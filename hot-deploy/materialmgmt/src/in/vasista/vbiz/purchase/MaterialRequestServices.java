@@ -311,6 +311,225 @@ public class MaterialRequestServices {
 		return result;	
 	}
 	
+	 public static String makeMassApproval(HttpServletRequest request, HttpServletResponse response) {
+			Delegator delegator = (Delegator) request.getAttribute("delegator");
+			LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+			DispatchContext dctx =  dispatcher.getDispatchContext();
+			Locale locale = UtilHttp.getLocale(request);
+		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	 Map<String, Object> result = ServiceUtil.returnSuccess();
+		  	  HttpSession session = request.getSession();
+		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
+		  	  String statusId  = "";
+		  	  String custRequestId = "";
+		  	  String custRequestItemSeqId = "";
+		  	  String qty="";
+		  	BigDecimal quantity=BigDecimal.ZERO;
+		  	  String description = "";
+		  	Map invoiceAmountMap = FastMap.newInstance();
+		  	List invoicesList = FastList.newInstance();
+			
+			  	for (int i = 0; i < rowCount; i++){
+		  		  
+			  	  Map paymentMap = FastMap.newInstance();
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+		  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
+		  		  }
+		  		 if (paramMap.containsKey("statusId" + thisSuffix)) {
+		  			statusId = (String) paramMap.get("statusId"+thisSuffix);
+			  		  }
+		  		 if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+		  			custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId"+thisSuffix);
+				  		  }
+		  		 if (paramMap.containsKey("description" + thisSuffix)) {
+		  			description = (String) paramMap.get("description"+thisSuffix);
+			  		  }
+		  		  if (paramMap.containsKey("quantity" + thisSuffix)) {
+		  			qty = (String) paramMap.get("quantity"+thisSuffix);
+		  		  }
+		  		  if(UtilValidate.isNotEmpty(qty)){
+					  try {
+						  quantity = new BigDecimal(qty);
+			  		  } catch (Exception e) {
+			  			  Debug.logError(e, "Problems parsing quantity string: " + qty, module);
+			  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + qty);
+			  			  return "error";
+			  		  }
+		  		  }
+				if(UtilValidate.isEmpty(quantity) || (UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)<=0)){
+					request.setAttribute("_ERROR_MESSAGE_", "Cannot Accept Quantity ZERO for"+custRequestId+"--!");	  		  
+			  		  return "error";
+				}
+				try{
+					GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+					
+					custRequestItem.set("quantity", quantity);
+					custRequestItem.store();
+					
+					Map statusItemCtx = FastMap.newInstance();
+					statusItemCtx.put("statusId", statusId);
+					statusItemCtx.put("custRequestId", custRequestId);
+					statusItemCtx.put("description", description);
+					statusItemCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+					statusItemCtx.put("userLogin", userLogin);
+					statusItemCtx.put("description", "");
+					Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusItemCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("RequestItem set status failed for Request: " + custRequestId+":"+custRequestItemSeqId, module);
+						return "error";
+					}
+					
+					List condList=FastList.newInstance();
+					List<GenericValue> custRequestItems = FastList.newInstance();
+					condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+					condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_DRAFT"));
+					EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+					custRequestItems = delegator.findList("CustRequestItem", cond,null,null,null,false);
+					if(custRequestItems.size()==0){
+						Map statusCtx = FastMap.newInstance();
+						statusCtx.put("statusId", statusId);
+						statusCtx.put("custRequestId", custRequestId);
+						statusCtx.put("userLogin", userLogin);
+						resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+						if (ServiceUtil.isError(resultCtx)) {
+							Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
+							return "error";
+						}
+					}
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+					 request.setAttribute("_ERROR_MESSAGE_", "RequestItem set status failed for Request: --- ");
+		  			  return "error";
+				}
+		 }
+		  		 result = ServiceUtil.returnSuccess("indent Approval successfully done");
+		         request.setAttribute("_EVENT_MESSAGE_", "Indent's Successfully Accepted!!");
+			return "success";
+	 }
+	
+	 
+	 public static String makeMassReject(HttpServletRequest request, HttpServletResponse response) {
+			Delegator delegator = (Delegator) request.getAttribute("delegator");
+			LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+			DispatchContext dctx =  dispatcher.getDispatchContext();
+			Locale locale = UtilHttp.getLocale(request);
+		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	 Map<String, Object> result = ServiceUtil.returnSuccess();
+		  	  HttpSession session = request.getSession();
+		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin"); 
+		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
+		  	  String statusId  = "";
+		  	  String custRequestId = "";
+		  	  String custRequestItemSeqId = "";
+		  	  String qty="";
+		  	BigDecimal quantity=BigDecimal.ZERO;
+		  	  String description = "";
+		  	for (int i = 0; i < rowCount; i++){
+			  	  Map paymentMap = FastMap.newInstance();
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+		  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
+		  		  }
+		  		 if (paramMap.containsKey("statusId" + thisSuffix)) {
+		  			statusId = (String) paramMap.get("statusId"+thisSuffix);
+			  		  }
+		  		 if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+		  			custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId"+thisSuffix);
+				  		  }
+		  		 if (paramMap.containsKey("description" + thisSuffix)) {
+			  			description = (String) paramMap.get("description"+thisSuffix);
+				  		  }
+		  		try{
+					GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId),  false);
+					
+					if(UtilValidate.isEmpty(custRequestItem)){
+						Debug.logError("No CustRequestItem found with Id " + custRequestId+":"+custRequestItemSeqId, module);
+						return "error";
+					}
+					String oldStatusId = custRequestItem.getString("statusId");
+					if(!oldStatusId.equals(statusId)){
+						GenericValue statusValidChange = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", oldStatusId, "statusIdTo", statusId), false);
+						if(UtilValidate.isEmpty(statusValidChange)){
+							Debug.logError("Not a Valid status change for the request", module);
+							request.setAttribute("_ERROR_MESSAGE_", "Not a Valid status change for the request"+custRequestId+"--!");	  		  
+							 return "error";
+						}
+					}
+					custRequestItem.set("statusId", statusId);
+					custRequestItem.store();
+					List condList=FastList.newInstance();
+					List<GenericValue> custRequestItems = FastList.newInstance();
+					condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+					if(statusId.equals("CRQ_ISSUED")){
+					condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"), EntityOperator.OR, EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"CRQ_DRAFT")));
+					}
+					if(statusId.equals("CRQ_REJECTED")){
+						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_ISSUED","CRQ_COMPLETED")));
+					}
+					if(statusId.equals("CRQ_COMPLETED")){
+						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_ISSUED")));
+					}
+					EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+					custRequestItems = delegator.findList("CustRequestItem", cond,null,null,null,false);
+					if(custRequestItems.size()==0){
+						GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+						custRequest.set("statusId", statusId);
+						custRequest.store();
+					}
+					if((custRequestItems.size()>0) && (statusId.equals("CRQ_REJECTED"))){
+						GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+						custRequest.set("statusId", "CRQ_SUBMITTED");
+						custRequest.store();
+					}
+					if((custRequestItems.size()>0) && (statusId.equals("CRQ_SUBMITTED"))){
+						GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+						custRequest.set("statusId", "CRQ_SUBMITTED");
+						custRequest.store();
+					}
+					
+					Map inputCtx = FastMap.newInstance();
+					inputCtx.put("custRequestId", custRequestId);
+					inputCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+					inputCtx.put("comments", description);
+					inputCtx.put("statusId", statusId);
+					inputCtx.put("userLogin", userLogin);
+					Map<String, Object> resultMap = createCustRequestStatus(dctx, inputCtx);
+					if(ServiceUtil.isError(resultMap)){
+						Debug.logError("Error in updating CustRequestItemStatus entity", module);
+						 request.setAttribute("_ERROR_MESSAGE_", "Error in updating CustRequestItemStatus entity");
+						 return "error";
+					}
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+		  			  return "error";
+				}
+				result.put("custRequestId", custRequestId);
+				result.put("custRequestItemSeqId", custRequestItemSeqId);
+				if((statusId).equals("CRQ_REJECTED")){
+					result = ServiceUtil.returnSuccess("Indent Successfully Rejected!!");
+			         request.setAttribute("_EVENT_MESSAGE_", "Indent's Successfully Rejected!!");
+
+				}
+		         request.setAttribute("_EVENT_MESSAGE_", "Indent's Successfully Rejected!!");
+		  	}
+		  	return "success";
+	 }
 	
 	public static Map<String, Object> approveRequestByHOD(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();

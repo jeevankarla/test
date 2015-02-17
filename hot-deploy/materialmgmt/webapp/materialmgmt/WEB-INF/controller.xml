@@ -227,6 +227,18 @@
        <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
      </request-map>
+     <request-map uri="makeMassApproval">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="makeMassApproval" global-transaction="true"/>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+   </request-map>
+    <request-map uri="makeMassReject">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="makeMassReject" global-transaction="true"/>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+   </request-map>
      <request-map uri="updateMaterialQuoteTerm">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="updateQuoteTerm"></event>
