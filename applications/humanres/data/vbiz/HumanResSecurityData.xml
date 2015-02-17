@@ -190,12 +190,18 @@ under the License.
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_LEAVE_APPROVAL"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_DAILYBUS_VIEW"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_HOLIDAYENTRY_VIEW"/>
+     
+      <!-- permission for electricity charges tab -->
+      <SecurityPermission description="Allow to Access and enter electricity charges in HumanRes Manager." permissionId="HR_ELECTR_VIEW"/>  
+      <SecurityGroup description="Allow to Access and enter water and electricity charges in HumanRes Manager." groupId="HR_ELECTR_VIEW"/>
+      <SecurityGroupPermission groupId="HR_ELECTR_VIEW" permissionId="HR_ELECTR_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ELECTR_VIEW"/>
       
-      <!-- permission for water and electricity charges tab -->
-      <SecurityPermission description="Allow to Access and enter water and electricity charges in HumanRes Manager." permissionId="WATER_ELECTR_VIEW"/>  
-      <SecurityGroup description="Allow to Access and enter water and electricity charges in HumanRes Manager." groupId="WATER_ELECTR_VIEW"/>
-      <SecurityGroupPermission groupId="WATER_ELECTR_VIEW" permissionId="WATER_ELECTR_VIEW"/>
-      <SecurityGroupPermission groupId="FULLADMIN" permissionId="WATER_ELECTR_VIEW"/>
+      <!-- permission for water charges tab -->
+      <SecurityPermission description="Allow to Access and enter water charges in HumanRes Manager." permissionId="HR_WATER_VIEW"/>  
+      <SecurityGroup description="Allow to Access and enter water and electricity charges in HumanRes Manager." groupId="HR_WATER_VIEW"/>
+      <SecurityGroupPermission groupId="HR_WATER_VIEW" permissionId="HR_WATER_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_WATER_VIEW"/>
       
       <SecurityPermission description="Allow to Access Lookup , Attendance and Leave screens in HumanRes Manager." permissionId="HR_EMPL_PROFILE_VIEW"/>  
       <SecurityGroup description="Allow to Access Lookup , Attendance and Leave screens in HumanRes Manager." groupId="HR_EMPL_PROFILE_VIEW"/>
