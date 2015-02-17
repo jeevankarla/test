@@ -190,18 +190,23 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    var quoteNumObj  = $(formObj).find("#quoteNum");
         var quoteDateObj  = $(formObj).find("#quoteDate");
         var billToPartyIdObj  = $(formObj).find("#0_lookupId_billToPartyId");
+        var quoteDateObj  = $(formObj).find("#quoteDate");
+        var fileNo  = $(formObj).find("#fileNo");
+        var estimatedDeliveryDate  = $(formObj).find("#estimatedDeliveryDate");
 
 		if(orderTypeId && orderTypeId == "PURCHASE_ORDER"){
 			$(poNumberObj).parent().parent().show();
-			$(quoteNumObj).parent().parent().show();
-			$(quoteDateObj).parent().parent().show();
-			$(billToPartyIdObj).parent().parent().parent().show();
+				$(fileNo).parent().parent().show();
+			$(estimatedDeliveryDate).parent().parent().show();
 		}
 		else{
 			$(poNumberObj).parent().parent().hide();
-			$(quoteNumObj).parent().parent().hide();
-			$(quoteDateObj).parent().parent().hide();
-			$(billToPartyIdObj).parent().parent().parent().hide();	
+			$(fileNo).parent().parent().hide();
+			$(estimatedDeliveryDate).parent().parent().hide();
+			
+		//	$(quoteNumObj).parent().parent().hide();
+		//	$(quoteDateObj).parent().parent().hide();
+		//	$(billToPartyIdObj).parent().parent().parent().hide();	
 		}
 	}    
 	
@@ -333,7 +338,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    </td>
 						</tr>
 						<tr>
+                        <#assign purchaseTypeFlag = parameters.purchaseTypeFlag?if_exists>
+						<#if purchaseTypeFlag?has_content && purchaseTypeFlag == "contractPurchase">
+						    <td class="label"><b>Date : </b></td>
+						    	<#else>
 						    <td class="label"><b>PO Date : </b></td>
+						   </#if>
 						    <td>
 						    	<#if orderId?exists && orderInfo.get("orderDate")?exists>
 						    		<input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderDate")?if_exists}"/>
@@ -365,6 +375,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 							</td>
 						</tr>
 						</#if>
+
+						<#if orderId?exists && quoteInfo.get("quoteId")?exists >
           		        <tr>
           		        	<td class="label"><b>Quote No: </b></td>
 						    <td>
@@ -397,6 +409,8 @@ function makeDatePicker(fromDateId ,thruDateId){
           		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
 						    </td>
 						 </tr>
+		         </#if>
+						 
  						 <tr>
 						    <td class="label"><b>Ref No. :</b></td>
 						    <td>
