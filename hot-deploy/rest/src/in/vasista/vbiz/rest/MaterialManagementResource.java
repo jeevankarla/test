@@ -7,7 +7,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import java.math.BigDecimal;
@@ -18,6 +20,8 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilDateTime;
+
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -43,7 +47,7 @@ public class MaterialManagementResource {
     @GET
     @Path("/fetchMaterials")        
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Object> fetchMaterials() {
+    public List<Object> fetchMaterials(@Context HttpServletRequest request) {
  
         String username = null;
         String password = null;
@@ -75,7 +79,11 @@ public class MaterialManagementResource {
   			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), MaterialManagementResource.class.getName());
 			return result;	   
   		}        
-
+AuditUtil auditUtil = new AuditUtil(delegator, request);
+Map<String, Object> apiHitMap = FastMap.newInstance();
+apiHitMap.put("userLoginId", username);
+apiHitMap.put("serviceName", "fetchMaterials");
+apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
         Security security = dispatcher.getDispatchContext().getSecurity();
         // security check
         if (!security.hasEntityPermission("MOB_INVENTORY", "_VIEW", userLogin)) {
@@ -117,13 +125,15 @@ public class MaterialManagementResource {
     		productMap.put("trackInventory","true");                		    		
 		    resultList.add(productMap);	
     	}
+apiHitMap.put("endDateTime", UtilDateTime.nowTimestamp());
+auditUtil.saveHit(apiHitMap);  	
         return resultList;
     }
     
     @GET
     @Path("/fetchMaterialInventory")        
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> fetchMaterialsInventory(@QueryParam("productId") String productId) {
+    public Map<String, Object> fetchMaterialInventory(@QueryParam("productId") String productId, @Context HttpServletRequest request) {
  
         String username = null;
         String password = null;
@@ -159,7 +169,11 @@ public class MaterialManagementResource {
   			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), MaterialManagementResource.class.getName());
 			return result;	   
   		}        
-
+AuditUtil auditUtil = new AuditUtil(delegator, request);
+Map<String, Object> apiHitMap = FastMap.newInstance();
+apiHitMap.put("userLoginId", username);
+apiHitMap.put("serviceName", "fetchMaterialInventory");
+apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
         Security security = dispatcher.getDispatchContext().getSecurity();
         // security check
         if (!security.hasEntityPermission("MOB_INVENTORY", "_VIEW", userLogin)) {
@@ -241,7 +255,9 @@ public class MaterialManagementResource {
         	result = ServiceUtil.returnError("Error while getting inventory details.");
         	return result;
         }
-    	Debug.logError("result = " + result,MaterialManagementResource.class.getName());       
+    	//Debug.logError("result = " + result,MaterialManagementResource.class.getName());   
+apiHitMap.put("endDateTime", UtilDateTime.nowTimestamp());
+auditUtil.saveHit(apiHitMap);     	
         return result;
 
     }    
