@@ -588,6 +588,7 @@
                 <parameter param-name="statusId" value="CRQ_REJECTED"/>
             </hyperlink> -->
         </field>
+        <field name="IndentHeadApproval"  title="Select" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${description}" description=" "  ></option></check> </field>
         
     </form>
     
