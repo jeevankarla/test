@@ -104,7 +104,7 @@
               		 			//alert("=result==="+result);
            	  					 productDetails =result["productObj"];
            	  					 //alert("productDetails=========="+productDetails.longDescription);
-          	 	 				GlobalproductName=productDetails.productName;
+          	 	 				GlobalproductName=productDetails.description;
           	 					 GloballongDescription=productDetails.longDescription;
           	 	 
           					  }
@@ -133,11 +133,11 @@
 			message +="<tr ><td align='right' class='h2' width='15%' >Uom Id: </td><td align='left' width='60%'><select name='quantityUomId' id='quantityUomId' class='h3'>"+
               		<#--<#list uomList as uom><option value='${uom.uomId}' <#if uom.uomId=='"+innerUomId+"'  > selected='selected'</#if> >${uom.description}[${uom.abbreviation}]</option></#list>"+   -->         
 					"</select></td></tr>";
-		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='productName' /><input type='hidden' id='productId'  name='productId'  /> <input type='hidden' size='70'  id='description' name='description'/> </tr></tbody></table></td></tr>";
+		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='description' name='description'/><input type='hidden' id='productId'  name='productId'  /> </tr></tbody></table></td></tr>";
 			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='right' class='label labelFontCSS' >Specification: </td><td align='left'  width='75%'  >";
-              message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'></textarea> <input type='hidden' size='70'  id='brandName'  name='brandName'/></td></tr>";
+              message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'></textarea> </td></tr>";
 			
-	          message +="<tr ><td align='right' class='h3' width='15%' ><input type='submit' value='Update' id='updateProduct' class='smallSubmit' onclick='setDescription()'/></td><td width='20%' align='center' class='h3' ><span align='center'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+	          message +="<tr ><td align='right' class='h3' width='15%' ><input type='submit' value='Update' id='updateProduct' class='smallSubmit'/></td><td width='20%' align='center' class='h3' ><span align='center'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 	          message += "</table></form>";
 	      	
 		message += "</div>";				
@@ -146,15 +146,10 @@
 	};
 	
 	function populateDate(){
-       jQuery("#productName").val(GlobalproductName);
+       jQuery("#description").val(GlobalproductName);
 		jQuery("#productId").val(GlobalproductId);
 		jQuery("#longDescription").val(GloballongDescription);
 	$('#quantityUomId').html(globalUomOptionList.join(''));
 
-	};
-	function setDescription(){
-		var desc=$("#productName").val();
-		jQuery("#brandName").val(desc);
-		jQuery("#description").val(desc);
 	};
 </script>
