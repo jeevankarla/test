@@ -25,12 +25,11 @@ under the License.
             <fail-property resource="ProductUiLabels" property="ProductCatalogCreatePermissionError"/>
         </check-permission>
         <check-errors/>
-
         <make-value value-field="newEntity" entity-name="SupplierProduct"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-
-        <create-value value-field="newEntity"/>
+        <entity-one entity-name="SupplierProduct" value-field="supplierProduct" auto-field-map="true"/>
+        <create-value value-field="newEntity" or-store="true"/>
     </simple-method>
 
     <simple-method method-name="updateSupplierProduct" short-description="Update a Supplier Product record">
