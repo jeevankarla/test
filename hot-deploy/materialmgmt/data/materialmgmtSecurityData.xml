@@ -436,5 +436,10 @@
     <SecurityGroupPermission groupId="MM_INTR_UNIT_VIEW"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_INTR_UNIT_VIEW"  permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="MM_INTR_UNIT_VIEW"  permissionId="CATALOG_VIEW"/>
+    
+    <SecurityPermission description="Close Indent" permissionId="MM_CLOSE_INDENT"/>
+    <SecurityGroup description="Close Indent!" groupId="MM_CLOSE_INDENT"/>
+    <SecurityGroupPermission groupId="MM_CLOSE_INDENT"  permissionId="MM_CLOSE_INDENT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_CLOSE_INDENT"/>
      
 </entity-engine-xml>
