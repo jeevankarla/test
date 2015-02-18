@@ -146,6 +146,9 @@ under the License.
       <relation type="one" fk-name="API_HIT_TYPE" rel-entity-name="ServerHitType">
         <key-map field-name="hitTypeId"/>
       </relation>
+        <index name="START_DATETIME_IDX" unique="false">
+            <index-field name="startDateTime"/>
+        </index>
     </entity>
     <entity entity-name="UserAgent"
             package-name="org.ofbiz.webapp.visit"
