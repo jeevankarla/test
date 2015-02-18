@@ -39,7 +39,7 @@ under the License.
         </tr>
         <tr>
           <td class="label">${uiLabelMap.CommonNewPassword}</td>
-          <td><input type="password" name="newPassword" value="" size="20"/></td>
+          <td><input type="password" name="newPassword" value="" size="20" onblur="validatePassword()"/></td>
         </tr>
         <tr>
           <td class="label">${uiLabelMap.CommonNewPasswordVerify}</td>
@@ -58,4 +58,13 @@ under the License.
 
 <script language="JavaScript" type="text/javascript">
   document.loginform.PASSWORD.focus();
+  function validatePassword()
+  	{
+	  if(loginform.newPassword.value.length < 5)
+	  	{
+		  alert("Password must be atleast 6 characters.!");
+		  loginform.newPassword.value="";
+		  document.loginform.newPassword.focus();
+	  	}
+ 	 } 
 </script>
