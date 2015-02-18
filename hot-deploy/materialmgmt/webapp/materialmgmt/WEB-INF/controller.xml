@@ -154,7 +154,7 @@
      <request-map uri="rejectRequirement">
         <security auth="true" https="true"/>
         <event type="service" invoke="updateRequirement" ></event>
-        <response name="success" type="view" value="FindMaterialRequirement"/>
+        <response name="success" type="request-redirect-noparam" value="FindMaterialRequirement"/>
         <response name="error" type="view" value="FindMaterialRequirement"/>
     </request-map>
     
