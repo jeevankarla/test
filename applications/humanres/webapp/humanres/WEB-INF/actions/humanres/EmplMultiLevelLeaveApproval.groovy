@@ -64,11 +64,15 @@ if(UtilValidate.isNotEmpty(emplLeaveApplId)){
 		//context.lossOfPayDays = emplLeaveDetails.lossOfPayDays;
 		request.setAttribute("lossOfPayDays", emplLeaveDetails.lossOfPayDays);
 		//context.description = emplLeaveDetails.description;
-		request.setAttribute("description", emplLeaveDetails.description);
+		//request.setAttribute("description", emplLeaveDetails.description);
 		//context.documentsProduced = emplLeaveDetails.documentsProduced;
 		request.setAttribute("documentsProduced", emplLeaveDetails.documentsProduced);
 		//context.comment = emplLeaveDetails.comment;
-		request.setAttribute("comment", emplLeaveDetails.comment);
+		if(UtilValidate.isNotEmpty(emplLeaveDetails.description)){
+			request.setAttribute("description", emplLeaveDetails.description);
+		}else{
+			request.setAttribute("description", emplLeaveDetails.comment);
+		}
 		//context.leaveStatus = emplLeaveDetails.leaveStatus;
 		request.setAttribute("leaveStatus", emplLeaveDetails.leaveStatus);
 	}

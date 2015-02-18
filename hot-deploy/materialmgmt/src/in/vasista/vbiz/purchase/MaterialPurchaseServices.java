@@ -1536,6 +1536,26 @@ public class MaterialPurchaseServices {
 				return "error";
 			}
 		}
+		//creating supplier product here
+		try{
+			Map suppProdResult = FastMap.newInstance();
+			if(UtilValidate.isNotEmpty(result.get("orderId"))){
+				Map suppProdMap = FastMap.newInstance();
+				suppProdMap.put("userLogin", userLogin);
+				suppProdMap.put("orderId", result.get("orderId"));
+				suppProdResult = dispatcher.runSync("createSupplierProductFromOrder",suppProdMap);
+				if(ServiceUtil.isError(suppProdResult)){
+					Debug.logError("Unable do create supplier product: " + ServiceUtil.getErrorMessage(suppProdResult), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable do create supplier product...! "+ServiceUtil.getErrorMessage(suppProdResult));
+					return "error";
+				}
+			}
+		}catch (Exception e1) {
+			Debug.logError(e1, "Error in supplier product",module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable do create supplier product...! ");
+			return "error";
+		}
+		
 		if(UtilValidate.isNotEmpty(PONumber)){
 		Map<String, Object> orderAssocMap = FastMap.newInstance();
 		orderAssocMap.put("orderId", result.get("orderId"));

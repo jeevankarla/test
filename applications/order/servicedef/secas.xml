@@ -39,6 +39,11 @@ under the License.
         <action service="createOrderHeaderSequence" mode="sync"/>
     </eca>
     
+    <eca service="receiveInventoryProduct" event="commit">
+    	<condition field-name="facilityId" operator="is-not-empty"/>
+        <action service="setUnitPriceAsLastPrice" mode="sync"/>
+    </eca>
+    
     <!--
 
     <eca service="storeOrder" event="return">

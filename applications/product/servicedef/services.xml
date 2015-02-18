@@ -481,6 +481,16 @@ under the License.
     </service>
 
     <!-- SupplierProduct Services -->
+    
+    <service name="createSupplierProductFromOrder" default-entity-name="SupplierProduct" engine="java"
+        location="org.ofbiz.product.supplier.SupplierProductServices" invoke="createSupplierProductFromOrder" auth="true">
+        <description>Create a new SupplierProduct record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_CREATE"/>
+        </required-permissions>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+    </service>
+    
     <service name="createSupplierProduct" default-entity-name="SupplierProduct" engine="simple"
         location="component://product/script/org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="createSupplierProduct" auth="true">
         <description>Create a new SupplierProduct record</description>
