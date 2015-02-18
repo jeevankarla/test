@@ -289,9 +289,9 @@ under the License.
                     <fo:table-column column-width="200pt"/>
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="70pt"/>
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="80pt"/>
                     <#if productMrpPriceMap?has_content>
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="80pt"/>
                     </#if>
                     <fo:table-column column-width="95pt"/>
                     <fo:table-body>
@@ -331,9 +331,9 @@ under the License.
                     <fo:table-column column-width="200pt"/>
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="70pt"/>
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="80pt"/>
                     <#if productMrpPriceMap?has_content>
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="80pt"/>
                     </#if>
                     <fo:table-column column-width="95pt"/>
                     <fo:table-body>
@@ -411,7 +411,7 @@ under the License.
 	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("#0.00")}</fo:block> 
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("##0.00000")}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<#else>
 	                   			<fo:table-cell border-style="solid">

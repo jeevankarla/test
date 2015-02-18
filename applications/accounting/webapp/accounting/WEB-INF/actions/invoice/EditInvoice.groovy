@@ -154,7 +154,7 @@ if (invoice) {
 	vatTaxesByType = FastMap.newInstance();
 	productMrpPriceMap = FastMap.newInstance();
 	invoiceItems.each { invoiceItem ->
-		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
+		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate);
 		invoiceItemsConv.add(invoiceItem);
 		glAccountId = null;
 		quantity = 0;
@@ -379,8 +379,6 @@ sequenceList.each{eachItem ->
 }
 
 context.invoiceSequenceNumMap = invoiceSequenceNumMap;
-
-
 
 
 
