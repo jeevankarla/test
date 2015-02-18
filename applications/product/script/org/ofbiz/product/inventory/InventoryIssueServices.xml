@@ -36,7 +36,7 @@ under the License.
                 <entity-count entity-name="InventoryItem" count-field="iiCount">
                     <condition-expr field-name="facilityId" operator="equals" from-field="orderHeader.originFacilityId"/>
                 </entity-count>
-
+                <log level="always" message="Inventory for Sales=======inventoryItem count===>${iiCount}==facilityId==${orderHeader.originFacilityId}"></log>
                 <!-- now go through each order item and call a service to issue the inventory -->
                 <if-compare field="iiCount" operator="greater" value="0" type="BigDecimal">
                     <iterate list="orderItemList" entry="orderItem">
