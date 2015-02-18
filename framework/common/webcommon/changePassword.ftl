@@ -54,17 +54,21 @@ under the License.
     </form>
   </div>
 </div>
+<div id="errorDisplay" ><font color="red" size="10"><b>Password must be atleast 6 characters.!</b></font></div>
 </center>
 
+
+
 <script language="JavaScript" type="text/javascript">
+  document.getElementById("errorDisplay").style.visibility = "hidden"; 
   document.loginform.PASSWORD.focus();
-  function validatePassword()
-  	{
-	  if(loginform.newPassword.value.length < 5)
+	  function validatePassword()
 	  	{
-		  alert("Password must be atleast 6 characters.!");
-		  loginform.newPassword.value="";
-		  document.loginform.newPassword.focus();
-	  	}
- 	 } 
+		  if(loginform.newPassword.value.length < 5)
+		  	{
+	    document.getElementById("errorDisplay").style.visibility = "visible";
+			  loginform.newPassword.value="";
+			  document.loginform.newPassword.focus();
+		  	}
+	 	 } 
 </script>
