@@ -32,7 +32,7 @@ import org.ofbiz.party.party.PartyHelper;
 fromDate=parameters.fromDateMr;
 thruDate=parameters.thruDateMr;
 productId=parameters.productId;
-
+context.productId=productId;
 fromDateTime = null;
 thruDateTime = null;
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -55,19 +55,25 @@ shipmentReceiptList = delegator.findList("ShipmentReceipt", cond, null,null, nul
 shipmentMap=[:];
 shipmentMap["totalInvoiceAmt"]=BigDecimal.ZERO;
 shipmentMap["totalPaidAmt"]=BigDecimal.ZERO;
+shipmentIds=EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "shipmentId", true);
+
 
 mrrList=[];
 shipmentReceiptList.each{shipmentData->
+	
    shipmentDetailMap=[:];
    shipmentDetailMap["receiptId"]=shipmentData.receiptId;
    shipmentDetailMap["datetimeReceived"]=shipmentData.datetimeReceived;
    shipmentDetailMap["shipmentId"]=shipmentData.shipmentId;
-
+   shipmentDetailMap["inventoryItemId"]=shipmentData.inventoryItemId;
+   
+   
       cList =[];
    cList.add(EntityCondition.makeCondition("statusId",  EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITOFF")));
    cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentData.shipmentId));
     con = EntityCondition.makeCondition(cList,EntityOperator.AND);
    invoiceDetails = delegator.findList("Invoice", con, null,null, null, false);
+   
    if(UtilValidate.isNotEmpty(invoiceDetails)){
 	   invoiceDetails=EntityUtil.getFirst(invoiceDetails);
 	   
@@ -96,6 +102,27 @@ shipmentReceiptList.each{shipmentData->
 		   
 	   }
    }
+
+     }
+   if(UtilValidate.isEmpty(invoiceDetails)){
+	   inventoryItemDetails = delegator.findOne("InventoryItem",["inventoryItemId":shipmentData.inventoryItemId],false);
+	   if(inventoryItemDetails){
+		   quantityAccepted=shipmentData.quantityAccepted;
+		   unitCost=inventoryItemDetails.get("unitCost");
+		   invoiceAmount=quantityAccepted*unitCost;
+		   
+		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);
+		   
+		  shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
+		  
+ //		   invoiceToApply=0;paidAmount=0;totalPaidAmt=0;
+//	   shipmentDetailMap.put("invoiceToApply",invoiceToApply);
+//	   shipmentDetailMap.put("paidAmount",paidAmount);
+//	   shipmentDetailMap.put("totalPaidAmt",totalPaidAmt);
+	   
+	   }
+	   
+   }
    
    //get PartyId from Role for vendor and dept
    vendorDeptDetails = delegator.findList("OrderRole",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , shipmentData.orderId)  , null, null, null, false );
@@ -116,10 +143,12 @@ shipmentReceiptList.each{shipmentData->
     shipmentDetailMap.put("partyId",partyId);
     partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("deptName",deptName);
-      }}
-   mrrList.addAll(shipmentDetailMap);
+      }
    }
-}
+   mrrList.addAll(shipmentDetailMap);
+   
+ 
+   }
 context.shipmentMap=shipmentMap;
 context.mrrList=mrrList;
 
