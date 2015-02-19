@@ -568,6 +568,7 @@ under the License.
          -->
         <!-- update the accepted and received quantity to zero in ShipmentReceipt entity -->
         <entity-one entity-name="ShipmentReceipt" value-field="shipmentReceipt"/>
+        <set field="shipmentReceipt.statusId" value="SR_CANCELLED"/>
         <set field="shipmentReceipt.quantityAccepted" value="0" type="BigDecimal"/>
         <set field="shipmentReceipt.quantityRejected" value="0" type="BigDecimal"/>
         <store-value value-field="shipmentReceipt"/>

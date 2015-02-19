@@ -20,11 +20,13 @@
      <StatusItem description="Receipt For QC" sequenceId="02" statusCode="QUALITYCHECK" statusId="SR_QUALITYCHECK" statusTypeId="RECEIPT_STATUS"/>
      <StatusItem description="Receipt Accepted" sequenceId="03" statusCode="ACCEPTED" statusId="SR_ACCEPTED" statusTypeId="RECEIPT_STATUS"/>
      <StatusItem description="Receipt Rejected" sequenceId="04" statusCode="REJECTED" statusId="SR_REJECTED" statusTypeId="RECEIPT_STATUS"/>
+     <StatusItem description="Receipt Cancelled" sequenceId="05" statusCode="CANCELLED" statusId="SR_CANCELLED" statusTypeId="RECEIPT_STATUS"/>
      
      <StatusValidChange statusId="SR_RECEIVED" statusIdTo="SR_REJECTED" transitionName="Rejected"/>
      <StatusValidChange statusId="SR_RECEIVED" statusIdTo="SR_QUALITYCHECK" transitionName="Quality Control"/>
      <StatusValidChange statusId="SR_QUALITYCHECK" statusIdTo="SR_ACCEPTED" transitionName="QC Approved"/>
      <StatusValidChange statusId="SR_QUALITYCHECK" statusIdTo="SR_REJECTED" transitionName="QC Rejected"/>
+       <StatusValidChange statusId="SR_QUALITYCHECK" statusIdTo="SR_CANCELLED" transitionName="Receipt Cancelled"/>
      
      <StatusItem description="Quote Accepted" statusCode="ACCEPTED" statusId="QUO_ACCEPTED" statusTypeId="QUOTE_STATUS"/>
      <StatusValidChange statusId="QUO_CREATED" statusIdTo="QUO_ACCEPTED" transitionName="Accept Quote"/>
