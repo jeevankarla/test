@@ -194,21 +194,26 @@ function makeDatePicker(fromDateId ,thruDateId){
         var fileNo  = $(formObj).find("#fileNo");
         var estimatedDeliveryDate  = $(formObj).find("#estimatedDeliveryDate");
 
-		if(orderTypeId && orderTypeId == "PURCHASE_ORDER"){
+		
+		if(orderTypeId && orderTypeId == "PURCHASE_ORDER" || orderTypeId == "EXTEN_PURCHASE_ORDER" || orderTypeId == "LETTER_OF_INTENT" ){
 			$(poNumberObj).parent().parent().show();
 				$(fileNo).parent().parent().show();
 			$(estimatedDeliveryDate).parent().parent().show();
+			$(billToPartyIdObj).parent().parent().parent().show();
+			$(quoteNumObj).parent().parent().show();
+			$(quoteDateObj).parent().parent().show();
+			
 		}
-		else{
+		if(orderTypeId && orderTypeId == "ARC_ORDER" || orderTypeId == "CPC_ORDER" ){			
 			$(poNumberObj).parent().parent().hide();
 			$(fileNo).parent().parent().hide();
-			$(estimatedDeliveryDate).parent().parent().hide();
-			
-		//	$(quoteNumObj).parent().parent().hide();
-		//	$(quoteDateObj).parent().parent().hide();
-		//	$(billToPartyIdObj).parent().parent().parent().hide();	
+			$(estimatedDeliveryDate).parent().parent().hide();			
+			$(quoteNumObj).parent().parent().hide();
+			$(quoteDateObj).parent().parent().hide();
+			$(billToPartyIdObj).parent().parent().parent().hide();	
 		}
 	}    
+
 	
 	
 	var supplierName;
@@ -376,7 +381,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 						</tr>
 						</#if>
 
-						<#if orderId?exists && quoteInfo.get("quoteId")?exists >
           		        <tr>
           		        	<td class="label"><b>Quote No: </b></td>
 						    <td>
@@ -409,7 +413,7 @@ function makeDatePicker(fromDateId ,thruDateId){
           		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
 						    </td>
 						 </tr>
-		         </#if>
+		         
 						 
  						 <tr>
 						    <td class="label"><b>Ref No. :</b></td>
