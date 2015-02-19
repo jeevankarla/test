@@ -1607,27 +1607,11 @@ public class MaterialRequestServices {
 				statusCtx.put("statusId", statusId);
 				statusCtx.put("custRequestId", custRequestId);
 				statusCtx.put("userLogin", userLogin);
-				Map resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+				Map resultCtx = dispatcher.runSync("setRequestStatus", statusCtx);
 				if (ServiceUtil.isError(resultCtx)) {
 					Debug.logError("Request set status failed for RequestId: " + custRequestId, module);
 					return resultCtx;
 				}
-				
-				List<GenericValue> custRequestItems = delegator.findList("CustRequestItem", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
-				for(GenericValue custReq : custRequestItems){
-					statusCtx.clear();
-					statusCtx.put("statusId", statusId);
-					statusCtx.put("custRequestId", custRequestId);
-					statusCtx.put("custRequestItemSeqId", custReq.getString("custRequestItemSeqId"));
-					statusCtx.put("userLogin", userLogin);
-					statusCtx.put("description", "");
-					resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
-					if (ServiceUtil.isError(resultCtx)) {
-						Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("custRequestItemSeqId"), module);
-						return resultCtx;
-					}
-				}
-				
 			} catch (Exception e) {
 				// TODO: handle exception
 				Debug.logError(e, module);
@@ -1635,4 +1619,43 @@ public class MaterialRequestServices {
 			}
 			return result;
 		}
+	 public static Map<String, Object> enquiryStatusValidation(DispatchContext ctx,Map<String, ? extends Object> context) {
+			Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			String custRequestId = (String) context.get("custRequestId");
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			boolean isOrdered = true;
+			Map<String, Object> result = FastMap.newInstance();
+			List<GenericValue> quoteAndItemAndCustRequest = FastList.newInstance();
+			List condList=FastList.newInstance();
+			try{
+				condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+				condList.add(EntityCondition.makeCondition("qiStatusId", EntityOperator.EQUALS, "QTITM_ORDERED"));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				quoteAndItemAndCustRequest = delegator.findList("QuoteAndItemAndCustRequest",cond, null , null, null, false);
+				List<GenericValue> custRequestItems = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null , null, null, false);
+				String custRequestItemSeqId="";
+				EntityCondition condtion=null;
+				if (UtilValidate.isNotEmpty(custRequestItems)){
+					for(GenericValue custRequestItem:custRequestItems){
+						custRequestItemSeqId=custRequestItem.getString("custRequestItemSeqId");
+						condList.clear();
+						condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+						condList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+						condtion = EntityCondition.makeCondition(condList,EntityOperator.AND);
+						List<GenericValue> quotes = EntityUtil.filterByCondition(quoteAndItemAndCustRequest, condtion);
+						if (UtilValidate.isEmpty(quotes)){
+							isOrdered = false;
+							break;
+						}
+					}
+				}
+				result.put("isOrdered", isOrdered);
+		    }catch (Exception e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+			}
+		    return result;
+	 }
 }
