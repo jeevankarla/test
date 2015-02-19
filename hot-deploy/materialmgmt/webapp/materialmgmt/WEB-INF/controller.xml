@@ -1167,7 +1167,10 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MaterialIndentReport"/>        
     </request-map>
-    
+    <request-map uri="SupplierEvaluationReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="SupplierEvaluationReport"/>        
+    </request-map>
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
@@ -1219,10 +1222,10 @@
     <view-map name="storeStockDetailsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#storeStockDetailsPDF" content-type="application/pdf"/>
     <view-map name="MRRregisterPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRregisterPDF" content-type="application/pdf"/>
     <view-map name="ArcOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
-   <view-map name="pendingQuantityARCPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#pendingQuantityARCPDF" content-type="application/pdf"/>
-       <view-map name="listofpendingPOsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#listofpendingPOsPDF" content-type="application/pdf"/>
-       <view-map name="MaterialIndentReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MaterialIndentReport" content-type="application/pdf"/>
-    
+    <view-map name="pendingQuantityARCPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#pendingQuantityARCPDF" content-type="application/pdf"/>
+    <view-map name="listofpendingPOsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#listofpendingPOsPDF" content-type="application/pdf"/>
+    <view-map name="MaterialIndentReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MaterialIndentReport" content-type="application/pdf"/>
+    <view-map name="SupplierEvaluationReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#SupplierEaluationReport" content-type="application/pdf"/>     
     <view-map name="letterOfAcceptancePDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#letterOfAcceptancePDF" content-type="application/pdf"/>
     <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
     <view-map name="extensionPurchaseOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#extensionPurchaseOrderPDF" content-type="application/pdf"/>

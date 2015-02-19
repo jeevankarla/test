@@ -28,7 +28,7 @@ OrderItemDetails = delegator.findList("OrderItem",EntityCondition.makeCondition(
 if(UtilValidate.isNotEmpty(OrderItemDetails)){
 	   quoteId=OrderItemDetails.get(0).quoteId;
 	   if(UtilValidate.isNotEmpty(quoteId)){		   
-			   QuoteAndItemAndCustRequest = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
+			   QuoteAndItemAndCustRequest = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , UtilMisc.toSet("custRequestId"), null, null, false );
 			   custRequestId=QuoteAndItemAndCustRequest.custRequestId;			   
 			   QuoteAndItemAndCustRequestDetails =  delegator.findList("QuoteAndItemAndCustRequest", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId),  null, null, null, false );			  
 			   if(UtilValidate.isNotEmpty(QuoteAndItemAndCustRequestDetails)){
