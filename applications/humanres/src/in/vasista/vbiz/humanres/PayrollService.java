@@ -2891,8 +2891,8 @@ public class PayrollService {
 			    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	        	
-	        	List<GenericValue> emplPositionAndFulfillments = delegator.findList("EmplPositionAndFulfillment", EntityCondition.makeCondition("employeePartyId",EntityOperator.EQUALS,employeeId), null,null, null, false);
-	        	emplPositionAndFulfillments = EntityUtil.filterByDate(emplPositionAndFulfillments, timePeriodStart);
+	        	List<GenericValue> emplPositionAndFulfillments = delegator.findList("EmplPositionAndFulfillment", EntityCondition.makeCondition("employeePartyId",EntityOperator.EQUALS,employeeId), null,UtilMisc.toList("fromDate"), null, false);
+	        	//emplPositionAndFulfillments = EntityUtil.filterByDate(emplPositionAndFulfillments, timePeriodStart);
 	        	GenericValue emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
 	        	if(UtilValidate.isNotEmpty(emplPositionAndFulfillment)){
 	        		result.put("emplPositionTypeId", emplPositionAndFulfillment.getString("emplPositionTypeId"));
@@ -2904,8 +2904,8 @@ public class PayrollService {
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 				condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
-				List<GenericValue> employments = delegator.findList("Employment", condition, null, null, null, false);
-				employments = EntityUtil.filterByDate(employments, timePeriodStart);
+				List<GenericValue> employments = delegator.findList("Employment", condition, null, UtilMisc.toList("fromDate"), null, false);
+				//employments = EntityUtil.filterByDate(employments, timePeriodStart);
 	            GenericValue employment = EntityUtil.getFirst(employments);
 	            if(UtilValidate.isNotEmpty(employment)){
 	        		result.put("geoId", employment.getString("locationGeoId"));
