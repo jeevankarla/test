@@ -108,8 +108,8 @@ dctx = dispatcher.getDispatchContext();
 			 }*/
 			 inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId]);
 			 if(UtilValidate.isNotEmpty(inventoryItem)){
-					 quantityOnHandTotal = inventoryItem.quantityOnHandTotal;
-					 availableToPromiseTotal = inventoryItem.availableToPromiseTotal;
+					 quantityOnHandTotal = inventoryItem.inventoryCount;
+					 availableToPromiseTotal = inventoryItem.inventoryCount;
 			 }
 			 tempMap = [:];
 			 tempMap["productId"] = productId;
