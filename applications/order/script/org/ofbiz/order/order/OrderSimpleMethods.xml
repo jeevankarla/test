@@ -143,15 +143,15 @@ under the License.
                     <set field="orderItem.statusId" value="ITEM_COMPLETED"/>
                     <store-value value-field="orderItem"/>
                     <!-- create status change history -->
-                    <make-value entity-name="OrderStatus" value-field="newValue"/>
+                     <!-- We are commented  because we are not tracking Order history -->
+                    <!-- <make-value entity-name="OrderStatus" value-field="newValue"/>
                     <sequenced-id sequence-name="OrderStatus" field="newValue.orderStatusId"/>
                     <set from-field="orderItem.orderItemSeqId" field="newValue.orderItemSeqId"/>
                     <set from-field="orderItem.orderId" field="newValue.orderId"/>
                     <set from-field="orderItem.statusId" field="newValue.statusId"/>
                     <set from-field="parameters.userLogin.userLoginId" field="newValue.statusUserLogin"/>
                     <now-timestamp field="newValue.statusDatetime"/>
-
-                    <create-value value-field="newValue"/>
+                    <create-value value-field="newValue"/> -->
                 </if-compare-field>
             </if-compare>
         </iterate>
@@ -172,7 +172,7 @@ under the License.
             <set field="orderHeader.statusId" value="ORDER_COMPLETED"/>
             <store-value value-field="orderHeader"/>
             <!-- create the status history -->
-            <make-value entity-name="OrderStatus" value-field="newValue"/>
+           <!--  <make-value entity-name="OrderStatus" value-field="newValue"/>
             <sequenced-id sequence-name="OrderStatus" field="newValue.orderStatusId"/>
 
             <set from-field="orderHeader.orderId" field="newValue.orderId"/>
@@ -180,7 +180,7 @@ under the License.
             <set from-field="parameters.userLogin.userLoginId" field="newValue.statusUserLogin"/>
             <now-timestamp field="newValue.statusDatetime"/>
 
-            <create-value value-field="newValue"/>
+            <create-value value-field="newValue"/> -->
         </if-compare>
 
         <!-- return the current return header status -->
