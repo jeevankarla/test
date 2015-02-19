@@ -191,7 +191,8 @@
     
     <form name="FindMaterialIssuanceNew" target="FindMaterialIssuanceNew" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="shipmentId" title="Issuance Id"><text-find/></field>
+        <field name="itemIssuanceId" title="Issuance Id"><text-find/></field>
+        <field name="shipmentId" title="Shipment Id"><text-find/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
         <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
