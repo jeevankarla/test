@@ -63,7 +63,7 @@
 			<condition>
 	        		<if-has-permission permission="MM"  action="_STORE_ISSUE_VIEW"/>
 	        </condition>
-	        	<link target="FindMaterialIssuance" />
+	        	<link target="FindMaterialIssuanceNew" />
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialRequirement" title="Requirements">
