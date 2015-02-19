@@ -110,7 +110,7 @@ under the License.
         <member-entity entity-alias="IIS" entity-name="ItemIssuance"/>
         <member-entity entity-alias="SH" entity-name="Shipment"/>
         <member-entity entity-alias="CR" entity-name="CustRequest"/>
-        <alias entity-alias="IIS" name="itemIssuanceId" />
+        <alias entity-alias="IIS" name="itemIssuanceId" group-by="true" />
         <alias entity-alias="IIS" name="custRequestId" group-by="true"/>
         <alias entity-alias="IIS" name="custRequestItemSeqId" group-by="true"/>
         <alias entity-alias="IIS" name="shipmentId" group-by="true"/>
