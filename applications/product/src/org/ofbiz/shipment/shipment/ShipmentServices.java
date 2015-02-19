@@ -1302,7 +1302,27 @@ public class ShipmentServices {
 			}
 		}
 		//updating ReceiptItems for shipment 
-			for(String receiptId:shipmentReceiptIds){
+			for(GenericValue shipmentReceipt:shipmentReceipts){
+				
+				String receiptId=shipmentReceipt.getString("receiptId");
+				//Before cancel check weather any issuance happen and quantity-cancelQuantity is grater than ZERO
+				List<GenericValue> itemIssuancesList = FastList.newInstance();
+				itemIssuancesList = delegator.findList("ItemIssuance", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, shipmentReceipt.getString("inventoryItemId") ), null, null, null, false);
+				for(GenericValue itemIssuance:itemIssuancesList){
+					BigDecimal checkQty=BigDecimal.ZERO;
+					
+					if(UtilValidate.isNotEmpty(itemIssuance.getBigDecimal("quantity"))){
+						checkQty=itemIssuance.getBigDecimal("quantity");
+					} 
+					if(UtilValidate.isNotEmpty(itemIssuance.getBigDecimal("cancelQuantity"))){
+						checkQty=checkQty.subtract(itemIssuance.getBigDecimal("cancelQuantity"));
+					}
+					if(checkQty.compareTo(ZERO) > 0){
+					   Debug.logError("Can not cancel the Shipment :"+shipmentId+" and ReceiptId:"+receiptId+" is already issued for issuanceId:"+itemIssuance.getString("itemIssuanceId"), module);
+					   return ServiceUtil.returnError("Can not cancel the Shipment :"+shipmentId+" and ReceiptId:"+receiptId+" is already issued for issuanceId:"+itemIssuance.getString("itemIssuanceId"));	
+					}
+				}
+				
 				Map<String, Object>  canceGrnResult = dispatcher.runSync("cancelGRNItem", UtilMisc.toMap("receiptId", receiptId,"userLogin",userLogin));
 				Debug.log("==receiptId=="+receiptId+"==========>");
 				if (ServiceUtil.isError(canceGrnResult)) {
