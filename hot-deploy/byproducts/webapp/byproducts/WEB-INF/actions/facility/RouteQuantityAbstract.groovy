@@ -284,7 +284,9 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						returnQty=0;
 						saleProdQty=0;
 						if(UtilValidate.isNotEmpty(returnProdMap)){
-						  returnQty=returnProdMap.get("returnQuantity");
+						  returnQty=returnProdMap.get("returnQtyLtrs");
+						}else{
+						  returnQty=0;
 						}
 						saleProdQty=productValue.getValue().get("total")-returnQty;
 						if(noOfDays!=0){
@@ -296,7 +298,9 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						returnQty=0;
 						saleProdQty=0;
 						if(UtilValidate.isNotEmpty(returnProdMap)){
-						  returnQty=returnProdMap.get("returnQuantity");
+						  returnQty=returnProdMap.get("returnQtyLtrs");
+						}else{
+						  returnQty=0;
 						}
 						saleProdQty=productValue.getValue().get("total")-returnQty;
 						if(noOfDays!=0){
