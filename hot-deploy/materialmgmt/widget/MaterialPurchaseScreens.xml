@@ -204,7 +204,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Find GRN Shipments"/>              
-			    <set field="tabButtonItem" value="FindGRNShipments" />
+			    <set field="tabButtonItem" value="FindGRNReceipts" />
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
