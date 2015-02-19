@@ -666,18 +666,13 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
        		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
        			enableAdvancePaymentApp = Boolean.TRUE;
        		}
-       		Boolean enableSalesInventoryTrack  = Boolean.FALSE;
-    		GenericValue tenantConfigEnableSalesInventoryTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enableSalesInventoryTrack"), true);
-       		if (UtilValidate.isNotEmpty(tenantConfigEnableSalesInventoryTrack) && (tenantConfigEnableSalesInventoryTrack.getString("propertyValue")).equals("Y")) {
-       			enableSalesInventoryTrack = Boolean.TRUE;
-       		}
        		
        		for(String eachOrderId : orderIdsList){
 
        			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachOrderId), false);
     			orderHeader.set("shipmentId", shipmentId);
     			
-    			if(UtilValidate.isNotEmpty(orderStatusId) && enableSalesInventoryTrack){
+    			if(UtilValidate.isNotEmpty(orderStatusId)){
     			orderHeader.set("statusId", orderStatusId);
     			}
     			orderHeader.store();
