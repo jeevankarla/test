@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="1.42in"/>
+        <fo:region-body margin-top="1.59in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -49,6 +49,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			        	   <fo:block white-space-collapse="false" font-size="10pt"  font-family="Helvetica" keep-together="always" >&#160;  STORE CODE:${parameters.stockId}&#160;    &#160;     &#160;  DESCRIPTION:${stockDetails.get("description")?if_exists}</fo:block>
 			               </#if>
               		   -->
+              		<fo:block  keep-together="always" text-align="left" font-family="Helvetica" white-space-collapse="false"  font-size="10pt" > ${productId?if_exists}             </fo:block>
+
               		<fo:block  keep-together="always" text-align="left" font-family="Helvetica" white-space-collapse="false"  font-size="10pt" >__________________________________________________________________________________________________________________________________________________________________________________________________________________</fo:block>
               	    <fo:block  font-size="12pt" font-weight="bold"  keep-together="always" text-align="left"  white-space-collapse="false" >SINo MRRNo  MRRDate VendorCode   VendorName       BillNo   BillDate     Amount  AmountPaid    Department St.Up.Date    </fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Helvetica" white-space-collapse="false"  font-size="10pt" >______________________________________________________________________________________________________________________________________________________________________________________________________</fo:block>               
@@ -76,12 +78,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				       <fo:table-cell  ><fo:block text-align="center"   font-size="10pt" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("datetimeReceived"), "dd/MM/yy")?if_exists}   </fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"   font-size="10pt">${mrrListItem.get("partyId")?if_exists} </fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"   font-size="10pt"> ${mrrListItem.get("partyName")?if_exists} </fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="left"  font-size="10pt" >${mrrListItem.get("invoiceId")?if_exists}</fo:block></fo:table-cell>  
-  				       <fo:table-cell  ><fo:block text-align="center"   font-size="10pt" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("invoiceDate"),"dd/MM/yy")?if_exists}   </fo:block></fo:table-cell>     
-  				  	   <fo:table-cell  ><fo:block text-align="right"  font-size="10pt"> ${mrrListItem.get("invoiceAmount")?if_exists?string("##0.00")} </fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${mrrListItem.get("paidAmount")?if_exists?string("##0.00")} </fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${mrrListItem.get("deptName")?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="center"   font-size="10pt"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("dueDate"),"dd/MM/yy")?if_exists}   </fo:block></fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="left"  font-size="10pt" >  <#if mrrListItem.get("invoiceId")?has_content>   ${mrrListItem.get("invoiceId")?if_exists}<#else>  </#if></fo:block></fo:table-cell> 
+  				      <fo:table-cell  ><fo:block text-align="center"   font-size="10pt" >  <#if mrrListItem.get("invoiceDate")?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("invoiceDate"),"dd/MM/yy")?if_exists}  </#if>    </fo:block></fo:table-cell>   
+  				  	 <fo:table-cell  ><fo:block text-align="right"  font-size="10pt">  <#if mrrListItem.get("invoiceAmount")?has_content> ${mrrListItem.get("invoiceAmount")?if_exists?string("##0.00")}  </#if>	</fo:block></fo:table-cell>  		  
+                         <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" > <#if mrrListItem.get("paidAmount")?has_content>  ${mrrListItem.get("paidAmount")?if_exists?string("##0.00")} </#if>  </fo:block></fo:table-cell>   
+  				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >  <#if mrrListItem.get("deptName")?has_content>${mrrListItem.get("deptName")?if_exists}   </#if></fo:block></fo:table-cell>    
+  				       <fo:table-cell  ><fo:block text-align="center"   font-size="10pt"> <#if mrrListItem.get("dueDate")?has_content>  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("dueDate"),"dd/MM/yy")?if_exists}  </#if> </fo:block></fo:table-cell>     
   				   <#assign sNo=sNo+1>
 	                               </fo:table-row>
                                 </#list>
