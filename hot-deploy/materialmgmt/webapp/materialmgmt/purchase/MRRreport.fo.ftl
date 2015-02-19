@@ -84,7 +84,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> P O DATE    :</fo:block> 
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("dateReceived")?if_exists}</fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" > VENDOR CODE:</fo:block>  
