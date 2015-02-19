@@ -19,6 +19,7 @@
     <Uom uomId="NUM_PAIR" uomTypeId="NUMERIC_MEASURE" abbreviation="PAIR" description="PAIR"/>
     <Uom uomId="NUM_SHT" uomTypeId="NUMERIC_MEASURE" abbreviation="SHEETS" description="SHEETS"/>
     <Uom uomId="NUM_TIN" uomTypeId="NUMERIC_MEASURE" abbreviation="TIN" description="TIN"/>
+    <Uom uomId="NUM_GRS" uomTypeId="NUMERIC_MEASURE" abbreviation="GROSS" description="GROSS"/>
 </entity-engine-xml>
     
     
