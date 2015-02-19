@@ -27,7 +27,7 @@ under the License.
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
 		</fo:layout-master-set>
-		<#if supplierMap?has_content> 
+		<#if supplierEvalMap?has_content> 
         <fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -75,7 +75,7 @@ under the License.
 				  <fo:table-column column-width="90pt"/>
 				  <fo:table-column column-width="130pt"/>
 			         <fo:table-body>
-			            <#assign supplierList = supplierMap.entrySet()>	
+			            <#assign supplierList = supplierEvalMap.entrySet()>	
                         <#assign sno=1>  					          				                                                                               					          
 			             <#list supplierList as supplierEntry>
 		                   <#assign quoteId=supplierEntry.getKey()> 

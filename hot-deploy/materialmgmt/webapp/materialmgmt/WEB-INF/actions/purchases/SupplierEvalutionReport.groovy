@@ -23,7 +23,7 @@ import org.ofbiz.party.contact.ContactHelper;
 orderId=parameters.orderId;
 context.orderId=orderId;
 conditionList = [];
-supplierMap = [:];
+supplierEvalMap = [:];
 OrderItemDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(OrderItemDetails)){
 	   quoteId=OrderItemDetails.get(0).quoteId;
@@ -64,9 +64,9 @@ if(UtilValidate.isNotEmpty(OrderItemDetails)){
 										quoteItemMap.put("statusId", statusId);										
 								    }
 							  }
-							  supplierMap.put(eachQuoteId, quoteItemMap);
+							  supplierEvalMap.put(eachQuoteId, quoteItemMap);
 				     }
               }
         }
 }
-context.supplierMap=supplierMap;
+context.supplierEvalMap=supplierEvalMap;
