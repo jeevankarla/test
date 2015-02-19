@@ -50,15 +50,15 @@ under the License.
 					      <fo:table-column column-width="140pt"/>					      
 					      </#list> 
 					         <fo:table-body>
-					             <fo:table-row height="50pt">
+					             <fo:table-row height="20pt">
                                     <fo:table-cell>
-									    <fo:block text-align="center" padding-before="1cm" keep-together="always"  font-weight="bold" white-space-collapse="false">SL.No</fo:block>
+									    <fo:block text-align="left" padding-before="1cm" keep-together="always"  font-weight="bold" white-space-collapse="false">SL.No</fo:block>
 								    </fo:table-cell>     
 					                 <fo:table-cell >
 								        <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
 								        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>							        
-								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;MATERIALS     REQRD     LAST PO</fo:block>
-								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;              QTY      DATE/RATE</fo:block>								        
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">MATERIALS      REQRD    LAST PO</fo:block>
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;                QTY    DATE/RATE</fo:block>								        
 								     </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
@@ -84,8 +84,8 @@ under the License.
 					  </fo:block>					 
 				     <fo:block font-family="Courier,monospace">
 	                     <fo:table border-style="solid">
-	                      <fo:table-column column-width="70pt"/>
-					     <fo:table-column column-width="100pt"/>
+	                      <fo:table-column column-width="40pt"/>
+					     <fo:table-column column-width="130pt"/>
 					     <fo:table-column column-width="50pt"/>
 					     <fo:table-column column-width="90pt"/>
 					     <#list partyDetList as partyNameList>
@@ -111,10 +111,10 @@ under the License.
 									    <fo:block text-align="center" keep-together="always" font-size="11pt" >${sno?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell border-style="solid">
-		  					            <fo:block text-align="center" font-size="11pt" >${product.description}</fo:block>
+		  					            <fo:block text-align="left" font-size="11pt" >${product.description}</fo:block>
 		  					        </fo:table-cell>
  		  					         <fo:table-cell border-style="solid">
-		  					            <fo:block text-align="center" font-size="11pt" >${productEntryValue?if_exists} ${unit?if_exists}</fo:block>
+		  					            <fo:block text-align="right" font-size="11pt" >${productEntryValue?if_exists} ${unit?if_exists}</fo:block>
 		  					        </fo:table-cell>
 		  					        <fo:table-cell border-style="solid">
 		  					            <fo:block text-align="center" font-size="11pt" >${poDateMap.get(productId)?if_exists}</fo:block>
@@ -164,13 +164,13 @@ under the License.
                                   <#assign termTypeId=termList.getKey()>					              
 					              <fo:table-row>
 					                  <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${termTypeId?if_exists}</fo:block>
+					                      <fo:block text-align="left" font-size="11pt" font-weight="bold">${termTypeId?if_exists}</fo:block>
 					                  </fo:table-cell>
                                        <#assign termVal=termList.getValue()>
                                        <#assign eachTermList = termVal.entrySet()>                                
 	                                   <#list eachTermList as term>
     								   <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${term.getValue()}</fo:block>
+					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${term.getValue()?if_exists}</fo:block>
 					                   </fo:table-cell>
 					                   </#list>  		
 		                         </fo:table-row>

@@ -127,6 +127,8 @@ termTypeDetails = delegator.findList("QuoteTerm", EntityCondition.makeCondition(
 termTypeIds = EntityUtil.getFieldListFromEntityList(termTypeDetails, "termTypeId", true);
 termTypeIds.each{eachTermType->
 	termDetailsMap=[:];	
+	termTypeDetails = delegator.findOne("TermType", ["termTypeId" : eachTermType], false);
+	description = termTypeDetails.description;	
 	quoteIds.each{eachQuoteId->
 		partyDetails = delegator.findOne("Quote", ["quoteId" : eachQuoteId], false);
 		partyId=partyDetails.partyId;
@@ -135,6 +137,7 @@ termTypeIds.each{eachTermType->
 		if(UtilValidate.isNotEmpty(termTypeDetail)){
 				termTypeDetail = EntityUtil.getFirst(termTypeDetail);
 				termTypeId=termTypeDetail.termTypeId;
+				
 				termValue=termTypeDetail.termValue;
 			    termDetailsMap.put(partyId,termValue);		
 		}
@@ -144,6 +147,6 @@ termTypeIds.each{eachTermType->
 			
 		}
 	}
-	allTermsMap.put(eachTermType,termDetailsMap);
+	allTermsMap.put(description,termDetailsMap);
 }
 context.allTermsMap=allTermsMap;
