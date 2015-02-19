@@ -104,11 +104,19 @@ propertyValue=mailIdConfig.get("propertyValue");
    context.companyMail=companyMail;
    allDetailsMap.put("companyMail",companyMail);	
    } 
+   partySecondEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue,contactMechPurposeTypeId:"SECONDARY_EMAIL" ,userLogin: userLogin]);
+   if(partySecondEmail){
+	   allDetailsMap.put("compSecondMail", partySecondEmail.emailAddress);
+   }
    companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, userLogin: userLogin]);
    companyPhone = "";
    if(companyTelephone != null && companyTelephone.contactNumber != null) {
    companyPhone = companyTelephone.contactNumber;
    allDetailsMap.put("companyPhone",companyPhone);
+   }
+   partySecondPhone= dispatcher.runSync("getPartyTelephone", [partyId:propertyValue,contactMechPurposeTypeId:"PHONE_WORK_SEC" ,userLogin: userLogin]);
+   if(partySecondPhone){
+	   allDetailsMap.put("partySecondPhone", partySecondPhone.contactNumber);
    }
    faxId="FAX_BILLING";
    companyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, contactMechPurposeTypeId: faxId, userLogin: userLogin]);

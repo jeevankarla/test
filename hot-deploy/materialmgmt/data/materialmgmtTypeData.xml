@@ -171,6 +171,6 @@
      <StatusItem createdStamp="2015-02-10 17:46:16.0" createdTxStamp="2015-02-10 17:46:16.0" description="Suspended" lastUpdatedStamp="2015-02-10 17:46:16.0" lastUpdatedTxStamp="2015-02-10 17:46:16.0"  statusCode="SUSPENDED" statusId="ORDER_SUSPENDED" statusTypeId="ORDER_STATUS"/>
 
  <TenantConfiguration  description="Send CC MailId Configuration For EnquiryEmail"  propertyName="sendCcMailId" propertyValue="vbiz@vasista.in,vbiz@vasista.in" propertyTypeEnumId="PURCHASE_OR_STORES" />
- <TenantConfiguration  description="Purchase Department configaretions"  propertyName="PURCHASEDEPT" propertyValue="Company" propertyTypeEnumId="PURCHASE_OR_STORES" />
+ <TenantConfiguration  description="Purchase Department configaretions"  propertyName="PURCHASEDEPT" propertyValue="INT5" propertyTypeEnumId="PURCHASE_OR_STORES" />
  
 </entity-engine-xml>
