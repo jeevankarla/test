@@ -11,6 +11,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 List finalList=[];
 List conditionList=[];
+
 if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
 	if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
@@ -22,9 +23,9 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	if(UtilValidate.isNotEmpty(parameters.vehicleId)){
 		conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,parameters.vehicleId));
 	}
-	/*if(UtilValidate.isNotEmpty(parameters.vehicleId)){
-		conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,parameters.vehicleId));
-	}*/
+	if(UtilValidate.isNotEmpty(parameters.statusId)){
+		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,parameters.statusId));
+	}
 	conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.EQUALS,"MATERIAL_SHIPMENT"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	shipmentList=delegator.findList("Shipment",condition,null,UtilMisc.toList("-estimatedShipDate"),null,false);
