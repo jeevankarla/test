@@ -213,7 +213,6 @@
                 <set field="tabButtonItem" value="FindMaterialRequest" />
                 <set field="tabButtonItem2" value="ApproveRequestsByDeptHead" />
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/multiselectindents.js" global="true"/>   
                 <set field="entityName" value="CustRequestAndItemAndAttribute"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
                 <!-- <entity-condition list="custRequestItemsList" entity-name="CustRequestAndItemAndAttribute">
@@ -236,6 +235,7 @@
                      			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="SearchRequestsToApprove"/>
                      	</screenlet>
                      	<screenlet title="List Requests to Approve">
+                     	
                      		<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/indentHeadApprovalForm.ftl"></html-template></html></platform-specific>
                      		<include-form name="ListRequestsToApprove" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                      	</screenlet>

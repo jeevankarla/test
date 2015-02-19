@@ -581,6 +581,15 @@
         <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
         <field name="tempQty" title="Accepted Qty"><text default-value="${quantity}"></text></field>
         <field name="description" title="Description"  widget-style="required" required-field="false"  ><text size="25" /></field>
+        <field name="rejectButton" widget-style="buttontext" event="onclick" action="javascript:rejectMaterialRequest(this);" >
+        <submit/>
+            <!-- <hyperlink target="rejectMaterialRequest" description="Reject">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="description"/>
+                <parameter param-name="statusId" value="CRQ_REJECTED"/>
+            </hyperlink> -->
+        </field>
         <field  name="acceptButton" event="onclick" action="javascript:approveRequestByHOD(this);" widget-style="buttontext" >
          <!-- <hyperlink target="" description="Accept">
                 <parameter param-name="custRequestId"/>
@@ -591,16 +600,8 @@
          </hyperlink> -->
          <submit />
         </field>
-        <field name="rejectButton" widget-style="buttontext" event="onclick" action="javascript:rejectMaterialRequest(this);" >
-        <submit/>
-            <!-- <hyperlink target="rejectMaterialRequest" description="Reject">
-                <parameter param-name="custRequestId"/>
-                <parameter param-name="custRequestItemSeqId"/>
-                <parameter param-name="description"/>
-                <parameter param-name="statusId" value="CRQ_REJECTED"/>
-            </hyperlink> -->
-        </field>
         <field name="IndentHeadApproval"  title="Select" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${description}" description=" "  ></option></check> </field>
+       
         
     </form>
     
