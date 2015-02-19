@@ -34,7 +34,11 @@ shipmentId = parameters.shipmentId;
 receiptId = parameters.receiptId;
 orderId = parameters.orderId;
 dateReceived = parameters.datetimeReceived;
-
+OrderHeaderDetails = delegator.findOne("OrderHeader",["orderId":orderId],false);
+if(UtilValidate.isNotEmpty(OrderHeaderDetails.orderDate)){
+	orderDate =  OrderHeaderDetails.orderDate;
+	context.orderDate=orderDate;
+}
 shipmentMap=[:];
 shipmentList=[];
 
