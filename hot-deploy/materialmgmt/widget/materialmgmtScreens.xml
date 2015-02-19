@@ -675,7 +675,7 @@
                         <section>
                             <widgets>
                					<screenlet title="FGS Orders">
-               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchIceCreamOrdersMm.ftl"/></html></platform-specific>
+               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchSaleOrdersMm.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
                         </section>
@@ -792,7 +792,7 @@
                         <section>
                             <widgets>
                					<screenlet title="Inter Unit Transfer Orders">
-               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchIceCreamOrdersMm.ftl"/></html></platform-specific>
+               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchSaleOrdersMm.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
                         </section>
