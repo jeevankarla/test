@@ -315,7 +315,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                  <fo:table text-align="center" >
                     <fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="200pt"/>
-               	    <fo:table-column column-width="220pt"/>
+               	    <fo:table-column column-width="390pt"/>
             		
                     <fo:table-body text-align="center">
                      <#assign sNo=1>
