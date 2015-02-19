@@ -1487,6 +1487,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="RegularIceCreamSaleBookPDF"/>
     </request-map>
+     <request-map uri="RegularIceCreamSaleBookReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="RegularIceCreamSaleBookCSV"/>
+    </request-map>
     <!-- <request-map uri="channelWiseSalesReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="ChannelWiseSalesReportPDF"/>
@@ -1739,6 +1743,7 @@
 	<view-map name="RetailerSalesComparisonTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="text/plain"/>
 	<!-- <view-map name="VatInvoiceSeqNoReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#VatInvoiceSeqNoReportPDF" content-type="application/pdf"/> -->
 	<view-map name="RegularIceCreamSaleBookPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RegularIceCreamSaleBookPDF" content-type="application/pdf"/>
+	<view-map name="RegularIceCreamSaleBookCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#RegularIceCreamSaleBookCSV" content-type="text/csv"/>
 	<view-map name="IceCreamSaleBookReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamSaleBookReportPDF" content-type="application/pdf"/>
 	<view-map name="IceCreamDueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamDueParticularsPDF" content-type="application/pdf"/>
 	<view-map name="IceCreamTaxEnclosuerReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamTaxEnclosuerReportCSV" content-type="text/csv"/>

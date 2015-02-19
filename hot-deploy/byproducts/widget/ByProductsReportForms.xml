@@ -175,4 +175,16 @@
         <field name="tax" title="Tax"><display/></field>
         <field name="total" title="Total"><display/></field>
     </form>
+    <form name="RegularIceCreamSaleBookCSV" type="list" list-name="Regularsaleslist" view-size="99999">
+        <field name="invoiceId" title="InVoice Number"><display/></field>
+        <field name="invoiceSequenceId" title="Central Excise Invoice Number"><display/></field>
+        <field name="partyName" title=" Retailer Name"><display/></field>
+        <field name="Description" title="Description"><display /></field>
+        <field name="quantity" title="Quantity"><display/></field>
+        <field name="basicRevenue" title="Ex-factory Value"><display/></field>
+        <field name="bedRevenue" title="Ed Value"><display/></field>
+        <field name="vatRevenue" title="Vat"><display/></field>
+        <field name="cstRevenue" title="C.S.T"><display/></field>
+        <field name="total" title="Total"><display/></field>
+    </form>
 </forms>
