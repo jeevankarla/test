@@ -173,6 +173,7 @@ public class SupplierProductServices {
 		Map result = ServiceUtil.returnSuccess();
 		List<GenericValue> orderItems = FastList.newInstance();
 		BigDecimal unitPrice = BigDecimal.ZERO;
+		BigDecimal unitListPrice = BigDecimal.ZERO;
 		String productId = null;
 		try{
 			if(UtilValidate.isNotEmpty(orderId)){
@@ -202,12 +203,15 @@ public class SupplierProductServices {
 						orderItemMap = (Map)orderItems.get(i);
 						productId = (String) orderItemMap.get("productId");
 						unitPrice = (BigDecimal) orderItemMap.get("unitPrice");
-						
+						unitListPrice = (BigDecimal) orderItemMap.get("unitListPrice");
 						List suppProdList = FastList.newInstance();
 						suppProdList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
 						suppProdList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						suppProdList.add(EntityCondition.makeCondition("availableFromDate", EntityOperator.LESS_THAN_EQUAL_TO, orderDate));
+						suppProdList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("availableThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+				        		EntityCondition.makeCondition("availableThruDate", EntityOperator.GREATER_THAN_EQUAL_TO, orderDate)));
 						EntityCondition suppProdCond = EntityCondition.makeCondition(suppProdList, EntityOperator.AND);
-						List<GenericValue> supplierProductList = EntityUtil.filterByDate(delegator.findList("SupplierProduct", suppProdCond, null, UtilMisc.toList("-availableFromDate"), null, false));
+						List<GenericValue> supplierProductList = delegator.findList("SupplierProduct", suppProdCond, null, UtilMisc.toList("-availableFromDate"), null, false);
 						if(UtilValidate.isEmpty(supplierProductList)){
 							Map<String,Object> suppProdMap = FastMap.newInstance();
 							suppProdMap.put("userLogin",userLogin);
@@ -217,7 +221,11 @@ public class SupplierProductServices {
 							suppProdMap.put("minimumOrderQuantity",BigDecimal.ZERO);
 							suppProdMap.put("currencyUomId","INR");
 							suppProdMap.put("supplierProductId",productId);
-							suppProdMap.put("lastPrice",unitPrice);
+							if(UtilValidate.isNotEmpty(unitListPrice)){
+								suppProdMap.put("lastPrice",unitListPrice);
+							}else{
+								suppProdMap.put("lastPrice",unitPrice);
+							}
 					        Map resultMap = dispatcher.runSync("createSupplierProduct",suppProdMap);
 					        if (ServiceUtil.isError(resultMap)) {
 					        	Debug.logError("Problem creating supplier product for orderId :"+orderId, module);
