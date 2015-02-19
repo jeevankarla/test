@@ -252,4 +252,10 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="enquiryStatusValidation" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="enquiryStatusValidation" >
+        <description>To check quote item status is ordered or not </description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="isOrdered" type="Boolean" mode="OUT" optional="true"/>
+    </service>
+    
 </services>

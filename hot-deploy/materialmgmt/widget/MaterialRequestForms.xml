@@ -338,6 +338,12 @@
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <field name="createdByUserLogin" sort-field="true"><display/></field>
         
+        <field use-when="&quot;ENQ_ORDERED&quot;.equals(&quot;${statusId}&quot;)&amp;&amp;!(&quot;ENQ_COMPLETED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_COMPLETED_ENQ&quot;, session)))}" name="Completed" widget-style="buttontext">
+            <hyperlink target="updateEnquiryStatus" description="Completed">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="ENQ_COMPLETED"/>
+            </hyperlink>
+        </field>
        <field use-when="&quot;N&quot;.equals(&quot;${cancelFlag}&quot;)&amp;&amp;!(&quot;ENQ_CANCELLED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_ENQ&quot;, session)))}" name="cancel" widget-style="buttontext">
             <hyperlink target="cancelEnquiryStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>

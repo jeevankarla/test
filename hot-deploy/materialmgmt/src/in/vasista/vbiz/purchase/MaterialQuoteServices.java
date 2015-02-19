@@ -880,7 +880,33 @@ public class MaterialQuoteServices {
         	 Debug.logError("Error While updating quote item status to ORDERED", module);
     	  	 return ServiceUtil.returnError("Error While updating quote item status to ORDERED");
          }
-         
+            boolean isOrdered=false;
+	 		Map statusCtx = FastMap.newInstance();
+	 		statusCtx.put("custRequestId", custRequestId);
+	 		statusCtx.put("userLogin", userLogin);
+	 		try {
+		 		Map<String, Object> enquiryResult = (Map)dispatcher.runSync("enquiryStatusValidation", statusCtx);
+		 		isOrdered=(Boolean)enquiryResult.get("isOrdered");
+	 		}catch(Exception e){
+ 	        	Debug.logError("Error in enquiryStatusValidation Service", module);
+ 			    return ServiceUtil.returnError("Error in enquiryStatusValidation Service");
+ 	        }
+	 		if (isOrdered) {
+	 			statusCtx.clear();
+	 			statusCtx.put("statusId", "ENQ_ORDERED");
+	 			statusCtx.put("custRequestId", custRequestId);
+	 			statusCtx.put("userLogin", userLogin);
+	 			try{
+		 			Map<String, Object> resultCtx = dispatcher.runSync("setRequestStatus", statusCtx);
+		 			if (ServiceUtil.isError(resultCtx)) {
+		 				Debug.logError("Error While Updating Enquiry Status: " + custRequestId, module);
+		 				return resultCtx;
+		 			}
+	 			}catch(Exception e){
+	 	        	Debug.logError("Error While Updating Enquiry Status:" + custRequestId, module);
+	 			    return ServiceUtil.returnError("Error While Updating Enquiry Status:");
+	 	        }
+	 		}
          result = ServiceUtil.returnSuccess("Created Purchase Order for Quote : "+quoteId);
          result.put("orderId", orderId);
         // result.put("custRequestName", custRequestName);

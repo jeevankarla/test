@@ -60,6 +60,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.order.order.OrderServices;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
@@ -3713,6 +3714,38 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		        		Debug.logError("Error updating QuoteStatus", module);
 		  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
 		        	}
+		        	String custRequestId="";
+		        	List<GenericValue>  quoteAndItemAndCustRequest = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null , null, null, false);
+		        	if(UtilValidate.isNotEmpty(quoteAndItemAndCustRequest)){
+		        		custRequestId = (EntityUtil.getFirst(quoteAndItemAndCustRequest)).getString("custRequestId");
+					}
+		        	boolean isOrdered=true;
+		        	statusCtx.clear();
+			 		statusCtx.put("custRequestId", custRequestId);
+			 		statusCtx.put("userLogin", userLogin);
+			 		try {
+				 		Map<String, Object> enquiryResult = (Map)dispatcher.runSync("enquiryStatusValidation", statusCtx);
+				 		isOrdered=(Boolean)enquiryResult.get("isOrdered");
+			 		}catch(Exception e){
+		 	        	Debug.logError("Error in enquiryStatusValidation Service", module);
+		 			    return ServiceUtil.returnError("Error in enquiryStatusValidation Service");
+		 	        }
+			 		if (!isOrdered) {
+			 			statusCtx.clear();
+			 			statusCtx.put("statusId", "ENQ_CREATED");
+			 			statusCtx.put("custRequestId", custRequestId);
+			 			statusCtx.put("userLogin", userLogin);
+			 			try{
+				 			resultCtx = dispatcher.runSync("setRequestStatus", statusCtx);
+				 			if (ServiceUtil.isError(resultCtx)) {
+				 				Debug.logError("Error While Updating Enquiry Status: " + custRequestId, module);
+				 				return resultCtx;
+				 			}
+			 			}catch(Exception e){
+			 	        	Debug.logError("Error While Updating Enquiry Status:" + custRequestId, module);
+			 			    return ServiceUtil.returnError("Error While Updating Enquiry Status:");
+			 	        }
+			 		}
 				}
 				
 			}
