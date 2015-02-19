@@ -96,6 +96,13 @@ under the License.
       <relation type="one" fk-name="ITEM_ISS_IBUL" title="IssuedBy" rel-entity-name="UserLogin">
         <key-map field-name="issuedByUserLoginId" rel-field-name="userLoginId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequest">
+       <key-map field-name="custRequestId"/>
+     </relation>
+     <relation type="one" fk-name="ITEM_ISS_CRITM" rel-entity-name="CustRequestItem">
+       <key-map field-name="custRequestId"/>
+       <key-map field-name="custRequestItemSeqId"/>
+     </relation>
     </entity>
     <view-entity entity-name="ItemIssuanceAndInventoryItem" package-name="org.ofbiz.shipment.issuance">
         <member-entity entity-alias="IISS" entity-name="ItemIssuance"/>
