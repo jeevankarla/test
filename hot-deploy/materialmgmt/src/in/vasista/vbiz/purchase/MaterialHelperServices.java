@@ -253,7 +253,7 @@ public class MaterialHelperServices{
 	public static Map<String, Object> getMaterialReceiptsForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
-		//String productId = (String) context.get("productId");
+		String productId = (String) context.get("productId");
 		String facilityId = (String) context.get("facilityId");
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
@@ -267,7 +267,9 @@ public class MaterialHelperServices{
 			 if(UtilValidate.isNotEmpty(facilityId)){
 				 condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 			 }
-			 
+			 if(UtilValidate.isNotEmpty(productId)){
+				 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			 }
 			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 EntityListIterator shipmentReceiptItr = null;
 			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost");
@@ -292,6 +294,7 @@ public class MaterialHelperServices{
 		            BigDecimal amount = price.multiply(quantity);
 		            tempMap.put("datetReceived", datetReceived);
 		            tempMap.put("quantity", quantity);
+		            tempMap.put("receiptId", receiptId);
 		            tempMap.put("amount", amount);
 		            tempMap.put("price", price);
 		            receiptsList.add(tempMap);
