@@ -12,8 +12,9 @@ import java.util.TimeZone;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
- 
+
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,10 +22,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.QueryParam;
- 
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
- 
+
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -42,6 +43,7 @@ import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
 import javax.ws.rs.core.MediaType;
 
 import java.text.SimpleDateFormat;
@@ -56,8 +58,7 @@ public class CreateWeighBridgeData {
     @Context
     HttpHeaders headers;
 
-    @GET
-    @Path("/plaintext")    
+    @POST
     @Produces("text/plain")
     public Response createWeighBridgeData(
     		@QueryParam("login.username") String username,@QueryParam("login.password") String password,
@@ -68,16 +69,17 @@ public class CreateWeighBridgeData {
     	String productId = "";
     	Locale locale = Locale.getDefault();
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    	
     	Timestamp entryDate = UtilDateTime.nowTimestamp();
     	
     	try {
     		entryDate = UtilDateTime.toTimestamp(sdf.parse(date)); 
     				
 		} catch (ParseException e) {
-			Debug.logError("Cannot parse date string: "+ date, CreateWeighBridgeData.class.getName());
+			Debug.logError("Cannot parse date string: "+ e, CreateWeighBridgeData.class.getName());
 			return Response.serverError().entity("Cannot parse date string:"+date).build();
 		} catch (NullPointerException e) {
-			Debug.logError("Cannot parse date string: "+ date, CreateWeighBridgeData.class.getName());
+			Debug.logError("Cannot parse date string: "+ e, CreateWeighBridgeData.class.getName());
 			return Response.serverError().entity("Cannot parse date string: "+ date).build();
 		}
  
