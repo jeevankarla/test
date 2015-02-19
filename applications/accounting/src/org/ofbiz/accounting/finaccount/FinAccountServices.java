@@ -1093,7 +1093,8 @@ public class FinAccountServices {
 								condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 								condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 						    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
-								finAccountList = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false);
+						    	List<String> orderBy = UtilMisc.toList("finAccountName");
+								finAccountList = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), orderBy, null, false);
 								if(UtilValidate.isNotEmpty(finAccountList)){
 									flag = true;
 									result.put("flag", flag);

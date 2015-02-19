@@ -3763,6 +3763,7 @@
 				<set field="formTargetRequest"    value="FinancialAccountingTransCASH" />
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="parameters.screenfinIdFlag" value="Y"/>
 			</actions>
 			<widgets>
 				<section>
