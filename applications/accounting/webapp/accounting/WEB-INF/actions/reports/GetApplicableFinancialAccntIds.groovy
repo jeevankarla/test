@@ -49,14 +49,26 @@
 			glAccnt = delegator.findList("GlAccountOrganizationAndClass", EntityCondition.makeCondition(["organizationPartyId" : organizationPartyId]), null, null, null, true);
 			glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
 				conditionList = [];
-				if(UtilValidate.isNotEmpty(parameters.screenFlag)){
+				 if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 				conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
 				}
+				 else if(UtilValidate.isNotEmpty("Y".equals(parameters.screenfinIdFlag))){
+					 conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH"));
+					 }
 				//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 				conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
-			financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				List<String> orderBy = UtilMisc.toList("finAccountName");				
+			financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, orderBy, null, false);
+			finalList=[];
+			financialAccnt.each{ eachvalue ->
+				if(eachvalue.finAccountName){
+					finalList.addAll(eachvalue);
+				}
+			}
+		//Debug.log("financialAccnt==========new================"+financialAccnt);
 			//glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
 			context.financialAccnt = financialAccnt;
+			context.finalList = finalList;
 		}
 	}
 	

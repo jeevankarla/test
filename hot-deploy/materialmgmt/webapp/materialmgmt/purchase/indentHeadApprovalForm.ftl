@@ -17,17 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
   <#if (security.hasEntityPermission("MASSAPPROVAL", "_VIEW", session) )>
-  <form name="submitBulkStatus" id="ListIndentSubmit"  method="post" action="makeMassApproval">
-    <div align="right" >  
-      <input type="checkbox" id="bulkCheckBox" name="submitBulkStatus" onchange="javascript:checkAllIndentApprovalStatus(this);"/>   
+  <form name="submitBulkStatus" id="ListIndentSubmit"  method="post" align="right">
+
+   <td align="left">    
+  <input type="checkbox" id="bulkCheckBox" name="submitBulkStatus" onchange="javascript:checkAllIndentApprovalStatus(this);"/>   
       <input id="submitButton" type="button"  onclick="javascript:getAllIndentApprovals();" value="Accept"/>
-    </div>
+  </td>
     
-  </form>
-   <form name="submitBulkRejectStatus" id="ListIndentReject"  method="post" action="makeMassReject">
-    <div align="right" >  
+ <#-- </form>
+   <form name="submitBulkRejectStatus" id="ListIndentReject"  method="post" action="makeMassReject">-->
+<td align="left">
       <input type="checkbox" id="bulkCheckBox" name="submitBulkStatus" onchange="javascript:checkAllIndentApprovalStatus(this);"/>   
       <input id="submitButton" type="button"  onclick="javascript:getAllIndentRejects();" value="Reject"/>
-    </div>
+
+    </td>
   </form>
 </#if>

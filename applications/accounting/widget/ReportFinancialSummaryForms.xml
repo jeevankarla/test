@@ -601,7 +601,7 @@ under the License.
         <field name="reportTypeFlag"><hidden/></field>
         <field name="finAccountId" title="Financial Account" id-name="finAccountId">
         	<drop-down allow-empty="false">
-                <list-options list-name="financialAccnt" key-name="finAccountId" description="${finAccountName}"/>
+                <list-options list-name="finalList" key-name="finAccountId" description="${finAccountName}"/>
             </drop-down>
             <!-- <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${glAccountId} ${accountName}">
