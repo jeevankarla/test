@@ -22,14 +22,13 @@ under the License.
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
 					 margin-left="0.5in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
-				<fo:region-body margin-top="2in"/>
+				<fo:region-body margin-top="2.2in"/>
 				<fo:region-before extent="1in"/>
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
 		</fo:layout-master-set>
-		        <#if MrrList?has_content>
-		         <#if ReceiptList?has_content>
-		         <#if issueList?has_content>
+		        <#if allDetailsMap?has_content>
+		       
 		<fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -83,7 +82,7 @@ under the License.
 									<fo:block text-align="right" keep-together="always" >AMOUNT</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="left" keep-together="always">INDENT NO.</fo:block>
+									<fo:block text-align="center" keep-together="always">INDENT NO.</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid" >
 								    <fo:block text-align="right" keep-together="always">ISSUE QTY</fo:block>
@@ -105,65 +104,140 @@ under the License.
 	   </fo:static-content>
 	   <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 	        <fo:block font-family="Courier,monospace"  font-size="10pt">
-	           <#list MrrList as mrrListDetails>
-	           <#list ReceiptList as ReceiptListDetails>
-	           <#list issueList as issueListDetails>
-	              <fo:table border-style="solid">
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="90pt"/>
-					<fo:table-column column-width="25pt"/>
-					<fo:table-body>
+ 
+ 
+
+<fo:table >
+<fo:table-column column-width="80pt"/>
+<fo:table-column column-width="856pt"/>
+<fo:table-body>
+     <#assign allMapDetails = allDetailsMap.entrySet()>
+ <#list allMapDetails as storeIssueDetails>
+                     <#assign storeDetails1 = storeIssueDetails.getValue().get("MrrMap")?if_exists>                   
+                     <#assign storeDetails2 = storeIssueDetails.getValue().get("issueMap")?if_exists>                   
+
+  <fo:table-row border-style="solid">
+ 
+ <fo:table-cell >
+		<fo:block text-align="left" >
+					 <fo:table>
+					  <fo:table-column column-width="80pt"/>
+                      <fo:table-body>
 					   <fo:table-row>
 				           <fo:table-cell border-style="solid">
-							   <fo:block text-align="left" >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListDetails.get("Date") ,"dd-MMM-yyyy")?if_exists}</fo:block>
+							   <fo:block text-align="left" >${storeIssueDetails.getKey()?if_exists} </fo:block>
 						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							   <fo:block text-align="left" >${mrrListDetails.get("BILLNo")?if_exists}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="left" >${mrrListDetails.get("MRRNo")?if_exists}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >${ReceiptListDetails.get("ReceiptQty")?if_exists?string("##0.00")}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >${ReceiptListDetails.get("ReceiptRate")?if_exists?string("##0.00")}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >${ReceiptListDetails.get("ReceiptAmount")?if_exists?string("##0.00")}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="center" >${issueListDetails.get("IndentNo")?if_exists}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >${issueListDetails.get("IssueQty")?if_exists?string("##0.00")}</fo:block>
-						   </fo:table-cell>
-						    <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >${issueListDetails.get("IssueRate")?if_exists?string("##0.00")}</fo:block>
-						   </fo:table-cell>
-						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >${issueListDetails.get("IssueAmount")?if_exists?string("##0.00")}</fo:block>
-						   </fo:table-cell>						   				
-					    </fo:table-row>
+                          </fo:table-row>
 					</fo:table-body>   
 				</fo:table>	
-				</#list> 
-				</#list>
-			   </#list>      	            
+          </fo:block>
+    </fo:table-cell>
+    
+	<fo:table-cell  border-style="solid">
+		<fo:block text-align="left" >
+		 <fo:table>
+			 <fo:table-column column-width="400pt"/>
+			<fo:table-column column-width="456pt"/>
+			 <fo:table-body>
+			 
+					   <fo:table-row>		   
+	   
+				  <fo:table-cell >
+				 <fo:block text-align="left" >			   	
+			 <fo:table >
+					  <fo:table-column column-width="80pt"/>
+					  <fo:table-column column-width="100pt"/>
+					  <fo:table-column column-width="80pt"/>
+					 <fo:table-column column-width="70pt"/>
+					   <fo:table-column column-width="70pt"/>					  
+                     <fo:table-body>
+<#if storeDetails1?has_content>
+        <#assign storeDetails11 = storeDetails1.entrySet()?if_exists>
+
+   <#list storeDetails11 as storeDetails111>
+					   <fo:table-row>				          
+						   <fo:table-cell border-style="solid">
+							   <fo:block text-align="left" >  ${storeDetails111.getValue().get("billNo")?if_exists}             </fo:block>
+						   </fo:table-cell>
+						   <fo:table-cell border-style="solid">
+							  <fo:block text-align="left" >    ${storeDetails111.getKey()?if_exists?if_exists}     </fo:block>
+						   </fo:table-cell>
+						   <fo:table-cell border-style="solid">
+							  <fo:block text-align="right" >    ${storeDetails111.getValue().get("ReceiptQty")?if_exists?string("##0.000")}            </fo:block>
+						   </fo:table-cell>
+						   <fo:table-cell border-style="solid">
+							  <fo:block text-align="right" >       ${storeDetails111.getValue().get("ReceiptRate")?if_exists?string("##0.00")}      </fo:block>
+						   </fo:table-cell>
+						   <fo:table-cell border-style="solid">
+							  <fo:block text-align="right" >      ${storeDetails111.getValue().get("ReceiptAmount")?if_exists?string("##0.00")}        </fo:block>
+						   </fo:table-cell>						   
+                            </fo:table-row>
+                            </#list>
+</#if>
+					</fo:table-body>   
+				</fo:table>				   
+					</fo:block>
+					 </fo:table-cell>
+						   
+			
+			 <fo:table-cell>
+					 <fo:block text-align="left" >			   
+				 <fo:table >
+					  <fo:table-column column-width="100pt"/>
+					  <fo:table-column column-width="100pt"/>
+					  <fo:table-column column-width="70pt"/>
+					 <fo:table-column column-width="70pt"/>
+					   <fo:table-column column-width="116pt"/>					  
+                      <fo:table-body>		  
+      <#if storeDetails2?has_content>
+
+           <#assign storeDetails22 = storeDetails2.entrySet()?if_exists>
+
+        <#list storeDetails22 as storeDetails222>
+					   <fo:table-row>
+				            <fo:table-cell border-style="solid">
+							  <fo:block text-align="center" >   ${storeDetails222.getKey()?if_exists?if_exists}       </fo:block>
+						   </fo:table-cell>
+						   <fo:table-cell border-style="solid">
+							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueQty")?if_exists?string("##0.000")}             </fo:block>
+						   </fo:table-cell>
+						    <fo:table-cell border-style="solid">
+							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueRate")?if_exists?string("##0.00")}         </fo:block>
+						   </fo:table-cell >
+						   <fo:table-cell border-style="solid">
+							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueAmount")?if_exists?string("##0.00")}            </fo:block>
+						   </fo:table-cell >							   
+                            </fo:table-row>
+                            </#list>
+                        </#if>
+					</fo:table-body>   
+			     	</fo:table>			 
+							   </fo:block>
+						   </fo:table-cell>
+	
+	
+	                 </fo:table-row>
+					</fo:table-body>   
+				</fo:table>	
+          </fo:block>
+    </fo:table-cell>				  
+ 
+	 
+    	  
+ 
+  </fo:table-row>
+   </#list>
+	</fo:table-body>   
+</fo:table>	
+ 
+ 
+ 
+ 
+   	 
 	       </fo:block> 	 		
 	   </fo:flow>
 	</fo:page-sequence>
-	</#if>
-	</#if>
+	
 	<#else>
 	       <fo:page-sequence master-reference="main">
 	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
