@@ -263,9 +263,16 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
 		
+		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
+			//get inventoryFacility details through productStore.
+			String  inventoryFacilityId="";
+			GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), false);
+			if(UtilValidate.isNotEmpty(productStore)){
+			inventoryFacilityId=productStore.getString("inventoryFacilityId");
+			}
 			cart.setOrderType("SALES_ORDER");
 	        cart.setIsEnableAcctg("Y");
 	        cart.setExternalId(PONumber);
@@ -273,6 +280,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			cart.setChannelType(salesChannel);
 			//cart.setBillToCustomerPartyId("GCMMF");
 			cart.setBillToCustomerPartyId(partyId);
+			cart.setFacilityId(inventoryFacilityId);//for store inventory we need this so that inventoryItem query by this orginFacilityId
 			if(UtilValidate.isNotEmpty(billToCustomer)){
 				cart.setBillToCustomerPartyId(billToCustomer);
 			}
@@ -432,6 +440,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 						productPrice.set("price", amount);
 						productPriceTaxCalc.add(productPrice);
 					}
+					
 				}
 			}
 		cart.setDefaultCheckoutOptions(dispatcher);
@@ -578,6 +587,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String modeOfDespatch = (String) request.getParameter("modeOfDespatch");
 		String salesChannelEnumId = (String) request.getParameter("salesChannelEnumId");
 		String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
+		String orderStatusId = (String) request.getParameter("orderStatusId");
+		
 		Map resultMap = FastMap.newInstance();
 		String partyIdFrom = "";
 		String shipmentId = "";
@@ -660,6 +671,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 
        			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachOrderId), false);
     			orderHeader.set("shipmentId", shipmentId);
+    			
+    			if(UtilValidate.isNotEmpty(orderStatusId)){
+    			orderHeader.set("statusId", orderStatusId);
+    			}
     			orderHeader.store();
     			
     			

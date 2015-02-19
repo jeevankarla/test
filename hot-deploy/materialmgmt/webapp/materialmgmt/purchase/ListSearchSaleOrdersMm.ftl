@@ -48,6 +48,8 @@ under the License.
         var lrNumber = $("#lrNumber").val();
         var modeOfDespatch = $("#modeOfDespatch").val();
         var shipmentTypeId = $("#shipmentTypeId").val();
+         var orderStatusId = $("#orderStatusId").val();
+        
         jQuery.each(orders, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -67,6 +69,7 @@ under the License.
     	appStr += "<input type=hidden name=lrNumber value='"+ lrNumber +"' />";
     	appStr += "<input type=hidden name=modeOfDespatch value='"+ modeOfDespatch +"' />";
     	appStr += "<input type=hidden name=shipmentTypeId value='"+ shipmentTypeId +"' />";
+    	appStr += "<input type=hidden name=orderStatusId value='"+ orderStatusId +"' />";
     	$("#processOrdersForm").append(appStr);
     	var salesChannel = '${parameters.salesChannelEnumId?if_exists}';
     	var splStr = "<input type=hidden name=salesChannelEnumId value='"+ salesChannel +"' />";
@@ -183,10 +186,12 @@ under the License.
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='DEPOT_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="fgsSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
+    		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
     	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_TR_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
+    		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
     	</#if>
     	
     	<table width="100%">
