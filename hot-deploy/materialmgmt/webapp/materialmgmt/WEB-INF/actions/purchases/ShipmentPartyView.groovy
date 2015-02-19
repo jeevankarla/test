@@ -13,7 +13,7 @@ List finalList=[];
 List conditionList=[];
 
 if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
-	if(UtilValidate.isNotEmpty(parameters.shipmentId)){
+	/*if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
 	}
 	
@@ -28,7 +28,8 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	}
 	conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.EQUALS,"MATERIAL_SHIPMENT"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	shipmentList=delegator.findList("Shipment",condition,null,UtilMisc.toList("-estimatedShipDate"),null,false);
+	shipmentList=delegator.findList("Shipment",condition,null,UtilMisc.toList("-estimatedShipDate"),null,false);*/
+	shipmentList=result.listIt;
 	shipmentList.each{shipment->
 		tempMap=[:];
 		tempMap.put("shipmentId",shipment.shipmentId);
@@ -74,3 +75,4 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	}else{
 		context.listIt=finalList;
 	}
+	
