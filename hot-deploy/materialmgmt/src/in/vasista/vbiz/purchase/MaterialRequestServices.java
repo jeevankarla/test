@@ -621,13 +621,16 @@ public class MaterialRequestServices {
 			List<GenericValue> custRequestItems = FastList.newInstance();
 			condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
 			if(statusId.equals("CRQ_ISSUED")){
-			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"), EntityOperator.OR, EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"CRQ_DRAFT")));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_INPROCESS")));
 			}
 			if(statusId.equals("CRQ_REJECTED")){
-				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_ISSUED","CRQ_COMPLETED")));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_ISSUED","CRQ_COMPLETED","CRQ_INPROCESS")));
 			}
 			if(statusId.equals("CRQ_COMPLETED")){
-				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_ISSUED")));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT","CRQ_ISSUED","CRQ_INPROCESS")));
+			}
+			if(statusId.equals("CRQ_INPROCESS")){
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT")));
 			}
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			custRequestItems = delegator.findList("CustRequestItem", cond,null,null,null,false);
@@ -636,7 +639,24 @@ public class MaterialRequestServices {
 				custRequest.set("statusId", statusId);
 				custRequest.store();
 			}
-			if((custRequestItems.size()>0) && (statusId.equals("CRQ_REJECTED"))){
+			if((custRequestItems.size()>0) && (((statusId.equals("CRQ_ISSUED")) || (statusId.equals("CRQ_REJECTED")) || (statusId.equals("CRQ_SUBMITTED"))))){
+				List<GenericValue> custRequestItemInProcess = FastList.newInstance();
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_INPROCESS"));
+				EntityCondition condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				custRequestItemInProcess = delegator.findList("CustRequestItem", condition,null,null,null,false);
+				if(custRequestItemInProcess.size()>0){
+					GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+					custRequest.set("statusId", "CRQ_INPROCESS");
+					custRequest.store();
+				}else{
+					GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+					custRequest.set("statusId", "CRQ_SUBMITTED");
+					custRequest.store();
+				}
+			}
+			/*if((custRequestItems.size()>0) && (statusId.equals("CRQ_REJECTED"))){
 				GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
 				custRequest.set("statusId", "CRQ_SUBMITTED");
 				custRequest.store();
@@ -645,7 +665,7 @@ public class MaterialRequestServices {
 				GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
 				custRequest.set("statusId", "CRQ_SUBMITTED");
 				custRequest.store();
-			}
+			}*/
 			
 			Map inputCtx = FastMap.newInstance();
 			inputCtx.put("custRequestId", custRequestId);
