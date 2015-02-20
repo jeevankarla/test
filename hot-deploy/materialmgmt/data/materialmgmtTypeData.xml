@@ -92,9 +92,12 @@
      <StatusItem description="Created" sequenceId="00" statusCode="CREATED" statusId="ENQ_CREATED" statusTypeId="ENQ_STTS"/>
      <StatusItem description="Cancelled" sequenceId="04" statusCode="CANCELLED" statusId="ENQ_CANCELLED" statusTypeId="ENQ_STTS"/>
      <StatusItem description="Completed" sequenceId="03" statusCode="COMPLETED" statusId="ENQ_COMPLETED" statusTypeId="ENQ_STTS"/>
-     
+     <StatusItem description="Ordered"  statusCode="ORDERED" statusId="ENQ_ORDERED" statusTypeId="ENQ_STTS"/>
+  
      <StatusValidChange statusId="ENQ_CREATED" statusIdTo="ENQ_CANCELLED" transitionName="Accept"/>
      <StatusValidChange statusId="ENQ_CREATED" statusIdTo="ENQ_COMPLETED" transitionName="Reject"/>
+     <StatusValidChange statusId="ENQ_ORDERED" statusIdTo="ENQ_CREATED" transitionName="Ordered"/>
+     <StatusValidChange statusId="ENQ_CREATED" statusIdTo="ENQ_ORDERED" transitionName="Created"/>
 	     
      <StatusItem description="In Enquiry" statusCode="INENQUIRY" statusId="REQ_IN_ENQUIRY" statusTypeId="REQUIREMENT_STATUS"/>
      <DataCategory categoryName="PO Document"  dataCategoryId="PO_DOCUMENT"  parentCategoryId="ROOT"/>
