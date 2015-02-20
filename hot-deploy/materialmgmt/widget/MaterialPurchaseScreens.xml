@@ -251,7 +251,7 @@
             <actions>
                 <set field="titleProperty" value="Receipts For QC"/>              
 			    <set field="tabButtonItem" value="MaterialForQCApproval" />	
-               <set field="entityName" value="ShipmentReceipt"/>
+               <set field="entityName" value="ShipmentReceiptAndShipmentReceiptRole"/>
                <!-- <entity-condition list="receiptItems" entity-name="ShipmentReceipt">
                
 					<condition-list combine="and">
