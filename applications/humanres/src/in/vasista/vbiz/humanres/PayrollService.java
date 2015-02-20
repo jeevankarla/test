@@ -3945,12 +3945,14 @@ public class PayrollService {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String partyIdFrom = null;
 	    	Timestamp fromDateStart  = null;
+	    	Timestamp thruDateEnd = null;
 	    	try {
 		        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
 	        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
 	        		Timestamp fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 	        		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 	        		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+	        		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
 	        	}
 	        }catch (GenericEntityException e) {
 	        	Debug.logError(e, module);
@@ -3960,14 +3962,17 @@ public class PayrollService {
 	    		List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
 				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+		        		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 	
 				List<GenericValue> employmentList = delegator.findList("Employment", condition, null, null, null, false);
 				if(UtilValidate.isNotEmpty(employmentList)){
-					List activeEmploymentList = EntityUtil.filterByDate(employmentList, fromDateStart);
-					if(UtilValidate.isNotEmpty(activeEmploymentList)){
-						GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
+					//List activeEmploymentList = EntityUtil.filterByDate(employmentList, fromDateStart);
+					//if(UtilValidate.isNotEmpty(activeEmploymentList)){
+						GenericValue activeEmployment = EntityUtil.getFirst(employmentList);
 						partyIdFrom = activeEmployment.getString("partyIdFrom");
-					}
+					//}
 				}
 	    	} catch (GenericEntityException e) {
 	            Debug.logError(e, module);
