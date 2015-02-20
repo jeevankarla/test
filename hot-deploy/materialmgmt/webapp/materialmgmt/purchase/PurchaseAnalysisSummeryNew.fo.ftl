@@ -410,7 +410,7 @@ language governing permissions and limitations under the License. -->
 								<fo:table-cell number-columns-spanned="6">
 									<fo:block keep-together="always" text-align="left"
 										font-size="12pt" white-space-collapse="false"
-										font-weight="bold">Analysis Code :${productCategory.description}</fo:block>
+										font-weight="bold">Primary Code :${productCategory.description} </fo:block>
 								</fo:table-cell>
 							 </fo:table-row>
           						   <#assign productDetailMap=codeIdMap.get("productDetailMap") ?if_exists>
@@ -419,15 +419,15 @@ language governing permissions and limitations under the License. -->
           						    <#list productDetailList as productDetailEach>
           						     <#assign innerProductId =productDetailEach.getKey()>
           						     <fo:table-row>
-          						     <#assign  productName="">
-			            			<#assign product = delegator.findOne("Product", {"productId" : innerProductId}, true)?if_exists/>
-			            			 <#if product?has_content>
-			            			<#assign productName =product.description>
+          						     <#assign  productPrimeryCatName="">
+          						     <#assign productPrimeryCategory = delegator.findOne("ProductCategory", {"productCategoryId" : innerProductId}, true)?if_exists/>
+			            			 <#if productPrimeryCategory?has_content>
+			            			<#assign productPrimeryCatName =productPrimeryCategory.description>
 			            			</#if>
 								<fo:table-cell number-columns-spanned="6">
 									<fo:block keep-together="always" text-align="left"
 										font-size="12pt" white-space-collapse="false"
-										font-weight="bold">Product Code :<#if product?has_content>${product.internalName}</#if>(${innerProductId})</fo:block>
+										font-weight="bold">Analysis Code :<#if productPrimeryCategory?has_content>${productPrimeryCatName?if_exists}</#if></fo:block>
 								</fo:table-cell>
 							 </fo:table-row>
           						   <#assign innerProductDetailMap =productDetailEach.getValue()>
@@ -440,7 +440,12 @@ language governing permissions and limitations under the License. -->
 										font-size="12pt" white-space-collapse="false"
 										font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>
 								</fo:table-cell>
-			            			
+		            			 <#assign  productName="">
+		            			<#if invTaxMap.get("productId")?exists>
+		            			<#assign productId=invTaxMap.get("productId")>
+		            			<#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
+		            			<#assign productName =product.description>
+		            			</#if>
 					            <fo:table-cell number-columns-spanned="2">
 									<fo:block text-align="left" font-size="11pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productName?if_exists)),35)}</fo:block>
 								</fo:table-cell>
@@ -473,7 +478,7 @@ language governing permissions and limitations under the License. -->
 												font-weight="bold"></fo:block>
 										</fo:table-cell>
 										<fo:table-cell number-columns-spanned="3">
-											<fo:block text-align="left" font-weight="normal" font-size="11pt">Product-Total</fo:block>
+											<fo:block text-align="left" font-weight="normal" font-size="11pt">Analysis Code-Total</fo:block>
 										</fo:table-cell>
 										<fo:table-cell>
 											<fo:block keep-together="always" text-align="left"
@@ -497,7 +502,7 @@ language governing permissions and limitations under the License. -->
 										font-weight="bold"></fo:block>
 								</fo:table-cell>
 								<fo:table-cell number-columns-spanned="3">
-									<fo:block text-align="left" font-weight="bold" font-size="11pt">Analysis Code-Total</fo:block>
+									<fo:block text-align="left" font-weight="bold" font-size="11pt">Primery Code-Total</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
 									<fo:block keep-together="always" text-align="left"
