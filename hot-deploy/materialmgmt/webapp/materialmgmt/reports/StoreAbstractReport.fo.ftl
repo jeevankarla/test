@@ -46,29 +46,29 @@ under the License.
 					   <fo:table-column column-width="50pt"/>
 					   <fo:table-column column-width="100pt"/>
 					   <fo:table-column column-width="50pt"/>
-					   <fo:table-column column-width="130pt"/>
-					   <fo:table-column column-width="130pt"/>
-					   <fo:table-column column-width="130pt"/>
-					   <fo:table-column column-width="130pt"/>
-					   <fo:table-column column-width="130pt"/>
-					   <fo:table-column column-width="130pt"/>
+					   <fo:table-column column-width="110pt"/>
+					   <fo:table-column column-width="150pt"/>
+					   <fo:table-column column-width="150pt"/>
+					   <fo:table-column column-width="110pt"/>
+					   <fo:table-column column-width="150pt"/>
+					   <fo:table-column column-width="110pt"/>
 					   <fo:table-column column-width="82pt"/>
 					   <fo:table-body> 
-					       <fo:table-row height="40pt">
+					       <fo:table-row height="30pt">
 					           <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left"  font-weight="bold" >ITEM CODE</fo:block>
+					                     <fo:block text-align="center" padding-before="0.6cm" font-weight="bold" >ITEM CODE</fo:block>
 					           </fo:table-cell>
 					           <fo:table-cell border-style="solid">
 					                     <fo:block text-align="center" padding-before="0.6cm" font-weight="bold"  >DESCRIPTION</fo:block>
 					           </fo:table-cell>
 					           <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left"  font-weight="bold"  >UNIT</fo:block>
+					                     <fo:block text-align="center" padding-before="0.6cm" font-weight="bold"  >UNIT</fo:block>
 					           </fo:table-cell>
 					           <fo:table-cell border-style="solid">
 					                     <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="55pt"/>
+											   <fo:table-column column-width="55pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -90,8 +90,8 @@ under the License.
                                <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="75pt"/>
+											   <fo:table-column column-width="75pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -113,8 +113,8 @@ under the License.
 					          <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="75pt"/>
+											   <fo:table-column column-width="75pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -136,8 +136,8 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="55pt"/>
+											   <fo:table-column column-width="55pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -159,8 +159,8 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					                     <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="75pt"/>
+											   <fo:table-column column-width="75pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -182,8 +182,8 @@ under the License.
                                <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="55pt"/>
+											   <fo:table-column column-width="55pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -203,7 +203,7 @@ under the License.
 										 </fo:block> 
 					           </fo:table-cell>
 					           <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left"  font-weight="bold" >REMARKS</fo:block>
+					                     <fo:block text-align="center"  font-weight="bold" padding-before="0.6cm">REMARKS</fo:block>
 					           </fo:table-cell>
 					       </fo:table-row>
 				      </fo:table-body>
@@ -214,18 +214,18 @@ under the License.
 					   <fo:table-column column-width="50pt"/>
 					   <fo:table-column column-width="100pt"/>
 					   <fo:table-column column-width="50pt"/>
-					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="65pt"/>					   
-					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="65pt"/>
-                       <fo:table-column column-width="65pt"/>
-                       <fo:table-column column-width="65pt"/>
-                       <fo:table-column column-width="65pt"/>
-                       <fo:table-column column-width="65pt"/>
+					   <fo:table-column column-width="55pt"/>
+					   <fo:table-column column-width="55pt"/>					   
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="55pt"/>
+					   <fo:table-column column-width="55pt"/>
+                       <fo:table-column column-width="75pt"/>
+                       <fo:table-column column-width="75pt"/>
+                       <fo:table-column column-width="55pt"/>
+                       <fo:table-column column-width="55pt"/>
                        <fo:table-column column-width="82pt"/> 
 					   <fo:table-body> 
 					    
@@ -233,35 +233,35 @@ under the License.
                            <#list productList as productEntry>
                            <#assign productd=productEntry.getKey()> 
                            <#assign productDetails=productEntry.getValue()>                             
-					       <fo:table-row height="40pt">
+					       <fo:table-row height="30pt">
 					            <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left" font-size="11pt" >${productDetails.get("itemCode")?if_exists}</fo:block>
+					                     <fo:block text-align="left" font-size="9pt" >${productDetails.get("itemCode")?if_exists}</fo:block>
 					           </fo:table-cell>	
                                <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left" font-size="11pt" >${productDetails.get("description")?if_exists}</fo:block>
+					                     <fo:block text-align="left" font-size="9pt" >${productDetails.get("description")?if_exists}</fo:block>
 					           </fo:table-cell>	
                                <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left"  font-size="11pt" >${productDetails.get("unit")?if_exists}</fo:block>
+					                     <fo:block text-align="left"  font-size="9pt" >${productDetails.get("unit")?if_exists}</fo:block>
 					           </fo:table-cell>
                                 <fo:table-cell border-style="solid">
-								    <fo:block text-align="right"  font-size="11pt" >${productDetails.get("openingQty")?if_exists}</fo:block>
+								    <fo:block text-align="right"  font-size="9pt" >${productDetails.get("openingQty")?if_exists}</fo:block>
 							   </fo:table-cell>
 							   <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${productDetails.get("openingTot")?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("openingTot")?if_exists}</fo:block>
 							  </fo:table-cell>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${productDetails.get("ReceiptQty")?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("ReceiptQty")?if_exists}</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${productDetails.get("ReceiptAmount")?if_exists?string("##0.0")}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("ReceiptAmount")?if_exists?string("##0.0")?if_exists}</fo:block>
 							  </fo:table-cell>
                                <#assign totQty=productDetails.get("openingQty")+productDetails.get("ReceiptQty")> 							  
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${totQty?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${totQty?if_exists}</fo:block>
 							  </fo:table-cell>
 							  <#assign totVal=productDetails.get("openingTot")+productDetails.get("ReceiptAmount")> 
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${totVal?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${totVal?if_exists}</fo:block>
 							  </fo:table-cell>
 							  <#assign temp=productDetails.get("IssueQty")>
 							  <#if temp?has_content>
@@ -270,7 +270,7 @@ under the License.
 								<#assign issQty = 0>
 							</#if>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${issQty}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${issQty}</fo:block>
 							  </fo:table-cell>
 							  <#assign amt=productDetails.get("IssueAmount")>
 							  <#if amt?has_content>
@@ -279,24 +279,24 @@ under the License.
 								<#assign issAmt = 0>
 							  </#if>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${issAmt}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${issAmt}</fo:block>
 							  </fo:table-cell>
 							  <#assign closeQty=totQty- issQty>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${closeQty?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${closeQty?if_exists}</fo:block>
 							  </fo:table-cell> 
                               <#assign closeVal=totVal- issAmt>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  >${closeVal?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${closeVal?if_exists}</fo:block>
 							  </fo:table-cell>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  ></fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ></fo:block>
 							  </fo:table-cell> 
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  ></fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ></fo:block>
 							  </fo:table-cell> 
 							  <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="11pt"  ></fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ></fo:block>
 							  </fo:table-cell> 	     				           
 					       </fo:table-row>					    
                               </#list> 
