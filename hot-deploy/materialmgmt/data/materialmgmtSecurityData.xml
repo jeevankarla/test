@@ -449,4 +449,9 @@
     <SecurityGroupPermission groupId="MM_CLOSE_INDENT"  permissionId="MM_CLOSE_INDENT"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_CLOSE_INDENT"/>
      
+    <SecurityPermission description="purchase analysis summary Report" permissionId="MMPURCHASESUMMARY_VIEW"/>
+    <SecurityGroup description="Viewing the  Purchase Analysis Summary Report!" groupId="MMPURCHSSMMRY_VIEW"/>
+    <SecurityGroupPermission groupId="MMPURCHSSMMRY_VIEW"  permissionId="MMPURCHSSMMRY_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MMPURCHSSMMRY_VIEW"/>
+     
 </entity-engine-xml>
