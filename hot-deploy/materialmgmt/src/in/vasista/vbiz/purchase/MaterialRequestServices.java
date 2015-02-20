@@ -963,6 +963,10 @@ public class MaterialRequestServices {
             while (itrIssList.hasNext()) {
                 GenericValue itrIssItem = itrIssList.next();
                 issuedQty =issuedQty.add(itrIssItem.getBigDecimal("quantity"));
+                //subtract cancelQuantity if any for the same issuance
+                if(UtilValidate.isNotEmpty(itrIssItem.getBigDecimal("cancelQuantity"))){
+                	issuedQty=issuedQty.subtract(itrIssItem.getBigDecimal("cancelQuantity"));
+                }
             }
             issuedQty=issuedQty.add(quantity);
             
