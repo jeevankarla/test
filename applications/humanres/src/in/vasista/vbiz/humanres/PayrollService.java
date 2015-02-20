@@ -5054,6 +5054,10 @@ public class PayrollService {
                		}
 	        		BigDecimal noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
+	        		if(UtilValidate.isNotEmpty(employementFromaDate) && (employementFromaDate.compareTo(timePeriodStart) >=0)){
+	        			noOfCalenderDays = UtilDateTime.getIntervalInDays(employementFromaDate, timePeriodEnd)+1;
+	        			newEntity.set("noOfCalenderDays", new BigDecimal(noOfCalenderDays));
+	        		}
 	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
 	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <=0)){
 	        			Map inputMap = FastMap.newInstance();
@@ -5066,7 +5070,9 @@ public class PayrollService {
 	    	        	if(UtilValidate.isEmpty(empEmployement)){
 	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
 	    	        	}
-	        			
+	        		}
+	        		if(UtilValidate.isNotEmpty(noOfEmployementDays) && (noOfEmployementDays.compareTo(BigDecimal.ZERO)) <= 0){
+	        			continue;
 	        		}
 	        		//Debug.log("noOfEmployementDays==========="+noOfEmployementDays);
 	        		conditionList.clear();
