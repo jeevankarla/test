@@ -253,7 +253,7 @@ under the License.
 								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("ReceiptQty")?if_exists}</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("ReceiptAmount")?if_exists?string("##0.0")}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("ReceiptAmount")?if_exists?string("##0.0")?if_exists}</fo:block>
 							  </fo:table-cell>
                                <#assign totQty=productDetails.get("openingQty")+productDetails.get("ReceiptQty")> 							  
                               <fo:table-cell border-style="solid">
