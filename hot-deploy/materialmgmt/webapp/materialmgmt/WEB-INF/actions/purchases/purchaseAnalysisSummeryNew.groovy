@@ -63,8 +63,8 @@ if(totalDays > 32){
 // Purchase abstract Sales report
 reportTypeFlag = parameters.reportTypeFlag;
 taxType=parameters.taxType;
-//get Product Catagory
-exprList=[];
+//get Product Catagory 
+/*exprList=[];
 exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
 condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
@@ -75,6 +75,19 @@ productCatMap=[:];
 productCategoryMember.each{prodCatMember ->
 	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
 }
+*/
+exprList=[];
+exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
+condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+//get product from ProductCategory
+productCategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+productCatMap=[:]
+productPrimaryCatMap=[:]
+productCategoryMember.each{prodCatMember ->
+	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
+	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.primaryParentCategoryId;
+}
+
 //Debug.log("==productCatMap="+productCatMap.size()+"==productCatMap=="+productCatMap);
 EntityListIterator invoiceItemsIter = null;
 //get KMf Units
@@ -192,7 +205,9 @@ purchaseSumInvDetaildMap=[:];
 			// get category
 			if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 				prodCategoryId=productCatMap.get(productId);
-				if(UtilValidate.isEmpty(purchasExemptProdCatMap[prodCategoryId])){
+				prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+				
+				if(UtilValidate.isEmpty(purchasExemptProdCatMap[prodPrimaryCategoryId])){
 					innerTaxCatMap=[:];
 					innerTaxCatMap["totalValue"]=invTotalVal;
 					innerTaxCatMap["taxAmount"]=0;
@@ -200,20 +215,21 @@ purchaseSumInvDetaildMap=[:];
 					invoiceList.addAll(innerItemMap);
 					innerTaxCatMap["invoiceList"]=invoiceList;
 					//inside category ProductWise starts
+					
 					productMap=[:];
-					if(UtilValidate.isEmpty(productMap[productId])){
+					if(UtilValidate.isEmpty(productMap[prodCategoryId])){
 						innerProdMap=[:];
 						innerProdMap["totalValue"]=invTotalVal;
 						innerProdMap["taxAmount"]=0;
 						prodInvItemList=[];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						productMap[productId]=innerProdMap;
+						productMap[prodCategoryId]=innerProdMap;
 					}
 					innerTaxCatMap["productDetailMap"]=productMap;
-					purchasExemptProdCatMap[prodCategoryId]=innerTaxCatMap;
-				}else if(UtilValidate.isNotEmpty(purchasExemptProdCatMap[prodCategoryId])){
-					Map innerTaxCatMap=purchasExemptProdCatMap[prodCategoryId];
+					purchasExemptProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+				}else if(UtilValidate.isNotEmpty(purchasExemptProdCatMap[prodPrimaryCategoryId])){
+					Map innerTaxCatMap=purchasExemptProdCatMap[prodPrimaryCategoryId];
 					innerTaxCatMap["totalValue"]+=invTotalVal;
 					innerTaxCatMap["taxAmount"]+=0;
 					invoiceList=innerTaxCatMap["invoiceList"];
@@ -221,26 +237,26 @@ purchaseSumInvDetaildMap=[:];
 					innerTaxCatMap["invoiceList"]=invoiceList;
 					//update proddetailsMap
 					updateProductMap=innerTaxCatMap["productDetailMap"];
-					if(UtilValidate.isEmpty(updateProductMap[productId])){
+					if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
 						innerProdMap=[:];
 						innerProdMap["totalValue"]=invTotalVal;
 						innerProdMap["taxAmount"]=0;
 						prodInvItemList=[];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[productId]=innerProdMap;
+						updateProductMap[prodCategoryId]=innerProdMap;
 					}else{
-					innerProdMap=updateProductMap[productId];
+					innerProdMap=updateProductMap[prodCategoryId];
 					innerProdMap["totalValue"]+=invTotalVal;
 					innerProdMap["taxAmount"]+=0;
 					prodInvItemList=innerProdMap["prodInvItemList"];
 					prodInvItemList.addAll(innerItemMap);
 					innerProdMap["prodInvItemList"]=prodInvItemList;
-					updateProductMap[productId]=innerProdMap;
+					updateProductMap[prodCategoryId]=innerProdMap;
 					}
 					innerTaxCatMap["productDetailMap"]=updateProductMap;
 					
-					purchasExemptProdCatMap[prodCategoryId]=innerTaxCatMap;
+					purchasExemptProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
 				}
 			}
 			//category ends here
@@ -310,7 +326,8 @@ purchaseSumInvDetaildMap=[:];
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
-					if(UtilValidate.isEmpty(purchaseCstProdCatMap[prodCategoryId])){
+					prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+					if(UtilValidate.isEmpty(purchaseCstProdCatMap[prodPrimaryCategoryId])){
 						innerTaxCatMap=[:];
 						innerTaxCatMap["totalValue"]=invTotalVal;
 						innerTaxCatMap["taxAmount"]=cstRevenue;
@@ -319,20 +336,20 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//inside category ProductWise starts
 						productMap=[:];
-						if(UtilValidate.isEmpty(productMap[productId])){
+						if(UtilValidate.isEmpty(productMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							productMap[productId]=innerProdMap;
+							productMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=productMap;
 						
-						purchaseCstProdCatMap[prodCategoryId]=innerTaxCatMap;
-					}else if(UtilValidate.isNotEmpty(purchaseCstProdCatMap[prodCategoryId])){
-						Map innerTaxCatMap=purchaseCstProdCatMap[prodCategoryId];
+						purchaseCstProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+					}else if(UtilValidate.isNotEmpty(purchaseCstProdCatMap[prodPrimaryCategoryId])){
+						Map innerTaxCatMap=purchaseCstProdCatMap[prodPrimaryCategoryId];
 						innerTaxCatMap["totalValue"]+=invTotalVal;
 						innerTaxCatMap["taxAmount"]+=cstRevenue;
 						invoiceList=innerTaxCatMap["invoiceList"];
@@ -340,25 +357,25 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//update proddetailsMap
 						updateProductMap=innerTaxCatMap["productDetailMap"];
-						if(UtilValidate.isEmpty(updateProductMap[productId])){
+						if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							updateProductMap[productId]=innerProdMap;
+							updateProductMap[prodCategoryId]=innerProdMap;
 						}else{
-						innerProdMap=updateProductMap[productId];
+						innerProdMap=updateProductMap[prodCategoryId];
 						innerProdMap["totalValue"]+=invTotalVal;
 						innerProdMap["taxAmount"]+=0;
 						prodInvItemList=innerProdMap["prodInvItemList"];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[productId]=innerProdMap;
+						updateProductMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=updateProductMap;
-						purchaseCstProdCatMap[prodCategoryId]=innerTaxCatMap;
+						purchaseCstProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
 					}
 				}
 				//category ends here
@@ -439,7 +456,8 @@ purchaseSumInvDetaildMap=[:];
 			// get category
 			if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 				prodCategoryId=productCatMap.get(productId);
-				if(UtilValidate.isEmpty(purchasDiselExProdCatMap[prodCategoryId])){
+				prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+				if(UtilValidate.isEmpty(purchasDiselExProdCatMap[prodPrimaryCategoryId])){
 					innerTaxCatMap=[:];
 					innerTaxCatMap["totalValue"]=invTotalVal;
 					innerTaxCatMap["taxAmount"]=0;
@@ -448,19 +466,19 @@ purchaseSumInvDetaildMap=[:];
 					innerTaxCatMap["invoiceList"]=invoiceList;
 					//inside category ProductWise starts
 					productMap=[:];
-					if(UtilValidate.isEmpty(productMap[productId])){
+					if(UtilValidate.isEmpty(productMap[prodCategoryId])){
 						innerProdMap=[:];
 						innerProdMap["totalValue"]=invTotalVal;
 						innerProdMap["taxAmount"]=0;
 						prodInvItemList=[];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						productMap[productId]=innerProdMap;
+						productMap[prodCategoryId]=innerProdMap;
 					}
 					innerTaxCatMap["productDetailMap"]=productMap;
-					purchasDiselExProdCatMap[prodCategoryId]=innerTaxCatMap;
-				}else if(UtilValidate.isNotEmpty(purchasExemptProdCatMap[prodCategoryId])){
-					Map innerTaxCatMap=purchasDiselExProdCatMap[prodCategoryId];
+					purchasDiselExProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+				}else if(UtilValidate.isNotEmpty(purchasDiselExProdCatMap[prodPrimaryCategoryId])){
+					Map innerTaxCatMap=purchasDiselExProdCatMap[prodPrimaryCategoryId];
 					innerTaxCatMap["totalValue"]+=invTotalVal;
 					innerTaxCatMap["taxAmount"]+=0;
 					invoiceList=innerTaxCatMap["invoiceList"];
@@ -468,26 +486,26 @@ purchaseSumInvDetaildMap=[:];
 					innerTaxCatMap["invoiceList"]=invoiceList;
 					//update proddetailsMap
 					updateProductMap=innerTaxCatMap["productDetailMap"];
-					if(UtilValidate.isEmpty(updateProductMap[productId])){
+					if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
 						innerProdMap=[:];
 						innerProdMap["totalValue"]=invTotalVal;
 						innerProdMap["taxAmount"]=0;
 						prodInvItemList=[];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[productId]=innerProdMap;
+						updateProductMap[prodCategoryId]=innerProdMap;
 					}else{
-					innerProdMap=updateProductMap[productId];
+					innerProdMap=updateProductMap[prodCategoryId];
 					innerProdMap["totalValue"]+=invTotalVal;
 					innerProdMap["taxAmount"]+=0;
 					prodInvItemList=innerProdMap["prodInvItemList"];
 					prodInvItemList.addAll(innerItemMap);
 					innerProdMap["prodInvItemList"]=prodInvItemList;
-					updateProductMap[productId]=innerProdMap;
+					updateProductMap[prodCategoryId]=innerProdMap;
 					}
 					innerTaxCatMap["productDetailMap"]=updateProductMap;
 				   //productWise update ends
-					purchasDiselExProdCatMap[prodCategoryId]=innerTaxCatMap;
+					purchasDiselExProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
 				}
 			}
 			//category ends here
@@ -559,9 +577,11 @@ purchaseSumInvDetaildMap=[:];
 				innerItemMap["taxAmount"]=cstRevenue;
 				purchasDiselCSTInvList.addAll(innerItemMap);
 				// get category
+				
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
-					if(UtilValidate.isEmpty(purchasDiselCSTProdCatMap[prodCategoryId])){
+					prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+					if(UtilValidate.isEmpty(purchasDiselCSTProdCatMap[prodPrimaryCategoryId])){
 						innerTaxCatMap=[:];
 						innerTaxCatMap["totalValue"]=invTotalVal;
 						innerTaxCatMap["taxAmount"]=cstRevenue;
@@ -570,19 +590,19 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//inside category ProductWise starts
 						productMap=[:];
-						if(UtilValidate.isEmpty(productMap[productId])){
+						if(UtilValidate.isEmpty(productMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							productMap[productId]=innerProdMap;
+							productMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=productMap;
-						purchasDiselCSTProdCatMap[prodCategoryId]=innerTaxCatMap;
-					}else if(UtilValidate.isNotEmpty(purchasDiselCSTProdCatMap[prodCategoryId])){
-						Map innerTaxCatMap=purchasDiselCSTProdCatMap[prodCategoryId];
+						purchasDiselCSTProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+					}else if(UtilValidate.isNotEmpty(purchasDiselCSTProdCatMap[prodPrimaryCategoryId])){
+						Map innerTaxCatMap=purchasDiselCSTProdCatMap[prodPrimaryCategoryId];
 						innerTaxCatMap["totalValue"]+=invTotalVal;
 						innerTaxCatMap["taxAmount"]+=cstRevenue;
 						invoiceList=innerTaxCatMap["invoiceList"];
@@ -590,26 +610,26 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//update proddetailsMap
 						updateProductMap=innerTaxCatMap["productDetailMap"];
-						if(UtilValidate.isEmpty(updateProductMap[productId])){
+						if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							updateProductMap[productId]=innerProdMap;
+							updateProductMap[prodCategoryId]=innerProdMap;
 						}else{
-						innerProdMap=updateProductMap[productId];
+						innerProdMap=updateProductMap[prodCategoryId];
 						innerProdMap["totalValue"]+=invTotalVal;
 						innerProdMap["taxAmount"]+=0;
 						prodInvItemList=innerProdMap["prodInvItemList"];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[productId]=innerProdMap;
+						updateProductMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=updateProductMap;
 					   //productWise update ends
-						purchasDiselCSTProdCatMap[prodCategoryId]=innerTaxCatMap;
+						purchasDiselCSTProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
 					}
 				}
 				//category ends here
@@ -668,6 +688,7 @@ purchaseSumInvDetaildMap=[:];
 				
 				//preparing Another Map here for Category
 				productId=invoiceItem.productId;
+				
 				innerItemMap=[:];
 				innerItemMap["invoiceDate"]=invoiceItem.invoiceDate;
 				innerItemMap["invoiceId"]=invoiceItem.invoiceId;
@@ -682,7 +703,8 @@ purchaseSumInvDetaildMap=[:];
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
-					if(UtilValidate.isEmpty(purchasInterStateProdCatMap[prodCategoryId])){
+					prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+					if(UtilValidate.isEmpty(purchasInterStateProdCatMap[prodPrimaryCategoryId])){
 						innerTaxCatMap=[:];
 						innerTaxCatMap["totalValue"]=invTotalVal;
 						innerTaxCatMap["taxAmount"]=0;
@@ -691,19 +713,19 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//inside category ProductWise starts
 						productMap=[:];
-						if(UtilValidate.isEmpty(productMap[productId])){
+						if(UtilValidate.isEmpty(productMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							productMap[productId]=innerProdMap;
+							productMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=productMap;
-						purchasInterStateProdCatMap[prodCategoryId]=innerTaxCatMap;
-					}else if(UtilValidate.isNotEmpty(purchasInterStateProdCatMap[prodCategoryId])){
-						Map innerTaxCatMap=purchasInterStateProdCatMap[prodCategoryId];
+						purchasInterStateProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+					}else if(UtilValidate.isNotEmpty(purchasInterStateProdCatMap[prodPrimaryCategoryId])){
+						Map innerTaxCatMap=purchasInterStateProdCatMap[prodPrimaryCategoryId];
 						innerTaxCatMap["totalValue"]+=invTotalVal;
 						innerTaxCatMap["taxAmount"]+=0;
 						invoiceList=innerTaxCatMap["invoiceList"];
@@ -711,26 +733,26 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//update proddetailsMap
 						updateProductMap=innerTaxCatMap["productDetailMap"];
-						if(UtilValidate.isEmpty(updateProductMap[productId])){
+						if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							updateProductMap[productId]=innerProdMap;
+							updateProductMap[prodCategoryId]=innerProdMap;
 						}else{
-						innerProdMap=updateProductMap[productId];
+						innerProdMap=updateProductMap[prodCategoryId];
 						innerProdMap["totalValue"]+=invTotalVal;
 						innerProdMap["taxAmount"]+=0;
 						prodInvItemList=innerProdMap["prodInvItemList"];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[productId]=innerProdMap;
+						updateProductMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=updateProductMap;
 					   //productWise update ends
-						purchasInterStateProdCatMap[prodCategoryId]=innerTaxCatMap;
+						purchasInterStateProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
 					}
 				}
 				//category ends here
@@ -752,8 +774,8 @@ purchaseSumInvDetaildMap=[:];
 				Debug.logWarning(e, module);
 			}
 		}
-		//kmf Unions
-		purchaseUnionWsdMap=[:];
+		//kmf Unions 
+	    purchaseUnionWsdMap=[:];
 		purchaseUnionWsdMap["DR"]=BigDecimal.ZERO;
 		purchaseUnionWsdMap["CR"]=BigDecimal.ZERO;
 		purchaseUnionWsdMap["total"]=BigDecimal.ZERO;
@@ -802,7 +824,8 @@ purchaseSumInvDetaildMap=[:];
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
-					if(UtilValidate.isEmpty(purchaseUnionProdCatMap[prodCategoryId])){
+					prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+					if(UtilValidate.isEmpty(purchaseUnionProdCatMap[prodPrimaryCategoryId])){
 						innerTaxCatMap=[:];
 						innerTaxCatMap["totalValue"]=invTotalVal;
 						innerTaxCatMap["taxAmount"]=0;
@@ -812,20 +835,20 @@ purchaseSumInvDetaildMap=[:];
 						
 						//inside category ProductWise starts
 						productMap=[:];
-						if(UtilValidate.isEmpty(productMap[productId])){
+						if(UtilValidate.isEmpty(productMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							productMap[productId]=innerProdMap;
+							productMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=productMap;
 						
-						purchaseUnionProdCatMap[prodCategoryId]=innerTaxCatMap;
-					}else if(UtilValidate.isNotEmpty(purchaseUnionProdCatMap[prodCategoryId])){
-						Map innerTaxCatMap=purchaseUnionProdCatMap[prodCategoryId];
+						purchaseUnionProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+					}else if(UtilValidate.isNotEmpty(purchaseUnionProdCatMap[prodPrimaryCategoryId])){
+						Map innerTaxCatMap=purchaseUnionProdCatMap[prodPrimaryCategoryId];
 						innerTaxCatMap["totalValue"]+=invTotalVal;
 						innerTaxCatMap["taxAmount"]+=0;
 						invoiceList=innerTaxCatMap["invoiceList"];
@@ -833,26 +856,26 @@ purchaseSumInvDetaildMap=[:];
 						innerTaxCatMap["invoiceList"]=invoiceList;
 						//update proddetailsMap
 						updateProductMap=innerTaxCatMap["productDetailMap"];
-						if(UtilValidate.isEmpty(updateProductMap[productId])){
+						if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
 							innerProdMap=[:];
 							innerProdMap["totalValue"]=invTotalVal;
 							innerProdMap["taxAmount"]=0;
 							prodInvItemList=[];
 							prodInvItemList.addAll(innerItemMap);
 							innerProdMap["prodInvItemList"]=prodInvItemList;
-							updateProductMap[productId]=innerProdMap;
+							updateProductMap[prodCategoryId]=innerProdMap;
 						}else{
-						innerProdMap=updateProductMap[productId];
+						innerProdMap=updateProductMap[prodCategoryId];
 						innerProdMap["totalValue"]+=invTotalVal;
 						innerProdMap["taxAmount"]+=0;
 						prodInvItemList=innerProdMap["prodInvItemList"];
 						prodInvItemList.addAll(innerItemMap);
 						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[productId]=innerProdMap;
+						updateProductMap[prodCategoryId]=innerProdMap;
 						}
 						innerTaxCatMap["productDetailMap"]=updateProductMap;
 					   //productWise update ends
-						purchaseUnionProdCatMap[prodCategoryId]=innerTaxCatMap;
+						purchaseUnionProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
 					}
 				}
 				//category ends here
@@ -900,6 +923,10 @@ purchaseSumInvDetaildMap=[:];
 		purchaseSumInvDetaildMap["Purchase-14.5%VAT"]=tax14pt5InvList;
 		prchaseCategorySummeryMap["Purchase-14.5%VAT"]=purchaseAt14pt5Map;
 		purchaseSumCatDetaildMap["Purchase-14.5%VAT"]=tax14pt5CatMap;
+		
+		/*Debug.log("==purchaseAt14pt5Map===="+purchaseAt14pt5Map);
+		Debug.log("==tax14pt5CatMap===="+tax14pt5CatMap);*/
+		
 		purchaseAt5pt5Map=[:];
 		purchaseAt5pt5Map["DR"]=BigDecimal.ZERO;
 		purchaseAt5pt5Map["CR"]=BigDecimal.ZERO;
@@ -1014,7 +1041,7 @@ purchaseSumInvDetaildMap=[:];
 			}
 		}
 		//Debug.log("=purchaseSumInvDetaildMap####=="+purchaseSumInvDetaildMap);
-	
+		
 		context.prchaseCategorySummeryMap = prchaseCategorySummeryMap;
 		context.prchaseCategoryDetaildMap = prchaseCategoryDetaildMap;
 		context.purchaseSumCatDetaildMap = purchaseSumCatDetaildMap;
