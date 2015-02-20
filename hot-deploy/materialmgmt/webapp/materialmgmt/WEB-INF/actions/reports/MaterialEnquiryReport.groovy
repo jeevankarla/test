@@ -48,19 +48,19 @@ if (companyFaxNumber) {
 tinDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , mailIdConfig.propertyValue)  , null, null, null, false );
 compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
 compantTinDetail = EntityUtil.getFirst(compantTinDetails);
-if(UtilValidate.isNotEmpty(compantTinDetail.idValue)){
+if(UtilValidate.isNotEmpty(compantTinDetail) && UtilValidate.isNotEmpty(compantTinDetail.idValue)){
    companyTinNumber=compantTinDetail.idValue;
    context.companyTinNumber=companyTinNumber;   
 }
 compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "KST_NUMBER"));
 compantTinDetail = EntityUtil.getFirst(compantTinDetails);
-if(UtilValidate.isNotEmpty(compantTinDetail.idValue)){
+if(UtilValidate.isNotEmpty(compantTinDetail) && UtilValidate.isNotEmpty(compantTinDetail.idValue)){
    kstNumber=compantTinDetail.idValue;
    context.kstNumber=kstNumber;   
 }
 compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
 compantTinDetail = EntityUtil.getFirst(compantTinDetails);
-if(UtilValidate.isNotEmpty(compantTinDetail.idValue)){
+if(UtilValidate.isNotEmpty(compantTinDetail) && UtilValidate.isNotEmpty(compantTinDetail.idValue)){
    cstNumber=compantTinDetail.idValue;
    context.cstNumber=cstNumber;   
 }
