@@ -2172,4 +2172,21 @@ under the License.
       </view-link>
     </view-entity>
     
+    <view-entity entity-name="OrderAdjustmentBillingAndInvoice" package-name="org.ofbiz.order.order" title="Order Adjustment Billing And Invoice Entity">
+        <member-entity entity-alias="OAB" entity-name="OrderAdjustmentBilling"/>
+        <member-entity entity-alias="INV" entity-name="Invoice"/> 
+        <alias entity-alias="OAB" name="orderAdjustmentId"/>
+        <alias entity-alias="OAB"  name="invoiceId"/>
+        <alias entity-alias="OAB"  name="invoiceItemSeqId"/>
+        <alias entity-alias="OAB"  name="amount"/>
+        <alias entity-alias="INV" name="invoiceStatusId" field="statusId"/>
+	    <alias entity-alias="INV" name="partyId"/>
+	     <view-link entity-alias="OAB" rel-entity-alias="INV">
+	      <key-map field-name="invoiceId"/>
+	    </view-link>
+        <relation type="one-nofk" rel-entity-name="Invoice" >
+	        <key-map field-name="invoiceId"/>
+	    </relation> 
+    </view-entity> 
 </entitymodel>
+

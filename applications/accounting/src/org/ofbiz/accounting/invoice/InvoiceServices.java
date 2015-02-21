@@ -502,7 +502,7 @@ public class InvoiceServices {
                         Debug.logError(e, errMsg, module);
                         return ServiceUtil.returnError(errMsg);
                     }
-
+                
                     // If the absolute invoiced amount >= the abs of the adjustment amount, the full amount has already been invoiced,
                     //  so skip this adjustment
                     if (adj.get("amount") == null) { // JLR 17/4/7 : fix a bug coming from POS in case of use of a discount (on item(s) or sale, item(s) here) and a cash amount higher than total (hence issuing change)
@@ -581,7 +581,7 @@ public class InvoiceServices {
                         if (ServiceUtil.isError(createInvoiceItemAdjResult)) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceItemFromOrder",locale), null, null, createInvoiceItemAdjResult);
                         }
-
+                       
                         // Create the OrderAdjustmentBilling record
                         Map<String, Object> createOrderAdjustmentBillingContext = FastMap.newInstance();
                         createOrderAdjustmentBillingContext.put("orderAdjustmentId", adj.getString("orderAdjustmentId"));
@@ -622,6 +622,7 @@ public class InvoiceServices {
             Map<GenericValue, BigDecimal> taxAdjustments = FastMap.newInstance();
 
             List<GenericValue> headerAdjustments = orh.getOrderHeaderAdjustments();
+           
             for (GenericValue adj : headerAdjustments) {
 
                 // Check against OrderAdjustmentBilling to see how much of this adjustment has already been invoiced
@@ -661,6 +662,7 @@ public class InvoiceServices {
                     invoiceItemSeqNum++;
                     invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, INVOICE_ITEM_SEQUENCE_ID_DIGITS);
                 }
+                
             }
 
             // next do the shipping adjustments.  Note that we do not want to add these to the invoiceSubTotal or orderSubTotal for pro-rating tax later, as that would cause
@@ -1176,7 +1178,6 @@ public class InvoiceServices {
                         Debug.logError(e, errMsg, module);
                         return ServiceUtil.returnError(errMsg);
                     }
-
                     // If the absolute invoiced amount >= the abs of the adjustment amount, the full amount has already been invoiced,
                     //  so skip this adjustment
                     if (adj.get("amount") == null) { // JLR 17/4/7 : fix a bug coming from POS in case of use of a discount (on item(s) or sale, item(s) here) and a cash amount higher than total (hence issuing change)
@@ -3794,7 +3795,10 @@ public class InvoiceServices {
         BigDecimal invoicedTotal = ZERO;
         List<GenericValue> invoicedAdjustments = null;
         try {
-            invoicedAdjustments = delegator.findByAnd("OrderAdjustmentBilling", UtilMisc.toMap("orderAdjustmentId", orderAdjustment.getString("orderAdjustmentId")));
+           // invoicedAdjustments = delegator.findByAnd("OrderAdjustmentBilling", UtilMisc.toMap("orderAdjustmentId", orderAdjustment.getString("orderAdjustmentId")));
+            invoicedAdjustments = delegator.findByAnd("OrderAdjustmentBillingAndInvoice", UtilMisc.toMap("orderAdjustmentId", orderAdjustment.getString("orderAdjustmentId")));
+            //To skipping any adjustment in canceled status
+            invoicedAdjustments = EntityUtil.filterByCondition(invoicedAdjustments, EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
         } catch (GenericEntityException e) {
             String errMsg = UtilProperties.getMessage(resource, "AccountingTroubleCallingCalculateInvoicedAdjustmentTotalService" + ": " + e.getMessage(), locale);
             Debug.logError(e, errMsg, module);
