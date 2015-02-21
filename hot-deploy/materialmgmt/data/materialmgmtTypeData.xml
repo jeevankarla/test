@@ -175,4 +175,7 @@
  <TenantConfiguration  description="Send CC MailId Configuration For EnquiryEmail"  propertyName="sendCcMailId" propertyValue="vbiz@vasista.in,vbiz@vasista.in" propertyTypeEnumId="PURCHASE_OR_STORES" />
  <TenantConfiguration  description="Purchase Department configaretions"  propertyName="PURCHASEDEPT" propertyValue="Company" propertyTypeEnumId="PURCHASE_OR_STORES" />
  
+ 
+  <EnumerationType  description="Product Attribute Type" enumTypeId="PROD_ATTRIBUTE_TYPE"/>
+  <Enumeration description="Ledger Folio Number" enumId="LEDGERFOLIONO" enumTypeId="PROD_ATTRIBUTE_TYPE"/>
 </entity-engine-xml>
