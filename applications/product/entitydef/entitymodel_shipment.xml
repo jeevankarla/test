@@ -485,7 +485,15 @@ under the License.
         <key-map field-name="inventoryItemId"/>
       </view-link>
     </view-entity>
-
+    <view-entity entity-name="ShipmentReceiptAndShipmentReceiptRole" package-name="org.ofbiz.shipment.issuance">
+        <member-entity entity-alias="SR" entity-name="ShipmentReceipt"/>
+        <member-entity entity-alias="SRR" entity-name="ShipmentReceiptRole"/>
+        <alias-all entity-alias="SR"/>
+        <alias-all entity-alias="SRR"/>
+        <view-link entity-alias="SR" rel-entity-alias="SRR">
+        <key-map field-name="receiptId"/>
+        </view-link>
+    </view-entity>
   <!-- ========================================================= -->
   <!-- org.ofbiz.shipment.shipment -->
   <!-- ========================================================= -->

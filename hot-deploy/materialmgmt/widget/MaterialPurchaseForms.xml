@@ -299,6 +299,7 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
     	<field name="shipmentId"><text-find></text-find></field>
+    	<field name="partyId" title ="Department"><text-find></text-find></field>
     	<field name="datetimeReceived" ><date-find type="timestamp"/></field>
     	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -332,6 +333,9 @@
       		<display/>
       	</field>
         <field name="datetimeReceived" title="Received Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="partyId" title ="Department">
+      		<display/>
+      	</field>
         <field name="productId" title="Name [Code][UOM]"><display-entity entity-name="Product" description="${productName} - [ ${productId} ][${dec}] "/></field>
         <field name="shipmentId"><display/></field>
       <!--   <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field> -->
