@@ -948,7 +948,6 @@ public class MaterialRequestServices {
 		BigDecimal quantity = (BigDecimal) context.get("quantity");
 		String shipmentId = (String) context.get("shipmentId");
 		BigDecimal requestedQuantity = BigDecimal.ZERO;
-		
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		GenericValue custRequestItem=null;
 		Map result = ServiceUtil.returnSuccess();
@@ -978,8 +977,7 @@ public class MaterialRequestServices {
 				filterIssuenceReq.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 			}*/
 			EntityCondition filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
-			List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, UtilMisc.toSet("quantity"), UtilMisc.toList("-issuedDateTime"), null, false);
-			
+			List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, null, UtilMisc.toList("-issuedDateTime"), null, false);
 			Iterator<GenericValue> itrIssList = itemIssuanceList.iterator();
             while (itrIssList.hasNext()) {
                 GenericValue itrIssItem = itrIssList.next();
@@ -990,7 +988,6 @@ public class MaterialRequestServices {
                 }
             }
             issuedQty=issuedQty.add(quantity);
-            
 			/*Create Item Issuance*/
 			Map itemIssueCtx = FastMap.newInstance();
 			itemIssueCtx.put("custRequestId", custRequestId);

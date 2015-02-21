@@ -291,7 +291,7 @@
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="CATALOG_VIEW"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="CATALOG_CREATE"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="CATALOG_UPDATE"/>
-    
+    <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="ORDERMGR_CREATE"/>
    
     
     <SecurityPermission description="Create Purchase Order" permissionId="MM_CREATE_PO"/>

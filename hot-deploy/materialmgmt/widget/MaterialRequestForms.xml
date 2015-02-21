@@ -802,6 +802,7 @@
         </actions>
          <field name="productId" title="productId"><display/></field>
          <field name="quantity" title="Quantity"><display/></field>
+         <field name="cancelQuantity" title="Cancled Quantity"><display/></field>
         <field name="issuedDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issuedDateTime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"></display></field>
        <field name="issuedByUserLoginId" title="IssuedByUserLoginId"><display/></field>
     </form>
