@@ -185,4 +185,7 @@
  <RoleType  description="Un-Registered Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="UN_REGISTERED_VENDOR"/> 
  
  
+ 
+  <EnumerationType  description="Product Attribute Type" enumTypeId="PROD_ATTRIBUTE_TYPE"/>
+  <Enumeration description="Ledger Folio Number" enumId="LEDGERFOLIONO" enumTypeId="PROD_ATTRIBUTE_TYPE"/>
 </entity-engine-xml>
