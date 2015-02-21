@@ -3834,4 +3834,40 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		result = ServiceUtil.returnSuccess("Order"+orderId+" Suspended sucessfully");
 		return result;
 	}
+	public static Map<String, Object> shipmentSendForQC(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusIdTo");
+		String shipmentId = (String) context.get("shipmentId");
+		String partyId = (String) context.get("partyId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_RECEIVED"));
+			List<GenericValue> shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(shipmentReceipts)){
+				for(GenericValue receipt:shipmentReceipts){
+					Map inputMap = FastMap.newInstance();
+		        	inputMap.put("userLogin", userLogin);
+		        	inputMap.put("partyId", partyId);
+		        	inputMap.put("statusIdTo", statusId);
+		        	inputMap.put("receiptId", receipt.get("receiptId"));
+
+		        	Map	resultReceipt = dispatcher.runSync("sendReceiptQtyForQC", inputMap);
+		        	if(ServiceUtil.isError(resultReceipt)){
+		        		Debug.logError("Error While Sending Receipt to QC", module);
+		  	  			return ServiceUtil.returnError("Error While Sending Receipt to QC"+receipt.get("receiptId"));
+		        	}
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result = ServiceUtil.returnSuccess("GRN no: "+shipmentId+" Send For Quality Check ");
+		return result;
+	}
 }

@@ -247,6 +247,20 @@
         		</condition-list>
         	</entity-condition>
         	<set field="partyId" value="${orderRoleList[0].partyId}"/> -->
+        	<entity-condition entity-name="ShipmentReceipt" list="shipmentReceiptList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId" />
+        			<condition-expr field-name="statusId" operator="equals" value="SR_RECEIVED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="shipmentReceiptSize" value="${groovy: shipmentReceiptList.size();}"/>
+        	<entity-condition entity-name="ShipmentReceipt" list="invoiceReceiptList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId" />
+        			<condition-expr field-name="statusId" operator="equals" value="SR_ACCEPTED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="invoiceReceiptSize" value="${groovy: invoiceReceiptList.size();}"/>
         </row-actions>
       	<field name="shipmentId" widget-style="buttontext h3" title="GRN Shipment Id">
       		<hyperlink target="MaterialShipmentOverview" description="${shipmentId}" target-window="_blank" >
@@ -286,7 +300,10 @@
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
-        <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+        <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Send to QC" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
+        </field>
+        <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
             <hyperlink target="MaterialInvoiceInit" description="Invoice">
                 <parameter param-name="shipmentId"/>
             </hyperlink>

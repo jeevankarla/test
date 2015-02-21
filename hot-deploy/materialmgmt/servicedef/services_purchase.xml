@@ -238,7 +238,12 @@
         <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
-    
+    <service name="shipmentSendForQC" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="shipmentSendForQC">
+        <description>Shipment For Quality Control Check</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="suspendPO" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="suspendPO">
         <description>Suspend PO</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
