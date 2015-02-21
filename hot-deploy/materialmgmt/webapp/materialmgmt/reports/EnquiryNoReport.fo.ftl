@@ -41,7 +41,7 @@ under the License.
               <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>                 
                 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    ENQUIRYSEQUENCE NO.: ${enquirySequenceNo?if_exists}       </fo:block>	
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    Enquiry Sequence No: ${enquirySequenceNo?if_exists}       </fo:block>	
 				   <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
 	                     <fo:table-column column-width="70pt"/>
@@ -148,9 +148,17 @@ under the License.
 					      <fo:table-column column-width="140pt"/>
 					      </#list> 					                					      
 					          <fo:table-body>
+					          		<fo:table-row border-style="solid">
+					          		<fo:table-cell border-style="solid">
+					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >TERMS</fo:block>
+					                  </fo:table-cell>
+					                  <fo:table-cell >
+					                      <fo:block text-align="right" font-weight="bold" font-size="11pt" >VENDOR NAME</fo:block>
+					                  </fo:table-cell>
+					          		</fo:table-row>
 					              <fo:table-row>
 					                  <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >VENDOR NAME</fo:block>
+					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" ></fo:block>
 					                  </fo:table-cell>	                                      				                  
     								  <#list partyDetList as partyNameList>
     								  <fo:table-cell border-style="solid">
