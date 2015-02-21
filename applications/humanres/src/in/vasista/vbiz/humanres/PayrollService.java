@@ -3962,11 +3962,11 @@ public class PayrollService {
 	    		List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
 				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
-				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd));
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-		        		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
+			    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart)));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 	
-				List<GenericValue> employmentList = delegator.findList("Employment", condition, null, null, null, false);
+				List<GenericValue> employmentList = delegator.findList("Employment", condition, null, UtilMisc.toList("fromDate"), null, false);
 				if(UtilValidate.isNotEmpty(employmentList)){
 					//List activeEmploymentList = EntityUtil.filterByDate(employmentList, fromDateStart);
 					//if(UtilValidate.isNotEmpty(activeEmploymentList)){
