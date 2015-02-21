@@ -41,7 +41,7 @@
             <link target="stockPosition">
             </link>
         	</menu-item>
-        	<menu-item name="searchMaterial" title="Search Material">
+        	<menu-item name="searchMaterial" title="Search Master">
             <link target="searchMaterial">
             </link>
         	</menu-item>
@@ -512,5 +512,36 @@
         	<link target="editQuot"/>
         </menu-item>
       </menu>
-      
+      <menu name="createNewVendor" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+       <menu-item name="searchMaterial" title="Search Master">
+            <link target="searchMaterial"/>
+        </menu-item>
+        <menu-item name="findVendor" title="Search Vendor">
+        <condition>
+	        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
+	    </condition>
+            <link target="findVendor"/>
+        </menu-item>
+      </menu>
+      <menu name="newPartyIdentification">
+        <menu-item name="new" title="${uiLabelMap.CommonNew}">
+            <link target="viewidentifications">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+      <menu name="personUpdate">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="editperson">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="groupUpdate">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="editpartygroup">
+                <parameter param-name="partyId" from-field="party.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
 </menus>

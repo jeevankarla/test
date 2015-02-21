@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="VendorId">
+      <value xml:lang="en">Vendor Id</value>
+    </property>
+    <property key="ContactInformation">
+        <value xml:lang="en">Contact Information</value>
+    </property>
+    <property key="ContactNumber">
+        <value xml:lang="en">Contact Number</value>
+    </property>
+    <property key="AreaCode">
+        <value xml:lang="en">Area Code</value>
+    </property>
+     <property key="CountryCode">
+        <value xml:lang="en">Country Code</value>
+    </property>
+     <property key="PostalCode">
+        <value xml:lang="en">Postal Code</value>
+    </property>
+    <property key="GroupName">
+    <value xml:lang="en">Group Name</value>
+    </property>
+    <property key="RoleType">
+    <value xml:lang="en">Role Type</value>
+    </property>
+    <property key="PostalCode">
+        <value xml:lang="en">Postal Code</value>
+    </property>
+    <property key="EmailAddress">
+        <value xml:lang="en">Email Addres</value>
+    </property>
+    <property key="CountryCode">
+        <value xml:lang="en">Country Code</value>
+    </property>
+     <property key="MobileNumber">
+        <value xml:lang="en">Mobile Number</value>
+    </property>
+     <property key="ContactNumber">
+        <value xml:lang="en">Contact Number</value>
+    </property>
+     <property key="NoVendorsFound">
+        <value xml:lang="en">No Vendor(s) found.</value>
+    </property>
+    <property key="PageTitleFindVendor">
+        <value xml:lang="en">Find Vendor(s)</value>
+    </property>
+    <property key="VendorType">
+        <value xml:lang="en">Type</value>
+    </property>
+    <property key="MainRole">
+        <value xml:lang="en">Main Role</value>
+    </property>
+    <property key="NoNameFound">
+        <value xml:lang="en">No name found</value>
+    </property>
+     <property key="PageTitleEditGroupInformation">
+        <value xml:lang="en">Edit Group Information</value>
+    </property>
+    <property key="PartyPartyGroupInformation">
+        <value xml:lang="en">Vendor Group Information</value>
+    </property>
+     <property key="PartyPartyGroupInformation">
+        <value xml:lang="en">Vendor Group Information</value>
+    </property>
+    <property key="PartyContactInformation">
+        <value xml:lang="en">Contact Information</value>
+    </property>
+     <property key="PartyContactType">
+        <value xml:lang="en">Contact Type</value>
+    </property>
+     <property key="partyIdentificationTypeId">
+        <value xml:lang="en">Identification Type Id</value>
+    </property>
+     <property key="PartyAddrAttnName">
+        <value xml:lang="en">Attn</value>
+    </property>
+     <property key="PartyContactSolicitingOk">
+        <value xml:lang="en">Soliciting OK?</value>
+    </property>
+    <property key="PartyContactPurposes">
+        <value xml:lang="en">Contact Purposes</value>
+    </property>
+    <property key="PartyCity">
+        <value xml:lang="cs">Město</value>
+        <value xml:lang="de">Stadt</value>
+        <value xml:lang="en">City</value>
+        <value xml:lang="es">Ciudad</value>
+        <value xml:lang="fr">Ville</value>
+        <value xml:lang="hi_IN">शहर</value>
+        <value xml:lang="it">Città</value>
+        <value xml:lang="ja">City</value>
+        <value xml:lang="nl">Plaats</value>
+        <value xml:lang="pt_BR">Cidade</value>
+        <value xml:lang="pt_PT">Cidade</value>
+        <value xml:lang="ro">Orasul</value>
+        <value xml:lang="ru">Город</value>
+        <value xml:lang="th">เมือง</value>
+        <value xml:lang="zh">城市</value>
+    </property>
+    <property key="PartyCityMissing">
+        <value xml:lang="cs">Chybí město</value>
+        <value xml:lang="de">Stadt fehlt</value>
+        <value xml:lang="en">City is Missing</value>
+        <value xml:lang="es">Falta la Ciudad</value>
+        <value xml:lang="fr">Ville absente</value>
+        <value xml:lang="hi_IN">शहर नही है</value>
+        <value xml:lang="it">Città mancante</value>
+        <value xml:lang="ja">City is Missing</value>
+        <value xml:lang="nl">Plaatsnaam ontbreekt</value>
+        <value xml:lang="pt_BR">Cidade está faltando</value>
+        <value xml:lang="pt_PT">Cidade em Falta</value>
+        <value xml:lang="ro">Orasul Lipseste</value>
+        <value xml:lang="ru">Город не указан</value>
+        <value xml:lang="th">ไม่ได้ใส่เมือง</value>
+        <value xml:lang="zh">找不到城市</value>
+    </property>
+     <property key="PartyState">
+        <value xml:lang="cs">Kraj</value>
+        <value xml:lang="de">Bundesland/Provinz</value>
+        <value xml:lang="en">State/Province</value>
+        <value xml:lang="es">Estado/Província</value>
+        <value xml:lang="fr">Etat/Province</value>
+        <value xml:lang="hi_IN">राज्य/प्रांत</value>
+        <value xml:lang="it">Stato/Provincia</value>
+        <value xml:lang="ja">State/Province</value>
+        <value xml:lang="nl">Staat/Provincie</value>
+        <value xml:lang="pt_BR">Estado</value>
+        <value xml:lang="pt_PT">Distrito/Província</value>
+        <value xml:lang="ro">Stat/Provincie</value>
+        <value xml:lang="ru">Штат/Провинция</value>
+        <value xml:lang="th">เมือง/จังหวัด</value>
+        <value xml:lang="zh">省/直辖市</value>
+    </property>
+    <property key="PartyAddressLine1">
+        <value xml:lang="cs">Adresa 1. Řádek</value>
+        <value xml:lang="de">Adresse 1. Zeile</value>
+        <value xml:lang="en">Address Line 1</value>
+        <value xml:lang="es">Linea de Dirección 1</value>
+        <value xml:lang="fr">1ère ligne d'adresse</value>
+        <value xml:lang="hi_IN">पता लाइन १</value>
+        <value xml:lang="it">Indirizzo riga 1</value>
+        <value xml:lang="ja">Address Line 1</value>
+        <value xml:lang="nl">Adres lijn 1</value>
+        <value xml:lang="pt_BR">Endereço - linha 1</value>
+        <value xml:lang="pt_PT">Linha 1 da Morada</value>
+        <value xml:lang="ro">Adresa Linie 1</value>
+        <value xml:lang="ru">Строк адреса 1</value>
+        <value xml:lang="th">ที่อยู่ที่1</value>
+        <value xml:lang="zh">地址行1</value>
+    </property>
+    <property key="PartyAddressLine1Missing">
+        <value xml:lang="de">Adresszeile 1 fehlt</value>
+        <value xml:lang="en">Address Line 1 is missing</value>
+        <value xml:lang="es">Falta ingresar dirección línea 1</value>
+        <value xml:lang="fr">1ère ligne d'adresse vide</value>
+        <value xml:lang="hi_IN">पता लाइन १ गायब है</value>
+        <value xml:lang="it">Indirizzo riga 1 è mancante</value>
+        <value xml:lang="nl">Adresregel 1 ontbreekt</value>
+        <value xml:lang="pt_BR">Endereço - linha 1 em branco</value>
+        <value xml:lang="pt_PT">Linha 1 da Morada em Falta</value>
+        <value xml:lang="ro">Adresa linie 1 Lipseste</value>
+        <value xml:lang="ru">Отсутствует адрес</value>
+        <value xml:lang="th">ไม่ได้ใส่ที่อยู่ที่ 1</value>
+        <value xml:lang="zh">缺少地址行1</value>
+    </property>
+    <property key="PartyAddressLine1MissingError">
+        <value xml:lang="cs">1. Řádek adresy chybí</value>
+        <value xml:lang="de">Adresszeile 1 fehlt</value>
+        <value xml:lang="en">Address Line 1 is missing</value>
+        <value xml:lang="es">Falta Linea de Dirección 1</value>
+        <value xml:lang="fr">1ère ligne d'adresse vide</value>
+        <value xml:lang="hi_IN">पता लाइन १ नही है</value>
+        <value xml:lang="it">Indirizzo riga 1 mancante</value>
+        <value xml:lang="ja">Address Line 1 is missing</value>
+        <value xml:lang="nl">Adreslijn 1 mist</value>
+        <value xml:lang="pt_BR">Endereço - linha 1 está faltando</value>
+        <value xml:lang="pt_PT">Linha 1 da Morada em Falta</value>
+        <value xml:lang="ro">Adresa 1 Lipseste</value>
+        <value xml:lang="ru">Строка адреса 1 отсутствует</value>
+        <value xml:lang="th">ไม่ได้ใส่ที่อยู่ที่1</value>
+        <value xml:lang="zh">没有找到地址行1</value>
+    </property>
+    <property key="PartyAddressLine2">
+        <value xml:lang="cs">Adresa 2. Řádek</value>
+        <value xml:lang="de">Adresse 2. Zeile</value>
+        <value xml:lang="en">Address Line 2</value>
+        <value xml:lang="es">Linea de Dirección 2</value>
+        <value xml:lang="fr">2ème ligne d'adresse</value>
+        <value xml:lang="hi_IN">पता लाइन २</value>
+        <value xml:lang="it">Indirizzo riga 2</value>
+        <value xml:lang="ja">Address Line 2</value>
+        <value xml:lang="nl">Adreslijn 2</value>
+        <value xml:lang="pt_BR">Endereço - linha 2</value>
+        <value xml:lang="pt_PT">Linha 2 da Morada</value>
+        <value xml:lang="ro">Adresa Linia 2</value>
+        <value xml:lang="ru">Строка адреса 2</value>
+        <value xml:lang="th">ที่อยู่ที่2</value>
+        <value xml:lang="zh">地址行2</value>
+    </property>
+    <property key="PartyAttentionName">
+        <value xml:lang="cs">Jméno</value>
+        <value xml:lang="de">Zu Händen von</value>
+        <value xml:lang="en">Attention Name</value>
+        <value xml:lang="es">A la Atención de</value>
+        <value xml:lang="fr">A l'attention de</value>
+        <value xml:lang="hi_IN">प्राप्तकर्ता का नाम</value>
+        <value xml:lang="it">All'attenzione di</value>
+        <value xml:lang="ja">Attention Name</value>
+        <value xml:lang="nl">Attentie naam</value>
+        <value xml:lang="pt_BR">Aos cuidados de</value>
+        <value xml:lang="pt_PT">Nome do Receptor</value>
+        <value xml:lang="ro">Atentie De</value>
+        <value xml:lang="ru">Attention Name</value>
+        <value xml:lang="th">ชื่อที่สนใจ</value>
+        <value xml:lang="zh">收件人</value>
+    </property>
+    <property key="PartyAttribute">
+        <value xml:lang="de">Akteur Attribut</value>
+        <value xml:lang="en">Party Attribute</value>
+        <value xml:lang="es">Atributo</value>
+        <value xml:lang="fr">Attribut de l'acteur</value>
+        <value xml:lang="hi_IN">पार्टी की विशेषता</value>
+        <value xml:lang="it">Attributo Soggetto</value>
+        <value xml:lang="nl">Kenmerk relatie</value>
+        <value xml:lang="pt_BR">Atributo de participante</value>
+        <value xml:lang="ro">Atribut Subiect</value>
+        <value xml:lang="ru">Атрибуты участника</value>
+        <value xml:lang="th">ความสนใจของกลุ่มผู้ใช้</value>
+        <value xml:lang="zh">会员属性</value>
+    </property>
+    <property key="PartyAttributes">
+        <value xml:lang="de">Akteur Attribute</value>
+        <value xml:lang="en">Party Attribute(s)</value>
+        <value xml:lang="es">Atributo(s)</value>
+        <value xml:lang="fr">Attribut(s) de l'acteur</value>
+        <value xml:lang="hi_IN">पार्टी की विशेषता(एँ)</value>
+        <value xml:lang="it">Attributo(i) Soggetto</value>
+        <value xml:lang="nl">Kenmerken relatie</value>
+        <value xml:lang="pt_BR">Atributos de participante</value>
+        <value xml:lang="ro">Atribut(e) Subiect</value>
+        <value xml:lang="ru">Атрибут(ы) участника</value>
+        <value xml:lang="th">ความสนใจของกลุ่มผู้ใช้</value>
+        <value xml:lang="zh">会员属性</value>
+    </property>
+      <property key="PartyPartyGroupInformation">
+        <value xml:lang="de">Akteurgruppe Information</value>
+        <value xml:lang="en">Vendor Group Information</value>
+        <value xml:lang="es">Información del grupo</value>
+        <value xml:lang="fr">Information groupe d'acteurs</value>
+        <value xml:lang="hi_IN">पार्टी समूह की जानकारी</value>
+        <value xml:lang="it">Informazioni Gruppo Soggetto</value>
+        <value xml:lang="nl">Informatie relatiegroep</value>
+        <value xml:lang="pt_BR">Dados do grupo de participantes</value>
+        <value xml:lang="pt_PT">Informação de Grupo de Secção</value>
+        <value xml:lang="ro">Informatii Grup Subiect</value>
+        <value xml:lang="ru">Информация группы участников</value>
+        <value xml:lang="th">ข้อมูลกลุ่มผู้ใช้</value>
+        <value xml:lang="zh">会员组信息</value>
+    </property>
+</resource>

@@ -89,5 +89,28 @@
         <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
+    
+    <service name="createSupplier" engine="java" auth="true" invoke="createSupplier" 
+        location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
+        <description>Create Party Froup  And Identification</description>
+        <auto-attributes entity-name="PostalAddress" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
+           <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PartyContactMechPurpose" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes> 
+        <attribute name="partyId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="groupName" mode="IN" type="String" optional="false"/>
+        <attribute name="USER_PANID" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_SERVICETAXNUM" mode="IN" type="String" optional="true"/>
+        <attribute name="USER_TINNUMBER" mode="IN" type="String" optional="true"/> 
+        <attribute name="USER_CSTNUMBER" mode="IN" type="String" optional="true"/>
+        <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="roleTypeId" mode="IN" type="String" optional="true"></attribute>
+    </service>
    
 </services>

@@ -1441,5 +1441,11 @@ under the License.
         <attribute name="insuranceId" mode="IN" type="String" optional="false"/>
         <attribute name="partyId" mode="IN" type="String" optional="true"/>
     </service>   
-    
+    <service name="getPartyIdentification" engine="simple"
+        location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="getPartyIdentification" auth="true">
+       <description>get Party Identification</description>
+       <attribute name="partyIdentificationTypeId" mode="IN" type="String" optional="true"/>
+      <attribute name="idvalue" mode="IN" type="String" optional="true"/>
+      <attribute name="partyIdentityList" mode="OUT" type="List" optional="true"/>
+    </service>
 </services>

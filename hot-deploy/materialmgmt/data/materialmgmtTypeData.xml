@@ -180,6 +180,9 @@
  
  <TenantConfiguration  description="Purchase Dept Sales And InterUnitStock Transfer"  propertyName="enableSalesInventoryTrack" propertyValue="Y" propertyTypeEnumId="PURCHASE_OR_STORES" />
  
+ <RoleType  description="Material Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="MATERIAL_VENDOR"/> 
+ <RoleType  description="Service Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="SERVICE_VENDOR"/> 
+ <RoleType  description="Un-Registered Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="UN_REGISTERED_VENDOR"/> 
  
  
 </entity-engine-xml>

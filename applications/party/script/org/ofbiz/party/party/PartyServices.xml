@@ -1151,4 +1151,20 @@ under the License.
             <field-to-result result-name="description" field="roleType.description" />
         </if-not-empty>
     </simple-method>
+    <simple-method method-name="getPartyIdentification" short-description="Get Party Identification">      
+        <entity-and entity-name="PartyIdentification" list="partyIdentificationList">
+           <field-map field-name="partyIdentificationTypeId" from-field="parameters.partyIdentificationTypeId"/>
+           <field-map field-name="idValue" from-field="parameters.idvalue"/>
+        </entity-and>
+        <if-empty field="partyIdentificationList">
+            <set field="noOptions" value=""/>
+            <field-to-list list="partyIdentityList" field="noOptions"/>
+            <else>
+                <iterate list="partyIdentificationList" entry="partyIdentity">
+                    <field-to-list list="partyIdentityList" field="partyIdentity.idValue"/>
+                </iterate>
+            </else>
+        </if-empty>
+        <field-to-result field="partyIdentityList"/>
+    </simple-method> 
 </simple-methods>

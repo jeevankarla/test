@@ -454,4 +454,8 @@
     <SecurityGroupPermission groupId="MMPURCHSSMMRY_VIEW"  permissionId="MMPURCHSSMMRY_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MMPURCHSSMMRY_VIEW"/>
      
+    <SecurityPermission description="View Vendor" permissionId="MM_VENDOR_VIEW"/>
+    <SecurityGroup description="View Vendor" groupId="MM_VENDOR_VIEW"/>
+    <SecurityGroupPermission groupId="MM_VENDOR_VIEW"  permissionId="MM_VENDOR_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_VENDOR_VIEW"/>
 </entity-engine-xml>

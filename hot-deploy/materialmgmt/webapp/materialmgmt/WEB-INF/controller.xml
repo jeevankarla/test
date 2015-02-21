@@ -1176,6 +1176,91 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="SupplierEvaluationReport"/>        
     </request-map>
+    
+    <!-- Vendor -->
+    <request-map uri="findVendor">
+	     <security https="true" auth="true"/>
+	     <response name="success" type="view" value="findVendor"/>
+     </request-map>
+     <request-map uri="editpartygroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyGroup"/>
+    </request-map> 
+    <request-map uri="createPartyGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSupplier"/>
+        <response name="success" type="request-redirect" value="viewprofile"/>
+        <response name="error" type="view" value="EditPartyGroup"/>
+    </request-map>
+    <request-map uri="updatePartyGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyGroup"/>
+        <response name="success" type="request" value="viewprofile"/>
+        <response name="error" type="view" value="EditPartyGroup"/>
+    </request-map>
+    <request-map uri="getPartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="getPartyIdentification"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+     <request-map uri="createVendorIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyIdentification"/>
+        <response name="success" type="view"  value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+    <request-map uri="updateVendorIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyIdentification"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+    <request-map uri="viewprofile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewprofile"/>
+    </request-map>
+   <request-map uri="editcontactmech">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editcontactmech" save-current-view="true"/>
+        <response name="error" type="view" value="NewVendor"/>
+    </request-map>
+     <request-map uri="createPostalAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="updatePostalAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyPostalAddress"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+     <request-map uri="createEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyEmailAddress"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="updateEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyEmailAddress"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="createTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyTelecomNumber"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="updateTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyTelecomNumber"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
@@ -1283,5 +1368,14 @@
 	<view-map name="QuoteForEvalution" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#QuoteForEvalution"/>
 	<view-map name="QuoteForAcceptance" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#QuoteForAcceptance"/>
 	<view-map name="QuoteForShortlist" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#QuoteForShortlist"/>
+	
+	
+	<!-- Vendor Info Views -->
+    <view-map name="findVendor" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#findVendor"/>
+    <view-map name="EditPartyGroup" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#EditPartyGroup"/>
+    <view-map name="NewVendor" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#NewVendor"/>
+    <view-map name="viewprofile" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#viewprofile"/>
+	<!--  <view-map name="EditPerson" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#EditPerson"/>-->
+	<view-map name="editcontactmech" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#editcontactmech"/>
 	
 </site-conf>
