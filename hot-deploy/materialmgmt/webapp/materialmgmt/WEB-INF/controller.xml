@@ -344,7 +344,12 @@
        <response name="success" type="request-redirect-noparam" value="FindGRNReceipts"/>
        <response name="error" type="request-redirect-noparam" value="FindGRNReceipts"/>
      </request-map>
-     
+     <request-map uri="shipmentSendForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="shipmentSendForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNShipments"/>
+     </request-map>
      <request-map uri="FindMaterialQuotes">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="FindMaterialQuotes"/>
