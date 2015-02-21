@@ -77,6 +77,7 @@ public class MaterialRequestServices {
 	    String requestDateStr = (String) request.getParameter("requestDate");
 	    String responseDateStr = (String) request.getParameter("responseDate");
 	    String requestName = (String) request.getParameter("custRequestName");
+	    String custRequestId="";
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 	    String partyId = (String) request.getParameter("partyId");
@@ -155,7 +156,7 @@ public class MaterialRequestServices {
 				TransactionUtil.rollback();
 		  		return "error";
 	        }
-	        String custRequestId = (String)resultMap.get("custRequestId");
+	         custRequestId = (String)resultMap.get("custRequestId");
 	        
 	        String productId = "";
 	        String quantityStr = "";
@@ -224,7 +225,7 @@ public class MaterialRequestServices {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  		}
 	  	}
-		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ");
+		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ...!IndentNo:"+custRequestId );
 		return "success";
 	}
 	
