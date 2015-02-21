@@ -182,7 +182,17 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 			 quantitySummary.facilityId = facility.facilityId;
 			 quantitySummary.totalQuantityOnHand = resultOutput.quantityOnHandTotal;
 			 quantitySummary.totalAvailableToPromise = resultOutput.availableToPromiseTotal;
-			 quantitySummary.totalQuantityInQcHand = totalInventory.quantityOnHandTotal-resultOutput.quantityOnHandTotal;
+			 quantitySummary.totalQuantityInQcHand = 0;// totalInventory.quantityOnHandTotal-resultOutput.quantityOnHandTotal;
+			 ecl = 	EntityCondition.makeCondition([
+				 	EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
+					EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_QUALITYCHECK")],
+			 		EntityOperator.AND);
+			 shipmentReceipts=delegator.findList("ShipmentReceipt",ecl,UtilMisc.toSet("productId","statusId","quantityAccepted"),null,null,false);
+			 if(UtilValidate.isNotEmpty(shipmentReceipts)){
+				 shipmentReceipts.each{ receipt->
+					 quantitySummary.totalQuantityInQcHand+=receipt.quantityAccepted;
+				 }
+			 }
 			 JSONArray jsonArray= new JSONArray();
 			 jsonArray.add(i++);
 			 jsonArray.add(resultOutput.quantityOnHandTotal);
