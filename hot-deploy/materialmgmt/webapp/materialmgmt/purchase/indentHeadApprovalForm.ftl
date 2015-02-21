@@ -125,7 +125,7 @@ function getAllIndentApprovals(){
  	 var str = "#"+formId;
  	 var tempQtyObj=$(varform).find("[name='"+"tempQty"+"']");
  	 var qty=$(tempQtyObj).val();
- 	 var tempQty=qty.replace(/[^0-9]/g,'');
+ 	 var tempQty=qty.replace(/,/g,'');
    	 var custRqst=$(this).val();
      var inputElementIdSplit = custRqst.split('_');
    	 var statusId="CRQ_SUBMITTED";   
@@ -163,7 +163,7 @@ function getAllIndentRejects(){
  	  var str = "#"+formId;
  	  var tempQtyObj=$(varform).find("[name='"+"tempQty"+"']");
  	  var qty=$(tempQtyObj).val();
- 	  var tempQty=qty.replace(/[^0-9]/g,'');
+ 	   var tempQty=qty.replace(/,/g,'');
    	  var custRqst=$(this).val();
       var inputElementIdSplit = custRqst.split('_');
 
