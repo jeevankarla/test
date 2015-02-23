@@ -41,8 +41,8 @@ under the License.
 						<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="14pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
                     	<fo:block text-align="center" font-size="14pt" font-weight="bold"  keep-together="always"  white-space-collapse="false">&#160;     STOCK POSITION REPORT ON: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} </fo:block>
               			<fo:block font-size="10pt">================================================================================================================</fo:block>
-            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">LedgerNo 	Product  		ProductDes 	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Uom &#160;&#160;&#160;&#160;&#160;&#160;	Available   				Quantity</fo:block>	 	 	  
-            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;     		Code		&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;   					to Promise			 &#160;&#160;on Hand			</fo:block>
+            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">LedgerNo 	Product  		ProductDes 	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Uom &#160;&#160;&#160;&#160;&#160;&#160;				 Quantity  					&#160;&#160;QC</fo:block>	 	 	  
+            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;     		Code		&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;&#160;&#160;&#160;&#160;	on Hand			 &#160;&#160;&#160;&#160;&#160;&#160;Qty</fo:block>
             			<fo:block font-size="10pt">================================================================================================================</fo:block>
             	<fo:block>
                  	<fo:table>
@@ -86,13 +86,13 @@ under the License.
 							       			<fo:table-cell>
 							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.get("uomDescription")?if_exists}</fo:block>
 							       			</fo:table-cell>
-							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.get("availableToPromiseTotal")?if_exists>
-							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("availableToPromiseTotal")?if_exists?string("#0.000")}</fo:block>
-							       			</fo:table-cell>
-							       			<#assign ledgerQtyHnd = ledgerQtyHnd + productDetails.get("quantityOnHandTotal")?if_exists>
+							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.get("quantityOnHandTotal")?if_exists>
 							       			<fo:table-cell>
 							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("quantityOnHandTotal")?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
+							       			<#assign ledgerQtyHnd = ledgerQtyHnd + productDetails.get("qcQuantity")?if_exists>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("qcQuantity")?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 						  			</fo:table-row>
 		                        	</#list>
