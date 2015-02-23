@@ -316,7 +316,12 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
     	<field name="shipmentId"><text-find></text-find></field>
-    	<field name="partyId" title ="Department"><text-find></text-find></field>
+    	<field name="partyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>   	
+<!--     	<field name="partyId" title ="Department"><text-find></text-find></field> -->
     	<field name="datetimeReceived" ><date-find type="timestamp"/></field>
     	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
