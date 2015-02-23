@@ -267,6 +267,7 @@
 					<order-by field-name="-datetimeReceived"/>        
                </entity-condition> -->
       			<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
+      			<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
