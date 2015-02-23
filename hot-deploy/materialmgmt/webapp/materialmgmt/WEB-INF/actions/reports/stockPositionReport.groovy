@@ -88,6 +88,7 @@ dctx = dispatcher.getDispatchContext();
 			 uomDescription = "";
 			 quantityOnHandTotal = BigDecimal.ZERO;
 			 availableToPromiseTotal = BigDecimal.ZERO;
+			 qcQuantity = BigDecimal.ZERO;
 			 if(UtilValidate.isNotEmpty(productDetails)){
 				 productName = productDetails.productName;
 				 quantityUomId = productDetails.quantityUomId;
@@ -106,11 +107,20 @@ dctx = dispatcher.getDispatchContext();
 					 availableToPromiseTotal = inventoryItem.availableToPromiseTotal;
 				 }
 			 }*/
-			 inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId]);
+			 inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId,ownerPartyId:"Company"]);
 			 if(UtilValidate.isNotEmpty(inventoryItem)){
-					 quantityOnHandTotal = inventoryItem.inventoryCount;
-					 availableToPromiseTotal = inventoryItem.inventoryCount;
+				 quantityOnHandTotal = inventoryItem.inventoryCount;
+				 availableToPromiseTotal = inventoryItem.inventoryCount;
 			 }
+			 inventoryItemWithQC = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId]);
+			 if(UtilValidate.isNotEmpty(inventoryItemWithQC)){
+				 qcQuantity = inventoryItemWithQC.inventoryCount;
+			 }
+			 qcQuantityDiff = BigDecimal.ZERO;
+			 if(UtilValidate.isNotEmpty(qcQuantity)){
+				 qcQuantityDiff = qcQuantity-quantityOnHandTotal;
+			 }
+			 
 			 tempMap = [:];
 			 tempMap["productId"] = productId;
 			 tempMap["productName"] = productName;
@@ -118,11 +128,12 @@ dctx = dispatcher.getDispatchContext();
 			 tempMap["uomDescription"] = uomDescription;
 			 tempMap["availableToPromiseTotal"] = availableToPromiseTotal;
 			 tempMap["quantityOnHandTotal"] = quantityOnHandTotal;
-			 if(availableToPromiseTotal>0 || quantityOnHandTotal>0){
+			 tempMap["qcQuantity"] = qcQuantityDiff;
+			 //if(availableToPromiseTotal>0 || quantityOnHandTotal>0){
 				 if(UtilValidate.isNotEmpty(tempMap)){
 					 productValueMap.putAll(tempMap);
 				 }
-			 }
+			 //}
 			 if(UtilValidate.isNotEmpty(productValueMap)){
 				 tempList.add(productValueMap);
 				 if(UtilValidate.isNotEmpty(attrName)){
