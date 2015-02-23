@@ -43,9 +43,35 @@ under the License.
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				    <fo:block text-align="center" keep-together="always"  >&#160;-------------------------------------------------------------------</fo:block>
+				    <#--
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;TEL NOS:${companyPhone?if_exists}         FAX  :${companyFax?if_exists}                   TIN NO :${companyTinNumber?if_exists} </fo:block>
                     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;        ${companyAnotherPhone?if_exists}         Email:${companyMail?if_exists}    KST NO :${kstNumber?if_exists}   </fo:block>
                     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;                                     ${companyOtherMail?if_exists}       CST NO :${cstNumber?if_exists}</fo:block>
+                    -->
+                    <fo:block font-weight="bold" >
+			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
+					               <fo:table-column column-width="165pt"/>               
+					                <fo:table-column column-width="280pt"/>               
+						           <fo:table-column column-width="200pt"/>               
+						           	<fo:table-body>
+				                     <fo:table-row>
+				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >TEL NOS:${companyPhone?if_exists}</fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >FAX&#160; : ${companyFax?if_exists}</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >TIN NO:${companyTinNumber?if_exists}</fo:block></fo:table-cell>       		
+                                  </fo:table-row>
+                                  <fo:table-row>
+				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${companyAnotherPhone?if_exists}</fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >Email:${companyMail?if_exists}</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >KST NO:${kstNumber?if_exists}</fo:block></fo:table-cell>       		
+                                  </fo:table-row>
+                                  <fo:table-row>
+									<fo:table-cell><fo:block text-align="left" font-size="12pt"></fo:block></fo:table-cell>
+				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >&#160;&#160;&#160;&#160;${companyOtherMail?if_exists}</fo:block> </fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >CST NO:${cstNumber?if_exists}</fo:block></fo:table-cell>       		
+                                  </fo:table-row>
+			                	</fo:table-body>
+			                		</fo:table>
+			        	  </fo:block>	
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------- </fo:block>
 				    <fo:block text-align="center" keep-together="always" font-weight="bold">                                              MATERIAL ENQUIRY REPORT                                                  </fo:block>
                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
