@@ -35,6 +35,12 @@ productId=parameters.productId;
 context.productId=productId;
 fromDateTime = null;
 thruDateTime = null;
+
+prodDetails = delegator.findOne("Product", [productId : productId], false);
+if(UtilValidate.isNotEmpty(prodDetails)){
+   materialName = prodDetails.productName;
+  context.put("materialName",materialName);
+}
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
@@ -115,7 +121,7 @@ shipmentReceiptList.each{shipmentData->
 		   
 		  shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
 		  
- //		   invoiceToApply=0;paidAmount=0;totalPaidAmt=0;
+//	   invoiceToApply=0;paidAmount=0;totalPaidAmt=0;
 //	   shipmentDetailMap.put("invoiceToApply",invoiceToApply);
 //	   shipmentDetailMap.put("paidAmount",paidAmount);
 //	   shipmentDetailMap.put("totalPaidAmt",totalPaidAmt);
@@ -129,21 +135,21 @@ shipmentReceiptList.each{shipmentData->
    
    vendorDetails = EntityUtil.filterByCondition(vendorDeptDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
    vendorDetails=EntityUtil.getFirst(vendorDetails);
-   if(UtilValidate.isNotEmpty(vendorDetails.partyId)){
+   if(UtilValidate.isNotEmpty(vendorDetails)){
     partyId=vendorDetails.partyId;
     shipmentDetailMap.put("partyId",partyId);
     partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("partyName",partyName);
      }
-   deptDetails = EntityUtil.filterByCondition(vendorDeptDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT"));
+     deptDetails = EntityUtil.filterByCondition(vendorDeptDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT"));
    deptDetails=EntityUtil.getFirst(deptDetails);
+   
    if(UtilValidate.isNotEmpty(deptDetails)){
-   if(UtilValidate.isNotEmpty(deptDetails.partyId)){
     partyId=deptDetails.partyId;
-    shipmentDetailMap.put("partyId",partyId);
-    partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+    //shipmentDetailMap.put("partyId",partyId);
+    deptName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("deptName",deptName);
-      }
+      
    }
    mrrList.addAll(shipmentDetailMap);
    
@@ -151,5 +157,4 @@ shipmentReceiptList.each{shipmentData->
    }
 context.shipmentMap=shipmentMap;
 context.mrrList=mrrList;
-
 

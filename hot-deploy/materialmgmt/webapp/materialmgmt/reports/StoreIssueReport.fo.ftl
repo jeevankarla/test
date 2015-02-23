@@ -109,13 +109,15 @@ under the License.
 
 <fo:table >
 <fo:table-column column-width="80pt"/>
-<fo:table-column column-width="856pt"/>
+<fo:table-column column-width="740pt"/>
+<fo:table-column column-width="116pt"/>
+
 <fo:table-body>
      <#assign allMapDetails = allDetailsMap.entrySet()>
  <#list allMapDetails as storeIssueDetails>
                      <#assign storeDetails1 = storeIssueDetails.getValue().get("MrrMap")?if_exists>                   
-                     <#assign storeDetails2 = storeIssueDetails.getValue().get("issueMap")?if_exists>                   
-
+                     <#assign storeDetails2 = storeIssueDetails.getValue().get("issueMap")?if_exists>    		       
+                     <#assign dayClosingQty = storeIssueDetails.getValue().get("dayClosingQty")?if_exists>                   
   <fo:table-row border-style="solid">
  
  <fo:table-cell >
@@ -124,7 +126,7 @@ under the License.
 					  <fo:table-column column-width="80pt"/>
                       <fo:table-body>
 					   <fo:table-row>
-				           <fo:table-cell border-style="solid">
+				           <fo:table-cell >
 							   <fo:block text-align="left" >${storeIssueDetails.getKey()?if_exists} </fo:block>
 						   </fo:table-cell>
                           </fo:table-row>
@@ -137,7 +139,7 @@ under the License.
 		<fo:block text-align="left" >
 		 <fo:table>
 			 <fo:table-column column-width="400pt"/>
-			<fo:table-column column-width="456pt"/>
+			<fo:table-column column-width="386pt"/>
 			 <fo:table-body>
 			 
 					   <fo:table-row>		   
@@ -187,7 +189,6 @@ under the License.
 					  <fo:table-column column-width="100pt"/>
 					  <fo:table-column column-width="70pt"/>
 					 <fo:table-column column-width="70pt"/>
-					   <fo:table-column column-width="116pt"/>					  
                       <fo:table-body>		  
       <#if storeDetails2?has_content>
 
@@ -221,7 +222,20 @@ under the License.
 				</fo:table>	
           </fo:block>
     </fo:table-cell>				  
- 
+ <fo:table-cell >
+		<fo:block text-align="left" >
+					 <fo:table>
+					  <fo:table-column column-width="116pt"/>
+                      <fo:table-body>
+					   <fo:table-row>
+				           <fo:table-cell >
+							   <fo:block text-align="right" >${dayClosingQty?if_exists?string("##0.00")} </fo:block>
+						   </fo:table-cell>
+                          </fo:table-row>
+					</fo:table-body>   
+				</fo:table>	
+          </fo:block>
+    </fo:table-cell>
 	 
     	  
  

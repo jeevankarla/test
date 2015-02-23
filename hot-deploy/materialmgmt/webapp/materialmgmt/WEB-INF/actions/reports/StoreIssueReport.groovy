@@ -70,6 +70,7 @@ if(UtilValidate.isNotEmpty(prodDetails)){
   context.put("materialName",materialName);
 }
 allDetailsMap=[:];	
+BigDecimal dayClosingQty = BigDecimal.ZERO;
 
 List currentDateKeysList = [];
 totalDays=totalDays+1;
@@ -98,10 +99,10 @@ inventoryCount = bookStock.inventoryCount;
 
 receiptIssuesMap=[:];
 MrrMap=[:];
+BigDecimal ReceiptTotQty = BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(receiptList)){
 	
-		
 	receiptList.each{receiptData->
 		 MrrDetailsMap=[:];
 		 
@@ -114,6 +115,7 @@ if(UtilValidate.isNotEmpty(receiptList)){
 		 mrrDetails=MaterialReceiptRegister.get(receiptId);				 
 		 billNo=mrrDetails.billNo;
 		 
+		 ReceiptTotQty=ReceiptTotQty+ReceiptQty;		 
 		//MrrDetailsMap.put("receiptId",receiptId);
 		MrrDetailsMap.put("ReceiptQty",ReceiptQty);
 		MrrDetailsMap.put("ReceiptRate",ReceiptRate);
@@ -124,14 +126,19 @@ if(UtilValidate.isNotEmpty(receiptList)){
 		MrrMap.put(receiptId,MrrDetailsMap);
 	}
 	receiptIssuesMap.put("MrrMap",MrrMap);
-}
+	
+} 
 
 issueMap=[:];
+BigDecimal IssueTotQty = BigDecimal.ZERO;
+
 if(UtilValidate.isNotEmpty(StoreIssueList)){
 	StoreIssueList.each{storeIssueDetails->
 		storeIssueDetailsMap=[:];
-		indentNo=storeIssueDetails.get("custRequestId")
-		custRequestDate=storeIssueDetails.get("custRequestDate")
+		IssueTotQty=IssueTotQty+storeIssueDetails.get("quantity");
+		
+		indentNo=storeIssueDetails.get("custRequestId");
+		custRequestDate=storeIssueDetails.get("custRequestDate");
 		issueDate = UtilDateTime.toDateString(custRequestDate);		
 		storeIssueDetailsMap.put("issueDate",storeIssueDetails.get("issueDate"));
 		//storeIssueDetailsMap.put("IndentNo",storeIssueDetails.get("custRequestId"));
@@ -142,9 +149,15 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	}
 	receiptIssuesMap.put("issueMap",issueMap);
 	
+	
 }
+if(UtilValidate.isNotEmpty(MrrMap) || UtilValidate.isNotEmpty(issueMap)){	
+dayClosingQty=inventoryCount+ReceiptTotQty-IssueTotQty;
+receiptIssuesMap.put("dayClosingQty",dayClosingQty);
+}
+
 if(UtilValidate.isNotEmpty(receiptIssuesMap)){	
-allDetailsMap.put(date, receiptIssuesMap)
+allDetailsMap.put(date, receiptIssuesMap);
 }
 }
 context.allDetailsMap=allDetailsMap;
