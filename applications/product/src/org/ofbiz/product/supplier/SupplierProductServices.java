@@ -180,7 +180,7 @@ public class SupplierProductServices {
 				
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				if(UtilValidate.isNotEmpty(orderHeader)){
-					orderDate = orderHeader.getTimestamp("orderDate");
+					orderDate = UtilDateTime.getDayStart(orderHeader.getTimestamp("orderDate"));
 				}
 				List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
@@ -204,33 +204,47 @@ public class SupplierProductServices {
 						productId = (String) orderItemMap.get("productId");
 						unitPrice = (BigDecimal) orderItemMap.get("unitPrice");
 						unitListPrice = (BigDecimal) orderItemMap.get("unitListPrice");
+						Map<String,Object> suppProdMap = FastMap.newInstance();
+						suppProdMap.put("userLogin",userLogin);
+						suppProdMap.put("productId",productId);
+						suppProdMap.put("partyId",supplierId);
+						suppProdMap.put("availableFromDate",orderDate);
+						suppProdMap.put("minimumOrderQuantity",BigDecimal.ZERO);
+						suppProdMap.put("currencyUomId","INR");
+						suppProdMap.put("supplierProductId",productId);
+						if(UtilValidate.isNotEmpty(unitListPrice)){
+							suppProdMap.put("lastPrice",unitListPrice);
+						}else{
+							suppProdMap.put("lastPrice",unitPrice);
+						}
 						List suppProdList = FastList.newInstance();
 						suppProdList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, supplierId));
 						suppProdList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-						suppProdList.add(EntityCondition.makeCondition("availableFromDate", EntityOperator.LESS_THAN_EQUAL_TO, orderDate));
-						suppProdList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("availableThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-				        		EntityCondition.makeCondition("availableThruDate", EntityOperator.GREATER_THAN_EQUAL_TO, orderDate)));
+						//suppProdList.add(EntityCondition.makeCondition("availableFromDate", EntityOperator.GREATER_THAN_EQUAL_TO, orderDate));
 						EntityCondition suppProdCond = EntityCondition.makeCondition(suppProdList, EntityOperator.AND);
 						List<GenericValue> supplierProductList = delegator.findList("SupplierProduct", suppProdCond, null, UtilMisc.toList("-availableFromDate"), null, false);
 						if(UtilValidate.isEmpty(supplierProductList)){
-							Map<String,Object> suppProdMap = FastMap.newInstance();
-							suppProdMap.put("userLogin",userLogin);
-							suppProdMap.put("productId",productId);
-							suppProdMap.put("partyId",supplierId);
-							suppProdMap.put("availableFromDate",orderDate);
-							suppProdMap.put("minimumOrderQuantity",BigDecimal.ZERO);
-							suppProdMap.put("currencyUomId","INR");
-							suppProdMap.put("supplierProductId",productId);
-							if(UtilValidate.isNotEmpty(unitListPrice)){
-								suppProdMap.put("lastPrice",unitListPrice);
-							}else{
-								suppProdMap.put("lastPrice",unitPrice);
-							}
 					        Map resultMap = dispatcher.runSync("createSupplierProduct",suppProdMap);
 					        if (ServiceUtil.isError(resultMap)) {
 					        	Debug.logError("Problem creating supplier product for orderId :"+orderId, module);
 								return ServiceUtil.returnError("Problem creating supplier product for orderId :"+orderId);
 					        }
+						}else{
+							GenericValue supplierProduct = EntityUtil.getFirst(supplierProductList);
+							if(UtilValidate.isNotEmpty(supplierProduct)){
+								Timestamp availableFromDate = UtilDateTime.getDayStart(supplierProduct.getTimestamp("availableFromDate"));
+								if(orderDate.compareTo(availableFromDate) < 0){
+									 Timestamp previousDayEnd = UtilDateTime.getDayEnd(orderDate);
+									 if(UtilValidate.isNotEmpty(previousDayEnd)){
+										suppProdMap.put("availableThruDate",previousDayEnd);
+										Map resultMap = dispatcher.runSync("createSupplierProduct",suppProdMap);
+								        if (ServiceUtil.isError(resultMap)) {
+								        	Debug.logError("Problem creating supplier product for orderId :"+orderId, module);
+											return ServiceUtil.returnError("Problem creating supplier product for orderId :"+orderId);
+								        }
+									}
+								}
+							}
 						}
 					}
 				}
