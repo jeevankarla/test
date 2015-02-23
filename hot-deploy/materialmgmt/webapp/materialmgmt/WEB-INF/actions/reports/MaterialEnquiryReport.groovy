@@ -42,10 +42,22 @@ if (companyFaxNumber) {
 	companyFax = companyFaxNumber.contactNumber;
 	context.companyFax=companyFax;	
 }
+
+companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: mailIdConfig.propertyValue,contactMechPurposeTypeId:"PRIMARY_PHONE", userLogin: userLogin]);
+if(companyTelephone) {
+	companyPhone = companyTelephone.contactNumber;
+	context.companyPhone=companyPhone;
+}
+companyAnotherTelephone= dispatcher.runSync("getPartyTelephone", [partyId: mailIdConfig.propertyValue,contactMechPurposeTypeId:"PHONE_WORK_SEC", userLogin: userLogin]);
+if(companyAnotherTelephone){
+	companyAnotherPhone = companyAnotherTelephone.contactNumber;
+	context.companyAnotherPhone=companyAnotherPhone;
+}
  
  }
 
-tinDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , mailIdConfig.propertyValue)  , null, null, null, false );
+tinDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
+
 compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
 compantTinDetail = EntityUtil.getFirst(compantTinDetails);
 if(UtilValidate.isNotEmpty(compantTinDetail) && UtilValidate.isNotEmpty(compantTinDetail.idValue)){
@@ -64,16 +76,7 @@ if(UtilValidate.isNotEmpty(compantTinDetail) && UtilValidate.isNotEmpty(compantT
    cstNumber=compantTinDetail.idValue;
    context.cstNumber=cstNumber;   
 }
-companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: mailIdConfig.propertyValue,contactMechPurposeTypeId:"PRIMARY_PHONE", userLogin: userLogin]);
-if(companyTelephone) {
-	companyPhone = companyTelephone.contactNumber;
-	context.companyPhone=companyPhone;		
-}
-companyAnotherTelephone= dispatcher.runSync("getPartyTelephone", [partyId: mailIdConfig.propertyValue,contactMechPurposeTypeId:"PHONE_WORK_SEC", userLogin: userLogin]);
-if(companyAnotherTelephone){
-	companyAnotherPhone = companyAnotherTelephone.contactNumber;
-	context.companyAnotherPhone=companyAnotherPhone;	
-}
+
 
 
 signature=parameters.signature;
