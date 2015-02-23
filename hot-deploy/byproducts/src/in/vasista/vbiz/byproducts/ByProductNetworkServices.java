@@ -7587,6 +7587,7 @@ public class ByProductNetworkServices {
 		Timestamp paymentDate = (Timestamp) context.get("paymentDate");
 		String paymentLocationId = (String) context.get("paymentLocationId");
 		String paymentRefNum = (String) context.get("paymentRefNum");
+		String cardNumber = (String) context.get("cardNumber");
 		String comments = (String) context.get("comments");
 		String paymentPurposeType = (String) context.get("paymentPurposeType");
 		String issuingAuthority = (String) context.get("issuingAuthority");
@@ -7799,13 +7800,17 @@ public class ByProductNetworkServices {
 			paymentCtx.put("userLogin", userLogin);
 			paymentCtx.put("invoices", invoiceIds);
 			
-			Debug.log("=====paymentAmount===="+paymentAmount+"=====invoiceIds=="+invoiceIds);
 			Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 			if (ServiceUtil.isError(paymentResult)) {
 				Debug.logError(paymentResult.toString(), module);
 				return ServiceUtil.returnError(null, null, null, paymentResult);
 			}
 			paymentId = (String) paymentResult.get("paymentId");
+			if(UtilValidate.isNotEmpty(cardNumber)){
+				GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "CARD_NUMBER"));
+		        paymentAttribute.put("attrValue",cardNumber);
+		        paymentAttribute.create();
+			}
 		} catch (Exception e) {
 			Debug.logError(e, e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
@@ -7873,6 +7878,10 @@ public class ByProductNetworkServices {
 			paymentCtx.put("paymentLocationId", paymentLocationId);
 			paymentCtx.put("paymentRefNum", transactionId);
 			paymentCtx.put("amount",((Double) boothPayment.get("amount")).toString());
+			if(UtilValidate.isNotEmpty(boothPayment.get("cardNumber"))){
+				paymentCtx.put("cardNumber",((String) boothPayment.get("cardNumber")));
+			}
+			
 
 			Map<String, Object> paidPaymentCtx = UtilMisc.<String, Object> toMap("paymentMethodTypeId",paymentChannel);
 			paidPaymentCtx.put("paymentDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
