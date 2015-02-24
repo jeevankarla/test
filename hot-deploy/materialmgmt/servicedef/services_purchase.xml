@@ -262,5 +262,19 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="isOrdered" type="Boolean" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="createNewProduct" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="createNewProduct">
+        <description>Creating new Product</description>
+        <attribute name="productTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="primaryCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="materialCode" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="productUOMtypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="userLogin" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="materialCategoryList" mode="IN" type="List" optional="true"/>
+        <attribute name="prodAttribute" type="String" mode="IN" optional="true"/>
+        <attribute name="attributeValue" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="OUT" optional="false"/>
+    </service>
 </services>
