@@ -1743,7 +1743,39 @@ under the License.
         <key-map field-name="custRequestId"/>
       </view-link>
     </view-entity>
-    
+    <view-entity entity-name="QuoteTermAndItemAndQuote" package-name="org.ofbiz.order.quote" title="Quote And Item And Terms">
+    	<description>Shows Items for a Quote And Terms</description>
+      <member-entity entity-alias="QUO" entity-name="Quote"/>
+      <member-entity entity-alias="QT" entity-name="QuoteTerm"/>
+      <member-entity entity-alias="QITM" entity-name="QuoteItem"/>
+      <alias name="termTypeId" entity-alias="QT"/>
+      <alias name="termValue" entity-alias="QT"/>
+      <alias name="uomId" entity-alias="QT"/>
+      <alias name="termDays" entity-alias="QT"/>
+      <alias name="textValue" entity-alias="QT"/>
+      <alias name="description" entity-alias="QT"/>
+      <alias name="quoteId" entity-alias="QUO"/>
+      <alias name="partyId" entity-alias="QUO"/>
+      <alias name="statusId" entity-alias="QUO"/>
+      <alias name="quoteItemSeqId" entity-alias="QT"/>
+      <alias name="qiStatusId" field="statusId" entity-alias="QITM"/>
+      <alias name="productId" entity-alias="QITM"/>
+      <alias name="custRequestId" entity-alias="QITM"/>
+      <alias name="custRequestItemSeqId" entity-alias="QITM"/>
+      <alias name="quantity" entity-alias="QITM"/>
+      <alias name="quoteUnitPrice" entity-alias="QITM"/>
+      <view-link  entity-alias="QT" rel-entity-alias="QITM" >
+      <key-map field-name="quoteId"/>
+      <key-map field-name="quoteItemSeqId"/>
+      </view-link>
+      <view-link  entity-alias="QT" rel-entity-alias="QUO" >
+      <key-map field-name="quoteId"/>
+      </view-link>
+      <!-- <view-link  entity-alias="QITM" rel-entity-alias="QT" >
+      <key-map field-name="quoteId"/>
+      <key-map field-name="quoteItemSeqId"/>
+      </view-link> -->
+    </view-entity>
     <view-entity entity-name="RequirementAndRole"
             package-name="org.ofbiz.order.request"
             title="Requirement And Role View Entity">
