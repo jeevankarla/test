@@ -125,7 +125,7 @@ allTermsMap=[:];
 quoteIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "quoteId", true);
 termTypeDetails = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
 termTypeIds = EntityUtil.getFieldListFromEntityList(termTypeDetails, "termTypeId", true);
-termTypeIds.each{eachTermType->
+/*termTypeIds.each{eachTermType->
 	termDetailsMap=[:];	
 	termTypeDetails = delegator.findOne("TermType", ["termTypeId" : eachTermType], false);
 	description = termTypeDetails.description;	
@@ -149,4 +149,30 @@ termTypeIds.each{eachTermType->
 	}
 	allTermsMap.put(description,termDetailsMap);
 }
-context.allTermsMap=allTermsMap;
+context.allTermsMap=allTermsMap;*/
+partyMap=[:];
+quoteIds.each{quoteId->
+	partyDetails = delegator.findOne("Quote", ["quoteId" : quoteId], false);
+	partyId=partyDetails.partyId;
+	partyMap[quoteId]=partyId;
+}
+
+quoteTermsList=delegator.findList("QuoteTermAndItemAndQuote", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
+finalMap=[:];
+termTypeIds.each{termType->
+	tempList=[];
+		partyIds.each{partyId->
+		tempMap=[:];
+		quoteTerms=EntityUtil.filterByCondition(quoteTermsList,EntityCondition.makeCondition([EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId),EntityCondition.makeCondition("termTypeId",EntityOperator.EQUALS,termType)],EntityOperator.AND));
+				tempMap.put(partyId, quoteTerms);	
+			if(UtilValidate.isNotEmpty(tempMap)){
+				tempList.add(tempMap);
+			}
+			
+		finalMap.put(termType, tempList);	
+	}
+}
+context.finalMap=finalMap;
+
+
+
