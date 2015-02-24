@@ -3988,4 +3988,173 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		result.put("partyId", partyId);
 		return result;
 	}
+	
+	public static String createProduct(HttpServletRequest request, HttpServletResponse response) {
+		String message;
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Delegator delegator = dctx.getDelegator();
+		Locale locale = UtilHttp.getLocale(request);
+		 Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		
+		String productTypeId = (String) request.getParameter("productTypeId");
+		String primaryCategoryId = (String) request.getParameter("primaryCategoryId");
+		String[] productCategoryIds = request.getParameterValues("productCategoryId");
+		String materialCode = (String) request.getParameter("materialCode");
+		String description = (String) request.getParameter("description");
+		String productUOMtypeId = (String) request.getParameter("productUOMtypeId");
+		String longDescription = (String) request.getParameter("specification");
+		String facilityId = (String) request.getParameter("facilityId");
+		String prodAttribute = (String) request.getParameter("attributeName");
+		String attributeValue = (String) request.getParameter("attributeValue");
+		try
+		{
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("internalName", EntityOperator.EQUALS, materialCode));
+			EntityConditionList condition = EntityCondition.makeCondition(conditionList, EntityOperator.OR);
+			List internalNameList = delegator.findList("Product", condition, null, null, null, false);
+			if(UtilValidate.isNotEmpty(internalNameList))
+			{
+				request.setAttribute("_ERROR_MESSAGE_", "Material Code Already Exists  !" );	
+				return "error";
+			}
+		}
+		catch(Exception e)
+			{
+			request.setAttribute("_ERROR_MESSAGE_", e.getMessage());	
+			return "error";
+			}
+		List materialCategoryList = new ArrayList();
+		for(int i=0;i<productCategoryIds.length;i++)
+		{
+			materialCategoryList.add(productCategoryIds[i]);
+		}
+		try{
+			Map newProductMap = FastMap.newInstance();
+			newProductMap.put("productTypeId", productTypeId);
+			newProductMap.put("primaryCategoryId", primaryCategoryId);
+			newProductMap.put("materialCode", materialCode);
+			newProductMap.put("description", description);
+			newProductMap.put("productUOMtypeId", productUOMtypeId);	
+			newProductMap.put("longDescription", longDescription);
+			newProductMap.put("facilityId", facilityId);		
+			newProductMap.put("prodAttribute",prodAttribute);
+			newProductMap.put("attributeValue",attributeValue);
+			newProductMap.put("userLogin", userLogin);
+			newProductMap.put("materialCategoryList", materialCategoryList);
+			result = dispatcher.runSync("createNewProduct", newProductMap);
+			if (ServiceUtil.isError(result)) {
+				request.setAttribute("_ERROR_MESSAGE_", "Error creating new product  !" );	
+				return "error";
+			}
+		}
+			catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				request.setAttribute("_ERROR_MESSAGE_", e);
+	            return "error";		
+	            }
+		String productId = (String) result.get("productId");
+	request.setAttribute("_EVENT_MESSAGE_", "Product sucessfully Added :"+productId);
+    return "success";
+	}
+	public static Map<String, Object> createNewProduct(DispatchContext ctx, Map<String, Object> context) {
+	LocalDispatcher dispatcher = ctx.getDispatcher();
+    Delegator delegator = ctx.getDelegator();
+	Map result = ServiceUtil.returnSuccess();
+
+	String productTypeId = (String) context.get("productTypeId");
+	String primaryCategoryId = (String) context.get("primaryCategoryId");
+	String materialCode = (String) context.get("materialCode");
+	String description = (String) context.get("description");
+	String productUOMtypeId = (String) context.get("productUOMtypeId");
+	String longDescription = (String) context.get("longDescription");
+	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	List materialCategoryList = (List) context.get("materialCategoryList");
+	String facilityId = (String) context.get("facilityId");
+	String prodAttribute = (String) context.get("prodAttribute");
+	String attributeValue = (String) context.get("attributeValue");
+	String productId = null;
+	try{
+		Map newProduct = FastMap.newInstance();
+		newProduct.put("userLogin", userLogin);
+		newProduct.put("productTypeId", productTypeId);
+		newProduct.put("primaryProductCategoryId", primaryCategoryId);
+		newProduct.put("internalName", materialCode);
+		newProduct.put("brandName", materialCode);
+		newProduct.put("productName", description);
+		newProduct.put("description", description);
+		if(!productUOMtypeId.equals(null) && UtilValidate.isNotEmpty(productUOMtypeId))
+		{	newProduct.put("quantityUomId", productUOMtypeId);	}
+		newProduct.put("longDescription", longDescription);
+		if(!facilityId.equals(null) && UtilValidate.isNotEmpty(facilityId))
+		{	newProduct.put("facilityId", facilityId);	}
+		result = dispatcher.runSync("createProduct", newProduct);
+		productId = (String)result.get("productId");
+		if (ServiceUtil.isError(result)) {
+			return ServiceUtil.returnError("Error Occurred While Creating Product");
+		}
+	}
+	catch (Exception e) {
+		// TODO: handle exception
+		return ServiceUtil.returnError(e.getMessage());
+        }
+//------------------------------------Updating the ProductCategoryMember Entity	
+	try{
+	Map productCatgMap = FastMap.newInstance();
+	int length = materialCategoryList.size();
+	for(int i=0;i<length;i++)
+		{
+		productCatgMap.put("productCategoryId", materialCategoryList.get(i));
+		productCatgMap.put("productId", productId);
+		productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+		productCatgMap.put("userLogin", userLogin);
+		result = dispatcher.runSync("addProductToCategory", productCatgMap);
+		}
+	if (ServiceUtil.isError(result)) {
+		return ServiceUtil.returnError("Error Occurred While updating Product Category");
+		}
+	}
+catch(Exception e){
+	return ServiceUtil.returnError(e.getMessage());
+	}
+//------------------------------------------------Updating the ProductFacility Entity	
+	if(!facilityId.equals(null) && UtilValidate.isNotEmpty(facilityId)){
+		try{
+		Map productFacilityMap = FastMap.newInstance();
+		productFacilityMap.put("productId",productId);
+		productFacilityMap.put("facilityId",facilityId);
+		productFacilityMap.put("userLogin", userLogin);
+		result = dispatcher.runSync("createProductFacility", productFacilityMap);
+		if (ServiceUtil.isError(result)) {
+			return ServiceUtil.returnError("Error Occurred While updating Product Facility");
+			}
+		}
+	catch(Exception e){
+		return ServiceUtil.returnError(e.getMessage());
+		}
+	}
+	//--------------------------------------------------------Updating the ProductAttribute Entity
+	if(!attributeValue.equals(null) && UtilValidate.isNotEmpty(attributeValue)){
+		try{
+		Map productAttributeMap = FastMap.newInstance();
+		productAttributeMap.put("productId",productId);
+		productAttributeMap.put("attrName",prodAttribute);
+		productAttributeMap.put("attrValue",attributeValue);
+		productAttributeMap.put("userLogin", userLogin);
+		result = dispatcher.runSync("createProductAttribute", productAttributeMap);
+		if (ServiceUtil.isError(result)) {
+			return ServiceUtil.returnError("Error Occurred While updating Product Attribute");
+			}
+		}
+	catch(Exception e){
+		return ServiceUtil.returnError(e.getMessage());
+		}
+	}
+		result.put("productId",productId);
+	return result;
+	}
+
 }
