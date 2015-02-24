@@ -55,6 +55,15 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	if(UtilValidate.isNotEmpty(prodIdData)){
 	  prodIdData.each{productDetails->
 	  productDetailMap=[:];
+	  
+	  productAttr = delegator.findOne("ProductAttribute", [productId : productDetails.productId , attrName : "LEDGERFOLIONO"], false);
+	  String attrName = null;
+	  String attrValue = null;
+	  if(UtilValidate.isNotEmpty(productAttr)){
+		  attrName = productAttr.get("attrName");
+		  attrValue = productAttr.get("attrValue");
+		  productDetailMap["ledgerfolio"]=attrValue;		  
+	  }
 	  productDetailMap["productId"]=productDetails.productId;
 	  productDetailMap["description"]=productDetails.description;
 	  uomId=productDetails.quantityUomId;

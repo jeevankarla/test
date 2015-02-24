@@ -88,8 +88,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                      <#assign sNo=1>
     <#assign prodDetails = prodMap.entrySet()> 
     <#list prodDetails as prodCatids >
+	                      						
                   	 <fo:table-row>
-                	   <fo:table-cell ><fo:block text-align="center" font-weight="bold"  font-size="11pt" keep-together="always">${sNo?if_exists}</fo:block></fo:table-cell>     
+                	   <fo:table-cell ><fo:block text-align="left" font-weight="bold"  font-size="11pt" keep-together="always">&#160;${sNo?if_exists}</fo:block></fo:table-cell>     
   				  	   <fo:table-cell ><fo:block text-align="left" font-weight="bold"  font-size="11pt" keep-together="always">${prodCatids.getKey()?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="left"  font-size="10pt" keep-together="always">&#160;</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
@@ -98,10 +99,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				     </fo:table-row>
                   
     <#list prodCatids.getValue() as productIds>
+		<#assign product = delegator.findOne("Product", {"productId" : productIds.productId}, true)> 	                              
 
                    <fo:table-row>
-                	   <fo:table-cell ><fo:block text-align="center"   font-size="10pt" ></fo:block></fo:table-cell>     
-  				  	   <fo:table-cell ><fo:block text-align="left"  font-size="10pt">${productIds.productId?if_exists}</fo:block></fo:table-cell>  
+                	   <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >&#160;${productIds.ledgerfolio?if_exists}</fo:block></fo:table-cell>     
+  				  	   <fo:table-cell ><fo:block text-align="left"  font-size="10pt">${product.internalName?if_exists}</fo:block></fo:table-cell>  
   				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >${productIds.description?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
