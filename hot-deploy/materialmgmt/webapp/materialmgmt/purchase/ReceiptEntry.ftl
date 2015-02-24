@@ -237,6 +237,24 @@
 		          			
 				        </tr>
 						<tr><td><br/></td></tr>
+						<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Remarks: </div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.remarks)?exists && (parameters.remarks)?has_content> 
+				          		<input type="hidden" name="remarks" id="remarks" value="${parameters.remarks}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.remarks}         
+					            	</div>
+					          	</td>
+				         	 <#else> 
+				         	 <td valign='middle'>
+		          				<input type="text" name="remarks" id="remarks" />
+		          			</td>
+				          </#if>
+		          			
+				        </tr>
+				        <tr><td><br/></td></tr>
 	
 	    			</table>
 				</form>

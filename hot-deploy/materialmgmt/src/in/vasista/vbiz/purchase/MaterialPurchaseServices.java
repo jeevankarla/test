@@ -96,6 +96,7 @@ public class MaterialPurchaseServices {
 	    String supplierId = (String) request.getParameter("supplierId");
 	    String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
 	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
+	    String remarks = (String) request.getParameter("remarks");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -232,6 +233,7 @@ public class MaterialPurchaseServices {
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
 	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
 	        newEntity.put("deliveryChallanNumber",deliveryChallanNo);
+	        newEntity.put("description",remarks);
 	        newEntity.put("deliveryChallanDate",deliveryChallanDate);
 	        newEntity.put("primaryOrderId",orderId);
 	        newEntity.set("createdDate", nowTimeStamp);

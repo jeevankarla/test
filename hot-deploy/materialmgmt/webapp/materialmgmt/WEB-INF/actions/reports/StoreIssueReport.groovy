@@ -39,6 +39,8 @@ thruDate=parameters.thruDate;
 productId=parameters.productId;
 issueToFacilityId=parameters.issueToFacilityId;
 context.put("issueToFacilityId",issueToFacilityId);
+context.put("productId",productId);
+
 reportTypeFlag = parameters.reportTypeFlag;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
@@ -72,6 +74,8 @@ if(UtilValidate.isNotEmpty(prodDetails)){
 allDetailsMap=[:];	
 BigDecimal dayClosingQty = BigDecimal.ZERO;
 
+BigDecimal inventoryCount = BigDecimal.ZERO;
+
 List currentDateKeysList = [];
 totalDays=totalDays+1;
 for(int i=0; i <totalDays; i++){
@@ -87,9 +91,13 @@ receiptList =storeIssueReceipts.get("receiptsList");
 
 storeIssue=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:currentDayStart, thruDate:currentDayEnd,productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
 StoreIssueList=storeIssue.get("itemIssuanceList");
-
 bookStock=InventoryServices.getProductInventoryOpeningBalance(dctx,[ effectiveDate:currentDayEnd, productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
-inventoryCount = bookStock.inventoryCount;
+if(UtilValidate.isNotEmpty(bookStock)){
+	if(UtilValidate.isNotEmpty(bookStock.inventoryCount)){
+		inventoryCount = bookStock.inventoryCount;
+		
+}
+}
 
 //bookStock = dispatcher.runSync("getInventoryAvailableByFacility", [fromDate:currentDayStart, thruDate:currentDayEnd,productId :productId, facilityId : issueToFacilityId ,ownerPartyId :"Company"]);
 //productDetailMap["inventoryCount"]=bookStock.quantityOnHandTotal;
@@ -114,8 +122,9 @@ if(UtilValidate.isNotEmpty(receiptList)){
 		 
 		 mrrDetails=MaterialReceiptRegister.get(receiptId);				 
 		 billNo=mrrDetails.billNo;
-		 
-		 ReceiptTotQty=ReceiptTotQty+ReceiptQty;		 
+		 if(UtilValidate.isNotEmpty(ReceiptQty)){
+		 ReceiptTotQty=ReceiptTotQty+ReceiptQty;
+		 }		 
 		//MrrDetailsMap.put("receiptId",receiptId);
 		MrrDetailsMap.put("ReceiptQty",ReceiptQty);
 		MrrDetailsMap.put("ReceiptRate",ReceiptRate);
@@ -128,15 +137,15 @@ if(UtilValidate.isNotEmpty(receiptList)){
 	receiptIssuesMap.put("MrrMap",MrrMap);
 	
 } 
-
 issueMap=[:];
 BigDecimal IssueTotQty = BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(StoreIssueList)){
 	StoreIssueList.each{storeIssueDetails->
 		storeIssueDetailsMap=[:];
+		if(UtilValidate.isNotEmpty(storeIssueDetails.get("quantity"))){			
 		IssueTotQty=IssueTotQty+storeIssueDetails.get("quantity");
-		
+		}		
 		indentNo=storeIssueDetails.get("custRequestId");
 		custRequestDate=storeIssueDetails.get("custRequestDate");
 		issueDate = UtilDateTime.toDateString(custRequestDate);		
@@ -152,7 +161,7 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	
 }
 if(UtilValidate.isNotEmpty(MrrMap) || UtilValidate.isNotEmpty(issueMap)){	
-dayClosingQty=inventoryCount+ReceiptTotQty-IssueTotQty;
+ dayClosingQty=inventoryCount+ReceiptTotQty-IssueTotQty;
 receiptIssuesMap.put("dayClosingQty",dayClosingQty);
 }
 

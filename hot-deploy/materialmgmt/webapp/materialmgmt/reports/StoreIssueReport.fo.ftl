@@ -36,7 +36,7 @@ under the License.
 				<fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------</fo:block>
 				<fo:block text-align="center" white-space-collapse="false">&#160;      STORE RECIPT-ISSUE BETWEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
 			    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false">MATERIAL CODE:${parameters.productId}                           STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               MATERIAL NAME:${materialName}</fo:block>   			   
+			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false"> <#if productId?has_content>MATERIAL CODE:${parameters.productId}<#else></#if>                            STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               <#if materialName?has_content>MATERIAL NAME:${materialName}<#else></#if> </fo:block>   			   
 			    <fo:block font-family="Courier,monospace">		 
 			    <fo:table border-style="solid">
 					<fo:table-column column-width="80pt"/>
