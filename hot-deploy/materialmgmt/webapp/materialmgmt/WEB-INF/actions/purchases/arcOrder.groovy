@@ -32,6 +32,8 @@ import org.ofbiz.party.party.PartyHelper;
 dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
 subject=parameters.subject;
+signature=parameters.sign;
+context.signature=signature;
 orderDetailsList=[];
 allDetailsMap=[:]; 
 orderTermList=[];
