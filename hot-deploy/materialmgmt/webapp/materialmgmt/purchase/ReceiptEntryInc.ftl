@@ -168,6 +168,9 @@
 		var deliveryChallanDate = $("#deliveryChallanDate").val();
 		var dcDate = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanDate").val(deliveryChallanDate);
 		var effectiveDate = $("#effectiveDate").val();
+		var remarks = $("#remarks").val();
+		var remarksOption = jQuery("<input>").attr("type", "hidden").attr("name", "remarks").val(remarks);
+		
 		var effDate = jQuery("<input>").attr("type", "hidden").attr("name", "receiptDate").val(effectiveDate);
 		$("#receiptDate").val(effectiveDate);
 		
@@ -180,6 +183,8 @@
 		jQuery(formId).append(jQuery(supplier));
 		jQuery(formId).append(jQuery(dcNo));
 		jQuery(formId).append(jQuery(dcDate));
+		jQuery(formId).append(jQuery(remarksOption));
+		
 		
 		jQuery(formId).attr("action", action);
 		
