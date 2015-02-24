@@ -643,10 +643,11 @@ under the License.
       <field name="routeId" type="id"></field>
       <field name="additionalShippingCharge" type="currency-amount"></field>
       <field name="addtlShippingChargeDesc" type="long-varchar"></field>
+      <field name="description" type="description"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>    
       <prim-key field="shipmentId"/>
       <relation type="one" fk-name="SHPMNT_TYPE" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId"/>
