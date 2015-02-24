@@ -35,9 +35,22 @@ receiptId = parameters.receiptId;
 orderId = parameters.orderId;
 dateReceived = parameters.datetimeReceived;
 OrderHeaderDetails = delegator.findOne("OrderHeader",["orderId":orderId],false);
-if(UtilValidate.isNotEmpty(OrderHeaderDetails.orderDate)){
+if((OrderHeaderDetails) && (OrderHeaderDetails.orderDate)){
 	orderDate =  OrderHeaderDetails.orderDate;
 	context.orderDate=orderDate;
+}
+orderAttributeList = delegator.findList("OrderAttribute",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+fileNumberDetails = EntityUtil.filterByCondition(orderAttributeList, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "FILE_NUMBER"));
+fileNumberDet=EntityUtil.getFirst(fileNumberDetails);
+if((fileNumberDet) && (fileNumberDet.attrValue)){
+	 fileNumber = fileNumberDet.attrValue;
+	 context.fileNumber=fileNumber;
+}
+refNumberDetails = EntityUtil.filterByCondition(orderAttributeList, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REF_NUMBER"));
+refNumberDet=EntityUtil.getFirst(refNumberDetails);
+if((refNumberDet) && (refNumberDet.attrValue)){
+	 refNumber = refNumberDet.attrValue;
+	 context.refNumber=refNumber;
 }
 shipmentMap=[:];
 shipmentList=[];

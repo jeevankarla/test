@@ -60,7 +60,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; </fo:block> 
 			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; </fo:block> 
 
-          	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;PO SEQ ID : ${shipmentMap.get("sequenceId")?if_exists}   </fo:block>
+         <#-- 	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;PO SEQ ID : ${shipmentMap.get("sequenceId")?if_exists}   </fo:block> -->
 
   <fo:block>
 	                 	<fo:table >
@@ -73,7 +73,27 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	            		<fo:table-column column-width="60pt"/> 		
 	            		<fo:table-column column-width="130pt"/> 		
 	                    <fo:table-body>
-	                    <fo:table-row >
+	                        <fo:table-row >
+                                <fo:table-cell>
+                            		<fo:block   text-align="left" font-size="12pt" >&#160; PO SEQ ID     : </fo:block>  
+                       			</fo:table-cell>
+                                <fo:table-cell>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("sequenceId")?if_exists}   </fo:block>
+                       			</fo:table-cell>
+                                <fo:table-cell>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;FILE NO     : </fo:block>  
+                       			</fo:table-cell>
+                                <fo:table-cell>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${fileNumber?if_exists}   </fo:block>
+                       			</fo:table-cell>
+                                 <fo:table-cell>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; REFERENCE NO.: </fo:block>  
+                       			</fo:table-cell>
+                                <fo:table-cell>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${refNumber?if_exists}   </fo:block>
+                       			</fo:table-cell>  
+                            </fo:table-row >
+                            <fo:table-row >      
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; P O NO    : </fo:block>  
                        			</fo:table-cell>                     
@@ -84,13 +104,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> P O DATE    :</fo:block> 
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if orderDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}<#else></#if></fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" > VENDOR CODE:</fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; VENDOR CODE  :</fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("partyId")}      </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${shipmentMap.get("partyId")}      </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" > STORE:</fo:block>  
@@ -113,10 +133,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("dcDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("dcDate"), "dd-MMM-yy")?if_exists}   </#if> </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" >VENDOR NAME: </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; VENDOR NAME  : </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("partyName")?if_exists}      </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${shipmentMap.get("partyName")?if_exists}      </fo:block>  
                        			</fo:table-cell>
                 			</fo:table-row>
                         <fo:table-row >
@@ -131,9 +151,21 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("invoiceDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("invoiceDate"), "dd-MMM-yy")?if_exists}    </#if> </fo:block>  
-                       			</fo:table-cell>
-	                    		                   		
+                       			</fo:table-cell>           		                   		
                 			</fo:table-row>
+                	   		<fo:table-row >
+                	   		<#list grnList as grnListItem>
+                	   		   <fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; VEHICLE NO: </fo:block>  
+                       		   </fo:table-cell> 
+                       		   <fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${grnListItem.get("vehicleId")?if_exists}</fo:block>  
+                       			</fo:table-cell> 
+                       	   </#list>		
+                       			<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;REMARKS     : </fo:block>  
+                       		   </fo:table-cell> 	        
+                	   		</fo:table-row>
                     </fo:table-body>
                 </fo:table>
               </fo:block>               	
@@ -155,8 +187,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="70pt"/>
 	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="70pt"/>
-	            		<fo:table-column column-width="70pt"/>
 	                    <fo:table-body>
 	                   
  <fo:table-row >
@@ -196,12 +226,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                         		<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">AMOUNT Rs </fo:block>   
                         		</fo:table-cell>
-                        		<fo:table-cell border-style="solid">
+                        	<#--- <fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">VEHICLE NO</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
                             		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">REMARKS</fo:block>  
-                        		</fo:table-cell>
+                        		</fo:table-cell> -->
                         		
                 			</fo:table-row>
                                  <#assign sNo=1>                 
@@ -268,7 +298,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                  ${grnListItem.get("amount")?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
-	                               <fo:table-cell border-style="solid">
+	                          <#--- <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
 	                                    ${grnListItem.get("vehicleId")?if_exists}
  	                                    </fo:block>
@@ -277,7 +307,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                    <fo:block text-align="center" font-size="10pt">
 	                                    
 	                                    </fo:block>
-	                                </fo:table-cell>
+	                                </fo:table-cell> -->
 	                               </fo:table-row>
 	                           	<#assign sNo=sNo+1>
                                 </#list>
