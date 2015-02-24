@@ -81,7 +81,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("sequenceId")?if_exists}   </fo:block>
                        			</fo:table-cell>
                                 <fo:table-cell>
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;FILE NO     : </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;FILE NO.    : </fo:block>  
                        			</fo:table-cell>
                                 <fo:table-cell>
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${fileNumber?if_exists}   </fo:block>
@@ -154,17 +154,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                        			</fo:table-cell>           		                   		
                 			</fo:table-row>
                 	   		<fo:table-row >
-                	   		<#list grnList as grnListItem>
                 	   		   <fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; VEHICLE NO: </fo:block>  
                        		   </fo:table-cell> 
                        		   <fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${grnListItem.get("vehicleId")?if_exists}</fo:block>  
-                       			</fo:table-cell> 
-                       	   </#list>		
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${vehicleNo?if_exists}</fo:block>  
+                       			</fo:table-cell>                       	   	
                        			<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;REMARKS     : </fo:block>  
-                       		   </fo:table-cell> 	        
+                       		   </fo:table-cell> 
+                               <fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("description")?if_exists}   </fo:block>
+                       			</fo:table-cell>	        
                 	   		</fo:table-row>
                     </fo:table-body>
                 </fo:table>

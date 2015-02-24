@@ -69,10 +69,12 @@ invoiceNo=invoiceDetails.get("supplierInvoiceId");
 invoiceDate=invoiceDetails.get("supplierInvoiceDate");
 dcNo=invoiceDetails.get("deliveryChallanNumber");
 dcDate=invoiceDetails.get("deliveryChallanDate");
+description=invoiceDetails.get("description");
 shipmentMap.put("invoiceNo",invoiceNo);
 shipmentMap.put("invoiceDate",invoiceDate);
 shipmentMap.put("dcNo",dcNo);
 shipmentMap.put("dcDate",dcDate);
+shipmentMap.put("description",description);
 ////get PartyId from Role for Dept
 //List conditionlist=[];
 //conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -133,10 +135,11 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	productIds = EntityUtil.getFieldListFromEntityList(grnDetailsList, "productId", true);
 	productStore = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
 	productStore=EntityUtil.getFirst(productStore);
-	Store=productStore.facilityId;
-	shipmentMap.put("store",Store);
-	
-	}
+	if((productStore) && (productStore.facilityId)){
+	      Store=productStore.facilityId;
+	      shipmentMap.put("store",Store);
+    }	  	
+}
 
  grnList=[];
  grnDetailsList.each{grnData->
@@ -156,7 +159,8 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	grnDetailsMap["quantity"]=0;
     grnDetailsMap["amount"]=0;
 	grnDetailsMap["deliveryChallanQty"]=0;
-	grnDetailsMap["vehicleId"]=invoiceDetails.get("vehicleId");
+	vehicleNo=invoiceDetails.get("vehicleId");
+	context.vehicleNo=vehicleNo;
 	
 	// productDetails
 	product = delegator.findOne("Product",["productId":grnData.productId],false);
