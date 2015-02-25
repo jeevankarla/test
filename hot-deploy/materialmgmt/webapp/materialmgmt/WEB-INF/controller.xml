@@ -1197,6 +1197,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPartyGroup"/>
     </request-map> 
+    <request-map uri="NewPartyGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewPartyGroup"/>
+    </request-map> 
     <request-map uri="createPartyGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSupplier"/>
@@ -1386,6 +1390,7 @@
 	<!-- Vendor Info Views -->
     <view-map name="findVendor" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#findVendor"/>
     <view-map name="EditPartyGroup" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#EditPartyGroup"/>
+    <view-map name="NewPartyGroup" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#CreatePartyGroup"/>
     <view-map name="NewVendor" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#NewVendor"/>
     <view-map name="viewprofile" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#viewprofile"/>
 	<!--  <view-map name="EditPerson" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#EditPerson"/>-->

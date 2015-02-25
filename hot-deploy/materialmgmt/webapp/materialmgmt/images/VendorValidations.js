@@ -8,45 +8,22 @@ function vendorValidation() {
 	jQuery('[name=USER_TINNUMBER]').parent().parent().hide();
 	jQuery('[name=USER_CSTNUMBER]').parent().parent().hide();
 	jQuery('[name=USER_SERVICETAXNUM]').parent().parent().hide(); 
-	formName=document.forms['NewUser'];	
 	 if (roleTypeId== "SERVICE_VENDOR") {
 		 jQuery('[name=USER_PANID]').parent().parent().hide();
 		 jQuery('[name=USER_TINNUMBER]').parent().parent().hide();
 		 jQuery('[name=USER_CSTNUMBER]').parent().parent().hide();
 		 jQuery('[name=USER_SERVICETAXNUM]').parent().parent().show();
-		 
-		 jQuery('[name=USER_TINNUMBER]').removeClass("required");
-		 jQuery('[name=USER_CSTNUMBER]').removeClass("required");
-		 jQuery('[name=USER_PANID]').removeClass("required");
-		 jQuery('[name=USER_SERVICETAXNUM]').addClass("required");
+		
      }else if(roleTypeId == "MATERIAL_VENDOR") {
-    	 var tin=jQuery("[name='USER_TINNUMBER']").val();
-    	 var cst=jQuery("[name='USER_CSTNUMBER']").val();
     	 jQuery('[name=USER_PANID]').parent().parent().hide();
     	 jQuery('[name=USER_SERVICETAXNUM]').parent().parent().hide();
     	 jQuery('[name=USER_TINNUMBER]').parent().parent().show();
     	 jQuery('[name=USER_CSTNUMBER]').parent().parent().show();
-         if (tin=="" ) {
-    		 jQuery('[name=USER_CSTNUMBER]').removeClass("required");
-    		 jQuery('[name=USER_TINNUMBER]').addClass("required");
-		 }else if (cst== "" ) {
-    		 jQuery('[name=USER_CSTNUMBER]').addClass("required");
-    		 jQuery('[name=USER_TINNUMBER]').removeClass("required");
-		 }
-    	 jQuery('[name=USER_SERVICETAXNUM]').removeClass("required");
-		 jQuery('[name=USER_PANID]').removeClass("required");
      }else{
-    	 var panId=jQuery("[name='USER_PANID']").val();
     	 jQuery('[name=USER_PANID]').parent().parent().show();
 		 jQuery('[name=USER_TINNUMBER]').parent().parent().hide();
 		 jQuery('[name=USER_CSTNUMBER]').parent().parent().hide();
 		 jQuery('[name=USER_SERVICETAXNUM]').parent().parent().hide();
-		
-		 jQuery('[name=USER_TINNUMBER]').removeClass("required");
-		 jQuery('[name=USER_CSTNUMBER]').removeClass("required");
-		 jQuery('[name=USER_SERVICETAXNUM]').removeClass("required");
-		 jQuery('[name=USER_PANID]').addClass("required");	
-		
 	}
 }
 
@@ -64,10 +41,6 @@ function partyIdentificationVal(){
 		 if(tinNumber!=""){
 		  idvalue=tinNumber;
 		  partyIdentificationTypeId="TIN_NUMBER";
-		 }
-		 if(cstNumber!=""){
-		  idvalue=cstNumber;
-		  partyIdentificationTypeId="CST_NUMBER";
 		 }
 	 }else{
 		 var panId=jQuery("[name='USER_PANID']").val();
@@ -98,18 +71,16 @@ function partyIdentificationVal(){
 							//alert("innerList11"+innerList);
 							if(innerList){
 								 if (innerList.length >= 1) {
-									     // alert(222);
-									  jQuery("[name='groupName']").after("Vendor Group Name already exist."); 
+									 jQuery("[name='groupName']").after("<div class='groupLabel'>Vendor Group Name already exist.</div>"); 
 									// jQuery('<div id="content-messages"></div>').insertAfter(jQuery("#partyContentList"));
 									 	//$("#test")..tooltip("option", "content", "New Content");
-									     $('.smallSubmit').hide();
 									     return false;
 						            }
 							}
 			      		}
 			      	}else{
-			      		$('.smallSubmit').show();
-			      		flag=true;
+			      		 $(".groupLabel").remove();
+			      		 flag=true;
 			      		
 			      	}
 			      	

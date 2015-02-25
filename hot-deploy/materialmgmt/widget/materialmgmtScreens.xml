@@ -1009,7 +1009,7 @@
                     	         
                     	        
 	                      		<widgets>
-	                      		<link target="editpartygroup"  text="Create Vendor" style="buttontext" ><parameter param-name="create_new" value="Y"/></link>
+	                      		<link target="NewPartyGroup"  text="Create Vendor" style="buttontext" ></link>
 	           						<platform-specific>
                                     <html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/findVendor.ftl"/></html>
                                 </platform-specific>
@@ -1110,16 +1110,41 @@
             </widgets>
         </section>
     </screen>
+    <screen name="CreatePartyGroup">
+        <section>
+            <actions>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="tabButtonItem" value="searchMaterial"/>
+                <set field="tabButtonItem2" value="findVendor"/>
+                <set field="headerItem" value="find"/>
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="createNewVendor" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+          					<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/CreateVendor.ftl"/></html></platform-specific>
+                        <!-- <screenlet title="${uiLabelMap.PageTitleEditGroupInformation}">
+                            <include-form name="EditPartyGroup" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                        </screenlet>-->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="viewprofile">
         <section>
             <actions>
               <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
               <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
-               <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
                 <set field="tabButtonItem" value="findVendor"/>
                 <set field="tabButtonItem2" value="findVendor"/>
-                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
