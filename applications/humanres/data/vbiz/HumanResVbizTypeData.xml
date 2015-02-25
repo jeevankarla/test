@@ -240,7 +240,8 @@
    <PeriodType description="HR DA Arrears" periodTypeId="HR_DAARREARS" uomId="TF_mon"/>
    <Enumeration description="Suppl Payroll DA ARREARS" enumCode="SP_DA_ARREARS" enumId="SP_DA_ARREARS" enumTypeId="PERIOD_BILLING"/>
    <PayrollType payrollTypeId="SP_DA_ARREARS" parentTypeId="PAYROLL_BILL" periodTypeId="HR_DAARREARS" serviceName="processDAArrearsService" />
-   <PayrollTypePayheadTypeMap payrollTypeId="SP_DA_ARREARS" payHeadTypeId="PAYROL_BEN_DA_ARERS"/>
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_DA_ARREARS" payHeadTypeId="PAYROL_BEN_DA"/>
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_DA_ARREARS" payHeadTypeId="PAYROL_DD_PF"/>
     
     
     

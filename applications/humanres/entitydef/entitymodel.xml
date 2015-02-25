@@ -1985,4 +1985,23 @@ under the License.
 	        <key-map field-name="recoveryType" rel-field-name="deductionTypeId"/>
 	  	</relation>
  	</entity>
+ 	<entity entity-name="EmployeeDAArrears"
+            package-name="org.ofbiz.humanres"
+            title="Employee DA Arrears">
+      	<field name="periodBillingId" type="id-ne"/>
+      	<field name="geoId" type="id-ne"></field>
+      	<field name="DADate" type="date-time" />
+      	<field name="createdDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+	    <prim-key field="periodBillingId"/>
+	    <prim-key field="geoId"/>
+      	<relation type="one" fk-name="DAA_GEO" rel-entity-name="Geo">
+            <key-map field-name="geoId"/>
+        </relation>
+      	<relation type="one" fk-name="DAA_PB" rel-entity-name="PeriodBilling">
+        	<key-map field-name="periodBillingId"/>
+        </relation>
+ 	</entity>
 </entitymodel>
