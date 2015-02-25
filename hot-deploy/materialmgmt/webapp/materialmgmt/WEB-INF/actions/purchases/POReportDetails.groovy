@@ -29,7 +29,9 @@ import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.order.order.*;
+import java.math.RoundingMode;
 
+rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
 signature = parameters.sign;
@@ -42,6 +44,7 @@ orderTermList=[];
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
 allDetailsMap["grandTotal"]=BigDecimal.ZERO;
+roundedGrandTotal=BigDecimal.ZERO;
 orderHeader=null;
 orderDesctioption="";
 if (orderId) {
@@ -54,8 +57,10 @@ if (orderId) {
 	orderItems = orderReadHelper.getOrderItems();
 	orderAdjustments = orderReadHelper.getAdjustments();
 	grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
+	roundedGrandTotal=grandTotal.setScale(0,rounding);
 	allDetailsMap["grandTotal"] = grandTotal;
  }}
+context.roundedGrandTotal=roundedGrandTotal;
 context.orderDesctioption=orderDesctioption;
 // orderDate
 orderHeaderDetails=orderHeader;
