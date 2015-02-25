@@ -53,7 +53,9 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 
 condList =[];
+if(UtilValidate.isNotEmpty(productId)){	
 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+}
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
@@ -72,8 +74,42 @@ shipmentReceiptList.each{shipmentData->
    shipmentDetailMap["datetimeReceived"]=shipmentData.datetimeReceived;
    shipmentDetailMap["shipmentId"]=shipmentData.shipmentId;
    shipmentDetailMap["inventoryItemId"]=shipmentData.inventoryItemId;
-   
-   
+
+   coList =[];
+coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, shipmentData.receiptId));
+coList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_QUALITYCHECK"));
+EntityCondition con = EntityCondition.makeCondition(coList,EntityOperator.AND);
+shipmentQCdate= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);   
+shipmentQCdate=EntityUtil.getFirst(shipmentQCdate);
+if(UtilValidate.isNotEmpty(shipmentQCdate)){
+	if(UtilValidate.isNotEmpty(shipmentQCdate.statusDatetime)){
+		statusDatetime=shipmentQCdate.statusDatetime;
+		shipmentDetailMap.put("statusDatetime",statusDatetime);
+}
+
+}
+ deptRole = delegator.findList("ShipmentReceiptRole",EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS , shipmentData.receiptId)  , null, null, null, false );
+    deptRole=EntityUtil.getFirst(deptRole);  
+    if(UtilValidate.isNotEmpty(deptRole)){
+	partyIdOfDept=deptRole.partyId;
+
+   if(UtilValidate.isNotEmpty(partyIdOfDept)){
+  deptGroupName= delegator.findList("PartyRelationshipAndDetail",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdOfDept)  , null, null, null, false );
+  deptGroupName=EntityUtil.getFirst(deptGroupName);
+  
+   deptName=deptGroupName.groupName;  
+   shipmentDetailMap.put("deptName",deptName);
+	     }
+  	  }
+   //invoiceno,date
+   invoiceData = delegator.findOne("Shipment",["shipmentId":shipmentData.shipmentId],false);
+   if(invoiceData){
+	   invoiceId=invoiceData.get("supplierInvoiceId");
+	   invoiceDate=invoiceData.get("supplierInvoiceDate");
+ 
+   shipmentDetailMap["invoiceId"]=invoiceId;
+   shipmentDetailMap["invoiceDate"]=invoiceDate;
+   }
       cList =[];
    cList.add(EntityCondition.makeCondition("statusId",  EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITOFF")));
    cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentData.shipmentId));
@@ -83,9 +119,9 @@ shipmentReceiptList.each{shipmentData->
    if(UtilValidate.isNotEmpty(invoiceDetails)){
 	   invoiceDetails=EntityUtil.getFirst(invoiceDetails);
 	   
-   shipmentDetailMap["invoiceId"]=invoiceDetails.invoiceId;
-   shipmentDetailMap["invoiceDate"]=invoiceDetails.invoiceDate;
-   shipmentDetailMap["dueDate"]=invoiceDetails.dueDate;
+ //  shipmentDetailMap["invoiceId"]=invoiceDetails.invoiceId;
+ //  shipmentDetailMap["invoiceDate"]=invoiceDetails.invoiceDate;
+  // shipmentDetailMap["dueDate"]=invoiceDetails.dueDate;
    
    invoiceId=invoiceDetails.invoiceId;
    invoiceAmount= InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
@@ -141,16 +177,7 @@ shipmentReceiptList.each{shipmentData->
     partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("partyName",partyName);
      }
-     deptDetails = EntityUtil.filterByCondition(vendorDeptDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT"));
-   deptDetails=EntityUtil.getFirst(deptDetails);
-   
-   if(UtilValidate.isNotEmpty(deptDetails)){
-    partyId=deptDetails.partyId;
-    //shipmentDetailMap.put("partyId",partyId);
-    deptName =  PartyHelper.getPartyName(delegator, partyId, false);
-	shipmentDetailMap.put("deptName",deptName);
-      
-   }
+  
    mrrList.addAll(shipmentDetailMap);
    
  
