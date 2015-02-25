@@ -509,6 +509,11 @@
             	<decorator-section name="body">
             	<include-menu name="createNewVendor" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
             	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/editMaterialDetails.ftl"/></html></platform-specific>
+            	<section>
+    					<widgets>
+                			<link target="AddMaterial" text="Add Material" style="buttontext"/>
+   	     				</widgets>
+   	     		</section>
             	<screenlet title="Search-Options">
             		<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="findMaterial"/>
             	</screenlet>
@@ -519,6 +524,30 @@
             </decorator-screen>
     	</widgets>
     </section>
+    </screen>
+    <screen name="AddMaterial">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Add Material"/>              
+			    <set field="tabButtonItem" value="searchMaterial" />	
+               <set field="targetRequest" value="addMaterial"/>
+                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ProductEntryFormNew.groovy"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                               <label style="h1">Material Details</label>
+                               <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/AddMaterial.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
     </screen>
     <screen name="orderAttributes">
     	<section>
@@ -651,16 +680,30 @@
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
 				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
-				 <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
-				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				<!--  <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" /> -->
+				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FGS_SALE_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
-				<set field="categoryList" value="${productCategoryResult.productCategory}"/>
+				<set field="prodCatalogIdResult" value="${groovy:org.ofbiz.product.catalog.CatalogWorker.getStoreCatalogs(delegator,productStoreId)}" />
+			   <!--  <set field="prodCatalogIdResult" value="${prodCatalogIdResult.[0]get(&quot;prodCatalogId&quot;)}"/> -->
+			   <set field="prodCatalogId" value="${prodCatalogIdResult[0].prodCatalogId}"/>
+			   <set field="productCategoryListResult" value="${groovy:org.ofbiz.product.catalog.CatalogWorker.getProdCatalogCategories(delegator,prodCatalogId,null)}" />
+			   <set field="productCategoryIdsList" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(productCategoryListResult, 'productCategoryId', true);}" type="List"/>
+	
+			   <entity-condition entity-name="ProductCategory" list="productCategoryListResult" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="productCategoryId" operator="in"  from-field="productCategoryIdsList"/>
+                    </condition-list>
+                </entity-condition>
+             
+			  <set field="categoryList" from-field="productCategoryListResult"/>
+				<!-- <set field="categoryList" value="${productCategoryResult.productCategory}"/> -->
             </actions>
             <widgets>
               <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">   
                       <include-menu name="FGSSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                       	<section>
+                      	
 	                    	<condition>
 	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
 	                        </condition>
@@ -891,8 +934,8 @@
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
               
-                <entity-condition entity-name="Product" list="productList" use-cache="true">
-                </entity-condition>                
+               <!--  <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition> -->                
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
