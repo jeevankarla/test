@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -67,10 +68,28 @@ public class MaterialManagementResource {
         if (username == null || password == null || tenantId == null) {
             Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", MaterialManagementResource.class.getName());        	
         	//::TODO:: error handling
-            return result;        }
+            return result;        
+        }
         String tenantDelegatorName =  "default#" + tenantId;
         GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
         LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
+        
+        Map<String, Object> paramMap = FastMap.newInstance();
+        paramMap.put("login.username", username);
+        paramMap.put("login.password", password);
+
+        Map<String, Object> resp;
+        try {
+            resp = dispatcher.runSync("userLogin", paramMap);
+        } catch (GenericServiceException e) {
+  			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), MaterialManagementResource.class.getName());
+			return result;	  
+        }
+
+        if (ServiceUtil.isError(resp)) {
+  			Debug.logWarning("userLogin authentication service failed for " +username, MaterialManagementResource.class.getName());
+			return result;	       
+		}
 
   		GenericValue userLogin = null;
   		try{
@@ -90,12 +109,6 @@ apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view inventory!", MaterialManagementResource.class.getName());
             return result;
         }
-        
-        Map<String, String> paramMap = UtilMisc.toMap(
-        		"login.username", username,
-                "login.password", password,
-                "tenantId", tenantId
-            );
  
         Map<String, Object> context = FastMap.newInstance();
         Map<String, Object> productListMap = MaterialHelperServices.getMaterialProducts(dispatcher.getDispatchContext(),  context);
@@ -162,6 +175,22 @@ auditUtil.saveHit(apiHitMap);
         GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
         LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
 
+        Map<String, Object> paramMap = FastMap.newInstance();
+        paramMap.put("login.username", username);
+        paramMap.put("login.password", password);        
+        Map<String, Object> resp;
+        try {
+            resp = dispatcher.runSync("userLogin", paramMap);
+        } catch (GenericServiceException e) {
+  			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), MaterialManagementResource.class.getName());
+			return result;	  
+        }
+
+        if (ServiceUtil.isError(resp)) {
+  			Debug.logWarning("userLogin authentication service failed for " +username, MaterialManagementResource.class.getName());
+			return result;	       
+		}
+        
   		GenericValue userLogin = null;
   		try{
   	    	userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
@@ -187,12 +216,6 @@ apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
         	result = ServiceUtil.returnError("Product Id is empty");
             return result;        
         }         
-        
-        Map<String, String> paramMap = UtilMisc.toMap(
-        		"login.username", username,
-                "login.password", password,
-                "tenantId", tenantId
-            );
  
 		GenericValue productDetails = null;
         try{
