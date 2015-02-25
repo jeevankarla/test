@@ -41,22 +41,23 @@ under the License.
 						<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="14pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
                     	<fo:block text-align="center" font-size="14pt" font-weight="bold"  keep-together="always"  white-space-collapse="false">&#160;     STOCK POSITION REPORT ON: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} </fo:block>
               			<fo:block font-size="10pt">================================================================================================================</fo:block>
-            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">LedgerNo 	Product  		ProductDes 	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Uom &#160;&#160;&#160;&#160;&#160;&#160;				 Quantity  					&#160;&#160;QC</fo:block>	 	 	  
-            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;     		Code		&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;&#160;&#160;&#160;&#160;	on Hand			 &#160;&#160;&#160;&#160;&#160;&#160;Qty</fo:block>
+            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">LedgerNo 	Product  		ProductDes 	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Uom&#160;&#160;&#160;&#160;&#160;&#160; Quantity  Received&#160; In-QC</fo:block>	 	 	  
+            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;     		Code		&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;on Hand	&#160;&#160;&#160;&#160;Qty      Qty</fo:block>
             			<fo:block font-size="10pt">================================================================================================================</fo:block>
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="70pt"/>
                     <fo:table-column column-width="80pt"/> 
                	    <fo:table-column column-width="270pt"/>
-            		<fo:table-column column-width="100pt"/> 	
+            		<fo:table-column column-width="75pt"/> 	
             		<fo:table-column column-width="50pt"/>	
-            		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="120pt"/>
+            		<fo:table-column column-width="60pt"/>
+            		<fo:table-column column-width="60pt"/>
 	                    <fo:table-body>
 	                    			<#assign serialNo = 1>
 	                    			<#assign ledgerGrandTotalPromise = 0>
 				                     <#assign ledgerGrandQtyHnd = 0>
+                                     <#assign ledgerGrandQtyRecvd =0>
 		                    	<#assign stockDetails = finalStockPositionMap.keySet()>
 		                    	<#list stockDetails as stockDet>
 		                    		<#assign productDet = finalStockPositionMap.get(stockDet)>
@@ -72,6 +73,7 @@ under the License.
 					                 </fo:table-row>
 					                 <#assign ledgerTotalPromise = 0>
 				                     <#assign ledgerQtyHnd = 0>
+                                     <#assign ledgerQtyRecvd = 0>
 		                        	<#list productDet as productDetails>
 		                        	<fo:table-row>
 		                        			<fo:table-cell>
@@ -89,6 +91,10 @@ under the License.
 							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.get("quantityOnHandTotal")?if_exists>
 							       			<fo:table-cell>
 							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("quantityOnHandTotal")?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
+							       			<#assign ledgerQtyRecvd = ledgerQtyRecvd + productDetails.get("receivedQty")?if_exists>
+											<fo:table-cell>
+							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("receivedQty")?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 							       			<#assign ledgerQtyHnd = ledgerQtyHnd + productDetails.get("qcQuantity")?if_exists>
 							       			<fo:table-cell>
@@ -118,6 +124,10 @@ under the License.
 							       			<fo:table-cell>
 							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerTotalPromise?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
+                                            <#assign ledgerGrandQtyRecvd = ledgerGrandQtyRecvd + ledgerQtyRecvd>
+                                             <fo:table-cell>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerQtyRecvd?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
 							       			<#assign ledgerGrandQtyHnd = ledgerGrandQtyHnd+ ledgerQtyHnd>
 							       			<fo:table-cell>
 							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerQtyHnd?if_exists?string("#0.000")}</fo:block>
@@ -144,6 +154,9 @@ under the License.
 							       			</fo:table-cell>
 							       			<fo:table-cell>
 							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandTotalPromise?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always"  font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandQtyRecvd?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
 							            		<fo:block  keep-together="always"  font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandQtyHnd?if_exists?string("#0.000")}</fo:block>

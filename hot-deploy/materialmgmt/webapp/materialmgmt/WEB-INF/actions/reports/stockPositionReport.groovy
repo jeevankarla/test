@@ -89,6 +89,7 @@ dctx = dispatcher.getDispatchContext();
 			 quantityOnHandTotal = BigDecimal.ZERO;
 			 availableToPromiseTotal = BigDecimal.ZERO;
 			 qcQuantity = BigDecimal.ZERO;
+			 receivedQty = BigDecimal.ZERO;
 			 if(UtilValidate.isNotEmpty(productDetails)){
 				 productName = productDetails.productName;
 				 quantityUomId = productDetails.quantityUomId;
@@ -112,15 +113,26 @@ dctx = dispatcher.getDispatchContext();
 				 quantityOnHandTotal = inventoryItem.inventoryCount;
 				 availableToPromiseTotal = inventoryItem.inventoryCount;
 			 }
-			 inventoryItemWithQC = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId]);
+			 ecl = EntityCondition.makeCondition([
+								   EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId)],
+								   EntityOperator.AND);
+			 shipmentReceipts=delegator.findList("ShipmentReceipt",ecl,UtilMisc.toSet("statusId","quantityAccepted","quantityRejected"),null,null,false);
+			 shipmentReceipts.each{receipt->
+				 if(receipt.statusId == "SR_RECEIVED"){
+					 receivedQty+=receipt.quantityAccepted;
+				 }
+				 if(receipt.statusId == "SR_QUALITYCHECK"){
+					 qcQuantity+=receipt.quantityAccepted;
+				 }
+			 }
+			 /*inventoryItemWithQC = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId]);
 			 if(UtilValidate.isNotEmpty(inventoryItemWithQC)){
 				 qcQuantity = inventoryItemWithQC.inventoryCount;
-			 }
-			 qcQuantityDiff = BigDecimal.ZERO;
+			 }*/
+			 /*qcQuantityDiff = BigDecimal.ZERO;
 			 if(UtilValidate.isNotEmpty(qcQuantity)){
 				 qcQuantityDiff = qcQuantity-quantityOnHandTotal;
-			 }
-			 
+			 }*/
 			 tempMap = [:];
 			 tempMap["productId"] = productId;
 			 tempMap["productName"] = productName;
@@ -128,7 +140,8 @@ dctx = dispatcher.getDispatchContext();
 			 tempMap["uomDescription"] = uomDescription;
 			 tempMap["availableToPromiseTotal"] = availableToPromiseTotal;
 			 tempMap["quantityOnHandTotal"] = quantityOnHandTotal;
-			 tempMap["qcQuantity"] = qcQuantityDiff;
+			 tempMap["qcQuantity"] = qcQuantity;
+			 tempMap["receivedQty"]=receivedQty
 			 //if(availableToPromiseTotal>0 || quantityOnHandTotal>0){
 				 if(UtilValidate.isNotEmpty(tempMap)){
 					 productValueMap.putAll(tempMap);
