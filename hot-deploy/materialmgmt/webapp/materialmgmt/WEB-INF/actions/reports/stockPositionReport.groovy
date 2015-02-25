@@ -114,15 +114,18 @@ dctx = dispatcher.getDispatchContext();
 				 availableToPromiseTotal = inventoryItem.inventoryCount;
 			 }
 			 ecl = EntityCondition.makeCondition([
-								   EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId)],
+								   EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
+								   EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("SR_RECEIVED","SR_QUALITYCHECK"))],
 								   EntityOperator.AND);
 			 shipmentReceipts=delegator.findList("ShipmentReceipt",ecl,UtilMisc.toSet("statusId","quantityAccepted","quantityRejected"),null,null,false);
-			 shipmentReceipts.each{receipt->
-				 if(receipt.statusId == "SR_RECEIVED"){
-					 receivedQty+=receipt.quantityAccepted;
-				 }
-				 if(receipt.statusId == "SR_QUALITYCHECK"){
-					 qcQuantity+=receipt.quantityAccepted;
+			 if(UtilValidate.isNotEmpty(shipmentReceipts)){
+				 shipmentReceipts.each{receipt->
+					 if(receipt.statusId == "SR_RECEIVED"){
+						 receivedQty+=receipt.quantityAccepted;
+					 }
+					 if(receipt.statusId == "SR_QUALITYCHECK"){
+						 qcQuantity+=receipt.quantityAccepted;
+					 }
 				 }
 			 }
 			 /*inventoryItemWithQC = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productId]);
