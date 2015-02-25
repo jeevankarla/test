@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the DepotSales Component." permissionId="DEPOTSALES_VIEW"/>
+    <SecurityPermission description="Create operations in the DepotSales Component." permissionId="DEPOTSALES_CREATE"/>
+    <SecurityPermission description="Update operations in the DepotSales Component." permissionId="DEPOTSALES_UPDATE"/>
+    <SecurityPermission description="Delete operations in the DepotSales Component." permissionId="DEPOTSALES_DELETE"/>
+    <SecurityPermission description="ALL operations in the DepotSales Component." permissionId="DEPOTSALES_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DEPOTSALES_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DEPOTSALES_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DEPOTSALES_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DEPOTSALES_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="DEPOTSALES_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="DEPOTSALES_ADMIN"/>
+</entity-engine-xml>
