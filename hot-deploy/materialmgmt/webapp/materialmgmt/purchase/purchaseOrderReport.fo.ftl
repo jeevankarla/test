@@ -224,12 +224,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	        	  </fo:block>	
 	</#list>
 					 <#if allDetailsMap.get("grandTotal")?has_content> 
-      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >  GRAND TOTAL                        :<#if allDetailsMap.get("discount")?has_content>${(allDetailsMap.get("grandTotal")-allDetailsMap.get("discount"))?string("##0.00")} INR<#else> ${allDetailsMap.get("grandTotal")?if_exists?string("##0.00")} INR</#if> </fo:block> </#if>
-    
+      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >  GRAND TOTAL                        :<#if allDetailsMap.get("discount")?has_content>${(allDetailsMap.get("grandTotal")-allDetailsMap.get("discount"))?string("##0.0")} INR <#else> ${allDetailsMap.get("grandTotal")?if_exists?string("##0.0")} INR </#if> </fo:block> </#if>
+      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >  ROUNDED GRAND TOTAL                :<#if allDetailsMap.get("discount")?has_content>${(roundedGrandTotal-allDetailsMap.get("discount"))?string("##0.0")} INR <#else> ${roundedGrandTotal?if_exists?string("##0.0")} INR </#if> </fo:block> 	
                
-               <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(allDetailsMap.get("grandTotal"), "%indRupees-and-paiseRupees", locale)>
+               <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(roundedGrandTotal, "%indRupees-and-paiseRupees", locale)>
 										  	
-                  <fo:block white-space-collapse="false" >Amount(words): Rupees ${amountWords}only</fo:block>
+                  <fo:block white-space-collapse="false" >Amount(In Words): Rupees ${amountWords}only</fo:block>
                   
 	<#list parent as parentList>
 				<#assign termType=parentList.getKey()>
