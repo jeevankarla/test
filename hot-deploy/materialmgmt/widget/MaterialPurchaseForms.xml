@@ -355,9 +355,16 @@
       		<display/>
       	</field>
         <field name="datetimeReceived" title="Received Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
-        <field name="partyId" title ="Department">
-      		<display/>
-      	</field>
+<!--         <field name="partyId" title ="Department"> -->
+<!--       		<display/> -->
+<!--       	</field> -->
+         <field name="partyId"  title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>  
         <field name="productId" title="Name [Code][UOM]"><display-entity entity-name="Product" description="${productName} - [ ${productId} ][${dec}] "/></field>
         <field name="shipmentId"><display/></field>
       <!--   <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field> -->

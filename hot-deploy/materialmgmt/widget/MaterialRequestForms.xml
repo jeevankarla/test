@@ -953,7 +953,7 @@
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field>
-   	<field name="invoiceDate"><display/></field>
+   	<field name="invoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;yyyy-MM-dd&quot;);}"/></field>
    	<field name="partyIdTo" entry-name="partyId" title="To Party">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${partyId}]">
                 <parameter param-name="partyId" from-field="partyId"/>
