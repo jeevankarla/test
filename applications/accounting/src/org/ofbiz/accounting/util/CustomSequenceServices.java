@@ -423,5 +423,91 @@ public class CustomSequenceServices {
 		        Debug.log("====service=Completed Sucessfully=====");
 		        return result;
 				}
-		
+		      //new Service for Create or Reset  Sequence for OrderHeader
+				public static Map<String, Object> updateOrResetOrderHeaderSequence(DispatchContext dctx, Map<String, Object> context) {
+					Delegator delegator = dctx.getDelegator();
+			        LocalDispatcher dispatcher = dctx.getDispatcher();       
+			        String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+			        String orderTypeId = (String) context.get("orderTypeId");
+			        GenericValue userLogin = (GenericValue) context.get("userLogin");
+			        
+			        
+			        Map<String, Object> result = ServiceUtil.returnSuccess();
+			        if(UtilValidate.isEmpty(salesChannelEnumId)){
+			        	salesChannelEnumId="MATERIAL_PUR_CHANNEL";
+			        }
+			        if(UtilValidate.isEmpty(orderTypeId)){
+			        	orderTypeId="PURCHASE_ORDER";
+		   			}
+			        Timestamp fromDate=null;
+			        Timestamp thruDate=null;
+			        if(UtilValidate.isNotEmpty(context.get("fromDate"))){
+			        	 fromDate =UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date)context.get("fromDate")).getTime())) ;
+			        }
+			        if(UtilValidate.isNotEmpty(context.get("thruDate"))){
+			        	 thruDate =UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date)context.get("thruDate")).getTime())) ;
+			        }
+			        
+			        List<String> orderIds=FastList.newInstance();
+			        List<GenericValue> ordersList=FastList.newInstance();
+				    List<EntityExpr> exprs = FastList.newInstance();
+						
+				        if(UtilValidate.isNotEmpty(salesChannelEnumId)){
+				        	exprs.add(EntityCondition.makeCondition("salesChannelEnumId", EntityOperator.EQUALS, salesChannelEnumId));
+				        }
+				        if(UtilValidate.isNotEmpty(orderTypeId)){
+				        	exprs.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, orderTypeId));
+				        }
+				        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+				        	 exprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+						     exprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+				        }
+				        exprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.NOT_EQUAL, null));
+				        EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
+				        Debug.log("==fromDate=="+fromDate+"====thruDate=="+thruDate+"=condition="+condition);
+				        try {
+				        	ordersList = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderDate", "salesChannelEnumId", "orderId"), UtilMisc.toList("orderDate"), null, false);
+				        	orderIds = EntityUtil.getFieldListFromEntityList(ordersList, "orderId", true);
+						} catch (GenericEntityException e) {
+							Debug.logError(e, module);
+							return ServiceUtil.returnError(e.getMessage());
+						}
+				        List<GenericValue> orderSequenceList=FastList.newInstance();
+				        try {
+				        	exprs.clear();
+				        	 if(UtilValidate.isNotEmpty(orderIds)){
+						        	exprs.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+						        }
+				        	 EntityCondition orderSeqcondition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
+				        	 orderSequenceList = delegator.findList("OrderHeaderSequence", orderSeqcondition, null, null, null, false);
+				        	Debug.log("====orderSequenceList=Size===="+orderSequenceList.size()+"==orderIds.size()="+orderIds.size());
+				        	delegator.removeAll(orderSequenceList);
+				        	Debug.log("====orderSequenceList=======Deleted==and=Size()==>"+orderSequenceList.size());
+						} catch (GenericEntityException e) {
+							Debug.logError(e, module);
+							return ServiceUtil.returnError(e.getMessage());
+						}
+				        int i = 0;
+				        for(String eachOrderId:orderIds){
+				        	i++;
+				        	Map resultCtx = FastMap.newInstance();
+			   				try{
+			   					resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", eachOrderId ,"userLogin",userLogin));
+			   					if(ServiceUtil.isError(resultCtx)){
+			   						Debug.logError("Problem while Creating  Sequence for orderId:"+eachOrderId, module);
+			   						return ServiceUtil.returnError("Problem while Creating  Sequence for orderId:"+eachOrderId);
+			   					}
+			   				}catch(GenericServiceException e){
+			   					Debug.logError(e, module);
+			   					return ServiceUtil.returnError(e.getMessage());
+			   				}
+			   				if(i%100 == 0){
+				            	Debug.log("Records processed ###########"+i);
+				            }
+			   				
+				        }
+				        
+				        Debug.log("====service=Completed Sucessfully=====");
+				        return result;
+						}
 }
