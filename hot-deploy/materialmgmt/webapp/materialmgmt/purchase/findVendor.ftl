@@ -25,11 +25,6 @@ under the License.
   <#assign hideFields = "N">
 </#if>
 <h2>${uiLabelMap.PageTitleFindVendor}</h2>
-<#if (parameters.groupName?has_content)>
-  <#assign createUrl = "editpartygroup?create_new=Y&amp;groupName=${parameters.groupName?if_exists}"/>
-<#else>
-  <#assign createUrl = "createnew"/>
-</#if>
 <div class="screenlet">
   <div class="screenlet-title-bar">
 <#if partyList?has_content>

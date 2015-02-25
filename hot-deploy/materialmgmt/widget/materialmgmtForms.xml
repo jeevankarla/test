@@ -560,35 +560,19 @@
 		<field name="submitButton"  title="Create" separate-column="true">
             <submit button-type="button"/></field>
 	</form>
-	<form name="EditPartyGroup" type="single" target="updatePartyGroup" default-map-name="partyGroup"
+	<form name="EditVendor" type="single" target="updateVendor" default-map-name="partyGroup"
         focus-field-name="groupName" header-row-style="header-row" default-table-style="basic-table">
-        <alt-target use-when="partyGroup==null" target="createPartyGroup"/>
         <field use-when="partyGroup!=null" name="partyId" title="${uiLabelMap.VendorId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="groupName" required-field="true" ><text></text></field>
-        <field  name="roleTypeId"  event="onChange" action="javascript:vendorValidation();">   
+        <!--  <field  name="roleTypeId"  event="onChange" action="javascript:vendorValidation();">   
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="RoleType">
                     <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>  
-        <field name="USER_PANID" title="Pan Number" required-field="true"  event="onblur"  action="javascript:partyIdentificationVal();"><text size="13"></text></field>
-        <field name="USER_TINNUMBER"  title="Tin Number" required-field="true" event="onblur"  action="javascript:partyIdentificationVal();"><text></text></field>
-        <field name="USER_CSTNUMBER" title="Cst Number" required-field="true"  event="onblur"  action="javascript:partyIdentificationVal();"><text></text></field>
-        <field name="USER_SERVICETAXNUM" title="Service Tax Number " required-field="true"  event="onblur"  action="javascript:partyIdentificationVal();"><text></text></field>
+        </field>  -->
         <field use-when="partyGroup==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
-        <field use-when="partyGroup==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
-        <field name="stateProvinceGeoId"><hidden value="IND"></hidden></field>
-        <field name="statusId" use-when="partyGroup==null"><hidden/></field>
-        <field name="address1" title="${uiLabelMap.Address1}" required-field="true"><text/></field>
-        <field name="address2" title="${uiLabelMap.Address2}"><text/></field>
-        <field name="city" title="${uiLabelMap.City}" required-field="true"><text size="13"></text></field>
-        <field name="postalCode" title="${uiLabelMap.PostalCode}"><text size="13" default-value="0"/></field>
-        <field name="emailAddress" title="${uiLabelMap.EmailAddress}"><text/></field>
-        <field name="mobileNumber" title="${uiLabelMap.MobileNumber}"><text size="13"></text></field>
-        <field name="countryCode" title="${uiLabelMap.CountryCode}"><text size="5"></text></field>
-        <field name="contactNumber" title="${uiLabelMap.ContactNumber}"><text size="13"></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -596,7 +580,7 @@
             </hyperlink>
         </field>
    </form>
-    <form name="ViewPartyGroup" type="single" default-map-name="lookupGroup">
+    <form name="ViewVendor" type="single" default-map-name="lookupGroup">
         <auto-fields-entity entity-name="PartyGroup" default-field-type="display"/>
         <field name="partyTypeId"><ignored/></field>
         <field name="cstNumber"><ignored/></field>
@@ -612,7 +596,7 @@
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
     </form>
-    <form name="ViewPartyGroupHistory" type="list" list-name="partyNameHistoryList"
+    <form name="ViewVendorHistory" type="list" list-name="partyNameHistoryList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${groupName}"/></field>
         <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>

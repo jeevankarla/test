@@ -1023,7 +1023,7 @@
                     	         
                     	        
 	                      		<widgets>
-	                      		<link target="editpartygroup"  text="Create Vendor" style="buttontext" ><parameter param-name="create_new" value="Y"/></link>
+	                      		<link target="createNewVendor"  text="Create Vendor" style="buttontext" ></link>
 	           						<platform-specific>
                                     <html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/findVendor.ftl"/></html>
                                 </platform-specific>
@@ -1098,7 +1098,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditPartyGroup">
+    <screen name="EditVendor">
         <section>
             <actions>
                 <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
@@ -1117,8 +1117,35 @@
                       <decorator-section name="body">   
                       <include-menu name="createNewVendor" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <screenlet title="${uiLabelMap.PageTitleEditGroupInformation}">
-                            <include-form name="EditPartyGroup" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                            <include-form name="EditVendor" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                         </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="createNewVendor">
+        <section>
+            <actions>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="tabButtonItem" value="searchMaterial"/>
+                <set field="tabButtonItem2" value="findVendor"/>
+                <set field="headerItem" value="find"/>
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="createNewVendor" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+          					<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/CreateVendor.ftl"/></html></platform-specific>
+                        <!-- <screenlet title="${uiLabelMap.PageTitleEditGroupInformation}">
+                            <include-form name="EditPartyGroup" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                        </screenlet>-->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1129,11 +1156,9 @@
             <actions>
               <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
               <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
-               <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
                 <set field="tabButtonItem" value="findVendor"/>
                 <set field="tabButtonItem2" value="findVendor"/>
-                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
@@ -1203,6 +1228,7 @@
   <screen name="Vendor">
         <section>
             <actions>
+                <property-map resource="VendorUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
                 <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -1220,28 +1246,28 @@
                     <widgets>
                         <section>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
+                                <screenlet title="${uiLabelMap.GroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
                                     <include-menu name="groupUpdate" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
-                                    <include-form name="ViewPartyGroup" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                                    <include-form name="ViewVendor" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                                     <section>
                                         <condition>
                                             <not><if-empty field="partyNameHistoryList"/></not>
                                         </condition>
                                         <widgets>
-                                            <include-form name="ViewPartyGroupHistory" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                                            <include-form name="ViewVendorHistory" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                                         </widgets>
                                     </section>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" id="PartyGroupInformationPanel">
-                                    <include-form name="ViewPartyGroup" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                                <screenlet title="${uiLabelMap.GroupInformation}" id="PartyGroupInformationPanel">
+                                    <include-form name="ViewVendor" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                                     <section>
                                         <condition>
                                             <not><if-empty field="partyNameHistoryList"/></not>
                                         </condition>
                                         <widgets>
-                                            <include-form name="ViewPartyGroupHistory" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                                            <include-form name="ViewVendorHistory" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                                         </widgets>
                                     </section>
                                 </screenlet>
