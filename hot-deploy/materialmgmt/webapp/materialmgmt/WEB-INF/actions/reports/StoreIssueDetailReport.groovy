@@ -66,7 +66,6 @@ deptIds = EntityUtil.getFieldListFromEntityList(storeAbst, "fromPartyId", true);
 
 prodDeptMap=[:];
 if(UtilValidate.isNotEmpty(deptIds)){
-	     prodDeptMap=[:];
 		 
 	     deptIds.each{fromPartyId->
 			 
@@ -78,75 +77,86 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		 productIdsDetails = delegator.findList("CustRequestAndCustRequestItem", condition , null, null, null, false );
 		 productIds = EntityUtil.getFieldListFromEntityList(productIdsDetails, "productId", true);
-		 productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
-		 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);			 
+		 productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );		 
+		 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);		 
          if(UtilValidate.isNotEmpty(productCatIds)){
 	             prodMap=[:];
-	
+				 
 	         productCatIds.each{productCatId->
+				 
 	             prodList=[];
                  if(UtilValidate.isNotEmpty(productIdsDetails)){
+					 
                       productIdsDetails.each{custReq->						
 	                        productDetailMap=[:];
-	  
+							
 	                        custRequestId=custReq.custRequestId;
 	                        custRequestDate=custReq.custRequestDate;
 	                        productId=custReq.productId;
-							if(productId){
+							
+							if(productId){								
 							conditionList.clear();
 							conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
 							condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-							productCatTypeDetails = delegator.findList("ProductCategoryMember", condition , null, null, null, false );
-							productCatTypes= EntityUtil.getFirst(productCatTypeDetails);  
-							productCatTypeId=productCatTypes.productCategoryId;
-							if(productCatTypeId.equals(productCatId)){
-	                               custRequestItemSeqId=custReq.custRequestItemSeqId;
-							       quantity=custReq.quantity;							
-	                               productDetailMap["custRequestId"]=custRequestId;
-	                               productDetailMap["custRequestDate"]=custRequestDate;														
-							       productDetails = delegator.findOne("Product",["productId":productId],false);
-							      if(productDetails){
-							             productDetailMap["productId"]=productDetails.productId;
-	                                     productDetailMap["description"]=productDetails.description;
-							             uomId=productDetails.quantityUomId;
-							      }
-							     if(UtilValidate.isNotEmpty(uomId)){
-								    unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-							        productDetailMap["unit"]=unitDesciption.description;
-							     }							
-                                 conditionList.clear();
-	                             conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
-	                             conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
-	                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);
-	                             totQty=0;
-	                             totunitCost=0;
-	                             if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){		  
-		                              storeAbstQtyDetails.each{storeAbstQty->
-			                              quantity=storeAbstQty.quantity;
-			                              totQty =totQty+quantity;
-			                              unitCost=storeAbstQty.unitCost;
-			                              totunitCost=totunitCost+unitCost;
-		                             }
-		                            unitPrice=totQty/totunitCost;
-		                            totVal=	totQty*	unitPrice;
-		                            productDetailMap["totQty"]=totQty;
-		                            productDetailMap["unitPrice"]=unitPrice;
-		                            productDetailMap["totVal"]=totVal;
-	                        }
-	                       if(UtilValidate.isEmpty(storeAbstQtyDetails)){
-		                            productDetailMap["totQty"]=0;
-		                            productDetailMap["unitPrice"]=0;
-		                            productDetailMap["totVal"]=0;
-	                       }
-	                   prodList.addAll(productDetailMap);					
-	                  }
-				  }
-               }
-	        }
-	       prodMap.put(productCatId,prodList);		 
-         }
-      }
+							productCatTypeDetails = delegator.findList("ProductCategoryMember", condition , null, null, null, false );							
+							productCatTypes= EntityUtil.getFirst(productCatTypeDetails); 
+							if((productCatTypes) && (productCatTypes.productCategoryId)){								
+							      productCatTypeId=productCatTypes.productCategoryId;							
+							      if(productCatTypeId.equals(productCatId)){									
+	                                     custRequestItemSeqId=custReq.custRequestItemSeqId;								   
+							             quantity=custReq.quantity;							
+	                                     productDetailMap["custRequestId"]=custRequestId;
+		                                 productDetailMap["custRequestDate"]=custRequestDate;														
+								         productDetails = delegator.findOne("Product",["productId":productId],false);
+								         if(productDetails){
+								             productDetailMap["productId"]=productDetails.internalName;
+		                                     productDetailMap["description"]=productDetails.description;
+								             uomId=productDetails.quantityUomId;
+								         }
+							             if(UtilValidate.isNotEmpty(uomId)){
+								                unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+							                    productDetailMap["unit"]=unitDesciption.description;
+							              }							
+		                                 conditionList.clear();
+			                             conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+			                             conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+										 
+			                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+										 
+			                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);
+			                             totQty=0;
+			                             totunitCost=0;
+	                                    if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
+									
+		                                      storeAbstQtyDetails.each{storeAbstQty->
+					                              quantity=storeAbstQty.quantity;
+					                              totQty =totQty+quantity;
+					                              unitCost=storeAbstQty.unitCost;
+					                              totunitCost=totunitCost+unitCost;
+		                                      }
+									         if(totunitCost != 0){  
+		                                           unitPrice=totQty/totunitCost;
+									         }
+				                            totVal=	totQty*	unitPrice;
+				                            productDetailMap["totQty"]=totQty;
+				                            productDetailMap["unitPrice"]=unitPrice;
+				                            productDetailMap["totVal"]=totVal;
+	                                  }
+	                                  else{									
+				                            productDetailMap["totQty"]=0;
+				                            productDetailMap["unitPrice"]=0;
+				                            productDetailMap["totVal"]=0;									
+	                                  }						
+	                                  prodList.addAll(productDetailMap);						  					 
+	                            }
+						}																	
+				  }						
+             }					 
+					 
+	     }				
+	     prodMap.put(productCatId,prodList);				   
+       }
+    }
       prodDeptMap.put(deptName,prodMap);
    }
   context.prodDeptMap=prodDeptMap;
