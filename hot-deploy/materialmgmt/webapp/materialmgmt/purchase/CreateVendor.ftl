@@ -105,7 +105,7 @@
 	}); 
 	
 </script>
-	<form id="EditPartyGroup"  action="<@ofbizUrl>createPartyGroup</@ofbizUrl>" name="EditPartyGroup" method="post">
+	<form id="EditPartyGroup"  action="<@ofbizUrl>createVendor</@ofbizUrl>" name="EditPartyGroup" method="post">
 	    <div id="wizard-2">
         <h3>Group Information</h3>
         <section>
