@@ -32,9 +32,10 @@ under the License.
     <eca service="storeOrder" event="return">
         <action service="balanceOrderItemsWithNegativeReservations" mode="sync"/>
     </eca>
-
-    --><eca service="storeOrder" event="return">
+    -->
+    <eca service="storeOrder" event="return">
         <condition field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
+        <condition field-name="salesChannelEnumId" operator="equals" value="MATERIAL_PUR_CHANNEL"/>
         <action service="setUnitPriceAsLastPrice" mode="sync"/>
         <action service="createOrderHeaderSequence" mode="sync"/>
     </eca>

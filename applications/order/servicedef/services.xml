@@ -1175,5 +1175,13 @@ under the License.
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="sequenceId" type="String" mode="OUT" optional="true"/>
     </service>
+     <service name="updateOrResetOrderHeaderSequence" engine="java"
+            location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="updateOrResetOrderHeaderSequence" auth="true"  transaction-timeout="10200">
+        <description>Update or Reset OrderHeaderSequence(PO sequence) Entity</description>  
+         <attribute name="fromDate" type="Date" mode="IN"  optional="true"/> 
+         <attribute name="thruDate" type="Date" mode="IN" optional="true"/>  
+         <attribute name="salesChannelEnumId" type="String" default-value="MATERIAL_PUR_CHANNEL" mode="IN" optional="true"/>
+         <attribute name="orderTypeId" type="String" default-value="PURCHASE_ORDER" mode="IN" optional="false"/>
+    </service> 
     
 </services>
