@@ -405,6 +405,7 @@ public class MaterialHelperServices{
 		Map result = ServiceUtil.returnSuccess();
 		List condList=FastList.newInstance();
 		Map supplyDetailMap = FastMap.newInstance();
+		Timestamp now = UtilDateTime.nowTimestamp();
 		try{
 			condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
@@ -422,13 +423,16 @@ public class MaterialHelperServices{
 	        }
 	        String supplierPartyId = "";
         	BigDecimal supplyRate = BigDecimal.ZERO;
+        	
+        	condList.clear();
+    		condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    		condList.add(EntityCondition.makeCondition("availableFromDate", EntityOperator.LESS_THAN_EQUAL_TO,now));
+    		condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("availableThruDate", EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("availableThruDate",EntityOperator.GREATER_THAN_EQUAL_TO,now)));
+    		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    		List<GenericValue> supplierProducts = delegator.findList("SupplierProduct",cond,UtilMisc.toSet("partyId","lastPrice"),null,null,false);
+    		
 	        if(UtilValidate.isNotEmpty(receipts)){
 	        	GenericValue receipt = EntityUtil.getFirst(receipts);
-	        	condList.clear();
-        		condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-        		condList.add(EntityCondition.makeCondition("availableThruDate", EntityOperator.EQUALS,null));
-        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-        		List<GenericValue> supplierProducts = delegator.findList("SupplierProduct",cond,UtilMisc.toSet("partyId","lastPrice"),null,null,false);
         		GenericValue supplierProduct = null;
         		if(UtilValidate.isNotEmpty(supplierProducts)){
         		 supplierProduct = EntityUtil.getFirst(supplierProducts);
@@ -439,11 +443,6 @@ public class MaterialHelperServices{
 	        	supplyDetailMap.put("supplyQty", receipt.getBigDecimal("quantityAccepted"));
 	        	supplyDetailMap.put("supplyDate", receipt.getTimestamp("datetimeReceived"));
 	        }else{
-	        	condList.clear();
-        		condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-        		condList.add(EntityCondition.makeCondition("availableThruDate", EntityOperator.EQUALS,null));
-        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-        		List<GenericValue> supplierProducts = delegator.findList("SupplierProduct",cond,UtilMisc.toSet("partyId","lastPrice"),null,null,false);
         		GenericValue supplierProduct = null;
         		if(UtilValidate.isNotEmpty(supplierProducts)){
         		 supplierProduct = EntityUtil.getFirst(supplierProducts);
