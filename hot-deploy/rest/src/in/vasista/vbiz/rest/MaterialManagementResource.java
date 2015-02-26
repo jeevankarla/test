@@ -254,8 +254,8 @@ apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
         		String supplierName = PartyHelper.getPartyName(delegator, (String)productSupplyDetails.get("supplierPartyId"), false);
         		result.put("supplierName", supplierName);
 	        	BigDecimal supplierRate = BigDecimal.ZERO;
-	        	if (UtilValidate.isNotEmpty(productSupplyDetails.get("supplierRate"))) {
-	        		supplierRate = (BigDecimal)productSupplyDetails.get("supplierRate");
+	        	if (UtilValidate.isNotEmpty(productSupplyDetails.get("supplyRate"))) {
+	        		supplierRate = (BigDecimal)productSupplyDetails.get("supplyRate");
 	        	}
         		result.put("supplierRate", supplierRate);
         	}
