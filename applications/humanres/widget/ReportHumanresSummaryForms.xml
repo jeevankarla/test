@@ -672,6 +672,14 @@
         		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
             </hyperlink>
         </field> 
+        <field use-when="(statusId.equals(&quot;GENERATED&quot;)|| statusId.equals(&quot;APPROVED&quot;))&amp;&amp;(billingTypeId.equals(&quot;SP_DA_ARREARS&quot;))" name="DA Payslip" widget-style="buttontext" >
+            <hyperlink target="DAArrearsPayslip.pdf" description="DA PaySlip"  target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyIdFrom" value="Company"/>
+        		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
+            </hyperlink>
+        </field> 
          <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="PaySlip Summary" widget-style="buttontext" >
             <hyperlink target="PrintPayrollSummary.pdf" description="Payroll Summary"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>

@@ -1888,6 +1888,11 @@ under the License.
         <response name="success" type="view" value="PrintPaySlipsPdf"/>
         <response name="error" type="view" value="PrintPaySlipsPdf"></response>
     </request-map>
+     <request-map uri="DAArrearsPayslip.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="DAArrearsPayslip"/>
+        <response name="error" type="view" value="DAArrearsPayslip"></response>
+    </request-map>
     <request-map uri="PrePrintedpaySlip.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="PrePrintedpaySlip"/>
@@ -2483,6 +2488,7 @@ under the License.
 	 
 	 <view-map name="PaySlipEmployeeWise" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySlipEmployeeWise"/>
 	 <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
+	 <view-map name="DAArrearsPayslip" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DAArrearsPayslip" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="PrePrintedpaySlip" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrePrintedpaySlip" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="GSLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GSLISReport" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ProfessionalTaxReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ProfessionalTaxReport" content-type="application/pdf" encoding="none"></view-map>
