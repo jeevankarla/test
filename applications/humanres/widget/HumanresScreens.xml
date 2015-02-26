@@ -701,6 +701,10 @@
                  		<condition-expr field-name="enumTypeId" operator="equals" value="PERIOD_BILLING"/>
                  	</condition-list>
                  </entity-condition>
+                 <entity-and list="geoList" entity-name="Geo">
+                     <field-map field-name="geoTypeId" value="CITY"/>
+                     <order-by field-name="geoName"/>
+                </entity-and>
             </actions>            
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"

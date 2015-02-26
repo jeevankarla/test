@@ -7092,7 +7092,7 @@ public class PayrollService {
 				  	  	        		BigDecimal currentDAamt=BigDecimal.ZERO;
 				  	  	        		if(UtilValidate.isNotEmpty(basicSalPeriodList)){
 				  	  	        			GenericValue basicSalPeriod = EntityUtil.getFirst(basicSalPeriodList);
-						  	  	        	Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
+						  	  	        	/*Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
 											payHeadCtx.put("payHeadTypeId", "PAYROL_BEN_DA");
 											payHeadCtx.put("timePeriodStart", UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate"))));
 											payHeadCtx.put("timePeriodEnd", UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(basicSalPeriod.getDate("thruDate"))));
@@ -7105,33 +7105,138 @@ public class PayrollService {
 							        		}
 											if(UtilValidate.isNotEmpty(resultMap)){
 												currentDAamt=(BigDecimal)resultMap.get("amount");
+											}*/
+							            	List payHeadCondList = FastList.newInstance();
+							            	payHeadCondList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.IN , billingIds));
+						  					payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
+						  					payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, payrollHeaderItems.get("partyIdFrom")));
+						  					EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
+						  					List<GenericValue> payrollHeaderAndHeaderItemIter = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, false);
+						  					//Debug.log("payrollHeaderAndHeaderItemIter====="+payrollHeaderAndHeaderItemIter);
+						  					BigDecimal payAmt=BigDecimal.ZERO;
+						  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter)){
+												GenericValue payrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter);
+												payAmt = (BigDecimal)payrollItems.get("amount");
 											}
-				  	  	        		}	        		
-						            	List payHeadCondList = FastList.newInstance();
-						            	payHeadCondList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.IN , billingIds));
-					  					payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
-					  					payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, payrollHeaderItems.get("partyIdFrom")));
-					  					EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
-					  					List<GenericValue> payrollHeaderAndHeaderItemIter = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, false);
-					  					//Debug.log("payrollHeaderAndHeaderItemIter====="+payrollHeaderAndHeaderItemIter);
-					  					BigDecimal payAmt=BigDecimal.ZERO;
-					  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter)){
-											GenericValue payrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter);
-											payAmt = (BigDecimal)payrollItems.get("amount");
-										}
-					  					diffAmt=currentDAamt.subtract(payAmt);
-					  					
-					  					if(UtilValidate.isEmpty(EmployeeDAArrearsMap.get(emplId))){
-					  						EmployeeDAArrearsMap.put(emplId,diffAmt);
-					  					}else{
-					  						EmployeeDAArrearsMap.put(emplId,diffAmt.add((BigDecimal)EmployeeDAArrearsMap.get(emplId)));
-					  					}
+						  					//getting basic here
+						  					List payHeadCondList1 = FastList.newInstance();
+						  					payHeadCondList1.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.IN , billingIds));
+						  					payHeadCondList1.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_SALARY"));
+						  					payHeadCondList1.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, payrollHeaderItems.get("partyIdFrom")));
+						  					EntityCondition payHeadCond1 = EntityCondition.makeCondition(payHeadCondList1,EntityOperator.AND);
+						  					List<GenericValue> payrollHeaderAndHeaderItemIter1 = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond1, null, null, null, false);
+						  					//Debug.log("payrollHeaderAndHeaderItemIter====="+payrollHeaderAndHeaderItemIter);
+						  					BigDecimal basicPayAmt = BigDecimal.ZERO;
+						  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter1)){
+												GenericValue basicPayrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter1);
+												basicPayAmt = (BigDecimal)basicPayrollItems.get("amount");
+											}
+						  					List rateAmountCondList = FastList.newInstance();
+						  					rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , "DA_BGLR_RATE"));
+						  					rateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
+						  					rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("thruDate"))))));
+						  					EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
+						  					List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
+						  					//Debug.log("payrollHeaderAndHeaderItemIter====="+payrollHeaderAndHeaderItemIter);
+						  					BigDecimal rateAmount = BigDecimal.ZERO;
+						  					if(UtilValidate.isNotEmpty(rateAmountList)){
+						  						GenericValue rateAmountGen = EntityUtil.getFirst(rateAmountList);
+						  						rateAmount = (BigDecimal) rateAmountGen.get("rateAmount");
+						  					}
+								            if(UtilValidate.isNotEmpty(basicPayAmt)){
+												Evaluator evltr = new Evaluator(dctx);
+												HashMap<String, Double> variables = new HashMap<String, Double>();
+												if(UtilValidate.isNotEmpty(rateAmount)){
+													variables.put("DA_BGLR_RATE",rateAmount.doubleValue());
+												}
+												if(UtilValidate.isNotEmpty(basicPayAmt)){
+													variables.put("BASIC",basicPayAmt.doubleValue());
+												}
+												String formulaId = "DA_BGLR_JUNE";
+												evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
+												evltr.addVariableValues(variables);
+												currentDAamt = new BigDecimal( evltr.evaluate());
+												currentDAamt = currentDAamt.setScale(2, BigDecimal.ROUND_HALF_UP);
+											}
+						  					diffAmt=currentDAamt.subtract(payAmt);
+						  					if(UtilValidate.isEmpty(EmployeeDAArrearsMap.get(emplId))){
+						  						EmployeeDAArrearsMap.put(emplId,diffAmt);
+						  					}else{
+						  						EmployeeDAArrearsMap.put(emplId,diffAmt.add((BigDecimal)EmployeeDAArrearsMap.get(emplId)));
+						  					}
+						        	    }
 			  	  	        		}
 				            	}
 				        	}
 			            }
 					}			
 				}
+				/*//Leave Encashment DA Here
+				Map EmployeeLEDAArrearsMap= FastMap.newInstance();
+				List LEbillingConList = FastList.newInstance();
+				LEbillingConList.add(EntityCondition.makeCondition("billingTypeId" ,EntityOperator.EQUALS , "SP_LEAVE_ENCASH"));
+				LEbillingConList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS , "APPROVED"));
+				LEbillingConList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO ,UtilDateTime.getDayStart(fromDateTime)));
+				LEbillingConList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.getDayEnd(thruDateTime)));
+	            EntityCondition LEBillingCond = EntityCondition.makeCondition(LEbillingConList,EntityOperator.AND);
+	            List<GenericValue> LEbillingList = delegator.findList("PeriodBillingAndCustomTimePeriod", LEBillingCond, null, null, null, false);   
+	            List LEBillingIds=FastList.newInstance();
+	            if(UtilValidate.isNotEmpty(LEbillingList)){
+					LEBillingIds= EntityUtil.getFieldListFromEntityList(LEbillingList, "periodBillingId", true);
+					if(UtilValidate.isNotEmpty(LEBillingIds)){
+						BigDecimal diffLEAmt=BigDecimal.ZERO;
+						if(UtilValidate.isNotEmpty(LEBillingIds)){
+							List LEheaderConList = FastList.newInstance();
+							LEheaderConList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.IN , LEBillingIds));
+				            EntityCondition LEheaderCond = EntityCondition.makeCondition(LEheaderConList,EntityOperator.AND);
+				            List<GenericValue> LEpayrollHeaderIdsList = delegator.findList("PayrollHeader", LEheaderCond, null, null, null, false);   
+				            List LEemplIds=FastList.newInstance();
+				            if(UtilValidate.isNotEmpty(LEpayrollHeaderIdsList)){
+				            	for (int j = 0; j < LEpayrollHeaderIdsList.size(); j++) {		
+			  	  	        		GenericValue LEpayrollHeaderItems = LEpayrollHeaderIdsList.get(j);
+			  	  	        		String LEemplId= (String)LEpayrollHeaderItems.get("partyIdFrom");
+			  	  	        	    GenericValue LEbasicSalPeriod = EntityUtil.getFirst(basicSalPeriodList);
+			  	  	        		//checking location geo here
+					        	    	BigDecimal currentLEDAamt=BigDecimal.ZERO;
+				  	  	        		Map LEpayHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
+				  	  	        		LEpayHeadCtx.put("payHeadTypeId", "PAYROL_BEN_DA");
+				  	  	        		LEpayHeadCtx.put("timePeriodStart", UtilDateTime.getDayStart(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("fromDate"))));
+				  	  	        		LEpayHeadCtx.put("timePeriodEnd", UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("thruDate"))));
+				  	  	        		LEpayHeadCtx.put("timePeriodId", LEbasicSalPeriod.getString("customTimePeriodId"));
+				  	  	        		LEpayHeadCtx.put("employeeId", LEemplId);
+										Map<String, Object> LEresultMap = getPayHeadAmount(dctx,LEpayHeadCtx);
+										if(ServiceUtil.isError(LEresultMap)){
+						        			 Debug.logError(ServiceUtil.getErrorMessage(LEresultMap), module);
+						 		             return LEresultMap;
+						        		}
+										if(UtilValidate.isNotEmpty(LEresultMap)){
+											currentLEDAamt=(BigDecimal)LEresultMap.get("amount");
+										}
+						            	List LEpayHeadCondList = FastList.newInstance();
+						            	LEpayHeadCondList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.IN , LEBillingIds));
+						            	LEpayHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
+						            	LEpayHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, LEpayrollHeaderItems.get("partyIdFrom")));
+					  					EntityCondition LEpayHeadCond = EntityCondition.makeCondition(LEpayHeadCondList,EntityOperator.AND);
+					  					List<GenericValue> LEpayrollHeaderAndHeaderItemIter = delegator.findList("PayrollHeaderAndHeaderItem", LEpayHeadCond, null, null, null, false);
+					  					BigDecimal LEpayAmt=BigDecimal.ZERO;
+					  					if(UtilValidate.isNotEmpty(LEpayrollHeaderAndHeaderItemIter)){
+											GenericValue LEpayrollItems = EntityUtil.getFirst(LEpayrollHeaderAndHeaderItemIter);
+											LEpayAmt = (BigDecimal)LEpayrollItems.get("amount");
+										}
+					  					diffLEAmt=currentLEDAamt.subtract(LEpayAmt);
+					  					if(UtilValidate.isEmpty(EmployeeLEDAArrearsMap.get(LEemplId))){
+					  						EmployeeLEDAArrearsMap.put(LEemplId,diffLEAmt);
+					  					}else{
+					  						EmployeeLEDAArrearsMap.put(LEemplId,diffLEAmt.add((BigDecimal)EmployeeLEDAArrearsMap.get(LEemplId)));
+					  					}
+					        	    
+					        	}
+				            }
+						}
+					}
+				}
+				Debug.log("EmployeeLEDAArrearsMap======================"+EmployeeLEDAArrearsMap);*/
+				
 				Map input = FastMap.newInstance();
 				if(UtilValidate.isEmpty(partyId)){
 					partyId = "Company";
@@ -7170,6 +7275,17 @@ public class PayrollService {
 						payHeader.set("partyIdFrom", payHeaderValue.get("partyIdFrom"));
 						payHeader.setNextSeqId();
 						payHeader.create();
+						
+						
+						/*if((UtilValidate.isNotEmpty(EmployeeLEDAArrearsMap.get(payHeaderValue.get("partyIdFrom"))))){
+			            	GenericValue payHeaderItem2 = delegator.makeValue("PayrollHeaderItem");
+			            	payHeaderItem2.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+			            	payHeaderItem2.set("payrollHeaderItemTypeId","PAYROL_BEN_LEAVENCAS");
+		   					BigDecimal LEItemAmount=(BigDecimal) EmployeeLEDAArrearsMap.get(payHeaderValue.get("partyIdFrom"));
+		   					payHeaderItem2.set("amount", (LEItemAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
+		   				    delegator.setNextSubSeqId(payHeaderItem2, "payrollItemSeqId", 5, 1);
+				            delegator.create(payHeaderItem2);
+			            }*/
 						
 	   					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItem");
 	   					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
