@@ -123,6 +123,9 @@
         <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="itemIssuanceId" type="String" mode="OUT" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="true"/>
+        
     </service>
      <service name="draftEnquiryForApprovedRequirements" engine="java"
                 location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="draftEnquiryForApprovedRequirements">

@@ -93,6 +93,9 @@
      <service name="sendIndentIssuanceEmail" engine="simple" location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="sendIndentIssuanceEmail">
         <description>sendIndentIssuancePerEmail  </description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="itemIssuanceId" type="String" mode="IN" optional="true"/>
+        <attribute name="flag" type="String" mode="IN" optional="true"/>
         <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
         <attribute name="sendTo" type="String" mode="IN" optional="false"/>
         <attribute name="sendCc" type="String" mode="IN" optional="true"/>
@@ -126,6 +129,8 @@
      <service name="getEmailForIndentIssuance" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/getEmailForIndentIssuance.groovy" invoke="" transaction-timeout="12000">
         <description>Get DeptEmail Details  For Indent Issuance</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>  
+          <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
+         <attribute name="itemIssuanceId" type="String" mode="IN" optional="true"/> 
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
    
