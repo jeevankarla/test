@@ -16,8 +16,8 @@ import javolution.util.FastMap;
 
 dctx = dispatcher.getDispatchContext();
 
-currentYear=UtilDateTime.getYear(UtilDateTime.nowTimestamp(),timeZone,locale);
-context.year=currentYear;
+/*currentYear=UtilDateTime.getYear(UtilDateTime.nowTimestamp(),timeZone,locale);
+context.year=currentYear;*/
 if(UtilValidate.isNotEmpty(parameters.IndentNo)){
 	custRequestId=parameters.IndentNo;
 }
