@@ -762,14 +762,31 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/MaterialIndentReport.groovy"/>
+				<set field="flag" from-field="parameters.flag"/>
 			</actions>
 			<widgets>
 				<section>
+				<condition>
+					<if-compare operator="not-equals" value="itemIssuance" field="flag"/>
+				</condition>
 					<widgets>
 						<platform-specific>
 						 	<xsl-fo>
 								<html-template
 								location="component://materialmgmt/webapp/materialmgmt/purchase/MaterialIndentReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+				<condition>
+					<if-compare operator="equals" value="itemIssuance" field="flag"/>
+				</condition>
+					<widgets>
+						<platform-specific>
+						 	<xsl-fo>
+								<html-template
+								location="component://materialmgmt/webapp/materialmgmt/purchase/ItemIssuanceReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>

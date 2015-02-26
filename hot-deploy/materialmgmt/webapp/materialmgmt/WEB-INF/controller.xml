@@ -1187,7 +1187,10 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="SupplierEvaluationReport"/>        
     </request-map>
-    
+    <request-map uri="ItemIssuanceReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="MaterialIndentReport"/>        
+    </request-map>
     <!-- Vendor -->
     <request-map uri="findVendor">
 	     <security https="true" auth="true"/>
