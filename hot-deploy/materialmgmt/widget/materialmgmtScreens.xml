@@ -681,10 +681,10 @@
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
 				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
 				<!--  <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" /> -->
-				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FGS_SALE_STORE')}" />
+				<!--  <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FGS_SALE_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
 				<set field="prodCatalogIdResult" value="${groovy:org.ofbiz.product.catalog.CatalogWorker.getStoreCatalogs(delegator,productStoreId)}" />
-			   <!--  <set field="prodCatalogIdResult" value="${prodCatalogIdResult.[0]get(&quot;prodCatalogId&quot;)}"/> -->
+			    <set field="prodCatalogIdResult" value="${prodCatalogIdResult.[0]get(&quot;prodCatalogId&quot;)}"/>
 			   <set field="prodCatalogId" value="${prodCatalogIdResult[0].prodCatalogId}"/>
 			   <set field="productCategoryListResult" value="${groovy:org.ofbiz.product.catalog.CatalogWorker.getProdCatalogCategories(delegator,prodCatalogId,null)}" />
 			   <set field="productCategoryIdsList" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(productCategoryListResult, 'productCategoryId', true);}" type="List"/>
@@ -695,7 +695,7 @@
                     </condition-list>
                 </entity-condition>
              
-			  <set field="categoryList" from-field="productCategoryListResult"/>
+			  <set field="categoryList" from-field="productCategoryListResult"/> -->
 				<!-- <set field="categoryList" value="${productCategoryResult.productCategory}"/> -->
             </actions>
             <widgets>
@@ -975,6 +975,7 @@
                 <set field="promotionAdj" from-field="parameters.promotionAdj"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
+                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              

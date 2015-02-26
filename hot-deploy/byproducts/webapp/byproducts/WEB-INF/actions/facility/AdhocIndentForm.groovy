@@ -94,6 +94,12 @@ if(changeFlag != "AdhocSaleNew"){
 		displayGrid = false;
 		return result;
 	}
+	Debug.log("==productCatageoryId==="+productCatageoryId);
+	if(UtilValidate.isEmpty(productCatageoryId)){
+		context.errorMessage = "Please Select At Least One productCatageoryId !";
+		displayGrid = false;
+		return result;
+	}
 	context.productCategoryId = parameters.productCatageoryId;
 	context.party = party;
 	context.orderTaxType = parameters.orderTaxType;
