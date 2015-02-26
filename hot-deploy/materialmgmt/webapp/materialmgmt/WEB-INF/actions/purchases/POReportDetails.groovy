@@ -183,10 +183,11 @@ if(referNumber){
 }
 
 //OrderHeaderNote
-orderheadDetails = delegator.findList("OrderHeaderNote",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+orderheadDetails = delegator.findList("OrderHeaderNote",EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId),EntityCondition.makeCondition("internalNote",EntityOperator.EQUALS,"N")],EntityOperator.AND)  , null, null, null, false );
 if(orderheadDetails){
-	noteId=orderheadDetails.noteId;
-	internalNote=orderheadDetails.internalNote;
+	orderHeadDetails=EntityUtil.getFirst(orderheadDetails);
+	noteId=orderHeadDetails.noteId;
+	internalNote=orderHeadDetails.internalNote;
 		if (internalNote.equals("N")) {
 	noteInfoData = delegator.findOne("NoteData",["noteId":noteId],false);
 	if(noteInfoData){
