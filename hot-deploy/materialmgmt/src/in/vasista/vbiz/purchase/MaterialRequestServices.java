@@ -922,6 +922,7 @@ public class MaterialRequestServices {
                 itemIssuanceCtx.put("quantity", issueQuantity);
                 // Call issuance service
                 resultCtx = dispatcher.runSync("createIssuanceForCustRequestItem",itemIssuanceCtx);
+               // Debug.log("===itemIssuanceId=="+resultCtx.get("itemIssuanceId")+"==Shipment="+resultCtx.get("shipmentId"));
                 if (ServiceUtil.isError(resultCtx)) {
                     return ServiceUtil.returnError("Error in service issueInventoryItemToCustRequest");
                 }
@@ -1010,7 +1011,9 @@ public class MaterialRequestServices {
 			GenericValue itemIssuance = delegator.findOne("ItemIssuance", UtilMisc.toMap("itemIssuanceId", itemIssuanceId), false);
 			itemIssuance.set("shipmentId", shipmentId);
 			itemIssuance.store();
-			
+			//send out parameters
+			result.put("itemIssuanceId", itemIssuanceId);
+			result.put("shipmentId", shipmentId);
 			/*Decrement inventory*/
 			Map createInvDetail = FastMap.newInstance();
 			createInvDetail.put("custRequestId", custRequestId);
