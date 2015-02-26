@@ -87,6 +87,11 @@
                 <parameter param-name="statusId" value="REQ_REJECTED"/>
             </hyperlink>
         </field>
+        <field name="purchaseIndent" title="Purchase Indent" use-when="statusId.equals(&quot;REQ_APPROVED&quot;)" widget-style="buttontext"> 
+            <hyperlink  description="Report" target="purchaseIndentReport" >
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field>
         <!-- <field name="facilityQuantityOnHandTotal"><display/></field>
         <field name="quantityOnHandTotal"><display/></field> -->
         <!-- <field name="requestsLink" widget-style="buttontext">

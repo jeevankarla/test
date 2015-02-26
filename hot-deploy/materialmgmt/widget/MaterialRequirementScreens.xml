@@ -34,6 +34,19 @@
             </widgets>
         </section>
     </screen>
+     <screen name="PurcaseIndentReport">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+               <script location="component://order/webapp/ordermgr/WEB-INF/actions/requirement/PurchaseIndentReport.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseIndentReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditRequirement">
     	<section>
     		<actions>
