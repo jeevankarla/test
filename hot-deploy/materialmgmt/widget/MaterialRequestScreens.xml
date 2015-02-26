@@ -743,15 +743,20 @@
                 <set field="tabButtonItem2" value="RequestsReceiptAcknowledgement"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
-                <entity-condition list="indentItems" entity-name="CustRequestAndItemAndAttribute">
+                <!--  <entity-condition list="indentItems" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_ISSUED"/>
                 	<order-by field-name="fromPartyId"/>
-                </entity-condition>
+                </entity-condition>-->
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ReceiptAcknowledgementSearchFilter.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     <screenlet title="Search-Options">
+                     			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="SearchReceiptAcknowledgement"/>
+                     </screenlet>
                      <screenlet title="Acknowledge Receipts">
                           <platform-specific>
                             <html>

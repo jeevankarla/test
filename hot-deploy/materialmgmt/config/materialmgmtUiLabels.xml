@@ -46,4 +46,8 @@
     <property key="MaterialMangement_FindMaterialIssuance">
         <value xml:lang="en">Find Material Issuance</value>
     </property>
+    <property key="MaterialMangement_IssuedDate">
+        <value xml:lang="en">Issued Date</value>
+    </property>
+    
 </resource>

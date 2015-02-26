@@ -1031,6 +1031,21 @@
             <submit button-type="button"/>
         </field>
    </form>
+    <form name="SearchReceiptAcknowledgement" type="single" target="SearchReceiptAcknowledgement">
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+   		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+   		  <field name="partyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+   		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
    
    
 </forms>

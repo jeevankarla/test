@@ -189,7 +189,7 @@ uomLabelMap = result.get("uomLabel");
 productUomMap = result.get("productUom");
 prodPriceMap=[:];
 prodPriceMap = (Map)priceResultMap.get("priceMap");
-conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", prodList, "userLogin", userLogin));
+/*conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", prodList, "userLogin", userLogin));
 conversionMap = conversionResult.get("productConversionDetails");
 if(conversionMap){
 	Iterator prodConvIter = conversionMap.entrySet().iterator();
@@ -210,7 +210,7 @@ if(conversionMap){
 		conversionJSON.put(productId, conversionDetailJSON);
 	}
 	context.conversionJSON = conversionJSON;
-}
+}*/
 JSONObject productUOMJSON = new JSONObject();
 JSONObject uomLabelJSON=new JSONObject();
 
