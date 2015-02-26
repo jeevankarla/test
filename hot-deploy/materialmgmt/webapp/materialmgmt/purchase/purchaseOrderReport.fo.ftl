@@ -117,7 +117,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
               	              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("quoteRef")?has_content>QUOTE REF NO     :${allDetailsMap.get("quoteRef")?if_exists}</#if>       </fo:block>
               	
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;-------------------------------------------------------------------------------------------</fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO  ITEM CODE    PRODUCT NAME           UNIT      QUANTITY   BASIC UNIT RATE    AMOUNT</fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;SNO  ITEM CODE    PRODUCT NAME           UNIT      QUANTITY      BASIC RATE      AMOUNT</fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;-------------------------------------------------------------------------------------------</fo:block>
             	<fo:block>
                  <fo:table text-align="center" >
@@ -282,7 +282,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 
                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > DESCRIPTION :${orderDesctioption?if_exists}</fo:block>
+                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if orderDesctioption?has_content> DESCRIPTION :${orderDesctioption?if_exists}</#if></fo:block>
                                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                    
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >NOTE: Material Specifications enclosed.  </fo:block>
@@ -341,14 +341,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                </fo:block>
               	                 
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;----------------------------------------------------------------------------------------- </fo:block>
-                     <#if allDetailsMap.get("noteInfo")?has_content> 
-                  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Note:${allDetailsMap.get("noteInfo")?if_exists} </fo:block>  </#if>
+                  
 
                  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                    
-                                     
+                                        <#if allDetailsMap.get("noteInfo")?has_content> 
+                  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >Note:${allDetailsMap.get("noteInfo")?if_exists} </fo:block>  </#if>
                        <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160; for MOTHER DAIRY &#160;&#160;</fo:block>
                       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block> 
