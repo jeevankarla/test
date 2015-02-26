@@ -19,11 +19,12 @@ under the License.
 <div class="screenlet">
   <#if product?exists>
     <div class="screenlet-body">
-        <table style="width:100%; font-size:1.5em">
+        <table style="width:100%; font-size:1.3em">
             <tr class="header-row">
-                <td style="width:50%"><b>${uiLabelMap.ProductFacility}</b></td>
-                <td style="width:30%; text-align: right"><b>Quantity</b></td>
-                 <td style="width:200%; text-align: right"><b>In-QC</b></td>
+                <td style="width:30%"><b>${uiLabelMap.ProductFacility}</b></td>
+                <td style="width:30%; text-align: center"><b>Quantity</b></td>
+                 <td style="width:20%; text-align: center"><b>In-QC</b></td>
+				<td style="width:20%; text-align: rignt"><b>Received</b></td>
             </tr>
             <#assign rowClass = "2">
             <#list quantitySummaryByFacility.values() as quantitySummary>
@@ -37,11 +38,12 @@ under the License.
                     <#assign mktgPkgQOH = quantitySummary.mktgPkgQOH?if_exists>
                     <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
                    <#assign totalQuantityInQcHand = quantitySummary.totalQuantityInQcHand?if_exists>
-                   
+                   <#assign receivedQty = quantitySummary.receivedQty?if_exists> 
                     <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if> >
-                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em" width="50%">${(facility.facilityName)?if_exists}</td>
-                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: center"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
-                    	<td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: right"><#if totalQuantityInQcHand?exists>${totalQuantityInQcHand}<#else>&nbsp;</#if></td>
+                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em" width="50%">${(facility.facilityName)?if_exists}</td>
+                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: center"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
+                    	<td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: center"><#if totalQuantityInQcHand?exists>${totalQuantityInQcHand}<#else>&nbsp;</#if></td>
+                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: center"><#if receivedQty?exists>${receivedQty}<#else>&nbsp;</#if></td>
                     </tr>
 
                 </#if>
