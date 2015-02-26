@@ -36,7 +36,7 @@ dctx = dispatcher.getDispatchContext();
 custRequestId = parameters.custRequestId;
 
 conditionList = [];
-Debug.log("=====custRequestId Before preparation=of email==custRequestId:"+parameters.custRequestId);
+Debug.log("=====custRequestId Before preparation=of email==custRequestId:"+parameters.custRequestId+"=itemIssuanceId="+parameters.itemIssuanceId+"==itemSeqId="+custRequestItemSeqId);
 
 GenericValue tenantConfigSendIssueEmail = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enableIndentIssuanceEmail"), false);
 sendEmailFlag="";
@@ -58,7 +58,11 @@ if(UtilValidate.isNotEmpty(custRequestItem) && UtilValidate.isNotEmpty(custReque
 	indentIssueEmailInput=[:];
 	indentIssueEmailInput["userLogin"]=userLogin;
 	indentIssueEmailInput["custRequestId"]=parameters.custRequestId;
+	indentIssueEmailInput["custRequestItemSeqId"]=parameters.custRequestItemSeqId;
 	indentIssueEmailInput["partyId"]=parameters.partyId;
+	indentIssueEmailInput["itemIssuanceId"]=parameters.itemIssuanceId;
+	indentIssueEmailInput["flag"]="itemIssuance";
+	
 	partyId="";
 	sendTo="";
 	subject="Indent #"+parameters.custRequestId+" issued ";
