@@ -689,8 +689,10 @@ under the License.
                    <if-compare field="parameters.statusId" operator="equals" value="INVOICE_READY">
                        <clear-field field="invoice.paidDate"/>
                    </if-compare>
-                </if-not-empty>
-
+          		 </if-not-empty>
+                  <if-not-empty field="parameters.cancelComments">
+				<set from-field="parameters.cancelComments" field="invoice.cancelComments"/>
+				   </if-not-empty>
                 <set from-field="parameters.statusId" field="invoice.statusId"/>
                 <store-value value-field="invoice"/>
 

@@ -391,6 +391,13 @@
 				<decorator-screen name="CommonInvoiceDecorator"
 					location="${parameters.invoiceDecoratorLocation}">
 					<decorator-section name="body">
+					<section>
+						<widgets>
+							<platform-specific>
+                               <html><html-template location="component://accounting/webapp/accounting/invoice/setInvoiceStatus.ftl"/></html>
+              				</platform-specific>
+						</widgets>
+					</section>
 						<section>
 							<condition>
 								<and>

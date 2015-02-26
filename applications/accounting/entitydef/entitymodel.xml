@@ -1383,6 +1383,7 @@
 		<field name="invoiceMessage" type="long-varchar"></field>
 		<field name="referenceNumber" type="short-varchar"></field> <!-- used to record things like the vendor's invoice number -->
 		<field name="description" type="description"></field>
+		<field name="cancelComments" type="long-varchar"></field>
 		<field name="currencyUomId" type="id"></field>
 		<field name="recurrenceInfoId" type="id"></field>
 		<field name="createdByUserLogin" type="id-vlong"></field>
@@ -3279,6 +3280,7 @@
 		<field name="amount" type="currency-amount"></field>
 		<field name="currencyUomId" type="id"></field>
 		<field name="comments" type="comment"></field>
+		<field name="cancelComments" type="long-varchar"></field>
 		<field name="cancelDate" type="date-time"></field><!-- Cheque bounce date -->
 		<field name="chequeReturns" type="indicator"><description>If this Payment is Cancelled because of cheque Bounce then check this flag.</description></field>
 		<field name="finAccountTransId" type="id"></field>

@@ -75,6 +75,7 @@ under the License.
         <description>Change the status of a Payment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
         <attribute name="transactionDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
@@ -186,6 +187,7 @@ under the License.
         <description>Sets payment status to PMNT_VOID, removes all PaymentApplications, changes related invoice statuses to 
             INVOICE_READY if status is INVOICE_PAID, and reverses related AcctgTrans by calling copyAcctgTransAndEntries service</description>
         <attribute name="paymentId" mode="IN" optional="false" type="String"/>
+        <attribute name="cancelComments" mode="IN" optional="false" type="String"/>
         <attribute name="finAccountTransId" type="String" mode="OUT" optional="true"/>
         <attribute name="statusId" type="String" mode="OUT" optional="true"/>
     </service>

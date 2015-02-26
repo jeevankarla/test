@@ -132,6 +132,7 @@ under the License.
                 <parameter param-name="partyId" from-field="invoice.partyIdFrom"/>
             </hyperlink>
         </field>
+         <field position="2" title="Reason For Cancellation" name="cancelComments" encode-output="false"><display/></field>
          <field position="1" name="roleTypeId"><display/></field>
         <field position="2" name="partyIdTo" entry-name="partyId">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${invoice.partyId}]">

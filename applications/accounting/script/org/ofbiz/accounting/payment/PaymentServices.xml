@@ -340,6 +340,9 @@ under the License.
                     </if-compare>
                     <!-- everything ok so now change the status field -->
                     <set from-field="parameters.statusId" field="payment.statusId"/>
+                    <if-not-empty field="parameters.cancelComments">
+						<set from-field="parameters.cancelComments" field="payment.cancelComments"/>
+				    </if-not-empty>
                     <if-not-empty field="parameters.transactionDate">
                          <set from-field="parameters.transactionDate" field="payment.transactionDate"/>
                     </if-not-empty>
@@ -582,6 +585,10 @@ under the License.
         <set field="paymentId" from-field="parameters.paymentId"/>
         <set field="paymentStatusCtx.paymentId" from-field="paymentId"/>
         <set field="paymentStatusCtx.statusId" value="PMNT_VOID"/>
+         <if-not-empty field="parameters.cancelComments">
+ 			<set field="cancelComments" from-field="parameters.cancelComments"/>
+        	<set field="paymentStatusCtx.cancelComments" from-field="cancelComments"/>
+         </if-not-empty>
         <call-service service-name="setPaymentStatus" in-map-name="paymentStatusCtx"/>
         <get-related relation-name="PaymentApplication" value-field="payment" list="paymentApplications"/>
         <iterate list="paymentApplications" entry="paymentApplication">

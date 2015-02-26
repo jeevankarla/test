@@ -79,7 +79,8 @@ under the License.
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="comments"><display/></field>
+        <field name="comments" title="Comments"><display/></field>
+        <field name="cancelComments" title="Reason For Voided"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
@@ -546,6 +547,7 @@ under the License.
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><display type="date"/></field>
         <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" required-field="true"><display/></field>
         <field name="comments" position="2"><display/></field>
+        <field name="cancelComments" title="Reason for Voided" position="2"><display/></field>
     </form>
 
     <form name="paymentApplications" type="list" list-name="paymentApplications"

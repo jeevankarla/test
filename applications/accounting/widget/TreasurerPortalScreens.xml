@@ -1969,6 +1969,7 @@
             	<set field="tabButtonItem2" value="invoiceOverview"/>
             	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
 				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<set field="catflag" value="Ap" global="true"/>
 				<entity-one entity-name="Invoice" value-field="invoice" />
 				<entity-and entity-name="InvoiceRole" list="invoiceRoles">
 					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
@@ -2034,6 +2035,13 @@
 			<widgets>
 				<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<section>
+						<widgets>
+							<platform-specific>
+                               <html><html-template location="component://accounting/webapp/accounting/invoice/setInvoiceStatus.ftl"/></html>
+              				</platform-specific>
+						</widgets>
+					</section>
 						<include-menu name="InvoiceTypesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<include-menu name="APInvoiceTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
@@ -2450,6 +2458,7 @@
             	<set field="tabButtonItem2" value="invoiceOverview"/>
             	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
 				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<set field="catflag" value="AR" global="true"/>
 				<entity-one entity-name="Invoice" value-field="invoice" />
 				<entity-and entity-name="InvoiceRole" list="invoiceRoles">
 					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
@@ -2515,6 +2524,13 @@
 			<widgets>
 				<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<section>
+						<widgets>
+							<platform-specific>
+                               <html><html-template location="component://accounting/webapp/accounting/invoice/setInvoiceStatus.ftl"/></html>
+              				</platform-specific>
+						</widgets>
+					</section>
 						<include-menu name="ARInvoiceTypesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<include-menu name="ARInvoiceTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
