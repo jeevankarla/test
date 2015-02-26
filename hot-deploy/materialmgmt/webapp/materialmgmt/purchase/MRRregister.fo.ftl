@@ -81,7 +81,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                  <#list mrrList as mrrListItem>
                       <fo:table-row>
                 	   <fo:table-cell  ><fo:block text-align="left"   font-size="12pt" >${sNo?if_exists}</fo:block></fo:table-cell>     
-  				  	   <fo:table-cell  ><fo:block text-align="center"   font-size="12pt" >  <#if mrrListItem.get("receiptId")?has_content>${mrrListItem.get("receiptId")?if_exists} </#if> </fo:block></fo:table-cell>     
+  				  	   <fo:table-cell  ><fo:block text-align="center"   font-size="12pt" >  <#if mrrListItem.get("shipmentId")?has_content>${mrrListItem.get("shipmentId")?if_exists} </#if> </fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"   font-size="12pt" >  <#if mrrListItem.get("datetimeReceived")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("datetimeReceived"), "dd/MM/yy")?if_exists} </#if>  </fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="center"   font-size="12pt"> <#if mrrListItem.get("partyId")?has_content>${mrrListItem.get("partyId")?if_exists} </#if></fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"   font-size="12pt">  <#if mrrListItem.get("partyName")?has_content>${mrrListItem.get("partyName")?if_exists} </#if> </fo:block></fo:table-cell>     

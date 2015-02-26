@@ -34,9 +34,9 @@ under the License.
 				<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				<fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------</fo:block>
-				<fo:block text-align="center" white-space-collapse="false">&#160;      STORE RECIPT-ISSUE BETWEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
+				<fo:block text-align="center" white-space-collapse="false">&#160;      STORE RECEIPTS-ISSUE BETWEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
 			    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false"> <#if productId?has_content>MATERIAL CODE:${parameters.productId}<#else></#if>                            STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               <#if materialName?has_content>MATERIAL NAME:${materialName}<#else></#if> </fo:block>   			   
+			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false"> <#if internalName?has_content>MATERIAL CODE:${internalName}<#else></#if>                            STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               <#if materialName?has_content>MATERIAL NAME:${materialName}<#else></#if> </fo:block>   			   
 			    <fo:block font-family="Courier,monospace">		 
 			    <fo:table border-style="solid">
 					<fo:table-column column-width="80pt"/>
@@ -127,7 +127,7 @@ under the License.
                       <fo:table-body>
 					   <fo:table-row>
 				           <fo:table-cell >
-							   <fo:block text-align="left" >${storeIssueDetails.getKey()?if_exists} </fo:block>
+							   <fo:block text-align="left" >${storeIssueDetails.getKey()?if_exists} <#--<#if storeIssueDetails.getKey()?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(storeIssueDetails.getKey(), "dd/MM/yy")?if_exists} </#if> -->   </fo:block>
 						   </fo:table-cell>
                           </fo:table-row>
 					</fo:table-body>   
