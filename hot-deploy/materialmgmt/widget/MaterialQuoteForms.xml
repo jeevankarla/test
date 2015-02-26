@@ -487,7 +487,7 @@
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="statusDatetime" title="Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
     </form>
-    <form name="AddQuoteTerm" type="single" target="createMaterialQuoteTerm">
+    <form name="AddQuoteTerm" type="single" target="createMaterialQuoteTerm" default-map-name="quote">
     	<field name="parentTypeId" id-name="parentTypeId" tooltip="${uiLabelMap.CommonRequired}" title="Parent" event="onchange" action="javascript:termTypesByParent();">
             <drop-down allow-empty="true" current-description="">
             	<list-options  list-name="filterTermTypeList" key-name="termTypeId" description="${description}"/>
@@ -513,6 +513,8 @@
         	</drop-down>
         </field>
         <field name="quoteId"><hidden/></field>
+       <field name="statusId"><hidden/></field>
+        
         <!-- <field name="quoteItemSeqId"><hidden/></field> -->
         <!-- <field name="uomId"><hidden value="INR"/></field> -->
         <field  name="orderTaxTypeId" id-name="orderTaxTypeId" title="Order Tax Type"  >

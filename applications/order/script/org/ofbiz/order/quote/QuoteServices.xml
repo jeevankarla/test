@@ -974,16 +974,33 @@ under the License.
             <remove-value value-field="quoteWorkEffort"/>
         </if-not-empty>
     </simple-method>
-    <simple-method method-name="createQuoteTerm" short-description="Create a QuoteTerm">
+    <simple-method method-name="createQuoteTerm" short-description="Create a QuoteTerm">  
+   <if>
+     <condition>
+        <and>
+         <if-compare field="parameters.statusId" value="QUO_ACCEPTED" operator="not-equals" type="String"/>
+         <if-compare field="parameters.statusId" value="QUO_ORDERED" operator="not-equals" type="String"/>
+         <if-compare field="parameters.statusId" value="QUO_REJECTED" operator="not-equals" type="String"/>
+        </and>
+      </condition> 
+       <then>
         <make-value value-field="newEntity" entity-name="QuoteTerm"/>
         <if-empty field="parameters.quoteItemSeqId">
-            <set field="parameters.quoteItemSeqId" value="_NA_"/>
+         <set field="parameters.quoteItemSeqId" value="_NA_"/>
         </if-empty>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
         <set field="responseMessage" value="QuoteTerm added successfully."/>
         <field-to-result field="responseMessage" result-name="successMessage"/>
+       </then>
+        <else>
+          <add-error>
+        		<fail-message message="you can not add quote terms for this quote status."/>
+        	</add-error>
+        	<check-errors/>      
+       </else>
+   </if> 
     </simple-method>
     <simple-method method-name="updateQuoteTerm" short-description="Update a QuoteTerm">
         <make-value value-field="newEntity" entity-name="QuoteTerm"/>
