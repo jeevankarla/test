@@ -90,6 +90,17 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
     
+     <service name="sendIndentIssuanceEmail" engine="simple" location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="sendIndentIssuanceEmail">
+        <description>sendIndentIssuancePerEmail  </description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
+    </service>
+    
     <service name="createSupplier" engine="java" auth="true" invoke="createSupplier" 
         location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
         <description>Create Party Froup  And Identification</description>
@@ -111,6 +122,11 @@
         <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="roleTypeId" mode="IN" type="String" optional="true"></attribute>
+    </service>
+     <service name="getEmailForIndentIssuance" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/getEmailForIndentIssuance.groovy" invoke="" transaction-timeout="12000">
+        <description>Get DeptEmail Details  For Indent Issuance</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>  
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
    
 </services>
