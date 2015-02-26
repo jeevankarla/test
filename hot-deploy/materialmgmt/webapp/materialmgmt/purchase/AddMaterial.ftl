@@ -76,8 +76,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 	});
 	
 </script>
-		<#assign productCatgInfo = []>
-	<#assign productCatgInfo = productCategoryList>
 	
 	
 	<form id="AddMaterial"  action="<@ofbizUrl>AddMaterialData</@ofbizUrl>" name="AddMaterial" method="post">
@@ -97,8 +95,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<td class="label">Primary Category :</td>
 						    <td>
 							<select name="primaryCategoryId" id="primaryCategoryId">
-						      	   <#list productCategoryList as productCategory>
-						      	   			<option value='${productCategory.productCategoryId}'>${productCategory.description}</option>
+						      	   <#list primaryCategoryList as primaryCategory>
+						      	   			<option value='${primaryCategory.productCategoryId}'>${primaryCategory.description}</option>
 								    </#list> 
 						      	</select>
 						    </td>
@@ -107,8 +105,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<td class="label">Material Category :</td>
 						    <td>
 							<select name="productCategoryId" id="productCategoryId" multiple="multiple" onblur="getMultiple(document.AddMaterial.productCategoryId);">
-						      	   <#list productCategoryList as productCategory>
-						      	   			<option value='${productCategory.productCategoryId}'>${productCategory.description}</option>
+						      	   <#list materialCategoryList as materialCategory>
+						      	   			<option value='${materialCategory.productCategoryId}'>${materialCategory.description}</option>
 								    </#list> 
 						      	</select>
 						      	<span class="tooltip">press 'Ctrl' key to select multiple </span>

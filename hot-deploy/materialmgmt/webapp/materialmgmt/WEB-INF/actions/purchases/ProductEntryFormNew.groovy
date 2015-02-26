@@ -12,12 +12,17 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 
 
-condProductCategoryList = [];
-condProductCategoryList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
-condProductCategoryList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
-condition = EntityCondition.makeCondition(condProductCategoryList,EntityOperator.OR);
-productCategoryList = delegator.findList("ProductCategory", condition, null, null, null, false);
-context.productCategoryList=productCategoryList;
+condPrimaryCategoryList = [];
+condPrimaryCategoryList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
+condition = EntityCondition.makeCondition(condPrimaryCategoryList,EntityOperator.AND);
+primaryCategoryList = delegator.findList("ProductCategory", condition, null, null, null, false);
+context.primaryCategoryList=primaryCategoryList;
+
+condmaterialCategoryList = [];
+condmaterialCategoryList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
+condition = EntityCondition.makeCondition(condmaterialCategoryList,EntityOperator.AND);
+materialCategoryList = delegator.findList("ProductCategory", condition, null, null, null, false);
+context.materialCategoryList=materialCategoryList;
 
 condProductTypeList = [];
 condProductTypeList.add(EntityCondition.makeCondition("productTypeId", EntityOperator.NOT_EQUAL, null));

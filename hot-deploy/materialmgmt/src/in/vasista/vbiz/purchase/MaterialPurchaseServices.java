@@ -4085,7 +4085,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		newProduct.put("productTypeId", productTypeId);
 		newProduct.put("primaryProductCategoryId", primaryCategoryId);
 		newProduct.put("internalName", materialCode);
-		newProduct.put("brandName", materialCode);
+		newProduct.put("brandName", description);
 		newProduct.put("productName", description);
 		newProduct.put("description", description);
 		if(!productUOMtypeId.equals(null) && UtilValidate.isNotEmpty(productUOMtypeId))
@@ -4115,6 +4115,11 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		productCatgMap.put("userLogin", userLogin);
 		result = dispatcher.runSync("addProductToCategory", productCatgMap);
 		}
+		productCatgMap.put("productCategoryId", primaryCategoryId);
+		productCatgMap.put("productId", productId);
+		productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+		productCatgMap.put("userLogin", userLogin);
+		result = dispatcher.runSync("addProductToCategory", productCatgMap);
 	if (ServiceUtil.isError(result)) {
 		return ServiceUtil.returnError("Error Occurred While updating Product Category");
 		}
