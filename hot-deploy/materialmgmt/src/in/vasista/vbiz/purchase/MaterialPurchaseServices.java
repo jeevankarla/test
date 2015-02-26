@@ -833,8 +833,8 @@ public class MaterialPurchaseServices {
 				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
 				EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				List<GenericValue> shipmentReceipts = delegator.findList("Invoice", condExpr, null, null, null, false);
-				if(UtilValidate.isNotEmpty(shipmentReceipts)){
+				List<GenericValue> shipmentReceipts = delegator.findList("ShipmentReceipt", condExpr, null, null, null, false);
+				if(UtilValidate.isEmpty(shipmentReceipts)){
 					Debug.logError("GRN not found for the shipment: "+shipmentId, module);
 					return ServiceUtil.returnError("GRN not found for the shipment: "+shipmentId);
 				}
