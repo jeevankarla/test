@@ -22,9 +22,15 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
     
     <!-- notification of a customer request received and accepted -->
-    <eca service="setCustRequestItemStatus" event="commit">
+   <!--  <eca service="setCustRequestItemStatus" event="commit">
         <condition field-name="custRequestId" operator="not-equals" value="null"/>
         <condition field-name="custRequestItemSeqId" operator="not-equals" value="null"/>
         <action service="checkRequestStatusByItems" mode="sync" />
+    </eca> -->
+    <eca service="createIssuanceForCustRequestItem" event="commit">
+        <condition field-name="custRequestId" operator="not-equals" value="null"/>
+        <condition field-name="custRequestItemSeqId" operator="not-equals" value="null"/>
+        <action service="getEmailForIndentIssuance" mode="sync" />
     </eca>
+    
 </service-eca>

@@ -21,9 +21,9 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="data/materialmgmtDemoData.xml"/>
 
     <!-- service resources: model(s), eca(s) and group definitions -->
-    <service-resource type="model" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_purchase.xml"/>
+    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <!--
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
