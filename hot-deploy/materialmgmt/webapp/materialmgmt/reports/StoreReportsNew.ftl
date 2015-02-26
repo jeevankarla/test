@@ -154,7 +154,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="StoreIssueReport" name="StoreIssueReport" mothed="post" action="<@ofbizUrl>StoreIssueReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
-							<td width="20%"><span class='h3'>Store Issue Report</span></td>
+							<td width="20%"><span class='h3'>Store Receipts And Issue Register</span></td>
 							
 							<td width="25%">
 							     <span class='h3'>
@@ -207,7 +207,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="StoreReport" name="StoreReport" mothed="post" action="<@ofbizUrl>StoreReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Store Report</span></td>
+					     <td width="20%"><span class='h3'>Store Issue Report(Category)</span></td>
 						 <td width="25%">
 						 <span class='h3'>
 						    From <input  type="text" size="18pt" id="storeFromDate"   name="storeFromDate"/>
