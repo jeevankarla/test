@@ -1,6 +1,7 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
+
 <style type="text/css">
  .labelFontCSS {
     font-size: 13px;
@@ -12,20 +13,13 @@
 
 $(document).ready(function(){
 
-   		$("#prodCatId").multiselect({
-   			minWidth : 180,
-   			height: 100,
-   			selectedList: 4,
-   			show: ["bounce", 100],
-   			position: {
-      			my: 'left bottom',
-      			at: 'left top'
-      		}
-   		});
    		
+   		
+   		/*
    		var productCategorySelectIds = ${StringUtil.wrapString(productCategoryJSON)!'[]'};
 		$("#prodCatId").val(productCategorySelectIds);
 		$("#prodCatId").multiselect("refresh");
+		*/
 		
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
@@ -57,11 +51,68 @@ $(document).ready(function(){
 		});
 		
 		
+		var productStoreObjOnload=$('#productStoreIdFrom');
+		showStoreCatalog(productStoreObjOnload);
+		
 	});
 	
-	$("#prodCatId").multiselect({
-   		selectedText: "# of # selected"
-	});
+	
+	
+	var globalCatgoryOptionList=[];
+	 var catagoryList=[];
+	function showStoreCatalog(productStoreObj) {
+		
+	var productStoreId=$(productStoreObj).val();
+	
+	$("#productStoreId").val(productStoreId);
+		
+	//alert("===productStoreId==="+$(productStoreObj).val());
+       var dataString="productStoreId=" + productStoreId ;
+      $.ajax({
+             type: "POST",
+             url: "getStoreCatalogCatagory",
+           	 data: dataString ,
+           	 dataType: 'json',
+           	 async: false,
+        	 success: function(result) {
+              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+       	  		 alert(result["_ERROR_MESSAGE_"]);
+          			}else{
+       	  				  catagoryList =result["catagoryList"];
+       	  				  var catgoryOptionList=[];
+       	  				 
+       	  				 // alert("catagoryList=========="+catagoryList);
+       	  					if(catagoryList != undefined && catagoryList != ""){
+								$.each(catagoryList, function(key, item){
+								// alert("item.value=========="+item.value);
+								 catgoryOptionList.push('<option value="'+item.value+'">' +item.text+'</option>');
+									});
+				           }
+				           $('#productCatageoryId').html(catgoryOptionList.join(''));   
+					            $("#productCatageoryId").multiselect({
+					   			minWidth : 180,
+					   			height: 100,
+					   			selectedList: 4,
+					   			show: ["bounce", 100],
+					   			position: {
+					      			my: 'left bottom',
+					      			at: 'left top'
+					      		}
+					   		});
+					   		 $("#productCatageoryId").multiselect("refresh");
+				          // alert("==globalCatgoryOptionList=="+globalCatgoryOptionList);
+				         
+      	 	 
+      			}
+               
+          	} ,
+         	 error: function() {
+          	 	alert(result["_ERROR_MESSAGE_"]);
+         	 }
+          }); 
+           
+     }
+ 
 </script>
 <#assign changeRowTitle = "Changes">                
 
@@ -120,43 +171,6 @@ $(document).ready(function(){
 	
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
       
-       <#if  (changeFlag?exists && changeFlag =='AdhocSaleNew')>   
-        <tr>
-          <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Products Type:</div></td>
-          <td>&nbsp;</td>
-       	  <#if productCatageoryId?exists && booth?exists>
-		  	  <input type="hidden" name="productCatageoryId" id="productCatageoryId" value="${parameters.productCatageoryId}"/>   	   	   	   
-	          <td valign='middle'>
-	            <div class='tabletext h3'>
-	               	${productCatageoryId}             
-	            </div>
-	          </td>       
-       	  <#else>
-          	<td valign='middle'>
-          	<#assign isDefault = false> 
-      		<select name="productCatageoryId" class='h2'>
-      			<option  value="" >Milk&Products</option>      			     			
-                <#list productCategoryIds as prodCategory>
-                	<#if !productCatageoryId?exists>    
-	                  	<#assign isDefault = false>                
-	                    <#if prodCategory == "INDENT">
-	                      <#assign isDefault = true>
-	                    </#if> 
-                    </#if>
-	                <#if productCatageoryId?exists && (productCatageoryId == prodCategory)>
-	  					<option  value="${productCatageoryId}" selected="selected">${prodCategory}</option>
-	  					<#else>
-	  						<option value='${prodCategory}'<#if isDefault> selected="selected"</#if>>
-	                			${prodCategory}
-	              		</option>
-	  				</#if>
-      			</#list>            
-			</select>
-          </td>
-       </#if>  
-       </tr>    
-       </#if>
         <tr>
         	<td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		      	<input type="hidden" name="isFormSubmitted"  value="YES" />
@@ -202,6 +216,25 @@ $(document).ready(function(){
             </td>
        	  </#if>
         </tr>
+         <tr><td><br/></td></tr>
+        <tr>
+      		<td>&nbsp;</td>
+      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Sale From Store:</div></td>
+      		<td>&nbsp;</td>
+   			<#if productStoreId?exists && productStoreId?has_content>  
+  	  			<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
+      			<td valign='middle'>
+        			<div class='tabletext h3'>${productStoreId?if_exists}</div>
+      			</td>       	
+   			<#else>      	         
+      			<td valign='middle'>
+      				<select name="productStoreIdFrom" id="productStoreIdFrom"   onchange="javascript:showStoreCatalog(this)"  class='h2'>
+      					<option value="1012">MAIN STORE </option>
+      					<option value="1013">MARKETING STORE</option>
+      				</select>
+      			</td>
+   			</#if>
+        </tr>
         <tr><td><br/></td></tr>
         <#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 	      	<tr>
@@ -239,7 +272,6 @@ $(document).ready(function(){
 		    	</tr>
 	    	</#if>
 	    	<tr><td><br/></td></tr>
-	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ICPTransferSale" || changeFlag == "DepotSales")>
 		    	<tr>
 		      		<td>&nbsp;</td>
 		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
@@ -248,33 +280,14 @@ $(document).ready(function(){
 		      		<#if productCategoryId?has_content>
 		      			<div class='tabletext h3'>${productCategoryId?if_exists}</div>
 		      		<#else>
-		      			<select id="prodCatId" name="productCatageoryId" class='h4' multiple="multiple" >
-		      				<#if categoryList?has_content><#list categoryList as eachCategory><option value='${eachCategory.productCategoryId?if_exists}'>${eachCategory.description?if_exists}</option></#list></#if>
+		      			<select id="productCatageoryId" name="productCatageoryId" class='h4' multiple="multiple" >
 						</select>
 		      		</#if>
 					</td>
 				</tr>
 		    	<tr><td><br/></td></tr>
-	    	</#if>
     	</#if>
-        
-        <#if changeFlag?exists && changeFlag == "AdhocSaleNew">
-          	<tr>
-          		<td>&nbsp;</td>
-          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle Number:</div></td>
-          		<td>&nbsp;</td>
-       			<#if vehicleId?exists && vehicleId?has_content>  
-	  	  			<input type="hidden" name="?if_exists" id="?if_exists" value="${vehicleId?if_exists}"/>  
-          			<td valign='middle'>
-            			<div class='tabletext h3'>${vehicleId?if_exists}</div>
-          			</td>       	
-       			<#else>      	         
-          			<td valign='middle'>
-          				<input type="text" name="vehicleId" id="vehicleId" />    
-          			</td>
-       			</#if>
-        	</tr>
-        <#else>
+       
         	<#if changeFlag?exists && changeFlag !='InterUnitTransferSale' && changeFlag !='ICPTransferSale'>
         		<tr>
 	          		<td>&nbsp;</td>
@@ -295,8 +308,7 @@ $(document).ready(function(){
 	       			</#if>
         		</tr>
         	</#if>
-        	
-		</#if>
+		
 		<#-- Order Message Field Starts -->
 		<#if changeFlag?exists && !(changeFlag=='AdhocSaleNew')>
         <tr><td><br/></td></tr>
