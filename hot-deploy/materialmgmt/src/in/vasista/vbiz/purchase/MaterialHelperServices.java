@@ -405,6 +405,7 @@ public class MaterialHelperServices{
 		Map result = ServiceUtil.returnSuccess();
 		List condList=FastList.newInstance();
 		Map supplyDetailMap = FastMap.newInstance();
+		Timestamp now = UtilDateTime.nowTimestamp();
 		try{
 			condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
@@ -420,50 +421,37 @@ public class MaterialHelperServices{
 	        } catch (GenericEntityException e) {
 	            Debug.logError(e, module);
 	        }
-	        
+	        String supplierPartyId = "";
+        	BigDecimal supplyRate = BigDecimal.ZERO;
+        	
+        	condList.clear();
+    		condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    		condList.add(EntityCondition.makeCondition("availableFromDate", EntityOperator.LESS_THAN_EQUAL_TO,now));
+    		condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("availableThruDate", EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("availableThruDate",EntityOperator.GREATER_THAN_EQUAL_TO,now)));
+    		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    		List<GenericValue> supplierProducts = delegator.findList("SupplierProduct",cond,UtilMisc.toSet("partyId","lastPrice"),null,null,false);
+    		
 	        if(UtilValidate.isNotEmpty(receipts)){
 	        	GenericValue receipt = EntityUtil.getFirst(receipts);
-	        	
-	        	String orderId = receipt.getString("orderId");
-	        	String supplierPartyId = "";
-	        	BigDecimal supplyRate = BigDecimal.ZERO;
-	        	if(UtilValidate.isNotEmpty(orderId)){
-	        		condList.clear();
-	        		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	        		condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-	        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	        		List<GenericValue> orderRoles = delegator.findList("OrderRole", cond, null, null, null, false);
-	        		
-	        		GenericValue orderRole = EntityUtil.getFirst(orderRoles);
-	        		if(UtilValidate.isNotEmpty(orderRole)){
-	        			supplierPartyId = orderRole.getString("partyId");
-	        		}
-	        		condList.clear();
-	        		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	        		condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-	        		EntityCondition condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	        		List<GenericValue> orderItems = delegator.findList("OrderItem", condExpr, null, null, null, false);
-	        		
-	        		GenericValue orderItem  = EntityUtil.getFirst(orderItems);
-	        		
-	        		if(UtilValidate.isNotEmpty(orderItem)){
-	        			supplyRate = orderItem.getBigDecimal("unitListPrice");
-	        		}
-	        		
-	        	}
-	        	
-	        	condList.clear();
-        		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-        		condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        		GenericValue supplierProduct = null;
+        		if(UtilValidate.isNotEmpty(supplierProducts)){
+        		 supplierProduct = EntityUtil.getFirst(supplierProducts);
+        		 supplierPartyId = supplierProduct.getString("partyId");
+        		 supplyRate = supplierProduct.getBigDecimal("lastPrice");
+        		}
 	        	supplyDetailMap.put("supplyProduct", receipt.getString("productId"));
 	        	supplyDetailMap.put("supplyQty", receipt.getBigDecimal("quantityAccepted"));
 	        	supplyDetailMap.put("supplyDate", receipt.getTimestamp("datetimeReceived"));
-	        	supplyDetailMap.put("supplierPartyId", supplierPartyId);
-	        	supplyDetailMap.put("supplyRate", supplyRate);
-	        	
+	        }else{
+        		GenericValue supplierProduct = null;
+        		if(UtilValidate.isNotEmpty(supplierProducts)){
+        		 supplierProduct = EntityUtil.getFirst(supplierProducts);
+        		 supplierPartyId = supplierProduct.getString("partyId");
+        		 supplyRate = supplierProduct.getBigDecimal("lastPrice");
+        		}
 	        }
-			  
+	        supplyDetailMap.put("supplierPartyId", supplierPartyId);
+        	supplyDetailMap.put("supplyRate", supplyRate);	  
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
