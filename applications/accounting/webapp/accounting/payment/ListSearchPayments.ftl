@@ -153,6 +153,7 @@ function setVoidPaymentParameters(currentPayment){
           <td>${uiLabelMap.AccountingPaymentType}</td>
           <td>Payment Method</td>
           <td>Comments</td>
+          <td>Reason For Voided</td>
           <td>${uiLabelMap.CommonStatus}</td>
           <td>${uiLabelMap.AccountingFromParty}</td>
           <td>${uiLabelMap.AccountingToParty}</td>
@@ -192,6 +193,9 @@ function setVoidPaymentParameters(currentPayment){
                <td>
               ${payment.comments?if_exists}
               </td>            
+              <td>
+                ${payment.cancelComments?if_exists}
+              </td>           
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : payment.statusId}, true) />
                 ${statusItem.description?default(payment.statusId)}

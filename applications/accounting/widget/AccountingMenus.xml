@@ -520,7 +520,7 @@
 					</or>
 				</and>
 			</condition>
-			<link target="setInvoiceStatus" request-confirmation="true"
+			<link target="javascript:getDescription()" url-mode="plain" link-type="hidden-form"
 				confirmation-message="You want to cancel this invoice number ${invoice.invoiceId}?">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
@@ -793,7 +793,7 @@
 					</and>
 				</and>
 			</condition>
-			<link target="voidPayment">
+			<link  target="javascript:getPaymentDescription()" url-mode="plain" link-type="hidden-form">
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 			</link>
 		</menu-item>
@@ -3425,7 +3425,7 @@
 					</or>
 				</and>
 			</condition>
-			<link target="SetAPInvoiceStatus" request-confirmation="true"
+			<link  target="javascript:getDescription('${catflag}')" url-mode="plain" link-type="hidden-form"
 				confirmation-message="You want to cancel this invoice number ${invoice.invoiceId}?">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
@@ -3842,7 +3842,7 @@
 					</or>
 				</and>
 			</condition>
-			<link target="SetARInvoiceStatus" request-confirmation="true"
+			<link target="javascript:getDescription('${catflag}')" url-mode="plain" link-type="hidden-form"
 				confirmation-message="You want to cancel this invoice number ${invoice.invoiceId}?">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
