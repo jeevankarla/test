@@ -68,8 +68,11 @@ if(totalDays > 32){
 
 prodDetails = delegator.findOne("Product", [productId : productId], false);
 if(UtilValidate.isNotEmpty(prodDetails)){
+	internalName = prodDetails.internalName;
    materialName = prodDetails.productName;
   context.put("materialName",materialName);
+  context.put("internalName",internalName);
+  
 }
 allDetailsMap=[:];	
 BigDecimal dayClosingQty = BigDecimal.ZERO;
@@ -161,7 +164,7 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	
 }
 if(UtilValidate.isNotEmpty(MrrMap) || UtilValidate.isNotEmpty(issueMap)){	
- dayClosingQty=inventoryCount+ReceiptTotQty-IssueTotQty;
+ dayClosingQty=ReceiptTotQty-IssueTotQty;
 receiptIssuesMap.put("dayClosingQty",dayClosingQty);
 }
 

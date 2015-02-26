@@ -63,12 +63,9 @@ shipmentReceiptList = delegator.findList("ShipmentReceipt", cond, null,null, nul
 shipmentMap=[:];
 shipmentMap["totalInvoiceAmt"]=BigDecimal.ZERO;
 shipmentMap["totalPaidAmt"]=BigDecimal.ZERO;
-shipmentIds=EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "shipmentId", true);
-
-
 mrrList=[];
-shipmentReceiptList.each{shipmentData->
-	
+if(UtilValidate.isNotEmpty(shipmentReceiptList)){
+shipmentReceiptList.each{shipmentData->	
    shipmentDetailMap=[:];
    shipmentDetailMap["receiptId"]=shipmentData.receiptId;
    shipmentDetailMap["datetimeReceived"]=shipmentData.datetimeReceived;
@@ -90,19 +87,21 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 }
  deptRole = delegator.findList("ShipmentReceiptRole",EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS , shipmentData.receiptId)  , null, null, null, false );
     deptRole=EntityUtil.getFirst(deptRole);  
+	
     if(UtilValidate.isNotEmpty(deptRole)){
 	partyIdOfDept=deptRole.partyId;
 
    if(UtilValidate.isNotEmpty(partyIdOfDept)){
   deptGroupName= delegator.findList("PartyRelationshipAndDetail",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdOfDept)  , null, null, null, false );
   deptGroupName=EntityUtil.getFirst(deptGroupName);
-  
+  if(UtilValidate.isNotEmpty(deptGroupName.groupName)){
+	  
    deptName=deptGroupName.groupName;  
    shipmentDetailMap.put("deptName",deptName);
-	     }
+	     }}
   	  }
    //invoiceno,date
-   invoiceData = delegator.findOne("Shipment",["shipmentId":shipmentData.shipmentId],false);
+   invoiceData = delegator.findOne("Shipment",["shipmentId":shipmentData.shipmentId],false);   
    if(invoiceData){
 	   invoiceId=invoiceData.get("supplierInvoiceId");
 	   invoiceDate=invoiceData.get("supplierInvoiceDate");
@@ -115,9 +114,9 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentData.shipmentId));
     con = EntityCondition.makeCondition(cList,EntityOperator.AND);
    invoiceDetails = delegator.findList("Invoice", con, null,null, null, false);
+   invoiceDetails=EntityUtil.getFirst(invoiceDetails);
    
    if(UtilValidate.isNotEmpty(invoiceDetails)){
-	   invoiceDetails=EntityUtil.getFirst(invoiceDetails);
 	   
  //  shipmentDetailMap["invoiceId"]=invoiceDetails.invoiceId;
  //  shipmentDetailMap["invoiceDate"]=invoiceDetails.invoiceDate;
@@ -125,11 +124,12 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    
    invoiceId=invoiceDetails.invoiceId;
    invoiceAmount= InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
-   if(UtilValidate.isNotEmpty(invoiceAmount)){
+   if(UtilValidate.isNotEmpty(invoiceAmount)){	   
 	   shipmentDetailMap.put("invoiceAmount",invoiceAmount);
 	   shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
 	   }
-   invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);     
+   
+   invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);    
    if(UtilValidate.isNotEmpty(invoice)){
     invoiceToApply = InvoiceWorker.getInvoiceNotApplied(invoice);
 	if(UtilValidate.isNotEmpty(invoiceToApply)){
@@ -143,20 +143,19 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 		   shipmentMap["totalPaidAmt"]+=paidAmount;
 		   
 	   }
-   }
-
+   }   
      }
    if(UtilValidate.isEmpty(invoiceDetails)){
 	   inventoryItemDetails = delegator.findOne("InventoryItem",["inventoryItemId":shipmentData.inventoryItemId],false);
-	   if(inventoryItemDetails){
+	   
+	     if(inventoryItemDetails){
 		   quantityAccepted=shipmentData.quantityAccepted;
 		   unitCost=inventoryItemDetails.get("unitCost");
-		   invoiceAmount=quantityAccepted*unitCost;
-		   
-		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);
-		   
+		   unitCost=0;
+		   invoiceAmount=quantityAccepted*unitCost;		   
+		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);		   
 		  shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
-		  
+
 //	   invoiceToApply=0;paidAmount=0;totalPaidAmt=0;
 //	   shipmentDetailMap.put("invoiceToApply",invoiceToApply);
 //	   shipmentDetailMap.put("paidAmount",paidAmount);
@@ -182,6 +181,6 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    
  
    }
+}
 context.shipmentMap=shipmentMap;
 context.mrrList=mrrList;
-
