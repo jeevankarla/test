@@ -886,7 +886,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
         }
       Map result = ServiceUtil.returnSuccess();
       try {
-    	  BigDecimal quantity=BigDecimal.ZERO;
     	  List conditionList = FastList.newInstance();
     	  conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId",EntityOperator.EQUALS,custRequestItemSeqId));
     	  conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,issuedDateTime));
@@ -895,13 +894,14 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
     	  List<GenericValue> itemIssuances=delegator.findList("ItemIssuance",condition,null,null,null,false);
 			if(UtilValidate.isNotEmpty(itemIssuances)){
 				for(GenericValue issuedItem:itemIssuances){
+					BigDecimal quantity=BigDecimal.ZERO;
 					GenericValue inventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId",issuedItem.get("inventoryItemId")),false);
-					totalValue = totalValue.add(((BigDecimal)inventoryItem.get("unitCost")).multiply((BigDecimal)issuedItem.get("quantity")));
 					totalUnitPrice = totalUnitPrice.add((BigDecimal)inventoryItem.get("unitCost"));
 					quantity = quantity.add(issuedItem.getBigDecimal("quantity"));
 					if(UtilValidate.isNotEmpty(issuedItem.getBigDecimal("cancelQuantity"))){
 						quantity = quantity.subtract(issuedItem.getBigDecimal("cancelQuantity"));
 					}
+					totalValue = totalValue.add(((BigDecimal)inventoryItem.get("unitCost")).multiply(quantity));
 					totalQty = totalQty.add(quantity);
 				}
 				totalUnitPrice = totalUnitPrice.divide(new BigDecimal((itemIssuances.size())));
