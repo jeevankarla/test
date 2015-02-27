@@ -95,6 +95,8 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 					invoiceDate = invoice.getValue().invoiceDateStr;
 				}
 				invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+				
+				shipmentId=invoiceDetails.shipmentId;
 				invoicePartyId = invoiceDetails.partyIdFrom;
 				partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
 				if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
@@ -208,6 +210,20 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 							}
 						}
 					}
+				}else if(UtilValidate.isNotEmpty(shipmentId)){
+								mrrNumber = shipmentId;
+							    shipmentDetails = delegator.findOne("Shipment", [shipmentId : shipmentId], false);
+								if(UtilValidate.isNotEmpty(shipmentDetails)){
+								    poNumber = shipmentDetails.primaryOrderId;
+									supInvNumber = shipmentDetails.supplierInvoiceId;
+									supInvDate = shipmentDetails.supplierInvoiceDate;
+									def sdf1 = new SimpleDateFormat("MM/dd/yy HH:mm");
+									supInvDateTime = UtilDateTime.getDayStart(supInvDateTime);
+									if(UtilValidate.isNotEmpty(supInvDateTime)){
+										supInvDateTime = UtilDateTime.toDateString(supInvDateTime, "dd/MM/yyyy");
+									}
+								}
+							
 				}
 				grandTotal = 0;
 				grandTotal = totalRevenue+totalFreight+discountAmount+insuranceAmount;
