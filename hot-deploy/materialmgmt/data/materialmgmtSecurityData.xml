@@ -345,6 +345,7 @@
     <SecurityGroup description="Indent Dept. Head Approval!" groupId="MM_DEPT_HEAD_APPROVE"/>
     <SecurityGroupPermission groupId="MM_DEPT_HEAD_APPROVE"  permissionId="MM_DEPT_HEAD_APPROVE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_DEPT_HEAD_APPROVE"/>
+    <SecurityGroupPermission groupId="MM_DEPT_HEAD_APPROVE"  permissionId="MM_CANCEL_INDENT"/>
     
     <SecurityPermission description="Approve Requirement Tab View" permissionId="MM_APPROVE_REQ_VIEW"/>
     <SecurityGroup description="Approve Requirement Tab View!" groupId="MM_APPROVE_REQ_VIEW"/>
@@ -457,5 +458,13 @@
     <SecurityPermission description="View Vendor" permissionId="MM_VENDOR_VIEW"/>
     <SecurityGroup description="View Vendor" groupId="MM_VENDOR_VIEW"/>
     <SecurityGroupPermission groupId="MM_VENDOR_VIEW"  permissionId="MM_VENDOR_VIEW"/>
+    <SecurityGroupPermission groupId="MM_VENDOR_VIEW"  permissionId="PARTYMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="MM_VENDOR_VIEW"  permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MM_VENDOR_VIEW"  permissionId="PARTYMGR_PCM_CREATE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_VENDOR_VIEW"/>
+    
+    <SecurityPermission description="Add Material" permissionId="MM_ADD_MATERIAL"/>
+    <SecurityGroup description="Add Material" groupId="MM_ADD_MATERIAL"/>
+    <SecurityGroupPermission groupId="MM_ADD_MATERIAL"  permissionId="MM_ADD_MATERIAL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_ADD_MATERIAL"/>
 </entity-engine-xml>
