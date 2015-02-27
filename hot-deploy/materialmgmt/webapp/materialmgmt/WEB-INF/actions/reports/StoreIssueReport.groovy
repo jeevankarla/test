@@ -113,10 +113,19 @@ MrrMap=[:];
 BigDecimal ReceiptTotQty = BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(receiptList)){
-	
+	receiptNo=1;
 	receiptList.each{receiptData->
+		
+		coList =[];
+		coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptData.receiptId));
+		coList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SHIPMENT_CANCELLED"));
+		EntityCondition con = EntityCondition.makeCondition(coList,EntityOperator.AND);
+		cancelledShipment= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);
+		if(UtilValidate.isNotEmpty(cancelledShipment)){
+			
+		}else{			
 		 MrrDetailsMap=[:];
-		 
+		 shipmentId=receiptData.shipmentId;
 		 receiptId=receiptData.receiptId;
 		 ReceiptQty=receiptData.quantity;
 		 ReceiptRate=receiptData.price;
@@ -125,55 +134,59 @@ if(UtilValidate.isNotEmpty(receiptList)){
 		 
 		 mrrDetails=MaterialReceiptRegister.get(receiptId);				 
 		 billNo=mrrDetails.billNo;
+		 
 		 if(UtilValidate.isNotEmpty(ReceiptQty)){
 		 ReceiptTotQty=ReceiptTotQty+ReceiptQty;
 		 }		 
 		//MrrDetailsMap.put("receiptId",receiptId);
+		 MrrDetailsMap.put("shipmentId",shipmentId);
+		 
 		MrrDetailsMap.put("ReceiptQty",ReceiptQty);
 		MrrDetailsMap.put("ReceiptRate",ReceiptRate);
 		MrrDetailsMap.put("ReceiptAmount",ReceiptAmount);
 		MrrDetailsMap.put("receivedDate",receivedDate);
 		MrrDetailsMap.put("billNo",billNo);
 		
-		MrrMap.put(receiptId,MrrDetailsMap);
+		MrrMap.put(receiptNo,MrrDetailsMap);
+		receiptNo++;
+	 }
 	}
-	receiptIssuesMap.put("MrrMap",MrrMap);
-	
+	receiptIssuesMap.put("MrrMap",MrrMap);	
 } 
+
 issueMap=[:];
 BigDecimal IssueTotQty = BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(StoreIssueList)){
+	issueNo=1;	
 	StoreIssueList.each{storeIssueDetails->
 		storeIssueDetailsMap=[:];
-		if(UtilValidate.isNotEmpty(storeIssueDetails.get("quantity"))){			
-		IssueTotQty=IssueTotQty+storeIssueDetails.get("quantity");
-		}		
-		indentNo=storeIssueDetails.get("custRequestId");
+		issueQty=storeIssueDetails.quantity;		
+		indentNo=storeIssueDetails.get("custRequestId");		
 		custRequestDate=storeIssueDetails.get("custRequestDate");
 		issueDate = UtilDateTime.toDateString(custRequestDate);		
 		storeIssueDetailsMap.put("issueDate",storeIssueDetails.get("issueDate"));
-		//storeIssueDetailsMap.put("IndentNo",storeIssueDetails.get("custRequestId"));
+		storeIssueDetailsMap.put("IndentNo",storeIssueDetails.get("custRequestId"));
 		storeIssueDetailsMap.put("IssueQty",storeIssueDetails.get("quantity"));
 		storeIssueDetailsMap.put("IssueRate",storeIssueDetails.get("price"));
-		storeIssueDetailsMap.put("IssueAmount",storeIssueDetails.get("amount"));			
-		issueMap.put(indentNo,storeIssueDetailsMap);
+		storeIssueDetailsMap.put("IssueAmount",storeIssueDetails.get("amount"));
+		if(UtilValidate.isNotEmpty(issueQty)){			
+			IssueTotQty=IssueTotQty+issueQty;
+			}
+		issueMap.put(issueNo,storeIssueDetailsMap);
+		issueNo++;
+		
 	}
 	receiptIssuesMap.put("issueMap",issueMap);
-	
-	
-}
-if(UtilValidate.isNotEmpty(MrrMap) || UtilValidate.isNotEmpty(issueMap)){	
- dayClosingQty=ReceiptTotQty-IssueTotQty;
-receiptIssuesMap.put("dayClosingQty",dayClosingQty);
-}
-
+ }
 if(UtilValidate.isNotEmpty(receiptIssuesMap)){	
-allDetailsMap.put(date, receiptIssuesMap);
-}
+	dayClosingQty=ReceiptTotQty-IssueTotQty;
+	
+	receiptIssuesMap.put("dayClosingQty",dayClosingQty);
+allDetailsMap.put(currentDayStart, receiptIssuesMap);
+ }
 }
 context.allDetailsMap=allDetailsMap;
-
 
 
 
