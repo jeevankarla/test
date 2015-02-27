@@ -422,15 +422,15 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.paymentDecoratorLocation}">
                     <decorator-section name="body">
+                     <platform-specific>
+                               <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatusCancel.ftl"/></html>
+              				</platform-specific>
                         <section>
                             <condition>
                                 <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
                             </condition>
                             <widgets>
-                            <platform-specific>
-                               <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatusCancel.ftl"/></html>
-              				</platform-specific>
-                                  <platform-specific>
+                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
                             </platform-specific>
                                 <container style="lefthalf">
