@@ -132,7 +132,7 @@ under the License.
 		                <fo:table-cell><fo:block text-align="left" > ${products.get("custRequestId")?if_exists}</fo:block> </fo:table-cell> 
 		                <fo:table-cell><fo:block text-align="left" > ${products.get("productId")?if_exists}</fo:block> </fo:table-cell>                         							
 		                <fo:table-cell><fo:block text-align="left" > ${products.get("description")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="center" > ${products.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
 		                <fo:table-cell><fo:block text-align="right" > ${products.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
 		                <fo:table-cell><fo:block text-align="right"> ${products.get("unitPrice")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>                         							
 		                <fo:table-cell><fo:block text-align="right" > ${products.get("totVal")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          

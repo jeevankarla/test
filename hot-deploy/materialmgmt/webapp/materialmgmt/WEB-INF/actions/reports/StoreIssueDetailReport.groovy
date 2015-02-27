@@ -115,7 +115,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 								         }
 							             if(UtilValidate.isNotEmpty(uomId)){
 								                unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-							                    productDetailMap["unit"]=unitDesciption.description;
+							                    productDetailMap["unit"]=unitDesciption.abbreviation;
 							              }							
 		                                 conditionList.clear();
 			                             conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));

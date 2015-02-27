@@ -74,7 +74,7 @@ if(UtilValidate.isNotEmpty(custReqItemDetails)){
 		 }
 		 if(UtilValidate.isNotEmpty(uomId)){
 			 unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-			 productMap.put("unit",unitDesciption.description);
+			 productMap.put("unit",unitDesciption.abbreviation);
 		 }
 		 productMap.put("requrdqty",requrdqty);
 		 key=key+1;
