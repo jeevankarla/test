@@ -118,6 +118,8 @@ under the License.
 			                    	<#assign SBEFest=0>
 			                    	<#assign othersDed = 0>
 			                    	<#assign SBEDeductions = 0>
+			                    	
+			                    	<#assign DAAREmpProFund = 0>
 			                    
 				                    <#assign monthKey = partyDeductions.getKey()>
 				                    
@@ -150,9 +152,12 @@ under the License.
 			                    	<#assign SBEFest = partyDeductions.getValue().get("SBEFest")?if_exists>
 			                    	<#assign othersDed = partyDeductions.getValue().get("othersDed")?if_exists>
 			                    	
+			                    	
+			                    	<#assign DAAREmpProFund = partyDeductions.getValue().get("DAAREmpProFund")?if_exists>
+			                    	
 			                    	<#assign SBEDeductions = SBEEmpProFund+SBEInsurance+othersDed>
 			                    	
-			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund>
+			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund+DAAREmpProFund>
 			                    	<#assign totalVpf = totalVpf + vpf>
 			                    	<#assign totalGsls = totalGsls + gsls+SBEGrSav>
 			                    	<#assign totalLicp = totalLicp + licp+SBEInsurance>
@@ -161,7 +166,7 @@ under the License.
 			                    	<#assign totalFRFNSC = totalFRFNSC + fRFNSC>
 			                    	<#assign totalPPFGSAS = totalPPFGSAS + pPFGSAS>
 			                    	<#assign totalExterLoan = totalExterLoan + exterLoan>
-			                    	<#assign totalDeductions = totalDeductions + deductions>
+			                    	<#assign totalDeductions = totalDeductions + deductions+DAAREmpProFund+SBEDeductions+TEEmpProFund>
 			                    	
 			                    	<#assign totalOthersDed = totalOthersDed + othersDed>
 			                    	
@@ -282,6 +287,46 @@ under the License.
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEPrTax?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
+							    <#if (DAAREmpProFund?has_content && DAAREmpProFund!=0)>
+							    <fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Arrears:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
