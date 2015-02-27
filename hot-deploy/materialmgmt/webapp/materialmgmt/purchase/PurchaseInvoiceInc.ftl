@@ -943,6 +943,10 @@
 		    gridShowCall();
 		 	setupGrid1();
 		 	setupGrid2();
+		 	updateInvoiceTotalAmount();
+		 	$('#addBED').attr('checked', true);
+            $('#addBED').attr('checked','checked');
+            addBedColumns();
 	     }else{ 
 	        gridHideCall();
 	     }

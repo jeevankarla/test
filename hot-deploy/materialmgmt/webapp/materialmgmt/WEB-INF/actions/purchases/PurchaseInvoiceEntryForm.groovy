@@ -134,8 +134,8 @@ if(shipments){
 			}
 			amount = unitPrice*qty;
 			bedAmt = (amount*bedPercent)/100;
-			bedcessAmt = (amount*bedcessPercent)/100;
-			bedseccessAmt = (amount*bedseccessPercent)/100;
+			bedcessAmt = (bedAmt*bedcessPercent)/100;
+			bedseccessAmt = (bedAmt*bedseccessPercent)/100;
 			
 			entryAmt = amount+bedAmt+bedcessAmt+bedseccessAmt;
 			
