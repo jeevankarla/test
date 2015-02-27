@@ -853,16 +853,29 @@ public class SalesInvoiceServices {
 		Map<String, Object> dayWiseTotals = new TreeMap<String, Object>();
 	   GenericValue invoiceItem;   
 	   while( invoiceItemsIter != null && (invoiceItem = invoiceItemsIter.next()) != null) {
-			String prodSubscriptionTypeId = invoiceItem.getString("productSubscriptionTypeId");
+			//String prodSubscriptionTypeId = invoiceItem.getString("productSubscriptionTypeId");
 			BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
 			BigDecimal packetQuantity = invoiceItem.getBigDecimal("quantity");
-			BigDecimal price = invoiceItem.getBigDecimal("unitListPrice");
+			BigDecimal price = ZERO;
+			BigDecimal revenue = ZERO;
+			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("unitListPrice"))) {
+				price = invoiceItem.getBigDecimal("unitListPrice");
+				revenue = price.multiply(quantity);
+			}else{
+				price = invoiceItem.getBigDecimal("amount");
+				revenue = price.multiply(quantity);
+			}
+			BigDecimal basicPrice =ZERO;
+			BigDecimal basicRevenue = ZERO;
+			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("unitPrice"))) {
+				basicPrice = invoiceItem.getBigDecimal("unitPrice");
+			}
+			
 			String invoicesupplyId = invoiceItem.getString("invoiceId");
-			BigDecimal basicPrice = invoiceItem.getBigDecimal("unitPrice");
-			BigDecimal basicRevenue = basicPrice.multiply(quantity);
+			
+			
 			totalBasicRevenue=totalBasicRevenue.add(basicRevenue);
 
-			BigDecimal revenue = price.multiply(quantity);
 			
 		/*	if (!(adjustmentOrderList.contains(invoiceItem.getString("orderId")))	&& (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))) {
 				try {

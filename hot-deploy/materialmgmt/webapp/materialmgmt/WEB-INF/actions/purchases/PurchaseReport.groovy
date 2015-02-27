@@ -101,6 +101,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 									}
 								}
 							}
+						}else if(UtilValidate.isNotEmpty(shipmentId)){
+							shipmentId=invoiceDetails.shipmentId
+							supInvNumber="";
+							if(UtilValidate.isNotEmpty(shipmentId)){
+								   shipmentDetails = delegator.findOne("Shipment", [shipmentId : shipmentId], false);	
+									if(UtilValidate.isNotEmpty(shipmentDetails)){
+										supInvNumber = shipmentDetails.supplierInvoiceId;
+									}
+							}
 						}
 						
 						prodTotals = invoice.getValue().get("productTotals");
