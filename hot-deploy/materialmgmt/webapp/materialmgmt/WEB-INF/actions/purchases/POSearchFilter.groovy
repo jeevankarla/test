@@ -42,7 +42,7 @@ if(UtilValidate.isNotEmpty(context.orderId)){
 	orderId=context.orderId;
 	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,orderId)],EntityOperator.AND);
 	orderItems=delegator.findList("OrderItem",ecl,null,null,null,false);
-	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,orderId),EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_REJECTED")],EntityOperator.AND);
+	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,orderId),EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_REJECTED"),EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_CANCELLED")],EntityOperator.AND);
 	shipmentReceipts=delegator.findList("ShipmentReceipt",condition,null,null,null,false);
 	orderItemsSize=orderItems.size();
 	if(UtilValidate.isNotEmpty(shipmentReceipts)){
