@@ -61,6 +61,7 @@ conditionlist.clear();
 /*conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, shippedOrderIds));*/
 conditionlist.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS,"PURCHASE_ORDER"));
 conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_FROM_VENDOR"));
+conditionlist.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"ORDER_APPROVED"));
 conditionlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
 conditionlist.add(EntityCondition.makeCondition("salesChannelEnumId", EntityOperator.EQUALS,"MATERIAL_PUR_CHANNEL"));
 
