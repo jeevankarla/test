@@ -44,25 +44,27 @@ under the License.
 				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    Enquiry Sequence No: ${enquirySequenceNo?if_exists}       </fo:block>	
 				   <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
-	                     <fo:table-column column-width="170pt"/>
-					     <fo:table-column column-width="240pt"/>
+	                     <fo:table-column column-width="100pt"/>
+					     <fo:table-column column-width="170pt"/>
 					     <#list partyDetList as partyNameList>
-					      <fo:table-column column-width="140pt"/>					      
+					      <fo:table-column column-width="75pt"/>					      
 					      </#list> 
 					         <fo:table-body>
 					             <fo:table-row height="20pt">
                                     <fo:table-cell>
-									    <fo:block text-align="left" padding-before="1cm" keep-together="always"  font-weight="bold" white-space-collapse="false">SL.No/Item No</fo:block>
+									    <fo:block text-align="left" padding-before="1cm" keep-together="always"  font-weight="bold" white-space-collapse="false">SL.No</fo:block>
 								    </fo:table-cell>     
 					                 <fo:table-cell  >
 								        <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
 								        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>							        
-								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">MATERIALS      REQRD    LAST PO</fo:block>
-								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;                QTY    DATE/RATE</fo:block>								        
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">MATERIALS    REQ  LAST </fo:block>
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;            QTY PO DATE</fo:block>	
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;                /RATE</fo:block>							        
 								     </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
-						                      <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}[${partyNameList.get("partyId")}]</fo:block>
+						                      <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}</fo:block>
+											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.get("partyId")}]</fo:block>
 						                  	</fo:table-cell>
     									</#list>    	
 					             </fo:table-row> 
@@ -84,12 +86,12 @@ under the License.
 					  </fo:block>					 
 				     <fo:block font-family="Courier,monospace">
 	                     <fo:table border-style="solid">
-	                      <fo:table-column column-width="100pt"/>
-					     <fo:table-column column-width="170pt"/>
+	                      <fo:table-column column-width="30pt"/>
+					     <fo:table-column column-width="150pt"/>
+					     <fo:table-column column-width="40pt"/>
 					     <fo:table-column column-width="50pt"/>
-					     <fo:table-column column-width="90pt"/>
 					     <#list partyDetList as partyNameList>
-					     <fo:table-column column-width="140pt"/>
+					     <fo:table-column column-width="75pt"/>
 					      </#list> 				    
 					         <fo:table-body>	
                                 <#assign sno=1>					         
@@ -191,9 +193,9 @@ under the License.
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
 					<fo:block font-family="Courier,monospace">
 	                    <fo:table>
-					      <fo:table-column column-width="200pt"/>
+					      <fo:table-column column-width="70pt"/>
 					     <#list partyDetList as partyNameList>					      
-					      <fo:table-column column-width="200pt"/>
+					      <fo:table-column column-width="96pt"/>
 					      </#list> 
 					          <fo:table-body>
 					          		<fo:table-row border-style="solid">
@@ -211,8 +213,8 @@ under the License.
     								  <#list partyDetList as partyNameList>
     								  <fo:table-cell border-style="solid">
 						                  <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
-						                  <fo:block text-align="left" font-weight="bold" font-size="11pt" >------------------------------</fo:block>
-										 <fo:block text-align="center" font-weight="bold" font-size="11pt" white-space-collapse="false">Item No  |   TermValue</fo:block>	
+						                  <fo:block text-align="left" font-weight="bold" font-size="11pt" >--------------</fo:block>
+										 <fo:block text-align="center" font-weight="bold" font-size="9pt" white-space-collapse="false">Item No|TermValue</fo:block>	
 						              </fo:table-cell>
     								  </#list>  
 					              </fo:table-row>
@@ -232,53 +234,55 @@ under the License.
 										<#list partyIdsList as partyIdsKey>
 				                       <#if partyIdsKey.getKey()==partyNameList.get("partyId")>
     								   <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">
+					                      <fo:block text-align="center" font-size="10pt" >
 					                      <#if partyIdsKey.getValue()?has_content>
 					                      <fo:table>
-					      						<fo:table-column column-width="75pt"/>
-					      						<fo:table-column column-width="75pt"/>
-					      						<fo:table-column column-width="50pt"/>
+					      						<fo:table-column column-width="32pt"/>
+					      						<fo:table-column column-width="63pt"/>
 												<fo:table-body>
 												<#assign partyValues=partyIdsKey.getValue()>
 													<#list partyValues as values>
-									          		<fo:table-row border-style="solid">
+									          		<fo:table-row >
 									          		<#assign TermType=delegator.findOne("TermType",{"termTypeId":values.get("termTypeId")},true)>
 													<#if (TermType.parentTypeId == "FEE_PAYMENT_TERM") || (TermType.parentTypeId == "DELIVERY_TERM")>
 														<fo:table-cell>
-																 <fo:block text-align="center" font-weight="bold" font-size="11pt" >${TermType.description}</fo:block>
+																 <fo:block text-align="center"  font-size="10pt" ></fo:block>
+														</fo:table-cell>
+														<fo:table-cell>
+																 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
 														</fo:table-cell>
 																			
 													<#else>		
-													<#if values.get("quoteItemSeqId")?has_content>
-									          		<fo:table-cell >
-									                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
-									                  </fo:table-cell>
-									                <#else>
-														<fo:table-cell >
-									                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >--</fo:block>
-									                  </fo:table-cell>
-                                                    </#if>  
-									                  <#if values.get("uomId")=="PERCENT">
-                                                      <#if values.get("termValue")?has_content>
-									                  <fo:table-cell >
-									                      <fo:block text-align="right" font-weight="bold" font-size="11pt" > ${values.get("termValue")?if_exists} %</fo:block>
-									                  </fo:table-cell>
-									                  <#else>
-                                                       <fo:table-cell >
-									                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >--</fo:block>
-									                  </fo:table-cell>
-                                                       </#if>
-													  <#else>
-                                                       <#if values.get("termValue")?has_content>
-                                                         <fo:table-cell >
-									                      <fo:block text-align="right" font-weight="bold" font-size="11pt" > ${values.get("termValue")?if_exists} INR</fo:block>
-									                  </fo:table-cell>
-                                                      <#else>
-                                                          <fo:table-cell >
-									                      <fo:block text-align="center" font-weight="bold" font-size="11pt" > --</fo:block>
-									                  </fo:table-cell>
-                                                      </#if>
-                                                      </#if>	
+														<#if values.get("quoteItemSeqId")?has_content>
+											          		<fo:table-cell border-style="solid">
+											                      <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
+											                  </fo:table-cell>
+											                <#else>
+																<fo:table-cell >
+											                      <fo:block text-align="center"  font-size="10pt" >--</fo:block>
+											                  </fo:table-cell>
+		                                                </#if>  
+										                  <#if values.get("uomId")=="PERCENT">
+			                                                  <#if values.get("termValue")?has_content>
+											                  <fo:table-cell border-style="solid">
+											                      <fo:block text-align="right"  font-size="11pt" > ${values.get("termValue")?if_exists} %</fo:block>
+											                  </fo:table-cell>
+											                  <#else>
+			                                                   <fo:table-cell >
+											                      <fo:block text-align="center"  font-size="11pt" >--</fo:block>
+											                  </fo:table-cell>
+		                                                   </#if>
+														  <#else>
+		                                                   <#if values.get("termValue")?has_content>
+		                                                     <fo:table-cell border-style="solid">
+										                      <fo:block text-align="right"  font-size="11pt" > ${values.get("termValue")?if_exists} INR</fo:block>
+										                  </fo:table-cell>
+		                                                  <#else>
+		                                                      <fo:table-cell >
+										                      <fo:block text-align="center"  font-size="11pt" > --</fo:block>
+										                  </fo:table-cell>
+		                                                  </#if>
+		                                                  </#if>	
                                                    </#if>
 									          		</fo:table-row>
                                                 </#list>
@@ -298,15 +302,11 @@ under the License.
 					   </fo:table>
 				   </fo:block>
 				   </#if>
-				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        				   
-                   <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="13pt" >VENDOR NAME</fo:block>
+                  <#-- <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="13pt" >VENDOR NAME</fo:block>
 			       <#list partyDetList as partyNameList>
 						 <fo:block text-align="left" font-size="11pt" font-weight="bold">${partyNameList.get("partyName")}</fo:block>
-    				</#list>   
-				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
-				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+    				</#list>   -->
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
