@@ -100,6 +100,16 @@ employmentsList.each{ employeeId->
 					secndSatDay =0;
 					shift =0;
 					washing =0;
+					
+					cash = 0;
+					heatallow = 0;
+					specPay = 0;
+					field = 0;
+					fixedPay = 0;
+					spec = 0;
+					fixedTra = 0;
+					
+					
 					bonus = 0;
 					DADAAmount = 0;
 					others = 0;
@@ -116,12 +126,21 @@ employmentsList.each{ employeeId->
 					TEHRAAmount = 0;
 					TECCAmount = 0;
 					TESpecPay = 0;
+					TEBonusEX = 0;
+					TESpec = 0;
+					TEOthers = 0;
 					
 					SBESalary = 0;
 					SBEDAAmount = 0;
 					SBEHRAAmount = 0;
 					SBECCAmount = 0;
 					SBESpecPay = 0;
+					SBEInterMrlf = 0;
+					SBEPerPay = 0;
+					SBESecndSat = 0;
+					SBEGenHol = 0;
+					SBEConver = 0;
+					SBEOthers = 0;
 					
 					DAARDAAmount = 0;
 					DAARLEAmount = 0;
@@ -173,6 +192,34 @@ employmentsList.each{ employeeId->
 					washing = periodTotals.get("PAYROL_BEN_WASHG");
 					if(UtilValidate.isEmpty(washing)){
 						washing = 0;
+					}
+					cash = periodTotals.get("PAYROL_BEN_CASH");
+					if(UtilValidate.isEmpty(cash)){
+						cash = 0;
+					}
+					heatallow = periodTotals.get("PAYROL_BEN_HEATALLOW");
+					if(UtilValidate.isEmpty(heatallow)){
+						heatallow = 0;
+					}
+					specPay = periodTotals.get("PAYROL_BEN_SPELPAY");
+					if(UtilValidate.isEmpty(specPay)){
+						specPay = 0;
+					}
+					field = periodTotals.get("PAYROL_BEN_FIELD");
+					if(UtilValidate.isEmpty(field)){
+						field = 0;
+					}
+					fixedPay = periodTotals.get("PAYROL_BEN_FXEDPAY");
+					if(UtilValidate.isEmpty(fixedPay)){
+						fixedPay = 0;
+					}
+					spec = periodTotals.get("PAYROL_BEN_SPL");
+					if(UtilValidate.isEmpty(spec)){
+						spec = 0;
+					}
+					fixedTra = periodTotals.get("PAYROL_BEN_FXED_TRA");
+					if(UtilValidate.isEmpty(fixedTra)){
+						fixedTra = 0;
 					}
 					
 					customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodEntry.getKey()] , false);
@@ -269,6 +316,14 @@ employmentsList.each{ employeeId->
 									if(UtilValidate.isEmpty(TESpecPay)){
 										TESpecPay = 0;
 									}
+									TEBonusEX = transferEntryTotals.get("PAYROL_BEN_BONUS_EX");
+									if(UtilValidate.isEmpty(TEBonusEX)){
+										TEBonusEX = 0;
+									}
+									TESpec = transferEntryTotals.get("PAYROL_BEN_SPL");
+									if(UtilValidate.isEmpty(TESpec)){
+										TESpec = 0;
+									}
 								}
 							}
 						}
@@ -300,6 +355,26 @@ employmentsList.each{ employeeId->
 									if(UtilValidate.isEmpty(SBESpecPay)){
 										SBESpecPay = 0;
 									}
+									SBEInterMrlf = SBETotals.get("PAYROL_BEN_INTRMRLF");
+									if(UtilValidate.isEmpty(SBEInterMrlf)){
+										SBEInterMrlf = 0;
+									}
+									SBEPerPay = SBETotals.get("PAYROL_BEN_PERS_PAY");
+									if(UtilValidate.isEmpty(SBEPerPay)){
+										SBEPerPay = 0;
+									}
+									SBESecndSat = SBETotals.get("PAYROL_BEN_SECSATDAY");
+									if(UtilValidate.isEmpty(SBESecndSat)){
+										SBESecndSat = 0;
+									}
+									SBEGenHol = SBETotals.get("PAYROL_BEN_GEN_HOL_W");
+									if(UtilValidate.isEmpty(SBEGenHol)){
+										SBEGenHol = 0;
+									}
+									SBEConver = SBETotals.get("PAYROL_BEN_CONVEY");
+									if(UtilValidate.isEmpty(SBEConver)){
+										SBEConver = 0;
+									}
 								}
 							}
 						}
@@ -324,8 +399,11 @@ employmentsList.each{ employeeId->
 						}
 					}
 				
-					others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift;
+					others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift+cash+heatallow+specPay+field+fixedPay+spec+fixedTra;
 					totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance+bonus+DADAAmount;
+					
+					SBEOthers = SBEPerPay+SBESecndSat+SBEGenHol+SBEConver+SBESpecPay;
+					TEOthers = TESpec+TESpecPay;
 					
 					tempMap = [:];
 					tempMap["basic"] = basic;
@@ -348,14 +426,16 @@ employmentsList.each{ employeeId->
 					tempMap["TEDAAmount"] = TEDAAmount;
 					tempMap["TEHRAAmount"] = TEHRAAmount;
 					tempMap["TECCAmount"] = TECCAmount;
-					tempMap["TESpecPay"] = TESpecPay;
+					tempMap["TEBonusEX"] = TEBonusEX;
+					tempMap["TEOthers"] = TEOthers;
 					
 					
 					tempMap["SBESalary"] = SBESalary;
 					tempMap["SBEDAAmount"] = SBEDAAmount;
 					tempMap["SBEHRAAmount"] = SBEHRAAmount;
 					tempMap["SBECCAmount"] = SBECCAmount;
-					tempMap["SBESpecPay"] = SBESpecPay;
+					tempMap["SBEInterMrlf"] = SBEInterMrlf;
+					tempMap["SBEOthers"] = SBEOthers;
 					
 					tempMap["DAARDAAmount"] = DAARDAAmount;
 					tempMap["DAARLEAmount"] = DAARLEAmount;
@@ -384,6 +464,21 @@ employmentsList.each{ employeeId->
 					canf =0;
 					hdfc =0;
 					hbac =0;
+					
+					bankL = 0;
+					cbBank = 0;
+					synBank = 0;
+					apxbank = 0;
+					canHol = 0;
+					canLoan = 0;
+					corpBank = 0;
+					cocus = 0;
+					orientBank = 0;
+					statMr = 0;
+					huseb = 0;
+					huseLC = 0;
+					finCRP = 0;
+					
 					incomeTax = 0;
 					prfTax = 0;
 					
@@ -407,7 +502,6 @@ employmentsList.each{ employeeId->
 					
 					
 					DAAREmpProFund = 0;
-					
 					othersDed = 0;
 					
 					epf = periodTotals.get("PAYROL_DD_EMP_PR");
@@ -483,6 +577,59 @@ employmentsList.each{ employeeId->
 					prfTax = periodTotals.get("PAYROL_DD_PR_TAX");
 					if(UtilValidate.isEmpty(prfTax)){
 						prfTax = 0;
+					}
+					
+					bankL = periodTotals.get("PAYROL_DD_BNK_L");
+					if(UtilValidate.isEmpty(bankL)){
+						bankL = 0;
+					}
+					cbBank = periodTotals.get("PAYROL_DD_CANR_BK");
+					if(UtilValidate.isEmpty(cbBank)){
+						cbBank = 0;
+					}
+					synBank = periodTotals.get("PAYROL_DD_SYND_B");
+					if(UtilValidate.isEmpty(synBank)){
+						synBank = 0;
+					}
+					apxbank = periodTotals.get("PAYROL_DD_APX_BK");
+					if(UtilValidate.isEmpty(apxbank)){
+						apxbank = 0;
+					}
+					canHol = periodTotals.get("PAYROL_DD_CANFN_HO");
+					if(UtilValidate.isEmpty(canHol)){
+						canHol = 0;
+					}
+					canLoan = periodTotals.get("PAYROL_DD_CANR_LN");
+					if(UtilValidate.isEmpty(canLoan)){
+						canLoan = 0;
+					}
+					corpBank = periodTotals.get("PAYROL_DD_CORP");
+					if(UtilValidate.isEmpty(corpBank)){
+						corpBank = 0;
+					}
+					cocus = periodTotals.get("PAYROL_DD_CO_CUS");
+					if(UtilValidate.isEmpty(cocus)){
+						cocus = 0;
+					}
+					orientBank = periodTotals.get("PAYROL_DD_ORENT_BK");
+					if(UtilValidate.isEmpty(orientBank)){
+						orientBank = 0;
+					}
+					statMr = periodTotals.get("PAYROL_DD_STAT_MR");
+					if(UtilValidate.isEmpty(statMr)){
+						statMr = 0;
+					}
+					huseb = periodTotals.get("PAYROL_DD_HUSE_B");
+					if(UtilValidate.isEmpty(huseb)){
+						huseb = 0;
+					}
+					huseLC = periodTotals.get("PAYROL_DD_HUSE_LC");
+					if(UtilValidate.isEmpty(huseLC)){
+						huseLC = 0;
+					}
+					finCRP = periodTotals.get("PAYROL_DD_FIN_CRP");
+					if(UtilValidate.isEmpty(finCRP)){
+						finCRP = 0;
 					}
 					
 					customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodEntry.getKey()] , false);
@@ -571,7 +718,7 @@ employmentsList.each{ employeeId->
 					
 					totalFRFNSC = frf+nsc;
 					totalPPFGSAS = ppf+gsas;
-					totalExterLoan = hba+canf+hbac;
+					totalExterLoan = hba+canf+hbac +bankL+cbBank+synBank+apxbank+canHol+canLoan+corpBank+cocus+orientBank+statMr+huseb+huseLC+finCRP;
 					totalDeductions = totalFRFNSC+totalPPFGSAS+totalExterLoan+epf+vpf+gsls+licp+othersDed;
 					
 					tempMap = [:];

@@ -787,6 +787,8 @@ public class PayrollService {
 		    	    		    if(UtilValidate.isNotEmpty(billingTypeId) && (billingTypeId.equals("SP_DA_ARREARS"))){
 		    	    		    	List<GenericValue> emplDAArrearsList = delegator.findList("EmployeeDAArrears", EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId), null, null, null, false);
 			    	    		    delegator.removeAll(emplDAArrearsList);
+			    	    		    List<GenericValue> payrollHeaderECList = delegator.findList("PayrollHeaderItemEc", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
+			    	    		    delegator.removeAll(payrollHeaderECList);
 		    	    		    }
 		    				}
 		    			}
@@ -1409,7 +1411,6 @@ public class PayrollService {
 						if(UtilValidate.isNotEmpty(result)){
 							benefit.set("cost" ,result.get("amount"));
 						}
-			        	
 			        	
 						//Map<String, Object> adjustment = adjustAmount(context,benefit.getBigDecimal("cost"), from, thru);			
 						input.put("quantity", BigDecimal.ONE);
@@ -2400,7 +2401,6 @@ public class PayrollService {
 
 	                // check all conditions
 	                boolean allTrue = true;
-	                
 	                StringBuilder condsDescription = new StringBuilder();
 	                List<GenericValue> payrollBenDedCondList = delegator.findList("PayrollBenDedCond", EntityCondition.makeCondition("payrollBenDedRuleId",EntityOperator.EQUALS ,payHeadPriceRuleId ), null,UtilMisc.toList("payrollBenDedCondSeqId") , null, false);	
 	              //this is to support rule with no condition 
@@ -7442,6 +7442,54 @@ public class PayrollService {
 								payHeaderItem1.set("amount",(epfAmountNet).setScale(0, BigDecimal.ROUND_HALF_UP));
 			   				    delegator.setNextSubSeqId(payHeaderItem1, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem1);
+					            
+					            Timestamp timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+					            GenericValue person = delegator.findOne("Person", UtilMisc.toMap("partyId",payHeaderValue.get("partyIdFrom")), false);
+					            if(UtilValidate.isNotEmpty(person) && UtilValidate.isNotEmpty(person.getDate("birthDate"))){
+					            	long ageTime = (UtilDateTime.toSqlDate(timePeriodEnd)).getTime()- (person.getDate("birthDate")).getTime();
+					            	Long age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_UP)).toString());
+					            	BigDecimal employeeAge = new BigDecimal(age);
+					            	
+					            	BigDecimal epfPensionAmount = BigDecimal.ZERO;
+									epfPensionAmount = epfAmount.multiply(new BigDecimal(0.0833));
+									
+									if((epfPensionAmount.compareTo(new BigDecimal(1250))) >0){	    
+										epfPensionAmount = new BigDecimal(1250);
+									}
+									BigDecimal employerPf = BigDecimal.ZERO;
+									employerPf = epfAmount.subtract(epfPensionAmount);
+					            	
+					            	
+					            	if((employeeAge.compareTo(new BigDecimal(58))) <=0){
+					            		//Employer PF Here 
+										if(UtilValidate.isNotEmpty(epfPensionAmount)){
+											GenericValue payHeaderItemEC1 = delegator.makeValue("PayrollHeaderItemEc");
+											payHeaderItemEC1.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+											payHeaderItemEC1.set("payrollHeaderItemTypeId","PAYROL_BEN_PENSION");
+											payHeaderItemEC1.set("amount",(epfPensionAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
+						   				    delegator.setNextSubSeqId(payHeaderItemEC1, "payrollItemSeqId", 5, 1);
+								            delegator.create(payHeaderItemEC1);
+										}
+										if(UtilValidate.isNotEmpty(employerPf)){
+											GenericValue payHeaderItemEC = delegator.makeValue("PayrollHeaderItemEc");
+											payHeaderItemEC.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+											payHeaderItemEC.set("payrollHeaderItemTypeId","PAYROL_BEN_PFEMPLYR");
+											payHeaderItemEC.set("amount",(employerPf).setScale(0, BigDecimal.ROUND_HALF_UP));
+						   				    delegator.setNextSubSeqId(payHeaderItemEC, "payrollItemSeqId", 5, 1);
+								            delegator.create(payHeaderItemEC);
+										}
+					            	}else{
+					            		if(UtilValidate.isNotEmpty(epfAmount)){
+											GenericValue payHeaderItemEC = delegator.makeValue("PayrollHeaderItemEc");
+											payHeaderItemEC.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+											payHeaderItemEC.set("payrollHeaderItemTypeId","PAYROL_BEN_PFEMPLYR");
+											payHeaderItemEC.set("amount",(epfAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
+						   				    delegator.setNextSubSeqId(payHeaderItemEC, "payrollItemSeqId", 5, 1);
+								            delegator.create(payHeaderItemEC);
+										}
+					            	}
+					            	
+					            }
 							}
 						}
 			            emplCounter++;
@@ -7473,7 +7521,7 @@ public class PayrollService {
 				periodBilling.set("statusId", "GENERATED");
 				periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 			}
-			periodBilling.store();	
+			periodBilling.store();
 	}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError("Error While generating PeriodBilling" + e);
@@ -7481,4 +7529,410 @@ public class PayrollService {
 		result.put("periodBillingId", periodBillingId);
 		return result;
 	} 
+	public static String updateForm16Details(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+  	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  	    Locale locale = UtilHttp.getLocale(request);
+  	    Map result = ServiceUtil.returnSuccess();
+  	    HttpSession session = request.getSession();
+  	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");	
+  	    String partyIdTo = (String) request.getParameter("partyIdTo");	
+  	    String customTimePeriodId = (String) request.getParameter("customTimePeriodId");	
+  	    
+  	    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+  	  	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+  	    List<Map>form16InputList =FastList.newInstance();
+  	    for (int i = 0; i < rowCount; i++) {
+  	    	Map<String  ,Object> sectionWiseMap = FastMap.newInstance();
+  	    	
+  	    	String inputId= "";
+  		    String grossValue= "";
+  		    String qualifyingValue= "";
+  		    String deductableValue = "";
+  		    
+  			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+  	    	if (paramMap.containsKey("inputTypeId" + thisSuffix)) {
+  	    		inputId = (String) paramMap.get("inputTypeId" + thisSuffix);
+  	  		}
+  	    	else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing Input Type id");
+  	  			return "error";			  
+  			}
+  	    	if (paramMap.containsKey("grossAmount" + thisSuffix)) {
+  	    		grossValue = (String) paramMap.get("grossAmount" + thisSuffix);
+  	  		}
+  	    	if (paramMap.containsKey("qualifyingAmount" + thisSuffix)) {
+  	    		qualifyingValue = (String) paramMap.get("qualifyingAmount" + thisSuffix);
+  	  		}
+  	    	if (paramMap.containsKey("deductableAmount" + thisSuffix)) {
+  	    		deductableValue = (String) paramMap.get("deductableAmount" + thisSuffix);
+  	  		}
+  	    	sectionWiseMap.put("inputTypeId", inputId);
+  	    	sectionWiseMap.put("grossAmount", grossValue);
+  	    	sectionWiseMap.put("qualifyingAmount", qualifyingValue);
+  	    	sectionWiseMap.put("deductableAmount", deductableValue);
+  	  		  
+  	  		form16InputList.add(sectionWiseMap);
+  	    }
+  	    Timestamp fromDateTime  = null;
+  	    Timestamp thruDateTime  = null;
+  	    Timestamp fromDateStart  = null;
+  	    Timestamp thruDateEnd  = null;
+  	    try {
+  	    	
+  	    	List condList = FastList.newInstance();
+  	    	condList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS ,partyIdTo));
+  	    	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+  			EntityCondition Cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+  			List<GenericValue> employeeForm16Details = delegator.findList("EmployeeForm16", Cond, null, null, null, false);
+  			if(UtilValidate.isEmpty(employeeForm16Details)){
+  				GenericValue newEntity = delegator.makeValue("EmployeeForm16");
+  			  	newEntity.set("employeeId",partyIdTo);
+  			  	newEntity.set("customTimePeriodId",customTimePeriodId);
+  			  	newEntity.create();
+  			}
+  	    	for(int i=0; i< form16InputList.size() ; i++){
+  	    		Map form16InputListMap = form16InputList.get(i);
+  	    		
+  	    	    BigDecimal grossAmount=BigDecimal.ZERO;
+  	    	    BigDecimal qualifyingAmount = BigDecimal.ZERO;
+  	    	    BigDecimal deductableAmount = BigDecimal.ZERO;
+  	    		
+  	    	    String inputTypeId = (String)form16InputListMap.get("inputTypeId");
+  	    	    String grossAmt = (String)form16InputListMap.get("grossAmount");
+  	    	    String qualifyingAmt=(String)form16InputListMap.get("qualifyingAmount");
+  	    	    String deductableAmt=(String)form16InputListMap.get("deductableAmount");
+  	    	    
+  	    	    if(!(grossAmt).equals("NaN")){
+  	    	    	grossAmount = new BigDecimal(grossAmt);
+  	    	    }
+  	    	    if(!(qualifyingAmt).equals("NaN")){
+  	    	    	qualifyingAmount = new BigDecimal(qualifyingAmt);
+  	    	    }
+  	    	    if(!(deductableAmt).equals("NaN")){
+  	    	    	deductableAmount = new BigDecimal(deductableAmt);
+  	    	    }
+  			  	GenericValue newEntity1 = delegator.makeValue("EmployeeForm16Detail");
+  			  	newEntity1.put("employeeId",partyIdTo);
+  			  	newEntity1.put("customTimePeriodId",customTimePeriodId);
+  			  	newEntity1.put("sectionTypeId",inputTypeId);
+  			  	if(UtilValidate.isNotEmpty(grossAmount)){
+  			  		newEntity1.put("grossAmount",grossAmount);
+  			  	}
+  			  	if(UtilValidate.isNotEmpty(qualifyingAmount)){
+  			  		newEntity1.put("qualifyingAmount",qualifyingAmount);
+  			  	}
+  			  	if(UtilValidate.isNotEmpty(deductableAmount)){
+  			  		newEntity1.put("deductableAmount",deductableAmount);
+  			  	}
+  			  	newEntity1.create();
+  	    	}
+  	    }catch (Exception e) {
+  	    	Debug.logError(e, module);
+  			return "Error";
+  		}
+  	    request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
+  	    return "success";
+  	}
+  	
+  	public static String updateTDSRemittanceDetails(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+  	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  	    Locale locale = UtilHttp.getLocale(request);
+  		TimeZone timeZone = null;
+  	    Map result = ServiceUtil.returnSuccess();
+  	    HttpSession session = request.getSession();
+  	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");	
+  	    String yearMonthDate = (String) request.getParameter("yearMonthDate");	
+  	    String bsrCode= "";
+  	    String challanNo= "";
+  	    String timePeriodId = "";
+  	    
+  	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
+  	    Timestamp challanDate = null;
+  	    Timestamp monthStartDate = null;
+  	    Timestamp monthEndDate = null;
+  	    String actualDate="01-"+yearMonthDate+" 00:00:00";
+  	    if(UtilValidate.isNotEmpty(actualDate)){
+  	    	try {
+  	    		challanDate = new java.sql.Timestamp(sdf.parse(actualDate).getTime());
+  	    		monthStartDate = UtilDateTime.getMonthStart(challanDate);
+  	    		monthEndDate = UtilDateTime.getMonthEnd(monthStartDate,TimeZone.getDefault(),Locale.getDefault());
+  	    		
+  	    		List condPeriodList = FastList.newInstance();
+  				condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+  				condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(monthEndDate)));
+  				condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(monthStartDate)));
+  				EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
+  				List<GenericValue> hrCustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
+  				if(UtilValidate.isNotEmpty(hrCustomTimePeriodList)){
+  					List timePeriodIdsList = EntityUtil.getFieldListFromEntityList(hrCustomTimePeriodList, "customTimePeriodId", true);
+  					for (int i = 0; i < hrCustomTimePeriodList.size(); ++i) {		
+  	  	        		GenericValue timePeriod = hrCustomTimePeriodList.get(i);
+  	  	        		timePeriodId = timePeriod.getString("customTimePeriodId");
+  					}
+  				}
+  			} catch (Exception e) {
+  				Debug.logError(e, module);
+  				return "Error";
+  			}
+  	    }
+  	    
+  	    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+  	  	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+  	    List<Map>TDSRemittanceInputList =FastList.newInstance();
+  	    
+  	    for (int i = 0; i < rowCount; i++) {
+  	    	Map<String  ,Object> TDSDetailsMap = FastMap.newInstance();
+  			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+  	    	if (paramMap.containsKey("BSRcode" + thisSuffix)) {
+  	    		bsrCode = (String) paramMap.get("BSRcode" + thisSuffix);
+  	  		}
+  	    	else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing BSRcode");
+  	  			return "error";			  
+  			  	}
+  	    	if (paramMap.containsKey("challanNumber" + thisSuffix)) {
+  	    		challanNo = (String) paramMap.get("challanNumber" + thisSuffix);
+  	  		}else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing challanNumber");
+  	  			return "error";			  
+  			  	}
+  	    	TDSDetailsMap.put("BSRcode", bsrCode);
+  	    	TDSDetailsMap.put("challanNumber", challanNo);
+  	  		  
+  	  		TDSRemittanceInputList.add(TDSDetailsMap);
+  	    }
+  	    try {
+  	    	for(int i=0; i< TDSRemittanceInputList.size() ; i++){
+  	    		Map TDSRemittanceInputListMap = TDSRemittanceInputList.get(i);
+  	    	    String BSRcode = (String)TDSRemittanceInputListMap.get("BSRcode");
+  	    	    String challanNumber = (String)TDSRemittanceInputListMap.get("challanNumber");
+  	    	    
+  			  	GenericValue newEntity = delegator.makeValue("TDSRemittances");
+  			  	newEntity.put("partyId","Company");
+  			  	newEntity.put("customTimePeriodId",timePeriodId);
+  			  	newEntity.put("BSRcode",BSRcode);
+  			  	newEntity.put("challanNumber",challanNumber);
+  			  	newEntity.create();
+  			  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
+  	    	}
+  	    }catch (Exception e) {
+  	    	Debug.logError(e, module);
+  			return "Error";
+  		}
+  	    return "success";
+  	}
+  	
+  	public static Map<String, Object> updateQualrterlyTDSDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+  	    Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();   
+  	    Map<String, Object> result = new HashMap<String, Object>();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    String receiptNumber = (String) context.get("receiptNumber");
+  	    String quarterPeriodId = (String) context.get("quarterPeriod");
+  	    try {
+  		    if(UtilValidate.isNotEmpty(quarterPeriodId)){
+  		    	List condList = FastList.newInstance();
+  		    	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,quarterPeriodId));
+  		    	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+  				EntityCondition Cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+  				List<GenericValue> TDSRemittancesList = delegator.findList("TDSRemittances", Cond, null, null, null, false);
+  				if(UtilValidate.isEmpty(TDSRemittancesList)){
+  		    		GenericValue newEntity = delegator.makeValue("TDSRemittances");
+  				  	newEntity.put("partyId","Company");
+  				  	newEntity.put("customTimePeriodId",quarterPeriodId);
+  				  	newEntity.put("ReceiptNumber",receiptNumber);
+  				  	newEntity.create();
+  				  	result = ServiceUtil.returnSuccess("Qualrterly TDS Details Successfully Updated..");
+  				}else{
+  					result = ServiceUtil.returnError("Receipt Number already entered for this period..");
+  				} 
+  			}
+  	    }catch (Exception e) {
+              Debug.logError(e, "Error while updating TDS form details..", module);
+              return ServiceUtil.returnError(e.toString());
+          }
+  	    
+  	    return result;
+  	}
+  	
+  	public static String updateTaxRatesDetails(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+  	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  	    Locale locale = UtilHttp.getLocale(request);
+  	    Map result = ServiceUtil.returnSuccess();
+  	    HttpSession session = request.getSession();
+  	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");	
+  	    String periodId = (String) request.getParameter("customTimePeriodId");
+  	    String gender = (String) request.getParameter("gender");
+  	    String age = (String) request.getParameter("age");
+  	    
+  	    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+  	  	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+  	    List<Map>taxRateInputList =FastList.newInstance();
+  	    
+  	    for (int i = 0; i < rowCount; i++) {
+  	    	Map<String  ,Object> taxSlabsMap = FastMap.newInstance();
+  			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+  			String incomeFrom= "";
+  		    String incomeTo= "";
+  		    String percentage = "";
+  		    String additionAmount = "";
+  		    
+  	    	if (paramMap.containsKey("totalIncomeFrom" + thisSuffix)) {
+  	    		incomeFrom = (String) paramMap.get("totalIncomeFrom" + thisSuffix);
+  	  		}
+  	    	else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing totalIncomeFrom");
+  	  			return "error";			  
+  			}
+  	    	if (paramMap.containsKey("totalIncomeTo" + thisSuffix)) {
+  	    		incomeTo = (String) paramMap.get("totalIncomeTo" + thisSuffix);
+  	  		}else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing totalIncomeTo");
+  	  			return "error";			  
+  			}
+  	    	if (paramMap.containsKey("taxPercentage" + thisSuffix)) {
+  	    		percentage = (String) paramMap.get("taxPercentage" + thisSuffix);
+  	  		}else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing taxPercentage");
+  	  			return "error";			  
+  			}
+  	    	if (paramMap.containsKey("refundAmount" + thisSuffix)) {
+  	    		additionAmount = (String) paramMap.get("refundAmount" + thisSuffix);
+  	  		}else {
+  	    		request.setAttribute("_ERROR_MESSAGE_", "Missing refundAmount");
+  	  			return "error";			  
+  			}
+  	    	taxSlabsMap.put("totalIncomeFrom", incomeFrom);
+  	    	taxSlabsMap.put("totalIncomeTo", incomeTo);
+  	    	taxSlabsMap.put("taxPercentage", percentage);
+  	    	taxSlabsMap.put("addedAmount", additionAmount);
+  	  		  
+  	    	taxRateInputList.add(taxSlabsMap);
+  	    }
+  	    try {
+  	    	for(int i=0; i< taxRateInputList.size() ; i++){
+  	    		Map TaxRateListMap = taxRateInputList.get(i);
+  	    		
+  	    		BigDecimal totalIncomeTo=BigDecimal.ZERO;
+  	    		BigDecimal taxPercentage=BigDecimal.ZERO;
+  	    		BigDecimal refundAmount=BigDecimal.ZERO;
+  	    		
+  	    	    String totalIncomeFrom = (String)TaxRateListMap.get("totalIncomeFrom");
+  	    	    String totalIncTo = (String)TaxRateListMap.get("totalIncomeTo");
+  	    	    String taxPercntge = (String)TaxRateListMap.get("taxPercentage");
+  	    	    String addedAmount = (String)TaxRateListMap.get("addedAmount");
+  	    	    
+  	    	    if(!(totalIncTo).equals("NaN")){
+  	    	    	totalIncomeTo = new BigDecimal(totalIncTo);
+  	    	    }
+  	    	    if(!(taxPercntge).equals("NaN")){
+  	    	    	taxPercentage = new BigDecimal(taxPercntge);
+  	    	    }
+  	    	    if(!(addedAmount).equals("NaN")){
+  	    	    	refundAmount = new BigDecimal(addedAmount);
+  	    	    }
+  	    	    String constantAge = "60";
+  	    	    if(UtilValidate.isNotEmpty(totalIncomeFrom)){
+  			    	List condList = FastList.newInstance();
+  			    	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,periodId));
+  			    	condList.add(EntityCondition.makeCondition("totalIncomeFrom", EntityOperator.EQUALS, totalIncomeFrom));
+  			    	condList.add(EntityCondition.makeCondition("age", EntityOperator.EQUALS, "60"));
+  			    	condList.add(EntityCondition.makeCondition("gender", EntityOperator.EQUALS, gender));
+  			    	if(UtilValidate.isNotEmpty(age)){
+  				  		if(age.equals("below")){
+  				  			condList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_LT"));
+  				  		}else{ 
+  				  			if(age.equals("above")){
+  					  			condList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_GTE"));
+  					  		}
+  				  		}
+  				  	}
+  					EntityCondition Cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+  					List<GenericValue> TaxSlabsList = delegator.findList("TaxSlabs", Cond, null, null, null, false);
+  					if(UtilValidate.isEmpty(TaxSlabsList)){
+  						GenericValue newEntity = delegator.makeValue("TaxSlabs");
+  					  	newEntity.put("customTimePeriodId",periodId);
+  					  	newEntity.put("totalIncomeFrom",totalIncomeFrom);
+  					  	if(!(totalIncomeTo).equals(BigDecimal.ZERO)){
+  					  		newEntity.put("totalIncomeTo",totalIncomeTo);
+  					  	}
+  					  	newEntity.put("taxPercentage",taxPercentage);
+  					  	newEntity.put("refundAmount",refundAmount);
+  					  	newEntity.put("age",constantAge);
+  					  	newEntity.put("gender",gender);
+  					  	if(UtilValidate.isNotEmpty(age)){
+  					  		if(age.equals("below")){
+  					  			newEntity.put("operatorEnumId","PRC_LT");
+  					  		}else{ 
+  					  			if(age.equals("above")){
+  						  			newEntity.put("operatorEnumId","PRC_GTE");
+  						  		}
+  					  		}
+  					  	}
+  					  	newEntity.create();
+  					  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
+  					}else{
+  						request.setAttribute("_ERROR_MESSAGE_", "Income already entered in this Period..");
+  						return "error";
+  					}
+  	    	    }
+  		    }
+  		}catch (Exception e) {
+  	    	Debug.logError(e, module);
+  			return "Error";
+  		}
+  	    return "success";
+  	}
+  	
+  	public static Map<String, Object> updateOtherForm16InputDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+  	    Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();   
+  	    Map<String, Object> result = new HashMap<String, Object>();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    String customTimePeriodId = (String) context.get("customTimePeriodId");
+  	    String surchargePercentage = (String) context.get("surchargePercentage");
+  	    String educationalCessPercentage = (String) context.get("educationalCessPercentage");
+  	    String name = (String) context.get("name");
+  	    String fatherName = (String) context.get("fatherName");
+  	    String designation = (String) context.get("designation");
+  	    try {
+  		    if(UtilValidate.isNotEmpty(customTimePeriodId)){
+  				GenericValue TDSRemittancesList = delegator.findOne("TDSRemittances",UtilMisc.toMap("customTimePeriodId",customTimePeriodId,"partyId","Company"),false);
+  				if(UtilValidate.isEmpty(TDSRemittancesList)){
+  		    		GenericValue newEntity = delegator.makeValue("TDSRemittances");
+  				  	newEntity.put("partyId","Company");
+  				  	newEntity.put("customTimePeriodId",customTimePeriodId);
+  				  	newEntity.put("surchargePercentage",new BigDecimal(surchargePercentage));
+  				  	newEntity.put("educationalCessPercentage",new BigDecimal(educationalCessPercentage));
+  				  	newEntity.create();
+  				  	result = ServiceUtil.returnSuccess("Input Details Successfully Updated..");
+  				}else{
+  					if(UtilValidate.isNotEmpty(surchargePercentage)){
+  						TDSRemittancesList.set("surchargePercentage",new BigDecimal(surchargePercentage));
+  					}
+  					if(UtilValidate.isNotEmpty(educationalCessPercentage)){
+  						TDSRemittancesList.set("educationalCessPercentage",new BigDecimal(educationalCessPercentage));
+  					}
+  					if(UtilValidate.isNotEmpty(name)){
+  						TDSRemittancesList.set("name",name);
+  					}
+  					if(UtilValidate.isNotEmpty(fatherName)){
+  						TDSRemittancesList.set("fatherName",fatherName);
+  					}
+  					if(UtilValidate.isNotEmpty(designation)){
+  						TDSRemittancesList.set("designation",designation);
+  					}
+  					TDSRemittancesList.store();
+  				} 
+  			}
+  	    }catch (Exception e) {
+              Debug.logError(e, "Error while updating input details..", module);
+              return ServiceUtil.returnError(e.toString());
+          }
+  	    
+  	    return result;
+  	}
 }//end of class
