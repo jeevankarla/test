@@ -510,6 +510,9 @@
             	<include-menu name="createNewVendor" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
             	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/editMaterialDetails.ftl"/></html></platform-specific>
             	<section>
+            		<condition>
+            			<if-has-permission permission="MM" action="_ADD_MATERIAL"/>
+            		</condition>
     					<widgets>
                 			<link target="AddMaterial" text="Add Material" style="buttontext"/>
    	     				</widgets>

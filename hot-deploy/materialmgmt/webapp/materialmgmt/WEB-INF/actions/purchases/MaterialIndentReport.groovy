@@ -58,10 +58,14 @@ if(custRequestItems){
 				}
 				tempMap.put("identedQty",item.quantity);
 				issuedQty=0;
-				itemIssuances=delegator.findOne("ItemIssuance",[itemIssuanceId:parameters.itemIssuanceId],true);
-				issuedQty=itemIssuances.quantity;
+				if(UtilValidate.isNotEmpty(parameters.itemIssuanceId)){
+					itemIssuances=delegator.findOne("ItemIssuance",[itemIssuanceId:parameters.itemIssuanceId],true);
+					if(UtilValidate.isNotEmpty(itemIssuances)){
+						issuedQty=itemIssuances.quantity;
+					}
+					tempMap.put("itemIssuanceId", parameters.itemIssuanceId);
+				}
 				tempMap.put("issuedQty", issuedQty);
-				tempMap.put("itemIssuanceId", parameters.itemIssuanceId)
 				itemIssuanceList.add(tempMap);
 			}	
 		}else{	

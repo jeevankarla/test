@@ -66,13 +66,12 @@
                 <parameter param-name="statusId" value="CRQ_COMPLETED"/>
         	</hyperlink>
         </field>
-        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_INDENT&quot;, session)))}" name="cancel" widget-style="buttontext">
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot; &amp;&amp;((${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_INDENT&quot;, session)))}) || (createdByUserLogin.equals(&quot;${userLogin.userLoginId}&quot;)))" name="cancel" widget-style="buttontext">
             <hyperlink target="setRequestStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_CANCELLED"/>
             </hyperlink>
         </field>
-        
     </form>
     
     <form name="FindMaterialReturn" target="FindMaterialReturns" title="" type="single" default-map-name="parameters"
