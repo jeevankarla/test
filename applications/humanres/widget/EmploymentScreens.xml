@@ -542,6 +542,33 @@
             </widgets>
         </section>
     </screen>
+    <screen name="AnnualIT">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="AnnualIT"/>
+				<set field="tabButtonItem" value="AnnualIT" />
+				<set field="tabButtonItem2" value="AnnualIT" />
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/date.js" global="true"/>
+				
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
+                    	<section>
+		                    <widgets>                       
+		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+		                            
+		                        </decorator-screen>
+		                    </widgets>                    
+                              		                   
+		            	</section>				                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
      <screen name="WaterCharges">
         <section>
             <actions>

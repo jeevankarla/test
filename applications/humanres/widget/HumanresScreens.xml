@@ -1018,5 +1018,142 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	 </screen>         
+	 </screen>  
+	 <screen name="Form16InputScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="Form16InputScreen"/>
+				<set field="tabButtonItem" value="AnnualIT" />
+				<set field="tabButtonItem2" value="Form16InputScreen" />
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/form16InputDetails.groovy" />  
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
+                    	<section>
+		                    <widgets>                       
+		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+		                            <decorator-section name="search-options">
+		                                <include-form name="updateForm16Details" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                            </decorator-section>		                           	 
+		                            <decorator-section name="search-results">
+		                               <section>
+		                               		 <widgets>
+				                                 <platform-specific>
+				                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/Form16InputDetails.ftl"/></html>
+				                                 </platform-specific>
+				                             </widgets>
+		                               </section>
+		                            </decorator-section>
+		                        </decorator-screen>
+		                    </widgets>                    
+		            	</section>	
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="MonthlyTDSRemittance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="MonthlyTDSRemittance"/>
+				<set field="tabButtonItem" value="AnnualIT" />
+				<set field="tabButtonItem2" value="MonthlyTDSRemittance"/>
+				<!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeBenefitsAndDeductions.groovy" /> -->
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+					 <decorator-section name="body">
+					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
+                        <screenlet title="Monthly TDS Input Form">
+                         <platform-specific>
+							<html><html-template location="component:///humanres/webapp/humanres/humanres/MonthlyTDSRemittance.ftl"/></html>
+					    </platform-specific>
+					    </screenlet>			                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="QuarterlyTDSStatement">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="QuarterlyTDSStatement"/>
+				<set field="tabButtonItem" value="AnnualIT" />
+				<set field="tabButtonItem2" value="QuarterlyTDSStatement"/>
+				<set field="layoutSettings.javaScripts[]" value="/humanres/images/quarterlyList.js" global="true"/>
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+					 <decorator-section name="body">
+					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
+                        <screenlet title="Quarterly TDS Input Form">
+                        	<include-form location="component://humanres/widget/forms/EmploymentForms.xml" name="QuarterlyTDSForm"/>
+                        </screenlet> 
+                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TaxRates">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="TaxRates"/>
+				<set field="tabButtonItem" value="AnnualIT" />
+				<set field="tabButtonItem2" value="TaxRates"/>
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
+                    	<screenlet title="Employee Details">
+                        	<include-form name="updateTaxRatesDetails" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet> 
+                        <screenlet title="">
+                        	<decorator-section name="search-results">
+                               <section>
+                               		 <widgets>
+		                                 <platform-specific>
+		                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/updateTaxRates.ftl"/></html>
+		                                 </platform-specific>
+		                             </widgets>
+                               </section>
+                            </decorator-section>
+                        </screenlet> 
+                    	
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
+    
+    <screen name="OtherInputs">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="Others"/>
+				<set field="tabButtonItem" value="AnnualIT" />
+				<set field="tabButtonItem2" value="Others"/>
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
+                    	<screenlet title="Other Inputs">
+                        	<include-form name="otherForm16InputDetails" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>        
 </screens>

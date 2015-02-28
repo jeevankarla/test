@@ -1858,4 +1858,18 @@ under the License.emplpunch
         <attribute name="timePeriodId" mode="IN" type="String" optional="true"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
+    <service name="updateQualrterlyTDSDetails" engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="updateQualrterlyTDSDetails" auth="true">
+        <attribute name="receiptNumber" mode="IN" type="String" optional="false"/>
+        <attribute name="quarterPeriod" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateOtherForm16InputDetails" engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="updateOtherForm16InputDetails" auth="true">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="surchargePercentage" mode="IN" type="String" optional="true"/>
+        <attribute name="educationalCessPercentage" mode="IN" type="String" optional="true"/>
+        <attribute name="name" mode="IN" type="String" optional="true"/>
+        <attribute name="fatherName" mode="IN" type="String" optional="true"/>
+        <attribute name="designation" mode="IN" type="String" optional="true"/>
+    </service>
 </services>

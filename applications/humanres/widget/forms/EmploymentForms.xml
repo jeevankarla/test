@@ -918,4 +918,79 @@
         <field name="leaveTypeId" required-field="true"><text></text></field>
         <field name="searchButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="updateForm16Details" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">  
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" required-field="true" tooltip="Required"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
+        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
+             <drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>  
+    </form>
+    <form name="QuarterlyTDSForm" id="QuarterlyTDSForm" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+        default-table-style="basic-table hover-bar" separate-columns="true" target="updateQualrterlyTDSDetails"> 
+        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
+             <drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="check" id-name="showQuarters" title="FindQuarters" event="onClick" action="javascript:hideQuarterFields();"><check /></field> 
+        <field name="quarterPeriod" tooltip="${uiLabelMap.CommonRequired}" id-name="quarter">
+        	<drop-down allow-empty="true" current-description="">
+       			 <list-options  list-name="quarterList" key-name="termTypeId" description="${description}"/>
+        	</drop-down>
+        </field> 
+        <field name="receiptNumber" title="Receipt Number"><text size="20"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+   </form> 
+    <form name="updateTaxRatesDetails" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">  
+        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
+             <drop-down allow-empty="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+        <field name="gender" title="Gender" position="1">
+            <radio no-current-selected-key="${checkRadio}">
+                <option key="M" description="Male"/>
+                <option key="F" description="Female"/>
+            </radio>
+        </field>
+        <field name="age" title="Age" position="1" tooltip="Required">
+            <radio no-current-selected-key="${checkRadio}">
+                <option key="below" description="Below 60"/>
+                <option key="above" description="Above or Equal 60"/>
+            </radio>
+        </field>
+    </form>
+    <form name="otherForm16InputDetails" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="updateOtherForm16InputDetails">  
+        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
+             <drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+        <field name="surchargePercentage" title="Surcharge Percentage"><text size="20"/></field>
+        <field name="educationalCessPercentage" title="Educational Cess Percentage"><text size="20"/></field> 
+        <field name="name" title="Name" tooltip="Required"><text size="20"/></field>
+        <field name="fatherName" title="FatherName" tooltip="Required"><text size="20"/></field>
+        <field name="designation" title="Designation" tooltip="Required"><text size="20"/></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>
