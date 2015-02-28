@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 requirementId = parameters.requirementId;
-Debug.log("requirementId ==== rrrr "+requirementId);
+context.requirementId=requirementId;
 productId = "";
 purchaseIndentMap = [:];
 purchaseIndentMap["materialCode"]="";
@@ -22,7 +22,15 @@ purchaseIndentMap["lastPOrate"];
 purchaseIndentMap["stockQTY"]="";
 purchaseIndentMap["requiredQTY"]="";
 
+indentNo="";
+indentDate="";
+approvedDate="";
+departmentName="";
+departmentId="";
+qtyIndented="";
+uom="";
 requirement = delegator.findOne("Requirement",UtilMisc.toMap("requirementId", requirementId), false);
+context.facilityId=requirement.facilityId;
 if(UtilValidate.isNotEmpty(requirement)){	
 	productId = requirement.productId; 
 	purchaseIndentMap["requiredQTY"] = requirement.quantity;
@@ -33,6 +41,12 @@ product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), f
 if(UtilValidate.isNotEmpty(product)){
 	purchaseIndentMap["materialCode"] = product.internalName;
 	purchaseIndentMap["description"] = product.description;
+	
+	uomEntry = delegator.findOne("Uom", UtilMisc.toMap("uomId", product.quantityUomId), false);
+	if(UtilValidate.isNotEmpty(uomEntry)){
+		uom = uomEntry.description;
+		}
+	context.uom=uom;
 	}
 if(UtilValidate.isNotEmpty(tempMap)){
 	purchaseIndentMap["lastPOdate"] = UtilDateTime.toDateString(tempMap.productSupplyDetails.supplyDate, "dd-MM-yyyy");
@@ -42,6 +56,7 @@ if(UtilValidate.isNotEmpty(invCountMap)){
 	purchaseIndentMap["stockQTY"] = invCountMap.inventoryCount;
 	}
 context.purchaseIndentMap=purchaseIndentMap;
+context.uom=uom;
 
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("requirementId", EntityOperator.EQUALS, requirementId));
@@ -49,12 +64,15 @@ conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUA
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ENQ_CANCELLED"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 requirementCustRequestList = delegator.findList("RequirementCustRequestView", condition, null, null, null, false);
-requirementCustRequest = EntityUtil.getFirst(requirementCustRequestList);
 
+if(UtilValidate.isNotEmpty(requirementCustRequestList)){
+requirementCustRequest = EntityUtil.getFirst(requirementCustRequestList);
 requirementIndent = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", requirementCustRequest.custRequestId), false);
-context.indentNo=requirementIndent.custRequestId;
-context.indentDate=UtilDateTime.toDateString(requirementIndent.custRequestDate, "dd-MM-yyyy");
-context.requirementId=requirementId;
+indentNo=requirementIndent.custRequestId;
+indentDate=UtilDateTime.toDateString(requirementIndent.custRequestDate, "dd-MM-yyyy");
+
+context.indentNo=indentNo;
+context.indentDate=indentDate;
 
 conditionStatus = [];
 conditionStatus.add(EntityCondition.makeCondition("requirementId", EntityOperator.EQUALS, requirementId));
@@ -62,6 +80,23 @@ conditionStatus.add(EntityCondition.makeCondition("statusId", EntityOperator.EQU
 condition = EntityCondition.makeCondition(conditionStatus, EntityOperator.AND);
 requirementStatusList = delegator.findList("RequirementStatus", condition, null, null, null, false);
 statusList = EntityUtil.getFirst(requirementStatusList);
-context.approvedDate=UtilDateTime.toDateString(statusList.statusDate, "dd-MM-yyyy");
-
-
+if(UtilValidate.isNotEmpty(statusList)){
+approvedDate=UtilDateTime.toDateString(statusList.statusDate, "dd-MM-yyyy");
+}
+context.approvedDate=approvedDate;
+if(UtilValidate.isNotEmpty(requirementCustRequest.custRequestId)){
+department = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", requirementIndent.fromPartyId), false);
+departmentName = department.groupName;
+departmentId = department.partyId;
+}
+context.departmentName=departmentName;
+context.departmentId=departmentId;
+conditionQty = [];
+conditionQty.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, requirementIndent.custRequestId));
+conditionQty.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, product.productId));
+condition = EntityCondition.makeCondition(conditionQty, EntityOperator.AND);
+conditionQtyList= delegator.findList("CustRequestItem", condition, null, null, null, false);
+indentQty = EntityUtil.getFirst(conditionQtyList);
+qtyIndented = indentQty.origQuantity;
+context.qtyIndented=qtyIndented;
+}
