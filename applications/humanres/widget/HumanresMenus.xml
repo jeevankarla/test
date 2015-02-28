@@ -120,6 +120,9 @@
             </condition>
         		<link target="LeaveReports"/>
         </menu-item>
+        <menu-item name="AnnualIT" title="Annual IT">
+            <link target="AnnualIT"/>
+        </menu-item>
 	</menu>
 	
 	 <menu name="HumanresEmplViewNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -286,7 +289,24 @@
 			<link target="BenefitDeductionCalculator"/>
 		</menu-item>
     </menu>
-    
+    <menu name="AnnualItTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="Form16InputScreen" title="Form16-InputScreen">
+            <link target="Form16InputScreen"/>
+        </menu-item>
+		<menu-item name="MonthlyTDSRemittance" title="Monthly TDS Remittance">
+			<link target="MonthlyTDSRemittance"/>
+		</menu-item>
+		<menu-item name="QuarterlyTDSStatement" title="Quarterly TDS Statement">
+           	<link target="QuarterlyTDSStatement"/>
+        </menu-item>
+        <menu-item name="TaxRates" title="Tax Rates">
+           	<link target="TaxRates"/>
+        </menu-item>
+        <menu-item name="Others" title="Others">
+           	<link target="Others"/>
+        </menu-item>
+    </menu>
     <menu name="SuplyPayRollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="EmplSupPayroll" title="Supplementary Payroll">

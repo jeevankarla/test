@@ -1351,6 +1351,32 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
+					<#if (reportDetailsMap.get("Form16Report.pdf") == "Y")> 
+						<tr class="alternate-row"> 
+							<form id="Form16Report" name="Form16Report" mothed="post" action="<@ofbizUrl>Form16Report.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="25%"><span class='h3'>FORM 16</span></td>
+										<td><input type="hidden" name="partyIdFrom" class="commonPartyId"></td>
+										<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="Form16Report" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
+										<td width="30%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+												<#list customTimePeriodIdsList as customTimePeriod>
+													 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+								      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								      					<#else>
+								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								                  		</option>
+								      				</#if>
+												</#list>
+											</select>
+										</td>
+										<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>
 			   	</table>
 			</div>
 		</div>

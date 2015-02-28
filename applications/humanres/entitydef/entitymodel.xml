@@ -2004,4 +2004,88 @@ under the License.
         	<key-map field-name="periodBillingId"/>
         </relation>
  	</entity>
+ 	<entity entity-name="EmployeeForm16"
+                 package-name="org.ofbiz.humanres"
+                 title="Employee Form 16">
+        	<field name="employeeId" type="id-ne"></field>
+        	<field name="customTimePeriodId" type="id-ne"/>
+    		<field name="q1AckNumber" type="long-varchar"/>
+    		<field name="q2AckNumber" type="long-varchar"/>
+    		<field name="q3AckNumber" type="long-varchar"/>
+    		<field name="q4AckNumber" type="long-varchar"/>
+    		<field name="relief" type="currency-amount"/>
+    		<field name="taxPaid" type="currency-precise"/>
+    		<prim-key field="employeeId"/>
+        	<prim-key field="customTimePeriodId"/>
+        	<relation type="one" fk-name="EF_CUST_TP" rel-entity-name="CustomTimePeriod">
+              <key-map field-name="customTimePeriodId"/>
+        	</relation>
+        	<relation type="one" fk-name="EF_PRTY" rel-entity-name="Party">
+              <key-map field-name="employeeId" rel-field-name="partyId"/>
+         </relation>
+    </entity>
+      <entity entity-name="EmployeeForm16Detail" package-name="org.ofbiz.humanres"
+     		title="Employee Form16 Detail">
+     		<field name="employeeId" type="id-ne"></field>
+     		<field name="customTimePeriodId" type="id-ne"></field>
+     		<field name="sectionTypeId" type="id-ne"></field>
+     		<field name="grossAmount" type="currency-amount"></field>
+     		<field name="qualifyingAmount" type="currency-amount"></field>
+     		<field name="deductableAmount" type="currency-amount" />
+     		<prim-key field="employeeId" />
+     		<prim-key field="customTimePeriodId" />
+     		<prim-key field="sectionTypeId" />
+     		<relation type="one" fk-name="EMP_ID" rel-entity-name="Party">
+     			<key-map field-name="employeeId" rel-field-name="partyId"/>
+     		</relation>
+     		<relation type="one" fk-name="EMPL_SEC_TYP" rel-entity-name="Enumeration">
+             <key-map field-name="sectionTypeId" rel-field-name="enumId"/>
+  	    </relation>
+  	    <relation type="one" fk-name="EF_CUST_TP" rel-entity-name="CustomTimePeriod">
+  	        <key-map field-name="customTimePeriodId"/>
+  	    </relation> 
+  	</entity>
+  	<entity entity-name="TDSRemittances" package-name="org.ofbiz.humanres"
+     		title="TDS Remittances">
+     		<field name="partyId" type="id-ne"></field>
+     		<field name="customTimePeriodId" type="id-ne"></field>
+     		<field name="BSRcode" type="id-long"></field>
+     		<field name="challanNumber" type="long-varchar"></field>
+     		<field name="ReceiptNumber" type="long-varchar"></field>
+     		<field name="surchargePercentage" type="fixed-point"></field>
+     		<field name="educationalCessPercentage" type="fixed-point"></field>
+     		<field name="name" type="name"></field>
+     		<field name="fatherName" type="name"></field>
+     		<field name="designation" type="name"></field>
+     		<prim-key field="partyId" />
+     		<prim-key field="customTimePeriodId" />
+     		<relation type="one-nofk" rel-entity-name="PartyGroup">
+          	<key-map field-name="partyId"/>
+        	</relation>
+  	    <relation type="one" fk-name="TDS_CUST_TP" rel-entity-name="CustomTimePeriod">
+  	        <key-map field-name="customTimePeriodId"/>
+  	    </relation> 
+  	</entity>
+  	<entity entity-name="TaxSlabs" package-name="org.ofbiz.humanres"
+     		title="Tax Slabs">
+     		<field name="customTimePeriodId" type="id-ne"></field>
+     		<field name="age" type="id-ne"></field>
+     		<field name="gender" type="id-ne"></field>
+     		<field name="operatorEnumId" type="id-ne"></field>
+     		<field name="totalIncomeFrom" type="currency-amount"></field>
+     		<field name="totalIncomeTo" type="currency-amount"></field>
+     		<field name="taxPercentage" type="fixed-point"></field>
+     		<field name="refundAmount" type="currency-amount"></field>
+     		<prim-key field="customTimePeriodId" />
+     		<prim-key field="age" />
+     		<prim-key field="gender" />
+     		<prim-key field="operatorEnumId" />
+     		<prim-key field="totalIncomeFrom" />
+     		<relation type="one" fk-name="TS_CUST_TP" rel-entity-name="CustomTimePeriod">
+  	        <key-map field-name="customTimePeriodId"/>
+  	    </relation> 
+  	    <relation type="one" fk-name="TAX_COND" title="Operator" rel-entity-name="Enumeration">
+  	        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+  	    </relation> 
+	</entity>
 </entitymodel>

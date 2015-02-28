@@ -39,5 +39,24 @@ under the License.
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="PARTYMGR_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="OFBTOOLS_VIEW"/>
     
-   
+   <EnumerationType description="Form16 Input Type" enumTypeId="FORM16_INPUT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Rent Paid" enumCode="RENT_PAID" enumId="RENT_PAID" sequenceId="01" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Other allowances" enumCode="OTHER_ALW" enumId="OTHER_ALW" sequenceId="02" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Maximum amount" enumCode="MAXIMUM_AMOUNT" enumId="MAXIMUM_AMOUNT" sequenceId="03" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80C" enumCode="SECTION_80C" enumId="SECTION_80C" sequenceId="04" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80CCC" enumCode="SECTION_80CCC" enumId="SECTION_80CCC" sequenceId="05" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80CCD" enumCode="SECTION_80CCD" enumId="SECTION_80CCD" sequenceId="06" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80CCG" enumCode="SECTION_80CCG" enumId="SECTION_80CCG" sequenceId="07" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80D" enumCode="SECTION_80D" enumId="SECTION_80D" sequenceId="08" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80DD" enumCode="SECTION_80DD" enumId="SECTION_80DD" sequenceId="09" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80DDB" enumCode="SECTION_80DDB" enumId="SECTION_80DDB" sequenceId="10" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80E" enumCode="SECTION_80E" enumId="SECTION_80E" sequenceId="11" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80EE" enumCode="SECTION_80EE" enumId="SECTION_80EE" sequenceId="12" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80G" enumCode="SECTION_80G" enumId="SECTION_80G" sequenceId="13" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80GG" enumCode="SECTION_80GG" enumId="SECTION_80GG" sequenceId="14" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80GGA" enumCode="SECTION_80GGA" enumId="SECTION_80GGA" sequenceId="15" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80GGC" enumCode="SECTION_80GGC" enumId="SECTION_80GGC" sequenceId="16" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80TTA" enumCode="SECTION_80TTA" enumId="SECTION_80TTA" sequenceId="17" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Section 80U" enumCode="SECTION_80U" enumId="SECTION_80U" sequenceId="18" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Other" enumCode="OTHER" enumId="OTHER" sequenceId="19" enumTypeId="FORM16_INPUT_TYPE"/>
 </entity-engine-xml>

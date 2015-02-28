@@ -1825,6 +1825,67 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="TelephoneCUGCharges"></response>
     </request-map>
+    <request-map uri="AnnualIT">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Form16InputScreen"/>
+    </request-map>
+    <request-map uri="Form16InputScreen">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="Form16InputScreen"></response>
+    </request-map>
+    <request-map uri="updateForm16Details">
+     	<security https="true" auth="true"/>
+    	<event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateForm16Details"/>
+    	<response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="MonthlyTDSRemittance">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MonthlyTDSRemittance"></response>
+    </request-map>
+    <request-map uri="updateTDSRemittanceDetails">
+     	<security https="true" auth="true"/>
+    	<event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateTDSRemittanceDetails"/>
+    	<response name="success" type="request" value="MonthlyTDSRemittance"/>
+       <response name="error" type="request" value="MonthlyTDSRemittance"/>
+    </request-map>
+    <request-map uri="QuarterlyTDSStatement">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="QuarterlyTDSStatement"></response>
+    </request-map>
+    <request-map uri="getQuartersForYear">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="YearlyQuarterList.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateQualrterlyTDSDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateQualrterlyTDSDetails"/>
+		<response name="success" type="view" value="QuarterlyTDSStatement" />
+   	</request-map>
+    <request-map uri="TaxRates">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="TaxRates"></response>
+    </request-map>
+    <request-map uri="updateTaxRatesDetails">
+     	<security https="true" auth="true"/>
+    	<event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateTaxRatesDetails"/>
+    	<response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="Others">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="OtherInputs"></response>
+    </request-map>
+    <request-map uri="updateOtherForm16InputDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateOtherForm16InputDetails"/>
+		<response name="success" type="view" value="OtherInputs" />
+   	</request-map>
+   	<request-map uri="Form16Report.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="Form16Report"></response>
+    </request-map>
     <request-map uri="findMasters">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="findMasters"></response>
@@ -2336,6 +2397,7 @@ under the License.
     <view-map name="EditPartyDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeductions"/>
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
     <view-map name="WaterCharges" type="screen" page="component://humanres/widget/EmploymentScreens.xml#WaterCharges"/>  
+    <view-map name="AnnualIT" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AnnualIT"/>
     <view-map name="benDedCheckList" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#benDedCheckList" content-type="text/plain"/>
     <view-map name="attendanceCheckList" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#attendanceCheckList" content-type="text/plain"/>
     <view-map name="AttendanceNotGiven" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#AttendanceNotGiven" content-type="text/plain"/>
@@ -2444,6 +2506,12 @@ under the License.
     <view-map name="DailyBusTimings" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyBusTimings"></view-map>
     <view-map name="WaterElectricityCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#WaterElectricityCharges"></view-map>
     <view-map name="TelephoneCUGCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#TelephoneCUGCharges"></view-map>
+    <view-map name="Form16InputScreen" type="screen" page="component://humanres/widget/HumanresScreens.xml#Form16InputScreen"></view-map>
+    <view-map name="MonthlyTDSRemittance" type="screen" page="component://humanres/widget/HumanresScreens.xml#MonthlyTDSRemittance"></view-map>
+    <view-map name="QuarterlyTDSStatement" type="screen" page="component://humanres/widget/HumanresScreens.xml#QuarterlyTDSStatement"></view-map>
+    <view-map name="TaxRates" type="screen" page="component://humanres/widget/HumanresScreens.xml#TaxRates"></view-map>
+    <view-map name="OtherInputs" type="screen" page="component://humanres/widget/HumanresScreens.xml#OtherInputs"></view-map>
+    <view-map name="Form16Report" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Form16Report" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
     <view-map name="FindHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindHoliday"/>
    	<view-map name="NewHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewHoliday"/>
