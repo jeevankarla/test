@@ -13,7 +13,6 @@ import java.text.ParseException;
 
 requirementId = parameters.requirementId;
 context.requirementId=requirementId;
-Debug.log("requirementId ==== rrrr "+requirementId);
 productId = "";
 purchaseIndentMap = [:];
 purchaseIndentMap["materialCode"]="";
