@@ -71,7 +71,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160; </fo:block>
               	<fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >---reference to your Quotation/proforma Invoice, we are pleased to place Order for --- Supply of materials as detailed below. </fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------------------- </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;SNO  ITEM CODE    DESCRIPTION                    UNIT        QTY    UNIT RATE    AMOUNT</fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;SNO  ITEM CODE    DESCRIPTION                     UNIT    QUANTITY  UNIT RATE        AMOUNT</fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------------------- </fo:block>
             	<fo:block>
                  <fo:table text-align="center" >
@@ -79,9 +79,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                     <fo:table-column column-width="90pt"/>
                     <fo:table-column column-width="220pt"/>  
                	    <fo:table-column column-width="60pt"/>
-               	    <fo:table-column column-width="60pt"/>
+               	    <fo:table-column column-width="70pt"/>
             		 <fo:table-column column-width="70pt"/>
-            		<fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="115pt"/>
             		
                     <fo:table-body text-align="center">
                      <#assign sNo=1>
@@ -96,7 +96,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 	   <fo:table-cell  ><fo:block text-align="center"  font-size="10pt" >${sNo} </fo:block></fo:table-cell>     
   				  	   <fo:table-cell  ><fo:block text-align="left" font-size="10pt">${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"   font-size="10pt" >${productNameDetails.get("productName")?if_exists} </fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="left" font-size="10pt">${productNameDetails.get("uomAbbr")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="center" font-size="10pt">${productNameDetails.get("uomAbbr")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="right"  font-size="10pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
   			          <fo:table-cell  ><fo:block text-align="right"   font-size="10pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     

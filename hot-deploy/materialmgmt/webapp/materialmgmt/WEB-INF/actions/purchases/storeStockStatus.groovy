@@ -80,7 +80,7 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	  
 	  if(UtilValidate.isNotEmpty(uomId)){
 		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-	   productDetailMap["unit"]=unitDesciption.get("description");
+	   productDetailMap["unit"]=unitDesciption.get("abbreviation");
 	  }
 	  prodList.addAll(productDetailMap);
 	  

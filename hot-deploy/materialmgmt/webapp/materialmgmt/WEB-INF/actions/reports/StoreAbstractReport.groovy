@@ -89,7 +89,7 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 			  }
 			 if(UtilValidate.isNotEmpty(uomId)){
 					unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-					productDetailsMap.put("unit",unitDesciption.description);
+					productDetailsMap.put("unit",unitDesciption.abbreviation);
 			 }
 			 invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProduct, ownerPartyId:"Company", userLogin: userLogin]);
 			 if(UtilValidate.isNotEmpty(invCountMap)){

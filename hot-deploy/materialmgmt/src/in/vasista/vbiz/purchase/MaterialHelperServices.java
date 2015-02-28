@@ -272,7 +272,7 @@ public class MaterialHelperServices{
 			 }
 			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 EntityListIterator shipmentReceiptItr = null;
-			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost");
+			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost","shipmentId");
 			 fieldsToSelect.add("orderId");
 			 fieldsToSelect.add("orderItemSeqId");
 			 fieldsToSelect.add("productId");
@@ -286,6 +286,7 @@ public class MaterialHelperServices{
 			 while( shipmentReceiptItr != null && (receiptItem = shipmentReceiptItr.next()) != null) {
 				    Map tempMap = FastMap.newInstance();
 		            String receiptId = receiptItem.getString("receiptId");
+		            String shipmentId = receiptItem.getString("shipmentId");
 		            String tmpProductId = receiptItem.getString("productId");
 		            BigDecimal quantity  = receiptItem.getBigDecimal("quantityAccepted");
 		            BigDecimal price  = receiptItem.getBigDecimal("unitCost");
@@ -295,6 +296,7 @@ public class MaterialHelperServices{
 		            tempMap.put("datetReceived", datetReceived);
 		            tempMap.put("quantity", quantity);
 		            tempMap.put("receiptId", receiptId);
+		            tempMap.put("shipmentId", shipmentId);
 		            tempMap.put("amount", amount);
 		            tempMap.put("price", price);
 		            receiptsList.add(tempMap);

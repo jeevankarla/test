@@ -70,7 +70,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			        	  </fo:block>	 
 
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >____________________________________________________________________________________________________________</fo:block>
-              	    <fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;LEDGER          ITEM                          DESCRIPTION                                           UNIT                              BOOK                  CLOSING  </fo:block>
+              	    <fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;LEDGER          ITEM                          DESCRIPTION                                                  UNIT                       BOOK                  CLOSING  </fo:block>
               		<fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;FOLIO              CODE                                                                                                                                 STOCK                  STOCK   </fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >____________________________________________________________________________________________________________</fo:block>               
             </fo:static-content>
@@ -105,7 +105,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 	   <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >&#160;${productIds.ledgerfolio?if_exists}</fo:block></fo:table-cell>     
   				  	   <fo:table-cell ><fo:block text-align="left"  font-size="10pt">${product.internalName?if_exists}</fo:block></fo:table-cell>  
   				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >${productIds.description?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
   				     </fo:table-row>
