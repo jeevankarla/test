@@ -34,7 +34,7 @@ under the License.
 				<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				<fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------</fo:block>
-				<fo:block text-align="center" white-space-collapse="false">&#160;      STORE RECEIPTS-ISSUE BETWEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
+				<fo:block text-align="center" white-space-collapse="false">&#160;      STORE RECEIPTS-ISSUES BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
 			    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false"> <#if internalName?has_content>MATERIAL CODE:${internalName}<#else></#if>                            STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               <#if materialName?has_content>MATERIAL NAME:${materialName}<#else></#if> </fo:block>   			   
 			    <fo:block font-family="Courier,monospace">		 
@@ -127,7 +127,7 @@ under the License.
                       <fo:table-body>
 					   <fo:table-row>
 				           <fo:table-cell >
-							   <fo:block text-align="left" >${storeIssueDetails.getKey()?if_exists} <#--<#if storeIssueDetails.getKey()?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(storeIssueDetails.getKey(), "dd/MM/yy")?if_exists} </#if> -->   </fo:block>
+							   <fo:block text-align="left" > <#if storeIssueDetails.getKey()?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(storeIssueDetails.getKey(), "dd/MM/yyyy")?if_exists} </#if>   </fo:block>
 						   </fo:table-cell>
                           </fo:table-row>
 					</fo:table-body>   
@@ -159,10 +159,10 @@ under the License.
    <#list storeDetails11 as storeDetails111>
 					   <fo:table-row>				          
 						   <fo:table-cell border-style="solid">
-							   <fo:block text-align="left" >  ${storeDetails111.getValue().get("billNo")?if_exists}             </fo:block>
+							   <fo:block text-align="left" > ${storeDetails111.getValue().get("billNo")?if_exists}             </fo:block>
 						   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="left" >    ${storeDetails111.getKey()?if_exists?if_exists}     </fo:block>
+							  <fo:block text-align="left" >  ${storeDetails111.getValue().get("shipmentId")?if_exists}     </fo:block>
 						   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
 							  <fo:block text-align="right" >    ${storeDetails111.getValue().get("ReceiptQty")?if_exists?string("##0.000")}            </fo:block>
@@ -197,8 +197,7 @@ under the License.
         <#list storeDetails22 as storeDetails222>
 					   <fo:table-row>
 				            <fo:table-cell border-style="solid">
-							  <fo:block text-align="center" >   ${storeDetails222.getKey()?if_exists?if_exists}       </fo:block>
-						   </fo:table-cell>
+							  <fo:block text-align="center" >  ${storeDetails222.getValue().get("IndentNo")?if_exists}      </fo:block>   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
 							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueQty")?if_exists?string("##0.000")}             </fo:block>
 						   </fo:table-cell>
@@ -229,7 +228,7 @@ under the License.
                       <fo:table-body>
 					   <fo:table-row>
 				           <fo:table-cell >
-							   <fo:block text-align="right" >${dayClosingQty?if_exists?string("##0.00")} </fo:block>
+							   <fo:block text-align="right" >${dayClosingQty?if_exists?string("##0.000")} </fo:block>
 						   </fo:table-cell>
                           </fo:table-row>
 					</fo:table-body>   
