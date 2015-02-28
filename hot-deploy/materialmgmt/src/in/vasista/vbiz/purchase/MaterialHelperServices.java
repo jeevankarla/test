@@ -293,6 +293,30 @@ public class MaterialHelperServices{
 		            Timestamp datetimeReceived =  receiptItem.getTimestamp("datetimeReceived");
 		            String datetReceived = UtilDateTime.toDateString(UtilDateTime.toSqlDate(datetimeReceived));
 		            BigDecimal amount = price.multiply(quantity);
+	   try{
+			List conList=FastList.newInstance();
+	        if(UtilValidate.isNotEmpty(shipmentId)){
+	       	conList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	       	conList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+	       		 }
+	        EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
+			List<GenericValue> shipmentData = delegator.findList("Shipment", con, null, null, null, false);
+	        //	Set fieldsSelect = UtilMisc.toSet("supplierInvoiceId","supplierInvoiceDate","deliveryChallanNumber","shipmentId");
+	       	// List<GenericValue> shipmentData = delegator.find("Shipment", con, null,fieldsSelect, null,null);
+	       	String supplierInvoiceId =null;
+	       	Timestamp supplierInvoiceDate =null;  
+	       	if(UtilValidate.isNotEmpty(shipmentData)){
+					GenericValue shipmentInvoiceData = EntityUtil.getFirst(shipmentData);
+					supplierInvoiceId=shipmentInvoiceData.getString("supplierInvoiceId");
+					supplierInvoiceDate=shipmentInvoiceData.getTimestamp("supplierInvoiceDate");
+		            tempMap.put("supplierInvoiceId",supplierInvoiceId );
+		            tempMap.put("supplierInvoiceDate",supplierInvoiceDate);   	
+		        }
+	   }catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}   
+ 		
 		            tempMap.put("datetReceived", datetReceived);
 		            tempMap.put("quantity", quantity);
 		            tempMap.put("receiptId", receiptId);
@@ -319,15 +343,15 @@ public class MaterialHelperServices{
 		            		if(UtilValidate.isNotEmpty(deptRole))
 		            			departmentId = deptRole.getString("partyId");
 		            		
-		            		List<GenericValue> orderAttributes = delegator.findByAnd("OrderAttribute", UtilMisc.toMap("orderId",orderId));
-		            		GenericValue billNoAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_NUMBER")));
-		            		GenericValue billDateAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_DATE")));
-		            		
-		            		if(UtilValidate.isNotEmpty(billNoAttr))
-		            			billNo = billNoAttr.getString("attrValue");
-		            		
-		            		if(UtilValidate.isNotEmpty(billDateAttr))
-		            			billDate = billDateAttr.getString("attrValue");
+//		            		List<GenericValue> orderAttributes = delegator.findByAnd("OrderAttribute", UtilMisc.toMap("orderId",orderId));
+//		            		GenericValue billNoAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_NUMBER")));
+//		            		GenericValue billDateAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_DATE")));
+//		            		
+//		            		if(UtilValidate.isNotEmpty(billNoAttr))
+//		            			billNo = billNoAttr.getString("attrValue");
+//		            		
+//		            		if(UtilValidate.isNotEmpty(billDateAttr))
+//		            			billDate = billDateAttr.getString("attrValue");
 		            		
 		            		GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
 		            		BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
@@ -336,8 +360,8 @@ public class MaterialHelperServices{
 		            		receiptDetailsMap.put("datetimeReceived", datetimeReceived);
 		            		receiptDetailsMap.put("departmentId", departmentId);
 		            		receiptDetailsMap.put("supplierId", supplierId);
-		            		receiptDetailsMap.put("billNo", billNo);
-		            		receiptDetailsMap.put("billDate", billDate);
+//		            		receiptDetailsMap.put("billNo", billNo);
+//		            		receiptDetailsMap.put("billDate", billDate);
 		            		receiptDetailsMap.put("amount", orderTotal);
 		            		MaterialReceiptRegisterMap.put(receiptId, receiptDetailsMap);
 		            	}
