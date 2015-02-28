@@ -89,9 +89,8 @@ date = UtilDateTime.toDateString(currentDayStart);
 //currentDateKeysList.add(date);
 
 storeIssueReceipts = MaterialHelperServices.getMaterialReceiptsForPeriod(dctx, [fromDate:currentDayStart, thruDate:currentDayEnd,productId:productId,facilityId:issueToFacilityId,isForMrrReg:"Y"]);
-MaterialReceiptRegister=storeIssueReceipts.get("MaterialReceiptRegisterMap");
+//MaterialReceiptRegister=storeIssueReceipts.get("MaterialReceiptRegisterMap");
 receiptList =storeIssueReceipts.get("receiptsList");
-
 storeIssue=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:currentDayStart, thruDate:currentDayEnd,productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
 StoreIssueList=storeIssue.get("itemIssuanceList");
 bookStock=InventoryServices.getProductInventoryOpeningBalance(dctx,[ effectiveDate:currentDayEnd, productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
@@ -116,40 +115,44 @@ if(UtilValidate.isNotEmpty(receiptList)){
 	receiptNo=1;
 	receiptList.each{receiptData->
 		
-		coList =[];
-		coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptData.receiptId));
-		coList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SHIPMENT_CANCELLED"));
-		EntityCondition con = EntityCondition.makeCondition(coList,EntityOperator.AND);
-		cancelledShipment= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);
-		if(UtilValidate.isNotEmpty(cancelledShipment)){
-			
-		}else{			
+//		coList =[];
+//		coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptData.receiptId));
+//		coList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SHIPMENT_CANCELLED"));
+//		EntityCondition con = EntityCondition.makeCondition(coList,EntityOperator.AND);
+//		cancelledShipment= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);
+//		if(UtilValidate.isNotEmpty(cancelledShipment)){
+//			
+//		}else{	
 		 MrrDetailsMap=[:];
 		 shipmentId=receiptData.shipmentId;
+		 supplierInvoiceId=receiptData.supplierInvoiceId;
+		 supplierInvoiceDate=receiptData.supplierInvoiceDate;
 		 receiptId=receiptData.receiptId;
 		 ReceiptQty=receiptData.quantity;
 		 ReceiptRate=receiptData.price;
 		 ReceiptAmount=receiptData.amount;
 		 receivedDate=receiptData.datetReceived;
 		 
-		 mrrDetails=MaterialReceiptRegister.get(receiptId);				 
-		 billNo=mrrDetails.billNo;
+		// mrrDetails=MaterialReceiptRegister.get(receiptId);				 
+		// billNo=mrrDetails.billNo;
 		 
 		 if(UtilValidate.isNotEmpty(ReceiptQty)){
 		 ReceiptTotQty=ReceiptTotQty+ReceiptQty;
 		 }		 
 		//MrrDetailsMap.put("receiptId",receiptId);
 		 MrrDetailsMap.put("shipmentId",shipmentId);
+		 MrrDetailsMap.put("supplierInvoiceId",supplierInvoiceId);
+		 MrrDetailsMap.put("supplierInvoiceDate",supplierInvoiceDate);
 		 
 		MrrDetailsMap.put("ReceiptQty",ReceiptQty);
 		MrrDetailsMap.put("ReceiptRate",ReceiptRate);
 		MrrDetailsMap.put("ReceiptAmount",ReceiptAmount);
 		MrrDetailsMap.put("receivedDate",receivedDate);
-		MrrDetailsMap.put("billNo",billNo);
+		//MrrDetailsMap.put("billNo",billNo);
 		
 		MrrMap.put(receiptNo,MrrDetailsMap);
 		receiptNo++;
-	 }
+	 
 	}
 	receiptIssuesMap.put("MrrMap",MrrMap);	
 } 

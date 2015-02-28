@@ -159,7 +159,7 @@ under the License.
    <#list storeDetails11 as storeDetails111>
 					   <fo:table-row>				          
 						   <fo:table-cell border-style="solid">
-							   <fo:block text-align="left" > ${storeDetails111.getValue().get("billNo")?if_exists}             </fo:block>
+							   <fo:block text-align="left" > ${storeDetails111.getValue().get("supplierInvoiceId")?if_exists}             </fo:block>
 						   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
 							  <fo:block text-align="left" >  ${storeDetails111.getValue().get("shipmentId")?if_exists}     </fo:block>
