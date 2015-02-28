@@ -87,8 +87,8 @@
                 <parameter param-name="statusId" value="REQ_REJECTED"/>
             </hyperlink>
         </field>
-        <field name="purchaseIndent" title="Purchase Indent" use-when="statusId.equals(&quot;REQ_APPROVED&quot;)" widget-style="buttontext"> 
-            <hyperlink  description="Report" target="purchaseIndentReport" >
+        <field name="purchaseIndent" title="Purchase Indent" use-when="statusId.equals(&quot;REQ_CREATED&quot;)" widget-style="buttontext"> 
+            <hyperlink  target-window="_blank" description="Report" target="purchaseIndentReport" >
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>

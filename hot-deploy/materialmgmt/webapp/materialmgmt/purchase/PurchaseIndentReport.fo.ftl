@@ -56,14 +56,36 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">REQUIREMENT ID: ${requirementId?if_exists}</fo:block>  
 	                       			</fo:table-cell>
 	                       		   <fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">APPROVED DATE: ${approvedDate?if_exists}</fo:block>  
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">FACILITY:    ${facilityId?if_exists}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENT DATE : ${indentDate?if_exists}</fo:block>  
 	                       			</fo:table-cell>
-	                         </fo:table-row>	
+	                         </fo:table-row>
 	                </fo:table-body>
                 </fo:table>
+                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                
+                <fo:table  align="center">
+               	    <fo:table-column column-width="46%"/>
+               	    <fo:table-column column-width="27%"/>
+               	    <fo:table-column column-width="27%"/>
+                    <fo:table-body>
+                     		<fo:table-row  font-family="Arial" font-weight="bold">	
+	                       		   <fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">DEPARTMENT:  ${departmentName?if_exists} [${departmentId?if_exists}]</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENTED QTY:    ${qtyIndented?if_exists} </fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">UOM : ${uom?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                         </fo:table-row>
+	                </fo:table-body>
+                </fo:table>
+                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             <fo:block text-align="center"  font-size="10pt" white-space-collapse="false" font-family="Arial">
             The below mentioned items are out of stock/below reorder level, requested to give the approval for purchase.
@@ -148,27 +170,34 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENTOR</fo:block>  
 	                       			</fo:table-cell>
 	                       		   <fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">APPROVED BY DIRECTOR</fo:block>  
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false"></fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">MANAGER</fo:block>  
 	                       			</fo:table-cell>
 	                         </fo:table-row>	
-	                         <fo:table-row  font-family="Arial" font-weight="bold">	
-                     				<fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false"></fo:block>  
-	                       			</fo:table-cell>
-	                       		   <fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">DIRECTOR</fo:block>  
-	                       			</fo:table-cell>
-	                       			<fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false"></fo:block>  
-	                       			</fo:table-cell>
-	                         </fo:table-row>
 	                </fo:table-body>
                 </fo:table>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                <fo:table  align="center">
+               	    <fo:table-column column-width="33%"/>
+               	    <fo:table-column column-width="33%"/>
+               	    <fo:table-column column-width="33%"/>
+                    <fo:table-body>
+                     		<fo:table-row  font-family="Arial" font-weight="bold">	
+                     				<fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       		   <fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">APPROVED BY DIRECTOR</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                         </fo:table-row>	
+	                </fo:table-body>
+                </fo:table>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 <!--<fo:block  keep-together="always"  text-align="left" font-size = "9pt" font-family="Arial" white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;APPROVED BY &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; MANAGER  &#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>                
 <fo:block  keep-together="always"  text-align="left" font-size = "9pt" font-family="Arial" white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DIRECTOR &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;   &#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block> -->
