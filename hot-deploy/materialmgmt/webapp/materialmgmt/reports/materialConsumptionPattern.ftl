@@ -146,7 +146,7 @@ $(document).ready(function(){
 	      <h3> Indents (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
 	    </div>
 	    <div class="screenlet-body">
-	   		<div id="chart2" class="graph" style="margin-left:10px;margin-top:10px;"></div>
+	   		<div id="chart2" class="graph"></div>
 	   		<br><br>
 	  		
 	    </div>
