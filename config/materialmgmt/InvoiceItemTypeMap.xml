@@ -1,0 +1,13 @@
+<entity-engine-xml>
+<InvoiceItemTypeMap  invoiceItemMapKey="COGS_FREIGHT" invoiceItemTypeId="COGS_FREIGHT" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/>
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_DISC" invoiceItemTypeId="COGS_DISC" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_INSURANCE" invoiceItemTypeId="COGS_INSURANCE" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_PCK_FWD" invoiceItemTypeId="COGS_PCK_FWD" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_OTH_CHARGES" invoiceItemTypeId="COGS_OTH_CHARGES" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_UND_CHG" invoiceItemTypeId="COGS_UND_CHG" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_LBR_CHG" invoiceItemTypeId="COGS_LBR_CHG" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_SHP_CHG" invoiceItemTypeId="COGS_SHP_CHG" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_TNS_CHG" invoiceItemTypeId="COGS_TNS_CHG" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_PCK_FWD_ATR" invoiceItemTypeId="COGS_PCK_FWD_ATR" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceItemMapKey="COGS_DISC_ATR" invoiceItemTypeId="COGS_DISC_ATR" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+</entity-engine-xml>
