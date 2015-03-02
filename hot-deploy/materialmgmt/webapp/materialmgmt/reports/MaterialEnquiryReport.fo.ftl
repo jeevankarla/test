@@ -176,11 +176,15 @@ under the License.
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">5.The validity of your offers should be 60 days from date of due date.</fo:block>
 	                <fo:block  font-size="12pt"  white-space-collapse="false"  text-align="left">6.Substandard / material not as per our specifications are liable for rejection.</fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">7.Payment will be made within 30 days from date of satisfactory receipt of the materials.</fo:block>
-	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">8.If you are a authorized dealer please send the dealership certificate and manufacturers price list.</fo:block>	               
+	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">8.If you are a authorized dealer please send the dealership certificate and manufacturers price list.</fo:block>
+	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                      Yours faithfully</fo:block>
+	                 <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                     for MOTHER DAIRY</fo:block>
+	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	               
+	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                     <#if signature?has_content>${signature?if_exists}<#else>MANAGER(Purchase)</#if></fo:block>	               
 	                <fo:block page-break-after="always"></fo:block>
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	                
                     <fo:block font-family="Courier,monospace">
                     <fo:block text-align="center" keep-together="always" font-weight="bold">                                              MATERIAL SPECIFICATIONS                                                  </fo:block>				    	                
                     <fo:table>
