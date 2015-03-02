@@ -684,6 +684,22 @@
         <response name="error" type="view" value="QuoteForEvalution"/>
     </request-map>
     
+    <request-map uri="updateQuotesForEvaluation">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="updateQuotesForEvaluation" global-transaction="true"/>
+		<response name="success"  type="request-redirect" value="QuoteForEvalution">
+     		<redirect-parameter name="custRequestId"/>
+     	</response>   	
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+    
+    <request-map uri="updateQuotesForNegotiation">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="updateQuotesForNegotiation" global-transaction="true"/>
+     	<response name="success" type="view" value="QuoteForShortlist"/>
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+    
     <request-map uri="changeQuoteItemStatusNew">
         <security https="true" auth="true"/>
      	<event type="service"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="changeQuoteItemStatus" global-transaction="true"/>

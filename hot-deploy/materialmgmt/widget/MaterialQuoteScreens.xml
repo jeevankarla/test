@@ -240,7 +240,9 @@
                     <decorator-section name="body">
                     	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                     	<screenlet title="Items For Evaluation">
-                    		<include-form name="ListQuotesForEvaluation" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                    		<platform-specific>
+                    		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListQuoteForEvaluation.ftl"></html-template></html>
+                    		</platform-specific>       
                     	</screenlet>
                     	<section >
                     		<widgets>
