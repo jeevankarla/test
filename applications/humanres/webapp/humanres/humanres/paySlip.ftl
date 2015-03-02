@@ -39,7 +39,7 @@ function setOrgPartyId() {
 									      </#list>
 										</select>
 									<input type="hidden" name="OrganizationId" class="commonPartyId" value ="Company">
-									<input  type="hidden"  id="employeeId"   name="employeeId" value = "${userLogin.partyId}"/>
+									<input  type="hidden"  id="employeeId"   name="employeeId" value = "${parameters.partyId}"/>
 									<span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('paySlipEmployeewise', '<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>');" class="buttontext"/></span></td>
 								</tr>
 							</table>

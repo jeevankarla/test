@@ -379,7 +379,7 @@ employmentsList.each{ employeeId->
 							}
 						}
 						
-						DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_DAARREARS","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 						if(UtilValidate.isNotEmpty(DAARPeriodTotals)){
 							Iterator DAARPeriodTotalsIter = DAARPeriodTotals.entrySet().iterator();
 							while(DAARPeriodTotalsIter.hasNext()){
@@ -701,7 +701,7 @@ employmentsList.each{ employeeId->
 								}
 							}
 						}
-						DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_DAARREARS","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 						if(UtilValidate.isNotEmpty(DAARPeriodTotals)){
 							Iterator DAARPeriodTotalsIter = DAARPeriodTotals.entrySet().iterator();
 							while(DAARPeriodTotalsIter.hasNext()){
