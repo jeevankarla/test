@@ -35,14 +35,17 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 				partyDetailsList=unionPartyDetailsList;
 			}
 		}
-		// sub division here
-		inputMap = [:];
-		inputMap.put("userLogin", userLogin);
-		inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -730));
-		Map departmentsMap = MaterialHelperServices.getDivisionDepartments(dctx,inputMap);
-		if(UtilValidate.isNotEmpty(departmentsMap)){
-			departmentList=departmentsMap.get("subDivisionDepartmentList");
-			partyDetailsList.addAll(departmentList);
+		// checking for PO
+		if(UtilValidate.isEmpty(parameters.changeFlag)){
+			// sub division here
+			inputMap = [:];
+			inputMap.put("userLogin", userLogin);
+			inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -730));
+			Map departmentsMap = MaterialHelperServices.getDivisionDepartments(dctx,inputMap);
+			if(UtilValidate.isNotEmpty(departmentsMap)){
+				departmentList=departmentsMap.get("subDivisionDepartmentList");
+				partyDetailsList.addAll(departmentList);
+			}
 		}
 	partyDetailsList.each{eachParty ->
 		JSONObject newPartyObj = new JSONObject();

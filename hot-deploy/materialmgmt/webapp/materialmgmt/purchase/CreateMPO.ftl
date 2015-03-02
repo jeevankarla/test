@@ -189,7 +189,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		var poNumberObj  = $(formObj).find("#PONumber");
 	    var quoteNumObj  = $(formObj).find("#quoteNum");
         var quoteDateObj  = $(formObj).find("#quoteDate");
-        var billToPartyIdObj  = $(formObj).find("#0_lookupId_billToPartyId");
+        var billToPartyIdObj  = $(formObj).find("#billToPartyId");
         var quoteDateObj  = $(formObj).find("#quoteDate");
         var fileNo  = $(formObj).find("#fileNo");
         var estimatedDeliveryDate  = $(formObj).find("#estimatedDeliveryDate");
