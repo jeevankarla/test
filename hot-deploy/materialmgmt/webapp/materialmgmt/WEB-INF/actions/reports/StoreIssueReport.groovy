@@ -114,17 +114,10 @@ BigDecimal ReceiptTotQty = BigDecimal.ZERO;
 if(UtilValidate.isNotEmpty(receiptList)){
 	receiptNo=1;
 	receiptList.each{receiptData->
-		
-//		coList =[];
-//		coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptData.receiptId));
-//		coList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SHIPMENT_CANCELLED"));
-//		EntityCondition con = EntityCondition.makeCondition(coList,EntityOperator.AND);
-//		cancelledShipment= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);
-//		if(UtilValidate.isNotEmpty(cancelledShipment)){
-//			
-//		}else{	
+	if(UtilValidate.isNotEmpty(receiptData.mrrNo)){
+			
 		 MrrDetailsMap=[:];
-		 shipmentId=receiptData.shipmentId;
+		 mrrNo=receiptData.mrrNo;
 		 supplierInvoiceId=receiptData.supplierInvoiceId;
 		 supplierInvoiceDate=receiptData.supplierInvoiceDate;
 		 receiptId=receiptData.receiptId;
@@ -140,7 +133,7 @@ if(UtilValidate.isNotEmpty(receiptList)){
 		 ReceiptTotQty=ReceiptTotQty+ReceiptQty;
 		 }		 
 		//MrrDetailsMap.put("receiptId",receiptId);
-		 MrrDetailsMap.put("shipmentId",shipmentId);
+		 MrrDetailsMap.put("mrrNo",mrrNo);
 		 MrrDetailsMap.put("supplierInvoiceId",supplierInvoiceId);
 		 MrrDetailsMap.put("supplierInvoiceDate",supplierInvoiceDate);
 		 
@@ -152,7 +145,7 @@ if(UtilValidate.isNotEmpty(receiptList)){
 		
 		MrrMap.put(receiptNo,MrrDetailsMap);
 		receiptNo++;
-	 
+	 }
 	}
 	receiptIssuesMap.put("MrrMap",MrrMap);	
 } 

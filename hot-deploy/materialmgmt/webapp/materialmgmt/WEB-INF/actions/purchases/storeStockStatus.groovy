@@ -36,14 +36,23 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 dctx = dispatcher.getDispatchContext();
 facilityId=parameters.issueToFacilityId;
 
+prodMap=[:];
 
  productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
  productIds = EntityUtil.getFieldListFromEntityList(productDetails, "productId", true);
+ 
+ 
+ //get product from ProductCategory
+ 
+ exprList=[];
+ exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
+ exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+ condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+ productCatDetails = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
 
-productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
+ //productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);
 if(UtilValidate.isNotEmpty(productCatIds)){
-	prodMap=[:];
 	productCatIds.each{productCatId->
     prodList=[];
 	List conlist=[];
