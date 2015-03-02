@@ -294,6 +294,7 @@ public class MaterialHelperServices{
 		            String datetReceived = UtilDateTime.toDateString(UtilDateTime.toSqlDate(datetimeReceived));
 		            BigDecimal amount = price.multiply(quantity);
 	   try{
+
 			List conList=FastList.newInstance();
 	        if(UtilValidate.isNotEmpty(shipmentId)){
 	       	conList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -303,24 +304,27 @@ public class MaterialHelperServices{
 			List<GenericValue> shipmentData = delegator.findList("Shipment", con, null, null, null, false);
 	        //	Set fieldsSelect = UtilMisc.toSet("supplierInvoiceId","supplierInvoiceDate","deliveryChallanNumber","shipmentId");
 	       	// List<GenericValue> shipmentData = delegator.find("Shipment", con, null,fieldsSelect, null,null);
+	       	String mrrNo =null;
 	       	String supplierInvoiceId =null;
 	       	Timestamp supplierInvoiceDate =null;  
 	       	if(UtilValidate.isNotEmpty(shipmentData)){
 					GenericValue shipmentInvoiceData = EntityUtil.getFirst(shipmentData);
+					mrrNo=shipmentInvoiceData.getString("shipmentId");
 					supplierInvoiceId=shipmentInvoiceData.getString("supplierInvoiceId");
 					supplierInvoiceDate=shipmentInvoiceData.getTimestamp("supplierInvoiceDate");
 		            tempMap.put("supplierInvoiceId",supplierInvoiceId );
-		            tempMap.put("supplierInvoiceDate",supplierInvoiceDate);   	
+		            tempMap.put("supplierInvoiceDate",supplierInvoiceDate); 
+		            tempMap.put("mrrNo", mrrNo);
+
 		        }
 	   }catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
 		}   
- 		
+		
 		            tempMap.put("datetReceived", datetReceived);
 		            tempMap.put("quantity", quantity);
 		            tempMap.put("receiptId", receiptId);
-		            tempMap.put("shipmentId", shipmentId);
 		            tempMap.put("amount", amount);
 		            tempMap.put("price", price);
 		            receiptsList.add(tempMap);
