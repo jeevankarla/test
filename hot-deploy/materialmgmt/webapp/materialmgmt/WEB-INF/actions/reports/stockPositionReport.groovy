@@ -67,8 +67,11 @@ dctx = dispatcher.getDispatchContext();
  productFacilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
  if(UtilValidate.isNotEmpty(productFacilityList)){
 	 List productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
-	 if(UtilValidate.isNotEmpty(productIdList)){
-		 productIdList.each{ productId ->
+	 condition=EntityCondition.makeCondition([EntityCondition.makeCondition("productId",EntityOperator.IN,productIdList),EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"RAW_MATERIAL")],EntityOperator.AND);
+	 productsList=delegator.findList("Product",condition,null,null,null,false);
+	List products=EntityUtil.getFieldListFromEntityList(productsList,"productId", true);
+	 if(UtilValidate.isNotEmpty(products)){
+		 products.each{ productId ->
 			 productId = productId;
 			 productAttr = delegator.findOne("ProductAttribute", [productId : productId , attrName : "LEDGERFOLIONO"], false);
 			 String attrName = null;
@@ -82,7 +85,7 @@ dctx = dispatcher.getDispatchContext();
 			 productDetails = delegator.findOne("Product",[productId : productId], false);
 			 internalName = "";
 			 if(UtilValidate.isNotEmpty(productDetails)){
-				 internalName = productDetails.internalName;
+				 internalName = Integer.parseInt(productDetails.internalName);
 			 }
 			 productName = "";
 			 uomDescription = "";
@@ -182,15 +185,10 @@ if(UtilValidate.isNotEmpty(finalStockPositionMap)){
 	for(String key in finalStockPositionMap.keySet()){
 			List tempList = FastList.newInstance();
 			tempList.addAll(finalStockPositionMap.get(key));
-			tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("-internalName"));
+			tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("internalName"));
 			sortedMap.put(key,tempList);
 	}
 }
-context.put("finalStockPositionMap",sortedMap);
- 
- 
- 
- 
- 
- 
- 
+Map<String, List> newSortedMap = new TreeMap<String, List>(sortedMap);
+context.put("finalStockPositionMap",newSortedMap);
+
