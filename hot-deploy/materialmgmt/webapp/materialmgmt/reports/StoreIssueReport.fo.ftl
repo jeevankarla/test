@@ -22,7 +22,7 @@ under the License.
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
 					 margin-left="0.5in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
-				<fo:region-body margin-top="2.2in"/>
+				<fo:region-body margin-top="2.61in"/>
 				<fo:region-before extent="1in"/>
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
@@ -30,25 +30,28 @@ under the License.
 		        <#if allDetailsMap?has_content>
 		       
 		<fo:page-sequence master-reference="main">
-			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
+			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" >
+				<fo:block  keep-together="always" text-align="left"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                       UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+		   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                   Date     : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
+		    			      
 				<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				<fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------</fo:block>
-				<fo:block text-align="center" white-space-collapse="false">&#160;      STORE RECEIPTS-ISSUES BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
+				<fo:block text-align="center" white-space-collapse="false" font-weight = "bold">&#160;      STORE RECEIPTS-ISSUES BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}                </fo:block>				
 			    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false"> <#if internalName?has_content>MATERIAL CODE:${internalName}<#else></#if>                            STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               <#if materialName?has_content>MATERIAL NAME:${materialName}<#else></#if> </fo:block>   			   
+			    <fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-weight = "bold"> <#if internalName?has_content>MATERIAL CODE:${internalName}<#else></#if>                            STORE:<#if issueToFacilityId?has_content>${issueToFacilityId?if_exists}<#else></#if>               <#if materialName?has_content>MATERIAL NAME:${materialName}<#else></#if> </fo:block>   			   
 			    <fo:block font-family="Courier,monospace">		 
 			    <fo:table border-style="solid">
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="80pt"/>
+					<fo:table-column column-width="80pt"/>
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="90pt"/>
+					<fo:table-column column-width="120pt"/>
+					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="110pt"/>
 					<fo:table-column column-width="90pt"/>
 					<fo:table-column column-width="25pt"/>
 					   <fo:table-body>
@@ -64,38 +67,38 @@ under the License.
 					      </fo:table-row>
 					      <fo:table-row >
 					            <fo:table-cell border-style="solid">
-									<fo:block text-align="left" keep-together="always" >DATE</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold">DATE</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="left" keep-together="always" >BILL NO.</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold">BILL NO.</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="left" keep-together="always" >MRR NUMBER</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold">MRR NUMBER</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="right" keep-together="always" >QUANTITY</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold" >QUANTITY</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="right" keep-together="always" >RATE</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold">RATE</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid" >
-									<fo:block text-align="right" keep-together="always" >AMOUNT</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold">AMOUNT</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="center" keep-together="always">INDENT NO.</fo:block>
+									<fo:block text-align="center" keep-together="always" font-weight = "bold">INDENT NO.</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid" >
-								    <fo:block text-align="right" keep-together="always">ISSUE QTY</fo:block>
+								    <fo:block text-align="center" keep-together="always" font-weight = "bold">ISSUE QTY</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-								    <fo:block text-align="right" keep-together="always">RATE</fo:block>
+								    <fo:block text-align="center" keep-together="always" font-weight = "bold">RATE</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-								    <fo:block text-align="right" keep-together="always">AMOUNT</fo:block>
+								    <fo:block text-align="center" keep-together="always" font-weight = "bold">AMOUNT</fo:block>
 								</fo:table-cell>
 								<fo:table-cell >
-								    <fo:block text-align="right" keep-together="always">Day Closing </fo:block>
-								    <fo:block text-align="right" keep-together="always">Balance</fo:block>
+								    <fo:block text-align="center" keep-together="always" font-weight = "bold">Day Closing </fo:block>
+								    <fo:block text-align="center" keep-together="always" font-weight = "bold">Balance</fo:block>
 								</fo:table-cell>
 							</fo:table-row>
 					</fo:table-body>
@@ -109,7 +112,7 @@ under the License.
 
 <fo:table >
 <fo:table-column column-width="80pt"/>
-<fo:table-column column-width="740pt"/>
+<fo:table-column column-width="840pt"/>
 <fo:table-column column-width="116pt"/>
 
 <fo:table-body>
@@ -138,8 +141,8 @@ under the License.
 	<fo:table-cell  border-style="solid">
 		<fo:block text-align="left" >
 		 <fo:table>
-			 <fo:table-column column-width="400pt"/>
-			<fo:table-column column-width="386pt"/>
+			 <fo:table-column column-width="470pt"/>
+			<fo:table-column column-width="370pt"/>
 			 <fo:table-body>
 			 
 					   <fo:table-row>		   
@@ -148,10 +151,10 @@ under the License.
 				 <fo:block text-align="left" >			   	
 			 <fo:table >
 					  <fo:table-column column-width="80pt"/>
-					  <fo:table-column column-width="100pt"/>
 					  <fo:table-column column-width="80pt"/>
-					 <fo:table-column column-width="70pt"/>
-					   <fo:table-column column-width="70pt"/>					  
+					  <fo:table-column column-width="100pt"/>
+					 <fo:table-column column-width="90pt"/>
+					   <fo:table-column column-width="120pt"/>					  
                      <fo:table-body>
 <#if storeDetails1?has_content>
         <#assign storeDetails11 = storeDetails1.entrySet()?if_exists>
@@ -162,10 +165,10 @@ under the License.
 							   <fo:block text-align="left" > ${storeDetails111.getValue().get("supplierInvoiceId")?if_exists}             </fo:block>
 						   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="left" >  ${storeDetails111.getValue().get("shipmentId")?if_exists}     </fo:block>
+							  <fo:block text-align="left" >  ${storeDetails111.getValue().get("mrrNo")?if_exists}     </fo:block>
 						   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >    ${storeDetails111.getValue().get("ReceiptQty")?if_exists?string("##0.000")}            </fo:block>
+							  <fo:block text-align="right" font-size="10pt" >    ${storeDetails111.getValue().get("ReceiptQty")?if_exists?string("##0.000")}            </fo:block>
 						   </fo:table-cell>
 						   <fo:table-cell border-style="solid">
 							  <fo:block text-align="right" >       ${storeDetails111.getValue().get("ReceiptRate")?if_exists?string("##0.00")}      </fo:block>
@@ -185,10 +188,10 @@ under the License.
 			 <fo:table-cell>
 					 <fo:block text-align="left" >			   
 				 <fo:table >
+					  <fo:table-column column-width="80pt"/>
 					  <fo:table-column column-width="100pt"/>
-					  <fo:table-column column-width="100pt"/>
-					  <fo:table-column column-width="70pt"/>
-					 <fo:table-column column-width="70pt"/>
+					  <fo:table-column column-width="80pt"/>
+					 <fo:table-column column-width="110pt"/>
                       <fo:table-body>		  
       <#if storeDetails2?has_content>
 
@@ -205,7 +208,7 @@ under the License.
 							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueRate")?if_exists?string("##0.00")}         </fo:block>
 						   </fo:table-cell >
 						   <fo:table-cell border-style="solid">
-							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueAmount")?if_exists?string("##0.00")}            </fo:block>
+							  <fo:block text-align="right" >    ${storeDetails222.getValue().get("IssueAmount")?if_exists?string("##0.00")}&#160;            </fo:block>
 						   </fo:table-cell >							   
                             </fo:table-row>
                             </#list>
