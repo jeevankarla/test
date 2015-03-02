@@ -1100,6 +1100,9 @@
 				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
+				<entity-condition list="customTimePeriodIdsList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                </entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
                 </entity-condition>  	
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
