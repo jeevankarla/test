@@ -613,7 +613,7 @@
     </form>
     
     <form name="ListRequestItems" type="list" use-row-submit="true"  title="" list-name="custRequestItems"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItems">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" >
         <actions>
         	<entity-condition entity-name="CustRequestItem">
         		<condition-expr field-name="custRequestId" operator="equals" from-field="parameters.custRequestId"/>
