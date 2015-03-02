@@ -7040,7 +7040,7 @@ public class PayrollService {
 	    	    condBasicSalPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(basicSalDate))));
 				EntityCondition basicSalPeriodCond = EntityCondition.makeCondition(condBasicSalPeriodList,EntityOperator.AND); 	
 				List<GenericValue> basicSalPeriodList = delegator.findList("CustomTimePeriod", basicSalPeriodCond, null, null, null, false);
-	    	    List payHeaderList = FastList.newInstance();
+				List payHeaderList = FastList.newInstance();
 	    	    // getting HR Months for the given period
 				List condPeriodList = FastList.newInstance();
 				condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
@@ -7150,7 +7150,7 @@ public class PayrollService {
 				  									List rateAmountCondList = FastList.newInstance();
 								  					rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
 								  					rateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
-								  					rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("thruDate"))))));
+								  					rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(basicSalPeriod.getDate("thruDate"))))));
 								  					EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
 								  					List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
 								  					BigDecimal rateAmount = BigDecimal.ZERO;
