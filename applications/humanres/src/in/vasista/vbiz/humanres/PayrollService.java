@@ -196,10 +196,10 @@ public class PayrollService {
 	 			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	 			    	try {
 	 			    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
-	 			    		if(!"SP_LEAVE_ENCASH".equals(billingTypeId)){
+	 			    		if("PAYROLL_BILL".equals(billingTypeId)){
 		 			    		if(!UtilValidate.isEmpty(periodBillingList)){
-		 			    			Debug.logError("Failed to create 'MarginReport': Already generated or In-process for the specified period", module);
-		 			    			return ServiceUtil.returnError("Failed to create 'MarginReport': Already generated or In-process for the specified period");
+		 			    			Debug.logError("Failed to generate 'Payroll Billing': Already generated or In-process for the specified period", module);
+		 			    			return ServiceUtil.returnError("Failed to generate 'Payroll Billing': Already generated or In-process for the specified period");
 		 			    		}
 	 			    		}
 	 			    	}catch (GenericEntityException e) {
