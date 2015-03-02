@@ -201,9 +201,7 @@ under the License.
 					   </fo:table> 					  
 				   </fo:block>  
 				   </#if>   
-                   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                    <fo:block text-align="center" keep-together="always" font-weight="bold">                                              MATERIAL SPECIFICATIONS                                                  </fo:block>				    	                
+                    <fo:block page-break-before="always" text-align="center" keep-together="always" font-weight="bold">                                              MATERIAL SPECIFICATIONS                                                  </fo:block>				    	                
                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block font-family="Courier,monospace">
 	                <fo:table>
