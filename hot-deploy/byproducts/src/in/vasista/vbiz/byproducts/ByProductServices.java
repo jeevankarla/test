@@ -3187,6 +3187,7 @@ public class ByProductServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String paymentId = (String) context.get("paymentId");
         String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
+        String cancelComments = (String) context.get("cancelComments");
         String subTabItem = (String) context.get("subTabItem");
         Locale locale = (Locale) context.get("locale");  
         Map result = ServiceUtil.returnSuccess();
@@ -3195,7 +3196,7 @@ public class ByProductServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         try {
         	
-        	Map resultPayMap = dispatcher.runSync("voidPayment", UtilMisc.toMap("paymentId", paymentId, "userLogin", userLogin));
+        	Map resultPayMap = dispatcher.runSync("voidPayment", UtilMisc.toMap("paymentId", paymentId,"cancelComments", cancelComments, "userLogin", userLogin));
 			if (ServiceUtil.isError(resultPayMap)) {
 				Debug.logError("There was an error in cancelling payment: " + ServiceUtil.getErrorMessage(resultPayMap), module);
                 return ServiceUtil.returnError("There was an error in cancelling payment: " + ServiceUtil.getErrorMessage(resultPayMap));          	            

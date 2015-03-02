@@ -96,7 +96,6 @@ function submitForm(){
 
 function getPaymentDescription(){
 	  var action;
-	  var statusId="INVOICE_CANCELLED";
      var message = "";
 
                 message += "<html><head></head><body><form id='invoicestatuschange' method='post' action='voidPayment' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
