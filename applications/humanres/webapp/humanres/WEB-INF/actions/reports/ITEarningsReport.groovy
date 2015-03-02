@@ -394,6 +394,8 @@ employmentsList.each{ employeeId->
 									if(UtilValidate.isEmpty(DAARLEAmount)){
 										DAARLEAmount = 0;
 									}
+									context.put("DAARDAAmount1",DAARDAAmount);
+									context.put("DAARLEAmount1",DAARLEAmount);
 								}
 							}
 						}
@@ -710,6 +712,7 @@ employmentsList.each{ employeeId->
 									if(UtilValidate.isEmpty(DAAREmpProFund)){
 										DAAREmpProFund = 0;
 									}
+									context.putAt("DAAREmpProFund1", -(DAAREmpProFund));
 								}
 							}
 						}

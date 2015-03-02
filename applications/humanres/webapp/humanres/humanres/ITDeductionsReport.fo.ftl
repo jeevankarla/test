@@ -290,13 +290,14 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (DAAREmpProFund?has_content && DAAREmpProFund!=0)>
+							    </#list>
+							    <#if (DAAREmpProFund1?has_content && DAAREmpProFund1!=0)>
 							    <fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Arrears:</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund1?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
@@ -320,7 +321,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund1?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
@@ -330,7 +331,6 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    </#list>
 							    <fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
