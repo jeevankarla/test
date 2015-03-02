@@ -45,18 +45,23 @@ under the License.
        <tr>
          <th>PaymentID</th>
          <th>${uiLabelMap.CommonAmount}</th>
-         <th>Payment Date</th> 
+         <th>Payment Date</th>    
+         <th>Pament Method Type</th>
          <th>${uiLabelMap.CommonStatus}</th> 
+         <th>Entry by</th> 
+
        </tr>
-       <tr><td class="h3" colspan="4"><hr size="30%"  /></td></tr>
+       <tr><td class="h3" colspan="6"><hr size="30%"  /></td></tr>
        <#if finalMap?has_content>
        <#assign payments=finalMap.entrySet()>
        <#list payments as payment>
        <tr>
        	<td><a href="/accounting/control/paymentOverview?paymentId=${payment.getKey()?if_exists}" target="_BLANK" class="buttontext" >${payment.getKey()?if_exists}</a></td>
        	<td>${payment.getValue().get("amount")?if_exists?string("##0.00")}</td>
+        <td>${payment.getValue().get("methodDescription")?if_exists}</td>
        	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.getValue().get("date"), "dd-MMM-yyyy")}</td> 
        	<td>${payment.getValue().get("statusId")?if_exists}</td>
+       	<td>${payment.getValue().get("createdByUserLogin")?if_exists}</td>
        </tr>
        </#list>
        </#if>

@@ -185,13 +185,13 @@
       	</field>
         <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
         <field name="shipmentId" title="GRN ShipmentId"><display/></field>
-        <field name="orderId" title="PO No"><display/></field>
+       <field name="orderId" title="PO No"><display/></field> 
         <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
         </field>
       	<field name="quantityAccepted" title="Quantity"><display/></field>
       	<field name="quantityRejected" title="Qty Rejected"><display/></field>
-      	<field name="supplyTillDate"><display/></field>
+   <!--    	<field name="supplyTillDate"><display/></field>  -->
       	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
       	
         <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
@@ -484,6 +484,35 @@
     		<display-entity entity-name="StatusItem" description="${description}" ></display-entity>
     	</field>
     	<field name="invoiceDate" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
+          <field name="createdByUserLogin" title="Entry by"><display/></field>	  
+    </form>
+    <form name="supplyProductstilldate" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row"  default-table-style="basic-table hover-bar">
+       <!--  <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ShipmentReceipt"/>
+                <field-map field-name="orderBy"  value="-receiptId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions> -->
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+      	<field name="productId" title="Code- Name [UOM]">
+      		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
+      	</field>      
+  	<field name="supplyTillDate"><display/></field> 
+      	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
+      	
+     
     </form>
     
 </forms>

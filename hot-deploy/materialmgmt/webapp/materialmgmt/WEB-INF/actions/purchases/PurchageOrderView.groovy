@@ -511,9 +511,9 @@ if (orderItems) {
 		   invoiceCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipment.shipmentId),EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE")],EntityOperator.AND);
 		   invoicesList = delegator.findList("Invoice",invoiceCondition,UtilMisc.toSet("invoiceId"),null,null,false);
 		   invoiceIds = EntityUtil.getFieldListFromEntityList(invoicesList, "invoiceId", true);
-		   if(UtilValidate.isNotEmpty(invoiceIds)){
+		  if(UtilValidate.isNotEmpty(invoiceIds)){
 			   ivoCond=EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
-			   invoiceDetailList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate"),null,null,false);
+			   invoiceDetailList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate","createdByUserLogin"),null,null,false);		   
 			   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
 			   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
 			   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
@@ -523,9 +523,19 @@ if (orderItems) {
 					   if(UtilValidate.isEmpty(finalMap.get(payment.paymentId))){
 						   paymentMap = [:];
 						   Status=delegator.findByPrimaryKey("StatusItem",[statusId:payment.statusId]);
+						  paymentMethodTypeId=payment.paymentMethodTypeId;
+						 
+						   //paymentMethodTypeId description
+						  PaymentMethodTypeDesc= delegator.findOne("PaymentMethodType",["paymentMethodTypeId" :payment.paymentMethodTypeId],false);						  
+						  if(PaymentMethodTypeDesc){
+						    methodDescription=PaymentMethodTypeDesc.get("description");
+							paymentMap.put("methodDescription", methodDescription);
+						  }
 							paymentMap.put("amount", amount);
 							paymentMap.put("statusId", Status.description);
 							paymentMap.put("date", payment.paymentDate);
+							paymentMap.put("createdByUserLogin", payment.createdByUserLogin);
+							
 							   finalMap[payment.paymentId] = paymentMap;
 					   }else{
 					   paymentMap = [:];
@@ -542,4 +552,3 @@ if (orderItems) {
    context.invoiceDetailList=invoiceDetailList;
    context.finalMap=finalMap;
    context.paymentIds=paymentIds;
-   
