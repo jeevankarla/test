@@ -783,6 +783,7 @@
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelRetailerPayment" auth="true">
         <description>cancel Retailer Payment</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
         <attribute name="paymentMethodTypeId" type="String" mode="INOUT" optional="true"/>
         <attribute name="subTabItem" type="String" optional="true" mode="INOUT"/>
     </service>
