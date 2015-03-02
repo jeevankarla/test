@@ -787,6 +787,8 @@ public class PayrollService {
 		    	    		    if(UtilValidate.isNotEmpty(billingTypeId) && (billingTypeId.equals("SP_DA_ARREARS"))){
 		    	    		    	List<GenericValue> emplDAArrearsList = delegator.findList("EmployeeDAArrears", EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId), null, null, null, false);
 			    	    		    delegator.removeAll(emplDAArrearsList);
+			    	    		    List<GenericValue> payrollHeaderECList = delegator.findList("PayrollHeaderItemEc", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
+			    	    		    delegator.removeAll(payrollHeaderECList);
 		    	    		    }
 		    				}
 		    			}
@@ -1409,7 +1411,6 @@ public class PayrollService {
 						if(UtilValidate.isNotEmpty(result)){
 							benefit.set("cost" ,result.get("amount"));
 						}
-			        	
 			        	
 						//Map<String, Object> adjustment = adjustAmount(context,benefit.getBigDecimal("cost"), from, thru);			
 						input.put("quantity", BigDecimal.ONE);
@@ -2400,7 +2401,6 @@ public class PayrollService {
 
 	                // check all conditions
 	                boolean allTrue = true;
-	                
 	                StringBuilder condsDescription = new StringBuilder();
 	                List<GenericValue> payrollBenDedCondList = delegator.findList("PayrollBenDedCond", EntityCondition.makeCondition("payrollBenDedRuleId",EntityOperator.EQUALS ,payHeadPriceRuleId ), null,UtilMisc.toList("payrollBenDedCondSeqId") , null, false);	
 	              //this is to support rule with no condition 
@@ -7442,6 +7442,54 @@ public class PayrollService {
 								payHeaderItem1.set("amount",(epfAmountNet).setScale(0, BigDecimal.ROUND_HALF_UP));
 			   				    delegator.setNextSubSeqId(payHeaderItem1, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem1);
+					            
+					            Timestamp timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+					            GenericValue person = delegator.findOne("Person", UtilMisc.toMap("partyId",payHeaderValue.get("partyIdFrom")), false);
+					            if(UtilValidate.isNotEmpty(person) && UtilValidate.isNotEmpty(person.getDate("birthDate"))){
+					            	long ageTime = (UtilDateTime.toSqlDate(timePeriodEnd)).getTime()- (person.getDate("birthDate")).getTime();
+					            	Long age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_UP)).toString());
+					            	BigDecimal employeeAge = new BigDecimal(age);
+					            	
+					            	BigDecimal epfPensionAmount = BigDecimal.ZERO;
+									epfPensionAmount = epfAmount.multiply(new BigDecimal(0.0833));
+									
+									if((epfPensionAmount.compareTo(new BigDecimal(1250))) >0){	    
+										epfPensionAmount = new BigDecimal(1250);
+									}
+									BigDecimal employerPf = BigDecimal.ZERO;
+									employerPf = epfAmount.subtract(epfPensionAmount);
+					            	
+					            	
+					            	if((employeeAge.compareTo(new BigDecimal(58))) <=0){
+					            		//Employer PF Here 
+										if(UtilValidate.isNotEmpty(epfPensionAmount)){
+											GenericValue payHeaderItemEC1 = delegator.makeValue("PayrollHeaderItemEc");
+											payHeaderItemEC1.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+											payHeaderItemEC1.set("payrollHeaderItemTypeId","PAYROL_BEN_PENSION");
+											payHeaderItemEC1.set("amount",(epfPensionAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
+						   				    delegator.setNextSubSeqId(payHeaderItemEC1, "payrollItemSeqId", 5, 1);
+								            delegator.create(payHeaderItemEC1);
+										}
+										if(UtilValidate.isNotEmpty(employerPf)){
+											GenericValue payHeaderItemEC = delegator.makeValue("PayrollHeaderItemEc");
+											payHeaderItemEC.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+											payHeaderItemEC.set("payrollHeaderItemTypeId","PAYROL_BEN_PFEMPLYR");
+											payHeaderItemEC.set("amount",(employerPf).setScale(0, BigDecimal.ROUND_HALF_UP));
+						   				    delegator.setNextSubSeqId(payHeaderItemEC, "payrollItemSeqId", 5, 1);
+								            delegator.create(payHeaderItemEC);
+										}
+					            	}else{
+					            		if(UtilValidate.isNotEmpty(epfAmount)){
+											GenericValue payHeaderItemEC = delegator.makeValue("PayrollHeaderItemEc");
+											payHeaderItemEC.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+											payHeaderItemEC.set("payrollHeaderItemTypeId","PAYROL_BEN_PFEMPLYR");
+											payHeaderItemEC.set("amount",(epfAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
+						   				    delegator.setNextSubSeqId(payHeaderItemEC, "payrollItemSeqId", 5, 1);
+								            delegator.create(payHeaderItemEC);
+										}
+					            	}
+					            	
+					            }
 							}
 						}
 			            emplCounter++;
@@ -7473,7 +7521,7 @@ public class PayrollService {
 				periodBilling.set("statusId", "GENERATED");
 				periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 			}
-			periodBilling.store();	
+			periodBilling.store();
 	}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError("Error While generating PeriodBilling" + e);

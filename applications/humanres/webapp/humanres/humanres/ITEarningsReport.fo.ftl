@@ -54,7 +54,7 @@ under the License.
           			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
           			<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">(A)SALARY EARNINGS</fo:block>
           			<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">MONTH																		BASIC  						DA  							HRA 								CNV 							CCA 						IR			    OTHERS      DA/IR ARREARS 		     BONUS    			TOTAL</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">MONTH																		BASIC  						DA  							HRA 								CNV 							CCA 						IR			    OTHERS     		     BONUS    			TOTAL</fo:block>
 	        		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -93,13 +93,15 @@ under the License.
 			                <#assign totalTEDAAmount = 0>
 			                <#assign totalTEHRAAmount = 0>
 			                <#assign totalTECCAmount = 0>
-			                <#assign totalTESpecPay = 0>
+			                <#assign totalTEBonusEX = 0>
+			                <#assign totalTEOthers = 0>
 			                
 			                <#assign totalSBESalary = 0>
 			                <#assign totalSBEDAAmount = 0>
 			                <#assign totalSBEHRAAmount = 0>
 			                <#assign totalSBECCAmount = 0>
-			                <#assign totalSBESpecPay = 0>
+			                <#assign totalSBEInterMrlf = 0>
+			                <#assign totalSBEOthers = 0>
 	                    	
 			                    <#assign partyBenefitList = partyBenefitsMap.getValue().entrySet()>
 			                    <#list partyBenefitList as partyBenefits>
@@ -131,14 +133,16 @@ under the License.
 			                        <#assign TEDAAmount =0>
 			                        <#assign TEHRAAmount =0>
 			                        <#assign TECCAmount =0>
-			                        <#assign TESpecPay =0>
+			                        <#assign TEBonusEX = 0>
+			                    	<#assign TEOthers =0>
 			                        <#assign TE = 0>
 		                            
 		                            <#assign SBESalary =0>
 			                        <#assign SBEDAAmount =0>
 			                        <#assign SBEHRAAmount =0>
 			                        <#assign SBECCAmount =0>
-			                        <#assign SBESpecPay =0>
+			                        <#assign SBEInterMrlf=0>
+			                    	<#assign SBEOthers =0>
 			                        <#assign SBE = 0>
 			                        
 			                        <#assign DAARDAAmount =0>
@@ -180,14 +184,16 @@ under the License.
 			                    	<#assign TEDAAmount = partyBenefits.getValue().get("TEDAAmount")?if_exists>
 			                    	<#assign TEHRAAmount = partyBenefits.getValue().get("TEHRAAmount")?if_exists>
 			                    	<#assign TECCAmount = partyBenefits.getValue().get("TECCAmount")?if_exists>
-			                    	<#assign TESpecPay = partyBenefits.getValue().get("TESpecPay")?if_exists>
+			                    	<#assign TEBonusEX = partyBenefits.getValue().get("TEBonusEX")?if_exists>
+			                    	<#assign TEOthers = partyBenefits.getValue().get("TEOthers")?if_exists>
 			                    	
 			                    	
 			                    	<#assign SBESalary = partyBenefits.getValue().get("SBESalary")?if_exists>
 			                    	<#assign SBEDAAmount = partyBenefits.getValue().get("SBEDAAmount")?if_exists>
 			                    	<#assign SBEHRAAmount = partyBenefits.getValue().get("SBEHRAAmount")?if_exists>
 			                    	<#assign SBECCAmount = partyBenefits.getValue().get("SBECCAmount")?if_exists>
-			                    	<#assign SBESpecPay = partyBenefits.getValue().get("SBESpecPay")?if_exists>
+			                    	<#assign SBEInterMrlf = partyBenefits.getValue().get("SBEInterMrlf")?if_exists>
+			                    	<#assign SBEOthers = partyBenefits.getValue().get("SBEOthers")?if_exists>
 			                    	
 			                    	
 			                    	<#assign DAARDAAmount = partyBenefits.getValue().get("DAARDAAmount")?if_exists>
@@ -204,29 +210,30 @@ under the License.
 			                    	<#assign totalTEDAAmount = totalTEDAAmount + TEDAAmount>
 			                    	<#assign totalTEHRAAmount = totalTEHRAAmount + TEHRAAmount>
 			                    	<#assign totalTECCAmount = totalTECCAmount + TECCAmount>
-			                    	<#assign totalTESpecPay = totalTESpecPay + TESpecPay>
+			                    	<#assign totalTEBonusEX = totalTEBonusEX + TEBonusEX>
+			                    	<#assign totalTEOthers = totalTEOthers + TEOthers>
 			                    	
 			                    	<#assign totalSBESalary = totalSBESalary + SBESalary>
 			                    	<#assign totalSBEDAAmount = totalSBEDAAmount + SBEDAAmount>
 			                    	<#assign totalSBEHRAAmount = totalSBEHRAAmount + SBEHRAAmount>
 			                    	<#assign totalSBECCAmount = totalSBECCAmount + SBECCAmount>
-			                    	<#assign totalSBESpecPay = totalSBESpecPay + SBESpecPay>
+			                    	<#assign totalSBEInterMrlf = totalSBEInterMrlf + SBEInterMrlf>
+			                    	<#assign totalSBEOthers = totalSBEOthers + SBEOthers>
 			                    	
 			                    	
 			                    	<#assign leaveEncash = LESalary+LEDAAmount+LEHRAAmount+LECCAmount+LESpecPay>
-			                    	<#assign TE = TESalary+TEDAAmount+TEHRAAmount+TECCAmount+TESpecPay>
-			                    	<#assign SBE = SBESalary+SBEDAAmount+SBEHRAAmount+SBECCAmount+SBESpecPay>
+			                    	<#assign TE = TESalary+TEDAAmount+TEHRAAmount+TECCAmount+TEBonusEX+TEOthers>
+			                    	<#assign SBE = SBESalary+SBEDAAmount+SBEHRAAmount+SBECCAmount+SBEOthers+SBEInterMrlf>
 			                    	<#assign DAAR = DAARDAAmount+DAARLEAmount>
-			                    	
 			                    	
 			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic>
 			                    	<#assign totalDA = totalDA + LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance+DAARDAAmount>
 			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance>
 			                    	<#assign totalConvey = totalConvey + convey>
 			                    	<#assign totalCityComp = totalCityComp + LECCAmount+TECCAmount+SBECCAmount+cityComp>
-			                    	<#assign totalBonus = totalBonus + bonus>
+			                    	<#assign totalBonus = totalBonus + bonus+totalTEBonusEX>
 			                    	<#assign totalDADAAmount = totalDADAAmount + DADAAmount>
-			                    	<#assign totalOthers = totalOthers + others+LESpecPay+TESpecPay+SBESpecPay+DAARLEAmount>
+			                    	<#assign totalOthers = totalOthers + others+LESpecPay+totalTEOthers+totalSBEOthers+DAARLEAmount>
 			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DAAR>
 			                    	
 			                    	
@@ -254,9 +261,6 @@ under the License.
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${others?if_exists?string("#0.00")}</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DADAAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${bonus?if_exists?string("#0.00")}</fo:block>  
@@ -295,14 +299,11 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${leaveEncash?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (TESalary?has_content && TESalary!=0) || (TEDAAmount?has_content && TEDAAmount!=0) || (TEHRAAmount?has_content && TEHRAAmount!=0) || (TECCAmount?has_content && TECCAmount!=0) || (TESpecPay?has_content && TESpecPay!=0)>
+							    <#if (TESalary?has_content && TESalary!=0) || (TEDAAmount?has_content && TEDAAmount!=0) || (TEHRAAmount?has_content && TEHRAAmount!=0) || (TECCAmount?has_content && TECCAmount!=0) || (TESpecPay?has_content && TESpecPay!=0) || (TEBonusEX?has_content && TEBonusEX!=0) || (TEOthers?has_content && TEOthers!=0)>
 							    	<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Transfer:</fo:block>  
@@ -326,20 +327,17 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TESpecPay?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TEOthers?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TEBonusEX?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TE?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (SBESalary?has_content && SBESalary!=0) || (SBEDAAmount?has_content && SBEDAAmount!=0) || (SBEHRAAmount?has_content && SBEHRAAmount!=0) || (SBECCAmount?has_content && SBECCAmount!=0) || (SBESpecPay?has_content && SBESpecPay!=0)>
+							    <#if (SBESalary?has_content && SBESalary!=0) || (SBEDAAmount?has_content && SBEDAAmount!=0) || (SBEHRAAmount?has_content && SBEHRAAmount!=0) || (SBECCAmount?has_content && SBECCAmount!=0) || (SBESpecPay?has_content && SBESpecPay!=0)  || (SBEInterMrlf?has_content && SBEInterMrlf!=0) || (SBEOthers?has_content && SBEOthers!=0)>
 							    	<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Supplementary Bill:</fo:block>  
@@ -360,13 +358,10 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBECCAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEInterMrlf?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBESpecPay?if_exists?string("#0.00")}</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEOthers?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
@@ -376,7 +371,7 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (DAARDAAmount?has_content && DAARDAAmount!=0) || (DAARLEAmount?has_content && DAARLEAmount!=0)>
+							    <#if (DAARDAAmount?has_content && DAARDAAmount!=0)>
 							    	<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Arrears:</fo:block>  
@@ -400,6 +395,25 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARDAAmount?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
+							    <#if (DAARLEAmount?has_content && DAARLEAmount!=0)>
+							    	<fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Leave Encash:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
@@ -409,7 +423,19 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAR?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
@@ -443,9 +469,6 @@ under the License.
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalOthers?if_exists?string("#0.00")}</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalDADAAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalBonus?if_exists?string("#0.00")}</fo:block>  
