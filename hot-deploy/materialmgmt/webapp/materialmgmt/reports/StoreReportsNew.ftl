@@ -98,7 +98,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDateMr","thruDateMr");
 		makeDatePicker("fromDateStock","thruDateStock");
 		makeDatePicker("fromDateArc","thruDateArc");
-	    makeDatePicker("fromDatependingPOs","thruDatependingPOs");
+	    makeDatePicker("datependingPOs");
 		makeDatePicker("stockDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -213,9 +213,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						    From <input  type="text" size="18pt" id="storeFromDate"   name="storeFromDate"/>
 							To   <input  type="text" size="18pt" id="storeThruDate"   name="storeThruDate"/>
 						 </span>
-						</td>
-							<td width="15%"><span class='h3'>							</span></td>
-							<td width="15%"><span class='h3'>   				       </span></td>	
+						 </td>
+						 <td width="15%"><span class='h3'>Department
+							    <select name="partyId" id="partyId">
+							        <option value=""></option>
+							        <#list  finalDepartmentList as eachDeparment>
+							          <option value='${eachDeparment.partyId?if_exists}'>${eachDeparment.groupName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
+						 <td width="10%"><span class='h3'>Store
+							    <select name="issueToFacilityId" id="issueToFacilityId">
+							        <option value=""></option>
+							        <#list  storeList as store>
+							          <option value='${store.facilityId?if_exists}'>${store.facilityId?if_exists}</option>
+							        </#list> 
+							    </select>    								
+						   </span></td>
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
 				 </table>
@@ -270,8 +284,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'> List of pending PO's</span></td>
                           <td width="25%">
 						 <span class='h3'>
-						    From <input  type="text" size="18pt" id="fromDatependingPOs"   name="fromDatependingPOs"/>
-							To   <input  type="text" size="18pt" id="thruDatependingPOs"   name="thruDatependingPOs"/>
+						    Date <input  type="text" size="18pt" id="datependingPOs"   name="datependingPOs"/>
 						 </span>
 						 </td>				   
 					 <td width="15%"><span class='h3'>	</span></td>

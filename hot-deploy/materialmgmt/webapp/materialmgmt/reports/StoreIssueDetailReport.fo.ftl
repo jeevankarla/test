@@ -113,20 +113,21 @@ under the License.
 					     <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block> </fo:table-cell>                         							
 				     </fo:table-row>
                     <#assign prodCatNames=storeEntry.getValue()>
-             		<#assign prodCatName = prodCatNames.entrySet()> 
+             	    <#assign prodCatName = prodCatNames.entrySet()>  
                    <#if prodCatName?has_content>
                    <#list prodCatName as Category>   
-			      <#assign total=0> 
+                   	   <#assign ProductCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : Category.getKey()}, false)>                   
+			          <#assign total=0> 
 					 <fo:table-row >
-					     <fo:table-cell><fo:block text-align="left" keep-together="always">TYPE   ${Category.getKey()?if_exists}</fo:block>  </fo:table-cell>
+					     <fo:table-cell><fo:block text-align="left" keep-together="always">TYPE   ${ProductCatDesc.description?if_exists}</fo:block>  </fo:table-cell>
 					     <fo:table-cell><fo:block text-align="left"></fo:block> </fo:table-cell>  		
 		                <fo:table-cell><fo:block text-align="left"></fo:block> </fo:table-cell>                         							
 				     </fo:table-row>
 			     <#assign prodNames=Category.getValue()>
                 <#if prodNames?has_content>
 		         <#list prodNames as products> 
-                    <#assign amt=products.get("totVal")?if_exists> 
-                  <#if amt != 0> 
+                    <#assign qty = products.get("totQty")?if_exists> 
+                  <#if qty != 0> 
                   <fo:table-row>
 					    <fo:table-cell><fo:block text-align="left">  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(products.get("custRequestDate"), "dd/MM/yyyy")?if_exists}</fo:block>  </fo:table-cell>
 		                <fo:table-cell><fo:block text-align="left" > ${products.get("custRequestId")?if_exists}</fo:block> </fo:table-cell> 
@@ -197,10 +198,11 @@ under the License.
                     <#assign prodCatNames=storeEntry.getValue()>
              		<#assign prodCatName = prodCatNames.entrySet()> 
                    <#if prodCatName?has_content>
-                   <#list prodCatName as Category>   			                                                
+                   <#list prodCatName as Category>  
+                        <#assign ProductCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : Category.getKey()}, false)>                    			                                                
 					 <fo:table-row >                         
                          <fo:table-cell><fo:block text-align="right">${sno?if_exists}</fo:block> </fo:table-cell>                         							  
-					     <fo:table-cell><fo:block text-align="left" keep-together="always">&#160;&#160;&#160;&#160;&#160;${Category.getKey()?if_exists}</fo:block>  </fo:table-cell>                          
+					     <fo:table-cell><fo:block text-align="left" keep-together="always">&#160;&#160;&#160;&#160;&#160;${ProductCatDesc.description?if_exists}</fo:block>  </fo:table-cell>                          
                           <#assign prodNames=Category.getValue()>
                             <#if prodNames?has_content>
                               <#assign total=0>                               
