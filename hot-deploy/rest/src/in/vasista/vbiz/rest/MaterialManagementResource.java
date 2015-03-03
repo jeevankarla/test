@@ -258,6 +258,8 @@ apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
 	        		supplierRate = (BigDecimal)productSupplyDetails.get("supplyRate");
 	        	}
         		result.put("supplierRate", supplierRate);
+        		result.put("lastSupplyDate", productSupplyDetails.get("supplyDate"));
+
         	}
         	Map<String, Object> inventoryDetails = 
         			InventoryServices.getProductInventoryOpeningBalance(dispatcher.getDispatchContext(), UtilMisc.toMap("productId", productId, "ownerPartyId","Company"));
