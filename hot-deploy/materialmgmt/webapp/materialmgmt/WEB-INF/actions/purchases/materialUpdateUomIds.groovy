@@ -32,12 +32,17 @@ productId=parameters.productId;
 if("y".equals(parameters.productflag))
 {
 	JSONArray productJSONList = new JSONArray();
-	
+	productAttribute=delegator.findByPrimaryKey("ProductAttribute",[productId:productId,attrName:"LEDGERFOLIONO"]);
 	productDetails=ProductWorker.findProduct(delegator, productId);
 	JSONObject productObj = new JSONObject();
 	productObj.put("productName",productDetails.productName);
 	productObj.put("description",productDetails.description);
 	productObj.put("longDescription",productDetails.longDescription);
+	if(UtilValidate.isNotEmpty(productAttribute)){
+		if(UtilValidate.isNotEmpty(productAttribute.attrValue)){
+			productObj.put("attrValue",productAttribute.attrValue);
+		}
+	}
 	request.setAttribute("productObj", productObj);
 	return "success";
 }
