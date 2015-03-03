@@ -190,4 +190,12 @@
   <Enumeration description="Ledger Folio Number" enumId="LEDGERFOLIONO" enumTypeId="PROD_ATTRIBUTE_TYPE"/>
   
    <TenantConfiguration  description="Enable Indent Issuance Email Config"  propertyName="enableIndentIssuanceEmail" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="N"/>
+
+  <OrderAdjustmentType  description="Sales Order Adjustments" orderAdjustmentTypeId="SALE_ORDER_ADJUSTMNT"/>
+  <OrderAdjustmentType  description="Handling Charges On Sales" hasTable="N"  orderAdjustmentTypeId="COGS_HANDLING_CHRGS" parentTypeId="SALE_ORDER_ADJUSTMNT"/> 
+  
+  <InvoiceItemType description="Invoice Item Handling Chrages" hasTable="N" invoiceItemTypeId="COGS_HANDLING_CHRGS" />
+  <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="COGS_HANDLING_CHRGS" invoiceItemTypeId="COGS_HANDLING_CHRGS"/>
+
+
 </entity-engine-xml>
