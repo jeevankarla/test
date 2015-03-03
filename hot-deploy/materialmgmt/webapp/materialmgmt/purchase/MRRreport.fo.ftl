@@ -192,40 +192,40 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                   
  <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SI NO</fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">SI NO</fo:block>  
                        			</fo:table-cell>                     
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">MTRL Code </fo:block>
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">MTRL Code </fo:block>
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">MATERIAL Name</fo:block> 
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">MATERIAL Name</fo:block> 
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNIT</fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">P O QTY</fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">P O QTY</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">DC/INVOICE QTY</fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">DC/INVOICE QTY</fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">RECEIVED QTY</fo:block>   
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">RECEIVED QTY</fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">REJECTED QTY </fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">REJECTED QTY </fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">ACCEPTED QTY</fo:block>  
+                            		<fo:block  text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">ACCEPTED QTY</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNIT RATE Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT RATE Rs </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">BOOK FOLOIO NO </fo:block>  
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">BOOK FOLOIO NO </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">AMOUNT Rs </fo:block>   
+                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">AMOUNT Rs </fo:block>   
                         		</fo:table-cell>
                         	<#--- <fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">VEHICLE NO</fo:block>  
@@ -239,63 +239,63 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                    <#list grnList as grnListItem>
 	                    <fo:table-row >
 									<fo:table-cell border-style="solid">
-	                            	 <fo:block  text-align="center"  font-size="10pt" >
+	                            	 <fo:block  text-align="center"  font-size="11pt" >
                                    ${sNo} </fo:block>                 			  
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" >
-                                  	<fo:block text-align="center"  font-size="10pt" >
+                                  	<fo:block text-align="center"  font-size="11pt" >
                                    ${grnListItem.get("internalName")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
-                                  	<fo:block text-align="center"  font-size="10pt" >
+                                  	<fo:block text-align="center"  font-size="11pt" >
                                    ${grnListItem.get("description")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-                                     <fo:block text-align="center" font-size="10pt" >
+                                     <fo:block text-align="center" font-size="11pt" >
                                    ${grnListItem.get("unit")?if_exists} 
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-                                    <fo:block text-align="center" font-size="10pt" >
+                                    <fo:block text-align="center" font-size="11pt" >
                                    ${grnListItem.get("quantity")?if_exists}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                               ${grnListItem.get("deliveryChallanQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
                                    ${grnListItem.get("receivedQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                   <fo:block text-align="center" font-size="10pt">
+	                                   <fo:block text-align="center" font-size="11pt">
 	                               <#if (grnListItem.get("quantityRejected")?has_content)>
                                    ${grnListItem.get("quantityRejected")?if_exists}<#else>0</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                               <#if (grnListItem.get("quantityAccepted")?has_content)>
 	                               ${grnListItem.get("quantityAccepted")?if_exists}<#else>0</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                               <#if (grnListItem.get("unitPrice")?has_content)>
                                     ${(grnListItem.get("unitPrice"))?if_exists?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="10pt">
+	                                    <fo:block text-align="left" font-size="11pt">
 	                                      ${grnListItem.get("folioNo")?if_exists}
 
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right" font-size="10pt">
+	                                    <fo:block text-align="right" font-size="11pt">
 	                                  ${grnListItem.get("amount")?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
