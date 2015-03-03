@@ -28,26 +28,23 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
-fromDate=parameters.fromDatependingPOs;
-thruDate=parameters.thruDatependingPOs;
-
-fromDateTime = null;
+thruDate=parameters.datependingPOs;
 thruDateTime = null;
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
-	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
 	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
+//	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-dayBegin = UtilDateTime.getDayStart(fromDateTime);
+dayBegin = UtilDateTime.getDayStart(thruDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.dayBegin=dayBegin;
 context.dayEnd=dayEnd;
 condList =[];
 condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
 condList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.IN, ['ORDER_APPROVED','ORDER_COMPLETED']));
-condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+//condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderAndItems", cond, null,null, null, false);

@@ -50,7 +50,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                 <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
            
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
-                                            <fo:block text-align="left" font-size="12pt"  white-space-collapse="false" keep-together="always" > Pending POs between ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd-MMM-yy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd-MMM-yy")} Listed below </fo:block>
+                                            <fo:block text-align="left" font-size="12pt"  white-space-collapse="false" keep-together="always" font-weight="bold" > Pending POs on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd-MMM-yy")} Listed below </fo:block>
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
 											
                          <fo:block >
