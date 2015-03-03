@@ -1461,4 +1461,21 @@ under the License.
             <call-service service-name="createPaymentApplication" in-map-name="createCtx"/>
         </if-not-empty>
     </simple-method>
+    
+     <simple-method method-name="cancelItemIssuanceForOrder" short-description=" Cancel Item Issuance For an Order by Shipment">
+        <log level="info" message="Cancelling Item Issuances for orderId: ${parameters.orderId}"/>
+        <entity-one entity-name="OrderHeader"  value-field="orderHeader"/>
+       <!--  <get-related value-field="orderHeader" relation-name="ItemIssuance" list="issuances"  >
+        </get-related> -->
+         <entity-one entity-name="Shipment"  value-field="shipment"/>
+         <get-related value-field="shipment" relation-name="ItemIssuance" list="issuances"  >
+        </get-related>
+        <iterate list="issuances" entry="issuance">
+            <set from-field="issuance.itemIssuanceId" field="inputMap.itemIssuanceId"/>
+           <!-- if already canceled ignore this issuance -->
+            <if-compare-field operator="equals" field="issuance.cancelQuantity" to-field="nullField">
+            <call-service service-name="cancelOrderItemIssuanceForSalesOrder" in-map-name="inputMap"/>
+            </if-compare-field>
+        </iterate>
+    </simple-method>
 </simple-methods>
