@@ -241,8 +241,6 @@
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_QUOTE_EDIT"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_CREATE_PO"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_EDIT_PO"/>
-    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_APPROVE_PO"/>
-    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_CANCEL_PO"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_RAISE_GRN"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_RAISE_INVOICE"/>
     
