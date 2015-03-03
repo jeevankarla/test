@@ -9,7 +9,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastMap;
-
+import org.ofbiz.base.util.UtilNumber;
 import java.sql.Timestamp;
 
 import org.ofbiz.base.util.UtilDateTime;
@@ -27,6 +27,9 @@ import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
 import org.ofbiz.party.party.PartyHelper;
+purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
+purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 
 orderEditParamMap = [:];
 orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -133,6 +136,65 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	
+	
+	quoteIds = EntityUtil.getFieldListFromEntityList(orderItems, "quoteId", true);
+	
+	termTypes = delegator.findList("TermType", null, null, null, null, false);
+	
+	paymentTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "FEE_PAYMENT_TERM"));
+	paymentTermTypeIds = EntityUtil.getFieldListFromEntityList(paymentTermTypes, "termTypeId", true);
+
+	deliveryTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DELIVERY_TERM"));
+	deliveryTermTypeIds = EntityUtil.getFieldListFromEntityList(deliveryTermTypes, "termTypeId", true);
+	
+	otherTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"));
+	otherTermTypeIds = EntityUtil.getFieldListFromEntityList(otherTermTypes, "termTypeId", true);
+	
+	orderTerms = [:];
+	List<GenericValue> terms = [];
+	terms = delegator.findList("OrderTerm", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	/*if(quoteIds && !terms){
+		String quoteId = quoteIds.get(0);
+		terms = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+	}
+	*/
+	termIds = EntityUtil.getFieldListFromEntityList(terms, "termTypeId", true);
+	
+	termTypesForDesc = delegator.findList("TermType", EntityCondition.makeCondition("termTypeId", EntityOperator.IN, termIds), null, null, null, false);
+	
+	termDescMap = [:];
+	termTypesForDesc.each{ eachTermItem ->
+		termDescMap.put(eachTermItem.termTypeId, eachTermItem.description);
+	}
+	
+	paymentTerms = [];
+	deliveryTerms = [];
+	otherTerms = [];
+	terms.each{ eachTerm ->
+		termMap = [:];
+		termMap.put("termTypeId", eachTerm.termTypeId);
+		termMap.put("termTypeDescription", termDescMap.get(eachTerm.termTypeId));
+		termMap.put("termValue", eachTerm.termValue);
+		termMap.put("sequenceId", eachTerm.orderItemSeqId);
+		termMap.put("termDays", eachTerm.termDays);
+		termMap.put("description", eachTerm.description);
+		termMap.put("uomId", eachTerm.uomId);
+		if(paymentTermTypeIds.contains(eachTerm.termTypeId)){
+			paymentTerms.add(termMap);
+		}
+		if(deliveryTermTypeIds.contains(eachTerm.termTypeId)){
+			deliveryTerms.add(termMap);
+		}
+		
+		if(otherTermTypeIds.contains(eachTerm.termTypeId)){
+			otherTerms.add(termMap);
+		}
+			
+	}
+	if(otherTerms){
+		context.termExists = "Y";
+	}
+	
 	JSONArray orderItemsJSON = new JSONArray();
 	orderItems.each{ eachItem ->
 		amount = eachItem.quantity*eachItem.unitPrice;
@@ -161,7 +223,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
 		newObj.put("cProductId",eachItem.productId);
-		newObj.put("cProductName", prodDetail.brandName +" [ " +prodDetail.description+"]");
+		newObj.put("cProductName", prodDetail.brandName+" [ "+prodDetail.description +"]("+prodDetail.internalName+")");
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);
@@ -176,64 +238,37 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		orderItemsJSON.add(newObj);
 	}
 	context.put("orderItemsJSON", orderItemsJSON);
-	quoteIds = EntityUtil.getFieldListFromEntityList(orderItems, "quoteId", true);
 	
-	termTypes = delegator.findList("TermType", null, null, null, null, false);
+	JSONArray orderAdjustmentJSON = new JSONArray();
 	
-	paymentTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "FEE_PAYMENT_TERM"));
-	paymentTermTypeIds = EntityUtil.getFieldListFromEntityList(paymentTermTypes, "termTypeId", true);
-
-	deliveryTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DELIVERY_TERM"));
-	deliveryTermTypeIds = EntityUtil.getFieldListFromEntityList(deliveryTermTypes, "termTypeId", true);
-	
-	otherTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"));
-	otherTermTypeIds = EntityUtil.getFieldListFromEntityList(otherTermTypes, "termTypeId", true);
-	
-	orderTerms = [:];
-	List<GenericValue> terms = [];
-	terms = delegator.findList("OrderTerm", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-	if(quoteIds && !terms){
-		String quoteId = quoteIds.get(0);
-		terms = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
-	}
-	
-	termIds = EntityUtil.getFieldListFromEntityList(terms, "termTypeId", true);
-	
-	termTypesForDesc = delegator.findList("TermType", EntityCondition.makeCondition("termTypeId", EntityOperator.IN, termIds), null, null, null, false);
-	
-	termDescMap = [:];
-	termTypesForDesc.each{ eachTermItem ->
-		termDescMap.put(eachTermItem.termTypeId, eachTermItem.description);
-	}
-	
-	paymentTerms = [];
-	deliveryTerms = [];
-	otherTerms = [];
-	terms.each{ eachTerm ->
-		termMap = [:];
-		termMap.put("termTypeId", eachTerm.termTypeId);
-		termMap.put("termTypeDescription", termDescMap.get(eachTerm.termTypeId));
-		termMap.put("termValue", eachTerm.termValue);
-		termMap.put("termDays", eachTerm.termDays);
-		termMap.put("description", eachTerm.description);
-		termMap.put("uomId", eachTerm.uomId);
-		if(paymentTermTypeIds.contains(eachTerm.termTypeId)){
-			paymentTerms.add(termMap);
-		}
-		if(deliveryTermTypeIds.contains(eachTerm.termTypeId)){
-			deliveryTerms.add(termMap);
-		}
+	otherTerms.each{ eachOtherTerm ->
 		
-		if(otherTermTypeIds.contains(eachTerm.termTypeId)){
-			otherTerms.add(termMap);
+		sequenceId = eachOtherTerm.sequenceId;
+		if(!(sequenceId == "_NA_")){
+			
+			sequenceItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachOtherTerm.sequenceId));
+			if(sequenceItem){
+				prodId = (EntityUtil.getFirst(sequenceItem)).productId;
+				sequenceId = productIdLabelJSON.get(prodId);
+			}
 		}
-		
+		else{
+			sequenceId = "ALL"
+		}
+		JSONObject newObj = new JSONObject();
+		newObj.put("adjustmentTypeId",eachOtherTerm.termTypeId);
+		newObj.put("applicableTo", sequenceId);
+		newObj.put("adjValue",eachOtherTerm.termValue);
+		newObj.put("uomId", eachOtherTerm.uomId);
+		newObj.put("termDays", eachOtherTerm.termDays);
+		newObj.put("description", eachOtherTerm.description);
+		orderAdjustmentJSON.add(newObj);
 	}
+	context.put("orderAdjustmentJSON", orderAdjustmentJSON);
+	
 	orderTerms.put("paymentTerms", paymentTerms);
 	orderTerms.put("deliveryTerms", deliveryTerms);
-	orderTerms.put("otherTerms", otherTerms);
 	
 	orderEditParamMap.putAt("orderTerms", orderTerms);
 }
 context.orderEditParam = orderEditParamMap;
-

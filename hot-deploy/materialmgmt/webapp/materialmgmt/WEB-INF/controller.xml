@@ -61,6 +61,11 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseIndentReport"/>
     </request-map>
+    <request-map uri="getMaterialPOValue">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="getMaterialPOValue" global-transaction="true"/>
+       <response name="success" type="request" value="json"/>
+     </request-map>
      <request-map uri="amendPOItemEvent">
        <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="amendPOItemEvent" global-transaction="true"/>
