@@ -71,6 +71,9 @@ expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 partyOrders = delegator.findList("OrderRole", expr, UtilMisc.toSet("orderId"), null, null, false);
 
 JSONArray orderItemsJSON = new JSONArray();
+
+JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json
+
 partyOrderIds = EntityUtil.getFieldListFromEntityList(partyOrders, "orderId", true);
 if(partyOrderIds){
 	updateOrderId = partyOrderIds.get(0);
@@ -148,14 +151,47 @@ if(partyOrderIds){
 			}else{
 				newObj.put("bedPrice", 0);
 			}
+			if(eachItem.serviceTaxAmount){
+				newObj.put("serviceTaxPrice", eachItem.serviceTaxAmount);
+			}else{
+				newObj.put("serviceTaxPrice", 0);
+			}
+			//adding perecenatges
+			if(eachItem.bedPercent){newObj.put("bedPercent", eachItem.bedPercent); }else{ newObj.put("bedPercent", 0); }
+			
+			if(eachItem.vatPercent){newObj.put("vatPercent", eachItem.vatPercent); }else{ newObj.put("vatPercent", 0); }
+			
+			if(eachItem.cstPercent){newObj.put("cstPercent", eachItem.cstPercent); }else{ newObj.put("cstPercent", 0); }
+			
+			if(eachItem.serviceTaxPercent){newObj.put("serviceTaxPercent", eachItem.serviceTaxPercent); }else{ newObj.put("serviceTaxPercent", 0); }
+		
 			newObj.put("quantity",eachItem.quantity);
 		}
 		orderItemsJSON.add(newObj);
 		
 	}
 	context.orderId = updateOrderId;
+	//adding adjustments here
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId));
+	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "SALE_ORDER_ADJUSTMNT"));
+	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderAdjustmentList = delegator.findList("OrderHeaderAdjustmentAndAdjustmentType", condExpr, null, null, null, false);
+	
+	orderAdjustmentList.each{eachItem->
+		JSONObject newAdjObj = new JSONObject();
+		newAdjObj.put("orderAdjTypeId", eachItem.orderAdjustmentTypeId);
+		newAdjObj.put("adjAmount", eachItem.amount);
+		
+		
+		orderAdjustmentJSON.add(newAdjObj);
+	}
+	
+	
 }
 context.dataJSON = orderItemsJSON;
+context.data2JSON = orderAdjustmentJSON;
 
 
 
