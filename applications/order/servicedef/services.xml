@@ -1187,6 +1187,7 @@ under the License.
             location="component://order/script/org/ofbiz/order/order/OrderServices.xml" invoke="cancelItemIssuanceForOrder" auth="true">
         <description> Cancel Item Issuance for an Order</description>
          <attribute name="orderId" type="String" mode="IN" optional="false"/>
+          <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="cancelOrderItemIssuanceForSalesOrder" engine="simple"
             location="component://product/script/org/ofbiz/shipment/issuance/IssuanceServices.xml" invoke="cancelOrderItemIssuanceForSalesOrder" auth="true">
