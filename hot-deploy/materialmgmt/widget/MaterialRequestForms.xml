@@ -931,7 +931,7 @@
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="inputFields.invoiceTypeId" value="PURCHASE_INVOICE"/>
-            <field-map field-name="orderBy" value="-invoiceId"/>  
+            <field-map field-name="orderBy" value="-invoiceDate"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -952,6 +952,7 @@
             </service>        
        </row-actions>
    	 <field name="invoiceId" title="Invoice Id" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
+   	 <field name="invoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MM-yyyy&quot;);}"/></field>    
    	 <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
    	<field name="facilityId"><display/></field>
    	<field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId"  description="${description}" /> </field>
@@ -960,7 +961,6 @@
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field>
-   	<field name="invoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;yyyy-MM-dd&quot;);}"/></field>
    	<field name="partyIdTo" entry-name="partyId" title="To Party">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${partyId}]">
                 <parameter param-name="partyId" from-field="partyId"/>
