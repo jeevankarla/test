@@ -67,7 +67,7 @@ if(UtilValidate.isNotEmpty(custRequestItem) && UtilValidate.isNotEmpty(custReque
 	sendTo="";
 	subject="Indent #"+parameters.custRequestId+" issued ";
 	//"link : <@ofbizContentUrl>/materialmgmt/control/ViewMaterialRequest?custRequestId=10161 "
-	bodyText="Hello, <br/> Your indented material (indent #" + parameters.custRequestId + ") has been issued.  Please find attached issuance report for further details.  <br/>  <br/> Regards, <br/> Stores Dept. ";
+	bodyText="Hello, <br/> Your indented material (indent #" + parameters.custRequestId + ") has been issued.  Please find attached issuance report for further details.  <br/>  <br/> Regards, <br/> Stores Dept. <br/> <br/> Note: Please do not reply to this email. It has been sent from an email account that is not monitored. ";
 	
 	indentIssueEmailInput["subject"]=subject;
 	indentIssueEmailInput["bodyText"]=bodyText;
