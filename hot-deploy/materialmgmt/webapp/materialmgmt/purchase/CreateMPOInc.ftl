@@ -60,19 +60,25 @@
 	var dataView;
 	var dataView2;
 	var grid;
-	
+	var grid2;
+	var dropDownOption = "ALL";
+	var optList = [];
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var data = ${StringUtil.wrapString(orderItemsJSON)!'[]'};
+	var data2 = ${StringUtil.wrapString(orderAdjustmentJSON)!'[]'};
 	var productUOMMap = ${StringUtil.wrapString(productUOMJSON)!'{}'};
 	var uomLabelMap = ${StringUtil.wrapString(uomLabelJSON)!'{}'};
+	
+	var otherTermsLabelJSON = ${StringUtil.wrapString(otherTermsLabelJSON)!'{}'};
+	var otherTermsLabelIdJSON = ${StringUtil.wrapString(otherTermsLabelIdJSON)!'{}'};
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
 	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
 	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
 	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	
-	var otherTermsJSON = ${StringUtil.wrapString(otherTermsJSON)!'[]'};	
+	var otherTermsTags = ${StringUtil.wrapString(otherTermsJSON)!'[]'};	
 	
 	var cstlableTags = ${StringUtil.wrapString(cstJSON)!'[]'};
 	var exclableTags = ${StringUtil.wrapString(excJSON)!'[]'};
@@ -83,7 +89,102 @@
 		else
 			return {valid:true, msg:null};
 	}
-
+	
+	function calculatePOValue(){
+		
+		var isIncTax = $('#incTax').is(':checked');
+		var dataMap = {};
+					
+		for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{ 
+			
+			var productId = data[rowCount]["cProductId"];
+			var prodId="";
+			if(typeof(productId)!= "undefined"){ 	  
+				var prodId = productId.toUpperCase();
+			}
+			dataMap["productId_o_"+rowCount] = prodId;
+			var qty = parseFloat(data[rowCount]["quantity"]);
+			dataMap["quantity_o_"+rowCount] = qty;
+			var unitPrice = data[rowCount]["unitPrice"];
+			dataMap["unitPrice_o_"+rowCount] = unitPrice;
+			var vatPercent = data[rowCount]["vatPercent"];
+			dataMap["vatPercent_o_"+rowCount] = vatPercent;
+			var cstPercent = data[rowCount]["cstPercent"];
+			dataMap["cstPercent_o_"+rowCount] = cstPercent;
+			var bedPercent = data[rowCount]["bedPercent"];
+			dataMap["bedPercent_o_"+rowCount] = bedPercent;
+		}
+		
+		for (var rowCount=0; rowCount < data2.length; ++rowCount)
+		{
+			var otherTermId = data2[rowCount]["adjustmentTypeId"];
+			dataMap["otherTermId_o_"+rowCount] = otherTermId;
+			var applicableToLabel = data2[rowCount]["applicableTo"];
+			var applicableTo = "ALL";
+			if(applicableToLabel && applicableToLabel != "ALL"){
+				applicableTo = productLabelIdMap[applicableToLabel];
+			}
+			dataMap["applicableTo_o_"+rowCount] = applicableTo;
+			var adjValue = data2[rowCount]["adjValue"];
+			if(isNaN(adjValue)){
+				adjValue = 0;
+			}
+			dataMap["adjustmentValue_o_"+rowCount] = adjValue;
+			var uomId = "INR";
+			if(data2[rowCount]["uomId"]){
+				uomId = data2[rowCount]["uomId"];
+			}
+			dataMap["uomId_o_"+rowCount] = uomId;
+			var termDays = 0;
+			if(data2[rowCount]["termDays"]){
+				termDays = data2[rowCount]["termDays"];
+			}
+			dataMap["termDays_o_"+rowCount] = termDays;
+			var description = "";
+			if(data2[rowCount]["description"]){
+				description = data2[rowCount]["description"];
+			}
+			dataMap["description_o_"+rowCount] = description;
+		}
+		
+		if(isIncTax){
+			dataMap["incTax"] = "Y";
+		}
+		else{
+			dataMap["incTax"] = "";
+		}
+		jQuery.ajax({
+            url: 'getMaterialPOValue',
+            async: false,
+            type: 'POST',
+            data: dataMap,
+            dataType: 'json',
+            success: function(result) {
+               var grandTotal = result["grandTotal"];
+               var dspMsg = "Rs. "+grandTotal;
+               $("#totalPOAmount").html(dspMsg);
+            },
+            error: function (xhr, textStatus, thrownError){
+				alert("record not found :: Error code:-  "+xhr.status);
+			}
+        });
+	}
+	function displayChargesGrid(){
+		$("#titleScreen").show();
+		prepareApplicableOptions();
+		setupGrid2();
+	}
+	function prepareApplicableOptions(){
+		if(data){
+			dropDownOption = "ALL";
+			for (i = 0; i < data.length; i++) {
+    			var product = data[i]["cProductName"];
+    			dropDownOption += ","+product;
+    		}
+		}
+	}
+	
 	function processPOEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
@@ -122,6 +223,51 @@
 				var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_" + rowCount).val(bedPercent);
 				jQuery(formId).append(jQuery(inputExcisePer));
    			}
+		}
+		
+		for (var rowCount=0; rowCount < data2.length; ++rowCount)
+		{
+			var otherTermId = data2[rowCount]["adjustmentTypeId"];
+			var applicableToLabel = data2[rowCount]["applicableTo"];
+			var applicableTo = "ALL";
+			if(applicableToLabel && applicableToLabel != "ALL"){
+				applicableTo = productLabelIdMap[applicableToLabel];
+			}
+			
+			var adjValue = data2[rowCount]["adjValue"];
+			if(isNaN(adjValue)){
+				adjValue = 0;
+			}
+			var uomId = "INR";
+			if(data2[rowCount]["uomId"]){
+				uomId = data2[rowCount]["uomId"];
+			}
+			var termDays = 0;
+			if(data2[rowCount]["termDays"]){
+				termDays = data2[rowCount]["termDays"];
+			}
+			
+			var description = "";
+			
+			if(data2[rowCount]["description"]){
+				description = data2[rowCount]["description"];
+			}
+			
+			if(adjValue != 0 && otherTermId){
+				var inputTermId = jQuery("<input>").attr("type", "hidden").attr("name", "otherTermId_o_" + rowCount).val(otherTermId);
+				var inputApplicable = jQuery("<input>").attr("type", "hidden").attr("name", "applicableTo_o_" + rowCount).val(applicableTo);
+				var inputAdjVal = jQuery("<input>").attr("type", "hidden").attr("name", "adjustmentValue_o_" + rowCount).val(adjValue);
+				var inputUom = jQuery("<input>").attr("type", "hidden").attr("name", "uomId_o_" + rowCount).val(uomId);
+				var inputDays = jQuery("<input>").attr("type", "hidden").attr("name", "termDays_o_" + rowCount).val(termDays);
+				var inputDescription = jQuery("<input>").attr("type", "hidden").attr("name", "termDescription_o_" + rowCount).val(description);
+				
+				jQuery(formId).append(jQuery(inputTermId));				
+				jQuery(formId).append(jQuery(inputApplicable));
+				jQuery(formId).append(jQuery(inputAdjVal));				
+				jQuery(formId).append(jQuery(inputUom));
+				jQuery(formId).append(jQuery(inputDays));				
+				jQuery(formId).append(jQuery(inputDescription));
+			}
 		}
 		
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
@@ -164,10 +310,24 @@
 		
 	}
 	
-    function productFormatter(row, cell, value, columnDef, dataContext) {   
+    function productFormatter(row, cell, value, columnDef, dataContext) {
         return productIdLabelMap[value];
     }
-
+	
+	function adjustmentTermFormatter(row, cell, value, columnDef, dataContext) {
+		
+		if(value != undefined){
+			if(otherTermsLabelJSON[value]){
+				return otherTermsLabelJSON[value];
+			}
+			else{
+				var adjTermId = otherTermsLabelIdJSON[value]; 
+				data2[row]['adjustmentTypeId'] = adjTermId;
+				return otherTermsLabelJSON[adjTermId]; 
+			}
+		}
+    }
+    
     function productValidator(value,item) {
     	var currProdCnt = 1;
 	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
@@ -346,7 +506,7 @@
 		else{
 			var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
 		}
-		jQuery("#totalAmount").html(dispText);
+		//jQuery("#totalAmount").html(dispText);
     }
 	
 	function quantityValidator(value ,item) {
@@ -363,11 +523,11 @@
 	function setupGrid1() {
     
         var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:270, minWidth:270, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"uomDescription", name:"UOM", field:"uomDescription", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
-			{id:"unitPrice", name:"Basic Unit Price", field:"unitPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
-			{id:"amount", name:"Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
+			{id:"unitPrice", name:"Basic Unit Price", field:"unitPrice", width:90, minWidth:90, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
 			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", availableTags: cstlableTags, editor: AutoCompleteEditor,validator:cstValidator},
@@ -465,7 +625,7 @@
     	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var productLabel = item['cProductName']; 
-      		item['cProductId'] = productLabelIdMap[productLabel];     		 		
+      		item['cProductId'] = productLabelIdMap[productLabel];
       		grid.invalidateRow(data.length);
       		data.push(item);
       		grid.updateRowCount();
@@ -493,7 +653,7 @@
 				if(isNaN(qty)){
 					qty = 0;
 				}
-			
+				var baseAmount = qty*price;
 				var roundedAmount = qty*price;
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
@@ -518,9 +678,9 @@
 				}
 				totalValue=roundedAmount;
 				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = roundedAmount;
+				data[args.row]["amount"] = baseAmount;
 				grid.updateRow(args.row);
-				updateInvoiceTotalAmount();
+				//updateInvoiceTotalAmount();
 			}
 			
 		}); 
@@ -556,7 +716,8 @@
         }
 
     });
-    
+	
+	    
     
     function updateInvoiceTotalAmount(){
    		updateGridAmount();
@@ -580,10 +741,10 @@
 			}
 			var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			if(amt > 0 ){
-				var dispText = "<b> [Total: Rs" +  amt + "]</b>";
+				var dispText = "<b> [Total PO Value: Rs" +  amt + "]</b>";
 			}
 			else{
-				var dispText = "<b> [Total: Rs 0 ]</b>";
+				var dispText = "<b>[Total PO Value: Rs 0 ]</b>";
 			}
 			
 			jQuery("#totalAmount").html(dispText);
@@ -591,82 +752,140 @@
 		mainGrid = grid;
 	}
 	
-	// update when  discunt/fright/insurence changes
-	function addToInvoiceAmount(){
-            var totalAmount = 0;
-           // alert("==data.length==inUpdate=>"+data.length);
-				for (i = 0; i < data.length; i++) {
-				   if(!isNaN(data[i]["amount"])){
-					totalAmount += data[i]["amount"];
-				   }
-				   if(!isNaN(data[i]["Excise"])){
-					totalAmount += data[i]["Excise"];
-				   }
-				   if(!isNaN(data[i]["bedCessAmount"])){
-					totalAmount += data[i]["bedCessAmount"];
-				   }
-				   if(!isNaN(data[i]["bedSecCessAmount"])){
-					totalAmount += data[i]["bedSecCessAmount"];
-				   }
-				  
-				   if(!isNaN(data[i]["VAT"])){
-					totalAmount += data[i]["VAT"];
-				   }
-				   if(!isNaN(data[i]["CST"])){
-					totalAmount += data[i]["CST"];
-				   }
-				   
-				}
+	function setupGrid2() {
+        withAdjColumns = [
+			{id:"adjustmentTypeId", name:"Term Type", field:"adjustmentTypeId", width:250, minWidth:250, cssClass:"cell-title", regexMatcher:"contains",availableTags: otherTermsTags, editor: AutoCompleteEditor,sortable:false , formatter: adjustmentTermFormatter, toolTip:"Other Adjustment Type"},
+			{id:"applicableTo", name:"Applicable To", field:"applicableTo", width:150, minWidth:150, cssClass:"cell-title",options: dropDownOption, editor: SelectCellEditor,sortable:false ,toolTip:""},
+			{id:"adjValue", name:"Value", field:"adjValue", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Value"},
+			{id:"uomId", name:"Rs/Percent", field:"uomId", width:80, minWidth:80, options: "INR,PERCENT", editor: SelectCellEditor, sortable:false, align:"right", toolTip:"Unit Of Measure"},
+			{id:"termDays", name:"Term Days", field:"termDays", width:80, minWidth:80, editor:IntegerCellEditor, sortable:false, align:"right", toolTip:"Term Days"},
+			{id:"description", name:"Description", field:"description", width:200, minWidth:200, editor:LongTextCellEditor, sortable:false, align:"right", toolTip:"Term Description"},
+		];
+		
+		var options2 = {
+			editable: true,		
+			forceFitColumns: false,			
+			enableCellNavigation: true,
+			enableAddRow: true,
+			asyncEditorLoading: false,			
+			autoEdit: true,
+            secondaryHeaderRowHeight: 25
+		};
+			  
+		grid2 = new Slick.Grid("#myGrid2", data2, withAdjColumns, options2);
+        grid2.setSelectionModel(new Slick.CellSelectionModel()); 
+     
+		var columnpicker = new Slick.Controls.ColumnPicker(withAdjColumns, grid2, options2);
+        if (data2.length > 0) {			
+			$(grid2.getCellNode(0, 1)).click();
+		}else{
+			$(grid2.getCellNode(0,0)).click();
+		}
+        
+        grid2.onKeyDown.subscribe(function(e) {
+			var cellNav = 5;
+			var cell = grid2.getCellFromEvent(e);		
+			if(e.which == $.ui.keyCode.UP && cell.row == 0){
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();
+			}
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data2.length && cell.cell == cellNav){
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(0, 2)).click();
+				e.stopPropagation();
+			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data2.length-1) && cell.cell == cellNav){
+				grid2.getEditController().commitCurrentEdit();
+				grid2.gotoCell(data2.length, 0, true);
+				$(grid2.getCellNode(data2.length, 0)).edit();
 				
-				 	var freightCharges=$("#freightCharges").val();
-			         var discount=$("#discount").val();
-			         var insurence = $("#insurence").val();
-			          var packAndFowdg = $("#packAndFowdg").val();
-			          var otherCharges = $("#otherCharges").val();
-			         //alert("<==totalAmount===>"+totalAmount+"=freightCharges="+freightCharges+"=discount="+discount+"=insurence="+insurence);
-			         if(freightCharges !=="" && (!isNaN(freightCharges))){
-			          freightCharges = parseFloat(freightCharges);
-			          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
-			         totalAmount +=freightCharges;
-			         }
-			         if(insurence !=="" && (!isNaN(insurence))){
-			         insurence = parseFloat(insurence);
-			         // alert("<==totalAmount===>"+totalAmount+"==insurence=="+insurence);
-			         totalAmount +=insurence;
-			         }
-			         if(discount !=="" && (!isNaN(discount))){
-			        discount = parseFloat(discount);
-			         totalAmount -=discount;
-			         }
-			         if(packAndFowdg !=="" && (!isNaN(packAndFowdg))){
-			           packAndFowdg = parseFloat(packAndFowdg);
-			         totalAmount +=packAndFowdg;
-			         }
-			         if(otherCharges !=="" && (!isNaN(otherCharges))){
-			        otherCharges = parseFloat(otherCharges);
-			         totalAmount +=otherCharges;
-			         }
-			         
-			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+				e.stopPropagation();
+			}
 			
-				if(amt > 0 ){
-					var dispText = "<b>  [Total PO Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
-				}
-				//alert("==amt="+amt);
-				jQuery("#totalAmount").html(dispText);
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
+				&& cell.row == data2.length && cell.cell == cellNav){
+  				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row, 0)).click();
+				e.stopPropagation();
+			
+			}else if (e.which == $.ui.keyCode.RIGHT &&
+				cell && (cell.cell == cellNav) && 
+				cell.row != data2.length) {
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();	
+			}
+			else if (e.which == $.ui.keyCode.DOWN && cell && (cell.cell == 3)) {
+				grid2.getEditController().commitCurrentEdit();
+				$(grid2.getCellNode(cell.row, 0)).click();
+				e.stopPropagation();	
+			}
+			else if (e.which == $.ui.keyCode.LEFT &&
+				cell && (cell.cell == 0) && 
+				cell.row != data2.length) {
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row, cellNav)).click();
+				e.stopPropagation();	
+			}else if (e.which == $.ui.keyCode.ENTER) {
+        		grid2.getEditController().commitCurrentEdit();
+				e.stopPropagation();
+            	e.preventDefault();        	
+            }else {
+            	return false;
+            }
+        });
+         
+    	grid2.onAddNewRow.subscribe(function (e, args) {
+      		var item = args.item;   
+      		var itemLabel = item['adjustmentTypeId'];
+      		
+      		
+      		if (item != null && item != undefined ) {
+      			item['adjustmentTypeId'] = otherTermsLabelIdJSON[itemLabel];
+      		}     		 		
+      		grid2.invalidateRow(data2.length);
+      		data2.push(item);
+      		grid2.updateRowCount();
+      		grid2.render();
+    	});
+        
+        grid2.onCellChange.subscribe(function(e,args) {
+
+		}); 
+		
+		grid2.onActiveCellChanged.subscribe(function(e,args) {
+        	if (args.cell == 1 && data2[args.row] != null) {
+				var itemType = data2[args.row]["adjustmentTypeId"];
+			}
+			if (args.cell == 0 && data[args.row] != null) {
+				var adjType = data[args.row]["adjustmentTypeId"];
+				var adjLabel = otherTermsLabelJSON[adjType];
+				var uomLabel = otherTermsLabelIdJSON[adjLabel];
+				data[args.row]['adjustmentTypeId'] = uomLabel;     		 		
+	      		
+			}
+		});
+		
+		grid2.onValidationError.subscribe(function(e, args) {
+	        var validationResult = args.validationResults;
+	        var activeCellNode = args.cellNode;
+	        var editor = args.editor;
+	        var errorMessage = validationResult.msg;
+	        var valid_result = validationResult.valid;
+	        
+	        if (!valid_result) {
+	           $(activeCellNode).attr("tittle", errorMessage);
+	            }else {
+	           $(activeCellNode).attr("tittle", "");
+	        }
+
+    	});
     }
     
 	jQuery(function(){
-	     // only setupGrid when BoothId exists
-	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=supplierId]').val();
-		 if(boothId || partyId){
+		 if(partyId){
 		    gridShowCall();
-		 	//setupGrid1();
 	     }else{ 
 	        gridHideCall();
 	     }
@@ -693,16 +912,9 @@
 		if (rowCount > 0) {			
 			$(mainGrid.getCellNode(rowCount-1, 0)).click();		   
     	}
-    	else { 
-			$("#boothId").focus();      
-		}  		
+    	  		
 	});
-//
-function newGrid(){
-	//var data = []; 
-        grid.setData(data);
-        grid.render();
-}
+	
 	
 // to show special related fields in form			
 

@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
-
+import org.ofbiz.accounting.util.UtilAccounting;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,11 +53,18 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+import java.util.Map.Entry;
 
 public class MaterialHelperServices{
 	
 	public static final String module = MaterialHelperServices.class.getName();
+	public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
+	public static final BigDecimal ONE_BASE = BigDecimal.ONE;
+	public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
+	public static int purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+	public static int purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 	
+	public static int purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 	public static Map<String, Object> getCustRequestIssuancesForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
@@ -687,6 +694,727 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		return result;
 	}
 	
+	public static Map<String, Object> getMaterialItemValuationDetails(DispatchContext ctx,Map<String, ? extends Object> context) {
+		
+		Delegator delegator = ctx.getDelegator();
+		String incTax = (String) context.get("incTax");
+		List<Map> productQty = (List) context.get("productQty");
+		List<Map> otherCharges = (List) context.get("otherCharges");
+		Map result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		BigDecimal grandTotal = BigDecimal.ZERO;
+		List<Map> itemDetail = FastList.newInstance();
+		List<Map> adjustmentDetail = FastList.newInstance();
+		List<Map> termsDetail = FastList.newInstance();
+		List condExpr = FastList.newInstance();
+		Map productItemRef = FastMap.newInstance();
+		List productItemDetails = FastList.newInstance();
+		try{
+			
+			if(UtilValidate.isNotEmpty(incTax)){
+				Map tempMap = FastMap.newInstance();
+				tempMap.put("termTypeId", "INC_TAX");
+				tempMap.put("applicableTo", "_NA_");
+				tempMap.put("termValue", null);
+				tempMap.put("uomId", "");
+				tempMap.put("termDays", null);
+				tempMap.put("description", "");
+				termsDetail.add(tempMap);
+			}
+			
+			String productId = "";
+			BigDecimal quantity = BigDecimal.ZERO;
+			for (Map<String, Object> prodQtyMap : productQty) {
+				
+				Map productItemMap = FastMap.newInstance();
+				BigDecimal unitPrice = BigDecimal.ZERO;
+				BigDecimal totalTaxAmt =  BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+					productId = (String)prodQtyMap.get("productId");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+					quantity = (BigDecimal)prodQtyMap.get("quantity");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
+					unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+				}
+				// this is to calculate inclusive tax
+				BigDecimal vatUnitRate = BigDecimal.ZERO;
+				BigDecimal cstUnitRate = BigDecimal.ZERO;
+				BigDecimal bedUnitRate = BigDecimal.ZERO;
+				BigDecimal bedCessUnitRate  = BigDecimal.ZERO;
+				BigDecimal bedSecCessUnitRate  = BigDecimal.ZERO;
+				
+				BigDecimal vatPercent =(BigDecimal)prodQtyMap.get("vatPercent");
+				BigDecimal cstPercent =(BigDecimal)prodQtyMap.get("cstPercent");
+				BigDecimal bedPercent =(BigDecimal)prodQtyMap.get("bedPercent");
+				
+				BigDecimal bedTaxPercent = BigDecimal.ZERO;
+				BigDecimal bedcessTaxPercent = BigDecimal.ZERO;
+				BigDecimal bedseccessTaxPercent = BigDecimal.ZERO;
+				BigDecimal vatTaxPercent = BigDecimal.ZERO;
+				BigDecimal cstTaxPercent = BigDecimal.ZERO;
+				
+				if(UtilValidate.isNotEmpty(bedPercent) && bedPercent.compareTo(BigDecimal.ZERO)>0){
+					
+					Map resultCtx = getOrderTaxComponentBreakUp(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "EXCISE_DUTY_PUR", "taxRate", bedPercent));
+					Map taxComponent = (Map)resultCtx.get("taxComponents");
+					if(UtilValidate.isEmpty(taxComponent)){
+						Debug.logError("Tax component configuration for Excise duty missing ", module);
+						return ServiceUtil.returnError("Tax component configuration for Excise duty missing ");
+					}
+					
+					if(UtilValidate.isNotEmpty(taxComponent.get("BED_PUR"))){
+						bedTaxPercent = (BigDecimal)taxComponent.get("BED_PUR");
+					}
+					if(UtilValidate.isNotEmpty(taxComponent.get("BEDCESS_PUR"))){
+						bedcessTaxPercent = (BigDecimal)taxComponent.get("BEDCESS_PUR");
+					}
+					if(UtilValidate.isNotEmpty(taxComponent.get("BEDSECCESS_PUR"))){
+						bedseccessTaxPercent = (BigDecimal)taxComponent.get("BEDSECCESS_PUR");
+					}
+					
+					Map termTempMap = FastMap.newInstance();
+					termTempMap.put("applicableTo", productId);
+					termTempMap.put("termTypeId", "BED_PUR");
+					termTempMap.put("termValue", bedPercent);
+					termTempMap.put("uomId", "PERCENT");
+					termTempMap.put("termDays", null);
+					termTempMap.put("description", "");
+					termsDetail.add(termTempMap);
+					
+				}
+				
+				if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
+					
+					Map resultCtx = getOrderTaxComponentBreakUp(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "VAT_PUR", "taxRate", vatPercent));
+					Map taxComponent = (Map)resultCtx.get("taxComponents");
+					if(UtilValidate.isEmpty(taxComponent)){
+						Debug.logError("Tax component configuration for VAT missing ", module);
+						return ServiceUtil.returnError("Tax component configuration for VAT missing ");
+					}
+					
+					if(UtilValidate.isNotEmpty(taxComponent.get("VAT_PUR"))){
+						vatTaxPercent = (BigDecimal)taxComponent.get("VAT_PUR");
+					}
+					
+					Map termTempMap = FastMap.newInstance();
+					termTempMap.put("applicableTo", productId);
+					termTempMap.put("termTypeId", "VAT_PUR");
+					termTempMap.put("termValue", vatPercent);
+					termTempMap.put("uomId", "PERCENT");
+					termTempMap.put("termDays", null);
+					termTempMap.put("description", "");
+					termsDetail.add(termTempMap);
+					
+				}
+				
+				if(UtilValidate.isNotEmpty(cstPercent) && cstPercent.compareTo(BigDecimal.ZERO)>0){
+					
+					Map resultCtx = getOrderTaxComponentBreakUp(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "CST_PUR", "taxRate", cstPercent));
+					Map taxComponent = (Map)resultCtx.get("taxComponents");
+					if(UtilValidate.isEmpty(taxComponent)){
+						Debug.logError("Tax component configuration for VAT missing ", module);
+						return ServiceUtil.returnError("Tax component configuration for VAT missing ");
+					}
+					
+					if(UtilValidate.isNotEmpty(taxComponent.get("CST_PUR"))){
+						cstTaxPercent = (BigDecimal)taxComponent.get("CST_PUR");
+					}
+					
+					Map termTempMap = FastMap.newInstance();
+					termTempMap.put("applicableTo", productId);
+					termTempMap.put("termTypeId", "CST_PUR");
+					termTempMap.put("termValue", cstPercent);
+					termTempMap.put("uomId", "PERCENT");
+					termTempMap.put("termDays", null);
+					termTempMap.put("description", "");
+					termsDetail.add(termTempMap);
+						
+				}
+				
+				productItemMap.put("productId", productId);
+				productItemMap.put("quantity", quantity);
+				productItemMap.put("bedPercent", bedTaxPercent);
+				productItemMap.put("bedcessPercent", bedcessTaxPercent);
+				productItemMap.put("bedseccessPercent", bedseccessTaxPercent);
+				productItemMap.put("vatPercent", vatTaxPercent);
+				productItemMap.put("cstPercent", cstTaxPercent);
+				
+				BigDecimal basePriceAmt = (unitPrice.multiply(quantity)).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
+				
+				BigDecimal exCstRate = BigDecimal.ZERO;
+				BigDecimal exVatRate = BigDecimal.ZERO;
+				BigDecimal exBedRate = BigDecimal.ZERO;
+				BigDecimal exBedCessRate = BigDecimal.ZERO;
+				BigDecimal exBedSecCessRate = BigDecimal.ZERO;
+				BigDecimal unitListPrice = BigDecimal.ZERO;
+				
+				if(UtilValidate.isNotEmpty(incTax)){
+					
+					unitListPrice = unitPrice;
+					if(UtilValidate.isNotEmpty(vatTaxPercent) && vatTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exVatRateMap = UtilAccounting.getExclusiveTaxRate(basePriceAmt,vatTaxPercent);
+						exVatRate = (BigDecimal)exVatRateMap.get("taxAmount");
+						vatUnitRate = exVatRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exVatRate);
+					}
+					
+					if(UtilValidate.isNotEmpty(cstTaxPercent) && cstTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exCstRateMap = UtilAccounting.getExclusiveTaxRate(basePriceAmt,cstTaxPercent);
+						exCstRate = (BigDecimal)exCstRateMap.get("taxAmount");
+						cstUnitRate = exCstRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exCstRate);
+					}
+					
+					if(UtilValidate.isNotEmpty(bedTaxPercent) && bedTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						Map<String,Object> exBedRateMap = UtilAccounting.getExclusiveTaxRate(basePriceAmt.subtract(exVatRate.add(exCstRate)),bedTaxPercent);
+						exBedRate = (BigDecimal)exBedRateMap.get("taxAmount");
+						bedUnitRate = exBedRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exBedRate);
+
+						Map<String,Object> exBedCessRateMap = UtilAccounting.getExclusiveTaxRate(exBedRate,bedcessTaxPercent);
+						exBedCessRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
+						bedCessUnitRate = exBedCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(bedCessUnitRate);
+						
+						Map<String,Object> exBedSecCessRateMap = UtilAccounting.getExclusiveTaxRate(exBedRate,bedseccessTaxPercent);
+						exBedSecCessRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
+						bedSecCessUnitRate = exBedSecCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exBedSecCessRate);
+						
+					}
+					
+				}
+				else{
+					
+					if(UtilValidate.isNotEmpty(bedTaxPercent) && bedTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						Map<String,Object> exBedRateMap = UtilAccounting.getInclusiveTaxRate(basePriceAmt, bedTaxPercent);
+						exBedRate = (BigDecimal)exBedRateMap.get("taxAmount");
+						bedUnitRate = exBedRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exBedRate);
+						
+						Map<String,Object> exBedCessRateMap = UtilAccounting.getInclusiveTaxRate(exBedRate, bedcessTaxPercent);
+						exBedCessRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
+						bedCessUnitRate = exBedCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exBedCessRate);
+						
+						Map<String,Object> exBedSecCessRateMap = UtilAccounting.getInclusiveTaxRate(exBedRate,bedseccessTaxPercent);
+						exBedSecCessRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
+						bedSecCessUnitRate = exBedSecCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exBedSecCessRate);
+						
+					}
+					
+					BigDecimal baseValue = unitPrice.add((bedUnitRate.add(bedCessUnitRate)).add(bedSecCessUnitRate));
+					BigDecimal baseValueAmt = basePriceAmt.add((exBedRate.add(exBedCessRate)).add(exBedSecCessRate));
+					
+					if(UtilValidate.isNotEmpty(vatTaxPercent) && vatTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exVatRateMap = UtilAccounting.getInclusiveTaxRate(baseValueAmt,vatTaxPercent);
+						exVatRate = (BigDecimal)exVatRateMap.get("taxAmount");
+						vatUnitRate = exVatRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exVatRate);
+					}
+					
+					if(UtilValidate.isNotEmpty(cstTaxPercent) && cstTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exCstRateMap = UtilAccounting.getInclusiveTaxRate(baseValueAmt,cstTaxPercent);
+						exCstRate = (BigDecimal)exCstRateMap.get("taxAmount");
+						cstUnitRate = exCstRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						totalTaxAmt = totalTaxAmt.add(exCstRate);
+					}
+					
+				}
+				
+				BigDecimal totalTaxUnitAmt = totalTaxAmt.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+				if(UtilValidate.isNotEmpty(incTax)){
+					unitListPrice = unitPrice;
+					unitPrice = unitPrice.subtract(totalTaxUnitAmt);
+				}
+				else{
+					unitListPrice = unitPrice.add(totalTaxUnitAmt);
+				}
+				productItemMap.put("bedAmount", exBedRate);
+				productItemMap.put("bedcessAmount", exBedCessRate);
+				productItemMap.put("bedseccessAmount", exBedSecCessRate);
+				productItemMap.put("vatAmount", exVatRate);
+				productItemMap.put("cstAmount", exCstRate);
+				productItemMap.put("bedUnitRate", bedUnitRate);
+				productItemMap.put("bedcessUnitRate", bedCessUnitRate);
+				productItemMap.put("bedseccessUnitRate", bedSecCessUnitRate);
+				productItemMap.put("vatUnitRate", vatUnitRate);
+				productItemMap.put("cstUnitRate", cstUnitRate);
+				productItemMap.put("unitPrice", unitPrice);
+				productItemMap.put("unitListPrice", unitListPrice);
+				itemDetail.add(productItemMap);
+				productItemRef.put(productId, productItemMap);
+			}
+			
+			String otherTermId = "";
+			String applicableTo = "";
+			String uomId = "";
+			String description = "";
+			BigDecimal termDays = null;
+			BigDecimal termValue = BigDecimal.ZERO;
+			
+			for (Map<String, Object> eachItem : otherCharges) {
+				
+				Map adjustmentItemMap = FastMap.newInstance();
+				Map termItemMap = FastMap.newInstance();
+				
+				if(UtilValidate.isNotEmpty(eachItem.get("otherTermId"))){
+					otherTermId = (String)eachItem.get("otherTermId");
+				}
+				
+				if(UtilValidate.isNotEmpty(eachItem.get("applicableTo"))){
+					applicableTo = (String)eachItem.get("applicableTo");
+				}
+				if(UtilValidate.isNotEmpty(eachItem.get("termValue"))){
+					termValue = (BigDecimal)eachItem.get("termValue");
+				}
+				if(UtilValidate.isNotEmpty(eachItem.get("termDays"))){
+					termDays = (BigDecimal)eachItem.get("termDays");
+				}
+				if(UtilValidate.isNotEmpty(eachItem.get("uomId"))){
+					uomId = (String)eachItem.get("uomId");
+				}
+				if(UtilValidate.isNotEmpty(eachItem.get("description"))){
+					description = (String)eachItem.get("description");
+				}
+				
+				/* Adding terms*/
+				termItemMap.put("termTypeId", otherTermId);
+				termItemMap.put("applicableTo", applicableTo);
+				termItemMap.put("termValue", termValue);
+				termItemMap.put("termDays", termDays);
+				termItemMap.put("uomId", uomId);
+				termItemMap.put("description", description);
+				termsDetail.add(termItemMap);
+
+			}
+			
+			Map adjInputCtx = UtilMisc.toMap("productItems", productItemRef, "otherCharges", otherCharges, "userLogin", userLogin, "incTax", incTax);
+			
+			Map adjResult = getItemAdjustments(ctx, adjInputCtx);
+			
+			if (ServiceUtil.isError(adjResult)) {
+  		  		String errMsg =  ServiceUtil.getErrorMessage(adjResult);
+  		  		Debug.logError(errMsg , module);
+  		  		return ServiceUtil.returnError(errMsg);
+  		  	}
+			Map revisedProdItems = (Map)adjResult.get("productItemsRevised");
+			
+			adjustmentDetail = (List)adjResult.get("adjustmentTerms");
+			Iterator tempIter = revisedProdItems.entrySet().iterator();
+			while (tempIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) tempIter.next();
+				Map eachItem = (Map) tempEntry.getValue();
+				productItemDetails.add(eachItem);
+				grandTotal = grandTotal.add(((BigDecimal)eachItem.get("unitListPrice")).multiply((BigDecimal)eachItem.get("quantity")));
+			}
+			
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		result.put("grandTotal", grandTotal);
+		result.put("itemDetail", productItemDetails);
+		result.put("adjustmentDetail", adjustmentDetail);
+		result.put("termsDetail", termsDetail);
+		return result;
+	}
+	
+	public static Map<String, Object> getTermValuePerProduct(DispatchContext ctx, Map<String, ? extends Object> context) {
+	   	   
+		Delegator delegator = ctx.getDelegator();
+		Map productItems = (Map) context.get("productItems");
+		String incTax = (String) context.get("incTax");
+		List<Map> adjustmentTerms = (List) context.get("adjustmentTerms");
+		Map result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		BigDecimal grandTotal = BigDecimal.ZERO;
+		Map tempUpdateMap = FastMap.newInstance();
+		for(Map eachAdj : adjustmentTerms){
+			
+			String applicableTo = (String)eachAdj.get("applicableTo");
+			BigDecimal amount = (BigDecimal)eachAdj.get("amount");
+			String termTypeId = (String)eachAdj.get("adjustmentTypeId");
+			boolean recalculateVAT = Boolean.FALSE;
+			if(termTypeId.equals("COGS_DISC") || termTypeId.equals("COGS_PCK_FWD")){
+				recalculateVAT = Boolean.TRUE;
+			}
+			BigDecimal poValue = BigDecimal.ZERO;
+			
+			Iterator prodPOIter = productItems.entrySet().iterator();
+			while (prodPOIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) prodPOIter.next();
+				Map prodItemTemp = (Map) tempEntry.getValue();
+				String productId = (String) tempEntry.getKey();
+				BigDecimal unitListPriceAmt = ((BigDecimal)prodItemTemp.get("unitListPrice")).multiply((BigDecimal)prodItemTemp.get("quantity"));
+				BigDecimal extTaxesAmt = ((BigDecimal)prodItemTemp.get("vatAmount")).add((BigDecimal)prodItemTemp.get("cstAmount"));
+				if(recalculateVAT){
+					unitListPriceAmt = unitListPriceAmt.subtract(extTaxesAmt);
+				}
+		    	poValue = poValue.add(unitListPriceAmt);
+			}
+			
+			if(applicableTo.equals("_NA_")){
+					
+				Iterator prodIter = productItems.entrySet().iterator();
+				while (prodIter.hasNext()) {
+					Map.Entry tempEntry = (Entry) prodIter.next();
+					Map prodItem = (Map) tempEntry.getValue();
+					String productId = (String) tempEntry.getKey();
+					BigDecimal quantity = (BigDecimal) prodItem.get("quantity"); 
+					Map prodMap = FastMap.newInstance();
+					
+					if(UtilValidate.isNotEmpty(tempUpdateMap.get(productId))){
+						prodMap = (Map)tempUpdateMap.get(productId);
+					}else{
+						prodMap.putAll(prodItem);
+					}
+					BigDecimal recalcAdjPrice = BigDecimal.ZERO;
+					BigDecimal unitListPrice = BigDecimal.ZERO;
+					BigDecimal itemValue = BigDecimal.ZERO;
+					BigDecimal vatUnitAmt = ((BigDecimal)prodMap.get("vatAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+					BigDecimal cstUnitAmt = ((BigDecimal)prodMap.get("cstAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+					if(recalculateVAT){
+						BigDecimal listAmt = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+						itemValue = listAmt.subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
+						unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
+					}
+					else{
+						itemValue = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+						unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
+					}
+					recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
+					BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+					BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
+					BigDecimal basicPrice = uPrice.multiply(quantity);
+					BigDecimal vatPercent = (BigDecimal) prodMap.get("vatPercent");
+					BigDecimal cstPercent = (BigDecimal) prodMap.get("cstPercent");
+					
+					if(recalculateVAT){
+						if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
+							
+							BigDecimal vatReCalc = (basicPrice.multiply(vatPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+							BigDecimal vatUnitPrice = vatReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+							uPrice = uPrice.add(vatUnitPrice);
+							prodMap.put("vatAmount", vatReCalc);
+							prodMap.put("unitListPrice", uPrice);
+						}
+						if(UtilValidate.isNotEmpty(cstPercent) && cstPercent.compareTo(BigDecimal.ZERO)>0){
+							
+							BigDecimal cstReCalc = (basicPrice.multiply(cstPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+							BigDecimal cstUnitPrice = cstReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+							uPrice = uPrice.add(cstUnitPrice);
+							prodMap.put("cstAmount", cstReCalc);
+							prodMap.put("unitListPrice", uPrice);
+						}
+					}
+					else{
+						prodMap.put("unitListPrice", uPrice);
+					}
+					tempUpdateMap.put(productId, prodMap);
+				}
+			}
+			else{
+				
+				Map prodItem = (Map)productItems.get(applicableTo);
+				String productId = (String) prodItem.get("productId");
+				Map prodMap = FastMap.newInstance();
+				if(UtilValidate.isNotEmpty(tempUpdateMap.get(productId))){
+					prodMap = (Map)tempUpdateMap.get(productId);
+				}else{
+					prodMap.putAll((Map)productItems.get(applicableTo));
+				}
+
+		    	BigDecimal quantity = (BigDecimal) prodMap.get("quantity"); 
+				
+				BigDecimal recalcAdjPrice = BigDecimal.ZERO;
+				BigDecimal unitListPrice = BigDecimal.ZERO;
+				BigDecimal itemValue = BigDecimal.ZERO;
+				BigDecimal vatUnitAmt = ((BigDecimal)prodMap.get("vatAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+				BigDecimal cstUnitAmt = ((BigDecimal)prodMap.get("cstAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+				
+				if(recalculateVAT){
+					BigDecimal listAmt = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+					itemValue = listAmt.subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
+					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
+				}
+				else{
+					itemValue = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+					unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
+				}
+				
+				recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
+				BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+				BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
+				BigDecimal basicPrice = uPrice.multiply(quantity);
+				BigDecimal vatPercent = (BigDecimal) prodMap.get("vatPercent");
+				BigDecimal cstPercent = (BigDecimal) prodMap.get("cstPercent");
+				if(recalculateVAT){
+					if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						BigDecimal vatReCalc = (basicPrice.multiply(vatPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+						BigDecimal vatUnitPrice = vatReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						uPrice = uPrice.add(vatUnitPrice);
+						prodMap.put("vatAmount", vatReCalc);
+						prodMap.put("unitListPrice", uPrice);
+					}
+					if(UtilValidate.isNotEmpty(cstPercent) && cstPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						BigDecimal cstReCalc = (basicPrice.multiply(cstPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+						BigDecimal cstUnitPrice = cstReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						uPrice = uPrice.add(cstUnitPrice);
+						prodMap.put("cstAmount", cstReCalc);
+						prodMap.put("unitListPrice", uPrice);
+					}
+					
+				}
+				else{
+					prodMap.put("unitListPrice", uPrice);
+				}
+				tempUpdateMap.put(productId, prodMap);
+			}
+		}
+		
+		Iterator prodItemIter = productItems.entrySet().iterator();
+		while (prodItemIter.hasNext()) {
+			Map.Entry tempProdEntry = (Entry) prodItemIter.next();
+			String productId = (String) tempProdEntry.getKey();
+			if(UtilValidate.isEmpty(tempUpdateMap.get(productId))){
+				tempUpdateMap.put(productId, (Map)tempProdEntry.getValue());
+			}
+		}
+		
+		result.put("productItemsRevised", tempUpdateMap);
+		return result;
+	   }
+		
+	   public static Map<String, Object> calculatePOTermValue(DispatchContext ctx, Map<String, ? extends Object> context) {
+	   	   
+		   BigDecimal termAmount = BigDecimal.ZERO;
+	   	   
+	       String termTypeId = (String)context.get("termTypeId");
+	       String applicableTo = (String)context.get("applicableTo");
+	       String uomId = (String)context.get("uomId");
+	       Map productItems = (Map) context.get("productItems");
+	       BigDecimal termValue   = (BigDecimal)context.get("termValue");
+	       Map result = ServiceUtil.returnSuccess();
+	       Map adjustmentMap = FastMap.newInstance();
+	       if(UtilValidate.isEmpty(termTypeId)){
+	    	   return ServiceUtil.returnError("Term Type cannot be empty");
+	       }
+	       //this to handle non derived terms
+	       termAmount = termValue;
+	       
+	       adjustmentMap.put("adjustmentTypeId", termTypeId);
+	       
+	       BigDecimal basicAmount = BigDecimal.ZERO;
+	       BigDecimal exciseDuty = BigDecimal.ZERO;
+	       BigDecimal poValue = BigDecimal.ZERO;
+	       BigDecimal vatAmt = BigDecimal.ZERO;
+	       BigDecimal cstAmt = BigDecimal.ZERO;
+	       
+	       if(applicableTo.equals("ALL")){
+	    	   Iterator tempIter = productItems.entrySet().iterator();
+			   while (tempIter.hasNext()) {
+					Map.Entry tempEntry = (Entry) tempIter.next();
+					Map prodItem = (Map) tempEntry.getValue();
+					
+					basicAmount = basicAmount.add(((BigDecimal)prodItem.get("unitPrice")).multiply((BigDecimal)prodItem.get("quantity")));
+					exciseDuty = exciseDuty.add(((BigDecimal)prodItem.get("bedAmount")).add(((BigDecimal)prodItem.get("bedcessAmount")).add((BigDecimal)prodItem.get("bedseccessAmount"))));
+					vatAmt = vatAmt.add((BigDecimal)prodItem.get("vatAmount"));
+					cstAmt = cstAmt.add((BigDecimal)prodItem.get("cstAmount"));
+				}
+				poValue = basicAmount.add(exciseDuty.add(vatAmt.add(cstAmt)));
+				adjustmentMap.put("applicableTo", "_NA_");
+	       }
+	       else{
+	    	   
+	    	   Map prodItem = (Map)productItems.get(applicableTo);
+	    	   
+	    	   basicAmount = ((BigDecimal)prodItem.get("unitPrice")).multiply((BigDecimal)prodItem.get("quantity"));
+	    	   exciseDuty = ((BigDecimal)prodItem.get("bedAmount")).add(((BigDecimal)prodItem.get("bedcessAmount")).add((BigDecimal)prodItem.get("bedseccessAmount")));
+	    	   vatAmt = (BigDecimal)prodItem.get("vatAmount");
+	    	   cstAmt = (BigDecimal)prodItem.get("cstAmount");
+	    	   adjustmentMap.put("applicableTo", (String)prodItem.get("productId"));
+	       }
+	       
+	       poValue = basicAmount.add(exciseDuty.add(vatAmt.add(cstAmt)));
+    	   if(termTypeId.equals("COGS_DISC")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+	       //Discount  After Tax
+    	   else if(termTypeId.equals("COGS_DISC_ATR")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+	       //Packing And Forwarding Charges Before Tax
+	       
+    	   else if(termTypeId.equals("COGS_PCK_FWD")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    	   }else{
+	    		   termAmount = termValue;
+	    	   }
+	       }
+	       //Packing And Forwarding Charges After Tax
+    	   else if(termTypeId.equals("COGS_PCK_FWD_ATR")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    	   }else{
+	    		   termAmount = termValue;
+	    	   }
+	       }
+    	   else if(termTypeId.equals("COGS_INSURANCE")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    	   }else{
+	    		   termAmount = termValue;
+	    	   }
+	       }
+    	   else{
+    		   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    	   }else{
+	    		   termAmount = termValue;
+	    	   }
+    	   }
+		   
+    	   adjustmentMap.put("amount", termAmount);
+	       result.put("termAmount", termAmount); 
+	       result.put("adjustmentMap", adjustmentMap);
+	       return result;
+	   }
+	
+	public static Map<String, Object> getItemAdjustments(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		Map productItems = (Map) context.get("productItems");
+		String incTax = (String) context.get("incTax");
+		List<Map> otherCharges = (List) context.get("otherCharges");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List<Map> adjustmentTerms = FastList.newInstance();
+		Map productItemsRevised = FastMap.newInstance();
+		try{
+			
+			for(Map eachItem : otherCharges){
+				
+				String adjustmentTypeId = (String)eachItem.get("otherTermId");
+				String applicableTo = (String)eachItem.get("applicableTo");
+				
+				BigDecimal termValue = (BigDecimal)eachItem.get("termValue");
+				String uomId = (String)eachItem.get("uomId");
+				
+				BigDecimal termAmount =BigDecimal.ZERO;
+				
+				Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+	    		inputMap.put("termTypeId", adjustmentTypeId);
+	    		inputMap.put("uomId", uomId);
+	    		inputMap.put("termValue", termValue);
+	    		inputMap.put("applicableTo", applicableTo);
+	    		inputMap.put("productItems", productItems);
+				Map resultTerm = calculatePOTermValue(ctx,inputMap);
+				if (ServiceUtil.isError(resultTerm)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultTerm);
+	  		  		Debug.logError(errMsg , module);
+	  		  		return ServiceUtil.returnError(errMsg);
+	  		  	}
+				Map adjustmentMap = (Map)resultTerm.get("adjustmentMap");
+				adjustmentTerms.add(adjustmentMap);
+	    		
+			}
+			
+			Map inputCtx = FastMap.newInstance();
+			inputCtx.put("userLogin", userLogin);
+			inputCtx.put("productItems", productItems);
+			inputCtx.put("adjustmentTerms", adjustmentTerms);
+			inputCtx.put("incTax", incTax);
+    		Map resultCtx = getTermValuePerProduct(ctx,inputCtx);
+    		if (ServiceUtil.isError(resultCtx)) {
+  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+  		  		Debug.logError(errMsg , module);
+  		  		return ServiceUtil.returnError(errMsg);
+  		  	}
+    		productItemsRevised = (Map)resultCtx.get("productItemsRevised");
+			
+    		BigDecimal vatAmount = BigDecimal.ZERO;
+    		BigDecimal cstAmount = BigDecimal.ZERO;
+    		BigDecimal bedAmount = BigDecimal.ZERO;
+    		BigDecimal bedcessAmount = BigDecimal.ZERO;
+    		BigDecimal bedseccessAmount = BigDecimal.ZERO;
+    		
+    		Iterator revisedItemsIter = productItemsRevised.entrySet().iterator();
+			while (revisedItemsIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) revisedItemsIter.next();
+				Map eachItem = (Map) tempEntry.getValue();
+				vatAmount = vatAmount.add((BigDecimal)eachItem.get("vatAmount"));
+				cstAmount = cstAmount.add((BigDecimal)eachItem.get("cstAmount"));
+				bedAmount = bedAmount.add((BigDecimal)eachItem.get("bedAmount"));
+				bedcessAmount = bedcessAmount.add((BigDecimal)eachItem.get("bedcessAmount"));
+				bedseccessAmount = bedseccessAmount.add((BigDecimal)eachItem.get("bedseccessAmount"));
+			}
+			
+			if(vatAmount.compareTo(BigDecimal.ZERO)>0){
+				Map tempAdjMap = FastMap.newInstance();
+				tempAdjMap.put("applicableTo", "_NA_");
+				tempAdjMap.put("adjustmentTypeId", "VAT_PUR");
+				tempAdjMap.put("amount", vatAmount);
+				adjustmentTerms.add(tempAdjMap);
+			}
+			if(cstAmount.compareTo(BigDecimal.ZERO)>0){
+				Map tempAdjMap = FastMap.newInstance();
+				tempAdjMap.put("applicableTo", "_NA_");
+				tempAdjMap.put("adjustmentTypeId", "CST_PUR");
+				tempAdjMap.put("amount", cstAmount);
+				adjustmentTerms.add(tempAdjMap);
+			}
+			if(bedAmount.compareTo(BigDecimal.ZERO)>0){
+				Map tempAdjMap = FastMap.newInstance();
+				tempAdjMap.put("applicableTo", "_NA_");
+				tempAdjMap.put("adjustmentTypeId", "BED_PUR");
+				tempAdjMap.put("amount", bedAmount);
+				adjustmentTerms.add(tempAdjMap);
+			}
+			if(bedcessAmount.compareTo(BigDecimal.ZERO)>0){
+				Map tempAdjMap = FastMap.newInstance();
+				tempAdjMap.put("applicableTo", "_NA_");
+				tempAdjMap.put("adjustmentTypeId", "BEDCESS_PUR");
+				tempAdjMap.put("amount", bedcessAmount);
+				adjustmentTerms.add(tempAdjMap);
+			}
+			if(bedseccessAmount.compareTo(BigDecimal.ZERO)>0){
+				Map tempAdjMap = FastMap.newInstance();
+				tempAdjMap.put("applicableTo", "_NA_");
+				tempAdjMap.put("adjustmentTypeId", "BEDSECCESS_PUR");
+				tempAdjMap.put("amount", bedseccessAmount);
+				adjustmentTerms.add(tempAdjMap);
+			}
+			
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		result.put("productItemsRevised", productItemsRevised);
+		result.put("adjustmentTerms", adjustmentTerms);
+		return result;
+	}
+	
+	
 	public static Map getProductUOM(Delegator delegator, List productIds) {
 		
 		Map uomLabelMap = FastMap.newInstance();
@@ -946,4 +1674,3 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
       return result;
 }
 }
-

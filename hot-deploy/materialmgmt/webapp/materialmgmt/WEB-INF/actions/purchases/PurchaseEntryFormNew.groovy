@@ -161,15 +161,26 @@ deliveryTerms.each{ eachTerm ->
 	newObj.put("label",eachTerm.description);
 	deliveryTermsJSON.add(newObj);
 }
-otherTerms.each{ eachTerm ->
-	newObj.put("value",eachTerm.termTypeId);
-	newObj.put("label",eachTerm.description);
+JSONObject otherTermsLabelJSON = new JSONObject();
+JSONObject otherTermsLabelIdJSON=new JSONObject();
+
+otherTerms.each{eachItem ->
+	newObj = new JSONObject();
+	newObj.put("value",eachItem.termTypeId);
+	newObj.put("label",eachItem.termTypeId +" [ " +eachItem.description+"]");
 	otherTermsJSON.add(newObj);
+	
+	otherTermsLabelJSON.put(eachItem.termTypeId, eachItem.description);
+	otherTermsLabelIdJSON.put(eachItem.termTypeId +" [ " +eachItem.description+"]", eachItem.termTypeId);
+	
 }
 
 context.paymentTermsJSON =paymentTermsJSON;
 context.deliveryTermsJSON =deliveryTermsJSON;
 context.otherTermsJSON =otherTermsJSON;
+context.otherTermsLabelJSON =otherTermsLabelJSON;
+context.otherTermsLabelIdJSON =otherTermsLabelIdJSON;
+
 // orderTypes here
 purchaseTypeFlag = parameters.purchaseTypeFlag;
 if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPurchase"){
