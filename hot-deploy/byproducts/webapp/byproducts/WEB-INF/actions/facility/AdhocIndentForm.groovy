@@ -22,6 +22,10 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 if(parameters.boothId){
 	parameters.boothId = parameters.boothId.toUpperCase();
 }
+if(UtilValidate.isNotEmpty(parameters.productStoreIdFrom)){
+	parameters.productStoreId = parameters.productStoreIdFrom;
+	productStoreId=parameters.productStoreIdFrom;
+}
 boothId = parameters.boothId;
 subscriptionTypeId = parameters.subscriptionTypeId;
 productSubscriptionTypeId = parameters.productSubscriptionTypeId;
@@ -255,3 +259,22 @@ context.productLabelIdJSON = productLabelIdJSON;
 if(displayGrid){
 	context.partyCode = facility;
 }
+//adding order adjustments
+orderAdjTypes = delegator.findList("OrderAdjustmentType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "SALE_ORDER_ADJUSTMNT"), null, null, null, false);
+
+JSONArray orderAdjItemsJSON = new JSONArray();
+JSONObject orderAdjLabelJSON = new JSONObject();
+JSONObject orderAdjLabelIdJSON=new JSONObject();
+orderAdjTypes.each{eachItem ->
+	JSONObject newObj = new JSONObject();
+	newObj.put("value",eachItem.orderAdjustmentTypeId);
+	newObj.put("label",eachItem.description +" [ " +eachItem.orderAdjustmentTypeId+"]");
+	orderAdjItemsJSON.add(newObj);
+	orderAdjLabelJSON.put(eachItem.orderAdjustmentTypeId, eachItem.description);
+	orderAdjLabelIdJSON.put(eachItem.description +" [ " +eachItem.orderAdjustmentTypeId+"]", eachItem.orderAdjustmentTypeId);
+	
+}
+
+context.orderAdjItemsJSON = orderAdjItemsJSON;
+context.orderAdjLabelJSON = orderAdjLabelJSON;
+context.orderAdjLabelIdJSON = orderAdjLabelIdJSON;

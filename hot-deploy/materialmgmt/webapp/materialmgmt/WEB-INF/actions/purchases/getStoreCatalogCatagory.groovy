@@ -70,9 +70,7 @@ if(UtilValidate.isNotEmpty(prodCatalog)){
 prodCatalogId=prodCatalog.prodCatalogId;
 
 productCategoryListResult=org.ofbiz.product.catalog.CatalogWorker.getProdCatalogCategories(delegator,prodCatalogId,null);
-Debug.log("=======productCategoryListResult="+productCategoryListResult);
 productCategoryIdsList=EntityUtil.getFieldListFromEntityList(productCategoryListResult, 'productCategoryId', true);
-Debug.log("=======productCategoryIdsList="+productCategoryIdsList);
 condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIdsList));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 productCategoryList = delegator.findList("ProductCategory", cond, null,null, null, false);
