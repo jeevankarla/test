@@ -6940,6 +6940,11 @@ public class ByProductNetworkServices {
 	    BigDecimal cstPrice = (BigDecimal) context.get("cstPrice");
 	    BigDecimal vatPrice = (BigDecimal) context.get("vatPrice");
 	    BigDecimal serviceTaxPrice = (BigDecimal) context.get("serviceTaxPrice");
+	    
+	    BigDecimal bedPercent=(BigDecimal)context.get("bedPercent");
+		BigDecimal vatPercent=(BigDecimal)context.get("vatPercent");
+		BigDecimal cstPercent=(BigDecimal)context.get("cstPercent");
+		BigDecimal serviceTaxPercent=(BigDecimal)context.get("serviceTaxPercent");	
 	    GenericValue product;
 	    String currencyDefaultUomId = (String) context.get("currencyUomId");
 	    BigDecimal discountAmount = BigDecimal.ZERO;
@@ -6969,7 +6974,7 @@ public class ByProductNetworkServices {
 			Map taxDetailMap = FastMap.newInstance();
 			taxDetailMap.put("taxType", "VAT_SALE");
 			taxDetailMap.put("amount", vatPrice);
-			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailMap.put("percentage", vatPercent);
 			taxDetailList.add(taxDetailMap);
 			
 			totalTaxAmt = totalTaxAmt.add(vatPrice);
@@ -6981,7 +6986,7 @@ public class ByProductNetworkServices {
 			
 			taxDetailMap.put("taxType", "BED_SALE");
 			taxDetailMap.put("amount", bedPrice);
-			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailMap.put("percentage", bedPercent);
 			taxDetailList.add(taxDetailMap);
 			
 			totalExciseDuty = totalExciseDuty.add(bedPrice);
@@ -6992,7 +6997,7 @@ public class ByProductNetworkServices {
 			
 			taxDetailMap.put("taxType", "CST_SALE");
 			taxDetailMap.put("amount", cstPrice);
-			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailMap.put("percentage", cstPercent);
 			taxDetailList.add(taxDetailMap);
 			
 			totalTaxAmt = totalTaxAmt.add(cstPrice);
@@ -7003,7 +7008,7 @@ public class ByProductNetworkServices {
 			
 			taxDetailMap.put("taxType", "SERTAX_SALE");
 			taxDetailMap.put("amount", serviceTaxPrice);
-			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailMap.put("percentage", serviceTaxPercent);
 			taxDetailList.add(taxDetailMap);
 			totalTaxAmt = totalTaxAmt.add(serviceTaxPrice);
 		}
