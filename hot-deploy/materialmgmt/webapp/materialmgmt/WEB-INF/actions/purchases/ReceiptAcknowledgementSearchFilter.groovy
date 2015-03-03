@@ -8,9 +8,11 @@ import javolution.util.FastMap;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 productId=parameters.productId;
 custRequestId = parameters.custRequestId;
+custRequestDate = parameters.custRequestDate;
 partyId = parameters.partyId;
 conditionList=[];
 if(UtilValidate.isNotEmpty(parameters.productId)){
@@ -21,6 +23,15 @@ if(UtilValidate.isNotEmpty(parameters.custRequestId)){
 }
 if(UtilValidate.isNotEmpty(partyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, partyId));
+}
+if(UtilValidate.isNotEmpty(custRequestDate)){
+    def sdf = new SimpleDateFormat("yyyy-MM-dd");
+	try {
+		custRequestDateNew = new java.sql.Timestamp(sdf.parse(custRequestDate+" 00:00:00").getTime());
+	}catch (Exception e) {
+		Debug.logError(e, "Cannot parse date string: " + custRequestDate, "");
+	}
+	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, custRequestDateNew));
 }
 orderBy = UtilMisc.toList("lastModifiedDate");	
 conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.EQUALS, "CRQ_ISSUED"));
