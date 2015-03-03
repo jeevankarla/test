@@ -64,7 +64,7 @@ $(document).ready(function(){
 		
 	var productStoreId=$(productStoreObj).val();
 	
-	$("#productStoreId").val(productStoreId);
+	//$("#productStoreId").val(productStoreId);
 		
 	//alert("===productStoreId==="+$(productStoreObj).val());
        var dataString="productStoreId=" + productStoreId ;
@@ -230,7 +230,7 @@ $(document).ready(function(){
       			<td valign='middle'>
       				<select name="productStoreIdFrom" id="productStoreIdFrom"   onchange="javascript:showStoreCatalog(this)"  class='h2'>
       					<option value="1012">MAIN STORE </option>
-      					<option value="1013">MARKETING STORE</option>
+      					<option value="1013">ICP STORE </option>
       				</select>
       			</td>
    			</#if>
@@ -372,7 +372,6 @@ $(document).ready(function(){
           		</td>
           	</#if>
     	<#else>
-    		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>
 		 	<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
           		<td valign='middle'>
@@ -564,7 +563,16 @@ $(document).ready(function(){
 			</#if>				
 			
 	<#if booth?exists || party?exists>
- 		<#--	<div align="center"><span class="tooltip">** Check Payment Entry Before Submit **</span></div>		-->		
+ 		<#--	<div align="center"><span class="tooltip">** Check Payment Entry Before Submit **</span></div>		-->	
+ 		    <div class="screenlet-title-bar">
+					<div class="grid-header" style="width:35%">
+						<label>Other Charges</label><span id="totalAmount"></span>
+					</div>
+					<div id="myGrid2" style="width:35%;height:150px;">
+						<div class="grid-header" style="width:35%">
+						</div>
+					</div>
+				</div>	
     	<div align="center">
     		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

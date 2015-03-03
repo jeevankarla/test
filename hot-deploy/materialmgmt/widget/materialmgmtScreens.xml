@@ -365,71 +365,74 @@
         </section>
     </screen> 
     <screen name="PurchageOrderOverView">
-    	<section>
-    		<actions>
-    			<set field="titleProperty" value="Purchase Order OverView - OrderId - ${parameters.orderId}"/> 
-    			<set field="tabButtonItem" value="FindMaterialPO" />	
-			      <set field="tabButtonItem2" value="POoverView"/> 
-                <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/OrderShippingInfo.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/geoAutoCompleter.js" global="true"/>
-                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchageOrderView.groovy"/>
-                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy"/>
-            </actions>
-	    	<widgets>
-	            <decorator-screen name="POOverViewDecorator" location="${parameters.mainDecoratorLocation}">
-	            	<decorator-section name="body"> 
-	            	<include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
-	            		<section>
-	            			<widgets>
-	            				<container style="lefthalf" >
-		            				<platform-specific>
-	                    				<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl"/></html>
-	                				</platform-specific>
-	                				<platform-specific>
-	                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl"/></html>
-	                        		</platform-specific>
-	                        		<platform-specific>
-	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
-	                        		</platform-specific>
-	                        		<platform-specific>
-	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POSuspend.ftl"/></html>
-	                        		</platform-specific>
-	                        		<screenlet title="Order Amendments">
-	                        			<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="orderAmendments"/>
-	                        		</screenlet>
-	                        		<screenlet title="Order Attributes">
-	                        			<include-screen name="orderAttributes"/>
-	                        		</screenlet>
-	                        		<include-screen name="orderAssoc"/>
-                					<platform-specific>
-                    					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
-                					</platform-specific>
-                				</container>
-                				<container style="righthalf" >
-	                        		<screenlet title="Receipts For Order">
-					                 	<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/> -->
-					                 	<include-screen name="listMaterialShipmentReceipt"/>
-					                </screenlet>
-					                <platform-specific>
-                    					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
-                					</platform-specific>
-                					 <screenlet title="Invoices For Order">
-					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="invoiceDetailList"/>
-					                </screenlet>
-					                <screenlet title="Content">
-					                <include-screen name="POcontent"/>
-					                </screenlet>
-					                <platform-specific>
-                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl"/></html>
-                        			</platform-specific>
-                				</container>
-	            			</widgets>
-	            		</section>
-	                </decorator-section> 
-	    		</decorator-screen>
-	    	</widgets>
-    	</section>
+           	<section>
+           		<actions>
+           			<set field="titleProperty" value="Purchase Order OverView - OrderId - ${parameters.orderId}"/> 
+           			<set field="tabButtonItem" value="FindMaterialPO" />	
+       			      <set field="tabButtonItem2" value="POoverView"/> 
+                       <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js" global="true"/>
+                       <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/OrderShippingInfo.js" global="true"/>
+                       <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/geoAutoCompleter.js" global="true"/>
+                       <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchageOrderView.groovy"/>
+                       <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy"/>
+                   </actions>
+       	    	<widgets>
+       	            <decorator-screen name="POOverViewDecorator" location="${parameters.mainDecoratorLocation}">
+       	            	<decorator-section name="body"> 
+       	            	<include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+       	            		<section>
+       	            			<widgets>
+       	            				<container style="lefthalf" >
+       		            				<platform-specific>
+       	                    				<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl"/></html>
+       	                				</platform-specific>
+       	                				<platform-specific>
+       	                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl"/></html>
+       	                        		</platform-specific>
+       	                        		<platform-specific>
+       	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
+       	                        		</platform-specific>
+       	                        		<platform-specific>
+       	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POSuspend.ftl"/></html>
+       	                        		</platform-specific>
+       	                        		<screenlet title="Order Amendments">
+       	                        			<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="orderAmendments"/>
+       	                        		</screenlet>
+       	                        		<screenlet title="Order Attributes">
+       	                        			<include-screen name="orderAttributes"/>
+       	                        		</screenlet>
+       	                        		<include-screen name="orderAssoc"/>
+                       				</container>
+                       				<container style="righthalf" >
+       	                        		<platform-specific>
+                           					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
+                       					</platform-specific>
+       	                        		<screenlet title="Receipts For Order">
+       					                 	<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/> -->
+       					                 	<include-screen name="listMaterialShipmentReceipt"/>
+       					                </screenlet>
+       					                <platform-specific>
+                           					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
+                       					</platform-specific>
+                       					 <screenlet title="Invoices For Order">
+       					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="invoiceDetailList"/>
+       					                </screenlet>
+       					                <screenlet title="Content">
+       					                <include-screen name="POcontent"/>
+       					                </screenlet>
+       					                <platform-specific>
+                                   			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl"/></html>
+                               			</platform-specific>
+                               			 <screenlet title="Supply Products Till Date">
+                                        	<include-screen name="supplyProductsTillDate"/>                              			 
+       					                </screenlet>
+                       				</container>
+       	            			</widgets>
+       	            		</section>
+       	                </decorator-section> 
+       	    		</decorator-screen>
+       	    	</widgets>
+           	</section>
     </screen>
     <screen name="OrderNewNote">
         <section>
@@ -510,6 +513,9 @@
             	<include-menu name="createNewVendor" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
             	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/editMaterialDetails.ftl"/></html></platform-specific>
             	<section>
+            		<condition>
+            			<if-has-permission permission="MM" action="_ADD_MATERIAL"/>
+            		</condition>
     					<widgets>
                 			<link target="AddMaterial" text="Add Material" style="buttontext"/>
    	     				</widgets>
@@ -586,7 +592,29 @@
 		                   <html>
 						  <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/qcApproval.ftl"/>
 					   </html>
-				   </platform-specific>
+				   </platform-specific>				   
+			</widgets>    	
+    	</section>
+    </screen>
+    <screen name="supplyProductsTillDate">
+    	<section>
+    	<actions>
+    	<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+               <set field="targetRequest" value="FindGRNReceipts"/>
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ShipmentReceipt"/>
+                <field-map field-name="orderBy"  value="-receiptId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+          <!--       <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/> -->
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>
+    	</actions>
+			<widgets>
+		  			<include-form name="supplyProductstilldate" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+					
 			</widgets>    	
     	</section>
     </screen>
@@ -697,6 +725,12 @@
              
 			  <set field="categoryList" from-field="productCategoryListResult"/> -->
 				<!-- <set field="categoryList" value="${productCategoryResult.productCategory}"/> -->
+				
+			  <!--  <entity-condition entity-name="ProductStoreGroupMember" list="productStoreGroupMemberList" use-cache="true">
+                	<condition-list >
+                    	<condition-expr field-name="productStoreGroupId" operator="equals" value="FGS_SALE_STORE" />
+                    </condition-list>
+                </entity-condition> -->
             </actions>
             <widgets>
               <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -975,7 +1009,7 @@
                 <set field="promotionAdj" from-field="parameters.promotionAdj"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
-                 <set field="productStoreId" from-field="parameters.productStoreId"/>
+                 <set field="productStoreId" from-field="parameters.productStoreIdFrom"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              

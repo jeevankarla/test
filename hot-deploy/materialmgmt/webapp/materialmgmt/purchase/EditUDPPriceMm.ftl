@@ -99,18 +99,46 @@
 			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || serviceTaxPrice>0){
 				priceExists = "Y";
 			}
+			
+		  // add percentage fileds here
+			var bedPercent=0;
+			var vatPercent=0;
+			var cstPercent=0;
+			var serviceTaxPercent=0;
+		
+		    if(dataRow["bedPercent"]){
+				bedPercent = dataRow["bedPercent"];
+			}
+			if(dataRow["vatPercent"]){
+				vatPercent = dataRow["vatPercent"];
+			}
+			if(dataRow["cstPercent"]){
+				cstPercent = dataRow["cstPercent"];
+			}
+			if(dataRow["serviceTaxPercent"]){
+				serviceTaxPercent = dataRow["serviceTaxPercent"];
+			}
 		}
 		
 		message += "<table cellspacing=10 cellpadding=10>" ;
 		if(priceExists == "N"){
-			message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' /></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount'></td></tr>";
-			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
-			message += "<tr class='h3'><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
+			message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' /></td></tr>";
+			message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
+			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount'></td></tr>";
+			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'></td></tr>";
+			message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
 			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}else{
+		    message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"' /></td></tr>";
+			message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' value='"+bedPercent+"' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
+			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' value='"+vatPercent+"' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"' ></td></tr>";
+			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' value='"+cstPercent+"' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'></td></tr>";
+			message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' value='"+serviceTaxPercent+"' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"' /></td></tr>";
+			<#--
 			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"'/></td></tr>";
+			-->
 			message += "<tr class='h3'><td align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}	
 		title = "<h2><center>User Defined Price <center></h2><br /><br /> <center>"+ productName +"</center> ";
@@ -119,11 +147,59 @@
 		
 	};
 	
+	
+	function getBedAmount(){
+		var bPrice = $('#basicAmount').val();
+		var bedPercent = $('#bedPercent').val();
+			if(isNaN(bedPercent)){
+				bedPercent = 0;
+			}
+		var exciseUnit = bedPercent/100;
+		var bedAmount=bPrice*exciseUnit;
+		$('#bedAmount').val(bedAmount);
+	}
+	function getVatAmount(){
+		var bPrice = $('#basicAmount').val();
+		var vatPercent = $('#vatPercent').val();
+			if(isNaN(vatPercent)){
+				vatPercent = 0;
+			}
+		var percentUnit = vatPercent/100;
+		var vatAmount=bPrice*percentUnit;
+		$('#vatAmount').val(vatAmount);
+	}
+	function getCstAmount(){
+		var bPrice = $('#basicAmount').val();
+		var cstPercent = $('#cstPercent').val();
+			if(isNaN(cstPercent)){
+				cstPercent = 0;
+			}
+		var percentUnit = cstPercent/100;
+		var cstAmount=bPrice*percentUnit;
+		$('#cstAmount').val(cstAmount);
+	}
+	function getServiceTaxAmount(){
+		var bPrice = $('#basicAmount').val();
+		var serviceTaxPercent = $('#serviceTaxPercent').val();
+			if(isNaN(serviceTaxPercent)){
+				serviceTaxPercent = 0;
+			}
+		var percentUnit = serviceTaxPercent/100;
+		var serviceTaxAmount=bPrice*percentUnit;
+		$('#serviceTaxAmount').val(serviceTaxAmount);
+	}
+	
 	function addDataToGrid(){
 		var bPrice = $('#basicAmount').val();
 		var cstPrice = $('#cstAmount').val();
 		var vatPrice = $('#vatAmount').val();
 		var bedPrice = $('#bedAmount').val();
+		
+		var bedPercent = $('#bedPercent').val();
+		var vatPercent = $('#vatPercent').val();
+		var cstPercent = $('#cstPercent').val();
+		var serviceTaxPercent = $('#serviceTaxPercent').val();
+		
 		var serviceTaxPrice = $('#serviceTaxAmount').val();
 		if(!bPrice){
 			bPrice = 0;
@@ -135,20 +211,40 @@
 		}else{
 			cstPrice = parseFloat(cstPrice);
 		}
+		if(!cstPercent){
+			cstPercent = 0;
+		}else{
+			cstPercent = parseFloat(cstPercent);
+		}
 		if(!vatPrice){
 			vatPrice = 0;
 		}else{
 			vatPrice = parseFloat(vatPrice);
+		}
+		if(!vatPercent){
+			vatPercent = 0;
+		}else{
+			vatPercent = parseFloat(vatPercent);
 		}
 		if(!bedPrice){
 			bedPrice = 0;
 		}else{
 			bedPrice = parseFloat(bedPrice);
 		}
+		if(!bedPercent){
+			bedPercent = 0;
+		}else{
+			bedPercent = parseFloat(bedPercent);
+		}
 		if(!serviceTaxPrice){
 			serviceTaxPrice = 0;
 		}else{
 			serviceTaxPrice = parseFloat(serviceTaxPrice);
+		}
+		if(!serviceTaxPercent){
+			serviceTaxPercent = 0;
+		}else{
+			serviceTaxPercent = parseFloat(serviceTaxPercent);
 		}
 		var totalUnitPrice = bPrice+cstPrice+vatPrice+bedPrice+serviceTaxPrice;
 		dataRow['basicPrice'] = bPrice;
@@ -156,12 +252,19 @@
 		dataRow['vatPrice'] = vatPrice;
 		dataRow['bedPrice'] = bedPrice;
 		dataRow['serviceTaxPrice'] = serviceTaxPrice;
+		
+		dataRow['bedPercent'] = bedPercent;
+		dataRow['vatPercent'] = vatPercent;
+		dataRow['cstPercent'] = cstPercent;
+		dataRow['serviceTaxPercent'] = serviceTaxPercent;
+		
 		dataRow['unitPrice'] = totalUnitPrice;
 		var qty = dataRow['quantity'];
 		
 		dataRow['amount'] = qty*totalUnitPrice;
 		grid.updateRow(rowIndex);
 		grid.render();
+		 updateProductTotalAmount();
 		cancelForm();
 	}
 		
