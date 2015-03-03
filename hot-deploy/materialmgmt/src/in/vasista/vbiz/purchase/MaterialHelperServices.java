@@ -1037,7 +1037,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		BigDecimal grandTotal = BigDecimal.ZERO;
 		Map tempUpdateMap = FastMap.newInstance();
 		for(Map eachAdj : adjustmentTerms){
-			
 			String applicableTo = (String)eachAdj.get("applicableTo");
 			BigDecimal amount = (BigDecimal)eachAdj.get("amount");
 			String termTypeId = (String)eachAdj.get("adjustmentTypeId");
@@ -1059,7 +1058,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}
 		    	poValue = poValue.add(unitListPriceAmt);
 			}
-			
 			if(applicableTo.equals("_NA_")){
 					
 				Iterator prodIter = productItems.entrySet().iterator();
@@ -1130,7 +1128,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}else{
 					prodMap.putAll((Map)productItems.get(applicableTo));
 				}
-
+				
 		    	BigDecimal quantity = (BigDecimal) prodMap.get("quantity"); 
 				
 				BigDecimal recalcAdjPrice = BigDecimal.ZERO;
@@ -1142,7 +1140,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				if(recalculateVAT){
 					BigDecimal listAmt = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
 					itemValue = listAmt.subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
-					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
+					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
 				}
 				else{
 					itemValue = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
