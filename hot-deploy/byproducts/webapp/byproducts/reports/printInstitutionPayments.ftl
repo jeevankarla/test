@@ -87,7 +87,11 @@ function submitForm(){
    return;
 	}
 function submitFormParam(){
-
+var comments = $("#cancelComments").val();
+		if(comments == undefined || comments == ""){
+		alert("Please enter the Reason for to Void The Payment");
+		return false;
+		}
 		
 	 $("#cancelPaymentDesc").submit();	
 	

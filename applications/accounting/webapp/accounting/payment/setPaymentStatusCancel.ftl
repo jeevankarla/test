@@ -88,7 +88,11 @@ function Alert(message, title)
 		  	
 	}
 function submitForm(){		 
-
+		var comments = $("#cancelComments").val();
+		if(comments == undefined || comments == ""){
+		alert("Please enter the Reason for to Void The Payment");
+		return false;
+		}
 		 jQuery('#invoicestatuschange').submit();
 	}
 

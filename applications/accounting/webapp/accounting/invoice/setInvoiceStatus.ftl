@@ -84,7 +84,12 @@ function Alert(message, title)
 		   $("input[type=submit]").attr("disabled", "disabled");
 		  	
 	}
-function submitForm(){		 
+function submitForm(){		
+var comments = $("#cancelComments").val();
+		if(comments == undefined || comments == ""){
+		alert("Please enter the Reason for to Cancel The invoice");
+		return false;
+		} 
 		 jQuery('#invoicestatuschange').submit();
 	}
 
