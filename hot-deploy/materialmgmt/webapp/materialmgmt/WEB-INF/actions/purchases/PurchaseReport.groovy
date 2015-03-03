@@ -88,6 +88,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 							invoiceDate = invoice.getValue().invoiceDateStr;
 						}
 						invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+						shipmentId = invoiceDetails.shipmentId;
 						supInvNumber="";
 						orderItemBillingList = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 						if(UtilValidate.isNotEmpty(orderItemBillingList)){
@@ -102,14 +103,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 								}
 							}
 						}else if(UtilValidate.isNotEmpty(shipmentId)){
-							shipmentId=invoiceDetails.shipmentId
-							supInvNumber="";
-							if(UtilValidate.isNotEmpty(shipmentId)){
 								   shipmentDetails = delegator.findOne("Shipment", [shipmentId : shipmentId], false);	
 									if(UtilValidate.isNotEmpty(shipmentDetails)){
 										supInvNumber = shipmentDetails.supplierInvoiceId;
 									}
-							}
 						}
 						
 						prodTotals = invoice.getValue().get("productTotals");

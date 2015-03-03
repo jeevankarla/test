@@ -860,21 +860,23 @@ public class SalesInvoiceServices {
 			BigDecimal revenue = ZERO;
 			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("unitListPrice"))) {
 				price = invoiceItem.getBigDecimal("unitListPrice");
-				revenue = price.multiply(quantity);
 			}else{
 				price = invoiceItem.getBigDecimal("amount");
-				revenue = price.multiply(quantity);
 			}
+			revenue = price.multiply(quantity);
+			
 			BigDecimal basicPrice =ZERO;
 			BigDecimal basicRevenue = ZERO;
 			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("unitPrice"))) {
 				basicPrice = invoiceItem.getBigDecimal("unitPrice");
 			}
+			basicRevenue = basicPrice.multiply(quantity);
+			totalBasicRevenue=totalBasicRevenue.add(basicRevenue);
 			
 			String invoicesupplyId = invoiceItem.getString("invoiceId");
 			
 			
-			totalBasicRevenue=totalBasicRevenue.add(basicRevenue);
+			
 
 			
 		/*	if (!(adjustmentOrderList.contains(invoiceItem.getString("orderId")))	&& (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))) {
