@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -258,8 +259,11 @@ apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
 	        		supplierRate = (BigDecimal)productSupplyDetails.get("supplyRate");
 	        	}
         		result.put("supplierRate", supplierRate);
-        		result.put("lastSupplyDate", productSupplyDetails.get("supplyDate"));
-
+        		String lastSupplyDate = "N/A";
+        		if (UtilValidate.isNotEmpty(productSupplyDetails.get("supplyDate"))) {
+        			lastSupplyDate = UtilDateTime.toDateString((Timestamp)productSupplyDetails.get("supplyDate"),"dd MMMMM, yyyy");
+	        	}
+        		result.put("lastSupplyDate", lastSupplyDate);
         	}
         	Map<String, Object> inventoryDetails = 
         			InventoryServices.getProductInventoryOpeningBalance(dispatcher.getDispatchContext(), UtilMisc.toMap("productId", productId, "ownerPartyId","Company"));
