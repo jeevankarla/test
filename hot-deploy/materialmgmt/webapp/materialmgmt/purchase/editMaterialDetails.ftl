@@ -14,7 +14,6 @@
 <script type="application/javascript">
 
 
-
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -83,6 +82,8 @@
   	var GlobalproductName;
 	var GlobalproductId;
   	var GloballongDescription;
+  	var productAttributeValue;
+	var productAttributeName="LEDGERFOLIONO";
 	 uomList = ${StringUtil.wrapString(dataJSONList)!'{}'};
 	function showUpdateProductForm(productId,uomId) {
          var innerUomId=$.trim(uomId);
@@ -106,7 +107,7 @@
            	  					 //alert("productDetails=========="+productDetails.longDescription);
           	 	 				GlobalproductName=productDetails.productName;
           	 					 GloballongDescription=productDetails.longDescription;
-          	 	 
+          	 	 				productAttributeValue=productDetails.attrValue;
           					  }
                
           	} ,
@@ -133,6 +134,7 @@
 			message +="<tr ><td align='right' class='h2' width='15%' >Uom Id: </td><td align='left' width='60%'><select name='quantityUomId' id='quantityUomId' class='h3'>"+
               		<#--<#list uomList as uom><option value='${uom.uomId}' <#if uom.uomId=='"+innerUomId+"'  > selected='selected'</#if> >${uom.description}[${uom.abbreviation}]</option></#list>"+   -->         
 					"</select></td></tr>";
+			message+="<tr><td align='right' class='h2' width='15%'>Ledger Folio No:</td><td align='left' width='75%'><input type='text' size='20'  id='attrValue' name='attrValue' onmouseover='onlyNumbers();' /><input type='hidden' id='attrName' name='attrName'/></td></tr>";
 		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='productName'/><input type='hidden' id='productId'  name='productId'  /> </tr></tbody></table></td></tr>";
 			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='right' class='label labelFontCSS' >Specification: </td><td align='left'  width='75%'  >";
               message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'></textarea><input type='hidden' id='description'  name='description'  /><input type='hidden' id='brandName'  name='brandName'  /> </td></tr>";
@@ -149,6 +151,8 @@
        jQuery("#productName").val(GlobalproductName);
 		jQuery("#productId").val(GlobalproductId);
 		jQuery("#longDescription").val(GloballongDescription);
+		jQuery("#attrValue").val(productAttributeValue);
+		jQuery("#attrName").val(productAttributeName);
 	$('#quantityUomId').html(globalUomOptionList.join(''));
 
 	};
@@ -157,4 +161,16 @@
 		jQuery("#description").val(desc);
 		jQuery("#brandName").val(desc);
 	};
+	function onlyNumbers(){    
+	 $('#attrValue').keypress(function(e) { 
+        var a = [];
+        var k = e.which;
+        for (i = 48; i < 58; i++)
+            a.push(i);
+
+        if (!(a.indexOf(k)>=0))
+            e.preventDefault();
+          
+        });
+      };
 </script>

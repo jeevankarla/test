@@ -290,4 +290,15 @@
         <attribute name="attributeValue" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="updateProductDetails" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="updateProductDetails" >
+        <description>Update product and create or update product Attribute </description>
+        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productName" mode="IN" type="String" optional="true"/>
+        <attribute name="attrValue" mode="IN" type="String" optional="true"/>
+        <attribute name="attrName" mode="IN" type="String" optional="false"/>
+        <attribute name="quantityUomId" mode="IN" type="String" optional="true"/>
+        <attribute name="description" mode="IN" type="String" optional="true"/>
+        <attribute name="brandName" mode="IN" type="String" optional="true"/>
+    </service>
 </services>
