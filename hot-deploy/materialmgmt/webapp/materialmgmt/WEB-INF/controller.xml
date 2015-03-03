@@ -1212,9 +1212,15 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="SupplierEvaluationReport"/>        
     </request-map>
+   
     <request-map uri="ItemIssuanceReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MaterialIndentReport"/>        
+    </request-map>
+     <request-map uri="getStoreCatalogCatagory">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="getStoreCatalogCatagory.groovy"/>
+       <response name="success" type="request" value="json"/>    
     </request-map>
     <!-- Vendor -->
     <request-map uri="findVendor">

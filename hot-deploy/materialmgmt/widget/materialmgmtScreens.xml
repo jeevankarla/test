@@ -725,6 +725,12 @@
              
 			  <set field="categoryList" from-field="productCategoryListResult"/> -->
 				<!-- <set field="categoryList" value="${productCategoryResult.productCategory}"/> -->
+				
+			  <!--  <entity-condition entity-name="ProductStoreGroupMember" list="productStoreGroupMemberList" use-cache="true">
+                	<condition-list >
+                    	<condition-expr field-name="productStoreGroupId" operator="equals" value="FGS_SALE_STORE" />
+                    </condition-list>
+                </entity-condition> -->
             </actions>
             <widgets>
               <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1003,7 +1009,7 @@
                 <set field="promotionAdj" from-field="parameters.promotionAdj"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
-                 <set field="productStoreId" from-field="parameters.productStoreId"/>
+                 <set field="productStoreId" from-field="parameters.productStoreIdFrom"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              
