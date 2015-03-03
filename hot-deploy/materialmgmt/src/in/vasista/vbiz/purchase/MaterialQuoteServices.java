@@ -1088,4 +1088,103 @@ public class MaterialQuoteServices {
 	  	request.setAttribute("_EVENT_MESSAGE_","Successfully Quotation Updated..!");
 		return "Success";
 	}
+	
+	public static String updateQuotesForEvaluation(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> resultCtx = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  String quoteId = "";
+	  	  String quoteItemSeqId = "";
+	  	  String custRequestId = "";
+	  	  String statusId = "";
+	  	  String comments = "";
+	  	 
+			  	for (int i = 0; i < rowCount; i++){
+		  		  
+			  	  Map paymentMap = FastMap.newInstance();
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  
+		  		  BigDecimal amount = BigDecimal.ZERO;
+		  		  String amountStr = "";
+		  		  
+		  		  if (paramMap.containsKey("quoteId" + thisSuffix)) {
+		  			quoteId = (String) paramMap.get("quoteId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("quoteItemSeqId" + thisSuffix)) {
+		  			quoteItemSeqId = (String) paramMap.get("quoteItemSeqId"+thisSuffix);
+		  		  }
+		  		   if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+		  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
+		  		  }
+		  		   if (paramMap.containsKey("statusId" + thisSuffix)) {
+		  			statusId = (String) paramMap.get("statusId"+thisSuffix);
+		  		  }
+		  		try{
+					Map evaluationMap = FastMap.newInstance();
+					evaluationMap.put("quoteId", quoteId);
+					evaluationMap.put("quoteItemSeqId", quoteItemSeqId);
+					evaluationMap.put("custRequestId", custRequestId);
+					evaluationMap.put("statusId", statusId);
+					evaluationMap.put("comments", comments);
+					evaluationMap.put("userLogin", userLogin);
+					evaluationMap.put("locale", locale);
+					resultCtx = dispatcher.runSync("changeQuoteItemStatus", evaluationMap);
+					custRequestId = (String)resultCtx.get("custRequestId");
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("Evaluation Failed for Quote: " + quoteId+":"+quoteItemSeqId, module);
+						return "error";
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+						Debug.logError(e, module);
+						request.setAttribute("_ERROR_MESSAGE_", " Quote Evaluation Failed ");
+			  			return "error";
+					}
+			  	}
+		         request.setAttribute("_EVENT_MESSAGE_", "Quote Status Updated  successfully");
+		         request.setAttribute("custRequestId", custRequestId);
+			return "success";
+		}
+	
+	public static String updateQuotesForNegotiation(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      String quoteId = request.getParameter("quoteId");
+	      String quoteItemSeqId = request.getParameter("quoteItemSeqId");
+	      String custRequestId = request.getParameter("custRequestId");
+	      BigDecimal quoteUnitPrice = new BigDecimal(request.getParameter("quoteUnitPrice"));
+	      try{
+	    	  Map negotiateMapCtx = FastMap.newInstance();
+	    	  negotiateMapCtx.put("quoteId",quoteId);
+	    	  negotiateMapCtx.put("quoteItemSeqId",quoteItemSeqId);
+	    	  negotiateMapCtx.put("custRequestId",custRequestId);
+	    	  negotiateMapCtx.put("quoteUnitPrice",quoteUnitPrice);
+	    	  negotiateMapCtx.put("userLogin",userLogin);
+	    	  negotiateMapCtx.put("locale",locale);
+	    	  Map resultCtx = dispatcher.runSync("quoteNegotiateAndStatusChange", negotiateMapCtx);
+	      }catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				request.setAttribute("_ERROR_MESSAGE_", " Quote Negotiation Failed ");
+	  			return "error";
+			}
+	      request.setAttribute("_EVENT_MESSAGE_", "Quote Negotiation successfully Accepted!!");
+	      return "success";
+	}
+
 }
