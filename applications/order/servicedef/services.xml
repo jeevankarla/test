@@ -1183,5 +1183,17 @@ under the License.
          <attribute name="salesChannelEnumId" type="String" default-value="MATERIAL_PUR_CHANNEL" mode="IN" optional="true"/>
          <attribute name="orderTypeId" type="String" default-value="PURCHASE_ORDER" mode="IN" optional="false"/>
     </service> 
-    
+    <service name="cancelItemIssuanceForOrder" engine="simple"
+            location="component://order/script/org/ofbiz/order/order/OrderServices.xml" invoke="cancelItemIssuanceForOrder" auth="true">
+        <description> Cancel Item Issuance for an Order</description>
+         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="cancelOrderItemIssuanceForSalesOrder" engine="simple"
+            location="component://product/script/org/ofbiz/shipment/issuance/IssuanceServices.xml" invoke="cancelOrderItemIssuanceForSalesOrder" auth="true">
+        <description>Cancel an ItemIssuance from Sales Shipment</description>
+        <permission-service service-name="facilityGenericPermission" main-action="UPDATE"/>
+        <attribute name="itemIssuanceId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelQuantity" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="canceledQuantity" type="BigDecimal" mode="OUT" optional="false"/>
+    </service>
 </services>
