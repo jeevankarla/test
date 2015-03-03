@@ -36,7 +36,7 @@ dctx = dispatcher.getDispatchContext();
 custRequestId = parameters.custRequestId;
 
 conditionList = [];
-Debug.log("=====custRequestId Before preparation=of email==custRequestId:"+parameters.custRequestId+"=itemIssuanceId="+parameters.itemIssuanceId+"==itemSeqId="+custRequestItemSeqId);
+
 
 GenericValue tenantConfigSendIssueEmail = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enableIndentIssuanceEmail"), false);
 sendEmailFlag="";
@@ -72,25 +72,21 @@ if(UtilValidate.isNotEmpty(custRequestItem) && UtilValidate.isNotEmpty(custReque
 	indentIssueEmailInput["subject"]=subject;
 	indentIssueEmailInput["bodyText"]=bodyText;
 
-/*<attribute name="custRequestId" type="String" mode="IN" optional="false"/>
-<attribute name="sendFrom" type="String" mode="IN" optional="true"/>
-<attribute name="sendTo" type="String" mode="IN" optional="false"/>
-<attribute name="sendCc" type="String" mode="IN" optional="true"/>
-<attribute name="subject" type="String" mode="IN" optional="true"/>
-<attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>
-<attribute name="partyId" type="String" mode="IN" optional="true"/>*/
 	deptPrimeryEmail= dispatcher.runSync("getPartyEmail", [partyId:custRequestItem.fromPartyId, userLogin: userLogin]);
-	if(deptPrimeryEmail){
+	if(UtilValidate.isNotEmpty(deptPrimeryEmail) && UtilValidate.isNotEmpty(deptPrimeryEmail.emailAddress) ){
 	sendTo=deptPrimeryEmail.emailAddress;
 	}
 	deptSecondEmail= dispatcher.runSync("getPartyEmail", [partyId:custRequestItem.fromPartyId,contactMechPurposeTypeId:"SECONDARY_EMAIL" ,userLogin: userLogin]);
-	if(deptSecondEmail){
+	if(UtilValidate.isNotEmpty(deptSecondEmail) && UtilValidate.isNotEmpty(deptSecondEmail.emailAddress) ){
 		sendTo=sendTo+","+ deptSecondEmail.emailAddress;
 	}
+	Debug.log("===sendTo Addresss is:"+sendTo+"=itemIssuanceId="+parameters.itemIssuanceId+"==itemSeqId="+custRequestItemSeqId);
 	if(UtilValidate.isNotEmpty(sendTo)){
-		indentIssueEmailInput["sendTo"]=sendTo;
+		indentIssueEmailInput["sendTo"]=sendTo+", kvarma@vasista.in ";
 		emailSendRes=dispatcher.runSync("sendIndentIssuanceEmail", indentIssueEmailInput);
-		Debug.log("==emailSendRes==="+emailSendRes+"==ENDDDDDDDDDDDDDDDDD=");
+		Debug.log("==emailSendRes==="+emailSendRes+"==ENDDDDDDDDDDDDDDDDD="+"==Send=To=partyId=="+custRequestItem.fromPartyId);
+	}else{
+	Debug.log("===SendTo addresss is empty ,so email not sent to Department=========>for partyId: "+custRequestItem.fromPartyId);
 	}
  }
 }
