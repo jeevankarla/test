@@ -55,12 +55,20 @@ partyId=parameters.partyId;
 basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
 salary=basicSalAndGradeMap.get("amount");
 grade=basicSalAndGradeMap.get("payGradeId");
-locations=delegator.findByAnd("Employment",[partyIdTo:partyId]);
-if(UtilValidate.isNotEmpty(locations))
-location=locations.get(0).locationGeoId;
-context.salary=salary;
-context.grade=grade;
-context.location=location;
+locations=delegator.findByAnd("Employment",[partyIdTo:partyId,thruDate:null]);
+if(UtilValidate.isNotEmpty(locations)){
+	geoId=locations.get(0).locationGeoId;
+	if(UtilValidate.isNotEmpty(geoId)){
+		locationGeo = delegator.findOne("Geo", [geoId : geoId], false);
+		if(UtilValidate.isNotEmpty(locationGeo.geoName)){
+			location = locationGeo.geoName;
+			context.location=location;
+		}
+	}
+	context.salary=salary;
+	context.grade=grade;
+}
+
 
 	
 	

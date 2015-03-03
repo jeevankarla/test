@@ -1051,6 +1051,63 @@ public class HumanresService {
 	        result = ServiceUtil.returnSuccess("New Employment Created Sucessfully...!");
 	        return result;
 	    }
+	 public static Map<String, Object> updateLocationGeo(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String partyIdTo = (String) context.get("partyId");
+	    	String partyIdFrom = (String) context.get("company");
+	    	String locationGeoId = (String) context.get("locationGeoId");
+	    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+	    	if(UtilValidate.isEmpty(fromDate)){
+	    		fromDate = UtilDateTime.nowTimestamp();
+	    	}
+	    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Timestamp appointmentDate = null;
+			try {
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
+				conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,partyIdFrom));
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart));
+				conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS ,null));
+		    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+				List<GenericValue> employmentList = delegator.findList("Employment", condition, null, null, null, false);
+				if(UtilValidate.isEmpty(employmentList)){
+					List condList = FastList.newInstance();
+					condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
+					condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,partyIdFrom));
+					condList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
+					condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+			    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			    	List<GenericValue> activeEmploymentList = delegator.findList("Employment", cond, null, UtilMisc.toList("-fromDate"), null, false);
+			    	if(UtilValidate.isNotEmpty(activeEmploymentList)){
+			    		GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
+						appointmentDate = activeEmployment.getTimestamp("appointmentDate");
+						activeEmployment.set("thruDate", previousDayEnd);
+						activeEmployment.store();
+			    	}
+			    	GenericValue newEntity = delegator.makeValue("Employment");
+					newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+					newEntity.set("roleTypeIdTo", "EMPLOYEE");
+					newEntity.set("partyIdFrom", partyIdFrom);
+					newEntity.set("partyIdTo", partyIdTo);
+					newEntity.set("fromDate", fromDateStart);
+					newEntity.set("appointmentDate", appointmentDate);
+					newEntity.set("locationGeoId", locationGeoId);
+					newEntity.create();
+				}else{
+					return ServiceUtil.returnError("Location already exists.....!");
+				}
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while creating new Employment"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("New Location updated Sucessfully...!");
+	        return result;
+	    }
 	 public static Map<String, Object> updateEmployeeFinancialAccount(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();

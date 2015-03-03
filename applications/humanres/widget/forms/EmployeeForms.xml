@@ -1082,7 +1082,7 @@
         <field name="description"><display/></field>    
         <field name="comment"><display/></field>                                        
     </form>    
-    <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
+    <form name="CurrentEmploymentData" default-map-name="employmentData" type="single" target="updateLocationGeo">
     	<field name="partyId" ><hidden value="${parameters.partyId}"/></field>
         <field name="company" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
@@ -1096,14 +1096,24 @@
                 <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
             </hyperlink>
         </field>
-        <field name="location" title="Location"><display description="${location}"/></field>
-        <field name="grade" title="Pay Grade"><display description="${grade}"/></field>
+        <field name="grade" title="Pay Grade"><display description="${grade}"/></field>	
         <field name="salary" title="Basic Salary"><display description="${salary}"/></field>
          <!-- <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field> -->
         <field name="appointmentDate" entry-name="employment.appointmentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+    	<field name="location" title="Current Location"><display description="${location}"/></field>
+        <field name="locationGeoId" title="New Location">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
+                    <entity-constraint name="geoTypeId" value="CITY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="From Date"><date-time/></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
    
 	 <form name="EditAccountDetails" type="single" separate-columns="true"  target="updateEmplFinAccount" >
