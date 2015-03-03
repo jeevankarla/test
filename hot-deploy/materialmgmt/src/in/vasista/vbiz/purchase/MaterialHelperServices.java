@@ -1147,7 +1147,8 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
 				}
 				
-				recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
+				//recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
+				recalcAdjPrice = amount;
 				BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
 				BigDecimal basicPrice = uPrice.multiply(quantity);
