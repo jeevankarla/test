@@ -38,7 +38,7 @@
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
 					$('button', api.elements.content).click(api.hide);
-					datepick();
+					datepick1();
 					$('input[name=changeComments]').focusout(function(){
 	     		            appendParams();
 	  
@@ -60,7 +60,7 @@
 		
 	}
 	
-	function datepick()	{		
+	function datepick1()	{	
 		$( "#tempAmendedDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: false,
@@ -99,7 +99,7 @@
 					"<td align='center' class='h3' colspan=8><font color='black'>Amend PO : ${orderId?if_exists}</font></td>"+
 				 "</tr>"
 		title += "</table>"
-		message += "<table cellspacing=10 cellpadding=10 width=250><tr class='h3'><td>Amend Date</td><td><input type='text' id='tempAmendedDate' name='tempAmendedDate' onclick='javascript:datepick()'/></td></tr>"+		
+		message += "<table cellspacing=10 cellpadding=10 width=250><tr class='h3'><td>Amend Date</td><td><input type='text' id='tempAmendedDate' name='tempAmendedDate' onmouseover='datepick1()'/></td></tr>"+		
 		           "<tr class='h3'><td>Comments</td><td><input type='text' id='changeComments' name='changeComments'/></td></tr></table>";
 		message += "<br/><br/>";
 		message += "<form action='amendPOItemEvent' method='post' onsubmit='return disableGenerateButton();' required><table cellspacing=10 cellpadding=10 width=250>" ; 		
