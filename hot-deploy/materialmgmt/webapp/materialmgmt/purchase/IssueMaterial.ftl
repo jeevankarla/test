@@ -30,7 +30,7 @@ function checkAllIndentApprovalStatus(master){
         flag = "true";
     } 
     if(flag == "true"){
-		var issuances = $('input[name="UpdateCrates"]');
+		var issuances = $('input[name="checkIssuance"]');
 	    jQuery.each(issuances, function() {
 	    this.checked = master.checked;
 	     });
@@ -38,7 +38,7 @@ function checkAllIndentApprovalStatus(master){
  }
 
 function issueSelected(){
-	 var issuanceList = $('input[name=UpdateCrates]:checked');
+	 var issuanceList = $('input[name=checkIssuance]:checked');
 	 if(issuanceList.size() <=0) {
 	 alert("Please Select at least One Request..!")
 		 return false;

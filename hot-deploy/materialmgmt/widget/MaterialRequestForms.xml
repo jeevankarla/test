@@ -491,7 +491,7 @@
           <field name="issuedQty" title="IssuedQty" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>  
          <field name="QOH" title="InventoryAvailable" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
         <field name="tempQty" title="QtyToIssue" widget-style="tabletextright"  widget-area-style="align-text"><text size="5"  default-value="${toBeIssuedQty}"> </text></field>
-        <field name="UpdateCrates"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}" description=" " ></option></check> </field>
+        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}" description=" " ></option></check> </field>
         
         <!-- <field name="UpdateCrates" title="Issue ${uiLabelMap.MaterialMangement_Product}"  use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" event="onclick" action="javascript:issueProductForRequest(this);"   widget-style="buttontext"> 
            <submit button-type="button" />
