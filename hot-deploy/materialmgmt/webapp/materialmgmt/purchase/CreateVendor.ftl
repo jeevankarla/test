@@ -188,17 +188,11 @@
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> email Address</b></td>
+									    <td class="label"><b> E-mail Address</b></td>
 									    <td>
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
-									<tr>
-									    <td class="label"><b>Mobile Number</b></td>
-									    <td>
-									      	<input type="text" name="mobileNumber" id="mobileNumber" size="30" maxlength="60" autocomplete="off" />
-									    </td>
-								   </tr>
 									<tr>
 									    <td class="label"><b>Country Code</b></td>
 									    <td>
@@ -206,9 +200,15 @@
 									    </td>
 									</tr>
 									<tr>
+									    <td class="label"><b>Mobile Number</b></td>
+									    <td>
+									      	<input type="text" name="mobileNumber" id="mobileNumber" size="15" maxlength="10" autocomplete="off" />
+									    </td>
+								   </tr>
+									<tr>
 									    <td class="label"><b>Contact Number</b></td>
 									    <td>
-									      	<input type="text" name="contactNumber" id="contactNumber" size="30" maxlength="60" autocomplete="off"/>
+									      	<input type="text" name="contactNumber" id="contactNumber" size="15" maxlength="15" autocomplete="off"/>
 									    </td>
 								  </tr>
 									
