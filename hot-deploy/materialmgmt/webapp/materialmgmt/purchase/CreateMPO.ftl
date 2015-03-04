@@ -723,7 +723,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 });
 	$('#delPaymentTerm').click(function () {
 	     var table = $("#paymentTermsTable");
-	    if (table.find('input:text').length > 1) {
+	     alert(table.find('input:text').length);
+	    if (table.find('input:text').length >= 1) {
 	        table.find('input:text').last().closest('tr').remove();
 	    }
 	});
@@ -752,7 +753,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	
 	$('#delDeliveryTerm').click(function () {
 	     var table = $("#deliveryTermsTable");
-	    if (table.find('input:text').length > 1) {
+	    if (table.find('input:text').length >= 1) {
 	        table.find('input:text').last().closest('tr').remove();
 	    }
 	});
