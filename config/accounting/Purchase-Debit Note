@@ -1,0 +1,5 @@
+<GlAccount accountCode="111401" accountName="Purchase-Debit Note" glAccountClassId="CASH_EQUIVALENT" glAccountId="111401" glAccountTypeId="BLNC_ACCT" glResourceTypeId="MONEY" parentGlAccountId="111000" postedBalance="0.00"/>
+<GlAccountOrganization glAccountId="111401" organizationPartyId="company" postedBalance="0.00"/>
+<PaymentMethodType description="Purchase - Debit Note" parentTypeId="NOTE" paymentMethodTypeId="DEBITNOTE_PURCH"/>
+<PaymentMethodTypeGlAccount glAccountId="111401" organizationPartyId="Company" paymentMethodTypeId="DEBITNOTE_PURCH"/>
+<PaymentMethod description="Purchase - Debit Note" glAccountId="111401" partyId="Company" paymentMethodId="PURCHASE_DEBITNOTE" paymentMethodTypeId="DEBITNOTE_PURCH"/>
