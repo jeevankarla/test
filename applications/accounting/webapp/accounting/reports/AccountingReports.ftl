@@ -140,6 +140,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	}
+	//no restriction for thruDate
+	function makeDatePicker3(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy, MM dd',
+			changeMonth: true,
+			changeYear: true,
+			onSelect: function(selectedDate) {
+			$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: null}).datepicker('setDate', date);
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'yy, MM dd',
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
 // for Vat Invoice Sequence and Invoice sale reports
 
 function reportTypeChangeFunc() {
@@ -159,12 +176,12 @@ function reportTypeChangeFunc() {
 
 	$(document).ready(function(){
 
-	    makeDatePicker("FinacialFromDate","FinacialThruDate");
-	    makeDatePicker("advFromDate","advThruDate");
-	    makeDatePicker("subLedgerFromDate","subLedgerThruDate");
+	    makeDatePicker3("FinacialFromDate","FinacialThruDate");
+	    makeDatePicker3("advFromDate","advThruDate");
+	    makeDatePicker3("subLedgerFromDate","subLedgerThruDate");
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
-	    makeDatePicker("PFHFromDateCrDr","PFHThruDateCrDr");
+	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
