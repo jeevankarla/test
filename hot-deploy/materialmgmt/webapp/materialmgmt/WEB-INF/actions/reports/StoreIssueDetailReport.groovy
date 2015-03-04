@@ -57,14 +57,22 @@ if(totalDays > 32){
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
-
+productIds=[];
 partyId=parameters.partyId;
 facilityId=parameters.issueToFacilityId;
+if(UtilValidate.isNotEmpty(facilityId)){
+	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId )],EntityOperator.AND);
+	productFacilityList = delegator.findList("ProductFacility", ecl, null, null, null, false);
+	productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
+	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("productId",EntityOperator.IN,productIdList),EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"RAW_MATERIAL")],EntityOperator.AND);
+	productList=delegator.findList("Product",condition,null,null,null,false);
+	productIds=EntityUtil.getFieldListFromEntityList(productList,"productId", true);
+}
 
 conditionList=[];
-if(UtilValidate.isNotEmpty(facilityId)){
+/*if(UtilValidate.isNotEmpty(facilityId)){
 	conditionList.add(EntityCondition.makeCondition("facilityId", ,EntityOperator.EQUALS, facilityId));
-}
+}*/
 if(UtilValidate.isNotEmpty(partyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", ,EntityOperator.EQUALS, partyId));
 }
@@ -73,7 +81,6 @@ conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 storeAbst= delegator.findList("CustRequestAndCustRequestItem",condition,UtilMisc.toSet("custRequestId","custRequestDate","productId","custRequestItemSeqId","fromPartyId"),null,null,false);
 deptIds = EntityUtil.getFieldListFromEntityList(storeAbst, "fromPartyId", true);
-
 prodDeptMap=[:];
 if(UtilValidate.isNotEmpty(deptIds)){
 		 
@@ -86,14 +93,15 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)));
 		 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		 productIdsDetails = delegator.findList("CustRequestAndCustRequestItem", condition , null, null, null, false );
-		 productIds = EntityUtil.getFieldListFromEntityList(productIdsDetails, "productId", true);		 
-		 
+		 if(UtilValidate.isEmpty(facilityId)){
+		 productIds = EntityUtil.getFieldListFromEntityList(productIdsDetails, "productId", true);		
+		 } 
          conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 productCatDetails = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);		 
-		 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);		 
+		 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);	
          if(UtilValidate.isNotEmpty(productCatIds)){
 	             prodMap=[:];
 				 
@@ -142,26 +150,43 @@ if(UtilValidate.isNotEmpty(deptIds)){
 										 unitPrice=0;
 			                             totQty=0;
 			                             totunitCost=0;
+										 totVal=0;
 	                                    if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
-									
-		                                      storeAbstQtyDetails.each{storeAbstQty->												  
-					                              quantity=storeAbstQty.quantity;												  
-					                              totQty =totQty+quantity;												  
+											if(storeAbstQtyDetails.size()>1){
+		                                      storeAbstQtyDetails.each{storeAbstQty->	
+					                              itemquantity=storeAbstQty.quantity;												  
+												  if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
+													  itemquantity=itemquantity-storeAbstQty.cancelQuantity;
+												  }			
+												  totQty =totQty+itemquantity;
 					                              unitCost=storeAbstQty.unitCost;
-					                              totunitCost=totunitCost+unitCost;
+					                             /* totunitCost=totunitCost+unitCost;*/
+												  totVal+=itemquantity*unitCost;
 												  
 		                                      }
-											  if(storeAbstQtyDetails.size()>1){
+											}else{
+												storeAbstQty=EntityUtil.getFirst(storeAbstQtyDetails);
+												quantity=storeAbstQty.quantity;
+												if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
+													quantity-=storeAbstQty.cancelQuantity;
+												}
+												totQty=quantity;
+												unitCost=storeAbstQty.unitCost;
+												 totVal=quantity*unitCost;
+											}
+											  /*if(storeAbstQtyDetails.size()>1){
 										         if(totunitCost != 0){  
 			                                           unitPrice=totQty/totunitCost;
 													   productDetailMap["unitPrice"]=unitPrice;
 													   totVal=	totQty*	unitPrice;
+										         }else{
+												 productDetailMap["unitPrice"]=unitPrice;
 										         }
 											  }
 											  else{
 												  productDetailMap["unitPrice"]=unitCost;
 												  totVal=	totQty*	unitCost;
-											  }
+											  }*/
 				                            
 				                            productDetailMap["totQty"]=totQty;				                           
 				                            productDetailMap["totVal"]=totVal;

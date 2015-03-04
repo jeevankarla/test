@@ -76,10 +76,10 @@ under the License.
 										<fo:block text-align="left" keep-together="always">ISS.</fo:block>
 										<fo:block text-align="left" keep-together="always">QTY</fo:block>
 									</fo:table-cell>
-									<fo:table-cell>
+								<#--	<fo:table-cell>
 									    <fo:block text-align="left" keep-together="always">UNIT</fo:block>
 									    <fo:block text-align="left" keep-together="always">RATE</fo:block>
-									</fo:table-cell>
+									</fo:table-cell> -->
 	                                <fo:table-cell>
 									    <fo:block text-align="left" keep-together="always">TOT</fo:block>
 									    <fo:block text-align="left" keep-together="always">VALUE</fo:block>
@@ -135,7 +135,7 @@ under the License.
 		                <fo:table-cell><fo:block text-align="left" > ${products.get("description")?if_exists}</fo:block> </fo:table-cell>                         							
 		                <fo:table-cell><fo:block text-align="center" > ${products.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
 		                <fo:table-cell><fo:block text-align="right" > ${products.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="right"> ${products.get("unitPrice")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>                         							
+		         <#--       <fo:table-cell><fo:block text-align="right"> ${products.get("unitPrice")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>  -->                         							
 		                <fo:table-cell><fo:block text-align="right" > ${products.get("totVal")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          
 				  </fo:table-row>
              <#assign amount=products.get("totVal")?if_exists>
@@ -157,7 +157,7 @@ under the License.
 	    		   <fo:table-cell><fo:block text-align="left" > </fo:block> </fo:table-cell>                         							
 	    		   <fo:table-cell><fo:block text-align="left" ></fo:block> </fo:table-cell>                         							
 	    		   <fo:table-cell><fo:block text-align="right" > TOTAL</fo:block> </fo:table-cell>                         							
-	    		   <fo:table-cell><fo:block text-align="right"> </fo:block> </fo:table-cell>                         							
+	    		   <#--  <fo:table-cell><fo:block text-align="right"> </fo:block> </fo:table-cell>    -->                     							
 	    		   <fo:table-cell><fo:block text-align="right" > ${total?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          
 			 </fo:table-row>  
              <fo:table-row >
@@ -210,10 +210,12 @@ under the License.
                                   <#assign amount = products.get("totVal")?if_exists>
                                    <#if  amount?has_content> 
                                      <#assign total = total+amount>
-                                     <#assign grandTotal = grandTotal+total> 	                            
+                                    	                            
                                    </#if>
-                               <#assign sno=sno+1>  
+                               
                               </#list> 
+							 <#assign grandTotal = grandTotal+total> 
+							<#assign sno=sno+1>  
 	                      </#if>      
 					     <fo:table-cell><fo:block text-align="right" > ${total?if_exists?string("##0.00")}</fo:block> </fo:table-cell>		
 				     </fo:table-row>                                                                                                                         

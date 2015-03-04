@@ -85,7 +85,7 @@ dctx = dispatcher.getDispatchContext();
 			 productDetails = delegator.findOne("Product",[productId : productId], false);
 			 internalName = "";
 			 if(UtilValidate.isNotEmpty(productDetails)){
-				 internalName = Integer.parseInt(productDetails.internalName);
+				 internalName = productDetails.internalName;
 			 }
 			 productName = "";
 			 uomDescription = "";
@@ -185,7 +185,7 @@ if(UtilValidate.isNotEmpty(finalStockPositionMap)){
 	for(String key in finalStockPositionMap.keySet()){
 			List tempList = FastList.newInstance();
 			tempList.addAll(finalStockPositionMap.get(key));
-			tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("internalName"));
+			tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("-internalName"));
 			sortedMap.put(key,tempList);
 	}
 }
