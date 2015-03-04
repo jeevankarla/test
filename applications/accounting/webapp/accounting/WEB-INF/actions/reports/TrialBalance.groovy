@@ -33,8 +33,7 @@ import javolution.util.FastList;
 import javolution.util.FastSet;
 import org.ofbiz.accounting.util.*;
   asOnDate = parameters.asOnDate;
-//Debug.log("customTimePeriodId========================="+parameters.customTimePeriodId);
-//Debug.log("organizationPartyId========================="+parameters.organizationPartyId);
+
   dctx = dispatcher.getDispatchContext();
  glAccountAndHistories =[];
  condList = [];
@@ -44,36 +43,67 @@ import org.ofbiz.accounting.util.*;
 	 Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("organizationPartyId", parameters.organizationPartyId,"customTimePeriodId",parameters.customTimePeriodId));
 	 lastClosedGlBalanceList =[];
 	 lastClosedGlBalanceList = lastClosedGlBalances.get("openingGlHistory");
-	 Debug.log(" before lastClosedGlBalanceList==========="+lastClosedGlBalanceList);
 	 tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
+		 
 		 tempGlAccountAndHistoryMap =[:];
 		 tempGlAccountAndHistoryMap.putAll(tempGlAccountAndHistory);
 		 lastClosedGlBalance = EntityUtil.getFirst(EntityUtil.filterByAnd(lastClosedGlBalanceList, UtilMisc.toMap("glAccountId",tempGlAccountAndHistory.get("glAccountId"))))
 		 tempGlAccountAndHistoryMap.putAt("openingC",0);
 		 tempGlAccountAndHistoryMap.putAt("openingD",0);
+		 
+		 glAccount = delegator.findOne("GlAccount", [glAccountId : tempGlAccountAndHistory.get("glAccountId")], false);
+		 isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
+		 
 		 if(UtilValidate.isNotEmpty(lastClosedGlBalance)){
+			 
+			 if (isDebitAccount) {
+				 if( (lastClosedGlBalance.getBigDecimal("totalEndingBalance")) < 0){
+					 tempGlAccountAndHistoryMap.putAt("openingC", (lastClosedGlBalance.getBigDecimal("totalEndingBalance")).negate());
+				 }
+				 else{
+					 tempGlAccountAndHistoryMap.putAt("openingD", lastClosedGlBalance.getBigDecimal("totalEndingBalance"));
+				 }
+			 }
+			 else{
+				 if( (lastClosedGlBalance.getBigDecimal("totalEndingBalance")) < 0){
+					 tempGlAccountAndHistoryMap.putAt("openingD", (lastClosedGlBalance.getBigDecimal("totalEndingBalance")).negate());
+				 }
+				 else{
+					 tempGlAccountAndHistoryMap.putAt("openingC", lastClosedGlBalance.getBigDecimal("totalEndingBalance"));
+				 }
+			 }
 			
-			if((lastClosedGlBalance.get("totalEndingBalance") <0 )){
-				tempGlAccountAndHistoryMap.putAt("openingC",((lastClosedGlBalance.getBigDecimal("totalEndingBalance").negate())));
-			}else{
-			   tempGlAccountAndHistoryMap.putAt("openingD", lastClosedGlBalance.getBigDecimal("totalEndingBalance"));
-			}
+			
 			lastClosedGlBalanceList.remove(lastClosedGlBalance);
 		}
 		tempGlAccountAndHistoryMap.putAt("totalEndingBalance", ((tempGlAccountAndHistoryMap.get("totalPostedDebits")+tempGlAccountAndHistoryMap.get("openingD"))-(tempGlAccountAndHistoryMap.get("totalPostedCredits")+tempGlAccountAndHistoryMap.get("openingC"))));
 		glAccountAndHistories.add(tempGlAccountAndHistoryMap);
 	 }
-	 Debug.log("lastClosedGlBalanceList==========="+lastClosedGlBalanceList);
+	 
 	 if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
 		 lastClosedGlBalanceList.each{ tempGlAccountAndHistory ->
+			 
+			 glAccount = delegator.findOne("GlAccount", [glAccountId : tempGlAccountAndHistory.get("glAccountId")], false);
+			 isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
 			 tempGlAccountAndHistoryMap =[:];
 			 tempGlAccountAndHistoryMap.putAll(tempGlAccountAndHistory);
 			 tempGlAccountAndHistoryMap.putAt("openingC",0);
 			 tempGlAccountAndHistoryMap.putAt("openingD",0);
-			 if((tempGlAccountAndHistory.get("totalEndingBalance") < 0 )){
-				 tempGlAccountAndHistoryMap.putAt("openingC",((tempGlAccountAndHistory.getBigDecimal("totalEndingBalance").negate())));
-			 }else{
-				tempGlAccountAndHistoryMap.putAt("openingD", tempGlAccountAndHistory.getBigDecimal("totalEndingBalance"));
+			 if (isDebitAccount) {
+				 if( (tempGlAccountAndHistory.getBigDecimal("totalEndingBalance")) < 0){
+					 tempGlAccountAndHistoryMap.putAt("openingC", (tempGlAccountAndHistory.getBigDecimal("totalEndingBalance")).negate());
+				 }
+				 else{
+					 tempGlAccountAndHistoryMap.putAt("openingD", tempGlAccountAndHistory.getBigDecimal("totalEndingBalance"));
+				 }
+			 }
+			 else{
+				 if( (tempGlAccountAndHistory.getBigDecimal("totalEndingBalance")) < 0){
+					 tempGlAccountAndHistoryMap.putAt("openingD", (tempGlAccountAndHistory.getBigDecimal("totalEndingBalance")).negate());
+				 }
+				 else{
+					 tempGlAccountAndHistoryMap.putAt("openingC", tempGlAccountAndHistory.getBigDecimal("totalEndingBalance"));
+				 }
 			 }
 			 tempGlAccountAndHistoryMap.putAt("totalPostedDebits",0 );
 			 tempGlAccountAndHistoryMap.putAt("totalPostedCredits",0 );
@@ -117,5 +147,6 @@ import org.ofbiz.accounting.util.*;
 	  Debug.logInfo("dataJSONList="+dataJSONList,"");
 	  request.setAttribute("dataJSON",dataJSONList);
   }
-  //Debug.log("dataJSONList =========="+dataJSONList);
-  //Debug.log("accountCodeList =========="+accountCodeList);
+
+  
+  
