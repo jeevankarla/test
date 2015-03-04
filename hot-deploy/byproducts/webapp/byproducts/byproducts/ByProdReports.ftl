@@ -1180,8 +1180,13 @@ function reportTypeChangeFunc() {
 								    <option value='PPDNandiniSalesAbstract'>PPDNandiniSalesAbstract</option>
 								</select>
 							</td>
-	      					<td width="15%"></td>
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+							<tr><td width="75%"></td>
+							<td width="75%"></td>
+							<td width="75%"></td>
+							<td width="75%"></td>
+							<td width="75%"></td>
+							<td width="20%"><input type="submit" value="PDF" onClick="javascript:appendParams('saleInvoiceAbstractReport', '<@ofbizUrl>saleInvoiceAbstractReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('saleInvoiceAbstractReport', '<@ofbizUrl>saleInvoiceAbstractReport.csv</@ofbizUrl>');" class="buttontext"/></td>   </tr>      			
 						</form>
 	                  </tr>
 	                  <#-->

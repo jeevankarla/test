@@ -187,4 +187,69 @@
         <field name="cstRevenue" title="C.S.T"><display/></field>
         <field name="total" title="Total"><display/></field>
     </form>
+        	<!--INVOICE SEQUENCE NUMBER REPORT CSV's-->
+     <form name="InvoiceAbstractReportCSV" type="list" list-name="invoiceAbstractList" view-size="99999">
+     	<field name="tinnumbe" title="TIN"><display/></field>
+        <field name="invoiceDate" title="InVoice Date"><display/></field>
+        <field name="invoiceId" title="InVoice Number"><display/></field>
+        <field name="invoiceSeqId" title="Central Excise Invoice Number"><display/></field>
+        <field name="partyName" title=" Retailer Name"><display/></field>
+        <field name="basicRevenue" title="Ex-factory Value"><display/></field>
+        <field name="bedRevenue" title="Ed Value"><display/></field>
+        <field name="vatRevenue" title="Vat"><display/></field>
+        <field name="cstRevenue" title="C.S.T"><display/></field>
+        <field name="ppd" title="PPD"><display/></field>
+        <field name="total" title="Total"><display/></field>
+    </form>
+     <form name="InvoiceAbstractDayWiseReportCSV" type="list" list-name="finalInvoiceDateList" view-size="99999">
+        <field name="invoiceDate" title="InVoice Date"><display/></field>
+        <field name="partyName" title=" Retailer Name"><display/></field>
+        <field name="invoiceId" title="InVoice Number"><display/></field>
+        <field name="tinnumbe" title="TIN"><display/></field>
+        <field name="invoiceSeqId" title="Central Excise Invoice Number"><display/></field>
+        <field name="totalMrpValue" title="MRP Value"><display/></field>
+        <field name="basicRevenue" title="Ex-factory Value"><display/></field>
+        <field name="bedRevenue" title="Ed Value"><display/></field>
+        <field name="vatRevenue" title="Vat"><display/></field>
+        <field name="cstRevenue" title="C.S.T"><display/></field>
+        <field name="ppd" title="PPD"><display/></field>
+        <field name="total" title="Total"><display/></field>
+    </form>
+     <form name="PPDNandiniSalesAbstractReportCSV" type="list" list-name="finalInvoiceDateList" view-size="99999">
+       <field name="invoiceDate" title="InVoice Date"><display/></field>
+        <field name="partyName" title=" Retailer Name"><display/></field>
+        <field name="invoiceId" title="InVoice Number"><display/></field>
+        <field name="tinnumbe" title="TIN"><display/></field>
+        <field name="invoiceSeqId" title="Central Excise Invoice Number"><display/></field>
+        <field name="totalMrpValue" title="MRP Value"><display/></field>
+        <field name="basicRevenue" title="Ex-factory Value"><display/></field>
+        <field name="bedRevenue" title="Ed Value"><display/></field>
+        <field name="vatRevenue" title="Vat"><display/></field>
+        <field name="cstRevenue" title="C.S.T"><display/></field>
+        <field name="ppd" title="PPD"><display/></field>
+        <field name="total" title="Total"><display/></field>
+    </form>
+     <form name="PPDNandiniSalesReportCSV" type="list" list-name="PPDAbstractList" view-size="99999">
+        <field name="tinnumbe" title="TIN"><display/></field>
+        <field name="invoiceDate" title="InVoice Date"><display/></field>
+        <field name="invoiceId" title="InVoice Number"><display/></field>
+        <field name="invoiceSeqId" title="Central Excise Invoice Number"><display/></field>
+        <field name="partyName" title=" Retailer Name"><display/></field>
+        <field name="basicRevenue" title="Ex-factory Value"><display/></field>
+        <field name="bedRevenue" title="Ed Value"><display/></field>
+        <field name="vatRevenue" title="Vat"><display/></field>
+        <field name="cstRevenue" title="C.S.T"><display/></field>
+        <field name="ppd" title="PPD"><display/></field>
+        <field name="total" title="Total"><display/></field>
+    </form>
+     <form name="VatInvoiceSeqNoReportCSV" type="list" list-name="finalVatLsit" view-size="99999">
+        <field name="invoiceDate" title="InVoice Date"><display/></field>
+        <field name="retailerCode" title="Retailer Code"><display/></field>
+        <field name="retailerName" title=" Retailer Name"><display/></field>
+        <field name="invoiceSeqNo" title="Invoice Number"><display/></field>
+        <field name="bosNo" title="BOS-No"><display /></field>
+        <field name="basicAmount" title="Basic Amount"><display/></field>
+        <field name="taxAmount" title="Tax Amount"><display/></field>
+        <field name="netAmount" title="Net Amount"><display/></field>
+    </form>
 </forms>

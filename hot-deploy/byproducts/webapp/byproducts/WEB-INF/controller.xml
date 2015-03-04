@@ -1471,6 +1471,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="InvoiceAbstractReport"/>
     </request-map>
+    <request-map uri="saleInvoiceAbstractReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="InvoiceAbstractReportCSV"/>
+    </request-map>
     <request-map uri="purchaseRegisterBook.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseRegisterBook"/>
@@ -1749,6 +1753,7 @@
 	<view-map name="IceCreamTaxEnclosuerReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamTaxEnclosuerReportCSV" content-type="text/csv"/>
 	
 	<view-map name="InvoiceAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoiceAbstractReport" content-type="application/pdf"/>
+	<view-map name="InvoiceAbstractReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoiceAbstractReportCSV" content-type="text/csv"/>
 	<view-map name="PurchaseRegisterBook" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBook" content-type="application/pdf"/>
 	<view-map name="PurchaseRegisterBookCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBookCSV" content-type="text/csv"/>
 	<view-map name="IcDealerOSDuesIntimationPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IcDealerOSDuesIntimationPDF" content-type="application/pdf"/>

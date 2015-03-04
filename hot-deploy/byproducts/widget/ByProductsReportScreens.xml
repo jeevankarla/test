@@ -2051,6 +2051,98 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="InvoiceAbstractReportCSV">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="vatType" from-field="parameters.vatType"/>
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="InvoiceSales" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/InvoiceAbstractReport.groovy" />	
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/csv/InvoiceAbstractReportCsv.groovy" />	
+					</actions>
+					<widgets>
+				
+						<include-form name="InvoiceAbstractReportCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+				
+					</widgets>
+				</section>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="InvoiceSalesAbstract" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/InvoiceAbstractReport.groovy" />
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/csv/InvoiceAbstractReportCsv.groovy" />		
+					</actions>
+					<widgets>
+						<include-form name="InvoiceAbstractDayWiseReportCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PPDNandiniSalesAbstract" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PPDNandiniSalesReport.groovy" />	
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/csv/PPDNandiniSalesReportCsv.groovy" />	
+					</actions>
+					<widgets>
+						<include-form name="PPDNandiniSalesAbstractReportCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PPDNandiniSales" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PPDNandiniSalesReport.groovy" />	
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/csv/PPDNandiniSalesReportCsv.groovy" />	
+					
+					</actions>
+					<widgets>
+							<include-form name="PPDNandiniSalesReportCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						  <if-compare operator="equals" value="vat" field="vatType" />
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/VatInvoiceSeqNoReport.groovy" />	
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/csv/VatInvoiceSeqNoReportCsv.groovy" />	
+					
+					</actions>
+					<widgets>
+							<include-form name="VatInvoiceSeqNoReportCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+	
 	<screen name="PurchaseRegisterBook">
 		<section>
 			<actions>
