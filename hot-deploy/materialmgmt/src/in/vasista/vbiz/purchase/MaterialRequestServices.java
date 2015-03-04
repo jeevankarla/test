@@ -1683,4 +1683,77 @@ public class MaterialRequestServices {
 			}
 		    return result;
 	 }
+    public static String issueSelectedRequests(HttpServletRequest request, HttpServletResponse response) {
+			Delegator delegator = (Delegator) request.getAttribute("delegator");
+		  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		  	  Locale locale = UtilHttp.getLocale(request);
+		  	  Map<String, Object> resultCtx = ServiceUtil.returnSuccess();
+		  	  HttpSession session = request.getSession();
+		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
+		  	  String custRequestId = "";
+		  	  String custRequestItemSeqId = "";
+		  	  BigDecimal toBeIssuedQty = BigDecimal.ZERO;
+		  	  String qty="";
+		  	  String facilityId = "";
+		  	
+				  	for (int i = 0; i < rowCount; i++){
+			  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			  		  
+			  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+			  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
+			  		  }
+			  		  if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+			  			custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId"+thisSuffix);
+			  		  }
+			  		   if (paramMap.containsKey("toBeIssuedQty" + thisSuffix)) {
+			  			 qty = (String) paramMap.get("toBeIssuedQty"+thisSuffix);
+			  		  }
+			  		   if(qty.contains(","))
+			  		   {
+			  			 qty = qty.replace(",", "");
+			  		   }
+			  		 if(UtilValidate.isNotEmpty(qty)){
+						  try {
+							  toBeIssuedQty = new BigDecimal(qty);
+				  		  } catch (Exception e) {
+				  			  Debug.logError(e, "Problems parsing quantity string: " + qty, module);
+				  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + qty);
+				  			  return "error";
+				  		  }
+			  		  }
+					if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)<=0)){
+						request.setAttribute("_ERROR_MESSAGE_", "Cannot Accept Quantity ZERO for"+custRequestId+"--!");	  		  
+				  		  return "error";
+					}
+			  		try{
+						Map issuanceMapCtx = FastMap.newInstance();
+						issuanceMapCtx.put("custRequestId", custRequestId);
+						issuanceMapCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+						issuanceMapCtx.put("toBeIssuedQty", toBeIssuedQty);
+						issuanceMapCtx.put("facilityId", facilityId);
+						issuanceMapCtx.put("userLogin", userLogin);
+						issuanceMapCtx.put("locale", locale);
+						resultCtx = dispatcher.runSync("issueProductForRequest", issuanceMapCtx);
+						if (ServiceUtil.isError(resultCtx)) {
+							Debug.logError("Issuance Failed in Service for Indent : " + custRequestId+":"+custRequestItemSeqId, module);
+							return "error";
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+							Debug.logError(e, module);
+							request.setAttribute("_ERROR_MESSAGE_", " Issuance Request Failed ");
+				  			return "error";
+						}
+				  	}
+			         request.setAttribute("_EVENT_MESSAGE_", "successfully Issued "+rowCount+" Selected Materials");
+				return "success";
+			}
+
 }

@@ -140,6 +140,7 @@
                                 <include-form name="FindIssueRequests" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                         </screenlet>
                      	<screenlet title="List Requests to Issue">
+	                     	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/IssueMaterial.ftl"></html-template></html></platform-specific>
                      		<include-form name="ListRequestsToIssue" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                      	</screenlet>
                     </decorator-section>
