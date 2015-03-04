@@ -34,7 +34,6 @@ finAccountId = parameters.finAccountId;
 if (!finAccountId && request.getAttribute("finAccountId")) {
   finAccountId = request.getAttribute("finAccountId");
 }
-//Debug.log("===finAccountId==sadasd="+finAccountId);
 finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
 context.finAccount = finAccount;
 context.finAccountId = finAccountId;
@@ -51,18 +50,24 @@ if (context.ctxFinAccountId != null) {
 			tabButtonItem="FindFinAccountAlt";
 			context.tabButtonItem="FindFinAccountAlt";
 			parameters.tabButtonItem="FindFinAccountAlt";
-		}
-		else if(parameters.screenFlag && parameters.screenFlag=="NON_BANKACCOUNT"){
-			tabButtonItem="FindNonBankAccount";
-			context.tabButtonItem="FindNonBankAccount";
-			parameters.tabButtonItem="FindNonBankAccount";
+			Debug.log("=ToBe ==Invoke For BANK Account==tabButtonItem="+tabButtonItem);
+		}//inter Unit Bank Accounts
+		else if((parameters.screenFlag && parameters.screenFlag=="INTERUNIT_ACCOUNT") || ("INTERUNIT_ACCOUNT"==ctxFinAccount.finAccountTypeId)){
+			tabButtonItem="FindInterUnitBankAccount";
+			context.tabButtonItem="FindInterUnitBankAccount";
+			parameters.tabButtonItem="FindInterUnitBankAccount";
+			Debug.log("=ToBe ==Invoke For INTER_UNIT Account==tabButtonItem="+tabButtonItem);
+		}else {//Non Bank Accounts
+		tabButtonItem="FindNonBankAccount";
+		context.tabButtonItem="FindNonBankAccount";
+		parameters.tabButtonItem="FindNonBankAccount";
+		Debug.log("=ToBe ==InvokeFor Non BANK Account=tabButtonItem="+tabButtonItem);
 		}
 	}
 	
 	context.ctxFinAccount = ctxFinAccount;
 }
-//Debug.log("===finAccountId==="+finAccountId);
-//Debug.log("===tabButtonItem==="+tabButtonItem);
+
 
 finAccountTypes = delegator.findList("FinAccountAndType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DEPOSIT_RECEIPT", "DEPOSIT_PAID")), UtilMisc.toSet("finAccountTypeId"), null, null, false);
 finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
@@ -70,12 +75,17 @@ if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 	conditionList = [];
 	if(parameters.screenFlag == "DEPOSIT_ACCOUNT"){
 		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountTypeIds));
-	}
-	else{
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+	}else if(parameters.screenFlag && parameters.screenFlag=="INTERUNIT_ACCOUNT"){//for InterUnit accounts
+	  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"));
+	  conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	}else{
 		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.NOT_EQUAL, "BANK_ACCOUNT"));
+		if(UtilValidate.isNotEmpty(finAccountTypeIds)){
 		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.NOT_IN, finAccountTypeIds));
+		}
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
 	}
-	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 	List nonBankAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	
@@ -94,6 +104,7 @@ if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	context.paymentMethodTypeList=paymentMethodTypeList;
 }
+//date filteration for reports
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 if(UtilValidate.isNotEmpty(parameters.fromTransDate)){
 	Timestamp daystart;

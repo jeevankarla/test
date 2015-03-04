@@ -278,6 +278,43 @@
             </widgets>
         </section>
     </screen>  
+    <screen name="FindInterUnitBankAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Inter Unit Financial Accounts"/>
+                  <set field="tabButtonItem" value="FindInterUnitBankAccount"/>
+                 <set field="tabButtonItem2" value="FindInterUnitBankAccount"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+               <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
+                <set field="parameters.ownerPartyId" value="Company"/>
+               <!--  <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/> -->
+                <set field="noConditionFind" value="Y"/>
+                <set field="screenFlag" value="INTERUNIT_ACCOUNT" /> 
+                <set field="parameters.screenFlag" value="INTERUNIT_ACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Inter Unit Accounts List">				
+									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    
     <screen name="FindFinAccountAlt">
         <section>
             <actions>

@@ -2028,6 +2028,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindNonBankAccount"/>
     </request-map>
+     <request-map uri="FindInterUnitBankAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindInterUnitBankAccount"/>
+    </request-map>
+    
     <request-map uri="FindDepositAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepositAccount"/>
@@ -3746,6 +3751,8 @@ under the License.
     <view-map name="WithdrawFromDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#WithdrawFromDepositAcct"/>
     <view-map name="DepositToDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositToDepositAcct"/>
     <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
+    <view-map name="FindInterUnitBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindInterUnitBankAccount"/>
+    
     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/>
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>

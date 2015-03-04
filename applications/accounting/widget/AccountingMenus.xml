@@ -2038,6 +2038,15 @@
 			<link target="FindNonBankAccount">
 			</link>
 		 </menu-item>
+		  <menu-item name="FindInterUnitBankAccount" title="Inter Unit Accounts">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindInterUnitBankAccount">
+			</link>
+		 </menu-item>
 		 <menu-item name="FindDepositAccount" title="Deposit Accounts">
           <condition>
 				<or>
