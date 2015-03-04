@@ -3350,9 +3350,11 @@ public class MaterialPurchaseServices {
 			return "error";
 			}
 		List materialCategoryList = new ArrayList();
-		for(int i=0;i<productCategoryIds.length;i++)
-		{
-			materialCategoryList.add(productCategoryIds[i]);
+		if(UtilValidate.isNotEmpty(productCategoryIds)){
+			for(int i=0;i<productCategoryIds.length;i++)
+			{
+				materialCategoryList.add(productCategoryIds[i]);
+			}
 		}
 		try{
 			Map newProductMap = FastMap.newInstance();
@@ -3425,17 +3427,24 @@ public class MaterialPurchaseServices {
 		return ServiceUtil.returnError(e.getMessage());
         }
 //------------------------------------Updating the ProductCategoryMember Entity	
-	try{
-	Map productCatgMap = FastMap.newInstance();
-	int length = materialCategoryList.size();
-	for(int i=0;i<length;i++)
-		{
-		productCatgMap.put("productCategoryId", materialCategoryList.get(i));
-		productCatgMap.put("productId", productId);
-		productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
-		productCatgMap.put("userLogin", userLogin);
-		result = dispatcher.runSync("addProductToCategory", productCatgMap);
+		Map productCatgMap = FastMap.newInstance();
+	if(UtilValidate.isNotEmpty(materialCategoryList)){
+		try{
+		int length = materialCategoryList.size();
+		for(int i=0;i<length;i++)
+			{
+			productCatgMap.put("productCategoryId", materialCategoryList.get(i));
+			productCatgMap.put("productId", productId);
+			productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+			productCatgMap.put("userLogin", userLogin);
+			result = dispatcher.runSync("addProductToCategory", productCatgMap);
+			}
 		}
+		catch(Exception e){
+			return ServiceUtil.returnError(e.getMessage());
+			}
+	}
+	try{
 		productCatgMap.put("productCategoryId", primaryCategoryId);
 		productCatgMap.put("productId", productId);
 		productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
@@ -3443,11 +3452,12 @@ public class MaterialPurchaseServices {
 		result = dispatcher.runSync("addProductToCategory", productCatgMap);
 	if (ServiceUtil.isError(result)) {
 		return ServiceUtil.returnError("Error Occurred While updating Product Category");
+			}
 		}
-	}
 catch(Exception e){
-	return ServiceUtil.returnError(e.getMessage());
-	}
+		return ServiceUtil.returnError(e.getMessage());
+		}
+	
 //------------------------------------------------Updating the ProductFacility Entity	
 	if(!facilityId.equals(null) && UtilValidate.isNotEmpty(facilityId)){
 		try{
