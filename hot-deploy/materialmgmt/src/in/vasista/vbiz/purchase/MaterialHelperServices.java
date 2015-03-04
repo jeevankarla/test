@@ -877,7 +877,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 						Map<String,Object> exBedCessRateMap = UtilAccounting.getExclusiveTaxRate(exBedRate,bedcessTaxPercent);
 						exBedCessRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
 						bedCessUnitRate = exBedCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
-						totalTaxAmt = totalTaxAmt.add(bedCessUnitRate);
+						totalTaxAmt = totalTaxAmt.add(exBedCessRate);
 						
 						Map<String,Object> exBedSecCessRateMap = UtilAccounting.getExclusiveTaxRate(exBedRate,bedseccessTaxPercent);
 						exBedSecCessRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
