@@ -38,5 +38,6 @@ under the License.
     <PaymentMethod paymentMethodId="PETTY_CASH" paymentMethodTypeId="CASH" partyId="Company" description="Petty Cash" glAccountId="110000" fromDate="2009-04-01 00:00:00.000"/>
    <!-- Debit Note Configuration -->
     <PaymentMethod description="Debit Note" finAccountId="FIN_ACCNT1" fromDate="2011-07-12 00:00:00.0" glAccountId="112200"  partyId="Company" paymentMethodId="DEBIT_NOTE" paymentMethodTypeId="CASH_PAYOUT"/> 
-
+      <FinAccount actualBalance="71567698.76" bCode=" " bPlace=" " createdStamp="2014-12-16 15:08:46.0"  currencyUomId="INR" finAccountBranch=" " finAccountCode=" " finAccountId="FININ_BSD" finAccountName="BANGALORE SALES DEPOT[BSD]" finAccountTypeId="INTERUNIT_ACCOUNT" fromDate="2014-07-01 00:00:00.0" gbCode=" " ifscCode=" " isRefundable="Y"  organizationPartyId="Company" ownerPartyId="BSD" postToGlAccountId="119000" replenishLevel="0.00" statusId="FNACT_ACTIVE"/>
+      <FinAccount actualBalance="138240663.40" availableBalance="0.00" bCode=" " bPlace=" "  currencyUomId="INR" finAccountBranch=" " finAccountCode=" " finAccountId="FININ_KMF" finAccountName="KARNATAKA MILK FEDERATION LTD[KMF]" finAccountTypeId="INTERUNIT_ACCOUNT" fromDate="2014-07-01 00:00:00.0" gbCode=" " ifscCode=" " isRefundable="Y"  organizationPartyId="Company" ownerPartyId="KMF" postToGlAccountId="119000" replenishLevel="0.00" statusId="FNACT_ACTIVE"/>
 </entity-engine-xml>
