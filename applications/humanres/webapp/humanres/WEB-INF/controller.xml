@@ -1715,6 +1715,12 @@ under the License.
         <response name="success" type="view" value="ListEmployments"/>
         <response name="error" type="view" value="ListEmployments"/>
     </request-map>
+     <request-map uri="updateLocationGeo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLocationGeo"/>
+        <response name="success" type="view" value="EmployeeProfile"/>
+        <response name="error" type="view" value="EmployeeProfile"/>
+    </request-map>
    <!--====================Reports Requests===================================-->
     <request-map uri="viewprofile">
         <security https="true" auth="true"/>

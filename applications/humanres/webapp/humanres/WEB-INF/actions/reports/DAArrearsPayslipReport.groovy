@@ -148,10 +148,28 @@ employmentsList.each{ employeeId ->
 															  netDAAmount  = newDAAmount - oldDAAmount;
 														  }
 														  tempMap = [:];
-														  tempMap.put("Basic",basicAmount);
-														  tempMap.put("oldDA",oldDAAmount);
-														  tempMap.put("newDA",newDAAmount);
-														  tempMap.put("netDA",netDAAmount);
+														  tempMap.put("Basic",basicAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  tempMap.put("oldDA",oldDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  tempMap.put("newDA",newDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  tempMap.put("netDA",netDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  fromDateStart = basicSalDate;
+														  thruDateEnd = UtilDateTime.getDayEnd(basicSalDate);
+														  BigDecimal EpfAmount = BigDecimal.ZERO;
+														  DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDateStart,"thruDate",thruDateEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+														  if(UtilValidate.isNotEmpty(DAARPeriodTotals)){
+															  Iterator DAARPeriodTotalsIter = DAARPeriodTotals.entrySet().iterator();
+															  while(DAARPeriodTotalsIter.hasNext()){
+																  Map.Entry DAAREntry = DAARPeriodTotalsIter.next();
+																  if(DAAREntry.getKey() != "customTimePeriodTotals"){
+																	  DAARTotals = DAAREntry.getValue().get("periodTotals");
+																	  EpfAmount = DAARTotals.get("PAYROL_DD_PF");
+																	  if(UtilValidate.isEmpty(EpfAmount)){
+																		  EpfAmount = 0;
+																	  }
+																	  tempMap.putAt("EpfAmount", -(EpfAmount.setScale(0,BigDecimal.ROUND_HALF_UP)));
+																  }
+															  }
+														  }
 														  if(UtilValidate.isNotEmpty(tempMap)){
 															  periodMap.putAt(ctpId, tempMap);
 														  }
@@ -263,10 +281,10 @@ employmentsList.each{ employeeId ->
 															  netDAAmount1  = newDAAmount1 - oldDAAmount1;
 														  }
 														  tempMap1 = [:];
-														  tempMap1.put("Basic1",basicAmount1);
-														  tempMap1.put("oldDA1",oldDAAmount1);
-														  tempMap1.put("newDA1",newDAAmount1);
-														  tempMap1.put("netDA1",netDAAmount1);
+														  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  tempMap1.put("oldDA1",oldDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+														  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
 														  if(UtilValidate.isNotEmpty(tempMap1)){
 															  leaveEncashMap.putAt(basicLEDate, tempMap1);
 														  }
@@ -283,7 +301,6 @@ employmentsList.each{ employeeId ->
 			}
 		}
 	}
-	
 	if(UtilValidate.isNotEmpty(periodMap)){
 		DAArrearMap.put(employeeId,periodMap);
 	}
@@ -293,3 +310,11 @@ employmentsList.each{ employeeId ->
 }
 context.DAArrearMap=DAArrearMap;
 context.DAArrearLEMap = DAArrearLEMap;
+
+
+
+
+
+
+
+

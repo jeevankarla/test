@@ -107,6 +107,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 		                						<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, ",yyyy")/>
 						                    </#if>
 						                    <#assign month = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "MMMM")>
+								             <#assign epf = employeeDetails.getValue().get("EpfAmount")?if_exists>
 								             <fo:table-row >
 						                        <fo:table-cell>
 						                          <fo:block text-align="left" >${fromDate?if_exists}${thruDate?if_exists}</fo:block>
@@ -195,14 +196,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
  				                      </fo:table-cell>
 			                      </fo:table-row>
 			                       <fo:table-row>
-			                       <#assign epf = (0.12*netDATotal?if_exists)>
+			                       <#assign epf = employeeDetails.getValue().get("EpfAmount")?if_exists>
 			                       <fo:table-cell>
 						                          <fo:block text-align="right"  ></fo:block>
 						                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right"  font-weight="bold" >PTAX  = 0.00 </fo:block>
 			                          <fo:block text-align="right"  font-weight="bold" >ESI   = 0.00</fo:block>
-			                          <fo:block text-align="right"  font-weight="bold" >		EPP    = ${(0.12*netDATotal)?if_exists?string("#0.00")}</fo:block>
+			                          <fo:block text-align="right"  font-weight="bold" >		EPP    = ${epf?if_exists?string("#0.00")}</fo:block>
 			                          <fo:block text-align="right"  font-weight="bold" >NSC   = 0.00 </fo:block>
 			                          <fo:block text-align="right"  ></fo:block>
 			                          <fo:block text-align="right" ></fo:block>
