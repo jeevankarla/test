@@ -6,6 +6,10 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
+
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
@@ -73,7 +77,20 @@ function makeDatePicker(fromDateId ,thruDateId){
 	
 	$(document).ready(function(){
 		makeDatePicker("fromDate","fromDateId");
+		
+		$("#productCategoryId").multiselect({
+			minWidth : 180,
+			height: 100,
+			selectedList: 4,
+			show: ["bounce", 100],
+			position: {
+				my: 'left bottom',
+				at: 'left top'
+			}
+		});
 	});
+	
+	
 	
 </script>
 	
@@ -101,15 +118,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 						      	</select>
 						    </td>
 						</tr>
-	                   <tr>
-							<td class="label">Material Category :</td>
+						<tr>
+							<td class="label">Analysis Code :</td>
 						    <td>
-							<select name="productCategoryId" id="productCategoryId" multiple="multiple" onblur="getMultiple(document.AddMaterial.productCategoryId);">
-						      	   <#list materialCategoryList as materialCategory>
+							<select name="productCategoryId" id="productCategoryId" multiple="multiple">
+						      	    <#list materialCategoryList as materialCategory>
 						      	   			<option value='${materialCategory.productCategoryId}'>${materialCategory.description}</option>
-								    </#list> 
+								    </#list>  
 						      	</select>
-						      	<span class="tooltip">press 'Ctrl' key to select multiple </span>
 						    </td>
 						</tr>
 						<tr>
@@ -119,7 +135,7 @@ function makeDatePicker(fromDateId ,thruDateId){
         				 	</td>
 						</tr>
 						<tr>
-          		        	<td class="label"><b>Description: </b></td>
+          		        	<td class="label"><b>Product Name: </b></td>
 					    	<td>
          						<textarea cols="40" rows="5" name="description" id="description"></textarea>
      					    </td>
@@ -151,7 +167,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		     					    </td>
 								</tr>			
 								<tr>
-									<td class="label">Facility Id</td>
+									<td class="label">Store Id</td>
 								    <td>
 										<select name="facilityId" id="facilityId">
 													<option></option>
@@ -167,7 +183,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    </td>
 								</tr>
 								<tr>
-		          		        	<td class="label"><b>Material Attribute Value: </b></td>
+		          		        	<td class="label"><b>Ledger Folio No: </b></td>
 							    	<td>
 								      	<input type="text" name="attributeValue" id="attributeValue" size="18" maxlength="60" autocomplete="off"/>
 		        				 	</td>
@@ -176,17 +192,3 @@ function makeDatePicker(fromDateId ,thruDateId){
 						</fieldset>
                      </section>
                 </form>
-                
- <script type="application/javascript">
-   var selected = new Array();
-function getMultiple(productCategory)
-{
-    for (var i = 0; i < productCategory.options.length; i++)
-    	{
-    	  if (productCategory.options[ i ].selected)
-    		  selected.push(productCategory.options[ i ].value);
-    	}
-    	alert(selected);
-}
- </script>               
-			
