@@ -58,7 +58,7 @@ context.put("openingBal",result.get("openingBal"));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate))));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate))));
  //Debug.log("conditionList========="+conditionList);
- acctgTransEntryListIter = delegator.find("AcctgTransAndEntries", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, findOpts);
+ acctgTransEntryListIter = delegator.find("AcctgTransAndEntries", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, ['transactionDate','postedDate'], findOpts);
  // List acctgTransEntryList = delegator.find("AcctgTransAndEntries", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
  // filterByCondition
  acctgTransEntryList=[];
