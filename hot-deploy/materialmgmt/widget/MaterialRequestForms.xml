@@ -567,7 +567,7 @@
         </actions>
     </form>
     <form name="RequestsToApproveList" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
-        odd-row-style="alternate-row"  default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
+        odd-row-style="alternate-row"  default-table-style="basic-table hover-bar"  separate-columns="true">
         <row-actions>
 			<entity-one value-field="product" entity-name="Product">
 				<field-map field-name="productId" from-field="productId"/>
