@@ -409,9 +409,13 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			}
 		}
 		if(salary40Percent < actualHRA){
-			leastValue = salary40Percent;
+			if(UtilValidate.isNotEmpty(salary40Percent)){
+				leastValue = salary40Percent;
+			}
 		}else{
-			leastValue = actualHRA;
+			if(UtilValidate.isNotEmpty(actualHRA)){
+				leastValue = actualHRA;
+			}
 		}
 		if(leastValue < rentPaidExcess){
 			leastValue = leastValue;
@@ -423,7 +427,9 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		}
 		totalExtentAlw = leastValue + totalConveyanceTaxableAmount;
 		balance = totalEarnings - totalExtentAlw;
-		income = balance + aggregate;
+		if(UtilValidate.isNotEmpty(aggregate)){
+			income = balance + aggregate;
+		}
 		totalIncome = income - totalDeductableAmount;
 		BigDecimal totIncome = new BigDecimal(totalIncome);
 		employeeDetails = PayrollService.getEmployeePayrollCondParms(dctx,UtilMisc.toMap("employeeId",employee,"timePeriodStart",fromDateStart,"timePeriodEnd",thruDateEnd,"userLogin",userLogin));

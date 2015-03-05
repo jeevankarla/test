@@ -1,5 +1,11 @@
+import java.sql.*;
+import java.util.*;
+import java.lang.*;
+import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -9,7 +15,12 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericServiceException;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
@@ -19,6 +30,7 @@ JSONObject newObj = new JSONObject();
 
 timePeriodId = "";
 yearMonthDate = "";
+Timestamp fromDateStart = null;
 if(UtilValidate.isNotEmpty(parameters.timePeriodId)){
 	timePeriodId = parameters.timePeriodId;
 }
@@ -35,14 +47,31 @@ if(UtilValidate.isNotEmpty(parameters.tdsRemittanceDetailsList)){
 		newObj.put("BSRcode",BSRcode);
 		newObj.put("challanNumber",challanNumber);
 		headItemsJson.add(newObj);
+		GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : timePeriodId], false);
+		if(UtilValidate.isNotEmpty(customTimePeriod)){
+			fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+			thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		}
 	}
-}
-
-Timestamp fromDateStart = null;
-GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : timePeriodId], false);
-if(UtilValidate.isNotEmpty(customTimePeriod)){
-	fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-	thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+}else{
+	def orderBy1 = UtilMisc.toList("-lastUpdatedStamp");  
+	TDSRemittanceslist = delegator.findList("TDSRemittances",null , null, orderBy1, null, false);
+	TDSRemittanceslist = EntityUtil.getFirst(TDSRemittanceslist);
+	if(UtilValidate.isNotEmpty(TDSRemittanceslist)){
+		BSRcode = TDSRemittanceslist.get("BSRcode");
+		challanNumber = TDSRemittanceslist.get("challanNumber");
+		periodId = TDSRemittanceslist.get("customTimePeriodId");
+		newObj.put("id",timePeriodId+"["+timePeriodId+"]");
+		newObj.put("timePeriodId",timePeriodId);
+		newObj.put("BSRcode",BSRcode);
+		newObj.put("challanNumber",challanNumber);
+		headItemsJson.add(newObj);
+		GenericValue customTimePeriodList = delegator.findOne("CustomTimePeriod", [customTimePeriodId : periodId], false);
+		if(UtilValidate.isNotEmpty(customTimePeriodList)){
+			fromDateStart=UtilDateTime.toTimestamp(customTimePeriodList.getDate("fromDate"));
+			thruDateEnd=UtilDateTime.toTimestamp(customTimePeriodList.getDate("thruDate"));
+		}
+	}
 }
 context.headItemsJson=headItemsJson;
 context.yearMonthDate=fromDateStart;

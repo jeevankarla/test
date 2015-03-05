@@ -922,7 +922,7 @@
     	default-table-style="basic-table hover-bar" separate-columns="true" >  
         <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" required-field="true" tooltip="Required"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="false">
+             <drop-down allow-empty="false" no-current-selected-key="${finYearId}" current="selected">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
@@ -934,9 +934,14 @@
     </form>
     <form name="QuarterlyTDSForm" id="QuarterlyTDSForm" odd-row-style="alternate-row" header-row-style="header-row" type="single"
         default-table-style="basic-table hover-bar" separate-columns="true" target="updateQualrterlyTDSDetails"> 
-        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="false">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
+        <actions>
+            <entity-one entity-name="CustomTimePeriod" value-field="CustomTimePeriodList">
+                <field-map field-name="customTimePeriodId" value="${finYearId}"/>
+            </entity-one>
+        </actions>
+        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required" >
+             <drop-down allow-empty="false" no-current-selected-key="${finYearId}" current="selected">
+                <entity-options  entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
@@ -950,7 +955,7 @@
         	</drop-down>
         </field> 
         <field name="receiptNumber" title="Receipt Number"><text size="20"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}/${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
    </form> 
    <form name="QuarterlyTDSResults" list-name="TDSRemittancesDetails" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -963,7 +968,7 @@
     <form name="updateTaxRatesDetails" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">  
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="false">
+             <drop-down allow-empty="false" no-current-selected-key="${finYearId}" current="selected">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
@@ -988,7 +993,7 @@
     <form name="otherForm16InputDetails" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true" target="updateOtherForm16InputDetails">  
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="false">
+             <drop-down allow-empty="false" no-current-selected-key="${finYearId}" current="selected">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
@@ -1001,7 +1006,7 @@
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field>
         <field name="fatherName" title="FatherName" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field>
         <field name="designation" title="Designation" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field> 
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}/${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="otherForm16SearchResults" list-name="from16OtherInputsList" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

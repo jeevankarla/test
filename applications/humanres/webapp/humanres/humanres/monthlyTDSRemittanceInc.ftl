@@ -96,8 +96,8 @@
 			 	 data =[];
 			</#if>
 		    var columns = [
-					{id:"BSRcode", name:"BSR code", field:"BSRcode", width:220, minWidth:220,  cssClass:"readOnlyColumnClass",regexMatcher:"contains",  sortable:false, toolTip:""},
-					{id:"challanNumber", name:"Challan Number", field:"challanNumber", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
+					{id:"BSRcode", name:"BSR code", field:"BSRcode", width:180, minWidth:220,  cssClass:"readOnlyColumnClass",regexMatcher:"contains",  sortable:false, toolTip:""},
+					{id:"challanNumber", name:"Challan Number", field:"challanNumber", width:180, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
 			];
 			var options = {
 			editable: true,		
