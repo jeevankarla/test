@@ -23,10 +23,25 @@ dctx = dispatcher.getDispatchContext();
 
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	roleTypeId =parameters.roleTypeId;
-	partyDetailsList = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: roleTypeId]).get("partyDetails");
+	inputMap = [:];
+	inputMap.put("userLogin", userLogin);
+	inputMap.put("roleTypeId", roleTypeId);
+	if(UtilValidate.isNotEmpty(parameters.partyStatusId)){
+			inputMap.put("statusId", parameters.partyStatusId);	
+	}
+	Map partyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
+	if(UtilValidate.isNotEmpty(partyDetailsMap)){
+		partyDetailsList = partyDetailsMap.get("partyDetails");
 	   //To handle KMFUnions along with OtherSuppliers in PurchaseOrder tab.
 		if("MAINSTORE_VENDOR"==parameters.roleTypeId){
-			unionPartyDetailsList = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyDetails");
+			inputMap = [:];
+			inputMap.put("userLogin", userLogin);
+			inputMap.put("roleTypeId", "UNION");
+			if(UtilValidate.isNotEmpty(parameters.partyStatusId)){
+					inputMap.put("statusId", parameters.partyStatusId);
+			}
+			Map unionPartyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx,inputMap);
+			unionPartyDetailsList = unionPartyDetailsMap.get("partyDetails");
 			//Debug.log("======unionPartyDetailsList=="+unionPartyDetailsList.size());
 			if(UtilValidate.isNotEmpty(unionPartyDetailsList)&&(UtilValidate.isNotEmpty(partyDetailsList))){
 				partyDetailsList.addAll(unionPartyDetailsList);
@@ -35,12 +50,16 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 				partyDetailsList=unionPartyDetailsList;
 			}
 		}
+	}	
 		// checking for PO
 		if(UtilValidate.isEmpty(parameters.changeFlag)){
 			// sub division here
 			inputMap = [:];
 			inputMap.put("userLogin", userLogin);
 			inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -730));
+			if(UtilValidate.isNotEmpty(parameters.partyStatusId)){
+				inputMap.put("statusId", parameters.partyStatusId);
+			}
 			Map departmentsMap = MaterialHelperServices.getDivisionDepartments(dctx,inputMap);
 			if(UtilValidate.isNotEmpty(departmentsMap)){
 				departmentList=departmentsMap.get("subDivisionDepartmentList");
