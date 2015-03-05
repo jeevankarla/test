@@ -46,7 +46,8 @@
 	}
 	
 </style>			
-			
+<#include "monthlyTDSRemittanceInc.ftl"/> 
+
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <#--
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -84,6 +85,11 @@
 	
 	var mainGrid;		
 	function setupGrid1() {
+		<#if headInputItemsJson?has_content>
+		 	data = ${StringUtil.wrapString(headInputItemsJson)!'[]'};
+		 	<#else>
+		 	 data =[];
+		</#if>
 		var columns = [
 					{id:"BSRcode", name:"BSR code of the Branch", field:"BSRcode", width:200, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
 					{id:"challanNumber", name:"Challan Number", field:"challanNumber", width:200, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor}		
@@ -365,30 +371,44 @@
 </script>
 
 <div id="wrapper" style="width: 95%; height:100%">
-  	<form method="post" action="<@ofbizUrl>updateTDSRemittanceDetails</@ofbizUrl>" name="updateTDSRemittanceDetails" id="updateTDSRemittanceDetails"></form>
-</div>
+  	<form method="post" action="<@ofbizUrl>updateTDSRemittanceDetails</@ofbizUrl>" name="updateTDSRemittanceDetails" id="updateTDSRemittanceDetails">
+
 <div name ="updateEntryMsg" id="updateEntryMsg"> </div> 
 <h3><div align="left">
 	<table width="50%" border="0" cellspacing="0" cellpadding="0">  
-	    <tr><td width="15%">Month: <input type='text' id='yearMonthDate' name='yearMonthDate' readonly class="FDate"/></td></tr>
+	    <tr><td width="15%">Month: <input type='text' id='yearMonthDate' name='yearMonthDate' readonly class="FDate" value = ${parameters.yearMonthDate?if_exists}></td></tr>
 	    <tr><td width="15%">&nbsp</td></tr>
 	    <tr><td width="15%">&nbsp</td></tr>
+	    <tr><td align='left'>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span class='h4'><input type="submit"  size="10" value="Find" class="buttontext h4"/></span> </td></tr>
 	    <tr><td width="15%">&nbsp</td></tr>
 	 </table>
 </div></h3>   
- 
-<div id="div2" style="float: left;width: 41%;align:right; border: #F97103 solid 0.1em;">
-    <div>    	
- 		<div class="grid-header" style="width:100%">
-			<label>Monthly TDS Remittance</label>
-		</div>  
-		<div id="myGrid1" style="width:100%;height:200px;"></div>
-	</div> 
-</div> 		
-<div align="center">
-	 <table width="68%" border="0" cellspacing="0" cellpadding="0">  
-	    <tr><td><input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processMonthlyTDSEntry('updateTDSRemittanceDetails','<@ofbizUrl>updateTDSRemittanceDetails</@ofbizUrl>');" /></td>
-	 </table>
+</form>
 </div>
-	    
-    
+<div class="full">
+ 	<div class="lefthalf">
+		<div id="div2" style="float: left;width: 100%;align:right; border: #F97103 solid 0.1em;">
+		    <div>    	
+		 		<div class="grid-header" style="width:100%">
+					<label>Monthly TDS Remittance</label>
+				</div>  
+				<div id="myGrid1" style="width:100%;height:200px;"></div>
+			</div> 
+		</div> 		
+		<div align="center">
+			 <table width="68%" border="0" cellspacing="0" cellpadding="0">  
+			    <tr><td><input type="submit" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processMonthlyTDSEntry('updateTDSRemittanceDetails','<@ofbizUrl>updateTDSRemittanceDetails</@ofbizUrl>');" /></td>
+			 </table>
+		</div>
+	</div>
+	<div class="righthalf">
+		<div class="screenlet">
+    		<div class="screenlet-body">
+    			<div class="grid-header" style="width:100%">
+					<font size="16" color="#22047F"><b>Last Change<b/></font>:<font size="16" color="red"><b><#if yearMonthDate?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(yearMonthDate?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  
+				</div>
+				<div id="myGrid2" style="width:100%;height:200px;"></div>
+			</div>
+		</div>     
+	</div>
+</div>

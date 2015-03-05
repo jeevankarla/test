@@ -1860,7 +1860,7 @@ under the License.emplpunch
     </service>
     <service name="updateQualrterlyTDSDetails" engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="updateQualrterlyTDSDetails" auth="true">
-        <attribute name="receiptNumber" mode="IN" type="String" optional="false"/>
+        <attribute name="receiptNumber" mode="IN" type="String" optional="true"/>
         <attribute name="quarterPeriod" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateOtherForm16InputDetails" engine="java"

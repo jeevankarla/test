@@ -46,7 +46,8 @@
 	}
 	
 </style>			
-			
+		
+<#include "updateTaxRatesInc.ftl"/> 	
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <#--
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -86,11 +87,16 @@
 	
 	var mainGrid;		
 	function setupGrid1() {
+		<#if headItemsJson?has_content>
+		 	data = ${StringUtil.wrapString(headItemsJson)!'[]'};
+		 	<#else>
+		 	 data =[];
+		</#if>
 		var columns = [
 					{id:"totalIncomeFrom", name:"Total Income From", field:"totalIncomeFrom", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},
 					{id:"totalIncomeTo", name:"Total Income To", field:"totalIncomeTo", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
 					{id:"taxPercentage", name:"Percentage Rate of Tax", field:"taxPercentage", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},	
-					{id:"refundAmount", name:"Refund Amount", field:"refundAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor}		
+					{id:"refundAmount", name:"Minimum Slab Amount", field:"refundAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor}		
 			];
 		
 			var options = {
@@ -269,6 +275,28 @@
 			$("#suppInvoiceId").autocomplete({ disabled: false });	
 		
 	});	
+	
+	function updateGrid2(ajaxJson) {
+             data = ajaxJson;
+             grid2.setData(data);
+             grid2.invalidate();
+             grid2.render();
+              var pluginOptions = {
+      		 enableForCells: true,
+		      enableForHeaderCells: false,
+		      maxToolTipLength: null
+		    };
+             plugin = new Slick.AutoTooltips(pluginOptions);
+			grid2.registerPlugin(plugin);
+           if(data.length >0){
+			$(grid2.getCellNode(0,1)).click();
+			}else{
+				$(grid2.getCellNode(0,0)).click();
+			}
+			updateProductInfo();
+    }
+    
+    
 	 function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
 		processIndentEntryInternal(formName, action);
@@ -311,6 +339,8 @@
 	            	    $('div#updateEntryMsg').html('<label style="float: left;width: 51%;align:right; border: #F97103 solid 0.1em;">'+ result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]+'</label>');
 	            	     
 	               }else{
+	               		var taxDetailsList = result["taxDetailsList"];
+	               		updateGrid2(taxDetailsList);
 	               		$("div#updateEntryMsg").fadeIn();               	         	   
 	            	    $('div#updateEntryMsg').html(); 
 	            	    $('div#updateEntryMsg').removeClass("errorMessage");           	 
@@ -331,7 +361,7 @@
 <div id="wrapper" style="width: 95%; height:100%">
   	<form method="post" action="<@ofbizUrl>updateTaxRatesDetails</@ofbizUrl>" name="updateTaxRatesDetails" id="updateTaxRatesDetails"></form>
 </div>
-<div name ="updateEntryMsg" id="updateEntryMsg"> </div> 
+
 <#assign customTimePeriodIdsList	= delegator.findByAnd("CustomTimePeriod", {"periodTypeId" : "FISCAL_YEAR"})>
  <#--  <div class="lefthalf">
 <table border="0" cellspacing="10" cellpadding="0">  
@@ -354,20 +384,36 @@
 	</tr>
     </table>
  </div> -->
-<div id="div2" style="float: left;width: 51%;align:right; border: #F97103 solid 0.1em;">
-    <div>    	
- 		<div class="grid-header" style="width:100%">
-			<label>Tax Rates Input Form</label>
-		</div>    
-		<div id="myGrid1" style="width:100%;height:200px;"></div>
-	</div> 
-</div> 		
-<div align="center">
-	 <table width="60%" border="0" cellspacing="0" cellpadding="0">  
-	    <tr><td></td><td></td></tr>
-	    <tr><td></td><td></td></tr>
-	    <tr><td> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('updateTaxRatesDetails','<@ofbizUrl>updateTaxRatesDetails</@ofbizUrl>');" /></td>
-	 </table>
-</div>
-	    
+ <div class="full">
+ 	<div class="lefthalf">
+		<div id="div2" style="float: left;width: 100%;align:right; border: #F97103 solid 0.1em;">
+		    <div>    	
+		 		<div class="grid-header" style="width:100%">
+					<label>Tax Rates Input Form</label>
+				</div>    
+				<div id="myGrid1" style="width:100%;height:200px;"></div>
+			</div> 
+		</div> 	
+		<div name ="updateEntryMsg" id="updateEntryMsg" style="width:100%"> </div> 	
+		<div align="center">
+			 <table width="60%" border="0" cellspacing="0" cellpadding="0">  
+			    <tr><td></td><td></td></tr>
+			    <tr><td></td><td></td></tr>
+			    <tr><td> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('updateTaxRatesDetails','<@ofbizUrl>updateTaxRatesDetails</@ofbizUrl>');" /></td>
+			 </table>
+		</div>
+	</div>
+	<div class="righthalf">
+		<div class="screenlet">
+    		<div class="screenlet-body">
+    			<div class="grid-header" style="width:100%">
+					<font size="15" color="#22047F"><b>Tax Slabs <b/></font>:<font size="15" color="red"><b><#if parameters.age?has_content>[Age : ${parameters.age} 60] </#if> <#if parameters.gender?has_content><#if (parameters.gender) == "M">[Gender : Male] </#if><#if (parameters.gender) == "F">[Gender : Female] </#if></#if>  </b></font>  
+				</div>
+		 		
+				<div id="myGrid2" style="width:100%;height:200px;"></div>
+			  
+			</div>
+		</div>     
+	</div>
+</div>    
     

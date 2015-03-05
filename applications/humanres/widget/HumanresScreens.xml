@@ -1027,35 +1027,32 @@
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="Form16InputScreen" />
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/form16InputDetails.groovy" />  
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/findForm16InputDetails.groovy" />
             </actions>
             <widgets>
-				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+            	<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
-                    	<section>
-		                    <widgets>                       
-		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-		                            <decorator-section name="search-options">
-		                                <include-form name="updateForm16Details" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-		                            </decorator-section>		                           	 
-		                            <decorator-section name="search-results">
-		                               <section>
-		                               		 <widgets>
-				                                 <platform-specific>
-				                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/Form16InputDetails.ftl"/></html>
-				                                 </platform-specific>
-				                             </widgets>
-		                               </section>
-		                            </decorator-section>
-		                        </decorator-screen>
-		                    </widgets>                    
-		            	</section>	
+                    	<screenlet title="Employee Details">
+                        	<include-form name="updateForm16Details" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet> 
+                        <screenlet title="">
+                        	<decorator-section name="search-results">
+                               <section>
+                               		 <widgets>
+		                                 <platform-specific>
+		                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/Form16InputDetails.ftl"/></html>
+		                                 </platform-specific>
+		                             </widgets>
+                               </section>
+                            </decorator-section>
+                        </screenlet>
+                       
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
     <screen name="MonthlyTDSRemittance">
         <section>
             <actions>
@@ -1063,6 +1060,7 @@
                 <set field="headerItem" value="MonthlyTDSRemittance"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="MonthlyTDSRemittance"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/findMonthlyTDSDetails.groovy" />
 				<!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeBenefitsAndDeductions.groovy" /> -->
             </actions>
             <widgets>
@@ -1088,6 +1086,7 @@
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="QuarterlyTDSStatement"/>
 				<set field="layoutSettings.javaScripts[]" value="/humanres/images/quarterlyList.js" global="true"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/quarterlyTDSInputs.groovy" />
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -1095,8 +1094,10 @@
 					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
                         <screenlet title="Quarterly TDS Input Form">
                         	<include-form location="component://humanres/widget/forms/EmploymentForms.xml" name="QuarterlyTDSForm"/>
+                        </screenlet>
+                        <screenlet title="Input Results">
+                        	<include-form location="component://humanres/widget/forms/EmploymentForms.xml" name="QuarterlyTDSResults"/>
                         </screenlet> 
-                      
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1110,6 +1111,7 @@
                 <set field="headerItem" value="TaxRates"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="TaxRates"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/taxSlabsResults.groovy" />
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -1143,6 +1145,7 @@
                 <set field="headerItem" value="Others"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="Others"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/form16OtherInputs.groovy" />
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -1150,6 +1153,9 @@
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnnualItTabBar"/>
                     	<screenlet title="Other Inputs">
                         	<include-form name="otherForm16InputDetails" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet>
+                        <screenlet title="Inputs Results">
+                        	<include-form name="otherForm16SearchResults" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet> 
                     </decorator-section>
                 </decorator-screen>
