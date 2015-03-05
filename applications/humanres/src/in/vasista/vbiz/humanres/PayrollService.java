@@ -7772,11 +7772,7 @@ public class PayrollService {
   	    String quarterPeriodId = (String) context.get("quarterPeriod");
   	    try {
   		    if(UtilValidate.isNotEmpty(quarterPeriodId)){
-  		    	List condList = FastList.newInstance();
-  		    	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,quarterPeriodId));
-  		    	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-  				EntityCondition Cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
-  				List<GenericValue> TDSRemittancesList = delegator.findList("TDSRemittances", Cond, null, null, null, false);
+  				GenericValue TDSRemittancesList = delegator.findOne("TDSRemittances",UtilMisc.toMap("customTimePeriodId",quarterPeriodId,"partyId","Company"),false);
   				if(UtilValidate.isEmpty(TDSRemittancesList)){
   		    		GenericValue newEntity = delegator.makeValue("TDSRemittances");
   				  	newEntity.put("partyId","Company");
@@ -7785,7 +7781,9 @@ public class PayrollService {
   				  	newEntity.create();
   				  	result = ServiceUtil.returnSuccess("Qualrterly TDS Details Successfully Updated..");
   				}else{
-  					result = ServiceUtil.returnError("Receipt Number already entered for this period..");
+  					TDSRemittancesList.set("ReceiptNumber",receiptNumber);
+  					TDSRemittancesList.store();
+  					result = ServiceUtil.returnSuccess("Qualrterly TDS Details Successfully Updated..");
   				} 
   			}
   	    }catch (Exception e) {
