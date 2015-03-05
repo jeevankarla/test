@@ -11,7 +11,16 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 
 if(UtilValidate.isEmpty(parameters.productId)){
 	if(UtilValidate.isNotEmpty(result.listIt)){
-		context.listIt=result.listIt;
+		list=result.listIt;
+		resultList = [];
+		GenericValue poEntry = null;
+		while ((poEntry=list.next()) != null) {
+		if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+			resultList.add(poEntry);
+			}
+		}
+		context.listIt=resultList;
+		
 	}
 }
 else{
