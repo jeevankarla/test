@@ -22,7 +22,7 @@ under the License.
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
 					 margin-left="0.2in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
-				<fo:region-body margin-top="1.2in"/>
+				<fo:region-body margin-top="1.3in"/>
 				<fo:region-before extent="1in"/>
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
@@ -36,9 +36,9 @@ under the License.
 				<fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------</fo:block>
                 <fo:block text-align="center" white-space-collapse="false">&#160;   TOTAL STORE ISSUE REGISTER FOR THE PERIOD BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}</fo:block>                 
                 <fo:block text-align="left" keep-together="always"  >&#160;&#160;&#160;&#160;&#160;----------------------------------------------------------------------------------</fo:block>				
-                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-            </fo:static-content>
+                <fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
+			<#--	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> -->
+            	</fo:static-content>
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
                 <fo:block text-align="left" keep-together="always"  >&#160;------------------------------------------------------------------------------------------------</fo:block>				   	
                 <fo:block font-family="Courier,monospace">

@@ -123,10 +123,10 @@ dctx = dispatcher.getDispatchContext();
 			 shipmentReceipts=delegator.findList("ShipmentReceipt",ecl,UtilMisc.toSet("statusId","quantityAccepted","quantityRejected"),null,null,false);
 			 if(UtilValidate.isNotEmpty(shipmentReceipts)){
 				 shipmentReceipts.each{receipt->
-					 if(receipt.statusId == "SR_RECEIVED"){
+					 if((UtilValidate.isNotEmpty(receipt.statusId)) && (receipt.statusId == "SR_RECEIVED") && UtilValidate.isNotEmpty(receipt.quantityAccepted)){
 						 receivedQty+=receipt.quantityAccepted;
 					 }
-					 if(receipt.statusId == "SR_QUALITYCHECK"){
+					 if((UtilValidate.isNotEmpty(receipt.statusId)) && (receipt.statusId == "SR_QUALITYCHECK") && UtilValidate.isNotEmpty(receipt.quantityAccepted)){
 						 qcQuantity+=receipt.quantityAccepted;
 					 }
 				 }
@@ -147,7 +147,7 @@ dctx = dispatcher.getDispatchContext();
 			 tempMap["availableToPromiseTotal"] = availableToPromiseTotal;
 			 tempMap["quantityOnHandTotal"] = quantityOnHandTotal;
 			 tempMap["qcQuantity"] = qcQuantity;
-			 tempMap["receivedQty"]=receivedQty
+			 tempMap["receivedQty"]=receivedQty;
 			 //if(availableToPromiseTotal>0 || quantityOnHandTotal>0){
 				 if(UtilValidate.isNotEmpty(tempMap)){
 					 productValueMap.putAll(tempMap);
@@ -157,13 +157,15 @@ dctx = dispatcher.getDispatchContext();
 				 tempList.add(productValueMap);
 				 if(UtilValidate.isNotEmpty(attrName)){
 					 if(attrName.equalsIgnoreCase("LEDGERFOLIONO")){
-						 if(UtilValidate.isEmpty(finalStockPositionMap.get(attrValue))){
-							 finalStockPositionMap.put(attrValue,tempList);
-						 }else{
-							 List existingList = FastList.newInstance();
-							 existingList = finalStockPositionMap.get(attrValue);
-							 existingList.add(productValueMap);
-							 finalStockPositionMap.put(attrValue,existingList);
+						 if(UtilValidate.isNotEmpty(attrValue)){
+							 if(UtilValidate.isEmpty(finalStockPositionMap.get(attrValue))){
+								 finalStockPositionMap.put(attrValue,tempList);
+							 }else{
+								 List existingList = FastList.newInstance();
+								 existingList = finalStockPositionMap.get(attrValue);
+								 existingList.add(productValueMap);
+								 finalStockPositionMap.put(attrValue,existingList);
+							 }
 						 }
 					 }
 				 }else{
@@ -179,6 +181,7 @@ dctx = dispatcher.getDispatchContext();
 			 }
 		 }
 	 }
+	 
  }
 Map sortedMap = FastMap.newInstance();
 if(UtilValidate.isNotEmpty(finalStockPositionMap)){

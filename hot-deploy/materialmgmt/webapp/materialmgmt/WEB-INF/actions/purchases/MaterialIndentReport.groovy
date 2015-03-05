@@ -69,7 +69,7 @@ if(custRequestItems){
 				itemIssuanceList.add(tempMap);
 			}	
 		}else{	
-				if(item.statusId=="CRQ_ISSUED" || item.statusId=="CRQ_COMPLETED" ){
+				if(item.statusId=="CRQ_ISSUED" || item.statusId=="CRQ_COMPLETED" || item.statusId=="CRQ_SUBMITTED" ){
 					tempMap=[:];
 					GenericValue product=delegator.findOne("Product",[productId:item.productId],true);
 					GenericValue productAttr=delegator.findOne("ProductAttribute",[productId:item.productId,attrName:"LEDGERFOLIONO"],true);
@@ -82,10 +82,23 @@ if(custRequestItems){
 					}
 					tempMap.put("identedQty",item.quantity);
 					issuedQty=0;
+					totalValue=0;
+					totalUnitPrice=0;
 					productDetails= MaterialHelperServices.getUnitPriceAndQuantity(dctx,UtilMisc.toMap("userLogin",userLogin,"custRequestItemSeqId",item.custRequestItemSeqId,"custRequestId",item.custRequestId));
-					tempMap.put("issuedQty",productDetails.get("totalQty"));
-					tempMap.put("totalValue",productDetails.get("totalValue"));
-					tempMap.put("totalUnitPrice",productDetails.get("totalUnitPrice"));
+					if(UtilValidate.isNotEmpty(productDetails)){
+						if(UtilValidate.isNotEmpty(productDetails.get("totalQty"))){
+							issuedQty=productDetails.get("totalQty");
+						}
+						if(UtilValidate.isNotEmpty(productDetails.get("totalValue"))){
+							totalValue=productDetails.get("totalValue");
+						}
+						if(UtilValidate.isNotEmpty(productDetails.get("totalUnitPrice"))){
+							totalUnitPrice=productDetails.get("totalUnitPrice");
+						}
+					}
+					tempMap.put("issuedQty",issuedQty);
+					tempMap.put("totalValue",totalValue);
+					tempMap.put("totalUnitPrice",totalUnitPrice);
 					stock = dispatcher.runSync("getProductInventoryAvailable",[productId:item.productId]);
 					if(stock){
 						tempMap.put("stock",stock.get("quantityOnHandTotal"));
