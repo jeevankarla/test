@@ -35,7 +35,7 @@ import javolution.util.FastMap;
 
 orderId = parameters.orderId;
 context.orderId = orderId;
-
+amendedPOList=[];
 workEffortId = parameters.workEffortId;
 assignPartyId = parameters.partyId;
 assignRoleTypeId = parameters.roleTypeId;
@@ -71,7 +71,42 @@ if (orderHeader) {
    orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
    orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
    orderTerms = orderHeader.getRelated("OrderTerm");
-
+   
+   // for amended PO in POoverview
+   if (orderItems) {
+	   orderItems.each{orderItem->
+		   amendedPOMap=[:];
+	  APorderId = orderItem.orderId
+	  APorderItemSeqId= orderItem.orderItemSeqId
+	  APproductId= orderItem.productId
+	  APquantity= orderItem.quantity
+	  APunitPrice = orderItem.unitPrice
+	if (APorderId) {
+		amendedPOMap.put("orderId", APorderId);
+		amendedPOMap.put("orderItemSeqId", APorderItemSeqId);
+		
+		  }
+		// productDetails
+	if (APproductId) {
+		amendedPOMap.put("productId", APproductId);
+		amendedPOMap.put("quantity", APquantity);
+		amendedPOMap.put("unitPrice", APunitPrice);
+	  productDetails = delegator.findOne("Product",["productId":APproductId],false);
+	  
+	  if(productDetails){
+	  amendedPOMap["internalName"]=productDetails.get("internalName");
+	  amendedPOMap["description"]=productDetails.get("description");
+	  uomId=productDetails.get("quantityUomId");
+	  }
+	  if(UtilValidate.isNotEmpty(uomId)){
+		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+	   amendedPOMap["unit"]=unitDesciption.get("abbreviation");
+		}
+	   }
+	  amendedPOList.add(amendedPOMap);
+	 }
+   }   
+   context.amendedPOList = amendedPOList;
    context.orderHeader = orderHeader;
    context.orderReadHelper = orderReadHelper;
    context.orderItems = orderItems;

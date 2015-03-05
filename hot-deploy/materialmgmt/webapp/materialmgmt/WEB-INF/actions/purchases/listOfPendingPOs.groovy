@@ -48,6 +48,7 @@ condList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.IN, [
 condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderAndItems", cond, null,null, null, false);
+if(UtilValidate.isNotEmpty(orderItemList)){
 orderIds = EntityUtil.getFieldListFromEntityList(orderItemList, "orderId", true);
 
 //get PartyId from Role for Vendor , PartyName
@@ -80,7 +81,10 @@ orderItemList.each{orderItem->
 //	}
 	
 	pendingPOsMap=[:];
+	if(UtilValidate.isNotEmpty(orderId)){
+		
 	partyIdDetails = EntityUtil.filterByCondition(vendorDetails, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	
 	partyIdDetails = EntityUtil.getFirst(partyIdDetails);
 	if(UtilValidate.isNotEmpty(partyIdDetails)){
 		partyId=partyIdDetails.partyId;
@@ -119,7 +123,8 @@ orderItemList.each{orderItem->
 		pendingPOsMap["balancePOqty"]=quantity;
 	}		
 	pendingPOsList.addAll(pendingPOsMap);
-}
+ }}
+ }
 context.pendingPOsList=pendingPOsList;
 
 
