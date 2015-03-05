@@ -91,7 +91,7 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 					unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
 					productDetailsMap.put("unit",unitDesciption.abbreviation);
 			 }
-			 invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProduct, ownerPartyId:"Company", userLogin: userLogin]);
+			 invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProduct,effectiveDate:dayBegin, ownerPartyId:"Company", userLogin: userLogin]);
 			 if(UtilValidate.isNotEmpty(invCountMap)){
 			 	 openingQty = invCountMap.get("inventoryCount");
 			 openingTotCost=invCountMap.get("inventoryCost");
