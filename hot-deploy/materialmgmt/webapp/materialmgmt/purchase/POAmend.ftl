@@ -34,15 +34,15 @@
 			},
 			hide: false, // We'll hide it maunally so disable hide events
 			style: {name : 'cream'}, //'ui-tooltip-light ui-tooltip-rounded ui-tooltip-dialogue', // Add a few styles
-			events: {
+			events: {			
 				// Hide the tooltip when any buttons in the dialogue are clicked
-				render: function(event, api) {
-					$('button', api.elements.content).click(api.hide);
+				render: function(event, api) {				
+				$('button', api.elements.content).click(api.hide);
 					datepick1();
 					$('input[name=changeComments]').focusout(function(){
 	     		            appendParams();
 	  
-	 		         });
+	 		         });	  				
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
 				hide: function(event, api) { api.destroy(); }
@@ -76,7 +76,6 @@
 	}
 	
 	function appendParams(){
-	   alert("alert");
 	    $("input[name=changeComments]").val($("#changeComments").val());
 	}
 	//disable the generate button once the form submited
@@ -103,29 +102,34 @@
 		           "<tr class='h3'><td>Comments</td><td><input type='text' id='changeComments' name='changeComments'/></td></tr></table>";
 		message += "<br/><br/>";
 		message += "<form action='amendPOItemEvent' method='post' onsubmit='return disableGenerateButton();' required><table cellspacing=10 cellpadding=10 width=250>" ; 		
-	    message +="<input type='hidden'  id='amendedDate' name='amendedDate'/><input type='hidden' name='changeComments'/>";
+	    message +="<input type='hidden'  id='amendedDate' name='amendedDate'/><input type='hidden' id='changeComments' name='changeComments'/>";
 			
 			message += "<tr class='h3'>"+
-							"<td align='center' ><b>ProductId</br></td>"+
-				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center'>Quantity</td>"+
-				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center'>Price</td>"+
+							"<td align='center' ><b>Internal Id</br></td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+				            "<td align='center'>Quantity</td>"+
+				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+				            "<td align='center'>Price</td>"+
+				             "<td align='center'>Unit</td>"+
+				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>Amended Quantity</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>Amended Price</td>";
 			
-			message +=   <#list orderItems as orderItem>
+			message +=   <#list amendedPOList as orderItem>
 							"<tr class='h3'>"+
 							"<input type='hidden' value='${orderItem.orderId}' name='orderId_o_"+${orderItem.orderItemSeqId}+"'/><input type='hidden' value='${orderItem.orderItemSeqId}' name='orderItemSeqId_o_"+${orderItem.orderItemSeqId}+"'/>"+
 							"<input type='hidden' value='${orderItem.productId}' name='productId_o_"+${orderItem.orderItemSeqId}+"'/>"+
-							"<td align='center' >${orderItem.productId}</td>"+
-				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center'>${orderItem.quantity}</td>"+
-				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center'>${orderItem.unitPrice}</td>"+
+					    	"<input type='hidden' value='${orderItem.internalName}' name='internalId_o_"+${orderItem.orderItemSeqId}+"'/>"+
+					    	"<input type='hidden' value='${orderItem.unit}' name='unit_o_"+${orderItem.orderItemSeqId}+"'/>"+
+
+							"<td align='center' >${orderItem.internalName}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+				            "<td align='center'>${orderItem.quantity}</td>"+
+				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+				            "<td align='center'>${orderItem.unitPrice}</td>"+
+                           "<td align='center'>${orderItem.unit}</td>"+
+				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center' class='h2'><input type='text'  id='amendedQuantity' name='amendedQuantity_o_"+${orderItem.orderItemSeqId}+"'  size='12'/></td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center' class='h2'><input type='text'  id='amendedPrice' name='amendedPrice_o_"+${orderItem.orderItemSeqId}+"' size='12'/></td>"+
