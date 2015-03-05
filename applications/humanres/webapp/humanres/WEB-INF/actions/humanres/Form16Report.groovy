@@ -267,7 +267,6 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		sectionMap = [:];
 		if(UtilValidate.isNotEmpty(sectionTypesList)){
 			sectionTypesList.each { sectionType ->
-				Debug.log("sectionType=============="+sectionType);
 				sectionDetailsMap = [:];
 				List employeeSectionList=[];
 				employeeSectionList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, employee));
@@ -426,6 +425,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		balance = totalEarnings - totalExtentAlw;
 		income = balance + aggregate;
 		totalIncome = income - totalDeductableAmount;
+		BigDecimal totIncome = new BigDecimal(totalIncome);
 		employeeDetails = PayrollService.getEmployeePayrollCondParms(dctx,UtilMisc.toMap("employeeId",employee,"timePeriodStart",fromDateStart,"timePeriodEnd",thruDateEnd,"userLogin",userLogin));
 		if(UtilValidate.isNotEmpty(employeeDetails)){
 			age = employeeDetails.get("age");
@@ -437,8 +437,8 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			}else{
 				employeeTaxSlabList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_GTE"));
 			}
-			employeeTaxSlabList.add(EntityCondition.makeCondition("totalIncomeFrom", EntityOperator.LESS_THAN_EQUAL_TO, totalIncome));
-			employeeTaxSlabList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("totalIncomeTo", EntityOperator.GREATER_THAN_EQUAL_TO, totalIncome), EntityOperator.OR,
+			employeeTaxSlabList.add(EntityCondition.makeCondition("totalIncomeFrom", EntityOperator.LESS_THAN_EQUAL_TO, totIncome));
+			employeeTaxSlabList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("totalIncomeTo", EntityOperator.GREATER_THAN_EQUAL_TO, totIncome), EntityOperator.OR,
 				EntityCondition.makeCondition("totalIncomeTo", EntityOperator.EQUALS, null)));
 			taxSlabCondition=EntityCondition.makeCondition(employeeTaxSlabList,EntityOperator.AND);
 			employeeTaxList = delegator.findList("TaxSlabs", taxSlabCondition , null, null, null, false );

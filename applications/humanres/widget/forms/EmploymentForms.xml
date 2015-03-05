@@ -919,23 +919,24 @@
         <field name="searchButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="updateForm16Details" odd-row-style="alternate-row" header-row-style="header-row" type="single"
-    	default-table-style="basic-table hover-bar" separate-columns="true">  
+    	default-table-style="basic-table hover-bar" separate-columns="true" >  
         <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" required-field="true" tooltip="Required"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="true">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+             <drop-down allow-empty="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
                 </entity-options>
             </drop-down>
         </field>  
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="QuarterlyTDSForm" id="QuarterlyTDSForm" odd-row-style="alternate-row" header-row-style="header-row" type="single"
         default-table-style="basic-table hover-bar" separate-columns="true" target="updateQualrterlyTDSDetails"> 
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="true">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+             <drop-down allow-empty="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
@@ -951,11 +952,19 @@
         <field name="receiptNumber" title="Receipt Number"><text size="20"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
    </form> 
+   <form name="QuarterlyTDSResults" list-name="TDSRemittancesDetails" type="list"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+         <actions>
+            
+        </actions>
+        <field name="customTimePeriodId"><display></display></field>
+        <field name="ReceiptNumber"><display></display></field>
+    </form>
     <form name="updateTaxRatesDetails" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">  
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
              <drop-down allow-empty="false">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
@@ -974,23 +983,36 @@
                 <option key="above" description="Above or Equal 60"/>
             </radio>
         </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="otherForm16InputDetails" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true" target="updateOtherForm16InputDetails">  
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
-             <drop-down allow-empty="true">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+             <drop-down allow-empty="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
                 </entity-options>
             </drop-down>
         </field> 
-        <field name="surchargePercentage" title="Surcharge Percentage"><text size="20"/></field>
-        <field name="educationalCessPercentage" title="Educational Cess Percentage"><text size="20"/></field> 
-        <field name="name" title="Name" tooltip="Required"><text size="20"/></field>
-        <field name="fatherName" title="FatherName" tooltip="Required"><text size="20"/></field>
-        <field name="designation" title="Designation" tooltip="Required"><text size="20"/></field> 
+        <field name="surchargePercentage" title="Surcharge Percentage" tooltip="Eg : Like 10%"><text size="20"/></field>
+        <field name="educationalCessPercentage" title="Educational Cess Percentage" tooltip="Eg : Like 10%"><text size="20"/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field>
+        <field name="fatherName" title="FatherName" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field>
+        <field name="designation" title="Designation" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field> 
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="otherForm16SearchResults" list-name="from16OtherInputsList" type="list"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            
+        </actions>
+        <field name="customTimePeriodId"><display></display></field>
+        <field name="surchargePercentage"><display></display></field>
+        <field name="educationalCessPercentage"><display></display></field>
+        <field name="name"><display></display></field>
+        <field name="fatherName"><display></display></field>
+        <field name="designation"><display></display></field>
     </form>
 </forms>

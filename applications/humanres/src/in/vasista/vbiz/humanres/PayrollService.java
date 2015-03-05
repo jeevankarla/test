@@ -7591,8 +7591,16 @@ public class PayrollService {
   			  	newEntity.set("customTimePeriodId",customTimePeriodId);
   			  	newEntity.create();
   			}
+  			List form16UpdatedDetails = FastList.newInstance();
   	    	for(int i=0; i< form16InputList.size() ; i++){
   	    		Map form16InputListMap = form16InputList.get(i);
+
+  	    		Map<String  ,Object> form16DetailsMap = FastMap.newInstance();
+				form16DetailsMap.put("inputTypeId", form16InputListMap.get("inputTypeId"));
+				form16DetailsMap.put("grossAmount", form16InputListMap.get("grossAmount"));
+				form16DetailsMap.put("qualifyingAmount", form16InputListMap.get("qualifyingAmount"));
+				form16DetailsMap.put("deductableAmount", form16InputListMap.get("deductableAmount"));
+				form16UpdatedDetails.add(form16DetailsMap);
   	    		
   	    	    BigDecimal grossAmount=BigDecimal.ZERO;
   	    	    BigDecimal qualifyingAmount = BigDecimal.ZERO;
@@ -7612,26 +7620,43 @@ public class PayrollService {
   	    	    if(!(deductableAmt).equals("NaN")){
   	    	    	deductableAmount = new BigDecimal(deductableAmt);
   	    	    }
-  			  	GenericValue newEntity1 = delegator.makeValue("EmployeeForm16Detail");
-  			  	newEntity1.put("employeeId",partyIdTo);
-  			  	newEntity1.put("customTimePeriodId",customTimePeriodId);
-  			  	newEntity1.put("sectionTypeId",inputTypeId);
-  			  	if(UtilValidate.isNotEmpty(grossAmount)){
-  			  		newEntity1.put("grossAmount",grossAmount);
-  			  	}
-  			  	if(UtilValidate.isNotEmpty(qualifyingAmount)){
-  			  		newEntity1.put("qualifyingAmount",qualifyingAmount);
-  			  	}
-  			  	if(UtilValidate.isNotEmpty(deductableAmount)){
-  			  		newEntity1.put("deductableAmount",deductableAmount);
-  			  	}
-  			  	newEntity1.create();
+  	    	    
+    			GenericValue employeeSectionDetails = delegator.findOne("EmployeeForm16Detail",UtilMisc.toMap("employeeId",partyIdTo,"sectionTypeId",inputTypeId,"customTimePeriodId",customTimePeriodId),false);
+    			if(UtilValidate.isEmpty(employeeSectionDetails)){
+    				GenericValue newEntity1 = delegator.makeValue("EmployeeForm16Detail");
+      			  	newEntity1.put("employeeId",partyIdTo);
+      			  	newEntity1.put("customTimePeriodId",customTimePeriodId);
+      			  	newEntity1.put("sectionTypeId",inputTypeId);
+      			  	if(!grossAmount.equals(BigDecimal.ZERO)){
+      			  		newEntity1.put("grossAmount",grossAmount);
+      			  	}
+      			  	if(!qualifyingAmount.equals(BigDecimal.ZERO)){
+      			  		newEntity1.put("qualifyingAmount",qualifyingAmount);
+      			  	}
+      			  	if(!deductableAmount.equals(BigDecimal.ZERO)){
+      			  		newEntity1.put("deductableAmount",deductableAmount);
+      			  	}
+      			  	newEntity1.create();
+    			}else{
+    				if(!grossAmount.equals(BigDecimal.ZERO)){
+    					employeeSectionDetails.set("grossAmount",grossAmount);
+  					}
+  					if(!qualifyingAmount.equals(BigDecimal.ZERO)){
+  						employeeSectionDetails.set("qualifyingAmount",qualifyingAmount);
+  					}
+  					if(!deductableAmount.equals(BigDecimal.ZERO)){
+  						employeeSectionDetails.set("deductableAmount",deductableAmount);
+  					}
+  					employeeSectionDetails.store();
+    			}
   	    	}
+  	    	result.put("form16UpdatedDetailsList", form16UpdatedDetails);
+  	    	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
+  	    	request.setAttribute("form16UpdatedDetailsList", form16UpdatedDetails); 
   	    }catch (Exception e) {
   	    	Debug.logError(e, module);
   			return "Error";
   		}
-  	    request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
   	    return "success";
   	}
   	
@@ -7700,23 +7725,37 @@ public class PayrollService {
   			  	}
   	    	TDSDetailsMap.put("BSRcode", bsrCode);
   	    	TDSDetailsMap.put("challanNumber", challanNo);
-  	  		  
   	  		TDSRemittanceInputList.add(TDSDetailsMap);
   	    }
+  	    List tdsRemittanceDetails = FastList.newInstance();
   	    try {
   	    	for(int i=0; i< TDSRemittanceInputList.size() ; i++){
   	    		Map TDSRemittanceInputListMap = TDSRemittanceInputList.get(i);
   	    	    String BSRcode = (String)TDSRemittanceInputListMap.get("BSRcode");
   	    	    String challanNumber = (String)TDSRemittanceInputListMap.get("challanNumber");
+  	    	    Map<String  ,Object> tdsRemittanceDetailsMap = FastMap.newInstance();
+  	    	    tdsRemittanceDetailsMap.put("BSRcode", TDSRemittanceInputListMap.get("BSRcode"));
+  	    	    tdsRemittanceDetailsMap.put("challanNumber", TDSRemittanceInputListMap.get("challanNumber"));
+  	    	    tdsRemittanceDetails.add(tdsRemittanceDetailsMap);
   	    	    
-  			  	GenericValue newEntity = delegator.makeValue("TDSRemittances");
-  			  	newEntity.put("partyId","Company");
-  			  	newEntity.put("customTimePeriodId",timePeriodId);
-  			  	newEntity.put("BSRcode",BSRcode);
-  			  	newEntity.put("challanNumber",challanNumber);
-  			  	newEntity.create();
+  	    	    GenericValue tdsRemittanceSearchList = delegator.findOne("TDSRemittances",UtilMisc.toMap("partyId","Company","customTimePeriodId",timePeriodId),false);
+  	    	    if(UtilValidate.isEmpty(tdsRemittanceSearchList)){
+	  	    	    GenericValue newEntity = delegator.makeValue("TDSRemittances");
+	  			  	newEntity.put("partyId","Company");
+	  			  	newEntity.put("customTimePeriodId",timePeriodId);
+	  			  	newEntity.put("BSRcode",BSRcode);
+	  			  	newEntity.put("challanNumber",challanNumber);
+	  			  	newEntity.create();
+  	    	    }else{
+  	    	    	tdsRemittanceSearchList.set("BSRcode",BSRcode);
+  	    	    	tdsRemittanceSearchList.set("challanNumber",challanNumber);
+				  	
+  	    	    	tdsRemittanceSearchList.store();
+  	    	    }
   			  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
   	    	}
+  	    	request.setAttribute("timePeriodId", timePeriodId); 
+  	    	request.setAttribute("tdsRemittanceDetailsList", tdsRemittanceDetails); 
   	    }catch (Exception e) {
   	    	Debug.logError(e, module);
   			return "Error";
@@ -7812,19 +7851,27 @@ public class PayrollService {
   	  		  
   	    	taxRateInputList.add(taxSlabsMap);
   	    }
+  	    List taxDetails = FastList.newInstance();
   	    try {
   	    	for(int i=0; i< taxRateInputList.size() ; i++){
   	    		Map TaxRateListMap = taxRateInputList.get(i);
   	    		
+  	    		Map<String  ,Object> taxDetailsMap = FastMap.newInstance();
+  	    		taxDetailsMap.put("totalIncomeFrom", TaxRateListMap.get("totalIncomeFrom"));
+  	    		taxDetailsMap.put("totalIncomeTo", TaxRateListMap.get("totalIncomeTo"));
+  	    		taxDetailsMap.put("taxPercentage", TaxRateListMap.get("taxPercentage"));
+  	    		taxDetailsMap.put("addedAmount", TaxRateListMap.get("addedAmount"));
+  	    	    taxDetails.add(taxDetailsMap);
+  	    		
   	    		BigDecimal totalIncomeTo=BigDecimal.ZERO;
   	    		BigDecimal taxPercentage=BigDecimal.ZERO;
   	    		BigDecimal refundAmount=BigDecimal.ZERO;
-  	    		
   	    	    String totalIncomeFrom = (String)TaxRateListMap.get("totalIncomeFrom");
   	    	    String totalIncTo = (String)TaxRateListMap.get("totalIncomeTo");
   	    	    String taxPercntge = (String)TaxRateListMap.get("taxPercentage");
   	    	    String addedAmount = (String)TaxRateListMap.get("addedAmount");
   	    	    
+  	    	    BigDecimal totalIncomeFromAmt = new BigDecimal(totalIncomeFrom);
   	    	    if(!(totalIncTo).equals("NaN")){
   	    	    	totalIncomeTo = new BigDecimal(totalIncTo);
   	    	    }
@@ -7834,28 +7881,23 @@ public class PayrollService {
   	    	    if(!(addedAmount).equals("NaN")){
   	    	    	refundAmount = new BigDecimal(addedAmount);
   	    	    }
+  	    	    String operatorEnumId = "";
   	    	    String constantAge = "60";
+  	    	    if(UtilValidate.isNotEmpty(age)){
+			  		if(age.equals("below")){
+			  			operatorEnumId = "PRC_LT";
+			  		}else{ 
+			  			if(age.equals("above")){
+			  				operatorEnumId = "PRC_GTE";
+				  		}
+			  		}
+			  	}
   	    	    if(UtilValidate.isNotEmpty(totalIncomeFrom)){
-  			    	List condList = FastList.newInstance();
-  			    	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,periodId));
-  			    	condList.add(EntityCondition.makeCondition("totalIncomeFrom", EntityOperator.EQUALS, totalIncomeFrom));
-  			    	condList.add(EntityCondition.makeCondition("age", EntityOperator.EQUALS, "60"));
-  			    	condList.add(EntityCondition.makeCondition("gender", EntityOperator.EQUALS, gender));
-  			    	if(UtilValidate.isNotEmpty(age)){
-  				  		if(age.equals("below")){
-  				  			condList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_LT"));
-  				  		}else{ 
-  				  			if(age.equals("above")){
-  					  			condList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_GTE"));
-  					  		}
-  				  		}
-  				  	}
-  					EntityCondition Cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
-  					List<GenericValue> TaxSlabsList = delegator.findList("TaxSlabs", Cond, null, null, null, false);
+  					GenericValue TaxSlabsList = delegator.findOne("TaxSlabs",UtilMisc.toMap("customTimePeriodId",periodId,"totalIncomeFrom",totalIncomeFromAmt,"age","60","gender",gender,"operatorEnumId",operatorEnumId),false);
   					if(UtilValidate.isEmpty(TaxSlabsList)){
   						GenericValue newEntity = delegator.makeValue("TaxSlabs");
   					  	newEntity.put("customTimePeriodId",periodId);
-  					  	newEntity.put("totalIncomeFrom",totalIncomeFrom);
+  					  	newEntity.put("totalIncomeFrom",totalIncomeFromAmt);
   					  	if(!(totalIncomeTo).equals(BigDecimal.ZERO)){
   					  		newEntity.put("totalIncomeTo",totalIncomeTo);
   					  	}
@@ -7873,11 +7915,17 @@ public class PayrollService {
   					  		}
   					  	}
   					  	newEntity.create();
-  					  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 
+  					  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries..");
   					}else{
-  						request.setAttribute("_ERROR_MESSAGE_", "Income already entered in this Period..");
-  						return "error";
+  					  	if(!(totalIncomeTo).equals(BigDecimal.ZERO)){
+  					  		TaxSlabsList.set("totalIncomeTo",totalIncomeTo);
+					  	}
+  					  	TaxSlabsList.set("taxPercentage",taxPercentage);
+  					  	TaxSlabsList.set("refundAmount",refundAmount);
+  					  	TaxSlabsList.store();
+  					  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries..");
   					}
+  					request.setAttribute("taxDetailsList", taxDetails);
   	    	    }
   		    }
   		}catch (Exception e) {
@@ -7901,12 +7949,26 @@ public class PayrollService {
   	    try {
   		    if(UtilValidate.isNotEmpty(customTimePeriodId)){
   				GenericValue TDSRemittancesList = delegator.findOne("TDSRemittances",UtilMisc.toMap("customTimePeriodId",customTimePeriodId,"partyId","Company"),false);
+  				
   				if(UtilValidate.isEmpty(TDSRemittancesList)){
   		    		GenericValue newEntity = delegator.makeValue("TDSRemittances");
   				  	newEntity.put("partyId","Company");
   				  	newEntity.put("customTimePeriodId",customTimePeriodId);
-  				  	newEntity.put("surchargePercentage",new BigDecimal(surchargePercentage));
-  				  	newEntity.put("educationalCessPercentage",new BigDecimal(educationalCessPercentage));
+  				  	if(UtilValidate.isNotEmpty(surchargePercentage)){
+  				  		newEntity.put("surchargePercentage",new BigDecimal(surchargePercentage));
+  				  	}
+  				  	if(UtilValidate.isNotEmpty(educationalCessPercentage)){
+  				  		newEntity.put("educationalCessPercentage",new BigDecimal(educationalCessPercentage));
+  				  	}
+	  				if(UtilValidate.isNotEmpty(name)){
+	  					newEntity.set("name",name);
+					}
+					if(UtilValidate.isNotEmpty(fatherName)){
+						newEntity.set("fatherName",fatherName);
+					}
+					if(UtilValidate.isNotEmpty(designation)){
+						newEntity.set("designation",designation);
+					}
   				  	newEntity.create();
   				  	result = ServiceUtil.returnSuccess("Input Details Successfully Updated..");
   				}else{
@@ -7926,6 +7988,7 @@ public class PayrollService {
   						TDSRemittancesList.set("designation",designation);
   					}
   					TDSRemittancesList.store();
+  					result = ServiceUtil.returnSuccess("Input Details Successfully Updated..");
   				} 
   			}
   	    }catch (Exception e) {

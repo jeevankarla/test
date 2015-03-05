@@ -46,11 +46,12 @@
 	}
 	
 </style>			
-			
+<#include "Form16InputEntryInc.ftl"/> 		
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <#--
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
 -->
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-ui-1.8.5.custom.min.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery.event.drag-2.0.min.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.core.js</@ofbizContentUrl>"></script>
@@ -65,9 +66,10 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/plugins/slick.autotooltips.js</@ofbizContentUrl>"></script>
+
 <script type="application/javascript">
     
-    	
 	var dataView;
 	var dataView2;
 	var grid;
@@ -86,10 +88,15 @@
 	
 	var mainGrid;		
 	function setupGrid1() {
+		<#if headItemsJson?has_content>
+			 	data = ${StringUtil.wrapString(headItemsJson)!'[]'};
+			 	<#else>
+			 	 data =[];
+			</#if>
 		var columns = [
-					{id:"inputName", name:"input", field:"inputName", width:220, minWidth:220, cssClass:"cell-title", availableTags:availableTags, editor: AutoCompleteEditor,toolTip:""},
-					{id:"grossAmount", name:"Gross Amount", field:"grossAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},
-					{id:"qualifyingAmount", name:"Qualifying Amount", field:"qualifyingAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
+					{id:"sectionTypeId", name:"Input", field:"sectionTypeId", width:180, minWidth:220, cssClass:"cell-title",toolTip:""},
+					{id:"grossAmount", name:"Gross Amount", field:"grossAmount", width:130, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},
+					{id:"qualifyingAmount", name:"Qualifying Amount", field:"qualifyingAmount", width:130, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
 					{id:"deductableAmount", name:"Deductable Amount / Actual Amount", field:"deductableAmount", width:240, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor}		
 			];
 		
@@ -180,7 +187,7 @@
                 
     	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
-      		var productLabel = item['inputName']; 
+      		var productLabel = item['inputTypeId']; 
       		item['inputTypeId'] = productLabelIdMap[productLabel];     		 		
       		grid.invalidateRow(data.length);
       		data.push(item);
@@ -269,12 +276,66 @@
 			$("#suppInvoiceId").autocomplete({ disabled: false });	
 		
 	});	
-	 function processIndentEntry(formName, action) {
-		jQuery("#changeSave").attr( "disabled", "disabled");
-		processIndentEntryInternal(formName, action);
+	
+	function updateGrid2(ajaxJson) {
+             data = ajaxJson;
+             grid2.setData(data);
+             grid2.invalidate();
+             grid2.render();
+              var pluginOptions = {
+      		 enableForCells: true,
+		      enableForHeaderCells: false,
+		      maxToolTipLength: null
+		    };
+             plugin = new Slick.AutoTooltips(pluginOptions);
+			grid2.registerPlugin(plugin);
+           if(data.length >0){
+			$(grid2.getCellNode(0,1)).click();
+			}else{
+				$(grid2.getCellNode(0,0)).click();
+			}
+			updateProductInfo();
+    }
+	
+	function updateProductInfo() {
+		for(var i=0;i<data.length;i++){
+			var inputTypeId = data[i]["inputTypeId"];
+			var grossAmount = parseFloat(data[i]["grossAmount"]);
+			var qualifyingAmount = parseFloat(data[i]["grossAmount"]);
+			var deductableAmount = parseFloat(data[i]["grossAmount"]);
+			if(isNaN(grossAmount)){
+				grossAmount = 0;
+				data[i]["grossAmount"] = grossAmount;
+			}
+			if(isNaN(qualifyingAmount)){
+				qualifyingAmount = 0;
+				data[i]["qualifyingAmount"] = qualifyingAmount;
+			}
+			if(isNaN(deductableAmount)){
+				deductableAmount = 0;
+				data[i]["deductableAmount"] = deductableAmount;
+			}
+			
+			/*if(indentCat == "CRATE"){
+				data[i]["uomId"] = "CR";
+			}
+			else if(indentCat == "CAN"){
+				data[i]["uomId"] = "CN";
+			}
+			else{
+				data[i]["uomId"] = "P";
+			}*/
+			grid2.updateRow(i);
+		}
 		
 	}
-	function processIndentEntryInternal(formName, action) {
+	
+	 function processInputEntry(formName, action) {
+		jQuery("#changeSave").attr( "disabled", "disabled");
+		processInputEntryInternal(formName, action);
+		
+	}
+	function processInputEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
 		}
@@ -295,7 +356,6 @@
 				jQuery(formId).append(jQuery(deductableAmount));
 				jQuery(formId).append(jQuery(grossAmount));
 				jQuery(formId).append(jQuery(qualifyingAmount));    
-   			
 		}
 		
 		// lets make the ajaxform submit
@@ -307,6 +367,7 @@
              url: action,
              data: dataString,
              dataType: 'json',
+             
              success: function(result) { 
              	//$(formId+' input').remove()            	
 	               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){               	   
@@ -316,6 +377,8 @@
 	            	    $('div#updateEntryMsg').html('<label>'+ result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]+'</label>');
 	            	     
 	               }else{
+	               		var form16UpdatedDetailsList = result["form16UpdatedDetailsList"];
+	               		updateGrid2(form16UpdatedDetailsList);
 	               		$("div#updateEntryMsg").fadeIn();               	         	   
 	            	    $('div#updateEntryMsg').html(); 
 	            	    $('div#updateEntryMsg').removeClass("errorMessage");           	 
@@ -323,6 +386,7 @@
 	            	    $('div#updateEntryMsg').html('<label><h2>succesfully updated.</h2></label>'); 
 	            	    $('div#updateEntryMsg').delay(5000).fadeOut('slow');  
 	            	    $($('.grid-canvas').children()[row]).css('background-color','#FAAC58'); 
+	            	    
 	               }
                
                },
@@ -332,27 +396,42 @@
            });
 			
 	}
-</script>			
-	
-<div id="wrapper" style="width: 95%; height:100%">
-  	<form method="post" action="<@ofbizUrl>updateForm16Details</@ofbizUrl>" name="updateForm16Details" id="updateForm16Details"></form>
+</script>
+
+<div class="full">			
+<div class="lefthalf">
+	<div id="wrapper" style="width: 100%; height:100%">
+	  	<form method="post" action="<@ofbizUrl>updateForm16Details</@ofbizUrl>" name="updateForm16Details" id="updateForm16Details"></form>
+	</div>
+	<div id="div2" style="float: left;width: 100%;align:right; border: #F97103 solid 0.1em;">
+	    <div>    	
+	 		<div class="grid-header" style="width:100%">
+				<label>Form 16 Input Screen</label>
+			</div>    
+			<div id="myGrid1" style="width:100%;height:350px;"></div>
+			 
+		</div> 
+	</div>
+	<div name ="updateEntryMsg" id="updateEntryMsg" border: #FAAC58 solid 0.1em;> </div>  		
+	<div align="center">
+		 <table width="60%" border="0" cellspacing="0" cellpadding="0">  
+		    <tr><td></td><td></td></tr>
+		    <tr><td></td><td></td></tr>
+		    <tr><td> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processInputEntry('updateForm16Details','<@ofbizUrl>updateForm16Details</@ofbizUrl>');" /></td>
+		 </table>
+	</div>
 </div>
-<div name ="updateEntryMsg" id="updateEntryMsg" border: #FAAC58 solid 0.1em;> </div>     
-<div id="div2" style="float: left;width: 57%;align:right; border: #F97103 solid 0.1em;">
-    <div>    	
- 		<div class="grid-header" style="width:100%">
-			<label>Form 16 Input Screen</label>
-		</div>    
-		<div id="myGrid1" style="width:100%;height:350px;"></div>
-		 
-	</div> 
-</div> 		
-<div align="center">
-			 <table width="60%" border="0" cellspacing="0" cellpadding="0">  
-			    <tr><td></td><td></td></tr>
-			    <tr><td></td><td></td></tr>
-			    <tr><td> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('updateForm16Details','<@ofbizUrl>updateForm16Details</@ofbizUrl>');" /></td>
-			 </table>
-		</div>
-	    
-    
+  
+ <div class="righthalf">
+		<div class="screenlet">
+    		<div class="screenlet-body">
+    			<div class="grid-header" style="width:100%">
+					<font size="20" color="#22047F"><b>Last Change<b/></font>:<font size="20" color="red"><b><#if parameters.partyIdTo?has_content>[${parameters.partyIdTo}]</#if></b></font>  
+				</div>
+		 		
+				<div id="myGrid2" style="width:100%;height:200px;"></div>
+			  
+			</div>
+		</div>     
+	</div>
+</div>
