@@ -44,24 +44,24 @@ under the License.
            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                      CST NO: ${allDetailsMap.get("cstNumber")?if_exists} </fo:block>
            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >---------------------------------------------------------------------------------------------- </fo:block>
 	       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">AMENDED PURCHASE ORDER </fo:block>  
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PO NO:${allDetailsMap.get("orderId")?if_exists}                                                       PO DATED:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >To                                                                 FAX NO: ${allDetailsMap.get("faxNumber")?if_exists}</fo:block>
-	       <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("address1")?if_exists}</fo:block>
-		   <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("address2")?if_exists}</fo:block>
-		   <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("city")?if_exists}</fo:block>				 
-		   <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("postalCode")?if_exists}</fo:block>
-		   	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PHONE NO                : ${contactNumber?if_exists}</fo:block>	                
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >VENDOR CODE             : ${partyAddressMap.get("fromPartyId")?if_exists}</fo:block>
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >MOTHER DAIRY ENQUIRY NO : ${allDetailsMap.get("custRequestId")?if_exists}</fo:block>
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >YOUR QUOTATION NO       : ${allDetailsMap.get("quoteId")?if_exists}  </fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PO NO:${allDetailsMap.get("orderId")?if_exists}                                                       PO DATED:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">To                                                                 FAX NO: ${allDetailsMap.get("faxNumber")?if_exists}</fo:block>
+	       <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("address1")?if_exists}</fo:block>
+		   <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("address2")?if_exists}</fo:block>
+		   <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("city")?if_exists}</fo:block>				 
+		   <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("postalCode")?if_exists}</fo:block>
+		   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PHONE NO                : ${contactNumber?if_exists}</fo:block>	                
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">VENDOR CODE             : ${partyAddressMap.get("fromPartyId")?if_exists}</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">MOTHER DAIRY ENQUIRY NO : ${allDetailsMap.get("custRequestId")?if_exists}</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">YOUR QUOTATION NO       : ${allDetailsMap.get("quoteId")?if_exists}  </fo:block>
 	       <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">With reference to your Quotation/Proforma Invoice, we are pleased to place order for the</fo:block>
 	       <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">supply of materials as detailed below.</fo:block>
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	       <fo:block font-family="Courier,monospace">
 	          <fo:table>
 				  <fo:table-column column-width="80pt"/>
-				  <fo:table-column column-width="120pt"/>
-				  <fo:table-column column-width="150pt"/>
+				  <fo:table-column column-width="100pt"/>
+				  <fo:table-column column-width="170pt"/>
 				  <fo:table-column column-width="80pt"/>
 				  <fo:table-column column-width="60pt"/>
 				   <fo:table-column column-width="120pt"/>
@@ -73,22 +73,22 @@ under the License.
 						  </fo:table-row>
 					      <fo:table-row>
 					          <fo:table-cell>
-								  <fo:block text-align="center" >SL.No</fo:block>
+								  <fo:block text-align="center" font-weight="bold">SL.No</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
-								  <fo:block text-align="left"  >ITEM CODE</fo:block>
+								  <fo:block text-align="left"  font-weight="bold">ITEM CODE</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
-								 <fo:block text-align="left" >DESCRIPTION</fo:block>
+								 <fo:block text-align="left" font-weight="bold">DESCRIPTION</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
-								 <fo:block text-align="left" keep-together="always" >UNIT</fo:block>
+								 <fo:block text-align="left" keep-together="always" font-weight="bold">UNIT</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
-								  <fo:block text-align="right" keep-together="always" >QTY</fo:block>
+								  <fo:block text-align="right" keep-together="always" font-weight="bold">QTY</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
-								  <fo:block text-align="right" keep-together="always" >UNIT RATE</fo:block>
+								  <fo:block text-align="right" keep-together="always" font-weight="bold">UNIT RATE</fo:block>
 							  </fo:table-cell>
 					     </fo:table-row>
 					     <fo:table-row >
@@ -102,32 +102,32 @@ under the License.
                   <fo:block font-family="Courier,monospace"  font-size="10pt">
 				      <fo:table>
 					      <fo:table-column column-width="80pt"/>
-				          <fo:table-column column-width="120pt"/>
-				          <fo:table-column column-width="150pt"/>
+				          <fo:table-column column-width="100pt"/>
+				          <fo:table-column column-width="170pt"/>
 				          <fo:table-column column-width="80pt"/>
 				          <fo:table-column column-width="60pt"/>
 				          <fo:table-column column-width="120pt"/>		
 					         <fo:table-body>
 					            <#assign sno=1>
                                <#list produtList as productDetail> 
-				               <fo:table-row >
+				               <fo:table-row height="20pt">
 				                   <fo:table-cell>
-								       <fo:block text-align="center" keep-together="always" >${sno?if_exists}</fo:block>
+								       <fo:block text-align="center" keep-together="always" font-size="11pt">${sno?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								      <fo:block text-align="left" keep-together="always" >${productDetail.get("itemCode")?if_exists}</fo:block>
+								      <fo:block text-align="left" keep-together="always" font-size="11pt">${productDetail.get("itemCode")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="left" white-space-collapse="false" >${productDetail.get("description")?if_exists}</fo:block>
+								       <fo:block text-align="left" white-space-collapse="false" font-size="11pt">${productDetail.get("description")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="left" keep-together="always" >${productDetail.get("unit")?if_exists}</fo:block>
+								       <fo:block text-align="left" keep-together="always" font-size="11pt">${productDetail.get("unit")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="right" keep-together="always" >${productDetail.get("quantity")?if_exists}</fo:block>
+								       <fo:block text-align="right" keep-together="always" font-size="11pt">${productDetail.get("quantity")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="right" keep-together="always" >${productDetail.get("unitPrice")?if_exists}</fo:block>
+								       <fo:block text-align="right" keep-together="always" font-size="11pt">${productDetail.get("unitPrice")?if_exists}</fo:block>
 							       </fo:table-cell>
 						      </fo:table-row > 
 						<#assign sno=sno+1>
