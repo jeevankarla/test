@@ -1594,6 +1594,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
       Timestamp fromDate =  (Timestamp)context.get("fromDate");
       Timestamp thruDate = (Timestamp)context.get("thruDate");
       String partyIdFrom = (String) context.get("partyIdFrom");
+      String partyStatusId = (String) context.get("partyStatusId"); 
       List partyRelationshipAndDetailList = FastList.newInstance();
       List partyIds = FastList.newInstance();
       Security security = dctx.getSecurity();
@@ -1611,6 +1612,10 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
     	  if(UtilValidate.isNotEmpty(thruDate)){
     		  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
     	  }
+    	  if(UtilValidate.isNotEmpty(partyStatusId)){
+     		  conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyStatusId", EntityOperator.EQUALS, null),
+   					EntityOperator.OR, EntityCondition.makeCondition("partyStatusId", EntityOperator.EQUALS, partyStatusId)));
+           }
     	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
     	  partyRelationshipAndDetailList = delegator.findList("PartyRelationshipAndDetail", condition, null, null, null, false);
     	  if(UtilValidate.isNotEmpty(partyRelationshipAndDetailList)){

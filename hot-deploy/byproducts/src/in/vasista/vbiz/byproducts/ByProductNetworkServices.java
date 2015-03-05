@@ -8101,9 +8101,14 @@ public class ByProductNetworkServices {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String roleTypeId = (String) context.get("roleTypeId");
+		String statusId = (String) context.get("statusId");
 		//List partyRoleTypes = UtilMisc.toList("MIS_CUSTOMER", "IC_WHOLESALE", "Retailer");
 		
 		List conditionList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(statusId)){
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null),
+					EntityOperator.OR, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,statusId)));
+		}	
 		if(UtilValidate.isNotEmpty(roleTypeId)){
 			conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, roleTypeId));
 		}
