@@ -29,7 +29,7 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-   <#if produtMap?has_content>
+   <#if produtList?has_content>
     <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 		<fo:static-content flow-name="xsl-region-before">
 		   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
@@ -82,7 +82,7 @@ under the License.
 								 <fo:block text-align="left" >DESCRIPTION</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
-								 <fo:block text-align="center" keep-together="always" >UNIT</fo:block>
+								 <fo:block text-align="left" keep-together="always" >UNIT</fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell >
 								  <fo:block text-align="right" keep-together="always" >QTY</fo:block>
@@ -109,27 +109,29 @@ under the License.
 				          <fo:table-column column-width="120pt"/>		
 					         <fo:table-body>
 					            <#assign sno=1>
+                               <#list produtList as productDetail> 
 				               <fo:table-row >
 				                   <fo:table-cell>
 								       <fo:block text-align="center" keep-together="always" >${sno?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								      <fo:block text-align="left" keep-together="always" >${produtMap.get("productId")?if_exists}</fo:block>
+								      <fo:block text-align="left" keep-together="always" >${productDetail.get("itemCode")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="left" white-space-collapse="false" >${produtMap.get("description")?if_exists}</fo:block>
+								       <fo:block text-align="left" white-space-collapse="false" >${productDetail.get("description")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="center" keep-together="always" >${produtMap.get("quantityUomId")?if_exists}</fo:block>
+								       <fo:block text-align="left" keep-together="always" >${productDetail.get("unit")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="center" keep-together="always" >${produtMap.get("quantity")?if_exists}</fo:block>
+								       <fo:block text-align="right" keep-together="always" >${productDetail.get("quantity")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="center" keep-together="always" >${produtMap.get("unitPrice")?if_exists}</fo:block>
+								       <fo:block text-align="right" keep-together="always" >${productDetail.get("unitPrice")?if_exists}</fo:block>
 							       </fo:table-cell>
 						      </fo:table-row > 
 						<#assign sno=sno+1>
+                        </#list>
 					 </fo:table-body> 
 				 </fo:table>
 				 <fo:block text-align="left" keep-together="always">&#160;--------------------------------------------------------------------------------------------------------</fo:block>

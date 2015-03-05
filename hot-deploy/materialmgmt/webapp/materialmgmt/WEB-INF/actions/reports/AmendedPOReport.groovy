@@ -185,41 +185,62 @@ if(UtilValidate.isNotEmpty(paymentDetails)){
    allDetailsMap.put("payment",payment);
 }
 context.allDetailsMap=allDetailsMap;
-Debug.log("allDetailsMap============="+allDetailsMap);
 
-produtMap=[:];
-productId ="";
-conditionList.clear();
+/*conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-productdet = delegator.findList("OrderItem", cond, null, null, null, false );
-productDetail = EntityUtil.getFirst(productdet);
+productDet = delegator.findList("OrderItem", cond, null, null, null, false );
+productIds = EntityUtil.getFieldListFromEntityList(productDet, "productId", true);
+
+
+productDetail = EntityUtil.getFirst(productDet);
+
 if(productDetail){
 	orderId=productDetail.orderId;
 	produtMap.put("orderId",orderId);
 	productId=productDetail.productId;
 	produtMap.put("productId",productId);
-}
-productDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , productId)  , null, null, null, false );
-if(UtilValidate.isNotEmpty(productDetails)){
-  productDetails=EntityUtil.getFirst(productDetails);
-  itemCode=productDetails.internalName;
-  description=productDetails.description;
-  quantityUomId=productDetails.quantityUomId;
-  produtMap.put("itemCode",itemCode);
-  produtMap.put("description",description);
-  produtMap.put("quantityUomId",quantityUomId);
-}
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-productAmt = delegator.findList("OrderItemChange", cond, null, null, null, false );
-if(UtilValidate.isNotEmpty(productAmt)){
-   productAmtDet=EntityUtil.getFirst(productAmt);
-   quantity=productAmtDet.quantity;
-   unitPrice=productAmtDet.unitPrice;
-   produtMap.put("quantity",quantity);
-   produtMap.put("unitPrice",unitPrice);      
-}
-context.produtMap=produtMap;
-Debug.log("produtMap================="+produtMap);
+}*/
+produtList=[];
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	OrderItemChangeDetails = delegator.findList("OrderItemChange", cond, null, null, null, false );
+	orderItemChangeIds = EntityUtil.getFieldListFromEntityList(OrderItemChangeDetails, "orderItemChangeId", true);
+	
+	orderItemChangeIds.each {eachorderItemChangeId->
+		produtMap=[:];
+		
+	   OrderItemChangeData = EntityUtil.filterByCondition(OrderItemChangeDetails, EntityCondition.makeCondition("orderItemChangeId", EntityOperator.EQUALS, eachorderItemChangeId));
+	   OrderItemChangeData = EntityUtil.getFirst(OrderItemChangeData);    
+	   quantity=OrderItemChangeData.quantity;
+	   unitPrice=OrderItemChangeData.unitPrice;
+	   orderId=OrderItemChangeData.orderId;
+	   orderItemSeqId=OrderItemChangeData.orderItemSeqId;
+	   
+	   OrderItemDetails = delegator.findOne("OrderItem",["orderId":orderId,"orderItemSeqId":orderItemSeqId],false);
+	   if(OrderItemDetails){
+		   productId=OrderItemDetails.get("productId");
+		   produtMap.put("productId",productId);
+		   if(UtilValidate.isNotEmpty(productId)){
+			   
+			   productDetails = delegator.findOne("Product",["productId":productId],false);
+			   itemCode=productDetails.internalName;
+			   description=productDetails.description;
+			   uomId=productDetails.quantityUomId;
+			   produtMap.put("itemCode",itemCode);
+			   produtMap.put("description",description);
+			   if(UtilValidate.isNotEmpty(uomId)){
+				   unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+				   produtMap.put("unit",unitDesciption.abbreviation);
+			   }
+		 
+		   }
+			   
+	   }
+	   produtMap.put("quantity",quantity);
+	   produtMap.put("unitPrice",unitPrice);  
+	   produtList.add(produtMap);
+	}		
+context.produtList=produtList;
+	
