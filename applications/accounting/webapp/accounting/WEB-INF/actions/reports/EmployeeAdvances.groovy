@@ -16,8 +16,9 @@ import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.accounting.finaccount.FinAccountServices;
 dctx = dispatcher.getDispatchContext();
 
-fromDateStr = parameters.EMPAdvSehFromDate;
-thruDateStr = parameters.EMPAdvSehThruDate;
+fromDateStr = parameters.fromDate;
+thruDateStr = parameters.thruDate;
+reportTypeFlag = parameters.reportTypeFlag;
 
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
@@ -42,11 +43,18 @@ employeeIds=[];
 ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"LOAN_ACCOUNT")],EntityOperator.AND);
 finAccountTypes=delegator.findList("FinAccountType",ecl,null,null,null,false);
 finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
+conditionList =[];
 if(UtilValidate.isEmpty(parameters.finAccountTypeId)){
-	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,finAccountTypeIds)],EntityOperator.AND);
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,finAccountTypeIds)],EntityOperator.AND));
 }else{
-	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId)],EntityOperator.AND);
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId)],EntityOperator.AND));
 }
+
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,parameters.partyId)],EntityOperator.AND));
+}
+EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+
 finAccountList=delegator.findList("FinAccount",condition,null,null,null,false);
 finAccountTypeIdsMap=[:];
 finAccountList.each{finAccountTypeId->
