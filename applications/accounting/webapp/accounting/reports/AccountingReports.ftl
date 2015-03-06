@@ -329,8 +329,8 @@ function reportTypeChangeFunc() {
 					<tr class="alternate-row">
 				<form id="EmployeeAdvancesAndSubSchedule" name="EmployeeAdvancesAndSubSchedule" method="post" action="<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>" target="_blank">	
 					<td width="30%"> Employee Advances And Sub Sechedule</td>
-					<td width="15%">From<input  type="text" size="18pt" id="EMPAdvSehFromDate" readonly  name="EMPAdvSehFromDate"/></td>
-				    <td width="15%">To<input  type="text" size="18pt" id="EMPAdvSehThruDate" readonly  name="EMPAdvSehThruDate"/></td>
+					<td width="15%">From<input  type="text" size="18pt" id="EMPAdvSehFromDate" readonly  name="fromDate"/></td>
+				    <td width="15%">To<input  type="text" size="18pt" id="EMPAdvSehThruDate" readonly  name="thruDate"/></td>
   					<td width="15%">Loan Type :<select name='finAccountTypeId' id ="finAccountTypeId">	
 							<option value=""></option>								
 						<#list FinAccountTypeList as finAcunt> 	
@@ -338,8 +338,14 @@ function reportTypeChangeFunc() {
               		   </#list>
 							</select>
 						</td>
-					<td width="15%"></td>
-					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+					  <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="EmployeeAdvancesAndSubSchedule" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
+					   <td width="5%">Report Type 
+					    <select name="reportTypeFlag" id="reportTypeFlag1">
+						   <option value='Abstract'>Abstract</option>
+						   <option value='Detailed'>Detailed</option>
+					   </select>
+				     </td>
+					  <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 					</td>         			
 				</form>
               </tr>

@@ -3320,13 +3320,37 @@
     <screen name="EmployeeAdvancesAndSubScheduleReport">
   	<section>
   	<actions>
+     	<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/EmployeeAdvances.groovy"/>
   	</actions>
-  		<widgets>
-  			<platform-specific>
-                   <xsl-fo><html-template location="component://accounting/webapp/accounting/reports/EmployeeAdvances.fo.ftl"/></xsl-fo>
-             </platform-specific>
-  		</widgets>
+  	    <widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="Abstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/EmployeeAdvances.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="Detailed" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/EmployeeAdvancesDtlsReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+		</widgets>
   	</section>
   </screen> 
 </screens>
