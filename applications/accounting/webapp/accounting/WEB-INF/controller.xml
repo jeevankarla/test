@@ -3602,6 +3602,17 @@ under the License.
         <response name="success" type="view" value="PartyFinancialHistoryWithDrCrPDF"/>
         <response name="error" type="view" value="PartyFinancialHistoryWithDrCrPDF"/>
     </request-map>
+     <request-map uri="InterUnitPartyHistoryWithDrCr.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitPartyHistoryWithDrCr"/>
+        <response name="error" type="view" value="InterUnitPartyHistoryWithDrCr"/>
+    </request-map>
+     <request-map uri="InterUnitLedgerAndAcntHistoryWithDrCr.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitLedgerAndAcntHistoryWithDrCr"/>
+        <response name="error" type="view" value="InterUnitLedgerAndAcntHistoryWithDrCr"/>
+    </request-map>
+    
     
     <request-map uri="AccountReports">
         <security https="true" auth="true"/>
@@ -3624,7 +3635,10 @@ under the License.
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    
+    <request-map uri="EmployeeAdvancesAndSubScheduleReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeAdvancesAndSubScheduleReport"/>
+    </request-map>
     
     <!--================= AP Invoices ==================== -->
 	
@@ -4097,6 +4111,8 @@ under the License.
    
    <view-map name="GenericPartyFinancialHistoryPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GenericPartyFinancialHistoryPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="PartyFinancialHistoryWithDrCrPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyFinancialHistoryWithDrCrPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="InterUnitPartyHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitPartyHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
+   <view-map name="InterUnitLedgerAndAcntHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
    
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
    
@@ -4107,6 +4123,6 @@ under the License.
    <view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
    <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="PrintPayGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
-   
+   <view-map name="EmployeeAdvancesAndSubScheduleReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvancesAndSubScheduleReport" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>
