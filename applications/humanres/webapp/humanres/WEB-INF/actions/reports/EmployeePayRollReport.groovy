@@ -365,11 +365,18 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 					contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
 				}
 			}
+			billingDesc = null;
+			if(UtilValidate.isNotEmpty(parameters.billingTypeId)){
+				GenericValue enumeration = delegator.findOne("Enumeration", [enumId : parameters.billingTypeId], false);
+				if(UtilValidate.isNotEmpty(enumeration.description)){
+					billingDesc = enumeration.description;
+				}
+			}
 			String text = null;
-		    if(UtilValidate.isNotEmpty(parameters.billingTypeId) && (parameters.billingTypeId.equals("SP_DA_ARREARS"))){
-			     text = "Your DA arrears remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" from "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+ " to " +UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),'MMMM yyyy')+ " has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+		    if(UtilValidate.isNotEmpty(parameters.billingTypeId) && (parameters.billingTypeId.equals("PAYROLL_BILL"))){
+				text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
 		    }else{
-		   	     text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+			    text = "Your " +billingDesc+" remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" from "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+ " to " +UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),'MMMM yyyy')+ " has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
 		    }
 		   
 		   Debug.log("Sms text: " + text);
