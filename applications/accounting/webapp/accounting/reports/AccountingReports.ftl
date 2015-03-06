@@ -182,6 +182,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
+	    makeDatePicker3("EMPAdvSehFromDate","EMPAdvSehThruDate");
 	    
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		

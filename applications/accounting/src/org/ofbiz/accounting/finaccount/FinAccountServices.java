@@ -1197,4 +1197,40 @@ public class FinAccountServices {
 	    }
         return ServiceUtil.returnSuccess("Reconcilation Canceld Successfully for glReconciliationId:"+glReconciliationId);
     }
+    public static Map<String, Object> getFinAccountTransOpeningBalances(DispatchContext dctx, Map<String, Object> context){
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String finAccountId = (String) context.get("finAccountId");
+        Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
+        List conditionList = FastList.newInstance();
+        List<GenericValue> finAccountTransList=null;
+        BigDecimal withDrawal = BigDecimal.ZERO;
+        BigDecimal deposit = BigDecimal.ZERO;
+        try{
+        	conditionList.add(EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountId));
+        	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
+        	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED"));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        	finAccountTransList = delegator.findList("FinAccountTrans",condition,null,null,null,false);
+        	if(UtilValidate.isNotEmpty(finAccountTransList)){
+        		for(GenericValue finAccountTrans:finAccountTransList){
+        			if(((String)finAccountTrans.get("finAccountTransTypeId")).equals("WITHDRAWAL") && UtilValidate.isNotEmpty((BigDecimal)finAccountTrans.get("amount"))){
+        				withDrawal=withDrawal.add((BigDecimal)finAccountTrans.get("amount"));
+        			}
+        			if(((String)finAccountTrans.get("finAccountTransTypeId")).equals("DEPOSIT") && UtilValidate.isNotEmpty((BigDecimal)finAccountTrans.get("amount"))){
+        				deposit=deposit.add((BigDecimal)finAccountTrans.get("amount"));
+        			}
+        		}
+        		result.put("withDrawal", withDrawal);
+        		result.put("deposit", deposit);
+        	}
+        }catch (Exception e) {
+	        Debug.logError(e, "Error While getting the Opening balace.!", module);
+	        return ServiceUtil.returnError(e.getMessage());
+	    }
+        return result;
+    }
 }
