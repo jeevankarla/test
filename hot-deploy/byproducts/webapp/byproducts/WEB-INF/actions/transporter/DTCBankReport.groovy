@@ -78,7 +78,9 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		partyId =  facilityCommission.partyId;
 		if(UtilValidate.isNotEmpty(partyId)){
 			if(finAccountParties.contains(partyId)){
-				List<GenericValue> finAccountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId), null, null, null, false);
+				//List<GenericValue> finAccountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId), null, null, null, false);
+				//only to get Type BankAccounts exclude others like 'EMDR_DEPOSIT'
+				List<GenericValue> finAccountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition([ownerPartyId: partyId, finAccountTypeId: "BANK_ACCOUNT" ,statusId: "FNACT_ACTIVE"]), null, null, null, false);
 				if(UtilValidate.isNotEmpty(finAccountDetails)){
 					finAccount = EntityUtil.getFirst(finAccountDetails);
 					String partyName = "";
