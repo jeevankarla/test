@@ -123,7 +123,7 @@
 					    	"<input type='hidden' value='${orderItem.internalName}' name='internalId_o_"+${orderItem.orderItemSeqId}+"'/>"+
 					    	"<input type='hidden' value='${orderItem.unit}' name='unit_o_"+${orderItem.orderItemSeqId}+"'/>"+
 
-							"<td align='center' >${orderItem.internalName}</td>"+
+							"<td align='center' >${orderItem.internalName}(${orderItem.description})</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>${orderItem.quantity}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
