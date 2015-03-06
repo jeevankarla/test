@@ -108,6 +108,28 @@ totalInvSaNotApplied     = BigDecimal.ZERO;
 totalInvPuApplied         = BigDecimal.ZERO;
 totalInvPuNotApplied     = BigDecimal.ZERO;
 
+
+//from finHistory for InterUnit Ledger
+
+partyDebits=0;
+partyCredits=0;
+partyFinHistryDayWiseMap=[];
+if(UtilValidate.isNotEmpty(context.partyTotalDebits)){
+		partyDebits=context.partyTotalDebits;
+	}
+if(UtilValidate.isNotEmpty(context.partyTotalCredits)){
+	partyCredits=context.partyTotalCredits;
+}
+if(UtilValidate.isNotEmpty(context.partyTotalCredits)){
+	partyCredits=context.partyTotalCredits;
+}
+if(UtilValidate.isNotEmpty(context.partyDayWiseFinHistryMap)){
+	partyFinHistryDayWiseMap=context.partyDayWiseFinHistryMap;
+}
+Debug.log("====partyDebits=====>"+partyDebits+"==partyCredits=="+partyCredits);
+//Debug.log("====partyFinHistryDayWiseMap=====>"+partyFinHistryDayWiseMap);
+
+
 conditionList=[];
 
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_IN_PROCESS"));
@@ -448,6 +470,13 @@ for(int j=0 ; j < (totalDays); j++){
 			dayPaymentList.addAll(payList);
 		}
 	}
+	//adding PartyFinAccountHistory always treat them as payments
+	if(UtilValidate.isNotEmpty(partyFinHistryDayWiseMap)){
+	    partyDayFinList=partyFinHistryDayWiseMap.get(curntDay);
+		if(UtilValidate.isNotEmpty(partyDayFinList)){
+			dayPaymentList.addAll(partyDayFinList);
+		}
+	}
 	//dayWise PartyMap prepartion
 	if(UtilValidate.isNotEmpty(dayInvoiceList) || UtilValidate.isNotEmpty(dayPaymentList)){
 		dayDetailMap.put("invoiceList", dayInvoiceList);
@@ -501,9 +530,15 @@ partyTrTotalMap["debitValue"]+=(arInvoiceDetailsMap.get("invTotal")+apPaymentDet
 
 partyTrTotalMap["creditValue"]+=(apInvoiceDetailsMap.get("invTotal")+arPaymentDetailsMap.get("amount"));
 
+
+
 partyTotalMap=[:];
 partyTotalMap["debitValue"]=BigDecimal.ZERO;
 partyTotalMap["creditValue"]=BigDecimal.ZERO;
+
+//adding FinHistoryTotal here
+partyTrTotalMap["debitValue"]+=(partyDebits);
+partyTrTotalMap["creditValue"]+=(partyCredits);
 
 //Debug.log("====partyTrTotalMap==First====>"+partyTrTotalMap);
 
