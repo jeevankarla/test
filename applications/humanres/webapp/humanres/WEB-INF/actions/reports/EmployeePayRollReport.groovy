@@ -51,7 +51,6 @@ if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 }
 List stautsList = UtilMisc.toList("GENERATED","APPROVED");
 conditionList=[];
-
 if(UtilValidate.isEmpty(parameters.billingTypeId)){
 	//conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , parameters.billingTypeId));
 	parameters.billingTypeId = "PAYROLL_BILL";
@@ -366,8 +365,13 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 					contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
 				}
 			}
-			
-		   String text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+			String text = null;
+		    if(UtilValidate.isNotEmpty(DaFlag)){
+			     text = "Your DA arrears remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" from "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+ " to " +UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),'MMMM yyyy')+ " has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+		    }else{
+		   	     text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+		    }
+		   
 		   //Debug.log("Sms text: " + text);
 		   Map<String, Object> sendSmsParams = FastMap.newInstance();
 		  if(UtilValidate.isNotEmpty(contactNumberTo)){

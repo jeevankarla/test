@@ -196,7 +196,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
  				                      </fo:table-cell>
 			                      </fo:table-row>
 			                       <fo:table-row>
+			                       <#assign epf = 0>
+			                       <#if employeeDetails?has_content>
 			                       <#assign epf = employeeDetails.getValue().get("EpfAmount")?if_exists>
+			                       </#if>
 			                       <fo:table-cell>
 						                          <fo:block text-align="right"  ></fo:block>
 						                        </fo:table-cell>
