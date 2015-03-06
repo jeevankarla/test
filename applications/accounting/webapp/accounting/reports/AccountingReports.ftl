@@ -325,6 +325,23 @@ function reportTypeChangeFunc() {
 									<td width="15%"><input type="submit" value="FORM 27A.PDF" class="buttontext"></td>
 						</form>
 					</tr>	
+					<tr class="alternate-row">
+				<form id="EmployeeAdvancesAndSubSchedule" name="EmployeeAdvancesAndSubSchedule" method="post" action="<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>" target="_blank">	
+					<td width="30%"> Employee Advances And Sub Sechedule</td>
+					<td width="15%">From<input  type="text" size="18pt" id="EMPAdvSehFromDate" readonly  name="EMPAdvSehFromDate"/></td>
+				    <td width="15%">To<input  type="text" size="18pt" id="EMPAdvSehThruDate" readonly  name="EMPAdvSehThruDate"/></td>
+  					<td width="15%">Loan Type :<select name='finAccountTypeId' id ="finAccountTypeId">	
+							<option value=""></option>								
+						<#list FinAccountTypeList as finAcunt> 	
+							<option value='${finAcunt.finAccountTypeId}'>${finAcunt.description?if_exists}</option>
+              		   </#list>
+							</select>
+						</td>
+					<td width="15%"></td>
+					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+					</td>         			
+				</form>
+              </tr>
 		</table>     			     
 	</div> 	
 </div>
