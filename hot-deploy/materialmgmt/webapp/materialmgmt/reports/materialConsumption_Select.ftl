@@ -64,7 +64,7 @@ $(document).ready(function(){
 		$('#ui-datepicker-div').css('clip', 'auto');
 
 	// fetch the charts for today
-	  	    $('#loader').show();
+	  	 /*   $('#loader').show();
      		$('#result').hide(); 
 	        $.get(  
             "${ajaxUrl}",  
@@ -103,7 +103,7 @@ $(document).ready(function(){
             "html"  
         ); 
         return false;
-    });
+    });*/ 
 });
 
 </script>
@@ -113,7 +113,7 @@ $(document).ready(function(){
       	<h3>Select Period</h3>	
      </div>
     <div class="screenlet-body">
-	  <form name="materialConsumptionAnalysis" action="MaterialConsumptionInternal">
+	  <form name="materialConsumptionAnalysis" action="MaterialConsumption">
 		<table class="basic-table" cellspacing="0">
 			<tr>
 			    <input class='h2' type="hidden" id="showAllFacilities" name="showAllFacilities"/>
@@ -148,4 +148,3 @@ $(document).ready(function(){
       </p>
 </div> -->
 
-<div id="result"/>

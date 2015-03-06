@@ -30,36 +30,64 @@
   
 $(document).ready(function(){
 
-<#if productDataListJSON?exists>		
+<#if listJSON?exists>		
 	
             
-	jQuery.plot($("#chart3"), [{data: ${StringUtil.wrapString(productDataListJSON)},
-		points: { show: true }
-									},
-                   							
-								  ],
-				{ 
-					series: {
-                   		points: { show: true },
-                   		lines: { show: true }
-                	}, 
-               		grid: { hoverable: true},                 	 
-                  	yaxes: [
-                      { position: 'left',
-                      	min: 0,
- 						axisLabel : 'Qty' }
-                  	],                	 
-     				xaxis: {
-         				min: 0,
-         				max : ${productDataListJSON.size()} + 1,
-         				ticks:${StringUtil.wrapString(labelsJSON)},
-         				rotateTicks: 140,
-         			    mode: "categories"
-     				},
-     				                 	         		             		            		
-				});
-	
 
+
+
+<script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.js</@ofbizContentUrl>"></script>
+<script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.selection.js</@ofbizContentUrl>"></script>
+
+<script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.pie.js"</@ofbizContentUrl>></script>
+
+<script type="application/javascript">  
+function timeConverter(timestamp){
+ 	var a = new Date(timestamp);
+ 	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time = month + ' ' + date+', '+year;
+    return time;
+ }
+  
+$(document).ready(function(){  
+	var data = ${StringUtil.wrapString(listJSON)};
+	var options = { 
+					series: {
+                   		lines: { show: true },
+                   		points: { show: true }
+               		},
+               		grid: { hoverable: true},
+					xaxis: { mode: "time" },
+					selection: { mode: "x" } 
+				};
+	
+	var plot = jQuery.plot($("#graph"), [data], options);
+				
+    var overview = $.plot($("#overview"), [data], {
+        xaxis: { ticks: [], mode: "time" },
+        yaxis: { ticks: [], min: 0, autoscaleMargin: 0.1 },
+        selection: { mode: "x" }
+    });
+
+    // now connect the two
+    
+    $("#graph").bind("plotselected", function (event, ranges) {
+        // do the zooming
+        plot = $.plot($("#graph"), [data],
+                      $.extend(true, {}, options, {
+                          xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+                      }));
+
+        // don't fire event on the overview to prevent eternal loop
+        overview.setSelection(ranges, true);
+    });
+    
+    $("#overview").bind("plotselected", function (event, ranges) {
+        plot.setSelection(ranges);
+    });				
 
     function showTooltip(x, y, contents) {
         $('<div id="tooltip">' + contents + '</div>').css( {
@@ -75,86 +103,44 @@ $(document).ready(function(){
     }
 
     var previousPoint = null;
-    $("#chart").bind("plothover", function (event, pos, item) {
+    $("#graph").bind("plothover", function (event, pos, item) {   
         $("#x").text(pos.x.toFixed(2));
         $("#y").text(pos.y.toFixed(2));
-        alert("item=" + item);
         if (item) {
             if (previousPoint != item.dataIndex) {
                 previousPoint = item.dataIndex;
                 
                 $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
-                    y = item.datapoint[1].toFixed(2);
-                var content ="<br> " + y;
+                var x = item.datapoint[0];
+                var y = item.datapoint[1].toFixed(2);
                 showTooltip(item.pageX, item.pageY,
-                            content);
+                            timeConverter(x)+ "<br>" + y + " ltrs");
             }
         }
         else {
             $("#tooltip").remove();
             previousPoint = null;            
         }
-    });       	
-	
-	
-</#if>
-
-    jQuery(".grid-header .ui-icon")
-        .addClass("ui-state-default ui-corner-all")
-        .mouseover(function(e) {
-            jQuery(e.target).addClass("ui-state-hover")
-        })
-        .mouseout(function(e) {
-            jQuery(e.target).removeClass("ui-state-hover")
-        });	 
-                       
-});
+    });
+    
+});    
 </script>
-	
-<div class="screenlet-body">
-	<div class="screenlet">
-	    <div class="screenlet-title-bar">
-	      <h3>For Product : ${productId}</h3>
-	    </div>
-	    <div class="screenlet-body">
-	   		<div id="chart3" class="graph">${productDataListJSON.size()}=== ${StringUtil.wrapString(productDataListJSON)}</div>
-	   		
-	    </div>
-	     </div>
-</div>	
-
-<!--<div class="screenlet-body">
-<div class="righthalf">
-	<div class="screenlet">
-	    <div class="screenlet-title-bar">
-	      <h3>Requirement (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
-	    </div>
-	    <div class="screenlet-body">
-	   		<div id="chart" class="graph" style="margin-left:10px;margin-top:10px;"></div>
-	   		<br><br>
-	  		
-	    </div>
-	</div>
-</div>
-
-<div class="lefthalf">
-   
-	<div class="screenlet">
-	  
-	    <div class="screenlet-title-bar">
-	      <h3> Indents (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
-	    </div>
-	    <div class="screenlet-body">
-	   		<div id="chart2" class="graph"></div>
-	   		<br><br>
-	  		
-	    </div>
-	    
-	</div>
-	
-</div>-->
-
-<div class="clear"></div>
+	<style type="text/css">
+		div.graph
+		{
+			width: 800px;
+			height: 400px;
+		}
+		
+	</style>
+</#if>
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3> Product : ${product.internalName?if_exists}-${product.description?if_exists},    Toal Consumption: ${totalConsu?if_exists}</h3>
+    </div>
+    <div class="screenlet-body">
+   		<div id="graph" class="graph"></div>
+   		<div id="overview" style="margin-left:50px;margin-top:20px;width:400px;height:50px"></div>
+    </div>
 </div>
 
