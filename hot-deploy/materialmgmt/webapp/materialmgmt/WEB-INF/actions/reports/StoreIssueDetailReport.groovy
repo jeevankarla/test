@@ -49,7 +49,6 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
 context.thruDate = dayEnd;
-
 totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
 if(totalDays > 32){
@@ -68,16 +67,22 @@ if(UtilValidate.isNotEmpty(facilityId)){
 	productList=delegator.findList("Product",condition,null,null,null,false);
 	productIds=EntityUtil.getFieldListFromEntityList(productList,"productId", true);
 }
-
+custRequestIds=[];
 conditionList=[];
 /*if(UtilValidate.isNotEmpty(facilityId)){
 	conditionList.add(EntityCondition.makeCondition("facilityId", ,EntityOperator.EQUALS, facilityId));
 }*/
+	issueCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin),
+												 EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)],EntityOperator.AND);
+	storeIssuedDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",issueCondition,UtilMisc.toSet("custRequestId"),null,null,false);
+	custRequestIds=EntityUtil.getFieldListFromEntityList(storeIssuedDetails,"custRequestId",true);
 if(UtilValidate.isNotEmpty(partyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", ,EntityOperator.EQUALS, partyId));
 }
+/*
 conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)));
-conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)));
+conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)));*/
+conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,custRequestIds));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 storeAbst= delegator.findList("CustRequestAndCustRequestItem",condition,UtilMisc.toSet("custRequestId","custRequestDate","productId","custRequestItemSeqId","fromPartyId"),null,null,false);
 deptIds = EntityUtil.getFieldListFromEntityList(storeAbst, "fromPartyId", true);
@@ -92,8 +97,9 @@ if(UtilValidate.isNotEmpty(deptIds)){
 			 conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN, productIds));
 		 }
 		 conditionList.add(EntityCondition.makeCondition("fromPartyId",EntityOperator.EQUALS, fromPartyId));
-		 conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)));
-		 conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)));
+		 /*conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)));
+		 conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)));*/
+		 conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,custRequestIds));
 		 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		 productIdsDetails = delegator.findList("CustRequestAndCustRequestItem", condition , null, null, null, false );
 		 if(UtilValidate.isEmpty(facilityId)){
@@ -132,7 +138,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 	                                     custRequestItemSeqId=custReq.custRequestItemSeqId;								   
 							             quantity=custReq.quantity;							
 	                                     productDetailMap["custRequestId"]=custRequestId;
-		                                 productDetailMap["custRequestDate"]=custRequestDate;														
+		                                 //productDetailMap["custRequestDate"]=custRequestDate;														
 								         productDetails = delegator.findOne("Product",["productId":productId],false);
 								         if(productDetails){
 								             productDetailMap["productId"]=productDetails.internalName;
@@ -150,6 +156,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 			                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 										 
 			                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);
+										 productDetailMap.
 										 unitPrice=0;
 			                             totQty=0;
 			                             totunitCost=0;
@@ -165,7 +172,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 					                              unitCost=storeAbstQty.unitCost;
 					                             /* totunitCost=totunitCost+unitCost;*/
 												  totVal+=itemquantity*unitCost;
-												  
+												  productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
 		                                      }
 											}else{
 												storeAbstQty=EntityUtil.getFirst(storeAbstQtyDetails);
@@ -176,6 +183,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 												totQty=quantity;
 												unitCost=storeAbstQty.unitCost;
 												 totVal=quantity*unitCost;
+												 productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
 											}
 											  /*if(storeAbstQtyDetails.size()>1){
 										         if(totunitCost != 0){  
