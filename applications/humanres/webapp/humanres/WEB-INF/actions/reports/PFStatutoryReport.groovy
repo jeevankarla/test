@@ -34,14 +34,34 @@ import in.vasista.vbiz.humanres.PayrollService;
 	context.timePeriodStart= timePeriodStart;
 	context.timePeriodEnd= timePeriodEnd;
 	
+	
 	fromDate=UtilDateTime.getDayStart(timePeriodStart);
 	thruDate=UtilDateTime.getDayEnd(timePeriodEnd);
+	
+	periodTypeId = null;
+	List condList = FastList.newInstance();
+	condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_DA_ARREARS"));
+	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+	condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
+	if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
+		periodBillingAndCustomTimePeriod = EntityUtil.getFirst(PeriodBillingAndCustomTimePeriodList);
+		periodTypeId = periodBillingAndCustomTimePeriod.periodTypeId;
+	}
 	
 	EachEmployeeMap=[:];
 	partyIdsList=[];
 	conditionList=[];
-	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
+	if(UtilValidate.isNotEmpty(periodTypeId) && periodTypeId.equals("HR_SDA")){
+		conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.IN ,UtilMisc.toList("PAYROLL_BILL","SP_DA_ARREARS")));
+		conditionList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+		conditionList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	}else{
+		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
+		conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
+	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 	if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
@@ -124,6 +144,10 @@ if(UtilValidate.isNotEmpty(pfList)){
 						}
 						if((eachItem.payrollHeaderItemTypeId=="PAYROL_DD_EMP_PR")){
 							epf = epf-eachItem.amount;
+						}else{
+							if((eachItem.payrollHeaderItemTypeId=="PAYROL_DD_PF")){
+								epf = epf-eachItem.amount;
+							}
 						}
 						if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")&&(eachItem.amount==0)){
 							break;
