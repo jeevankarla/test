@@ -93,7 +93,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  orgPartyId = parameters.orgPartyId;
  context.productId = productId;
  int i=1;
- if (productId) {
+ /*if (productId) {
 	 JSONArray productDataListJSON = new JSONArray();
 	 JSONArray labelsJSON = new JSONArray();
 	
@@ -119,9 +119,9 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 					 tempMap = [:];
 					 date = entry.getKey();
 					
-					 /*tempMap.putAt("name", date);
+					 tempMap.putAt("name", date);
 					 tempMap.putAt("count", entry.getValue().quantity);
-					 requirmentByStatusList.add(tempMap);*/
+					 requirmentByStatusList.add(tempMap);
 					 jsonArray= new JSONArray();
 					 jsonArray.add(i++);
 					 jsonArray.add(entry.getValue().quantity);
@@ -142,15 +142,51 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	context.labelsJSON = labelsJSON;
 	Debug.log("labelsJSON============"+labelsJSON);
 }
+ */
+ if (productId) {
+	 
  
- Debug.logError("productDataListJSON: " + context.productDataListJSON, "");
- 
- 
-/* String productId = (String) context.get("productId");
- String facilityId = (String) context.get("facilityId");
- Timestamp fromDate = (Timestamp) context.get("fromDate");
- Timestamp thruDate = (Timestamp) context.get("thruDate");*/
- 
- //resultMap = MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,UtilMisc.toMap("productId","RM1210","facilityId","STORE","fromDate",fromDate,"thruDate",thruDate));
- 
- 
+	 JSONArray listJSON= new JSONArray();
+	 
+	 startTime =  UtilDateTime.getDayEnd(fromDate, timeZone, locale);
+	 endTime =  UtilDateTime.getDayEnd(thruDate, timeZone, locale);
+	 GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId),false);
+	 context.product = product;
+	 Map issueCtxMap = FastMap.newInstance();
+		issueCtxMap.put("productId", productId);
+		issueCtxMap.put("fromDate", fromDate);
+		issueCtxMap.put("thruDate", thruDate);
+		issueCtxMap.put("orgPartyId", orgPartyId);
+		//Debug.log("issueCtxMap============"+issueCtxMap);
+		 // Find oustanding purchase orders for this item.
+		issues = MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx, issueCtxMap);
+		if(UtilValidate.isNotEmpty(issues) && UtilValidate.isNotEmpty(issues.productTotals) &&
+			 UtilValidate.isNotEmpty((issues.productTotals).get(productId)) && UtilValidate.isNotEmpty((issues.productTotals).get(productId).dayWiseMap)){
+			
+			 dayWiseMap=(issues.productTotals).get(productId).dayWiseMap;
+			 i=0;
+			 if(dayWiseMap){
+				 iterTime = startTime;
+				 while (iterTime <= endTime) {
+					 issueDate = UtilDateTime.toDateString(new Date(iterTime.getTime()),"yyyy-MM-dd");
+					 issueDetails = dayWiseMap.get(issueDate);
+					 JSONArray dayList= new JSONArray();
+					 dayList.add(iterTime.getTime());
+					
+					 if (issueDetails) {
+						 dayList.add(issueDetails.quantity);
+					 }else{
+					 	dayList.add(0.00);
+					 }
+					
+					 listJSON.add(dayList);
+					 iterTime = UtilDateTime.addDaysToTimestamp(iterTime, 1);
+				 }
+			 }
+		}
+	 
+	
+	context.listJSON=listJSON;
+
+ }
+

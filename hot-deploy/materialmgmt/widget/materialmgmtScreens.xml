@@ -676,6 +676,7 @@
                  <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                   <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                   <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/> 
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/MaterialConsumptionPattern.groovy"/>  
             </actions>  
                <condition> <or>
