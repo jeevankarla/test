@@ -168,7 +168,7 @@ under the License.
 				            	<fo:block   text-align="left"  >${eachDateDetail.get("description")?if_exists}</fo:block>  
 				            </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("instrumentNo")?if_exists}</fo:block>  
 				            </fo:table-cell>
 				            <#-->
 				            <fo:table-cell>

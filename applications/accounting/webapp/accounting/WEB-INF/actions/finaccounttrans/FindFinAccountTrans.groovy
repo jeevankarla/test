@@ -54,7 +54,13 @@ import org.ofbiz.party.party.PartyHelper;
 
 reportTypeFlag = parameters.reportTypeFlag;
 finAccountReconciliationList=[];
+partyFinAccountTransList=[];
 
+partyDayWiseFinHistryMap=[:];
+partyTotalDebits=0;
+partyTotalCredits=0;
+
+Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
 //finAccountTransList.each{finAccountTrans->
 finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 	tempFinAccountTransMap=[:];
@@ -73,6 +79,26 @@ finAccountTransList.eachWithIndex {finAccountTrans, idx ->
    tempFinAccountTransMap["statusId"]=finAccountTrans.statusId;
    tempFinAccountTransMap["comments"]=finAccountTrans.comments;
    
+   
+   //preparing AnotherMap for PartyLedger
+   curntDay=UtilDateTime.toDateString(finAccountTrans.transactionDate,"dd-MM-yyyy");
+   innerMap=[:];
+   innerMap["partyId"]=finAccountTrans.partyId;
+   innerMap["date"]=curntDay;
+   innerMap["paymentDate"]=finAccountTrans.transactionDate;
+   innerMap["paymentId"]=finAccountTrans.paymentId;
+   innerMap["vchrType"]="";
+   innerMap["vchrCode"]="";
+   //here IntsrumentNO adding
+   innerMap["instrumentNo"]="";
+   innerMap["paymentMethodTypeId"]="";
+   innerMap["description"]="";
+   innerMap["amount"]=0;
+   innerMap["crOrDbId"]="";
+   innerMap["debitValue"]=0;
+   innerMap["creditValue"]=0;
+    
+   
       if(UtilValidate.isNotEmpty(finAccountTrans.paymentId)){
        payment = delegator.findOne("Payment", [paymentId : finAccountTrans.paymentId], true);
 	   if(UtilValidate.isNotEmpty(payment.paymentTypeId)){
@@ -85,9 +111,17 @@ finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 		   if( finAccountTrans.finAccountTransTypeId=="WITHDRAWAL"){
 		    tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, payment.partyIdTo, false);
 		    tempFinAccountTransMap["paymentPartyId"] = payment.partyIdTo;
+			//if deposit for partyLedger it is Cr
+			innerMap["creditValue"]=finAccountTrans.amount;
+			partyTotalDebits+=finAccountTrans.amount;
+			innerMap["crOrDbId"]="C";
 		   }else if(finAccountTrans.finAccountTransTypeId=="DEPOSIT"){
 		    tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, payment.partyIdFrom, false);
 		    tempFinAccountTransMap["paymentPartyId"] = payment.partyIdFrom;
+			//if deposit for partyLedger it is Dr
+			innerMap["debitValue"]=finAccountTrans.amount;
+			partyTotalCredits+=finAccountTrans.amount;
+			innerMap["crOrDbId"]="D";
 		   }
         }
          tempFinAccountTransMap["instrumentNo"]=payment.paymentRefNum;
@@ -107,10 +141,36 @@ finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 	          }
 	        tempFinAccountTransMap["instrumentNo"]=finAccountTrans.contraRefNum;
     }
+	   //adding required fields to partyLedgerInnerMap
+	   innerMap["instrumentNo"]=tempFinAccountTransMap["instrumentNo"];
+	   innerMap["partyId"]=tempFinAccountTransMap["paymentPartyId"];
+	   innerMap["description"]=tempFinAccountTransMap["paymentMethodTypeId"];
+	   partyFinAccountTransList.addAll(innerMap);
+	   //preparing Map here
+	   dayPaymentList=[];
+	   dayPaymentList=partyDayWiseFinHistryMap[curntDay];
+	   //Debug.log("=curntDay=="+curntDay+"==dayInvoiceList=="+dayPaymentList);
+	   if(UtilValidate.isEmpty(dayPaymentList)){
+		   dayTempPaymentList=[];
+		   dayTempPaymentList.addAll(innerMap);
+		   dayPaymentList=dayTempPaymentList;
+		   partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
+	   }else{
+			dayPaymentList.addAll(innerMap);
+		   partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
+	   }
    finAccountReconciliationList.addAll(tempFinAccountTransMap);
 }
 context.finAccountReconciliationList=finAccountReconciliationList;
+
+//result for PartyLedger
+context.partyFinAccountTransList=partyFinAccountTransList;
+context.partyTotalDebits=partyTotalDebits;
+context.partyTotalCredits=partyTotalCredits;
+context.partyDayWiseFinHistryMap=partyDayWiseFinHistryMap;
 //Debug.log("==finAccountReconciliationList=="+finAccountReconciliationList);
+//Debug.log("==partyFinAccountTransList=="+partyFinAccountTransList);
+
 
 
 
