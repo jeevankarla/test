@@ -366,13 +366,13 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 				}
 			}
 			String text = null;
-		    if(UtilValidate.isNotEmpty(DaFlag)){
+		    if(UtilValidate.isNotEmpty(parameters.billingTypeId) && (parameters.billingTypeId.equals("SP_DA_ARREARS"))){
 			     text = "Your DA arrears remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" from "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+ " to " +UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),'MMMM yyyy')+ " has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
 		    }else{
 		   	     text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
 		    }
 		   
-		   //Debug.log("Sms text: " + text);
+		   Debug.log("Sms text: " + text);
 		   Map<String, Object> sendSmsParams = FastMap.newInstance();
 		  if(UtilValidate.isNotEmpty(contactNumberTo)){
 				sendSmsParams.put("contactNumberTo", contactNumberTo);
