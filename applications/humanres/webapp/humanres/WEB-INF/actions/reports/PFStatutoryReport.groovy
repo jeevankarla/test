@@ -39,6 +39,9 @@ import in.vasista.vbiz.humanres.PayrollService;
 	thruDate=UtilDateTime.getDayEnd(timePeriodEnd);
 	
 	periodTypeId = null;
+	
+	daPeriodBillingIdList = [];
+	periodBillingIdList = [];
 	List condList = FastList.newInstance();
 	condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_DA_ARREARS"));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
@@ -47,27 +50,25 @@ import in.vasista.vbiz.humanres.PayrollService;
 	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
 	if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
-		periodBillingAndCustomTimePeriod = EntityUtil.getFirst(PeriodBillingAndCustomTimePeriodList);
-		periodTypeId = periodBillingAndCustomTimePeriod.periodTypeId;
+		daPeriodBillingIdList = EntityUtil.getFieldListFromEntityList(PeriodBillingAndCustomTimePeriodList, "periodBillingId", true);
 	}
 	
 	EachEmployeeMap=[:];
 	partyIdsList=[];
 	conditionList=[];
-	if(UtilValidate.isNotEmpty(periodTypeId) && periodTypeId.equals("HR_SDA")){
-		conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.IN ,UtilMisc.toList("PAYROLL_BILL","SP_DA_ARREARS")));
-		conditionList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
-		conditionList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-	}else{
-		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-		conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
-	}
+	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
+	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 	if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
 	}
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
+	periodBillingIdList = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
+	if(UtilValidate.isNotEmpty(daPeriodBillingIdList)){
+		periodBillingIdList.add(daPeriodBillingIdList);
+	}
+	
 	periodBillingId = periodBillingList.periodBillingId;
 	
 	emplInputMap = [:];
@@ -104,7 +105,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 	}
 	
 	headerConditionList=[];
-	headerConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingId));
+	headerConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingIdList));
 	headerConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,partyIdsList));
 	headerCondition = EntityCondition.makeCondition(headerConditionList,EntityOperator.AND);
 	def orderBy = UtilMisc.toList("partyIdFrom");
