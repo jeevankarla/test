@@ -136,7 +136,7 @@ $(document).ready(function(){
 </#if>
 <div class="screenlet">
     <div class="screenlet-title-bar">
-      <h3>Material Consumption Quantity (${product.internalName?if_exists}-${product.description?if_exists})</h3>
+      <h3> Product : ${product.internalName?if_exists}-${product.description?if_exists},    Toal Consumption: ${totalConsu?if_exists}</h3>
     </div>
     <div class="screenlet-body">
    		<div id="graph" class="graph"></div>

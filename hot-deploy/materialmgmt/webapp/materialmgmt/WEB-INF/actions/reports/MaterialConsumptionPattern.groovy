@@ -145,7 +145,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  */
  if (productId) {
 	 
- 
+	 totalConsu = 0;
 	 JSONArray listJSON= new JSONArray();
 	 
 	 startTime =  UtilDateTime.getDayEnd(fromDate, timeZone, locale);
@@ -175,6 +175,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 					
 					 if (issueDetails) {
 						 dayList.add(issueDetails.quantity);
+						 totalConsu +=issueDetails.quantity;
 					 }else{
 					 	dayList.add(0.00);
 					 }
@@ -185,7 +186,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 			 }
 		}
 	 
-	
+	context.totalConsu =totalConsu;
 	context.listJSON=listJSON;
 
  }
