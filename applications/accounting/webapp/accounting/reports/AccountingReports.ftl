@@ -183,7 +183,8 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker3("EMPAdvSehFromDate","EMPAdvSehThruDate");
-	    
+	    makeDatePicker3("IULFromDateCrDr","IULThruDateCrDr");
+	    makeDatePicker3("IULAcntFromDateCrDr","IULAcntThruDateCrDr");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -291,7 +292,28 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
-              	
+			        <#--
+              	   <tr class="alternate-row">
+			      	   <form id="InterUnitPartyHistoryWithDrCr" name="InterUnitPartyHistoryWithDrCr" method="post" action="<@ofbizUrl>InterUnitPartyHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Inter Unit Party Account Transactions</td>
+			             <td width="15%">From<input  type="text" size="15pt" id="IULFromDateCrDr" readonly  name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="15pt" id="IULThruDateCrDr" readonly  name="thruDate"/></td>
+			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="InterUnitPartyHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
+			        -->
+			          <tr class="alternate-row">
+			      	   <form id="InterUnitLedgerAndAcntHistoryWithDrCr" name="InterUnitLedgerAndAcntHistoryWithDrCr" method="post" action="<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Inter Unit Party Ledger And Account History</td>
+			             <td width="15%">From<input  type="text" size="15pt" id="IULAcntFromDateCrDr" readonly  name="partyfromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="15pt" id="IULAcntThruDateCrDr" readonly  name="partythruDate"/></td>
+			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="InterUnitLedgerAndAcntHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
               
               <tr class="alternate-row">
 				   	<form id="MonthlyTDSAnnexure" name="MonthlyTDSAnnexure" method="post" action="<@ofbizUrl>TDSReport.pdf</@ofbizUrl>" target="_blank">
