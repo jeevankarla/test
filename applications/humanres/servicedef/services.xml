@@ -1558,6 +1558,7 @@ under the License.emplpunch
       <attribute name="periodBillingId" mode="IN" optional="false" type="String"/>
       <attribute name="customTimePeriodId" mode="IN" optional="false" type="String"/>
       <attribute name="sendSms" mode="IN" optional="true" type="String" default-value="Y"/>
+      <attribute name="billingTypeId" mode="IN" optional="true" type="String"/>
   </service>  
   <service name="populatePayrollAttedanceInternal" engine="java" auth="true" invoke="populatePayrollAttedanceInternal" 
         location="in.vasista.vbiz.humanres.PayrollService" transaction-timeout="1800">

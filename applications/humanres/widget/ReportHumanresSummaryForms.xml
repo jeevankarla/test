@@ -706,12 +706,13 @@
 	        	<parameter param-name="statusId" value="GENERATED"/>
 	        </hyperlink>
         </field>
-        <!-- <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
-            <hyperlink target="sendPayrollSms" description="Send sms"  target-window="_BLANK" confirmation-message="Are You Sure You Want To send Sms">
+        <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session))) &amp;&amp;(billingTypeId.equals(&quot;SP_DA_ARREARS&quot;))}" name="Sendsms" widget-style="buttontext">
+            <hyperlink target="sendDAPayrollSms" description="Send sms"  target-window="_BLANK" confirmation-message="Are You Sure You Want To send Sms">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
              	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+             	<parameter param-name="billingTypeId" value="${billingTypeId}"/>
             </hyperlink>
-        </field> -->
+        </field>
 	</form>
 	<form name="createBenefitDeductionCalculator" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="calculateEmployeeBenefitDeduction">
        	<field name="employeeId">

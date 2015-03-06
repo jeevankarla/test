@@ -51,7 +51,6 @@ if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 }
 List stautsList = UtilMisc.toList("GENERATED","APPROVED");
 conditionList=[];
-
 if(UtilValidate.isEmpty(parameters.billingTypeId)){
 	//conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , parameters.billingTypeId));
 	parameters.billingTypeId = "PAYROLL_BILL";
@@ -366,9 +365,21 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 					contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
 				}
 			}
-			
-		   String text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
-		   //Debug.log("Sms text: " + text);
+			billingDesc = null;
+			if(UtilValidate.isNotEmpty(parameters.billingTypeId)){
+				GenericValue enumeration = delegator.findOne("Enumeration", [enumId : parameters.billingTypeId], false);
+				if(UtilValidate.isNotEmpty(enumeration.description)){
+					billingDesc = enumeration.description;
+				}
+			}
+			String text = null;
+		    if(UtilValidate.isNotEmpty(parameters.billingTypeId) && (parameters.billingTypeId.equals("PAYROLL_BILL"))){
+				text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+		    }else{
+			    text = "Your " +billingDesc+" remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" from "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+ " to " +UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),'MMMM yyyy')+ " has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+		    }
+		   
+		   Debug.log("Sms text: " + text);
 		   Map<String, Object> sendSmsParams = FastMap.newInstance();
 		  if(UtilValidate.isNotEmpty(contactNumberTo)){
 				sendSmsParams.put("contactNumberTo", contactNumberTo);
