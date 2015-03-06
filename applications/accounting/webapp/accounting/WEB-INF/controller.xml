@@ -3624,7 +3624,10 @@ under the License.
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    
+    <request-map uri="EmployeeAdvancesAndSubScheduleReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeAdvancesAndSubScheduleReport"/>
+    </request-map>
     
     <!--================= AP Invoices ==================== -->
 	
@@ -4107,6 +4110,6 @@ under the License.
    <view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
    <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="PrintPayGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
-   
+   <view-map name="EmployeeAdvancesAndSubScheduleReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvancesAndSubScheduleReport" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>

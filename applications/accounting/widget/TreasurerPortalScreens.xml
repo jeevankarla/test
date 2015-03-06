@@ -3038,6 +3038,12 @@
                     <order-by field-name="-thruDate"/>
                      <order-by field-name="periodNum"/>
                </entity-condition>
+               <entity-condition list="FinAccountTypeList" entity-name="FinAccountType">
+               	<condition-list>
+               		<condition-expr field-name="parentTypeId" operator="equals" value="LOAN_ACCOUNT"/>
+               	</condition-list>
+               </entity-condition>
+               
               </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
@@ -3311,4 +3317,16 @@
             </widgets>
         </section>
     </screen>
+    <screen name="EmployeeAdvancesAndSubScheduleReport">
+  	<section>
+  	<actions>
+  		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/EmployeeAdvances.groovy"/>
+  	</actions>
+  		<widgets>
+  			<platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/reports/EmployeeAdvances.fo.ftl"/></xsl-fo>
+             </platform-specific>
+  		</widgets>
+  	</section>
+  </screen> 
 </screens>
