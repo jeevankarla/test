@@ -39,10 +39,10 @@ under the License.
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="PARTYMGR_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="OFBTOOLS_VIEW"/>
     
-   <EnumerationType description="Form16 Input Type" enumTypeId="FORM16_INPUT_TYPE" hasTable="N" parentTypeId=""/>
+   	<EnumerationType description="Form16 Input Type" enumTypeId="FORM16_INPUT_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Rent Paid" enumCode="RENT_PAID" enumId="RENT_PAID" sequenceId="01" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Other allowances" enumCode="OTHER_ALW" enumId="OTHER_ALW" sequenceId="02" enumTypeId="FORM16_INPUT_TYPE"/>
-    <Enumeration description="Maximum amount" enumCode="MAXIMUM_AMOUNT" enumId="MAXIMUM_AMOUNT" sequenceId="03" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description="Other" enumCode="OTHER" enumId="OTHER" sequenceId="03" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80C" enumCode="SECTION_80C" enumId="SECTION_80C" sequenceId="04" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80CCC" enumCode="SECTION_80CCC" enumId="SECTION_80CCC" sequenceId="05" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80CCD" enumCode="SECTION_80CCD" enumId="SECTION_80CCD" sequenceId="06" enumTypeId="FORM16_INPUT_TYPE"/>
@@ -58,5 +58,9 @@ under the License.
     <Enumeration description="Section 80GGC" enumCode="SECTION_80GGC" enumId="SECTION_80GGC" sequenceId="16" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80TTA" enumCode="SECTION_80TTA" enumId="SECTION_80TTA" sequenceId="17" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80U" enumCode="SECTION_80U" enumId="SECTION_80U" sequenceId="18" enumTypeId="FORM16_INPUT_TYPE"/>
-    <Enumeration description="Other" enumCode="OTHER" enumId="OTHER" sequenceId="19" enumTypeId="FORM16_INPUT_TYPE"/>
+    
+    <EnumerationType description="SECTION 80C" enumTypeId="SECTION_80C" hasTable="N" parentTypeId=""/>
+    <Enumeration description="LIC Policy" enumCode="LIC_POLICY" enumId="LIC_POLICY" sequenceId="01" enumTypeId="SECTION_80C"/>
+    <Enumeration description="HBA Principal" enumCode="HBA_PRICIPAL" enumId="HBA_PRICIPAL" sequenceId="02" enumTypeId="SECTION_80C"/>
+    <Enumeration description="Tuition Fee" enumCode="TUITION_FEE" enumId="TUITION_FEE" sequenceId="03" enumTypeId="SECTION_80C"/>
 </entity-engine-xml>

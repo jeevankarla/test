@@ -40,10 +40,26 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 form16InputTypes = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "FORM16_INPUT_TYPE") , null, null, null, false);
 sectionTypesList = EntityUtil.getFieldListFromEntityList(form16InputTypes, "enumId", true);
 
-
-
+subSectionTypeIdsList = [];
 if(UtilValidate.isNotEmpty(sectionTypesList)){
 	sectionTypesList.each{ sectionType->
+		List subSectionList=[];
+		subSectionList.add(EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, sectionType));
+		subsectionCondition=EntityCondition.makeCondition(subSectionList,EntityOperator.AND);
+		subSectionDetailsList = delegator.findList("Enumeration", subsectionCondition , null, null, null, false );
+		subSectionTypeIdsList.add(sectionType);
+		if(UtilValidate.isNotEmpty(subSectionDetailsList)){
+			subSectionDetailsList.each{ subSection->
+				enumId = subSection.get("enumId");
+				subSectionTypeIdsList.add(enumId);
+			}
+		}
+	}
+}
+//sectionTypesList.addAll(subSectionTypeIdsList);
+
+if(UtilValidate.isNotEmpty(subSectionTypeIdsList)){
+	subSectionTypeIdsList.each{ sectionType->
 		List employeeSectionList=[];
 		employeeSectionList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, partyId));
 		employeeSectionList.add(EntityCondition.makeCondition("sectionTypeId", EntityOperator.EQUALS, sectionType));

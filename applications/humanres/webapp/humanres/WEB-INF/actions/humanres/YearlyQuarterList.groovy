@@ -24,7 +24,8 @@ condPeriodList = [];
 condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"FISCAL_QUARTER"));
 condPeriodList.add(EntityCondition.makeCondition("parentPeriodId", EntityOperator.EQUALS, customTimePeriodId));
 EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND);
-CustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
+def orderBy = UtilMisc.toList("fromDate");
+CustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, orderBy, null, false);
 if(UtilValidate.isNotEmpty(CustomTimePeriodList)){
 	CustomTimePeriodList.each{period ->
 		timePeriodId = period.get("customTimePeriodId");
