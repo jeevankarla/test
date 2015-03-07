@@ -36,6 +36,7 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 
 List quarterPeriodIdsList=[];
 List periodConditionList=[];
+TDSRemittancesDetailsList = [];
 periodConditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_QUARTER"));
 periodConditionList.add(EntityCondition.makeCondition("parentPeriodId", EntityOperator.EQUALS, customTimePeriodId));
 periodCondition=EntityCondition.makeCondition(periodConditionList,EntityOperator.AND);
@@ -45,15 +46,24 @@ if(UtilValidate.isNotEmpty(quarterlyCustomTimePeriodList)){
 	quarterlyCustomTimePeriodList.each { period ->
 		quarterPeriodId = period.get("customTimePeriodId");
 		quarterPeriodIdsList.add(quarterPeriodId);
+		List ConditionList1=[];
+		receiptNoMap = [:];
+		receiptNoList = [];
+		ConditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+		ConditionList1.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, quarterPeriodId));
+		Condition1 =EntityCondition.makeCondition(ConditionList1,EntityOperator.AND);
+		TDSRemittancesDetails = delegator.findList("TDSRemittances", Condition1 , null, null, null, false );
+		if(UtilValidate.isNotEmpty(TDSRemittancesDetails)){
+			TDSRemittancesDetails = EntityUtil.getFirst(TDSRemittancesDetails);
+			receiptNoMap.put("customTimePeriodId",TDSRemittancesDetails.get("customTimePeriodId"));
+			receiptNoMap.put("ReceiptNumber",TDSRemittancesDetails.get("ReceiptNumber"));
+			receiptNoList.add(receiptNoMap);
+			TDSRemittancesDetailsList.addAll(receiptNoList);
+		}
 	}
 }
-List ConditionList1=[];
-ConditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-ConditionList1.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, quarterPeriodIdsList));
-Condition1 =EntityCondition.makeCondition(ConditionList1,EntityOperator.AND);
-TDSRemittancesDetails = delegator.findList("TDSRemittances", Condition1 , null, null, null, false );
 
-context.put("TDSRemittancesDetails",TDSRemittancesDetails);
+context.put("TDSRemittancesDetails",TDSRemittancesDetailsList);
 
 
 finYearContext = [:];
