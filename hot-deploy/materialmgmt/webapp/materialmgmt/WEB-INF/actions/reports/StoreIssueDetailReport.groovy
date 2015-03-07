@@ -61,10 +61,10 @@ partyId=parameters.partyId;
 facilityId=parameters.issueToFacilityId;
 if(UtilValidate.isNotEmpty(facilityId)){
 	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId )],EntityOperator.AND);
-	productFacilityList = delegator.findList("ProductFacility", ecl, null, null, null, false);
+	productFacilityList = delegator.findList("ProductFacility", ecl, UtilMisc.toSet("facilityId","productId"), null, null, false);
 	productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
 	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("productId",EntityOperator.IN,productIdList),EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"RAW_MATERIAL")],EntityOperator.AND);
-	productList=delegator.findList("Product",condition,null,null,null,false);
+	productList=delegator.findList("Product",condition,UtilMisc.toSet("productId"),null,null,false);
 	productIds=EntityUtil.getFieldListFromEntityList(productList,"productId", true);
 }
 custRequestIds=[];
@@ -102,7 +102,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,custRequestIds));
 		 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		 productIdsDetails = delegator.findList("CustRequestAndCustRequestItem", condition , null, null, null, false );
-		 if(UtilValidate.isEmpty(facilityId)){
+		 if(UtilValidate.isEmpty(productIds)){
 			 productIds = EntityUtil.getFieldListFromEntityList(productIdsDetails, "productId", true);		
 		 } 
          conditionList.clear();
@@ -155,7 +155,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 										 
 			                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 										 
-			                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);
+			                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,UtilMisc.toSet("quantity","cancelQuantity","issuedDateTime","unitCost"),null,null,false);
 										 productDetailMap.
 										 unitPrice=0;
 			                             totQty=0;
