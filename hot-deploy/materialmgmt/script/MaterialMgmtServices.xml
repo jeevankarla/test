@@ -77,7 +77,7 @@
         </if-not-empty>
         <set field="context.quoteId" from-field="formInput.formInput.quoteId"/>
         <set field="context.quoteItemSeqId" from-field="formInput.formInput.quoteItemSeqId"/>
-        <set field="context.fromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
+        <set field="context.fromDate" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="Timestamp"/>
         <log level="always" message="date is ${context.fromdate} " ></log>
         <call-map-processor in-map-name="context" out-map-name="bidContext">
             <simple-map-processor name="bidContent">
@@ -229,7 +229,7 @@
             </if-empty>
         </if-not-empty>
         <set field="context.custRequestId" from-field="formInput.formInput.custRequestId"/>
-        <set field="context.fromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
+        <set field="context.fromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
         <log level="always" message="date is ${context.fromdate} " ></log>
         <call-map-processor in-map-name="context" out-map-name="custRequestContext">
             <simple-map-processor name="custRequestContext">
