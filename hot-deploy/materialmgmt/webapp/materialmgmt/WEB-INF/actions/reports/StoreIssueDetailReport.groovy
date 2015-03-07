@@ -130,7 +130,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 							conditionList.clear();
 							conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
 							condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-							productCatTypeDetails = delegator.findList("ProductCategoryMember", condition , null, null, null, false );							
+							productCatTypeDetails = EntityUtil.filterByCondition(productCatDetails,condition);							
 							productCatTypes= EntityUtil.getFirst(productCatTypeDetails); 
 							if((productCatTypes) && (productCatTypes.productCategoryId)){								
 							      productCatTypeId=productCatTypes.productCategoryId;	
