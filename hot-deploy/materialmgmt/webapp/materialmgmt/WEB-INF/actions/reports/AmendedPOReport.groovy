@@ -157,6 +157,7 @@ if(UtilValidate.isNotEmpty(discountDetail)){
 }
 
 taxDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN , UtilMisc.toList("VAT_PUR","CST_PUR")));
+taxDetails = EntityUtil.getFirst(taxDetails);
 if(UtilValidate.isNotEmpty(taxDetails)){
    tax =taxDetails.amount;
    allDetailsMap.put("tax",tax);
