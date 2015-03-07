@@ -2149,7 +2149,7 @@ public class PayrollService {
 				        //Code to Exclude already suplyPayroll Generated Employees 
 				            List billingConList = FastList.newInstance();
 				            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
-				            billingConList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS , "GENERATED"));
+				            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 				            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
 				            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBillingAndCustomTimePeriod", billingCond, null, null, null, false);   
 				            List billingIds=FastList.newInstance();
