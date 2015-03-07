@@ -3413,14 +3413,14 @@ public class MaterialPurchaseServices {
 		newProduct.put("brandName", description);
 		newProduct.put("productName", description);
 		newProduct.put("description", description);
-		if(!productUOMtypeId.equals(null) && UtilValidate.isNotEmpty(productUOMtypeId))
+		if(!productUOMtypeId.equals(null) || UtilValidate.isNotEmpty(productUOMtypeId))
 		{	newProduct.put("quantityUomId", productUOMtypeId);	}
 		newProduct.put("longDescription", longDescription);
-		if(!facilityId.equals(null) && UtilValidate.isNotEmpty(facilityId))
+		if(!facilityId.equals(null) || UtilValidate.isNotEmpty(facilityId))
 		{	newProduct.put("facilityId", facilityId);	}
 		result = dispatcher.runSync("createProduct", newProduct);
 		productId = (String)result.get("productId");
-		if(materialCode.equals(null) || UtilValidate.isEmpty(materialCode)){
+		if(UtilValidate.isEmpty(materialCode)){
 			GenericValue createdProduct = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
 			createdProduct.set("internalName", productId);
 			createdProduct.store();
