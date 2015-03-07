@@ -3332,6 +3332,7 @@ public class MaterialPurchaseServices {
 		String facilityId = (String) request.getParameter("facilityId");
 		String prodAttribute = (String) request.getParameter("attributeName");
 		String attributeValue = (String) request.getParameter("attributeValue");
+		if(UtilValidate.isNotEmpty(materialCode)){
 		try
 		{
 			List conditionList = FastList.newInstance();
@@ -3349,6 +3350,7 @@ public class MaterialPurchaseServices {
 			request.setAttribute("_ERROR_MESSAGE_", e.getMessage());	
 			return "error";
 			}
+		}
 		List materialCategoryList = new ArrayList();
 		if(UtilValidate.isNotEmpty(productCategoryIds)){
 			for(int i=0;i<productCategoryIds.length;i++)
@@ -3418,6 +3420,11 @@ public class MaterialPurchaseServices {
 		{	newProduct.put("facilityId", facilityId);	}
 		result = dispatcher.runSync("createProduct", newProduct);
 		productId = (String)result.get("productId");
+		if(materialCode.equals(null) || UtilValidate.isEmpty(materialCode)){
+			GenericValue createdProduct = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+			createdProduct.set("internalName", productId);
+			createdProduct.store();
+			}
 		if (ServiceUtil.isError(result)) {
 			return ServiceUtil.returnError("Error Occurred While Creating Product");
 		}
