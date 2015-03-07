@@ -57,8 +57,12 @@ EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityO
 
 finAccountList=delegator.findList("FinAccount",condition,null,null,null,false);
 finAccountTypeIdsMap=[:];
+//EmployeeAdvDetails=[];
+List detailTempList=FastList.newInstance();
 finAccountList.each{finAccountTypeId->
 	List tempList=FastList.newInstance();
+	
+	detailTempMap=[:];
 	tempMap=[:];
 	openBalanceDebit=0;
 	openBalanceCredit=0;
@@ -68,8 +72,11 @@ finAccountList.each{finAccountTypeId->
 	closingCredit=0;
 	balance=0;
 	tempMap.partyId=finAccountTypeId.ownerPartyId;
+	detailTempMap.finAccountTypeId=finAccountTypeId.finAccountTypeId
+	detailTempMap.partyId=finAccountTypeId.ownerPartyId;
 	partyName=PartyHelper.getPartyName(delegator, finAccountTypeId.ownerPartyId, false);
 	tempMap.Name=partyName;
+	detailTempMap.Name=partyName;
 	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate));
 	if(UtilValidate.isNotEmpty(finAccTransMap)){
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("withDrawal"))){
@@ -81,21 +88,45 @@ finAccountList.each{finAccountTypeId->
 	}
 	tempMap.openBalanceDebit=openBalanceDebit;
 	tempMap.openBalanceCredit=openBalanceCredit;
+	detailTempMap.openBalanceDebit=openBalanceDebit;
+	detailTempMap.openBalanceCredit=openBalanceCredit;
 	cond=EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountTypeId.finAccountId),
 										 EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate),
 										 EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate),
 										 EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED")],EntityOperator.AND);
 	finAccountTranses=delegator.findList("FinAccountTrans",cond,null,null,null,false);
+	DaywiseMap=[:];
 	if(UtilValidate.isNotEmpty(finAccountTranses)){
 		finAccountTranses.each{finAccntTrans->
+			List newList=FastList.newInstance();
+			debit=0;
+			credit=0;
+			newTempMap=[:];
+			newTempMap.transactionDate=finAccntTrans.transactionDate;
 			if(UtilValidate.isNotEmpty(finAccntTrans.finAccountTransTypeId) && finAccntTrans.finAccountTransTypeId=="WITHDRAWAL"){
 				currentDebit+=finAccntTrans.get("amount");
+				debit=finAccntTrans.get("amount");
 			}
+			newTempMap.debit=debit;
 			if(UtilValidate.isNotEmpty(finAccntTrans.finAccountTransTypeId) && finAccntTrans.finAccountTransTypeId=="DEPOSIT"){
 				currentCredit+=finAccntTrans.get("amount");
+				credit=finAccntTrans.get("amount");
 			}
-		}
+			newTempMap.credit=credit;
+			newList.add(newTempMap);
+			if(UtilValidate.isEmpty(DaywiseMap["Details"])){
+				DaywiseMap["Details"]=newList;
+			}else{
+				List existing = FastList.newInstance();
+				existing=DaywiseMap["Details"];
+				existing.add(newTempMap);
+				DaywiseMap["Details"]=existing;
+			}
+			}
 	}
+	detailTempMap.list=DaywiseMap;
+	detailTempList.add(detailTempMap);
+	//EmployeeAdvDetails.add(detailTempList);
 	tempMap.currentDebit=currentDebit;
 	tempMap.currentCredit=currentCredit;
 	balance=((openBalanceDebit+currentDebit)-(openBalanceCredit+currentCredit));
@@ -117,3 +148,4 @@ finAccountList.each{finAccountTypeId->
 	}
 }
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
+context.detailTempList=detailTempList
