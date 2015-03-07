@@ -32,7 +32,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="orderBy" value="-custRequestId"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -46,7 +46,7 @@
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>
-        <field name="custRequestDate"  title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="custRequestDate"  title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd-MM-yyyy&quot;)}"/></field>
         <field name="fromPartyId"  title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
@@ -301,7 +301,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="orderBy" value="-custRequestId"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -331,7 +331,7 @@
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>
-        <field name="custRequestDate" sort-field="true" title="Enquiry Date"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="custRequestDate" sort-field="true" title="Enquiry Date"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd-MM-yyyy&quot;)}"/></field>
         <!-- <field name="fromPartyId" sort-field="true">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
