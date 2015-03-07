@@ -69,7 +69,7 @@ if(custRequestItems){
 				itemIssuanceList.add(tempMap);
 			}	
 		}else{	
-				if(item.statusId=="CRQ_ISSUED" || item.statusId=="CRQ_COMPLETED" || item.statusId=="CRQ_SUBMITTED" ){
+				//if(item.statusId=="CRQ_ISSUED" || item.statusId=="CRQ_COMPLETED" || item.statusId=="CRQ_SUBMITTED" ){
 					tempMap=[:];
 					GenericValue product=delegator.findOne("Product",[productId:item.productId],true);
 					GenericValue productAttr=delegator.findOne("ProductAttribute",[productId:item.productId,attrName:"LEDGERFOLIONO"],true);
@@ -104,7 +104,7 @@ if(custRequestItems){
 						tempMap.put("stock",stock.get("quantityOnHandTotal"));
 					}
 					materialIndentList.add(tempMap);
-				}
+				//}
 		}
 	}
 }
