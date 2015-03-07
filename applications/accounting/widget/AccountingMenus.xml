@@ -1313,12 +1313,12 @@
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<!-- <menu-item name="AgingAnalysis" title="${uiLabelMap.AccountingAgingAnalysis}">
+		<menu-item name="AgingAnalysis" title="${uiLabelMap.AccountingAgingAnalysis}">
 			<link target="AgingAnalysis">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<menu-item name="FinancialAccountingTrans" title="Financial Account Trans">
+		<!-- <menu-item name="FinancialAccountingTrans" title="Financial Account Trans">
 			<link target="FinancialAccountingTrans">
 				<parameter param-name="organizationPartyId" />
 			</link>
