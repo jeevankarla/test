@@ -96,6 +96,9 @@ under the License.
                   		<fo:table-row>
                     		<fo:table-cell>                      			
                      		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                     		 	 <#if parameters.billingTypeId=="SP_LEAVE_ENCASH">   
+        								<#assign timePeriodEnd=basicSalDate?if_exists>
+       							 </#if> 
                      		 	<fo:block text-align="center" font-weight="bold"><fo:inline text-decoration="underline">PAYSLIP FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:inline></fo:block>
                      		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                      		 	<fo:block>

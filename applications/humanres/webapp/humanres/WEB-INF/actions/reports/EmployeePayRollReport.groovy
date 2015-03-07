@@ -132,11 +132,12 @@ Map payRollEmployeeMap=FastMap.newInstance();
 Map BankAdvicePayRollMap=FastMap.newInstance();
 Map InstallmentFinalMap=FastMap.newInstance();
 Map EmplSalaryDetailsMap=FastMap.newInstance();
-
+Timestamp basicSalDate=null;
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
 	periodBillingId = periodBillDetails.get("periodBillingId");
+	basicSalDate = periodBillDetails.get("basicSalDate");
 	payRollHeaderList=[];
 	payConList=[];
 	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingIds));
@@ -399,7 +400,9 @@ context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
 context.put("EmplSalaryDetailsMap",EmplSalaryDetailsMap);
-
+if(UtilValidate.isNotEmpty(basicSalDate)){
+	context.putAt("basicSalDate", basicSalDate);
+}
 if(UtilValidate.isEmpty(orgPartyId)){
 	orgPartyId = "Company";
 }
