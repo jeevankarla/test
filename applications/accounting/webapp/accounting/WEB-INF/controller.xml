@@ -2731,7 +2731,8 @@ under the License.
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupTaxAuthPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthPartyName"/></request-map>
     <request-map uri="LookupInternalOrganization"><security auth="true" https="true"/><response name="success" type="view" value="LookupInternalOrganization"/></request-map>
-
+    <request-map uri="LookupEmployeeName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
+	<view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
 
     <request-map uri="LookupPayment" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
@@ -3612,6 +3613,12 @@ under the License.
         <response name="success" type="view" value="InterUnitLedgerAndAcntHistoryWithDrCr"/>
         <response name="error" type="view" value="InterUnitLedgerAndAcntHistoryWithDrCr"/>
     </request-map>
+    <request-map uri="InterUnitLedgerAndAcntHistoryWithDrCr.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitLedgerAndAcntHistoryWithCSV"/>
+        <response name="error" type="view" value="InterUnitLedgerAndAcntHistoryWithCSV"/>
+    </request-map>
+    
     
     
     <request-map uri="AccountReports">
@@ -4113,6 +4120,7 @@ under the License.
    <view-map name="PartyFinancialHistoryWithDrCrPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyFinancialHistoryWithDrCrPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="InterUnitPartyHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitPartyHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
    <view-map name="InterUnitLedgerAndAcntHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
+   <view-map name="InterUnitLedgerAndAcntHistoryWithCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithCSV" content-type="text/csv" encoding="none"/>
    
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
    

@@ -157,6 +157,33 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			}
 		});
 	}
+//one year restriction
+	function makeDatePicker4(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+		dateFormat:'yy, MM dd',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		date = $(this).datepicker('getDate');
+		y = date.getFullYear(),
+		m = date.getMonth();
+		d = date.getDate();
+		    var maxDate = new Date(y+1, m, d);
+		
+		$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+		//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+		}
+		});
+		$( "#"+thruDateId ).datepicker({
+		dateFormat:'yy, MM dd',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function( selectedDate ) {
+		//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+		}
+		});
+	}	
+	
 // for Vat Invoice Sequence and Invoice sale reports
 
 function reportTypeChangeFunc() {
@@ -182,7 +209,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
-	    makeDatePicker3("EMPAdvSehFromDate","EMPAdvSehThruDate");
+	    makeDatePicker4("EMPAdvSehFromDate","EMPAdvSehThruDate");
 	    makeDatePicker3("IULFromDateCrDr","IULThruDateCrDr");
 	    makeDatePicker3("IULAcntFromDateCrDr","IULAcntThruDateCrDr");
 		
@@ -311,7 +338,10 @@ function reportTypeChangeFunc() {
 			      		 <td width="15%">Thru<input  type="text" size="15pt" id="IULAcntThruDateCrDr" readonly  name="partythruDate"/></td>
 			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="InterUnitLedgerAndAcntHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			             <td width="15%"></td>
-			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			             <#--><td width="10%"><input type="submit" value="Download" class="buttontext"/></td> -->
+			             <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('InterUnitLedgerAndAcntHistoryWithDrCr', '<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.pdf</@ofbizUrl>');" class="buttontext"/>
+					                    <input type="submit" value="CSV" onClick="javascript:appendParams('InterUnitLedgerAndAcntHistoryWithDrCr', '<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.csv</@ofbizUrl>');" class="buttontext"/>
+					     </td>
 			           </form>
 			        </tr>
               
@@ -360,7 +390,7 @@ function reportTypeChangeFunc() {
               		   </#list>
 							</select>
 						</td>
-					  <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="EmployeeAdvancesAndSubSchedule" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
+					  <td width="20%">Employee Id<@htmlTemplate.lookupField size="10" maxlength="22" formName="EmployeeAdvancesAndSubSchedule" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/> </td>
 					   <td width="5%">Report Type 
 					    <select name="reportTypeFlag" id="reportTypeFlag1">
 						   <option value='Abstract'>Abstract</option>

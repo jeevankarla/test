@@ -931,4 +931,15 @@ under the License.
         <field name="actualBalance" title="Actual Balance"><display/></field>  
         <field name="availableBalance" title="Available Balance"><display/></field>   	
     </form>
+     <form name="PartyLedgrCsvListForm" type="list" list-name="partyLedgerDayWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
+        <field name="date" title="Date"><display/></field>  
+        <field name="description" title="Particulars"><display/></field>  
+        <field name="invoiceId" title="Invoice Id" ><display/></field>
+         <field name="instrumentNo" title="Instrument NO." ><display/></field>
+         <field name="vchrCode" title="Code"><display/></field>
+          <field name="paymentId" title="Payment Id" ><display/></field>
+        <field name="debitValue" title="Debit"><display/></field>  
+        <field name="creditValue" title="Credit"><display/></field>
+           	
+    </form>
 </forms>
