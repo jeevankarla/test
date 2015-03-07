@@ -40,18 +40,18 @@ thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
 context.fromDate = fromDate;
 context.thruDate = thruDate;
 employeeIds=[];
-ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"LOAN_ACCOUNT")],EntityOperator.AND);
+/*ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"LOAN_ACCOUNT")],EntityOperator.AND);
 finAccountTypes=delegator.findList("FinAccountType",ecl,null,null,null,false);
-finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
+finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);*/
 conditionList =[];
-if(UtilValidate.isEmpty(parameters.finAccountTypeId)){
+/*if(UtilValidate.isEmpty(parameters.finAccountTypeId)){
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,finAccountTypeIds)],EntityOperator.AND));
 }else{
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId)],EntityOperator.AND));
-}
-
+}*/
+	conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId));
 if(UtilValidate.isNotEmpty(parameters.partyId)){
-	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,parameters.partyId)],EntityOperator.AND));
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,parameters.partyId));
 }
 EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
 
@@ -149,3 +149,4 @@ finAccountList.each{finAccountTypeId->
 }
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
 context.detailTempList=detailTempList
+//Debug.log("detailTempList=========================="+detailTempList);
