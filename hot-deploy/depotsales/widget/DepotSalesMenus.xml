@@ -3,4 +3,57 @@
     <menu name="MainAppBar" title="${uiLabelMap.DepotSalesApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
     </menu>
+    
+     <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="FacilityProfile">
+		<actions> 
+            <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/>
+		</actions>          
+        <menu-item name="main" title="${uiLabelMap.ProductFacilityLocationNetwork}">
+            <link target="main">
+            </link>
+        </menu-item>
+        <menu-item name="facility" title="${uiLabelMap.ProductFindFacilities}">
+			<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="FACILITY"  action="_UPDATE"/>
+            		<if-has-permission permission="FACILITY"  action="_FIND"/>
+            	</or>
+            </condition>        
+        	<link target="FindFacility"/>
+        </menu-item>
+        <menu-item name="Product" title="Product">       
+            <condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>          
+            <link target="FindByProduct">               
+            </link>
+        </menu-item>
+        <menu-item name="ViewFacilityGeoPoint" title="Location Map">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+				</or>
+            	
+            </condition>         
+            <link target="ViewFacilityGeoPoint">
+            </link>
+        </menu-item>  
+        <menu-item name="EditFacilityGroups" title="Facility Groups">
+        	<condition>
+				<or>
+            		<if-has-permission permission="FACILITYGRP"  action="_ADMIN"/>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            	</or>
+            </condition>
+            <link target="FindFacilityGroup">
+            </link>
+        </menu-item> 
+      </menu>
 </menus>

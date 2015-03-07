@@ -5,7 +5,7 @@
         <value xml:lang="zh">DepotSales应用程序</value>
     </property>
     <property key="DepotSalesCompanyName">
-        <value xml:lang="en">OFBiz: DepotSales</value>
+        <value xml:lang="en">VBiz: DepotSales</value>
     </property>
     <property key="DepotSalesCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
