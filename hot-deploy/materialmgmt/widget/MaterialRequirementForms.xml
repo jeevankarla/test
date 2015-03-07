@@ -35,7 +35,7 @@
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
                 <field-map field-name="entityName" value="Requirement"/>
-                <field-map field-name="orderBy" value="-requirementId"/>
+                <field-map field-name="orderBy" value="-requirementStartDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -65,6 +65,7 @@
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
+        <field name="requirementStartDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(requirementStartDate, &quot;dd-MM-yyyy&quot;);}"/></field>            
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <!-- <field name="requirementTypeId">
             <display-entity entity-name="RequirementType"/>
@@ -73,7 +74,7 @@
         <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
-        <field name="requirementStartDate" title="Requirement Date"><display/></field>
+<!--         <field name="requirementStartDate" title="Requirement Date"><display/></field> -->
         <!-- <field name="requiredByDate"><display/></field> -->
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="editRequirement" widget-style="buttontext" title="Edit" use-when="statusId.equals(&quot;REQ_CREATED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_REQ&quot;, session)))}">
