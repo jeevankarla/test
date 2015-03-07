@@ -62,6 +62,7 @@ under the License.
       	 </#if>
       	 
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
+      	 <#assign doj = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(doj?if_exists,timePeriodStart) />
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign payGrade=delegator.findByAnd("PayGradePayHistory", {"partyIdTo" : partyId})/>
       	 <#assign payGrade = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(payGrade?if_exists,timePeriodStart) />
