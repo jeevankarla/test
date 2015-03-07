@@ -15,5 +15,48 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="FacilityTree">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                              
+                <set field="titleProperty" value="DepotSalesApplication"/>
+         
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+<!--                <set field="facilityId" from-field="parameters.facilityId"/>-->
+<!--                <set field="isTreeRoot" value="Y"/>-->
+				<script  
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/facilityTreeNetwork.groovy" />                                
+            </actions>          
+            <widgets>
+            <section>
+            <condition>
+                <if-empty field="parameters.ajaxLookup"/>
+            </condition> 
+            <widgets>
+             <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            <!-- 	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml"> -->
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf"> 
+                                	<screenlet title="${uiLabelMap.FormFieldTitle_company}">    
+   										<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/facilityTree.ftl"></html-template></html></platform-specific>
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+   				<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/facilityTree.ftl"></html-template></html></platform-specific>
+            </fail-widgets>
+        </section>         
+        </widgets>     
+		</section>
+    </screen>
 
 </screens>

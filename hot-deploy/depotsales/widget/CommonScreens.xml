@@ -7,7 +7,12 @@
             <actions>
                 <property-map resource="DepotSalesUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-
+                <!-- including other Module UiLables -->
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.DepotSalesCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.DepotSalesCompanySubtitle" global="true"/>
 
@@ -34,6 +39,7 @@
                                 <if-has-permission permission="DEPOTSALES" action="_VIEW"/>
                             </condition>
                             <widgets>
+                            	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="DepotSaleMenuTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
