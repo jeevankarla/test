@@ -98,6 +98,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 										<#assign newDATotal=0>
 										<#assign netDATotal=0>
 										<#assign netDATotal1 = 0>
+										<#assign epf = 0>	
  										 <#list employeeamountList as employeeDetails>
  										 <#assign month = "">
  										 <#assign monthKey = employeeDetails.getKey()>
@@ -196,10 +197,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
  				                      </fo:table-cell>
 			                      </fo:table-row>
 			                       <fo:table-row>
-			                       <#assign epf = 0>
-			                       <#if employeeDetails?has_content>
-			                       <#assign epf = employeeDetails.getValue().get("EpfAmount")?if_exists>
-			                       </#if>
+			                       <#if epf?has_content>
 			                       <fo:table-cell>
 						                          <fo:block text-align="right"  ></fo:block>
 						                        </fo:table-cell>
@@ -230,6 +228,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="center"  keep-together= "always" font-weight="bold" >Net Amount = ${net?if_exists?string("#0.00")}</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
+			                      </#if>
 			                      <fo:table-row>
 			                         <fo:table-cell>
 			                       <fo:block>---------------------------------------------------------------------------------------------</fo:block>
