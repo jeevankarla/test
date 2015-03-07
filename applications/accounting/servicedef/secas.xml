@@ -131,6 +131,7 @@ under the License.
     
     <eca service="createFinAccountTrans" event="commit">
         <condition field-name="glAccountId" operator="is-not-empty"/>
+        <condition field-name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>
         <action service="postFinAccountTransToGl" mode="sync"/>
     </eca>
 	<eca service="createFinAccountTrans" event="commit">
