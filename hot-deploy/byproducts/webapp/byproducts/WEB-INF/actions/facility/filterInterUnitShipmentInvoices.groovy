@@ -18,7 +18,9 @@ if(parameters.invoiceId){
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, parameters.invoiceId));
    cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
    orders = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, UtilMisc.toSet("orderId"), null, null, false);
-	if(orders){
+	if(UtilValidate.isEmpty(orders)){
+		parameters.orderId =" ";
+	}else{
 		order = EntityUtil.getFirst(orders);
 		parameters.orderId = order.orderId;
 	}
