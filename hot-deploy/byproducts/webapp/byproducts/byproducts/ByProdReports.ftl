@@ -1117,7 +1117,7 @@ function reportTypeChangeFunc() {
 	                  </tr>-->
 	  				 <tr class="alternate-row">
 						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Regular Sale Book Report</td>
+							<td width="30%">Sale Book Report Detail</td>
 							<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
 			      			<td width="15%">By<select name="categoryType">
@@ -1128,7 +1128,7 @@ function reportTypeChangeFunc() {
 				      			<option value="UNION">Sale to Union</option>
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
-			      			<td width="15%"></td>
+			      			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
 							<input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 							
@@ -1136,7 +1136,7 @@ function reportTypeChangeFunc() {
 	                  </tr>
 	                   <tr class="alternate-row">
 						<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>iceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Sale Book Report</td>
+							<td width="30%">Sale Book Report Abstract </td>
 							<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
 			      			<td width="15%">By<select name="categoryType">
