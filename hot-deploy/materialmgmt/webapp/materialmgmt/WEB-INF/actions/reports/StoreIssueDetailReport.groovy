@@ -109,7 +109,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		 productCatDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId"), null, null, false),dayBegin);
+		 productCatDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false),dayBegin);
 		 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);	
          if(UtilValidate.isNotEmpty(productCatIds)){
 	             prodMap=[:];
