@@ -3043,10 +3043,12 @@
                		<condition-expr field-name="parentTypeId" operator="equals" value="LOAN_ACCOUNT"/>
                	</condition-list>
                </entity-condition>
-               
-                <entity-condition list="roleTypes" entity-name="RoleType">
+               <entity-condition list="depositTypesList" entity-name="FinAccountType">
+               		<condition-list combine="and">
+               		<condition-expr field-name="parentTypeId" operator="not-equals" value=""/>
+               		<condition-expr field-name="parentTypeId" operator="not-equals" value="LOAN_ACCOUNT"/>
+               		</condition-list>
                </entity-condition>
-               
               </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
