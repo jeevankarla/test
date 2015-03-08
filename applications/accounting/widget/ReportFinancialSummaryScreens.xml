@@ -255,8 +255,6 @@
 				<set field="tabButtonItem2" value="AgingAnalysis" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
                 <set field="invoiceTypeId" value="SALES_INVOICE"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
-                <set field="invoices" from-field="PastDueInvoices"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AgingAnalysis.groovy"/>
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">

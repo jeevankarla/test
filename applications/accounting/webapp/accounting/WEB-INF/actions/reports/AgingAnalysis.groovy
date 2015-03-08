@@ -8,9 +8,22 @@ import org.ofbiz.party.party.PartyHelper;
 
 JSONArray jsonData= new JSONArray();
 
-if (invoices) {
-	i = 0;
-	invoices.each { invoice ->
+if (invoiceTypeId) {
+	exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+    expr = exprBldr.AND() {
+        EQUALS(parentTypeId: invoiceTypeId)    
+        LESS_THAN(dueDate: UtilDateTime.nowTimestamp())
+    }
+ 
+    invoiceStatusesCondition = exprBldr.IN(statusId: ["INVOICE_APPROVED", "INVOICE_READY"])
+
+    expr = exprBldr.AND([expr, invoiceStatusesCondition]);
+    context.PastDueInvoicestotalAmount = 0;
+    pastDueInvoicesIter = delegator.find("InvoiceAndType", expr, null, null, ["dueDate DESC"], null);
+    invoiceIds = [];
+    i = 0;
+	pastDueInvoicesIter.each{invoice->
+        invoiceIds.add( invoice.invoiceId);
 		JSONObject inv = new JSONObject();
 		id = "id_" + i++;
 		inv.put("id", id);
@@ -27,7 +40,16 @@ if (invoices) {
 		inv.put("outstandingAmount", UtilFormatOut.formatCurrency(invoicePaymentInfo.outstandingAmount, invoice.currencyUomId, locale));		
 		inv.put("outstandingAmountRaw", invoicePaymentInfo.outstandingAmount);		
 		inv.put("currencySymbol", com.ibm.icu.util.Currency.getInstance(invoice.currencyUomId).getSymbol(locale));
-		jsonData.add(inv);
-	}
+		if( invoicePaymentInfo.outstandingAmount > 0) {
+			jsonData.add(inv);
+		}
+    }
+	pastDueInvoicesIter.close();
+    
+    totalAmount = dispatcher.runSync("getInvoiceRunningTotal", [invoiceIds: invoiceIds, organizationPartyId: organizationPartyId, userLogin: userLogin]);
+    if (totalAmount) {
+    	context.PastDueInvoicestotalAmount = totalAmount.invoiceRunningTotal;
+    }
 }
+
 context.put("jsonData", jsonData.toString());
