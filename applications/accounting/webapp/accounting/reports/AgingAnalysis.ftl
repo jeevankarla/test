@@ -20,7 +20,6 @@
 		<div style="width:960px;float:left;">
 			<div class="grid-header" style="width:100%">
 				<label>Aging Analysis for Receivables</label>
-                <span style="float:right" class="ui-icon ui-icon-search" title="Toggle search panel" onclick="toggleFilterRow()"></span>
 			</div>
 			<div id="myGrid" style="width:100%;height:500px;"></div>
 			<div id="pager" style="width:100%;height:20px;"></div>
@@ -29,9 +28,9 @@
 
 
 
-        <div id="inlineFilterPanel" style="display:none;background:#dddddd;padding:3px;color:black;">
-                    <button onclick="clearGrouping()">Clear grouping</button>
-                    <button onclick="groupByOverDue()">Group by Over Due</button>
+        <div id="inlineFilterPanel" style="background:#dddddd;padding:3px;color:black;">
+                    <button onclick="dataView.collapseAllGroups()">Collapse all groups</button>
+      				<button onclick="dataView.expandAllGroups()">Expand all groups</button>
         </div>
 
 		<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
@@ -231,10 +230,12 @@
                     return (parseInt(a.value/30) == parseInt(b.value/30))
                 }
             );
-            dataView.collapseGroup(0);
 			dataView.endUpdate();
 
 			$("#gridContainer").resizable();
+			grid.showTopPanel();
+			dataView.collapseAllGroups();			
+			
 		})
 
 </script>

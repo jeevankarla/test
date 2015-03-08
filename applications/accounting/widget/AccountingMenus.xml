@@ -1315,7 +1315,7 @@
 		</menu-item>
 		<menu-item name="AgingAnalysis" title="${uiLabelMap.AccountingAgingAnalysis}">
 			<condition>
-	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="ACCOUNTING"  action="_ADMIN"/>
 			</condition>		    
 			<link target="AgingAnalysis">
 				<parameter param-name="organizationPartyId" />
