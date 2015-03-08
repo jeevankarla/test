@@ -1305,6 +1305,12 @@ public class ShipmentServices {
 			for(GenericValue shipmentReceipt:shipmentReceipts){
 				
 				String receiptId=shipmentReceipt.getString("receiptId");
+				//checking QC Accepted Or Not
+				String statusId = shipmentReceipt.getString("statusId");
+				if(statusId.equals("SR_ACCEPTED")){
+					 Debug.logError("Can not cancel the Shipment :"+shipmentId+".! ReceiptId:"+receiptId+" is already QC Accepted.!", module);
+					   return ServiceUtil.returnError("Can not cancel the Shipment :"+shipmentId+".! ReceiptId:"+receiptId+" is already QC Accepted.!");
+				}
 				//Before cancel check weather any issuance happen and quantity-cancelQuantity is grater than ZERO
 				List<GenericValue> itemIssuancesList = FastList.newInstance();
 				itemIssuancesList = delegator.findList("ItemIssuance", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, shipmentReceipt.getString("inventoryItemId") ), null, null, null, false);

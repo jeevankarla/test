@@ -205,6 +205,7 @@
         <field name="debitNote" use-when="salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)"  title="Debit/Credit Note" widget-style="buttontext" id-name = "DebitNote">
             <hyperlink target="DebitNote" description="Debit/Credit Note" target-window="_blank"> 	
                	  <parameter param-name="orderId"/>
+               	  <parameter param-name="invoiceId"/>
                	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
             </hyperlink>
         </field>
