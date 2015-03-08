@@ -3618,6 +3618,11 @@ under the License.
         <response name="success" type="view" value="InterUnitLedgerAndAcntHistoryWithCSV"/>
         <response name="error" type="view" value="InterUnitLedgerAndAcntHistoryWithCSV"/>
     </request-map>
+    <request-map uri="PartyLedgerAbstaracFintHistory.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyLedgerAbstaracFintHistoryCSV"/>
+        <response name="error" type="view" value="PartyLedgerAbstaracFintHistoryCSV"/>
+    </request-map>
     
     
     
@@ -4121,6 +4126,7 @@ under the License.
    <view-map name="InterUnitPartyHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitPartyHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
    <view-map name="InterUnitLedgerAndAcntHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
    <view-map name="InterUnitLedgerAndAcntHistoryWithCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithCSV" content-type="text/csv" encoding="none"/>
+   <view-map name="PartyLedgerAbstaracFintHistoryCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyLedgerAbstaracFintHistoryCSV" content-type="text/csv" encoding="none"/>
    
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
    

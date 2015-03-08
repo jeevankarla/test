@@ -44,6 +44,11 @@ partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
 partyCode = parameters.partyId;
 dctx = dispatcher.getDispatchContext();
+
+isLedgerCallFor="ArOnly";
+if(parameters.isLedgerCallFor){
+	isLedgerCallFor=parameters.isLedgerCallFor;
+}
 fromDateTime = null;
 thruDateTime = null;
 if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
@@ -69,14 +74,6 @@ Timestamp invoiceLastDate=null;
 Timestamp paymentFirstDate=null;
 Timestamp paymentLastDate=null;
 
-//Check for Party is Valid or Not
-result = [:];
-GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
-if (UtilValidate.isEmpty(partyDetail)) {
-	Debug.logError(parameters.partyId+ "'is not a valid Party!!", "");
-	context.errorMessage = parameters.partyId+"'is not a valid Party!!";
-	return result;
-}
 
 partyFinHistoryMap=[:];
 
@@ -128,6 +125,22 @@ if(UtilValidate.isNotEmpty(context.partyDayWiseFinHistryMap)){
 }
 Debug.log("====partyDebits=====>"+partyDebits+"==partyCredits=="+partyCredits);
 //Debug.log("====partyFinHistryDayWiseMap=====>"+partyFinHistryDayWiseMap);
+partyIds=[];
+//partyIdsList
+if(UtilValidate.isNotEmpty(context.partyIdsList)){
+	partyIds=context.partyIdsList;
+}
+//Abstract Ledger Map
+partyWiseLedgerAbstractMap=[:]
+Debug.log("====partyIds=====>OBJJJJJJJJJJJ"+partyIds);
+//Check for Party is Valid or Not
+result = [:];
+/*GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
+if (UtilValidate.isEmpty(partyDetail)) {
+	Debug.logError(parameters.partyId+ "'is not a valid Party!!", "");
+	context.errorMessage = parameters.partyId+"'is not a valid Party!!";
+	return result;
+}*/
 
 
 conditionList=[];
@@ -143,6 +156,20 @@ if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 }
+//adding for Abstract PartyLedger
+if(UtilValidate.isNotEmpty(partyIds)){
+conditionList.add( EntityCondition.makeCondition([
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+					],EntityOperator.AND),
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds)
+					],EntityOperator.AND)
+				],EntityOperator.OR));
+	
+}else{
 conditionList.add( EntityCondition.makeCondition([
             EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
@@ -153,7 +180,7 @@ conditionList.add( EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ],EntityOperator.AND)
             ],EntityOperator.OR));
-
+}
 newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 
@@ -247,6 +274,25 @@ while (invoice = invIterator.next()) {
 			apInvoiceDetailsMap.put(curntDay, dayInvoiceList);
 		}
 		apInvoiceDetailsMap["invTotal"]+=invTotalVal;
+		//adding Abstract Map here
+		partAbstractLedger=partyWiseLedgerAbstractMap.get(invoice.partyIdFrom);
+		Debug.log("===partAbstractLedger=="+partAbstractLedger);
+		if(UtilValidate.isEmpty(partAbstractLedger)){
+			   abstractInnerMap=[:];
+			   abstractInnerMap["OB"]=0;
+			   abstractInnerMap["partyId"]=invoice.partyIdFrom;
+			   abstractInnerMap["invTotal"]=invTotalVal;
+			   abstractInnerMap["paymentTotal"]=0;
+		       abstractInnerMap["debitValue"]=0;
+		       abstractInnerMap["creditValue"]=invTotalVal;
+		 partyWiseLedgerAbstractMap[invoice.partyIdFrom]=abstractInnerMap;
+		}else{
+		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(invoice.partyIdFrom);
+		Debug.log("===partAbstractLedger=IN==ELSEE="+abstractInnerMap);
+		abstractInnerMap["invTotal"]+=invTotalVal;
+		abstractInnerMap["creditValue"]+=invTotalVal;
+		partyWiseLedgerAbstractMap[invoice.partyIdFrom]=abstractInnerMap;
+		}
     }
     else if ("SALES_INVOICE".equals(invoice.parentTypeId)) {
 		innerMap["vchrType"]="SALES";
@@ -275,6 +321,25 @@ while (invoice = invIterator.next()) {
 			arInvoiceDetailsMap.put(curntDay, dayInvoiceList);
 		}
 		arInvoiceDetailsMap["invTotal"]+=invTotalVal;
+		//adding Abstract Map here
+		partAbstractLedger=partyWiseLedgerAbstractMap.get(invoice.partyId);
+		Debug.log("===partAbstractLedger=SALESSSSSSSSS="+partAbstractLedger);
+		if(UtilValidate.isEmpty(partAbstractLedger)){
+			   abstractInnerMap=[:];
+			   abstractInnerMap["OB"]=0;
+			   abstractInnerMap["partyId"]=invoice.partyId;
+			   abstractInnerMap["invTotal"]=invTotalVal;
+			   abstractInnerMap["paymentTotal"]=0;
+			   abstractInnerMap["debitValue"]=invTotalVal;
+			   abstractInnerMap["creditValue"]=0;
+	     partyWiseLedgerAbstractMap[invoice.partyId]=abstractInnerMap;
+		}else{
+		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(invoice.partyId);
+			abstractInnerMap["invTotal"]+=invTotalVal;
+			abstractInnerMap["debitValue"]+=invTotalVal;
+		partyWiseLedgerAbstractMap[invoice.partyId]=abstractInnerMap;
+		}
+		
     }
     else {
         Debug.logError("InvoiceType: " + invoice.invoiceTypeId + " without a valid parentTypeId: " + invoice.parentTypeId + " !!!! Should be either PURCHASE_INVOICE or SALES_INVOICE", "");
@@ -308,7 +373,20 @@ if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDat
 if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
-}
+}//adding for Abstract PartyLedger
+if(UtilValidate.isNotEmpty(partyIds)){
+conditionList.add( EntityCondition.makeCondition([
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, partyIds),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
+					],EntityOperator.AND),
+				EntityCondition.makeCondition([
+					EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS,"Company"),
+					EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds)
+					],EntityOperator.AND)
+				],EntityOperator.OR));
+	
+}else{
 conditionList.add(EntityCondition.makeCondition([
                EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyId),
@@ -319,7 +397,7 @@ conditionList.add(EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
                 ], EntityOperator.AND)
             ], EntityOperator.OR));
-
+}
 newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 
@@ -372,6 +450,24 @@ while (payment = payIterator.next()) {
 			apPaymentDetailsMap.put(curntDay, dayPaymentList);
 		}
 		apPaymentDetailsMap.put("amount",apPaymentDetailsMap.get("amount").add(payment.amount));
+		
+		//adding Abstract Map here
+		partAbstractLedger=partyWiseLedgerAbstractMap.get(payment.partyIdTo);
+		if(UtilValidate.isEmpty(partAbstractLedger)){
+			   abstractInnerMap=[:];
+			   abstractInnerMap["OB"]=0;
+			   abstractInnerMap["partyId"]=payment.partyIdTo;
+			   abstractInnerMap["invTotal"]=0;
+			   abstractInnerMap["paymentTotal"]=payment.amount;
+			   abstractInnerMap["debitValue"]=payment.amount;
+			   abstractInnerMap["creditValue"]=0;
+		partyWiseLedgerAbstractMap[payment.partyIdTo]=abstractInnerMap;
+		}else{
+		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(payment.partyIdTo);
+		abstractInnerMap["paymentTotal"]+=payment.amount;
+		abstractInnerMap["debitValue"]+=payment.amount;
+		partyWiseLedgerAbstractMap[payment.partyIdTo]=abstractInnerMap;
+		}
     }
     else if ("RECEIPT".equals(payment.parentTypeId)) {
 		innerMap["partyId"]=payment.partyIdFrom;
@@ -396,6 +492,24 @@ while (payment = payIterator.next()) {
 			arPaymentDetailsMap.put(curntDay, dayPaymentList);
 		}
 		arPaymentDetailsMap.put("amount",arPaymentDetailsMap.get("amount").add(payment.amount));
+		
+		//adding Abstract Map here
+		partAbstractLedger=partyWiseLedgerAbstractMap.get(payment.partyIdFrom);
+		if(UtilValidate.isEmpty(partAbstractLedger)){
+			   abstractInnerMap=[:];
+			   abstractInnerMap["OB"]=0;
+			   abstractInnerMap["partyId"]=payment.partyIdFrom;
+			   abstractInnerMap["invTotal"]=0;
+			   abstractInnerMap["paymentTotal"]=payment.amount;
+			   abstractInnerMap["creditValue"]=payment.amount;
+			   abstractInnerMap["debitValue"]=0;
+		partyWiseLedgerAbstractMap[payment.partyIdFrom]=abstractInnerMap;
+		}else{
+		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(payment.partyIdFrom);
+		abstractInnerMap["paymentTotal"]+=payment.amount;
+		abstractInnerMap["creditValue"]+=payment.amount;
+		partyWiseLedgerAbstractMap[payment.partyIdFrom]=abstractInnerMap;
+		}
 		
     }
     else {
@@ -586,6 +700,38 @@ context.partyCBMap=partyCBMap;
 	
 	context.apOpeningBalance=apOpeningBalance;
 	context.apClosingBalance=apClosingBalance;
+	
+	
+	partyWiseLedgerAbstractMap.each{partyEntry->
+		partyId=partyEntry.getKey();
+		Map partyAbstractTotalInner=partyEntry.getValue();
+		
+		arPartyOB  =BigDecimal.ZERO;
+		arPartyCB  =BigDecimal.ZERO;
+		
+		apPartyOB  =BigDecimal.ZERO;
+		apPartyCB  =BigDecimal.ZERO;
+		
+		if("ArOnly"==isLedgerCallFor){
+			arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId]));
+			if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
+				arPartyOB=arOpeningBalanceRes.get("openingBalance");
+			}
+			arPartyCB=(arPartyOB+partyAbstractTotalInner.get("invTotal"))-(partyAbstractTotalInner.get("paymentTotal"));
+			partyAbstractTotalInner.putAt("OB",arPartyOB);
+			partyAbstractTotalInner.putAt("CB",arPartyCB);
+		}else{
+			apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE]));
+			if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
+				apPartyOB=apOpeningBalanceRes.get("openingBalance");
+			}
+			apPartyCB=(apPartyCB+partyAbstractTotalInner.get("invTotal"))-(partyAbstractTotalInner.get("paymentTotal"));
+			partyAbstractTotalInner.putAt("OB",apPartyOB);
+			partyAbstractTotalInner.putAt("CB",apPartyCB);
+		}
+		
+	}
+	Debug.log("=====partyWiseLedgerAbstractMap================>"+partyWiseLedgerAbstractMap);
 	
 //transferAmount = totalInvSaApplied.add(totalInvSaNotApplied).subtract(totalInvPuApplied.add(totalInvPuNotApplied)).subtract(totalPayInApplied.add(totalPayInNotApplied).add(totalPayOutApplied.add(totalPayOutNotApplied)));
 

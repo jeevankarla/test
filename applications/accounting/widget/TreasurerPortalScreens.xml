@@ -3044,6 +3044,9 @@
                	</condition-list>
                </entity-condition>
                
+                <entity-condition list="roleTypes" entity-name="RoleType">
+               </entity-condition>
+               
               </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 

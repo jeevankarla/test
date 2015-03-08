@@ -212,6 +212,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("EMPAdvSehFromDate","EMPAdvSehThruDate");
 	    makeDatePicker3("IULFromDateCrDr","IULThruDateCrDr");
 	    makeDatePicker3("IULAcntFromDateCrDr","IULAcntThruDateCrDr");
+	    makeDatePicker3("PLAFinFromDate","PLAFinThruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -341,6 +342,33 @@ function reportTypeChangeFunc() {
 			             <#--><td width="10%"><input type="submit" value="Download" class="buttontext"/></td> -->
 			             <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('InterUnitLedgerAndAcntHistoryWithDrCr', '<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.pdf</@ofbizUrl>');" class="buttontext"/>
 					                    <input type="submit" value="CSV" onClick="javascript:appendParams('InterUnitLedgerAndAcntHistoryWithDrCr', '<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.csv</@ofbizUrl>');" class="buttontext"/>
+					     </td>
+			           </form>
+			        </tr>
+			         <tr class="alternate-row">
+			      	   <form id="PartyLedgerAbstaracFintHistory" name="PartyLedgerAbstaracFintHistory" method="post" action="<@ofbizUrl>PartyLedgerAbstaracFintHistory.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Party Ledger Abstract</td>
+			             <td width="15%">From<input  type="text" size="15pt" id="PLAFinFromDate" readonly  name="partyfromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PLAFinThruDate" readonly  name="partythruDate"/></td>
+			             <td width="20%">${uiLabelMap.PartyRoleTypeId} <div>
+					              <select name="partyRoleTypeId">
+					                <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
+					                <#list roleTypes as roleType>
+					                   <option value="${roleType.roleTypeId}">${roleType.description?if_exists}</option>
+					                 </#list>
+					              </select>
+					            </div>
+                         </td> 
+			             <td width="15%">
+			                <div>
+				              <select name="isLedgerCallFor">
+				                <option value="ArOnly">AR Ledger</option>
+				                <option value="ApOnly">AP Ledger</option>
+				              </select>
+					       </div>
+			             </td>
+			             <td width="10%"><#--> <input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerAbstaracFintHistory', '<@ofbizUrl>PartyLedgerAbstaracFintHistory.pdf</@ofbizUrl>');" class="buttontext"/>-->
+					                    <input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerAbstaracFintHistory', '<@ofbizUrl>PartyLedgerAbstaracFintHistory.csv</@ofbizUrl>');" class="buttontext"/>
 					     </td>
 			           </form>
 			        </tr>
