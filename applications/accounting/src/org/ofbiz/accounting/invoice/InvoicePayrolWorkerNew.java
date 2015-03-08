@@ -142,6 +142,9 @@ public class InvoicePayrolWorkerNew {
 			 if(!enablePayrollInvAcctg){
 				 input.put("isEnableAcctg", "N");
 			  }
+			 if(UtilValidate.isNotEmpty(periodBilling.getString("billingTypeId")) && (periodBilling.getString("billingTypeId")).equals("SP_DA_ARREARS")){
+     			input.put("allowMultipleInvForPeriod", "Y");
+     		}
 			  input.put("periodBillingId",periodBillingId);
 			  input.put("referenceNumber",periodBilling.getString("billingTypeId")+"_"+periodBillingId);
 	         	List conditionList = UtilMisc.toList(
