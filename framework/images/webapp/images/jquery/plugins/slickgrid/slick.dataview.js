@@ -288,6 +288,14 @@
             delete collapsedGroups[groupingValue];
             refresh();
         }
+        function expandAllGroups() {
+        	beginUpdate();
+            for (var i = 0; i < getGroups().length; i++) {
+                expandGroup(getGroups()[i].value);
+            }
+            endUpdate();
+        }        
+        
 
         function getGroups() {
             return groups;
@@ -510,6 +518,7 @@
             "collapseGroup":    collapseGroup,
             "collapseAllGroups":   collapseAllGroups,
             "expandGroup":      expandGroup,
+            "expandAllGroups":   expandAllGroups,            
             "getGroups":        getGroups,
             "getIdxById":       getIdxById,
             "getRowById":       getRowById,
