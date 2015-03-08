@@ -628,6 +628,7 @@
         
         <field title="shipment Date" name="estimatedShipDate"><date-find/></field>
         <field name="shipmentId"><text-find/></field>
+        <field name="invoiceId" title="Invoice ID"><text/></field>
         <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
         <field name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field> 
         <field name="shipmentTypeId"><hidden value="${shipmentTypeId}"/></field>
@@ -735,6 +736,8 @@
     <form name="listInterUnitShipments" type="list" list-name="listIt" paginate-target="FindStockTranferShipment" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+            <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
@@ -742,6 +745,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
