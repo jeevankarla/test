@@ -54,25 +54,29 @@ if(totalDays > 32){
 	return;
 }
 partyIds=[];
-if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
-nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
-partyIds.addAll(nandiniPartyIds);
-}
-if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
-amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
-partyIds.addAll(amulPartyIds);
-}
-if(categoryType.equals("UNITS")||categoryType.equals("All")){
-	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
-	partyIds.addAll(unitPartyIds);
-}
-if(categoryType.equals("UNION")||categoryType.equals("All")){
-	unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
-	partyIds.addAll(unionPartyIds);
-}
-if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
-	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
-	partyIds.addAll(depotPartyIds);
+if(UtilValidate.isEmpty(parameters.partyId)){
+	if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
+	nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
+	partyIds.addAll(nandiniPartyIds);
+	}
+	if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
+	amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
+	partyIds.addAll(amulPartyIds);
+	}
+	if(categoryType.equals("UNITS")||categoryType.equals("All")){
+		unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
+		partyIds.addAll(unitPartyIds);
+	}
+	if(categoryType.equals("UNION")||categoryType.equals("All")){
+		unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
+		partyIds.addAll(unionPartyIds);
+	}
+	if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
+		depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
+		partyIds.addAll(depotPartyIds);
+	}
+}else{
+	partyIds.add(parameters.partyId);
 }
 //dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 dayWiseInvoice=FastMap.newInstance();

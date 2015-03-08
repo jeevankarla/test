@@ -159,7 +159,9 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	}
 	*/
 	termIds = EntityUtil.getFieldListFromEntityList(terms, "termTypeId", true);
-	
+	if(termIds.contains("INC_TAX")){
+		context.includeTax="Y";
+	}
 	termTypesForDesc = delegator.findList("TermType", EntityCondition.makeCondition("termTypeId", EntityOperator.IN, termIds), null, null, null, false);
 	
 	termDescMap = [:];
