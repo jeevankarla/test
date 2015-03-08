@@ -1111,6 +1111,10 @@ public class InvoiceWorker {
 		String partyIdFrom = (String) context.get("partyIdFrom");					
 		String invoiceAttrName = (String) context.get("invoiceAttrName");
 		String invoiceAttrValue = (String) context.get("invoiceAttrValue");	
+		String allowMultipleInvForPeriod = (String)context.get("allowMultipleInvForPeriod");
+		if(UtilValidate.isNotEmpty(allowMultipleInvForPeriod) && allowMultipleInvForPeriod.equals("Y")){
+			return ServiceUtil.returnSuccess();
+		}
 		String infoMsg = "[" + invoiceTypeId + ",[" + partyId + "<-->" + partyIdFrom + "]," 
 			+ invoiceAttrName + "=" + invoiceAttrValue + "]";
 Debug.logInfo("==========>ensureInvoiceAlreadyNotExists=" + infoMsg, module);   				

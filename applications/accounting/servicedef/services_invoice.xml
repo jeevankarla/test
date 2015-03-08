@@ -55,6 +55,7 @@ under the License.
         <attribute name="invoiceAttrName" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceAttrValue" type="String" mode="IN" optional="true"/>
         <attribute name="timePeriodId" type="String" mode="IN" optional="true"/>
+        <attribute name="allowMultipleInvForPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
         <attribute name="billOfSaleTypeId" type="String" mode="INOUT" optional="true"/>                 
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
@@ -113,6 +114,7 @@ under the License.
         <description>Ensures that an invoice of this type doesn't already exists between 
         these 2 parties, typically for a given time period</description>
         <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="allowMultipleInvForPeriod" type="String" mode ="IN" optional="true"/>  
         <attribute name="partyId" type="String" mode = "IN" optional="true"/>  
         <attribute name="partyIdFrom" type="String" mode = "IN" optional="false"/>        
         <attribute name="invoiceAttrName" type="String" mode = "IN" optional="false"/>
