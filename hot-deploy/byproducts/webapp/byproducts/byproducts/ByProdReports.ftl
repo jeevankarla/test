@@ -189,6 +189,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker("IOFromDateId","IOThruDateId");
 		makeDatePicker("conversionFDateId","conversionTDateId");
 		makeDatePicker("taxEnclosuerFDate","taxEnclosuerTDate");
+		makeDatePicker("PurchaseSalesFromDate","PurchaseSalesThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1148,6 +1149,25 @@ function reportTypeChangeFunc() {
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
 	      					<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+						</form>
+	                  </tr>
+					  <tr class="alternate-row">
+						<form id="purchaseSaleReport" name="purchaseSaleReport" method="post" action="<@ofbizUrl>PurchaseSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Purchse Book Report Detail<input type="hidden" id="isPurchaseInvoice" name="isPurchaseInvoice" value="isPurchaseInvoice"/></td>
+							<td width="15%">From<input  type="text" size="18pt" id="PurchaseSalesFromDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="PurchaseSalesThruDate" readonly  name="thruDate"/></td>
+			      		<#-- 	<td width="15%">By<select name="categoryType">
+			      				<option value="All">All</option>
+				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+				      			<option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="UNION">Sale to Union</option>
+				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
+			      			</select></td> -->
+							<td width="15%"></td>
+			      			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="purchaseSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseSaleReport', '<@ofbizUrl>PurchaseSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
+						    <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseSaleReport', '<@ofbizUrl>PurchaseSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>    -->     			
 						</form>
 	                  </tr>
 	                  <tr class="alternate-row">

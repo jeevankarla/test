@@ -1856,6 +1856,48 @@
 			</widgets>
 		</section>
 	</screen> -->
+	<screen name="PurchaseSaleBookReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/RegularIceCreamSaleReport.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/RegularIceCreamSaleReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PurchaseSaleBookReportCSV">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/RegularIceCreamSaleReport.groovy" />
+									<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/RegularIceCreamSaleReportCsv.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+								<include-form name="RegularIceCreamSaleBookCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="RegularIceCreamSaleBookPDF">
 		<section>
 			<actions>
