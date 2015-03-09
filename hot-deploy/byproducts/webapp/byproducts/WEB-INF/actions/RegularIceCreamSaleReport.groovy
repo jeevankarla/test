@@ -41,7 +41,7 @@ try {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
 boolean isPurchaseInvoice = Boolean.FALSE;
-if(UtilValidate.isNotEmpty(parameters.isPurchaseInvoice)){
+if(UtilValidate.isNotEmpty(parameters.isPurchaseInvoice) && (parameters.isPurchaseInvoice=="Y")){
 	isPurchaseInvoice = Boolean.TRUE;
 }
 fromDateTime = UtilDateTime.getDayStart(fromDateTime);
@@ -98,11 +98,13 @@ vatMap=[:];
 		invoiceMap = [:];
 		if(UtilValidate.isNotEmpty(partyIds)){
 			invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
-			if(UtilValidate.isNotEmpty(parameters.isPurchaseInvoice)){
-				salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd, isPurchaseInvoice: isPurchaseInvoice]);
-			}else{
-				salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
-			}
+			inputMap=[:];
+			inputMap.put("partyIds", partyIds);
+			inputMap.put("isQuantityLtrs", true);
+			inputMap.put("fromDate", dayBegin);
+			inputMap.put("thruDate", dayEnd);
+			inputMap.put("isPurchaseInvoice", isPurchaseInvoice);
+			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, inputMap);
 			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
 				if(UtilValidate.isNotEmpty(invoiceTotals)){

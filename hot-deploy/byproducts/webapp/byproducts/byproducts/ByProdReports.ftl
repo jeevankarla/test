@@ -1153,7 +1153,7 @@ function reportTypeChangeFunc() {
 	                  </tr>
 					  <tr class="alternate-row">
 						<form id="purchaseSaleReport" name="purchaseSaleReport" method="post" action="<@ofbizUrl>PurchaseSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Purchse Book Report Detail<input type="hidden" id="isPurchaseInvoice" name="isPurchaseInvoice" value="isPurchaseInvoice"/></td>
+							<td width="30%">Purchse Book Report Detail<input type="hidden" id="isPurchaseInvoice" name="isPurchaseInvoice" value="Y"/></td>
 							<td width="15%">From<input  type="text" size="18pt" id="PurchaseSalesFromDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="PurchaseSalesThruDate" readonly  name="thruDate"/></td>
 			      		<#-- 	<td width="15%">By<select name="categoryType">
