@@ -357,6 +357,9 @@
 	                     <screenlet title="${uiLabelMap.Indents}">
 	                         <include-form name="ListRequestList" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
 	                     </screenlet>
+	                     <screenlet title="Receipts">
+	                     	<include-form name="ListReceiptsList" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+	                     </screenlet>
 	                     <screenlet title="${uiLabelMap.ProductSuppliers}">
 	                         <include-form name="ListSupplierProducts" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
 	                     </screenlet>
