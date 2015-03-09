@@ -235,18 +235,21 @@ while (invoice = invIterator.next()) {
 	innerMap["creditValue"]=0;
 	//get Sequence for invoiceId
 	//invoiceSequenceId = null;
-	if(UtilValidate.isNotEmpty(invoice.invoiceId)){
-		invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice.invoiceId) , null, null, null, false);
-		if(UtilValidate.isNotEmpty(invoiceSequenceList)){
-			invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
-			if(UtilValidate.isNotEmpty(invoiceSequence)){
-				invoiceSequenceId = invoiceSequence.sequenceId;
-				innerMap["invoiceSequenceId"]=invoiceSequence.sequenceId+" ["+invoice.invoiceId+"]";
+	//for abstract PartyLedger it should ignore
+		if(UtilValidate.isEmpty(context.partyIdsList)){
+			if(UtilValidate.isNotEmpty(invoice.invoiceId)){
+				invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice.invoiceId) , null, null, null, false);
+				if(UtilValidate.isNotEmpty(invoiceSequenceList)){
+					invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
+					if(UtilValidate.isNotEmpty(invoiceSequence)){
+						invoiceSequenceId = invoiceSequence.sequenceId;
+						innerMap["invoiceSequenceId"]=invoiceSequence.sequenceId+" ["+invoice.invoiceId+"]";
+					}
+				}else{
+					innerMap["invoiceSequenceId"]=" ["+invoice.invoiceId+"]";
+				}
 			}
-		}else{
-			innerMap["invoiceSequenceId"]=" ["+invoice.invoiceId+"]";
 		}
-	}
     if ("PURCHASE_INVOICE".equals(invoice.parentTypeId)) {
 		innerMap["partyId"]=invoice.partyIdFrom;
 		innerMap["vchrType"]="PURCHASE";
@@ -275,23 +278,23 @@ while (invoice = invIterator.next()) {
 		}
 		apInvoiceDetailsMap["invTotal"]+=invTotalVal;
 		//adding Abstract Map here
-		partAbstractLedger=partyWiseLedgerAbstractMap.get(invoice.partyIdFrom);
-		Debug.log("===partAbstractLedger=="+partAbstractLedger);
-		if(UtilValidate.isEmpty(partAbstractLedger)){
-			   abstractInnerMap=[:];
-			   abstractInnerMap["OB"]=0;
-			   abstractInnerMap["partyId"]=invoice.partyIdFrom;
-			   abstractInnerMap["invTotal"]=invTotalVal;
-			   abstractInnerMap["paymentTotal"]=0;
-		       abstractInnerMap["debitValue"]=0;
-		       abstractInnerMap["creditValue"]=invTotalVal;
-		 partyWiseLedgerAbstractMap[invoice.partyIdFrom]=abstractInnerMap;
-		}else{
-		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(invoice.partyIdFrom);
-		Debug.log("===partAbstractLedger=IN==ELSEE="+abstractInnerMap);
-		abstractInnerMap["invTotal"]+=invTotalVal;
-		abstractInnerMap["creditValue"]+=invTotalVal;
-		partyWiseLedgerAbstractMap[invoice.partyIdFrom]=abstractInnerMap;
+		if("ApOnly"==isLedgerCallFor){
+			partAbstractLedger=partyWiseLedgerAbstractMap.get(invoice.partyIdFrom);
+			if(UtilValidate.isEmpty(partAbstractLedger)){
+				   abstractInnerMap=[:];
+				   abstractInnerMap["OB"]=0;
+				   abstractInnerMap["partyId"]=invoice.partyIdFrom;
+				   abstractInnerMap["invTotal"]=invTotalVal;
+				   abstractInnerMap["paymentTotal"]=0;
+			       abstractInnerMap["debitValue"]=0;
+			       abstractInnerMap["creditValue"]=invTotalVal;
+			 partyWiseLedgerAbstractMap[invoice.partyIdFrom]=abstractInnerMap;
+			}else{
+			Map abstractInnerMap=partyWiseLedgerAbstractMap.get(invoice.partyIdFrom);
+			abstractInnerMap["invTotal"]+=invTotalVal;
+			abstractInnerMap["creditValue"]+=invTotalVal;
+			partyWiseLedgerAbstractMap[invoice.partyIdFrom]=abstractInnerMap;
+			}
 		}
     }
     else if ("SALES_INVOICE".equals(invoice.parentTypeId)) {
@@ -322,23 +325,24 @@ while (invoice = invIterator.next()) {
 		}
 		arInvoiceDetailsMap["invTotal"]+=invTotalVal;
 		//adding Abstract Map here
-		partAbstractLedger=partyWiseLedgerAbstractMap.get(invoice.partyId);
-		Debug.log("===partAbstractLedger=SALESSSSSSSSS="+partAbstractLedger);
-		if(UtilValidate.isEmpty(partAbstractLedger)){
-			   abstractInnerMap=[:];
-			   abstractInnerMap["OB"]=0;
-			   abstractInnerMap["partyId"]=invoice.partyId;
-			   abstractInnerMap["invTotal"]=invTotalVal;
-			   abstractInnerMap["paymentTotal"]=0;
-			   abstractInnerMap["debitValue"]=invTotalVal;
-			   abstractInnerMap["creditValue"]=0;
-	     partyWiseLedgerAbstractMap[invoice.partyId]=abstractInnerMap;
-		}else{
-		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(invoice.partyId);
-			abstractInnerMap["invTotal"]+=invTotalVal;
-			abstractInnerMap["debitValue"]+=invTotalVal;
-		partyWiseLedgerAbstractMap[invoice.partyId]=abstractInnerMap;
-		}
+		if("ArOnly"==isLedgerCallFor){
+		  partAbstractLedger=partyWiseLedgerAbstractMap.get(invoice.partyId);
+		  if(UtilValidate.isEmpty(partAbstractLedger)){
+				   abstractInnerMap=[:];
+				   abstractInnerMap["OB"]=0;
+				   abstractInnerMap["partyId"]=invoice.partyId;
+				   abstractInnerMap["invTotal"]=invTotalVal;
+				   abstractInnerMap["paymentTotal"]=0;
+				   abstractInnerMap["debitValue"]=invTotalVal;
+				   abstractInnerMap["creditValue"]=0;
+		     partyWiseLedgerAbstractMap[invoice.partyId]=abstractInnerMap;
+			}else{
+			Map abstractInnerMap=partyWiseLedgerAbstractMap.get(invoice.partyId);
+				abstractInnerMap["invTotal"]+=invTotalVal;
+				abstractInnerMap["debitValue"]+=invTotalVal;
+			partyWiseLedgerAbstractMap[invoice.partyId]=abstractInnerMap;
+			}
+	    }
 		
     }
     else {
@@ -452,21 +456,23 @@ while (payment = payIterator.next()) {
 		apPaymentDetailsMap.put("amount",apPaymentDetailsMap.get("amount").add(payment.amount));
 		
 		//adding Abstract Map here
-		partAbstractLedger=partyWiseLedgerAbstractMap.get(payment.partyIdTo);
-		if(UtilValidate.isEmpty(partAbstractLedger)){
-			   abstractInnerMap=[:];
-			   abstractInnerMap["OB"]=0;
-			   abstractInnerMap["partyId"]=payment.partyIdTo;
-			   abstractInnerMap["invTotal"]=0;
-			   abstractInnerMap["paymentTotal"]=payment.amount;
-			   abstractInnerMap["debitValue"]=payment.amount;
-			   abstractInnerMap["creditValue"]=0;
-		partyWiseLedgerAbstractMap[payment.partyIdTo]=abstractInnerMap;
-		}else{
-		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(payment.partyIdTo);
-		abstractInnerMap["paymentTotal"]+=payment.amount;
-		abstractInnerMap["debitValue"]+=payment.amount;
-		partyWiseLedgerAbstractMap[payment.partyIdTo]=abstractInnerMap;
+		if("ApOnly"==isLedgerCallFor){
+			partAbstractLedger=partyWiseLedgerAbstractMap.get(payment.partyIdTo);
+			if(UtilValidate.isEmpty(partAbstractLedger)){
+				   abstractInnerMap=[:];
+				   abstractInnerMap["OB"]=0;
+				   abstractInnerMap["partyId"]=payment.partyIdTo;
+				   abstractInnerMap["invTotal"]=0;
+				   abstractInnerMap["paymentTotal"]=payment.amount;
+				   abstractInnerMap["debitValue"]=payment.amount;
+				   abstractInnerMap["creditValue"]=0;
+			partyWiseLedgerAbstractMap[payment.partyIdTo]=abstractInnerMap;
+			}else{
+			Map abstractInnerMap=partyWiseLedgerAbstractMap.get(payment.partyIdTo);
+			abstractInnerMap["paymentTotal"]+=payment.amount;
+			abstractInnerMap["debitValue"]+=payment.amount;
+			partyWiseLedgerAbstractMap[payment.partyIdTo]=abstractInnerMap;
+			}
 		}
     }
     else if ("RECEIPT".equals(payment.parentTypeId)) {
@@ -494,21 +500,23 @@ while (payment = payIterator.next()) {
 		arPaymentDetailsMap.put("amount",arPaymentDetailsMap.get("amount").add(payment.amount));
 		
 		//adding Abstract Map here
-		partAbstractLedger=partyWiseLedgerAbstractMap.get(payment.partyIdFrom);
-		if(UtilValidate.isEmpty(partAbstractLedger)){
-			   abstractInnerMap=[:];
-			   abstractInnerMap["OB"]=0;
-			   abstractInnerMap["partyId"]=payment.partyIdFrom;
-			   abstractInnerMap["invTotal"]=0;
-			   abstractInnerMap["paymentTotal"]=payment.amount;
-			   abstractInnerMap["creditValue"]=payment.amount;
-			   abstractInnerMap["debitValue"]=0;
-		partyWiseLedgerAbstractMap[payment.partyIdFrom]=abstractInnerMap;
-		}else{
-		Map abstractInnerMap=partyWiseLedgerAbstractMap.get(payment.partyIdFrom);
-		abstractInnerMap["paymentTotal"]+=payment.amount;
-		abstractInnerMap["creditValue"]+=payment.amount;
-		partyWiseLedgerAbstractMap[payment.partyIdFrom]=abstractInnerMap;
+		if("ArOnly"==isLedgerCallFor){
+			partAbstractLedger=partyWiseLedgerAbstractMap.get(payment.partyIdFrom);
+			if(UtilValidate.isEmpty(partAbstractLedger)){
+				   abstractInnerMap=[:];
+				   abstractInnerMap["OB"]=0;
+				   abstractInnerMap["partyId"]=payment.partyIdFrom;
+				   abstractInnerMap["invTotal"]=0;
+				   abstractInnerMap["paymentTotal"]=payment.amount;
+				   abstractInnerMap["creditValue"]=payment.amount;
+				   abstractInnerMap["debitValue"]=0;
+			partyWiseLedgerAbstractMap[payment.partyIdFrom]=abstractInnerMap;
+			}else{
+			Map abstractInnerMap=partyWiseLedgerAbstractMap.get(payment.partyIdFrom);
+			abstractInnerMap["paymentTotal"]+=payment.amount;
+			abstractInnerMap["creditValue"]+=payment.amount;
+			partyWiseLedgerAbstractMap[payment.partyIdFrom]=abstractInnerMap;
+			}
 		}
 		
     }
@@ -731,7 +739,8 @@ context.partyCBMap=partyCBMap;
 		}
 		
 	}
-	Debug.log("=====partyWiseLedgerAbstractMap================>"+partyWiseLedgerAbstractMap);
+	context.partyWiseLedgerAbstractMap=partyWiseLedgerAbstractMap;
+	//Debug.log("=====partyWiseLedgerAbstractMap================>"+partyWiseLedgerAbstractMap);
 	
 //transferAmount = totalInvSaApplied.add(totalInvSaNotApplied).subtract(totalInvPuApplied.add(totalInvPuNotApplied)).subtract(totalPayInApplied.add(totalPayInNotApplied).add(totalPayOutApplied.add(totalPayOutNotApplied)));
 

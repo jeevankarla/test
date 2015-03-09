@@ -58,7 +58,7 @@ partyLedgerAbstractCsvMap=[:];
 
 
 if(UtilValidate.isNotEmpty(context.partyWiseLedgerAbstractMap)){
-	partyDayWiseDetailCsvMap=context.partyWiseLedgerAbstractMap;
+	partyLedgerAbstractCsvMap=context.partyWiseLedgerAbstractMap;
 }
 
 partyLedgerAbstractCsvMap.each{ eachPartyLedger->
