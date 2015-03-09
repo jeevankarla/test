@@ -85,7 +85,7 @@ if(reconciledDate){
 parameters.reconciledDateStart = UtilDateTime.getDayStart(fromDateTs);
 parameters.reconciledDateEnd = UtilDateTime.getDayEnd(fromDateTs);
 }
-Debug.log("==arameters.partyRoleTypeId===PartyListttt="+parameters.partyRoleTypeId);
+//Debug.log("==arameters.partyRoleTypeId===PartyListttt="+parameters.partyRoleTypeId);
 
 
 partyIdsList=[];
@@ -104,11 +104,10 @@ if(UtilValidate.isNotEmpty(parameters.partyRoleTypeId)){//to handle IceCream Par
 	if(UtilValidate.isNotEmpty(partyDetailsMap)){
 		partyDetailsList = partyDetailsMap.get("partyDetails");
 		partyIdsList=partyDetailsMap.get("partyIds");
-		Debug.log("==partyIdsList=="+partyIdsList);
 	}
 }
 context.partyIdsList=partyIdsList;
 	
    
-Debug.log("==partyIdsList=="+partyIdsList);
+Debug.log("==partyIdsList====="+partyIdsList+"==partyRoleTypeId==="+parameters.partyRoleTypeId);
 return  "success";
