@@ -3525,6 +3525,7 @@ catch(Exception e){
 			inputMap.put("brandName", brandName);
 			inputMap.put("description", description);
 			inputMap.put("quantityUomId", quantityUomId);
+			inputMap.put("longDescription", longDescription);
 			result = dispatcher.runSync("updateProduct", inputMap);
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error Occurred While updating Product.!");
@@ -3533,38 +3534,40 @@ catch(Exception e){
 		catch(Exception e){
 				return ServiceUtil.returnError(e.getMessage());
 			}
-		try{
-				inputMap.clear();
-				inputMap.put("userLogin",userLogin);
-				inputMap.put("productId",productId);
-				inputMap.put("attrValue", attrValue);
-				inputMap.put("attrName", attrName);
+		if(UtilValidate.isNotEmpty(attrValue)){
+			try{
+					inputMap.clear();
+					inputMap.put("userLogin",userLogin);
+					inputMap.put("productId",productId);
+					inputMap.put("attrValue", attrValue);
+					inputMap.put("attrName", attrName);
+					
+					GenericValue productAttr = delegator.findOne("ProductAttribute", UtilMisc.toMap("productId", productId,"attrName",attrName), false);
+					if(UtilValidate.isNotEmpty(productAttr)){
+						try{
+							result = dispatcher.runSync("updateProductAttribute", inputMap);
+							if (ServiceUtil.isError(result)) {
+								return ServiceUtil.returnError("Error While updating the Product Attribute.!");
+								}
+						}catch(Exception e){
+							return ServiceUtil.returnError(e.getMessage());
+						}
+					}else{
+						try{
+							result = dispatcher.runSync("createProductAttribute", inputMap);
+							if (ServiceUtil.isError(result)) {
+								return ServiceUtil.returnError("Error While creating the Product Attribute.!");
+								}
+						}catch(Exception e){
+							return ServiceUtil.returnError(e.getMessage());
+						}
+					}
 				
-				GenericValue productAttr = delegator.findOne("ProductAttribute", UtilMisc.toMap("productId", productId,"attrName",attrName), false);
-				if(UtilValidate.isNotEmpty(productAttr)){
-					try{
-						result = dispatcher.runSync("updateProductAttribute", inputMap);
-						if (ServiceUtil.isError(result)) {
-							return ServiceUtil.returnError("Error While updating the Product Attribute.!");
-							}
-					}catch(Exception e){
-						return ServiceUtil.returnError(e.getMessage());
-					}
-				}else{
-					try{
-						result = dispatcher.runSync("createProductAttribute", inputMap);
-						if (ServiceUtil.isError(result)) {
-							return ServiceUtil.returnError("Error While creating the Product Attribute.!");
-							}
-					}catch(Exception e){
-						return ServiceUtil.returnError(e.getMessage());
-					}
 				}
-			
-			}
-		catch(Exception e){
-				return ServiceUtil.returnError(e.getMessage());
-			}
+			catch(Exception e){
+					return ServiceUtil.returnError(e.getMessage());
+				}
+		}	
 		result = ServiceUtil.returnSuccess("Product Id: "+productId+" Successfully Updated..!");
 		return result;
 	}	

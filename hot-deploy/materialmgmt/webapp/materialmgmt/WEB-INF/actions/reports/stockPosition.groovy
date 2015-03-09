@@ -352,6 +352,13 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, null, ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
+	 //Receipts
+	 condList.clear();
+	 condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+	 condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_CANCELLED"));
+	 receiptsCond=EntityCondition.makeCondition(condList,EntityOperator.AND);
+	 receiptsList=delegator.findList("ShipmentReceipt",receiptsCond,null,['-datetimeReceived'],null,false);
+	 context.receiptsList=receiptsList;
 	 custRequestsByStatusMap =[:];
 	 indentQty = 0;
 	 for(GenericValue custRequest : custRequestsList){

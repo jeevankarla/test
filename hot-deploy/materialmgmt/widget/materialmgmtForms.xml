@@ -348,6 +348,17 @@
             </hyperlink>
         </field> -->
     </form>
+    <form name="ListReceiptsList" type="list" use-row-submit="true" list-name="receiptsList" title="List of Shipment Receipts"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="receiptId"><display/></field>
+        <field name="inventoryItemId"><display/></field>
+        <field name="shipmentId"><display/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId"  description="${description}" /> </field>
+        <field name="orderId"><display/></field>
+        <field name="datetimeReceived" title="Received Date"><display /></field>
+        <field name="quantityAccepted" title="Quantity"><display/></field>
+        <field name="quantityRejected"><display/></field> 
+    </form>
      <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequestsList" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <row-actions>
@@ -372,8 +383,6 @@
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId"  description="${description}" /> </field>
         <!-- <field name="lastModifiedDate" sort-field="true"><display/></field>
         <field name="createdByUserLogin" sort-field="true"><display/></field> -->
-        
-       
     </form>
     <form name="PurchaseReportForms" type="list" list-name="prodCatAnalysisList" view-size="99999">
         <field name="voucherCode" title="Voucher Code"><display/></field>
