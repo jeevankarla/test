@@ -97,16 +97,21 @@ partyFinHistoryMap=[:];
 interUnitAccountsList=[];
 conditionList = [];
    if(UtilValidate.isNotEmpty(parameters.partyId)){
-	
+	if(!parameters.multifinAccount == "Y"){
 	  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"));
 	  conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	  
+	}
 	  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyId));
 	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 	interUnitAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	
+	Debug.log("interUnitAccountsList======================"+interUnitAccountsList);
+	finAccountIdList= EntityUtil.getFieldListFromEntityList(interUnitAccountsList,"finAccountId", true);
+	Debug.log("finAccountIdList=================="+finAccountIdList);
 	context.interUnitAccountsList=interUnitAccountsList;
 	interUnitFinAccount=EntityUtil.getFirst(interUnitAccountsList);
+	
 	finAccountId="";
 	if(UtilValidate.isNotEmpty(interUnitFinAccount)){
 		context.finAccountId=interUnitFinAccount.finAccountId;
@@ -123,11 +128,21 @@ conditionList = [];
 	finAccountTransInputMap["fromTransactionDate"]=parameters.fromDateReport;
 	finAccountTransInputMap["thruTransactionDate"]=parameters.thruDateReport;
 	finAccountTransInputMap["statusId"]="FINACT_TRNS_CREATED";
-	finAccountTransInputMap["finAccountId"]=finAccountId;
 	finAccountTransInputMap["userLogin"]=userLogin;
-	
 	List finAccountTransList = [];
 	Map resultCtx = [:];
+	if(parameters.multifinAccount == "Y"){
+		finAccountIdList.each{ eachfinAccountId ->
+			finAccountTransInputMap["finAccountId"]=eachfinAccountId;
+			Debug.log("finAccountTransInputMap====================="+finAccountTransInputMap);
+				Map finAccountTransMap=resultCtx = dispatcher.runSync("getFinAccountTransListAndTotals", finAccountTransInputMap);
+				Debug.log("finAccountTransMap====================="+finAccountTransMap);
+				finAccountTransList.addAll(finAccountTransMap.get("finAccountTransList"));
+		}
+		Debug.log("finAccountTransList==================="+finAccountTransList);
+		context.finAccountTransList=finAccountTransList;
+	}else{
+	finAccountTransInputMap["finAccountId"]=finAccountId;
 	if(UtilValidate.isNotEmpty(finAccountId)){
 		Map	finAccountTransListAndTotals=resultCtx = dispatcher.runSync("getFinAccountTransListAndTotals", finAccountTransInputMap);
 		finAccountTransList=finAccountTransListAndTotals.get("finAccountTransList");
@@ -142,6 +157,8 @@ conditionList = [];
 		
 	}
 	context.finAccountTransList=finAccountTransList;
+	}
+	//Debug.log("finAccountTransList===================="+finAccountTransList);
 	/*<set field="finAccountId" from-field="parameters.finAccountId"/>
 	<set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
 	<set field="fromTransactionDate" value="${parameters.fromDateReport}"/>

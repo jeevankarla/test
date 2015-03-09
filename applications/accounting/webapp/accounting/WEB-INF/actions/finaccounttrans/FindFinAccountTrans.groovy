@@ -60,8 +60,15 @@ partyDayWiseFinHistryMap=[:];
 partyTotalDebits=0;
 partyTotalCredits=0;
 
-Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
+finAccountIdList= EntityUtil.getFieldListFromEntityList(finAccountTransList,"finAccountId", true);
+finAccountTransList.each{ eachFinAccount ->
+	multifinAccountTransList=[];
+	finAccountId=eachFinAccount.finAccountId;
+	multifinAccountTransList.addAll(eachFinAccount);
+	multipleFinAccountList(finAccountId,multifinAccountTransList);	
+}
 //finAccountTransList.each{finAccountTrans->
+def multipleFinAccountList(finAccountId, finAccountTransList){
 finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 	tempFinAccountTransMap=[:];
 	tempFinAccountTransMap["sNo"]=idx+1;
@@ -160,6 +167,7 @@ finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 		   partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
 	   }
    finAccountReconciliationList.addAll(tempFinAccountTransMap);
+}
 }
 context.finAccountReconciliationList=finAccountReconciliationList;
 
