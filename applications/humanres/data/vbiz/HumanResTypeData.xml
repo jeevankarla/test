@@ -58,6 +58,7 @@ under the License.
     <Enumeration description="Section 80GGC" enumCode="SECTION_80GGC" enumId="SECTION_80GGC" sequenceId="16" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80TTA" enumCode="SECTION_80TTA" enumId="SECTION_80TTA" sequenceId="17" enumTypeId="FORM16_INPUT_TYPE"/>
     <Enumeration description="Section 80U" enumCode="SECTION_80U" enumId="SECTION_80U" sequenceId="18" enumTypeId="FORM16_INPUT_TYPE"/>
+    <Enumeration description=" Interest on HBA u/s 24B" enumCode="INTEREST_HBA_24B" enumId="INTEREST_HBA_24B" sequenceId="19" enumTypeId="FORM16_INPUT_TYPE"/>
     
     <EnumerationType description="SECTION 80C" enumTypeId="SECTION_80C" hasTable="N" parentTypeId=""/>
     <Enumeration description="LIC Policy" enumCode="LIC_POLICY" enumId="LIC_POLICY" sequenceId="01" enumTypeId="SECTION_80C"/>
