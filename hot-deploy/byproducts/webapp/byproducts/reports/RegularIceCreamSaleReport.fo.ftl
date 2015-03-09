@@ -42,7 +42,7 @@ under the License.
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
-                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if>SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
+                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"><#if categoryType?has_content><#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if><#else>PURCHASE</#if> SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Invoice 					Retailer        	Description        Quantity        Ex-factory    ED          VAT(Rs)    		C.S.T(Rs)      Total(Rs)</fo:block>
@@ -119,7 +119,7 @@ under the License.
 							            </fo:table-cell>
 							           
 							             <fo:table-cell>
-							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${shippingDetails.get(invoiceDetails.getKey()).get("partyName")?if_exists}<#if categoryType=="ICE_CREAM_AMUL">[${shippingDetails.get(invoiceDetails.getKey()).get("partyId")?if_exists}]</#if></fo:block>  
+							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${shippingDetails.get(invoiceDetails.getKey()).get("partyName")?if_exists}<#if categoryType?has_content && categoryType=="ICE_CREAM_AMUL">[${shippingDetails.get(invoiceDetails.getKey()).get("partyId")?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
@@ -149,9 +149,16 @@ under the License.
 					       							<#assign totalCstRev=totalCstRev+productDtls.getValue().get("cstRevenue")>
 					       							<#assign grandTotal=grandTotal+productDtls.getValue().get("totalRevenue")>
 						                                <fo:table-row>
+						                                   <#if categoryType?has_content>
 						                                   <fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${productDtls.getKey()}</fo:block>  
 								                       		</fo:table-cell>
+								                       		<#else>
+                                                             <#assign product=delegator.findOne("Product",{"productId":productDtls.getKey()},true)>
+                                                            <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${product.description}</fo:block>  
+								                       		</fo:table-cell>
+															</#if>
 															<fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("quantity")?string("#0.00")}</fo:block>  
 								                       		</fo:table-cell>
