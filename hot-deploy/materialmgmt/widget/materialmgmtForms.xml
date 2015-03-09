@@ -4,6 +4,7 @@
 	<form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
+         <field name="invoiceId"><text/></field>
         <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
         <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field>
         <field name="statusId">
@@ -112,6 +113,8 @@
      <form name="listPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+             <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeader"/>

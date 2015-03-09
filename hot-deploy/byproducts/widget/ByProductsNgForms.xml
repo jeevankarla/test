@@ -640,6 +640,8 @@
     <form name="listICPNandiniShipments" type="list" list-name="listIt" paginate-target="FindICPNandiniShipment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+           <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
@@ -671,6 +673,8 @@
     <form name="listICPBellaryShipments" type="list" list-name="listIt" paginate-target="FindICPBellaryShipment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+             <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
@@ -703,6 +707,8 @@
     <form name="listICPAmulShipments" type="list" list-name="listIt" paginate-target="FindICPAmulShipment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+             <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
@@ -823,6 +829,8 @@
     <form name="listDepotShipments" type="list" list-name="listIt" paginate-target="${targetRequest}" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+             <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
