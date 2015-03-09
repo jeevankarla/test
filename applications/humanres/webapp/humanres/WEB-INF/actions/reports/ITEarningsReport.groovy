@@ -5,6 +5,10 @@ import org.ofbiz.entity.util.EntityUtil;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.UtilDateTime;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
@@ -378,7 +382,56 @@ employmentsList.each{ employeeId->
 								}
 							}
 						}
-						DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDate,"thruDate",thruDate,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						
+						
+						List condList = FastList.newInstance();
+						condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_SDA"));
+						condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_DA_ARREARS"));
+						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+						condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+						condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+						EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+						List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
+						if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
+							List<String> periodBillingIds = EntityUtil.getFieldListFromEntityList(PeriodBillingAndCustomTimePeriodList, "periodBillingId", false);
+							if(UtilValidate.isNotEmpty(periodBillingIds)){
+								periodBillingIds.each{ perBillId ->
+									List payHeadCondList = FastList.newInstance();
+									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, perBillId));
+									payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+									payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
+									EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
+									List<GenericValue> DaHeadList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, false);
+									if(UtilValidate.isNotEmpty(DaHeadList)){
+										DaHead = EntityUtil.getFirst(DaHeadList);
+										if(UtilValidate.isNotEmpty(DaHead.amount)){
+											DAARDAAmount = DaHead.amount;
+											if(UtilValidate.isEmpty(DAARDAAmount)){
+												DAARDAAmount = 0;
+											}
+										}
+									}
+									payHeadCondList.clear();
+									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, perBillId));
+									payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+									payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_LEAVENCAS"));
+									EntityCondition payHeadCond1 = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
+									DaHeadList1 = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond1, null,null, null,false);
+									if(UtilValidate.isNotEmpty(DaHeadList1)){
+										DaHead1 = EntityUtil.getFirst(DaHeadList1);
+										if(UtilValidate.isNotEmpty(DaHead1.amount)){
+											DAARLEAmount = DaHead1.amount;
+											if(UtilValidate.isEmpty(DAARDAAmount)){
+												DAARLEAmount = 0;
+											}
+										}
+									}
+									context.put("DAARDAAmount1",DAARDAAmount);
+									context.put("DAARLEAmount1",DAARLEAmount);
+								}
+							}
+						}
+						/*DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDate,"thruDate",thruDate,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 						if(UtilValidate.isNotEmpty(DAARPeriodTotals)){
 							Iterator DAARPeriodTotalsIter = DAARPeriodTotals.entrySet().iterator();
 							while(DAARPeriodTotalsIter.hasNext()){
@@ -397,7 +450,7 @@ employmentsList.each{ employeeId->
 									context.put("DAARLEAmount1",DAARLEAmount);
 								}
 							}
-						}
+						}*/
 					}
 				
 					others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift+cash+heatallow+specPay+field+fixedPay+spec+fixedTra;
@@ -700,7 +753,38 @@ employmentsList.each{ employeeId->
 								}
 							}
 						}
-						DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDate,"thruDate",thruDate,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						List condList = FastList.newInstance();
+						condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_SDA"));
+						condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_DA_ARREARS"));
+						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+						condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+						condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+						EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+						List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
+						if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
+							List<String> periodBillingIds = EntityUtil.getFieldListFromEntityList(PeriodBillingAndCustomTimePeriodList, "periodBillingId", false);
+							if(UtilValidate.isNotEmpty(periodBillingIds)){
+								periodBillingIds.each{ perBillId ->
+									List payHeadCondList = FastList.newInstance();
+									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, perBillId));
+									payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+									payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_PF"));
+									EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
+									List<GenericValue> DaHeadList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, false);
+									if(UtilValidate.isNotEmpty(DaHeadList)){
+										DaHead = EntityUtil.getFirst(DaHeadList);
+										if(UtilValidate.isNotEmpty(DaHead.amount)){
+											DAAREmpProFund = DaHead.amount;
+											if(UtilValidate.isEmpty(DAAREmpProFund)){
+												DAAREmpProFund = 0;
+											}
+										}
+									}
+									context.putAt("DAAREmpProFund1", -(DAAREmpProFund));
+								}
+							}
+						}
+						/*DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDate,"thruDate",thruDate,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 						if(UtilValidate.isNotEmpty(DAARPeriodTotals)){
 							Iterator DAARPeriodTotalsIter = DAARPeriodTotals.entrySet().iterator();
 							while(DAARPeriodTotalsIter.hasNext()){
@@ -711,10 +795,10 @@ employmentsList.each{ employeeId->
 									if(UtilValidate.isEmpty(DAAREmpProFund)){
 										DAAREmpProFund = 0;
 									}
-									context.putAt("DAAREmpProFund1", -(DAAREmpProFund));
+									context.putAt("DAAREmpProFund1", -(DAAREmpProFund));	
 								}
 							}
-						}
+						}*/
 					}
 					othersDed = SBEWFTrust+SBEMisDed;
 					
