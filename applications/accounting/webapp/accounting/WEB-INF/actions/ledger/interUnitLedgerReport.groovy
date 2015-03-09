@@ -59,7 +59,6 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
 
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
-Debug.log("=======partyfromDate========>"+partyfromDate+"==partythruDate=="+partythruDate);
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
    Timestamp daystart;
 	try {
@@ -91,7 +90,6 @@ if(reconciledDate){
 parameters.reconciledDateStart = UtilDateTime.getDayStart(fromDateTs);
 parameters.reconciledDateEnd = UtilDateTime.getDayEnd(fromDateTs);
 }
-Debug.log("==arameters.partyId=INTER==UNIT="+parameters.partyId);
 partyFinHistoryMap=[:];
 
 interUnitAccountsList=[];
@@ -106,9 +104,7 @@ conditionList = [];
 	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 	interUnitAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-	Debug.log("interUnitAccountsList======================"+interUnitAccountsList);
 	finAccountIdList= EntityUtil.getFieldListFromEntityList(interUnitAccountsList,"finAccountId", true);
-	Debug.log("finAccountIdList=================="+finAccountIdList);
 	context.interUnitAccountsList=interUnitAccountsList;
 	interUnitFinAccount=EntityUtil.getFirst(interUnitAccountsList);
 	
@@ -134,12 +130,9 @@ conditionList = [];
 	if(parameters.multifinAccount == "Y"){
 		finAccountIdList.each{ eachfinAccountId ->
 			finAccountTransInputMap["finAccountId"]=eachfinAccountId;
-			Debug.log("finAccountTransInputMap====================="+finAccountTransInputMap);
 				Map finAccountTransMap=resultCtx = dispatcher.runSync("getFinAccountTransListAndTotals", finAccountTransInputMap);
-				Debug.log("finAccountTransMap====================="+finAccountTransMap);
 				finAccountTransList.addAll(finAccountTransMap.get("finAccountTransList"));
 		}
-		Debug.log("finAccountTransList==================="+finAccountTransList);
 		context.finAccountTransList=finAccountTransList;
 	}else{
 	finAccountTransInputMap["finAccountId"]=finAccountId;
