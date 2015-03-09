@@ -233,6 +233,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 findIncomingShipmentsTypeConds.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "INCOMING_SHIPMENT"));
 		 findIncomingShipmentsTypeConds.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "PURCHASE_SHIPMENT"));
 		 findIncomingShipmentsTypeConds.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "SALES_RETURN"));
+		 findIncomingShipmentsTypeConds.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "MATERIAL_SHIPMENT"));
 		 findIncomingShipmentsConds.add(EntityCondition.makeCondition(findIncomingShipmentsTypeConds, EntityOperator.OR));
 	 
 		 findIncomingShipmentsStatusConds = [];
@@ -243,6 +244,21 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 
 		 findIncomingShipmentsStatusCondition = EntityCondition.makeCondition(findIncomingShipmentsConds, EntityOperator.AND);
 		 incomingShipmentAndItems = delegator.findList("ShipmentAndItem", findIncomingShipmentsStatusCondition, null, ['-estimatedArrivalDate'], null, false);
+		 //Receipts
+		 shipmentIds=EntityUtil.getFieldListFromEntityList(incomingShipmentAndItems,"shipmentId", true);
+		 condList =[];
+		 condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+		 condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_CANCELLED"));
+		 condList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.IN,shipmentIds));
+		 receiptsCond=EntityCondition.makeCondition(condList,EntityOperator.AND);
+		 receiptsList=delegator.findList("ShipmentReceipt",receiptsCond,null,['-datetimeReceived'],null,false);
+		 context.receiptsList=receiptsList;
+		 cancelQty=0;
+		 receiptsList.each{receipt->
+			 if(UtilValidate.isNotEmpty(receipt.quantityRejected)){
+				 cancelQty+=receipt.quantityRejected;
+			 }
+		 }
 		 incomingShipmentAndItemIter = incomingShipmentAndItems.iterator();
 		 receiptQty = 0;
 		 while (incomingShipmentAndItemIter) {
@@ -267,10 +283,10 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 			 incomingShipmentAndItemList.add(incomingShipmentAndItem);
 			 receiptQty = receiptQty+quantity;
 		 }
-		 
+		 receiptQty-=cancelQty;
 		 jsonArray= new JSONArray();
 		 jsonArray.add(i++);
-		 jsonArray.add(receiptQty);
+		 jsonArray.add((receiptQty));
 		 productDataListJSON.add(jsonArray);
 		 JSONArray labelArray= new JSONArray();
 		 labelArray.add(jsonArray.get(0));
@@ -312,7 +328,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 }
 	 
 	 // get requirments here
-	 condList =[];
+	 condList.clear();
 	 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	 condList.add(EntityCondition.makeCondition("requirementTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
 	 condList.add(EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -352,24 +368,20 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, null, ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
-	 //Receipts
-	 condList.clear();
-	 condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
-	 condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_CANCELLED"));
-	 receiptsCond=EntityCondition.makeCondition(condList,EntityOperator.AND);
-	 receiptsList=delegator.findList("ShipmentReceipt",receiptsCond,null,['-datetimeReceived'],null,false);
-	 context.receiptsList=receiptsList;
+	
 	 custRequestsByStatusMap =[:];
 	 indentQty = 0;
 	 for(GenericValue custRequest : custRequestsList){
 		 String statusId = custRequest.getString("itemStatusId");
 		 quantity = custRequest.quantity;
-		 if(UtilValidate.isEmpty(custRequestsByStatusMap.get(statusId))){
-			 custRequestsByStatusMap.put(statusId , quantity);
-		 }else{
-			 custRequestsByStatusMap.put(statusId , custRequestsByStatusMap.get(statusId)+quantity);
-		 }
-		 indentQty = indentQty+quantity;
+		 if(statusId.equals("CRQ_DRAFT") || statusId.equals("CRQ_SUBMITTED")){
+			 if(UtilValidate.isEmpty(custRequestsByStatusMap.get(statusId))){
+				 custRequestsByStatusMap.put(statusId , quantity);
+			 }else{
+				 custRequestsByStatusMap.put(statusId , custRequestsByStatusMap.get(statusId)+quantity);
+			 }
+			 indentQty = indentQty+quantity;
+		  }
 	 }
 	 JSONArray jsonArray= new JSONArray();
 	 jsonArray.add(i++);
