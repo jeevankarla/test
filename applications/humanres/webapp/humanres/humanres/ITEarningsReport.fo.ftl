@@ -145,8 +145,8 @@ under the License.
 			                    	<#assign SBEOthers =0>
 			                        <#assign SBE = 0>
 			                        
-			                        <#assign DAARDAAmount =0>
-			                        <#assign DAARLEAmount=0>
+			                        <#assign DAARDAAmount2 =0>
+			                        <#assign DAARLEAmount2=0>
 			                        
 			                    
 				                    <#assign monthKey = partyBenefits.getKey()>
@@ -196,8 +196,8 @@ under the License.
 			                    	<#assign SBEOthers = partyBenefits.getValue().get("SBEOthers")?if_exists>
 			                    	
 			                    	
-			                    	<#assign DAARDAAmount = partyBenefits.getValue().get("DAARDAAmount")?if_exists>
-			                    	<#assign DAARLEAmount = partyBenefits.getValue().get("DAARLEAmount")?if_exists>
+			                    	<#assign DAARDAAmount2 = partyBenefits.getValue().get("DAARDAAmount")?if_exists>
+			                    	<#assign DAARLEAmount2 = partyBenefits.getValue().get("DAARLEAmount")?if_exists>
 			                    	
 			                    	
 			                    	<#assign totalLESalary = totalLESalary + LESalary>
@@ -224,16 +224,16 @@ under the License.
 			                    	<#assign leaveEncash = LESalary+LEDAAmount+LEHRAAmount+LECCAmount+LESpecPay>
 			                    	<#assign TE = TESalary+TEDAAmount+TEHRAAmount+TECCAmount+TEBonusEX+TEOthers>
 			                    	<#assign SBE = SBESalary+SBEDAAmount+SBEHRAAmount+SBECCAmount+SBEOthers+SBEInterMrlf>
-			                    	<#assign DAAR = DAARDAAmount+DAARLEAmount>
+			                    	<#assign DAAR = DAARDAAmount2+DAARLEAmount2>
 			                    	
 			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic>
-			                    	<#assign totalDA = totalDA + LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance+DAARDAAmount>
+			                    	<#assign totalDA = totalDA + LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance+DAARDAAmount2>
 			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance>
 			                    	<#assign totalConvey = totalConvey + convey>
 			                    	<#assign totalCityComp = totalCityComp + LECCAmount+TECCAmount+SBECCAmount+cityComp>
-			                    	<#assign totalBonus = totalBonus + bonus+totalTEBonusEX>
+			                    	<#assign totalBonus = totalBonus + bonus+TEBonusEX>
 			                    	<#assign totalDADAAmount = totalDADAAmount + DADAAmount>
-			                    	<#assign totalOthers = totalOthers + others+LESpecPay+totalTEOthers+totalSBEOthers+DAARLEAmount>
+			                    	<#assign totalOthers = totalOthers + others+LESpecPay+TEOthers+SBEOthers>
 			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DAAR>
 			                    	
 			                    	
