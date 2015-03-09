@@ -280,7 +280,6 @@ invoiceList = delegator.findList("InvoiceAndItem", condition, null, null, null, 
 
 	
 		invoiceList.each{ invoiceEntry ->
-			Debug.log("invoiceAmounts == AAA "+invoiceEntry.amount);
 			amount = 0;
 			tempMap = [:];
 			tempMap["serialNo"]= "";
@@ -320,19 +319,31 @@ invoiceList = delegator.findList("InvoiceAndItem", condition, null, null, null, 
 					}
 					sectionCode = invoiceEntry.invoiceItemTypeId;
 					tempMap["section"] = sectionCode.substring(sectionCode.lastIndexOf("_") + 1);
-
-					tempMap["invoiceAmount"] = org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceEntry.invoiceId);
+					
+					grossAmtConditionList = [];
+					grossAmtConditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceEntry.invoiceId));
+					grossAmtConditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, sectionCode));
+					grossCond=EntityCondition.makeCondition(grossAmtConditionList,EntityOperator.AND);
+					grossCondList = delegator.findList("InvoiceItem", grossCond, null, null, null, false);
+					tempAmt = 0;
+					grossCondList.each{ grossEntry ->
+					if(grossEntry.amount<0)
+					{
+						grossEntry.amount = -(grossEntry.amount);
+					}
+					tempAmt = tempAmt+grossEntry.amount;
+					}
+					tempMap["invoiceAmount"] = tempAmt;
+					//tempMap["invoiceAmount"] = org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceEntry.invoiceId);
 					if(tempMap["invoiceAmount"] < 0)
 					{
 						tempMap["invoiceAmount"] = -(tempMap["invoiceAmount"]);
 					}
 					tempMap["month"] = UtilDateTime.toDateString(monthEndNew, "MMM");
-				//	Debug.log("monthName MMM "+tempMap["month"]);
 					
 		listAnnexureNew.add(tempMap);
 		
 		}
-		
 		
 		if(monthEndNew == monthEnd)
 		{
@@ -345,7 +356,6 @@ invoiceList = delegator.findList("InvoiceAndItem", condition, null, null, null, 
 			monthEndNew = UtilDateTime.getMonthEnd(monthBeginNew, timeZone, locale);
 		}
 }
-
 		sectionCode = sectionCode.substring(sectionCode.lastIndexOf("_") + 1);
 		
 		tempFinalList =[];
