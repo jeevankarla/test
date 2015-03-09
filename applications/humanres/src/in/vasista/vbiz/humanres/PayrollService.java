@@ -2445,7 +2445,7 @@ public class PayrollService {
 	                    }else{
 	                    	payHeadPriceActions = EntityUtil.filterByDate(payHeadPriceActions,timePeriodStart);
 	                    }
-	                   
+		                   
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
 	                        // yeah, finally here, perform the action, ie, modify the amount
 	     	                    priceInfoDescription.append(condsDescription.toString());
@@ -2502,7 +2502,6 @@ public class PayrollService {
 	                       } 
                       
 	                    }
-	                    
 	                    //calcResults.put("amount", modifyAmount.setScale(0, BigDecimal.ROUND_HALF_UP));
 	                    calcResults.put("amount", modifyAmount);
 	                    priceInfos.add(priceInfoDescription.toString());
@@ -2854,6 +2853,7 @@ public class PayrollService {
 	        String employeeId = (String) context.get("employeeId");
 	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 	        Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+	        Timestamp basicSalDate=(Timestamp)context.get("basicSalDate");	        
 	        Locale locale = (Locale) context.get("locale");
 	        Map<String, Double> variables = FastMap.newInstance();
 	        try{
@@ -2876,7 +2876,11 @@ public class PayrollService {
 			    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 				condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	        	List<GenericValue> payRollRateAmounts = delegator.findList("RateAmount", condition, null,null, null, false);
-	        	payRollRateAmounts = EntityUtil.filterByDate(payRollRateAmounts, timePeriodStart);
+	        	if(UtilValidate.isNotEmpty(basicSalDate)){
+	        		payRollRateAmounts = EntityUtil.filterByDate(payRollRateAmounts, basicSalDate);
+	        	}else{
+	        		payRollRateAmounts = EntityUtil.filterByDate(payRollRateAmounts, timePeriodStart);
+	        	}
 	        	for(GenericValue rateAmount : payRollRateAmounts){
 	        		if(UtilValidate.isNotEmpty(rateAmount.getDouble("rateAmount")))
 	        			variables.put(rateAmount.getString("rateTypeId"), rateAmount.getDouble("rateAmount"));
