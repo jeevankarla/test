@@ -40,7 +40,10 @@ try {
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-
+boolean isPurchaseInvoice = Boolean.FALSE;
+if(UtilValidate.isNotEmpty(parameters.isPurchaseInvoice)){
+	isPurchaseInvoice = Boolean.TRUE;
+}
 fromDateTime = UtilDateTime.getDayStart(fromDateTime);
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
@@ -95,7 +98,11 @@ vatMap=[:];
 		invoiceMap = [:];
 		if(UtilValidate.isNotEmpty(partyIds)){
 			invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
-			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+			if(UtilValidate.isNotEmpty(parameters.isPurchaseInvoice)){
+				salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd, isPurchaseInvoice: isPurchaseInvoice]);
+			}else{
+				salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+			}
 			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
 				if(UtilValidate.isNotEmpty(invoiceTotals)){
