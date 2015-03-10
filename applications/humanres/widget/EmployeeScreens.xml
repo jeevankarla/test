@@ -807,4 +807,36 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="cashEncashmentReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cash Encashment Report"/>
+                <set field="headerItem" value="cashEncashmentReport"/>
+				<set field="tabButtonItem" value="EmployeeProfile" />
+				<set field="tabButtonItem2" value="cashEncashmentReport" />
+				<entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>		
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    	<section>
+		                    <widgets>                       
+	                               <section>
+	                               		 <widgets>
+			                                 <platform-specific>
+			                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/cashEncashment.ftl"/></html>
+			                                 </platform-specific>
+			                             </widgets>
+	                               </section>
+		                    </widgets>                    
+		            	</section>				                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
