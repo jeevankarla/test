@@ -131,6 +131,44 @@
                 grid.showTopPanel();
         }
 
+		function getGroup(overDueDays) {
+			if (overDueDays <= 30) {
+				return 1;
+			}
+			else if (overDueDays <= 90) {
+				return 2;
+			}
+			else if (overDueDays <= 180) {
+				return 3;
+			}
+			else if (overDueDays <= 360) {
+				return 4;
+			}
+			else {
+				return 5;
+			}
+		}
+		
+		function getGroupLabel(group) {
+			if (group == 1) {
+				return "0 -30";
+			}
+			else if (group == 2) {
+				return "30 - 90";
+			}
+			else if (group == 3) {
+				return "90 -180";
+			}
+			else if (group == 4) {
+				return "180 - 360";
+			}
+			else if (group == 5) {
+				return "> 360";
+			}		
+			else {
+				return "Unknown";
+			}
+		}
 
         $(".grid-header .ui-icon")
             .addClass("ui-state-default ui-corner-all")
@@ -212,7 +250,7 @@
 			dataView.setItems(data);
             dataView.groupBy(
                 function (row) {
-                	return parseInt(row["overDue"]/30) + 1;
+                	return getGroup(row["overDue"]);
                 },
                 function (g) {
                 	var rows = g.rows;
@@ -223,11 +261,11 @@
                 		currencySymbol = rows[i]["currencySymbol"];
                 	}
                 	total = total.toFixed(2);
-                    return "<span style='color:red'>Over Due:  " + (g.value - 1) * 30 + " - " + g.value*30 + " days  [Invoices=" + g.count + "; Total Outstanding=" + currencySymbol + total + "]</span>";
+                    return "<span style='color:red'>Over Due:  " + getGroupLabel(g.value) + " days  [Invoices=" + g.count + "; Total Outstanding=" + currencySymbol + total + "]</span>";
                 },
                 function (a, b) {
                     //return a.value - b.value;
-                    return (parseInt(a.value/30) == parseInt(b.value/30))
+                    return (getGroup(a.value) == getGroup(b.value))
                 }
             );
 			dataView.endUpdate();
