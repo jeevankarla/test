@@ -152,8 +152,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 	orderTerms = [:];
 	List<GenericValue> terms = [];
+	 if(UtilValidate.isNotEmpty(quoteNo.quoteId)){
+	terms = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteNo.quoteId), null, null, null, false);
+	  }
+	if(UtilValidate.isEmpty(terms)){
 	terms = delegator.findList("OrderTerm", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-	/*if(quoteIds && !terms){
+		}
+			/*if(quoteIds && !terms){
 		String quoteId = quoteIds.get(0);
 		terms = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
 	}
@@ -235,6 +240,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		else{
 			newObj.put("bedPercent", 0);
 		}
+//		newObj.put("bedPercent", eachItem.bedPercent);
 		newObj.put("cstPercent", eachItem.cstPercent);
 		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
