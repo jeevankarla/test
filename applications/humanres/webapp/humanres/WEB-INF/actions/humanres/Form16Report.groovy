@@ -1,24 +1,35 @@
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.util.EntityUtil;
+import java.util.*;
+import java.lang.*;
+import java.sql.*;
+import java.util.Calendar;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import org.ofbiz.base.util.UtilDateTime;
-import net.sf.json.JSONObject;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import java.text.ParseException;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.Delegator;
+import java.text.SimpleDateFormat;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityFindOptions;
+
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
-import java.util.Calendar;
-import org.ofbiz.base.util.UtilNumber;
 
 dctx = dispatcher.getDispatchContext();
-
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -80,7 +91,6 @@ if(UtilValidate.isNotEmpty(quarterPeriodIdsList)){
 	}
 }
 
-
 List currMonthKeyList = FastList.newInstance();
 tempCurrentDate =  UtilDateTime.getMonthStart(fromDateStart);
 while(tempCurrentDate<= (UtilDateTime.getMonthEnd(thruDateEnd,timeZone, locale))){
@@ -138,8 +148,29 @@ if(UtilValidate.isNotEmpty(parameters.employeeId)){
 	employeeIdsList = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 }
 
+sectionTypesList = [];
 form16InputTypes = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "FORM16_INPUT_TYPE") , null, null, null, false);
-sectionTypesList = EntityUtil.getFieldListFromEntityList(form16InputTypes, "enumId", true);
+if(UtilValidate.isNotEmpty(form16InputTypes)){
+	sectionTypesList = EntityUtil.getFieldListFromEntityList(form16InputTypes, "enumId", true);
+}
+
+payrollTypeIdsList = [:];
+payrollTypesList = delegator.findList("PayrollType", null , null, null, null, false );
+if(UtilValidate.isNotEmpty(payrollTypesList)){
+	payrollTypeIdsList = EntityUtil.getFieldListFromEntityList(payrollTypesList, "payrollTypeId", true);
+	periodTypeIdsList = EntityUtil.getFieldListFromEntityList(payrollTypesList, "payrollTypeId", true);
+}
+
+supplyPayrollIdsMap = [:];
+if(UtilValidate.isNotEmpty(payrollTypeIdsList)){
+	payrollTypeIdsList.each { payrollTypeId ->
+		supplyPayrollTypeIdDetails = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId",payrollTypeId), false);
+		if(UtilValidate.isNotEmpty(supplyPayrollTypeIdDetails)){
+			periodTypeId = supplyPayrollTypeIdDetails.get("periodTypeId");
+			supplyPayrollIdsMap.put(payrollTypeId, periodTypeId);
+		}
+	}
+}
 
 finalEmployeeMap = [:];
 employeeSectionMap = [:];
@@ -159,18 +190,23 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		income= 0;
 		totalIncome = 0;
 		tax = 0;
+		employeeName = "";
 		employeeDetailsMap = [:];
 		personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",employee), false);
-		firstName = personDetails.get("firstName");
-		lastName = personDetails.get("lastName");
-		employeeName = firstName +" "+ lastName;
+		if(UtilValidate.isNotEmpty(personDetails)){
+			firstName = personDetails.get("firstName");
+			lastName = personDetails.get("lastName");
+			employeeName = firstName +" "+ lastName;
+		}
 		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employee]));
-		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
-		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
-			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
-			if (emplPositionType != null) {
-				employeePosition = emplPositionType.getString("description");
-				employeeDetailsMap.put("employeePosition",employeePosition);
+		if(UtilValidate.isNotEmpty(emplPositionAndFulfillments)){
+			emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
+			if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
+				emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
+				if(UtilValidate.isNotEmpty(emplPositionType)){
+					employeePosition = emplPositionType.getString("description");
+					employeeDetailsMap.put("employeePosition",employeePosition);
+				}
 			}
 		}
 		companyDetails = delegator.findOne("PartyIdentification", [partyId : parameters.partyIdFrom, partyIdentificationTypeId : "PAN_NUMBER"], false);
@@ -188,6 +224,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			panNumberOfEmployee = partyIdentificationDetails.get("idValue");
 			employeeDetailsMap.put("panNumberOfEmployee",panNumberOfEmployee);
 		}
+		
 		subSequenceYearStart=UtilDateTime.addDaysToTimestamp(thruDateEnd, 1);
 		date = UtilDateTime.toDateString(subSequenceYearStart);
 		List conditionList=[];
@@ -210,21 +247,71 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			employeeDetailsMap.put("subSequentThruDate",subSequenceYearEnd);
 		}
 		supplyPayrollTotalEarnings = 0;
-		payrollTypesList = delegator.findList("PayrollType", null , null, null, null, false );
-		payrollTypeIdsList = EntityUtil.getFieldListFromEntityList(payrollTypesList, "payrollTypeId", true);
-		supplyPayrollTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employee,"fromDate",fromDateStart,"thruDate",thruDateEnd,"payrollTypesList",payrollTypeIdsList,"userLogin",userLogin)).get("periodTotalsForParty");
-		if(UtilValidate.isNotEmpty(supplyPayrollTotals)){
-			Iterator supplyPayrollTotalsIter = supplyPayrollTotals.entrySet().iterator();
-			while(supplyPayrollTotalsIter.hasNext()){
-				Map.Entry supplyPayrollTotalsIterEntry = supplyPayrollTotalsIter.next();
-				if(supplyPayrollTotalsIterEntry.getKey() == "customTimePeriodTotals"){
-					if(UtilValidate.isNotEmpty(supplyPayrollTotalsIterEntry.getValue())){
-						supplyPayrollTotalEarnings = supplyPayrollTotalsIterEntry.getValue().get("grossBenefitAmt");
-						professionalTax = supplyPayrollTotalsIterEntry.getValue().get("PAYROL_DD_PR_TAX");
+		dasupplyPayrollEarnings = 0;
+		totalSupplyPT = 0;
+		totalSupplyPF = 0;
+		if(UtilValidate.isNotEmpty(supplyPayrollIdsMap)){
+			Iterator supplyPayrollIdsMapIter = supplyPayrollIdsMap.entrySet().iterator();
+			while(supplyPayrollIdsMapIter.hasNext()){
+				Map.Entry supplyPayrollIdsMapIterEntry = supplyPayrollIdsMapIter.next();
+				payrollTypeId = supplyPayrollIdsMapIterEntry.getKey();
+				periodTypeId = supplyPayrollIdsMapIterEntry.getValue();
+				InputMap = [:];
+				InputMap.put("partyId", employee);
+				InputMap.put("fromDate", fromDateStart);
+				InputMap.put("thruDate", thruDateEnd);
+				InputMap.put("periodTypeId", periodTypeId);
+				InputMap.put("billingTypeId", payrollTypeId);
+				InputMap.put("userLogin", userLogin);
+				totalgrossBenefitAmt = 0;
+				supplyPayrollTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,InputMap).get("supplyPeriodTotalsForParty");
+				if(UtilValidate.isNotEmpty(supplyPayrollTotals)){
+					Iterator supplyPayrollTotalsIter = supplyPayrollTotals.entrySet().iterator();
+					while(supplyPayrollTotalsIter.hasNext()){
+						Map.Entry supplyPayrollTotalsIterEntry = supplyPayrollTotalsIter.next();
+						if(supplyPayrollTotalsIterEntry.getKey() != "customTimePeriodTotals"){
+							Map suppplyEachPeriodTotals = supplyPayrollTotalsIterEntry.getValue();
+							if(UtilValidate.isNotEmpty(suppplyEachPeriodTotals)){
+								Iterator suppplyEachPeriodTotalsIter = suppplyEachPeriodTotals.entrySet().iterator();
+								while(suppplyEachPeriodTotalsIter.hasNext()){
+									Map.Entry suppplyEachPeriodTotalsIterEntry = suppplyEachPeriodTotalsIter.next();
+									if(UtilValidate.isNotEmpty(suppplyEachPeriodTotalsIterEntry.getValue())){
+										if(!(suppplyEachPeriodTotalsIterEntry.getKey()).equals("periodTotals")){
+											grossBenefitAmt = suppplyEachPeriodTotalsIterEntry.getValue().get("grossBenefitAmt");
+											if(UtilValidate.isNotEmpty(grossBenefitAmt)){
+												totalgrossBenefitAmt = totalgrossBenefitAmt + grossBenefitAmt;
+											}
+											if(payrollTypeId.equals("SP_DA_ARREARS")){
+												daArrearsAmount = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_BEN_DA");
+												if(UtilValidate.isNotEmpty(daArrearsAmount)){
+													dasupplyPayrollEarnings = dasupplyPayrollEarnings + daArrearsAmount;
+												}
+											}
+											supplyprofessionalTax = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_DD_EMP_PR");
+											if(UtilValidate.isNotEmpty(supplyprofessionalTax)){
+												totalSupplyPT = totalSupplyPT + supplyprofessionalTax;
+											}
+											supplyProviduntFund = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_DD_PF");
+											if(UtilValidate.isNotEmpty(supplyProviduntFund)){
+												totalSupplyPF = totalSupplyPF + supplyProviduntFund;
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
+				supplyPayrollTotalEarnings = supplyPayrollTotalEarnings + totalgrossBenefitAmt;
 			}
 		}
+		GSLISAmount = 0;
+		providuntFund = 0;
+		totalTaxDeducted = 0;
+		vpf = 0;
+		licAmount = 0;
+		daAmount =0;
+		sec80CDedAmount =0;
 		customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employee,"fromDate",fromDateStart,"thruDate",thruDateEnd,"userLogin",userLogin)).get("periodTotalsForParty");
 		if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
 			Iterator customTimePeriodIter = customTimePeriodTotals.entrySet().iterator();
@@ -236,22 +323,62 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						basic = customTimePeriodEntry.getValue().get("PAYROL_BEN_SALARY");
 						professionalTax = customTimePeriodEntry.getValue().get("PAYROL_DD_PR_TAX");
 						actualHRA = customTimePeriodEntry.getValue().get("PAYROL_BEN_HRA");
+						GSLISAmount = customTimePeriodEntry.getValue().get("PAYROL_DD_GR_SAVG");
+						providuntFund = customTimePeriodEntry.getValue().get("PAYROL_DD_EMP_PR");
+						vpf = customTimePeriodEntry.getValue().get("PAYROL_DD_VLNT_PR");
+						lic = customTimePeriodEntry.getValue().get("PAYROL_DD_LIFE_IN");
+						licKmf = customTimePeriodEntry.getValue().get("PAYROL_DD_LIC_KMF");
+						daAmount = customTimePeriodEntry.getValue().get("PAYROL_BEN_DA");
+						totalTaxDeducted = customTimePeriodEntry.getValue().get("PAYROL_DD_INC_TAX");
+						if(UtilValidate.isNotEmpty(lic)){
+							licAmount = licAmount - lic;
+						}
+						if(UtilValidate.isNotEmpty(licKmf)){
+							licAmount = licAmount - licKmf;
+						}
+						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+							if(UtilValidate.isNotEmpty(GSLISAmount)){
+								sec80CDedAmount = sec80CDedAmount - GSLISAmount;
+							}
+							if(UtilValidate.isNotEmpty(providuntFund)){
+								sec80CDedAmount = sec80CDedAmount - providuntFund;
+							}
+							if(UtilValidate.isNotEmpty(vpf)){
+								sec80CDedAmount = sec80CDedAmount - vpf;
+							}
+							if(UtilValidate.isNotEmpty(totalSupplyPF)){
+								sec80CDedAmount = sec80CDedAmount - totalSupplyPF;
+							}
+							if(UtilValidate.isNotEmpty(totalSupplyPT)){
+								sec80CDedAmount = sec80CDedAmount - totalSupplyPT;
+							}
+							if(licAmount != 0){
+								sec80CDedAmount = sec80CDedAmount + licAmount;
+							}
+						}
 						if(totalEarnings != 0){
 							totalEarnings = totalEarnings + supplyPayrollTotalEarnings;
 							employeeDetailsMap.put("totalEarnings",totalEarnings);
 						}
 						if(professionalTax != 0){
 							employeeDetailsMap.put("professionalTax",professionalTax);
-							aggregate = professionalTax;
+							if(UtilValidate.isNotEmpty(professionalTax)){
+								aggregate = professionalTax;
+							}
 						}
 						if(basic != 0){
 							employeeSalary = employeeSalary + basic;
+							if(UtilValidate.isNotEmpty(dasupplyPayrollEarnings)){
+								employeeSalary = employeeSalary + dasupplyPayrollEarnings;
+							}
+							if(UtilValidate.isNotEmpty(daAmount)){
+								employeeSalary = employeeSalary + daAmount;
+							}
 						}
 					}
 				}
 			}
 		}
-		
 		List addressConditionList=[];
 		addressConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee));
 		addressConditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
@@ -283,13 +410,78 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						grossAmount = section.get("grossAmount");
 						qualifyingAmount = section.get("qualifyingAmount");
 						deductableAmount = section.get("deductableAmount");
+						if(UtilValidate.isEmpty(grossAmount)){
+							grossAmount = 0;
+						}
+						if(UtilValidate.isEmpty(qualifyingAmount)){
+							qualifyingAmount = 0;
+						}
+						if(UtilValidate.isEmpty(deductableAmount)){
+							deductableAmount = 0;
+						}
+						if(sectionId.equals("SECTION_80C")){
+							if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+								if(UtilValidate.isNotEmpty(deductableAmount)){
+									sec80CDedAmount = sec80CDedAmount + deductableAmount;
+								}
+							}
+						}
+						subSectionDetailsList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, sectionId) , null, null, null, false);
+						if(UtilValidate.isNotEmpty(subSectionDetailsList)){
+							subSectionDetailsList.each { subSection ->
+								subSectionId = subSection.get("enumId");
+								List employeeSectionList1=[];
+								employeeSectionList1.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, employee));
+								employeeSectionList1.add(EntityCondition.makeCondition("sectionTypeId", EntityOperator.EQUALS, subSectionId));
+								employeeSectionList1.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
+								sectionCondition1=EntityCondition.makeCondition(employeeSectionList1,EntityOperator.AND);
+								subSectionAmountList = delegator.findList("EmployeeForm16Detail", sectionCondition1 , null, null, null, false );
+								if(UtilValidate.isNotEmpty(subSectionAmountList)){
+									subSectionAmountList = EntityUtil.getFirst(subSectionAmountList);
+									subGrossAmount = subSectionAmountList.get("grossAmount");
+									subQualifyingAmount = subSectionAmountList.get("qualifyingAmount");
+									subDeductableAmount = subSectionAmountList.get("deductableAmount");
+									if(UtilValidate.isNotEmpty(subGrossAmount)){
+										grossAmount = grossAmount + subGrossAmount;
+									}
+									if(UtilValidate.isNotEmpty(subQualifyingAmount)){
+										qualifyingAmount = qualifyingAmount + subQualifyingAmount;
+									}
+									if(UtilValidate.isNotEmpty(subDeductableAmount)){
+										sec80CDedAmount = sec80CDedAmount + subDeductableAmount;
+									}
+									subSectionDetailsMap = [:];
+									subSectionDetailsMap.put("grossAmount",subGrossAmount);
+									subSectionDetailsMap.put("qualifyingAmount",subQualifyingAmount);
+									subSectionDetailsMap.put("deductableAmount",subDeductableAmount);
+									sectionMap.put(subSectionId,subSectionDetailsMap);
+								}
+							}
+						}
 						if(sectionId.equals("RENT_PAID")){
-							rentPaid = deductableAmount;
+							rentPaid = section.get("deductableAmount");
 						}else{
-							totalDeductableAmount = totalDeductableAmount + deductableAmount;
 							sectionDetailsMap.put("grossAmount",grossAmount);
 							sectionDetailsMap.put("qualifyingAmount",qualifyingAmount);
-							sectionDetailsMap.put("deductableAmount",deductableAmount);
+							if(sectionId.equals("SECTION_80C")){
+								if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+									if(sec80CDedAmount > 150000){
+										totalDeductableAmount = totalDeductableAmount + 150000;
+									}else{
+										totalDeductableAmount = totalDeductableAmount + sec80CDedAmount;
+									}
+								}
+								sectionDetailsMap.put("deductableAmount",sec80CDedAmount);
+							}else{
+								if(sectionId.equals("INTEREST_HBA_24B")){
+									
+								}else{
+									if(UtilValidate.isNotEmpty(deductableAmount)){
+										totalDeductableAmount = totalDeductableAmount + deductableAmount;
+									}
+								}
+								sectionDetailsMap.put("deductableAmount",deductableAmount);
+							}
 							sectionMap.put(sectionId,sectionDetailsMap);
 						}
 					}
@@ -299,9 +491,24 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					deductableAmount =0;
 					sectionDetailsMap.put("grossAmount",grossAmount);
 					sectionDetailsMap.put("qualifyingAmount",qualifyingAmount);
-					sectionDetailsMap.put("deductableAmount",deductableAmount);
+					if(sectionType.equals("SECTION_80C")){
+						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+							if(sec80CDedAmount > 150000){
+								totalDeductableAmount = totalDeductableAmount + 150000;
+							}else{
+								totalDeductableAmount = totalDeductableAmount + sec80CDedAmount;
+							}
+						}
+						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+							sectionDetailsMap.put("deductableAmount",sec80CDedAmount);
+						}else{
+							sec80CDedAmount = 0;
+							sectionDetailsMap.put("deductableAmount",sec80CDedAmount);
+						}
+					}else{
+						sectionDetailsMap.put("deductableAmount",deductableAmount);
+					}
 					sectionMap.put(sectionType,sectionDetailsMap);
-					
 				}
 			}
 		}
@@ -328,8 +535,10 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					monthlyTaxList = delegator.findList("PayrollHeaderAndHeaderItem", headerCondition , null, null, null, false );
 					if(UtilValidate.isNotEmpty(monthlyTaxList)){
 						monthlyTaxList = EntityUtil.getFirst(monthlyTaxList);
-						amount = monthlyTaxList.get("amount");
-						totalAmount = totalAmount - amount;
+						if(UtilValidate.isNotEmpty(monthlyTaxList)){
+							amount = monthlyTaxList.get("amount");
+							totalAmount = totalAmount - amount;
+						}
 					}
 				}
 				itertn = itertn + 1;
@@ -341,7 +550,9 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			employeewiseQuarterlyTaxMap.put(employee,quarterlyTaxMap);
 		}
 		totalConveyanceTaxableAmount = 0;
+		totalConvAmount = 0;
 		monthWiseTaxMap = [:];
+		conveyAlw =0;
 		if(UtilValidate.isNotEmpty(currMonthKeyList)){
 			currMonthKeyList.each { currMonth ->
 				monthWiseDetailsMap = [:];
@@ -369,12 +580,17 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					monthlyIncomeTaxList.each { eachMonth ->
 						if((eachMonth.get("payrollHeaderItemTypeId")).equals("PAYROL_DD_INC_TAX")){
 							taxAmount = eachMonth.get("amount");
-							monthWiseDetailsMap.put("taxAmount",taxAmount);
+							if(UtilValidate.isNotEmpty(taxAmount)){
+								monthWiseDetailsMap.put("taxAmount",taxAmount);
+							}
 						}else{
 							conveyanceAlw = eachMonth.get("amount");
-							if(conveyanceAlw > 800){
-								taxableAmount = conveyanceAlw - 800;
-								totalConveyanceTaxableAmount = totalConveyanceTaxableAmount + taxableAmount;
+							if(UtilValidate.isNotEmpty(conveyanceAlw)){
+								if(conveyanceAlw > 800){
+									taxableAmount = conveyanceAlw - 800;
+									totalConvAmount = totalConvAmount + conveyanceAlw;
+									totalConveyanceTaxableAmount = totalConveyanceTaxableAmount + taxableAmount;
+								}
 							}
 						}
 					}
@@ -382,7 +598,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 				monthWiseTaxMap.put(currMonth,monthWiseDetailsMap);
 			}
 		}
-		DAarrearsSupplyPayrollTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employee,"fromDate",fromDateStart,"thruDate",thruDateEnd,"payrollTypesList",UtilMisc.toList("SP_DA_ARREARS"),"userLogin",userLogin)).get("periodTotalsForParty");
+		/*DAarrearsSupplyPayrollTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employee,"fromDate",fromDateStart,"thruDate",thruDateEnd,"payrollTypesList",UtilMisc.toList("SP_DA_ARREARS"),"userLogin",userLogin)).get("periodTotalsForParty");
 		if(UtilValidate.isNotEmpty(DAarrearsSupplyPayrollTotals)){
 			Iterator daSupplyPayrollTotalsIter = DAarrearsSupplyPayrollTotals.entrySet().iterator();
 			while(daSupplyPayrollTotalsIter.hasNext()){
@@ -390,47 +606,63 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 				if(daSupplyPayrollTotalsIterEntry.getKey() == "customTimePeriodTotals"){
 					if(UtilValidate.isNotEmpty(daSupplyPayrollTotalsIterEntry.getValue())){
 						dasupplyPayrollEarnings = daSupplyPayrollTotalsIterEntry.getValue().get("grossBenefitAmt");
+						Debug.log("employeeSalary========22======="+employeeSalary);
 						if(UtilValidate.isNotEmpty(dasupplyPayrollEarnings)){
 							employeeSalary = employeeSalary + dasupplyPayrollEarnings;
 						}
 					}
 				}
 			}
-		}
+		}*/
+		conveyAlw = totalConvAmount - totalConveyanceTaxableAmount;
 		if(UtilValidate.isNotEmpty(monthWiseTaxMap)){
 			monthWiseTaxDepositedMap.put(employee,monthWiseTaxMap);
 		}
-		
-		if(employeeSalary != 0){
-			salary10Percent = employeeSalary * (0.1);
-			salary40Percent = employeeSalary * (0.4);
-			if(rentPaid > salary10Percent){
-				rentPaidExcess = rentPaid - salary10Percent;
+		if(UtilValidate.isNotEmpty(rentPaid)){
+			if(employeeSalary != 0){
+				salary10Percent = employeeSalary * (0.1);
+				salary40Percent = employeeSalary * (0.4);
+				if(rentPaid > salary10Percent){
+					if(UtilValidate.isNotEmpty(salary10Percent)){
+						rentPaidExcess = rentPaid - salary10Percent;
+					}
+				}
 			}
-		}
-		if(salary40Percent < actualHRA){
-			if(UtilValidate.isNotEmpty(salary40Percent)){
-				leastValue = salary40Percent;
+			if(salary40Percent < actualHRA){
+				if(UtilValidate.isNotEmpty(salary40Percent)){
+					leastValue = salary40Percent;
+				}
+			}else{
+				if(UtilValidate.isNotEmpty(actualHRA)){
+					leastValue = actualHRA;
+				}
+			}
+			if(leastValue < rentPaidExcess){
+				leastValue = leastValue;
+			}else{
+				if(UtilValidate.isNotEmpty(rentPaidExcess)){
+					leastValue = rentPaidExcess;
+				}
 			}
 		}else{
-			if(UtilValidate.isNotEmpty(actualHRA)){
-				leastValue = actualHRA;
-			}
+			leastValue = 0;
 		}
-		if(leastValue < rentPaidExcess){
-			leastValue = leastValue;
-		}else{
-			leastValue = rentPaidExcess;
-		}
-		if(leastValue != 0){
+		if(UtilValidate.isNotEmpty(leastValue)){
 			employeeDetailsMap.put("leastValue",leastValue);
 		}
-		totalExtentAlw = leastValue + totalConveyanceTaxableAmount;
+		if(UtilValidate.isNotEmpty(conveyAlw)){
+			totalExtentAlw = leastValue + conveyAlw;
+			employeeDetailsMap.put("totalExtentAlw",totalExtentAlw);
+		}
+		
 		balance = totalEarnings - totalExtentAlw;
 		if(UtilValidate.isNotEmpty(aggregate)){
 			income = balance + aggregate;
 		}
 		totalIncome = income - totalDeductableAmount;
+		if(totalIncome < 0){
+			totalIncome = 0;
+		}
 		BigDecimal totIncome = new BigDecimal(totalIncome);
 		employeeDetails = PayrollService.getEmployeePayrollCondParms(dctx,UtilMisc.toMap("employeeId",employee,"timePeriodStart",fromDateStart,"timePeriodEnd",thruDateEnd,"userLogin",userLogin));
 		if(UtilValidate.isNotEmpty(employeeDetails)){
@@ -450,14 +682,18 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			employeeTaxList = delegator.findList("TaxSlabs", taxSlabCondition , null, null, null, false );
 			if(UtilValidate.isNotEmpty(employeeTaxList)){
 				employeeTaxList = EntityUtil.getFirst(employeeTaxList);
-				taxPercentage = employeeTaxList.get("taxPercentage");
-				refundAmount = employeeTaxList.get("refundAmount");
-				if(taxPercentage != 0){
-					totalIncomeFrom = employeeTaxList.get("totalIncomeFrom");
-					excess = totalIncome - totalIncomeFrom;
-					tax = (taxPercentage/100)*excess;
-					if(refundAmount != 0){
-						tax = tax + refundAmount;
+				if(UtilValidate.isNotEmpty(employeeTaxList)){
+					taxPercentage = employeeTaxList.get("taxPercentage");
+					refundAmount = employeeTaxList.get("refundAmount");
+					if(taxPercentage != 0){
+						totalIncomeFrom = employeeTaxList.get("totalIncomeFrom");
+						if(UtilValidate.isNotEmpty(totalIncomeFrom)){
+							excess = totalIncome - totalIncomeFrom;
+							tax = (taxPercentage/100)*excess;
+						}
+						if(refundAmount != 0){
+							tax = tax + refundAmount;
+						}
 					}
 				}
 			}
@@ -469,28 +705,48 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			fatherName = percentagesDetails.get("fatherName");
 			designation = percentagesDetails.get("designation");
 			surchargePercentage = percentagesDetails.get("surchargePercentage");
-			surchargeAmount = (surchargePercentage/100)*tax;
+			surchargeAmount = 0;
+			educationalCessAmount = 0;
+			if(UtilValidate.isNotEmpty(surchargePercentage)){
+				if(totalIncome > 10000000){
+					surchargeAmount = (surchargePercentage/100)*tax;
+				}
+			}
 			educationalCessPercentage = percentagesDetails.get("educationalCessPercentage");
-			educationalCessAmount = (educationalCessPercentage/100)*tax;
+			if(UtilValidate.isNotEmpty(educationalCessPercentage)){
+				educationalCessAmount = (educationalCessPercentage/100)*tax;
+			}
 			taxPayable = taxPayable + surchargeAmount;
 			taxPayable = taxPayable + tax;
-			employeeDetailsMap.put("surchargeAmount",surchargeAmount);
-			employeeDetailsMap.put("educationalCessAmount",educationalCessAmount);
-			employeeDetailsMap.put("taxPayable",taxPayable);
+			BigDecimal surchargeAmt = new BigDecimal(surchargeAmount);
+			surchargeAmt=surchargeAmt.setScale(0, BigDecimal.ROUND_HALF_UP);
+			BigDecimal educationalCessAmt = new BigDecimal(educationalCessAmount);
+			educationalCessAmt=educationalCessAmt.setScale(0, BigDecimal.ROUND_HALF_UP);
+			BigDecimal taxPayableAmt = new BigDecimal(taxPayable);
+			taxPayableAmt=taxPayableAmt.setScale(0, BigDecimal.ROUND_HALF_UP);
+			employeeDetailsMap.put("surchargeAmount",surchargeAmt);
+			employeeDetailsMap.put("educationalCessAmount",educationalCessAmt);
+			employeeDetailsMap.put("taxPayable",taxPayableAmt);
 			employeeDetailsMap.put("signatoryName",signatoryName);
 			employeeDetailsMap.put("fatherName",fatherName);
 			employeeDetailsMap.put("designation",designation);
 		}
+		if(UtilValidate.isNotEmpty(totalTaxDeducted)){
+			BigDecimal totalTaxDeductedatSource = new BigDecimal(totalTaxDeducted);
+			totalTaxDeductedatSource = totalTaxDeductedatSource.setScale(0, BigDecimal.ROUND_HALF_UP);
+			employeeDetailsMap.put("totalTaxDeductedatSource",totalTaxDeductedatSource);
+		}
 		employeeDetailsMap.put("employeeName",employeeName);
-		employeeDetailsMap.put("totalExtentAlw",totalExtentAlw);
 		employeeDetailsMap.put("balance",balance);
 		employeeDetailsMap.put("aggregate",aggregate);
 		employeeDetailsMap.put("income",income);
 		employeeDetailsMap.put("totalDeductableAmount",totalDeductableAmount);
 		employeeDetailsMap.put("totalIncome",totalIncome);
-		employeeDetailsMap.put("tax",tax);
-		if(leastValue != 0){
-			employeeDetailsMap.put("totalConveyanceTaxableAmount",totalConveyanceTaxableAmount);
+		BigDecimal taxOnIncome = new BigDecimal(tax);
+		taxOnIncome=taxOnIncome.setScale(0, BigDecimal.ROUND_HALF_UP);
+		employeeDetailsMap.put("tax",taxOnIncome);
+		if(conveyAlw != 0){
+			employeeDetailsMap.put("totalConveyanceTaxableAmount",conveyAlw);
 		}
 		if(UtilValidate.isNotEmpty(employeeDetailsMap)){
 			finalEmployeeMap.put(employee,employeeDetailsMap);
