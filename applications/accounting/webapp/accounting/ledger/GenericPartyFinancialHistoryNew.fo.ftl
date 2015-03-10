@@ -186,8 +186,54 @@ under the License.
                         </fo:table-row>
                          </#list>
                         </#if>
-                        
+                       
                         </#list>
+					 <#if finalpartyDayWiseFinHistryMap?has_content>
+						<fo:table-row>
+		                    <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">===============FinAccountTransDetails============</fo:block>  
+				            </fo:table-cell>
+						</fo:table-row>
+						<#assign partyDayWiseFin = finalpartyDayWiseFinHistryMap.entrySet()>
+						<#list partyDayWiseFin as partyDayWiseFinTrans>
+						<fo:table-row>
+		                    <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Fin Account Id : ${partyDayWiseFinTrans.getKey()?if_exists}</fo:block>  
+				            	<fo:block   text-align="left"  ></fo:block>  
+				            </fo:table-cell>
+						</fo:table-row>	
+						<#assign partyDayWiseFinHistry = partyDayWiseFinTrans.getValue().entrySet()>
+						<#list partyDayWiseFinHistry as finTransList>
+							<#assign finTransValues = finTransList.getValue()>
+							 <#list finTransValues as finTrans>	
+                        	<fo:table-row>
+		                    <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${finTransList.getKey()?if_exists}</fo:block>  
+				            </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block   text-align="left"  >${finTrans.description?if_exists}</fo:block>  
+				            </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${finTrans.instrumentNo?if_exists}</fo:block>  
+				            </fo:table-cell>
+				            <#-->
+				            <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("vchrCode")?if_exists}</fo:block>  
+				            </fo:table-cell> -->
+		                    <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${finTrans.paymentId?if_exists}</fo:block>  
+				            </fo:table-cell>
+				              <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${finTrans.debitValue?if_exists}</fo:block>  
+		                    </fo:table-cell>
+		                     <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${finTrans.creditValue?if_exists}</fo:block>  
+		                    </fo:table-cell>
+                        </fo:table-row>
+                        		</#list>
+							</#list>
+ 						</#list>
+                        </#if>
                         <#--
                         <fo:table-row>
 	                    	<fo:table-cell>
