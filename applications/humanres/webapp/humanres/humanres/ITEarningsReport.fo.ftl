@@ -227,14 +227,14 @@ under the License.
 			                    	<#assign DAAR = DAARDAAmount2+DAARLEAmount2>
 			                    	
 			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic>
-			                    	<#assign totalDA = totalDA + LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance+DAARDAAmount2>
+			                    	<#assign totalDA = totalDA + DADAAmount+LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance>
 			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance>
 			                    	<#assign totalConvey = totalConvey + convey>
 			                    	<#assign totalCityComp = totalCityComp + LECCAmount+TECCAmount+SBECCAmount+cityComp>
 			                    	<#assign totalBonus = totalBonus + bonus+TEBonusEX>
 			                    	<#assign totalDADAAmount = totalDADAAmount + DADAAmount>
 			                    	<#assign totalOthers = totalOthers + others+LESpecPay+TEOthers+SBEOthers>
-			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DAAR>
+			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DADAAmount>
 			                    	
 			                    	
        							<fo:table-row>
@@ -371,6 +371,40 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
+							    <#if (DADAAmount?has_content && DADAAmount!=0)>
+							    	<fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Arrears:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DADAAmount?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DADAAmount?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
 							    </#list>
 							    <#if (DAARDAAmount1?has_content && DAARDAAmount1!=0)>
 							    	<fo:table-row>
@@ -445,6 +479,8 @@ under the License.
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						</fo:table-row>
+          						<#assign totalDA = totalDA+DAARDAAmount1+DAARLEAmount1>
+          						<#assign totalBenefits = totalBenefits + DAARDAAmount1+DAARLEAmount1>
 							    <fo:table-row font-weight= "bold">
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Grand Total</fo:block>  

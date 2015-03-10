@@ -157,7 +157,7 @@ under the License.
 			                    	
 			                    	<#assign SBEDeductions = SBEEmpProFund+SBEInsurance+othersDed>
 			                    	
-			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund+DAAREmpProFund>
+			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund>
 			                    	<#assign totalVpf = totalVpf + vpf>
 			                    	<#assign totalGsls = totalGsls + gsls+SBEGrSav>
 			                    	<#assign totalLicp = totalLicp + licp+SBEInsurance>
@@ -166,7 +166,7 @@ under the License.
 			                    	<#assign totalFRFNSC = totalFRFNSC + fRFNSC>
 			                    	<#assign totalPPFGSAS = totalPPFGSAS + pPFGSAS>
 			                    	<#assign totalExterLoan = totalExterLoan + exterLoan>
-			                    	<#assign totalDeductions = totalDeductions + deductions+DAAREmpProFund+SBEDeductions+TEEmpProFund>
+			                    	<#assign totalDeductions = totalDeductions + deductions+SBEDeductions+TEEmpProFund>
 			                    	
 			                    	<#assign totalOthersDed = totalOthersDed + othersDed>
 			                    	
@@ -336,6 +336,9 @@ under the License.
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						</fo:table-row>
+          						<#assign totalEpf = totalEpf + DAAREmpProFund1>
+          						<#assign totalDeductions = totalDeductions + DAAREmpProFund1>
+          						
 							    <fo:table-row font-weight= "bold">
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Grand Total</fo:block>  
