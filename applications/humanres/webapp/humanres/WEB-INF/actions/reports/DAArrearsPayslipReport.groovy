@@ -101,78 +101,72 @@ employmentsList.each{ employeeId ->
 					GenericValue payrollItems1 = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter1);
 					basicAmount = (BigDecimal)payrollItems1.get("amount");
 					if(UtilValidate.isNotEmpty(basicAmount)){
-						List emplCondList = UtilMisc.toList(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
-						emplCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, ctpThruDate));
-						emplCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-					    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, ctpFromDate)));
-						EntityCondition emplCond = EntityCondition.makeCondition(emplCondList, EntityOperator.AND);
-						List<GenericValue> employments = delegator.findList("Employment", emplCond, null, null, null, false);
-						if(UtilValidate.isNotEmpty(employments)){
-							  GenericValue employment = EntityUtil.getFirst(employments);
-							  if(UtilValidate.isNotEmpty(employment)){
-								  String activeGeoId = (String) employment.get("locationGeoId");
-								  daArrearsData = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
-								  if(UtilValidate.isNotEmpty(daArrearsData[0].geoId)){
-									  geoId = daArrearsData[0].geoId;
-									  if(geoId.equals(activeGeoId)){
-										  String rateTypeId = null;
-										  if(UtilValidate.isNotEmpty(activeGeoId)){
-											  if(activeGeoId.equals("BAGALKOT")){
-												  rateTypeId = "DA_BAGALKOT_RATE";
-											  }
-											  if(activeGeoId.equals("BELL")){
-												  rateTypeId = "DA_BELL_RATE";
-											  }
-											  if(activeGeoId.equals("BGLR")){
-												  rateTypeId = "DA_BGLR_RATE";
-											  }
-											  if(activeGeoId.equals("DRWD")){
-												  rateTypeId = "DA_DRWD_RATE";
-											  }
-											  if(activeGeoId.equals("GULB")){
-												  rateTypeId = "DA_GULB_RATE";
-											  }
-											  if(UtilValidate.isNotEmpty(rateTypeId)){
-												  List rateAmountCondList = FastList.newInstance();
-												  rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
-												  rateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate))));
-												  rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate)))));
-												  EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
-												  List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
-												  if(UtilValidate.isNotEmpty(rateAmountList)){
-													  GenericValue rateAmountGen = EntityUtil.getFirst(rateAmountList);
-													  rateAmount = (BigDecimal) rateAmountGen.get("rateAmount");
-													  if(UtilValidate.isNotEmpty(rateAmount)){
-														  newDAAmount = (rateAmount*basicAmount);
-														  if(UtilValidate.isNotEmpty(newDAAmount)){
-															  netDAAmount  = newDAAmount - oldDAAmount;
-														  }
-														  tempMap = [:];
-														  tempMap.put("Basic",basicAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  tempMap.put("oldDA",oldDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  tempMap.put("newDA",newDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  tempMap.put("netDA",netDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  fromDateStart = basicSalDate;
-														  thruDateEnd = UtilDateTime.getDayEnd(basicSalDate);
-														  BigDecimal EpfAmount = BigDecimal.ZERO;
-														  DAARPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDateStart,"thruDate",thruDateEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
-														  if(UtilValidate.isNotEmpty(DAARPeriodTotals)){
-															  Iterator DAARPeriodTotalsIter = DAARPeriodTotals.entrySet().iterator();
-															  while(DAARPeriodTotalsIter.hasNext()){
-																  Map.Entry DAAREntry = DAARPeriodTotalsIter.next();
-																  if(DAAREntry.getKey() != "customTimePeriodTotals"){
-																	  DAARTotals = DAAREntry.getValue().get("periodTotals");
-																	  EpfAmount = DAARTotals.get("PAYROL_DD_PF");
-																	  if(UtilValidate.isEmpty(EpfAmount)){
-																		  EpfAmount = 0;
-																	  }
-																	  tempMap.putAt("EpfAmount", -(EpfAmount.setScale(0,BigDecimal.ROUND_HALF_UP)));
-																  }
+						Map activeEmployeeDetails = PayrollService.getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",ctpFromDate,"timePeriodEnd" ,ctpThruDate ,"userLogin",userLogin));
+						if(UtilValidate.isNotEmpty(activeEmployeeDetails)){
+						String activeGeoId = (String)activeEmployeeDetails.get("geoId");
+						daArrearsData = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
+						  if(UtilValidate.isNotEmpty(daArrearsData[0].geoId)){
+							  geoId = daArrearsData[0].geoId;
+							  if(geoId.equals(activeGeoId)){
+								  String rateTypeId = null;
+								  if(UtilValidate.isNotEmpty(activeGeoId)){
+									  if(activeGeoId.equals("BAGALKOT")){
+										  rateTypeId = "DA_BAGALKOT_RATE";
+									  }
+									  if(activeGeoId.equals("BELL")){
+										  rateTypeId = "DA_BELL_RATE";
+									  }
+									  if(activeGeoId.equals("BGLR")){
+										  rateTypeId = "DA_BGLR_RATE";
+									  }
+									  if(activeGeoId.equals("DRWD")){
+										  rateTypeId = "DA_DRWD_RATE";
+									  }
+									  if(activeGeoId.equals("GULB")){
+										  rateTypeId = "DA_GULB_RATE";
+									  }
+									  if(UtilValidate.isNotEmpty(rateTypeId)){
+										  List rateAmountCondList = FastList.newInstance();
+										  rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
+										  rateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate))));
+										  rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate)))));
+										  EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
+										  List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
+										  if(UtilValidate.isNotEmpty(rateAmountList)){
+											  GenericValue rateAmountGen = EntityUtil.getFirst(rateAmountList);
+											  rateAmount = (BigDecimal) rateAmountGen.get("rateAmount");
+											  if(UtilValidate.isNotEmpty(rateAmount)){
+												  newDAAmount = (rateAmount*basicAmount);
+												  if(UtilValidate.isNotEmpty(newDAAmount)){
+													  netDAAmount  = newDAAmount - oldDAAmount;
+												  }
+												  tempMap = [:];
+												  tempMap.put("Basic",basicAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap.put("oldDA",oldDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap.put("newDA",newDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap.put("netDA",netDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  fromDateStart = basicSalDate;
+												  thruDateEnd = UtilDateTime.getDayEnd(basicSalDate);
+												  BigDecimal EpfAmount = BigDecimal.ZERO;
+												  if(UtilValidate.isNotEmpty(periodBillingIdParam)){
+													  List payHeadCondListEpf = FastList.newInstance();
+													  payHeadCondListEpf.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingIdParam));
+													  payHeadCondListEpf.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+													  payHeadCondListEpf.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_PF"));
+													  EntityCondition payHeadCondEpf = EntityCondition.makeCondition(payHeadCondListEpf,EntityOperator.AND);
+													  List<GenericValue> EpfPayHeadList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCondEpf, null, null, null, false);
+													  if(UtilValidate.isNotEmpty(EpfPayHeadList)){
+														  EpfHead = EntityUtil.getFirst(EpfPayHeadList);
+														  if(UtilValidate.isNotEmpty(EpfHead)){
+															  EpfAmount = EpfHead.amount;
+															  if(UtilValidate.isEmpty(EpfAmount)){
+																  EpfAmount = 0;
 															  }
 														  }
-														  if(UtilValidate.isNotEmpty(tempMap)){
-															  periodMap.putAt(ctpId, tempMap);
-														  }
+													  }
+													  tempMap.putAt("EpfAmount", -(EpfAmount.setScale(0,BigDecimal.ROUND_HALF_UP)));
+													  if(UtilValidate.isNotEmpty(tempMap)){
+														  periodMap.putAt(ctpId, tempMap);
 													  }
 												  }
 											  }
@@ -181,6 +175,7 @@ employmentsList.each{ employeeId ->
 								  }
 							  }
 						  }
+						}
 					}
 				}
 			}
@@ -233,62 +228,53 @@ employmentsList.each{ employeeId ->
 					GenericValue payrollItems3 = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter3);
 					basicAmount1 = (BigDecimal)payrollItems3.get("amount");
 					if(UtilValidate.isNotEmpty(basicAmount1)){
-						List emplCondList1 = UtilMisc.toList(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
-						emplCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, ctpThruDate1));
-						emplCondList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, ctpFromDate1)));
-						EntityCondition emplCond1 = EntityCondition.makeCondition(emplCondList1, EntityOperator.AND);
-						List<GenericValue> employments1 = delegator.findList("Employment", emplCond1, null, null, null, false);
-						if(UtilValidate.isNotEmpty(employments1)){
-							  GenericValue employment1 = EntityUtil.getFirst(employments1);
-							  if(UtilValidate.isNotEmpty(employment1)){
-								  String activeGeoId1 = (String) employment1.get("locationGeoId");
-								  daArrearsData1 = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
-								  if(UtilValidate.isNotEmpty(daArrearsData1[0].geoId)){
-									  geoId1 = daArrearsData1[0].geoId;
-									  if(geoId1.equals(activeGeoId1)){
-										  String rateTypeId1 = null;
-										  if(UtilValidate.isNotEmpty(activeGeoId1)){
-											  if(activeGeoId1.equals("BAGALKOT")){
-												  rateTypeId1 = "DA_BAGALKOT_RATE";
-											  }
-											  if(activeGeoId1.equals("BELL")){
-												  rateTypeId1 = "DA_BELL_RATE";
-											  }
-											  if(activeGeoId1.equals("BGLR")){
-												  rateTypeId1 = "DA_BGLR_RATE";
-											  }
-											  if(activeGeoId1.equals("DRWD")){
-												  rateTypeId1 = "DA_DRWD_RATE";
-											  }
-											  if(activeGeoId1.equals("GULB")){
-												  rateTypeId1 = "DA_GULB_RATE";
-											  }
-											  if(UtilValidate.isNotEmpty(rateTypeId1)){
-												  List rateAmountCondList1 = FastList.newInstance();
-												  rateAmountCondList1.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId1));
-												  rateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate))));
-												  rateAmountCondList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate)))));
-												  EntityCondition rateAmountCond1 = EntityCondition.makeCondition(rateAmountCondList1,EntityOperator.AND);
-												  List<GenericValue> rateAmountList1 = delegator.findList("RateAmount", rateAmountCond1,null, UtilMisc.toList("fromDate"), null, false);
-												  if(UtilValidate.isNotEmpty(rateAmountList1)){
-													  GenericValue rateAmountGen1 = EntityUtil.getFirst(rateAmountList1);
-													  rateAmount1 = (BigDecimal) rateAmountGen1.get("rateAmount");
-													  
-													  if(UtilValidate.isNotEmpty(rateAmount1)){
-														  newDAAmount1 = (rateAmount1*basicAmount1);
-														  if(UtilValidate.isNotEmpty(newDAAmount1 )){
-															  netDAAmount1  = newDAAmount1 - oldDAAmount1;
-														  }
-														  tempMap1 = [:];
-														  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  tempMap1.put("oldDA1",oldDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-														  if(UtilValidate.isNotEmpty(tempMap1)){
-															  leaveEncashMap.putAt(basicLEDate, tempMap1);
-														  }
-													  }
+						Map activeEmployeeDetails = PayrollService.getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",ctpFromDate1,"timePeriodEnd" ,ctpThruDate1 ,"userLogin",userLogin));
+						if(UtilValidate.isNotEmpty(activeEmployeeDetails)){
+						String activeGeoId1 = (String)activeEmployeeDetails.get("geoId");
+						daArrearsData1 = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
+						  if(UtilValidate.isNotEmpty(daArrearsData1[0].geoId)){
+							  geoId1 = daArrearsData1[0].geoId;
+							  if(geoId1.equals(activeGeoId1)){
+								  String rateTypeId1 = null;
+								  if(UtilValidate.isNotEmpty(activeGeoId1)){
+									  if(activeGeoId1.equals("BAGALKOT")){
+										  rateTypeId1 = "DA_BAGALKOT_RATE";
+									  }
+									  if(activeGeoId1.equals("BELL")){
+										  rateTypeId1 = "DA_BELL_RATE";
+									  }
+									  if(activeGeoId1.equals("BGLR")){
+										  rateTypeId1 = "DA_BGLR_RATE";
+									  }
+									  if(activeGeoId1.equals("DRWD")){
+										  rateTypeId1 = "DA_DRWD_RATE";
+									  }
+									  if(activeGeoId1.equals("GULB")){
+										  rateTypeId1 = "DA_GULB_RATE";
+									  }
+									  if(UtilValidate.isNotEmpty(rateTypeId1)){
+										  List rateAmountCondList1 = FastList.newInstance();
+										  rateAmountCondList1.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId1));
+										  rateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate))));
+										  rateAmountCondList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate)))));
+										  EntityCondition rateAmountCond1 = EntityCondition.makeCondition(rateAmountCondList1,EntityOperator.AND);
+										  List<GenericValue> rateAmountList1 = delegator.findList("RateAmount", rateAmountCond1,null, UtilMisc.toList("fromDate"), null, false);
+										  if(UtilValidate.isNotEmpty(rateAmountList1)){
+											  GenericValue rateAmountGen1 = EntityUtil.getFirst(rateAmountList1);
+											  rateAmount1 = (BigDecimal) rateAmountGen1.get("rateAmount");
+											  
+											  if(UtilValidate.isNotEmpty(rateAmount1)){
+												  newDAAmount1 = (rateAmount1*basicAmount1);
+												  if(UtilValidate.isNotEmpty(newDAAmount1 )){
+													  netDAAmount1  = newDAAmount1 - oldDAAmount1;
+												  }
+												  tempMap1 = [:];
+												  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap1.put("oldDA1",oldDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  if(UtilValidate.isNotEmpty(tempMap1)){
+													  leaveEncashMap.putAt(basicLEDate, tempMap1);
 												  }
 											  }
 										  }
@@ -296,6 +282,7 @@ employmentsList.each{ employeeId ->
 								  }
 							  }
 						  }
+					  }
 					}
 				}
 			}
