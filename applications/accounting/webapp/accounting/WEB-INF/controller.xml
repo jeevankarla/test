@@ -2032,7 +2032,42 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindInterUnitBankAccount"/>
     </request-map>
-    
+    <request-map uri="NonBankAccount.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="NonBankAccountCSV"/>    	
+    </request-map>
+    <request-map uri="DepositAccount.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="DepositAccountCSV"/>    	
+    </request-map>
+    <request-map uri="BankContraEntry.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="BankContraEntryCSV"/>    	
+    </request-map>
+    <request-map uri="IncomingAdvancesReceived.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="IncomingAdvancesReceivedCSV"/>    	
+    </request-map>
+    <request-map uri="IncomingAdvancesRefund.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="IncomingAdvancesReceivedCSV"/>    	
+    </request-map>
+    <request-map uri="OutgoingAdvancesPaid.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="IncomingAdvancesReceivedCSV"/>    	
+    </request-map>
+    <request-map uri="OutgoingAdvancesRefund.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="IncomingAdvancesReceivedCSV"/>    	
+    </request-map>
+   <request-map uri="TreasurerPayments.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="TreasurerPaymentsCSV"/>    	
+    </request-map>
+    <request-map uri="GroupPayment.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="GroupPaymentCSV"/>    	
+    </request-map>
     <request-map uri="FindDepositAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepositAccount"/>
@@ -4002,7 +4037,12 @@ under the License.
     <view-map name="ComparativeCashFlowStatementCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatementCsv" content-type="text/csv" encoding="none"/>
     <view-map name="FinAccountAltCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountAltCSV" content-type="text/csv" encoding="none"/>
     <view-map name="FinAccountAltPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountAltPDF" content-type="application/pdf" encoding="none"/>
-  
+  	<view-map name="NonBankAccountCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#NonBankAccountCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="DepositAccountCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#DepositAccountCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="BankContraEntryCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankContraEntryCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="IncomingAdvancesReceivedCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#IncomingAdvancesReceivedCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="TreasurerPaymentsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TreasurerPaymentsCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="GroupPaymentCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GroupPaymentCSV" content-type="text/csv" encoding="none"/>
     <!-- Assignment Mappings -->
     <view-map name="EditPartyFixedAssetAssignments" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditPartyFixedAssetAssignments"/>
 

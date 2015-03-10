@@ -157,6 +157,15 @@
 								<platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/DepositContraRefund.ftl"/></html>
                                 </platform-specific>
+                                <container style="button-bar">
+									<link target="DepositAccount.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="finAccountName" from-field="parameters.finAccountName"/>
+									<parameter param-name="finAccountTypeId" from-field="parameters.finAccountTypeId"/>
+									<parameter param-name="AccDate" from-field="parameters.AccDate"/>
+									<parameter param-name="ownerPartyId" from-field="parameters.ownerPartyId"/>
+									</link>
+								</container> 
 								<screenlet title="List Deposit Account">				
 									 <include-form name="ListDepositAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
@@ -268,6 +277,11 @@
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
+								<container style="button-bar">
+									<link target="NonBankAccount.csv" text="Export As CSV" style="buttontext create">
+										<parameter param-name="screenFlag" value="NON_BANKACCOUNT"/>	
+									</link>
+								</container>
 								<screenlet title="Non Bank Accounts List">				
 									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
@@ -304,6 +318,11 @@
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
+								<container style="button-bar">
+									<link target="NonBankAccount.csv" text="Export As CSV" style="buttontext create">	
+									<parameter param-name="screenFlag" value="INTERUNIT_ACCOUNT"/>
+									</link>
+								</container>
 								<screenlet title="Inter Unit Accounts List">				
 									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
@@ -845,6 +864,18 @@
                                         <include-form name="FindIncomingAdvancesReceived" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    	<container>
+                                    		<link target="IncomingAdvancesReceived.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+                                    		</link>
+                                    	</container>
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
@@ -939,6 +970,18 @@
                                         <include-form name="FindIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    <container>
+                                    		<link target="IncomingAdvancesRefund.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+                                    		</link>
+                                    	</container>
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
@@ -1062,6 +1105,15 @@
 								<screenlet title="Find Contra Entries">				
 									<include-form name="FindContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
+								<container>
+									<link target="BankContraEntry.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="amount" from-field="parameters.amount"/>
+									<parameter param-name="contraRefNum" from-field="parameters.contraRefNum"/>
+									<parameter param-name="transactionDate" from-field="parameters.transactionDate"/>
+									<parameter param-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+									</link>
+								</container>
 								<screenlet title="List Contra Entries">				
 									<include-form name="ListContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
@@ -1150,6 +1202,18 @@
                                         <include-form name="FindOutgoingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    	<container>
+                                    		<link target="OutgoingAdvancesRefund.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+                                    		</link>
+                                    	</container>
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
@@ -1260,6 +1324,18 @@
                                         <include-form name="FindOutgoingAdvancesPaid" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    <container>
+                                    		<link target="OutgoingAdvancesPaid.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+                                    		</link>
+                                    	</container>
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
@@ -2805,6 +2881,19 @@
                                         <include-form name="FindTreasurerPayments" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    <container>
+                                    	<link target="TreasurerPayments.csv" text="Export As CSV" style="buttontext">
+                                    	 <parameter param-name="paymentId" from-field="parameters.paymentId"/>
+                                    	 <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+                                    	 <parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+                                    	 <parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    	 <parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    	 <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    	 <parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    	 <parameter param-name="amount" from-field="parameters.amount"/>
+                                    	 <parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    	</link>
+                                    </container>
                                         <include-form name="ListTreasurerPayments"  location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
@@ -3246,7 +3335,17 @@
 							<screenlet title="Find Batch payments">
 								<include-form name="FindPaymentGroups" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 							</screenlet>
-							
+							<container>
+								<link target="GroupPayment.csv" text="Export As CSV" style="buttontext">
+								<parameter param-name="paymentGroupTypeId" from-field="parameters.paymentGroupTypeId"/>
+								<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+								<parameter param-name="statusId" from-field="parameters.statusId"/>
+								<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+								<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+								<parameter param-name="amount" from-field="parameters.amount"/>
+								<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+								</link>
+							</container>
 							<screenlet title="List Batch Payments">
              					<include-form name="ListPaymentGroups" location="component://accounting/widget/TreasurerPortalForms.xml"/>
              				</screenlet>

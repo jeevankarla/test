@@ -931,6 +931,135 @@ under the License.
         <field name="actualBalance" title="Actual Balance"><display/></field>  
         <field name="availableBalance" title="Available Balance"><display/></field>   	
     </form>
+    <form name="NonBankAccountCSV" type="list" default-entity-name="FinAccount"   list-name="nonBankAccountsList">
+    <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
+         <field name="finAccountId"><hidden></hidden></field>
+         <field name="gbCode"><ignored></ignored></field>
+          <field name="bCode"><ignored></ignored></field>
+           <field name="bPlace"><ignored></ignored></field>
+            <field name="categoryTypeEnum"><ignored></ignored></field>
+             <field name="organizationPartyId"><ignored></ignored></field>
+              <field name="ownerPartyId"><ignored></ignored></field>
+               <field name="isRefundable"><ignored></ignored></field>
+                <field name="finAccountId"><ignored></ignored></field>
+                 <field name="replenishPaymentId"><ignored></ignored></field>
+                  <field name="replenishLevel"><ignored></ignored></field>
+                   <field name="finAccountTypeId"><ignored></ignored></field>
+                   <field name="statusId"><ignored></ignored></field> 
+                     <field name="finAccountPin"><ignored></ignored></field>
+                        <field name="micrNumber"><ignored></ignored></field>
+                           <field name="fromDate"><ignored></ignored></field>
+                            <field name="thruDate"><ignored></ignored></field>
+        <field name="finAccountName">
+            <display></display>
+        </field>
+    </form>
+    <form name="DepositAccountCSV" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts">
+        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+        <field name="finAccountName" title="Acc Name"><display/></field>
+        <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
+        <field name="fromDate" title="Acc Date"><display/></field>
+<!--         <field name="finAccountType"><display></display></field> -->
+        <field name="actualBalance" title="Acc Balance"><display/></field>
+        </form>
+      <form name="BankContraEntryCSV" type="list" list-name="finAccountTransList"   default-entity-name="FinAccountTrans">
+    	 <actions>
+			<!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/> -->	
+        </actions>
+    	<field name="finAccountId" title = "Fin Account">
+          <display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountName}"/>
+        </field>
+        <field name="contraRefNum" title="Instrument Number"><display></display></field>
+        <field name="transactionDate"><display></display></field>
+    	<field name="amount" title="Amount(Rs)"><display/></field>
+    	<!-- <field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
+            <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
+                <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field>
+    	<field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+             <parameter param-name="finAccountId"/>
+             <parameter param-name="finAccountTransId"/>
+             <parameter param-name="amount"/>
+             <parameter param-name="comments"/>
+             <parameter param-name="transactionDate"/>
+             <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field>  -->
+    </form>
+    <form name="IncomingAdvancesReceivedCSV" type="list" list-name="payments"   default-entity-name="FinAccountTrans">
+    	 <actions>
+        </actions>
+    	<field name="paymentId" title = "Payment Id"><display/></field>
+        <field name="paymentDate"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+        <field name="paymentTypeId"><display-entity entity-name="PaymentType" also-hidden="false" description="${description}"></display-entity></field>
+    	<field name="paymentMethodTypeId"><display-entity entity-name="PaymentMethodType" also-hidden="false" description="${description}"></display-entity></field>
+    	<field name="statusId"  title="Status"><display-entity also-hidden="false" entity-name="StatusItem" description="${description}"/></field>
+    	<field name="partyIdFrom"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdFrom, false);}[${partyIdFrom}]"/> </field>
+    	<field name="partyIdTo"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdTo, false);}[${partyIdTo}]"/></field>
+    	<field name="effectiveDate"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(effectiveDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+    	<field name="amount"><display/></field>
+    	<field name="amountToApply" title="Amt to Apply"><display description="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator, paymentId);}"/></field>
+    </form>	
+    <form name="TreasurerPaymentsCSV" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PaymentAndType"/>
+                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="paymentId" widget-style="buttontext">
+            <hyperlink description="${paymentId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+        <field name="facilityId" title="Booth Id"><display/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem"/></field>
+        <field name="comments"><display/></field>
+        <field name="cancelComments" title="Reason For Voided"><display/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                    <parameter param-name="partyId" from-field="partyIdFrom"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                    <parameter param-name="partyId" from-field="partyIdTo"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>        
+        <field name="paymentDate"><display/></field>
+        <field name="currencyUomId"><hidden/></field>
+        <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+    </form>
+    <form name="GroupPaymentCSV" type="list" list-name="listIt">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PaymentGroup"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-paymentDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="paymentGroupId" ><display/></field>
+        <field name="paymentGroupTypeId"><display-entity entity-name="PaymentGroupType" key-field-name="paymentGroupTypeId" description="${description}"/></field>
+        <field name="paymentMethodTypeId" ><display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"/></field>
+        <field name="paymentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="paymentRefNum" title="Cheque No."><display/></field>
+        <field name="issuingAuthority"><display/></field>
+        <field name="amount" ><display/></field>
+    </form>
      <form name="PartyLedgrCsvListForm" type="list" list-name="partyLedgerDayWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
         <field name="date" title="Date"><display/></field>  
         <field name="description" title="Particulars"><display/></field>  
