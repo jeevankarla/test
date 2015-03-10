@@ -35,7 +35,7 @@ employmentsList = [];
 emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
-emplInputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-365)));
+emplInputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-60)));
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
 if(UtilValidate.isNotEmpty(employments)){
