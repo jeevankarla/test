@@ -94,10 +94,10 @@
 			 	 data =[];
 			</#if>
 		var columns = [
-					{id:"sectionTypeId", name:"Input", field:"sectionTypeId", width:180, minWidth:220, cssClass:"cell-title",toolTip:""},
-					{id:"grossAmount", name:"Gross Amount", field:"grossAmount", width:130, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},
-					{id:"qualifyingAmount", name:"Qualifying Amount", field:"qualifyingAmount", width:130, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
-					{id:"deductableAmount", name:"Deductable Amount / Actual Amount", field:"deductableAmount", width:240, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor}		
+					{id:"sectionTypeId", name:"Input", field:"sectionTypeId", width:150, minWidth:220, cssClass:"cell-title",toolTip:""},
+					{id:"grossAmount", name:"Gross Amount", field:"grossAmount", width:120, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},
+					{id:"qualifyingAmount", name:"Qualifying Amount", field:"qualifyingAmount", width:120, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
+					{id:"deductableAmount", name:"Deductable Amount / Actual Amount", field:"deductableAmount", width:225, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor}		
 			];
 		
 			var options = {
