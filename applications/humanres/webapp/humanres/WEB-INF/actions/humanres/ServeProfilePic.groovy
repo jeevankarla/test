@@ -60,7 +60,7 @@ if(UtilValidate.isNotEmpty(locations)){
 	geoId=locations.get(0).locationGeoId;
 	if(UtilValidate.isNotEmpty(geoId)){
 		locationGeo = delegator.findOne("Geo", [geoId : geoId], false);
-		if(UtilValidate.isNotEmpty(locationGeo.geoName)){
+		if(UtilValidate.isNotEmpty(locationGeo)){
 			location = locationGeo.geoName;
 			context.location=location;
 		}
