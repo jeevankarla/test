@@ -113,14 +113,14 @@ finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 		    tempFinAccountTransMap["paymentPartyId"] = payment.partyIdTo;
 			//if deposit for partyLedger it is Cr
 			innerMap["creditValue"]=finAccountTrans.amount;
-			partyTotalDebits+=finAccountTrans.amount;
+			partyTotalCredits+=finAccountTrans.amount;
 			innerMap["crOrDbId"]="C";
 		   }else if(finAccountTrans.finAccountTransTypeId=="DEPOSIT"){
 		    tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, payment.partyIdFrom, false);
 		    tempFinAccountTransMap["paymentPartyId"] = payment.partyIdFrom;
 			//if deposit for partyLedger it is Dr
 			innerMap["debitValue"]=finAccountTrans.amount;
-			partyTotalCredits+=finAccountTrans.amount;
+			partyTotalDebits+=finAccountTrans.amount;
 			innerMap["crOrDbId"]="D";
 		   }
         }
