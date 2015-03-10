@@ -807,13 +807,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="CashEncashment">
+    <screen name="cashEncashmentReport">
         <section>
             <actions>
-                <set field="titleProperty" value="Cash Encashment"/>
-                <set field="headerItem" value="cashEncashment"/>
+                <set field="titleProperty" value="Cash Encashment Report"/>
+                <set field="headerItem" value="cashEncashmentReport"/>
 				<set field="tabButtonItem" value="EmployeeProfile" />
-				<set field="tabButtonItem2" value="cashEncashment" />
+				<set field="tabButtonItem2" value="cashEncashmentReport" />
 				<entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
                 	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
                 	<order-by field-name="-thruDate"/>

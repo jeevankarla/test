@@ -2325,9 +2325,9 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="paySlip"/>
     </request-map>
-    <request-map uri="cashEncashment">
+    <request-map uri="cashEncashmentReport">
        	<security https="true" auth="true"/>
-       	<response name="success" type="view" value="cashEncashment"></response>
+       	<response name="success" type="view" value="cashEncashmentReport"></response>
     </request-map>
     <request-map uri="loanDisbursement">
        	<security https="true" auth="true"/>
@@ -2680,7 +2680,7 @@ under the License.
 	<view-map name="viewEmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>
 	<view-map name="PayrollExceptionReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#PayrollExceptionReport" content-type="application/pdf" encoding="none"/>
 	<view-map name="paySlip" type="screen" page="component://humanres/widget/EmployeeScreens.xml#paySlip"/>
-	<view-map name="cashEncashment" type="screen" page="component://humanres/widget/EmployeeScreens.xml#CashEncashment"/>
+	<view-map name="cashEncashmentReport" type="screen" page="component://humanres/widget/EmployeeScreens.xml#cashEncashmentReport"/>
 	<!-- Analytics -->
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>

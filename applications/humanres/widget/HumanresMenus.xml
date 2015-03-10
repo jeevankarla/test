@@ -820,8 +820,8 @@
         		<parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
         </menu-item>
-        <menu-item name="cashEncashment" title="Cash Encashment">
-        	<link target="cashEncashment">
+        <menu-item name="cashEncashmentReport" title="Cash Encashment Report">
+        	<link target="cashEncashmentReport">
         		<parameter param-name="partyId" from-field="userLogin.partyId"/>
         		<parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
