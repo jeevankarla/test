@@ -3806,6 +3806,242 @@
 		    </widgets>								
 		</section>
 	</screen>   -->
+	<screen name="GroupPaymentCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="GroupPaymentCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="TreasurerPaymentsCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="TreasurerPaymentsCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="IncomingAdvancesReceivedCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>	
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="IncomingAdvancesReceivedCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="BankContraEntryCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/>	
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="BankContraEntryCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DepositAccountCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="DepositAccountCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="NonBankAccountCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				 <set field="screenFlag" value="${parameters.screenFlag}" /> 
+                <!-- <set field="parameters.screenFlag" value="NON_BANKACCOUNT" />  -->
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> 
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="NonBankAccountCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="FinAccountAltCSV">
 		<section>
 			<actions>
