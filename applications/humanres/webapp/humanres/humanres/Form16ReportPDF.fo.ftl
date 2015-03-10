@@ -833,30 +833,18 @@
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;7. Add : Any other income reported by employee</fo:block>
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;&#160;&#160;&#160;&#160;a. Interest on HBA u/s 24</fo:block>
 	                           		</fo:table-cell>
-	                           		<#if employeeSectionMap?has_content>
-			                           	<#assign employeeSections = employeeSectionMap.entrySet()>
-			                           	<#list employeeSections as employeeWiseSectionDetails>
-			                           		<#if employeeWiseSectionDetails.getKey() == employeeValues.getKey()>
-			                           			<#assign interestHBA = employeeWiseSectionDetails.getValue().get("INTEREST_HBA_24B").get("deductableAmount")>
-			                           			<#if (interestHBA > 200000)>
-			                           				<#assign interestHBA = 200000>
-			                           			<#else>
-			                           				<#assign interestHBA = interestHBA>
-			                           			</#if>
-				                           		<fo:table-cell border-right-style = "solid">
-				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
-				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
-				                           		</fo:table-cell>
-				                           		<fo:table-cell border-right-style = "solid">
-					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
-				                           		</fo:table-cell>
-				                           		<fo:table-cell >
-				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
-				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if interestHBA?has_content>(${interestHBA?if_exists?string("#0.00")})&#160;&#160;<#else>&#160;</#if></fo:block>
-				                           		</fo:table-cell>
-				                           	</#if>
-				                      	</#list>
-				                  	</#if>
+                           			<#assign interestHBA = employeeValues.getValue().get("interestHBA")>
+	                           		<fo:table-cell border-right-style = "solid">
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+	                           		</fo:table-cell>
+	                           		<fo:table-cell border-right-style = "solid">
+		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+	                           		</fo:table-cell>
+	                           		<fo:table-cell >
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if interestHBA?has_content>(${interestHBA?if_exists?string("#0.00")})&#160;&#160;<#else>&#160;</#if></fo:block>
+	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
@@ -930,11 +918,10 @@
 				                           		<fo:table-cell >
 				                           			<#if employeeWiseSectionDetails.getValue().get("SECTION_80C").get("deductableAmount")?has_content>
 				                           				<#assign deductableAmount = employeeWiseSectionDetails.getValue().get("SECTION_80C").get("deductableAmount")>
-				                           				
 				                           			</#if>
 				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if deductableAmount?has_content>${deductableAmount?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
-					                           		<#if employeeWiseSectionDetails.getValue().get("LIC_POLICY")?has_content>
-					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("LIC_POLICY").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("LIC_POLICY").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+					                           		<#if employeeValues.getValue().get("totalLICAmt")?has_content>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("totalLICAmt")!= 0>${employeeValues.getValue().get("totalLICAmt")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 					                           		<#else>
 					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 					                           		</#if>
@@ -1145,7 +1132,7 @@
 			                   	</fo:table-row>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(15) Education Cess @ 2% on (tax at S.No.12)</fo:block>
+	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(15) Education Cess @ 3% on (tax at S.No.12)</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>

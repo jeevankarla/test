@@ -312,6 +312,8 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		licAmount = 0;
 		daAmount =0;
 		sec80CDedAmount =0;
+		totalLICAmt = 0;
+		interestHBA = 0;
 		customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employee,"fromDate",fromDateStart,"thruDate",thruDateEnd,"userLogin",userLogin)).get("periodTotalsForParty");
 		if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
 			Iterator customTimePeriodIter = customTimePeriodTotals.entrySet().iterator();
@@ -337,6 +339,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						if(UtilValidate.isNotEmpty(licKmf)){
 							licAmount = licAmount - licKmf;
 						}
+						
 						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
 							if(UtilValidate.isNotEmpty(GSLISAmount)){
 								sec80CDedAmount = sec80CDedAmount - GSLISAmount;
@@ -360,6 +363,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 								sec80CDedAmount = sec80CDedAmount - totalSupplyPT;
 							}
 							if(licAmount != 0){
+								totalLICAmt = totalLICAmt + licAmount;
 								sec80CDedAmount = sec80CDedAmount + licAmount;
 							}
 						}
@@ -478,9 +482,10 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 										sec80CDedAmount = sec80CDedAmount + subDeductableAmount;
 									}
 									//Debug.log("subDeductableAmount================="+subDeductableAmount);
-									//Debug.log("licAmount================="+licAmount);
+									Debug.log("licAmount================="+licAmount);
 									if(subSectionId.equals("LIC_POLICY")){
 										if(UtilValidate.isNotEmpty(subDeductableAmount)){
+											totalLICAmt = totalLICAmt + subDeductableAmount;
 											subDeductableAmount = subDeductableAmount + licAmount;
 										}
 									}
@@ -505,6 +510,11 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 										otherAlwDeductableAmount = otherAlwDeductableAmount + deductableAmount;
 										employeeDetailsMap.put("otherAlwDeductableAmount",otherAlwDeductableAmount);
 									}
+									if(sectionId.equals("INTEREST_HBA_24B")){
+										if(UtilValidate.isNotEmpty(deductableAmount)){
+											interestHBA = deductableAmount;
+										}
+									}
 								}else{
 									if(UtilValidate.isNotEmpty(deductableAmount)){
 										totalDeductableAmount = totalDeductableAmount + deductableAmount;
@@ -525,7 +535,9 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					
 					}else{
 						if(sectionType.equals("INTEREST_HBA_24B")){
-						
+							if(UtilValidate.isNotEmpty(deductableAmount)){
+								interestHBA = deductableAmount;
+							}
 						}else{
 							if(UtilValidate.isNotEmpty(deductableAmount)){
 								totalDeductableAmount = totalDeductableAmount + deductableAmount;
@@ -698,7 +710,15 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		if(UtilValidate.isNotEmpty(aggregate)){
 			income = balance + aggregate;
 		}
-		totalIncome = income - totalDeductableAmount;
+		grossTotIncome = 0;
+		
+		if(UtilValidate.isNotEmpty(interestHBA)){
+			if(interestHBA > 200000){
+				interestHBA = 200000;
+			}
+			grossTotIncome = income - interestHBA;
+		}
+		totalIncome = grossTotIncome - totalDeductableAmount;
 		if(totalIncome < 0){
 			totalIncome = 0;
 		}
@@ -775,10 +795,12 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			totalTaxDeductedatSource = totalTaxDeductedatSource.setScale(0, BigDecimal.ROUND_HALF_UP);
 			employeeDetailsMap.put("totalTaxDeductedatSource",totalTaxDeductedatSource);
 		}
+		employeeDetailsMap.put("totalLICAmt",totalLICAmt);
 		employeeDetailsMap.put("employeeName",employeeName);
 		employeeDetailsMap.put("balance",balance);
 		employeeDetailsMap.put("aggregate",aggregate);
 		employeeDetailsMap.put("income",income);
+		employeeDetailsMap.put("interestHBA",interestHBA);
 		employeeDetailsMap.put("totalDeductableAmount",totalDeductableAmount);
 		employeeDetailsMap.put("totalIncome",totalIncome);
 		BigDecimal taxOnIncome = new BigDecimal(tax);
