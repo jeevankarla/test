@@ -454,7 +454,7 @@ employmentsList.each{ employeeId->
 					}
 				
 					others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift+cash+heatallow+specPay+field+fixedPay+spec+fixedTra;
-					totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance+bonus+DADAAmount;
+					totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance+bonus;
 					
 					SBEOthers = SBEPerPay+SBESecndSat+SBEGenHol+SBEConver+SBESpecPay;
 					TEOthers = TESpec+TESpecPay;
@@ -819,16 +819,16 @@ employmentsList.each{ employeeId->
 					tempMap["totalExterLoan"] = -(totalExterLoan);
 					tempMap["totalDeductions"] = -(totalDeductions);
 					
-					tempMap["TEEmpProFund"] = TEEmpProFund;
-					tempMap["TEIncTax"] = TEIncTax;
+					tempMap["TEEmpProFund"] = -(TEEmpProFund);
+					tempMap["TEIncTax"] = -(TEIncTax);
 					
-					tempMap["SBEEmpProFund"] = SBEEmpProFund;
-					tempMap["SBEIncTax"] = SBEIncTax;
-					tempMap["SBEPrTax"] = SBEPrTax;
-					tempMap["SBEGrSav"] = SBEGrSav;
-					tempMap["SBEInsurance"] = SBEInsurance;
-					tempMap["SBEFest"] = SBEFest;
-					tempMap["othersDed"] = othersDed;
+					tempMap["SBEEmpProFund"] = -(SBEEmpProFund);
+					tempMap["SBEIncTax"] = -(SBEIncTax);
+					tempMap["SBEPrTax"] = -(SBEPrTax);
+					tempMap["SBEGrSav"] = -(SBEGrSav);
+					tempMap["SBEInsurance"] = -(SBEInsurance);
+					tempMap["SBEFest"] = -(SBEFest);
+					tempMap["othersDed"] = -(othersDed);
 					
 					tempMap["DAAREmpProFund"] = -(DAAREmpProFund);
 					
