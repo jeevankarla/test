@@ -3950,8 +3950,8 @@
 					default-value="${nowTimestamp}" /> -->
 			    <set field="finAccountTransList" type="List"  />
 			    <set field="parameters.noConditionFind" value="Y"/>
-				<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
-			    <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
+				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
+			     <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
             </actions>
 			<widgets>
 		<!-- 	<include-screen name="RecStatement" location="component://accounting/widget/TreasurerPortalScreens.xml" /> -->
