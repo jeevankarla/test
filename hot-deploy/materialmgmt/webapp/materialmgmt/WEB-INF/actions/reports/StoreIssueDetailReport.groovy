@@ -152,6 +152,8 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		                                 conditionList.clear();
 			                             conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
 			                             conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+										 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+										 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
 										 
 			                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 										 
