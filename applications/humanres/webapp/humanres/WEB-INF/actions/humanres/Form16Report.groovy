@@ -330,6 +330,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						licKmf = customTimePeriodEntry.getValue().get("PAYROL_DD_LIC_KMF");
 						daAmount = customTimePeriodEntry.getValue().get("PAYROL_BEN_DA");
 						totalTaxDeducted = customTimePeriodEntry.getValue().get("PAYROL_DD_INC_TAX");
+						sec80cPFAmt = 0;
 						if(UtilValidate.isNotEmpty(lic)){
 							licAmount = licAmount - lic;
 						}
@@ -339,22 +340,31 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
 							if(UtilValidate.isNotEmpty(GSLISAmount)){
 								sec80CDedAmount = sec80CDedAmount - GSLISAmount;
+								employeeDetailsMap.put("sec80cGSLISAmt",GSLISAmount);
 							}
+							
 							if(UtilValidate.isNotEmpty(providuntFund)){
+								sec80cPFAmt = sec80cPFAmt + providuntFund;
 								sec80CDedAmount = sec80CDedAmount - providuntFund;
 							}
 							if(UtilValidate.isNotEmpty(vpf)){
+								sec80cPFAmt = sec80cPFAmt + vpf;
 								sec80CDedAmount = sec80CDedAmount - vpf;
 							}
 							if(UtilValidate.isNotEmpty(totalSupplyPF)){
+								sec80cPFAmt = sec80cPFAmt + totalSupplyPF;
 								sec80CDedAmount = sec80CDedAmount - totalSupplyPF;
 							}
 							if(UtilValidate.isNotEmpty(totalSupplyPT)){
+								sec80cPFAmt = sec80cPFAmt + totalSupplyPT;
 								sec80CDedAmount = sec80CDedAmount - totalSupplyPT;
 							}
 							if(licAmount != 0){
 								sec80CDedAmount = sec80CDedAmount + licAmount;
 							}
+						}
+						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+							employeeDetailsMap.put("sec80cPFAmt",sec80cPFAmt);
 						}
 						if(totalEarnings != 0){
 							totalEarnings = totalEarnings + supplyPayrollTotalEarnings;
@@ -392,6 +402,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			employeeDetailsMap.put("address2",address2);
 		}
 		sectionMap = [:];
+		otherAlwDeductableAmount = 0;
 		if(UtilValidate.isNotEmpty(sectionTypesList)){
 			sectionTypesList.each { sectionType ->
 				sectionDetailsMap = [:];
@@ -419,6 +430,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						if(UtilValidate.isEmpty(deductableAmount)){
 							deductableAmount = 0;
 						}
+						
 						if(sectionId.equals("SECTION_80C")){
 							if(UtilValidate.isNotEmpty(sec80CDedAmount)){
 								if(UtilValidate.isNotEmpty(deductableAmount)){
@@ -426,6 +438,21 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 								}
 							}
 						}
+						if(sectionId.equals("SECTION_80CCC")){
+							if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+								if(UtilValidate.isNotEmpty(deductableAmount)){
+									sec80CDedAmount = sec80CDedAmount + deductableAmount;
+								}
+							}
+						}
+						if(sectionId.equals("SECTION_80CCD")){
+							if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+								if(UtilValidate.isNotEmpty(deductableAmount)){
+									sec80CDedAmount = sec80CDedAmount + deductableAmount;
+								}
+							}
+						}
+						
 						subSectionDetailsList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, sectionId) , null, null, null, false);
 						if(UtilValidate.isNotEmpty(subSectionDetailsList)){
 							subSectionDetailsList.each { subSection ->
@@ -450,6 +477,13 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 									if(UtilValidate.isNotEmpty(subDeductableAmount)){
 										sec80CDedAmount = sec80CDedAmount + subDeductableAmount;
 									}
+									//Debug.log("subDeductableAmount================="+subDeductableAmount);
+									//Debug.log("licAmount================="+licAmount);
+									if(subSectionId.equals("LIC_POLICY")){
+										if(UtilValidate.isNotEmpty(subDeductableAmount)){
+											subDeductableAmount = subDeductableAmount + licAmount;
+										}
+									}
 									subSectionDetailsMap = [:];
 									subSectionDetailsMap.put("grossAmount",subGrossAmount);
 									subSectionDetailsMap.put("qualifyingAmount",subQualifyingAmount);
@@ -463,25 +497,21 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						}else{
 							sectionDetailsMap.put("grossAmount",grossAmount);
 							sectionDetailsMap.put("qualifyingAmount",qualifyingAmount);
-							if(sectionId.equals("SECTION_80C")){
-								if(UtilValidate.isNotEmpty(sec80CDedAmount)){
-									if(sec80CDedAmount > 150000){
-										totalDeductableAmount = totalDeductableAmount + 150000;
-									}else{
-										totalDeductableAmount = totalDeductableAmount + sec80CDedAmount;
-									}
-								}
-								sectionDetailsMap.put("deductableAmount",sec80CDedAmount);
+							if(sectionId.equals("SECTION_80C") || sectionId.equals("SECTION_80CCC") || sectionId.equals("SECTION_80CCD")){
+								
 							}else{
-								if(sectionId.equals("INTEREST_HBA_24B")){
-									
+								if(sectionId.equals("INTEREST_HBA_24B") || sectionId.equals("OTHER_ALW")){
+									if(sectionId.equals("OTHER_ALW")){
+										otherAlwDeductableAmount = otherAlwDeductableAmount + deductableAmount;
+										employeeDetailsMap.put("otherAlwDeductableAmount",otherAlwDeductableAmount);
+									}
 								}else{
 									if(UtilValidate.isNotEmpty(deductableAmount)){
 										totalDeductableAmount = totalDeductableAmount + deductableAmount;
 									}
 								}
-								sectionDetailsMap.put("deductableAmount",deductableAmount);
 							}
+							sectionDetailsMap.put("deductableAmount",deductableAmount);
 							sectionMap.put(sectionId,sectionDetailsMap);
 						}
 					}
@@ -491,29 +521,34 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					deductableAmount =0;
 					sectionDetailsMap.put("grossAmount",grossAmount);
 					sectionDetailsMap.put("qualifyingAmount",qualifyingAmount);
-					if(sectionType.equals("SECTION_80C")){
-						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
-							if(sec80CDedAmount > 150000){
-								totalDeductableAmount = totalDeductableAmount + 150000;
-							}else{
-								totalDeductableAmount = totalDeductableAmount + sec80CDedAmount;
+					if(sectionType.equals("SECTION_80C") || sectionType.equals("SECTION_80CCC") || sectionType.equals("SECTION_80CCD")){
+					
+					}else{
+						if(sectionType.equals("INTEREST_HBA_24B")){
+						
+						}else{
+							if(UtilValidate.isNotEmpty(deductableAmount)){
+								totalDeductableAmount = totalDeductableAmount + deductableAmount;
 							}
 						}
-						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
-							sectionDetailsMap.put("deductableAmount",sec80CDedAmount);
-						}else{
-							sec80CDedAmount = 0;
-							sectionDetailsMap.put("deductableAmount",sec80CDedAmount);
-						}
-					}else{
-						sectionDetailsMap.put("deductableAmount",deductableAmount);
 					}
+					sectionDetailsMap.put("deductableAmount",deductableAmount);
 					sectionMap.put(sectionType,sectionDetailsMap);
 				}
 			}
 		}
 		if(UtilValidate.isNotEmpty(sectionMap)){
 			employeeSectionMap.put(employee,sectionMap);
+		}
+		if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+			employeeDetailsMap.put("total9Amount",sec80CDedAmount);
+		}
+		if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+			if(sec80CDedAmount > 150000){
+				totalDeductableAmount = totalDeductableAmount + 150000;
+			}else{
+				totalDeductableAmount = totalDeductableAmount + sec80CDedAmount;
+			}
 		}
 		itertn = 0;
 		quarterlyTaxMap = [:];
@@ -586,9 +621,9 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						}else{
 							conveyanceAlw = eachMonth.get("amount");
 							if(UtilValidate.isNotEmpty(conveyanceAlw)){
+								totalConvAmount = totalConvAmount + conveyanceAlw;
 								if(conveyanceAlw > 800){
 									taxableAmount = conveyanceAlw - 800;
-									totalConvAmount = totalConvAmount + conveyanceAlw;
 									totalConveyanceTaxableAmount = totalConveyanceTaxableAmount + taxableAmount;
 								}
 							}
@@ -650,11 +685,15 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		if(UtilValidate.isNotEmpty(leastValue)){
 			employeeDetailsMap.put("leastValue",leastValue);
 		}
+		totalExtentAlw = 0;
+		
 		if(UtilValidate.isNotEmpty(conveyAlw)){
 			totalExtentAlw = leastValue + conveyAlw;
-			employeeDetailsMap.put("totalExtentAlw",totalExtentAlw);
 		}
-		
+		if(UtilValidate.isNotEmpty(otherAlwDeductableAmount)){
+			totalExtentAlw = totalExtentAlw + otherAlwDeductableAmount;
+		}
+		employeeDetailsMap.put("totalExtentAlw",totalExtentAlw);
 		balance = totalEarnings - totalExtentAlw;
 		if(UtilValidate.isNotEmpty(aggregate)){
 			income = balance + aggregate;
@@ -760,5 +799,4 @@ context.put("finalEmployeeMap",finalEmployeeMap);
 context.put("employeeSectionMap",employeeSectionMap);
 context.put("monthWiseTaxDepositedMap",monthWiseTaxDepositedMap);
 context.put("employeewiseQuarterlyTaxMap",employeewiseQuarterlyTaxMap);
-
 
