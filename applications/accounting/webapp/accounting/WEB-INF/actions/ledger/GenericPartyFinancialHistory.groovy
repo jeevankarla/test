@@ -117,9 +117,7 @@ if(UtilValidate.isNotEmpty(context.partyTotalDebits)){
 if(UtilValidate.isNotEmpty(context.partyTotalCredits)){
 	partyCredits=context.partyTotalCredits;
 }
-if(UtilValidate.isNotEmpty(context.partyTotalCredits)){
-	partyCredits=context.partyTotalCredits;
-}
+
 if(UtilValidate.isNotEmpty(context.partyDayWiseFinHistryMap)){
 	partyFinHistryDayWiseMap=context.partyDayWiseFinHistryMap;
 }
