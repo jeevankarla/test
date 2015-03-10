@@ -858,8 +858,8 @@ public class SalesInvoiceServices {
 			BigDecimal packetQuantity = invoiceItem.getBigDecimal("quantity");
 			BigDecimal price = ZERO;
 			BigDecimal revenue = ZERO;
-			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("unitListPrice"))) {
-				price = invoiceItem.getBigDecimal("unitListPrice");
+			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("unitPrice"))) {
+				price = invoiceItem.getBigDecimal("unitPrice");
 			}else{
 				price = invoiceItem.getBigDecimal("amount");
 			}
