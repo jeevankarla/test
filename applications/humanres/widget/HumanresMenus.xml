@@ -820,6 +820,12 @@
         		<parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
         </menu-item>
+        <menu-item name="cashEncashment" title="Cash Encashment">
+        	<link target="cashEncashment">
+        		<parameter param-name="partyId" from-field="userLogin.partyId"/>
+        		<parameter param-name="partyId" from-field="parameters.partyId"/>
+        	</link>
+        </menu-item>
     </menu>
 	
 	<menu name="PayrollItemsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
