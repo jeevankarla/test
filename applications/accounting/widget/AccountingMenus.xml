@@ -2077,6 +2077,15 @@
 			<link target="OutgoingAdvancesPaid">
 			</link>
 		 </menu-item>
+		 <menu-item name="BankGuaranteeReceipt" title="Bank Guarantee">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="BankGuaranteeReceipt">
+			</link>
+		 </menu-item>
 		 <!-- <menu-item name="IncomingDeposits" title="Deposits Received">
           <condition>
 				<or>
@@ -2310,6 +2319,15 @@
 			</link>
 		</menu-item>
 	</menu>
+	<menu name="BankGuaranteeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="BankGuaranteeReceipt" title="Receipts">
+             <link target="BankGuaranteeReceipt"></link>
+          </menu-item>
+          <menu-item name="BankGuaranteeRefund" title="Refunds">
+             <link target="BankGuaranteeRefund"></link>
+          </menu-item>
+    </menu>
 	<menu name="IncomingAdvancesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
           <menu-item name="IncomingAdvancesReceived" title="Receipts">
