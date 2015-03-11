@@ -3687,6 +3687,46 @@ under the License.
         <response name="success" type="view" value="EmployeeAdvancesAndSubScheduleReport"/>
     </request-map>
     
+     <!--================= Bank Guarantee ==================== -->
+	
+	<request-map uri="BankGuaranteeReceipt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankGuaranteeReceipt"/>
+    </request-map>
+    <request-map uri="NewBankGuaranteeReceived">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewBankGuaranteeReceived"/>
+    </request-map>
+	<request-map uri="createNewBankGuaranteeReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    <!--================= Bank Guarantee Refund ==================== -->
+    
+    <request-map uri="BankGuaranteeRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankGuaranteeRefund"/>
+    </request-map>
+    <request-map uri="NewBankGuaranteeRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewBankGuaranteeRefund"/>
+    </request-map>
+	<request-map uri="createNewBankGuaranteeRefund">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    <!--================= Bank Guarantee ==================== -->
+    
+    <view-map name="BankGuaranteeReceipt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankGuaranteeReceipt"/>
+    <view-map name="NewBankGuaranteeReceived" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewBankGuaranteeReceived"/>
+    
+    <view-map name="BankGuaranteeRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankGuaranteeRefund"/>
+    <view-map name="NewBankGuaranteeRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewBankGuaranteeRefund"/>
+    
     <!--================= AP Invoices ==================== -->
 	
 	<view-map name="FindApInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApInvoices"/>
