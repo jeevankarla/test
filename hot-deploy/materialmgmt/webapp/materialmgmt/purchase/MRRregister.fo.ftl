@@ -51,23 +51,24 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			        	   <fo:block white-space-collapse="false" font-size="12pt"  font-family="Helvetica" keep-together="always" >&#160;  STORE CODE:${parameters.stockId}&#160;    &#160;     &#160;  DESCRIPTION:${stockDetails.get("description")?if_exists}</fo:block>
 			               </#if>
               		   -->
-              		<fo:block  keep-together="always"  text-align="left" white-space-collapse="false"  font-size="12pt" >  <#if parameters.productId?has_content> MATERIAL CODE: ${parameters.productId}      </#if>                                               <#if materialName?has_content>  MATERIAL NAME: ${materialName} </#if>                                    </fo:block>
+              		<fo:block  keep-together="always"  text-align="left" white-space-collapse="false"  font-size="12pt" >  <#if internalName?has_content> MATERIAL CODE: ${internalName}      </#if>            <#if materialName?has_content>  MATERIAL NAME: ${materialName} </#if>       <#if facilityId?has_content>  STORE: ${facilityId} </#if>                             </fo:block>
 
               		<fo:block  keep-together="always" text-align="left" font-family="Helvetica" white-space-collapse="false"  font-size="10pt" >__________________________________________________________________________________________________________________________________________________________________________________________________________________</fo:block>
-              	    <fo:block  font-size="12pt" font-weight="bold"  keep-together="always" text-align="left"  white-space-collapse="false" >SINo   MRRNo   MRRDate   VendorCode   VendorName          BillNo      BillDate         Amount      AmountPaid     Department        St.Up.Date    </fo:block>
+              	    <fo:block  font-size="12pt" font-weight="bold"  keep-together="always" text-align="left"  white-space-collapse="false" >SINo MRRNo   MRRDate   VendorCode   VendorName          BillNo        BillDate         Amount      AmountPaid     Department        St.Up.Date    </fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Helvetica" white-space-collapse="false"  font-size="10pt" >______________________________________________________________________________________________________________________________________________________________________________________________________</fo:block>               
+                       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace"  font-size="15pt" > &#160;&#160;  </fo:block>
             </fo:static-content>		
            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
-          			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="8pt" > &#160;&#160;  </fo:block>
+                       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace"  font-size="8pt" > &#160;&#160;  </fo:block>
 
             	<fo:block>
                  	<fo:table  >
-                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="15pt"/>
                     <fo:table-column column-width="70pt"/>
                     <fo:table-column column-width="60pt"/>  
                	    <fo:table-column column-width="110pt"/>
-               	    <fo:table-column column-width="150pt"/>
-            		<fo:table-column column-width="80pt"/>
+               	    <fo:table-column column-width="140pt"/>
+            		<fo:table-column column-width="110pt"/>
             		<fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="120pt"/>
                     <fo:table-column column-width="100pt"/>   
@@ -87,8 +88,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				       <fo:table-cell  ><fo:block text-align="left"   font-size="12pt">  <#if mrrListItem.get("partyName")?has_content>${mrrListItem.get("partyName")?if_exists} </#if> </fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"  font-size="12pt" > <#if mrrListItem.get("invoiceId")?has_content>${mrrListItem.get("invoiceId")?if_exists} </#if></fo:block></fo:table-cell>  
   				       <fo:table-cell  ><fo:block text-align="center"   font-size="12pt" > <#if mrrListItem.get("invoiceDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(mrrListItem.get("invoiceDate"),"dd/MM/yy")?if_exists} </#if>  </fo:block></fo:table-cell>     
-  				  	   <fo:table-cell  ><fo:block text-align="right"  font-size="12pt">  <#if mrrListItem.get("invoiceAmount")?has_content>${mrrListItem.get("invoiceAmount")?if_exists?string("##0.00")} </#if> </fo:block></fo:table-cell>      				      
-  				       <fo:table-cell  ><fo:block text-align="right"  font-size="12pt" > <#if mrrListItem.get("paidAmount")?has_content>${mrrListItem.get("paidAmount")?if_exists?string("##0.00")} </#if></fo:block></fo:table-cell>     
+  				  	   <fo:table-cell  ><fo:block text-align="right"  font-size="12pt">  <#if mrrListItem.get("invoiceAmount")?has_content>${mrrListItem.get("invoiceAmount")?if_exists?string("##0.00")}<#else>0.00 </#if> </fo:block></fo:table-cell>      				      
+  				       <fo:table-cell  ><fo:block text-align="right"  font-size="12pt" > <#if mrrListItem.get("paidAmount")?has_content>${mrrListItem.get("paidAmount")?if_exists?string("##0.00")}<#else>0.00 </#if></fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"  font-size="12pt" > &#160;&#160; </fo:block></fo:table-cell>     
   				       
   				       <fo:table-cell  ><fo:block text-align="left"  font-size="12pt" > <#if mrrListItem.get("deptName")?has_content>${mrrListItem.get("deptName")?if_exists} </#if></fo:block></fo:table-cell>     

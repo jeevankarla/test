@@ -58,6 +58,8 @@ if(UtilValidate.isNotEmpty(departmentList)){
 }
 context.put("finalDepartmentList",finalDepartmentList);
 
-
-
+List<String> orderBy = UtilMisc.toList("attrValue");
+ledgerFolioList = delegator.findList("ProductAttribute",EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "LEDGERFOLIONO")  , null, orderBy, null, false );
+ledgerFolioList=EntityUtil.getFieldListFromEntityList(ledgerFolioList, "attrValue", true);
+context.put("ledgerFolioList",ledgerFolioList);
 

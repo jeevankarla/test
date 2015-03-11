@@ -73,6 +73,14 @@ if(UtilValidate.isNotEmpty(prodDetails)){
   context.put("materialName",materialName);
   context.put("internalName",internalName);
   
+  uomId=prodDetails.get("quantityUomId");
+  if(UtilValidate.isNotEmpty(uomId)){
+	  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+   unit=unitDesciption.get("abbreviation");
+   context.put("unit",unit);
+   
+  }
+  
 }
 allDetailsMap=[:];	
 BigDecimal dayClosingQty = BigDecimal.ZERO;
@@ -176,7 +184,7 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	receiptIssuesMap.put("issueMap",issueMap);
  }
 if(UtilValidate.isNotEmpty(receiptIssuesMap)){	
-	dayClosingQty=ReceiptTotQty-IssueTotQty;
+	dayClosingQty=inventoryCount+ReceiptTotQty-IssueTotQty;
 	
 	receiptIssuesMap.put("dayClosingQty",dayClosingQty);
 allDetailsMap.put(currentDayStart, receiptIssuesMap);

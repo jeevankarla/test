@@ -139,12 +139,20 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Stock Position Report</span></td>
-							<td width="30%">
+							<td width="25%">
 							     <span class='h3'>
 									Date <input  type="text" size="18pt" id="stockDate"   name="fromDate"/>
 								 </span>
-							</td>
-							<td width="25%">
+							</td>			
+								<td width="15%"><span class='h3'>							</span></td>
+							 <td width="15%"><span class='h3'>ledgerFolioNos
+							    <select name="ledgerFolioNo" id="ledgerFolioNo">
+							        <option value=""></option>
+							        <#list  ledgerFolioList as ledgerFolioNos>
+							          <option value='${ledgerFolioNos?if_exists}'>${ledgerFolioNos?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
@@ -270,8 +278,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						 </span>
 						 </td>
 						    <td width="15%"><span class='h3'>Material Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="MRRregister" name="productId" id="productId" fieldFormName="LookupProduct"/>
-						  <td width="15%"><span class='h3'>   				       </span></td>	
-						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+                           <td width="15%"><span class='h3'>Store
+							    <select name="issueToFacilityId" id="issueToFacilityId">
+							        <option value=""></option>
+							        <#list  storeList as store>
+							          <option value='${store.facilityId?if_exists}'>${store.facilityId?if_exists}</option>
+							        </#list> 
+							    </select>    								
+						   </span></td>							
+                           <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
 				 </table>
 			 </form>
