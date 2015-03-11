@@ -23,7 +23,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="0.2in"/>
+        <fo:region-body margin-top="0.1in"/>
         <fo:region-before extent="1.5in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -74,7 +74,6 @@ under the License.
 			        	  </fo:block>	
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------- </fo:block>
 				    <fo:block text-align="center" keep-together="always" font-weight="bold">                                              MATERIAL ENQUIRY REPORT                                                  </fo:block>
-                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;ENQUIRY SEQUENCE NO.:${enquirySequenceNo?if_exists}                           ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")?if_exists}</fo:block>  	 			       
 				    <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" >&#160;INTERNAL ENQUIRY NO.:${custRequestId?if_exists}                                    FAX NO: ${partyEntry.getValue().get("faxNumber")?if_exists}</fo:block>
@@ -180,8 +179,9 @@ under the License.
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                      Yours faithfully</fo:block>
 	                 <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                     for MOTHER DAIRY</fo:block>
-	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	               
-	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                     <#if signature?has_content>${signature?if_exists}<#else>MANAGER(Purchase)</#if></fo:block>	               
+	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		               
+	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                <#if signature?has_content>${signature?if_exists}<#else>GENERAL MANAGER(Purchase)</#if></fo:block>	               
 	                <fo:block page-break-after="always"></fo:block>
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -279,7 +279,7 @@ under the License.
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	               
-	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                     <#if signature?has_content>${signature?if_exists}<#else>MANAGER(Purchase)</#if></fo:block>
+	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                              <#if signature?has_content>${signature?if_exists}<#else>GENERAL MANAGER(Purchase)</#if></fo:block>
 	                </fo:flow>
 		  </fo:page-sequence>	
        </#list>

@@ -80,11 +80,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 </fo:table>
                </fo:block> 	
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;         SL CODE : ${finAccntId.get("partyId")?if_exists}     ${finAccntId.get("Name")?if_exists?upper_case}                OPENING BALANCE:       ${finAccntId.get("openBalanceDebit")?if_exists?string("##0.00")}          ${finAccntId.get("openBalanceCredit")?if_exists?string("##0.00")} </fo:block>
+               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;         SL CODE : ${finAccntId.get("partyId")?if_exists}     ${finAccntId.get("Name")?if_exists?upper_case}                 </fo:block>
+               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                                                    OPENING BALANCE:       ${finAccntId.get("openBalanceDebit")?if_exists?string("##0.00")}          ${finAccntId.get("openBalanceCredit")?if_exists?string("##0.00")} </fo:block>
                 <#assign DaywiseMap=finAccntId.get("list")>
                 <#assign Daywise=DaywiseMap.entrySet()>
                 <#assign totalDebit=0>
+				<#assign totalDebit=finAccntId.get("openBalanceDebit")>
 				<#assign totalCredit=0> 
+				<#assign totalCredit=finAccntId.get("openBalanceCredit")>
                <#list Daywise as DaywiseDetails>
                 <#assign Details=DaywiseDetails.getValue()> 
                <#list Details as values>

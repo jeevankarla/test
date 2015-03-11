@@ -108,7 +108,12 @@ categoryType=context.get("categoryType");
 							  tempMap.put("partyName", partyName);
 							  }
 							  prvinvoiceId=invoiceId;
+							  if(Util.Validate.isNotEmpty(parameters.categoryType)){
 							  tempMap.put("Description", productDtls.getKey());
+							  }else{
+							  productDes = delegator.findOne("Product", [productId : productDtls.getKey()], false);
+							  tempMap.put("Description", productDes.description);
+							  }
 							  tempMap.put("quantity", productDtls.getValue().get("quantity"));
 							  tempMap.put("basicRevenue", productDtls.getValue().get("basicRevenue"));
 							  tempMap.put("bedRevenue", productDtls.getValue().get("bedRevenue"));

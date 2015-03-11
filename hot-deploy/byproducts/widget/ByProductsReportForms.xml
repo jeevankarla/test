@@ -178,7 +178,7 @@
     <form name="RegularIceCreamSaleBookCSV" type="list" list-name="Regularsaleslist" view-size="99999">
         <field name="invoiceId" title="InVoice Number"><display/></field>
         <field name="invoiceSequenceId" title="Central Excise Invoice Number"><display/></field>
-        <field name="partyName" title=" Retailer Name"><display/></field>
+        <field name="partyName" title=" Party Name"><display/></field>
         <field name="Description" title="Description"><display /></field>
         <field name="quantity" title="Quantity"><display/></field>
         <field name="basicRevenue" title="Ex-factory Value"><display/></field>

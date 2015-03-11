@@ -1060,6 +1060,17 @@ under the License.
         <field name="issuingAuthority"><display/></field>
         <field name="amount" ><display/></field>
     </form>
+    <form name="EmployeeAdvancesAndSubScheduleReportCSV" type="list" list-name="finAccountTypeIdList">
+    	<field name="finAccountTypeId" title="Loan Type"><display-entity entity-name="FinAccountType" also-hidden="false" description="${description}"></display-entity></field>
+    	<field name="partyId"><display/></field>
+    	<field name="Name" ><display/></field>
+    	<field name="openBalanceDebit" ><display/></field>
+    	<field name="openBalanceCredit"><display/></field>
+    	<field name="currentDebit" ><display/></field>
+    	<field name="currentCredit"><display/></field>
+    	<field name="closingDebit"><display/></field>
+    	<field name="closingCredit"><display/></field>
+    </form>
      <form name="PartyLedgrCsvListForm" type="list" list-name="partyLedgerDayWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
         <field name="date" title="Date"><display/></field>  
         <field name="description" title="Particulars"><display/></field>  

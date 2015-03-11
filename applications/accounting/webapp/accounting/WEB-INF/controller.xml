@@ -3686,6 +3686,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAdvancesAndSubScheduleReport"/>
     </request-map>
+    <request-map uri="EmployeeAdvancesAndSubScheduleReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeAdvancesAndSubScheduleReportCSV"/>
+    </request-map>
     
      <!--================= Bank Guarantee ==================== -->
 	
@@ -4218,5 +4222,6 @@ under the License.
    <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="PrintPayGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
    <view-map name="EmployeeAdvancesAndSubScheduleReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvancesAndSubScheduleReport" content-type="application/pdf" encoding="none"/>
+   <view-map name="EmployeeAdvancesAndSubScheduleReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#EmployeeAdvancesAndSubScheduleReportCSV" content-type="text/csv" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>
