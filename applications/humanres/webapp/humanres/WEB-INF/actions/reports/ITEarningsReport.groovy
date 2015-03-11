@@ -383,7 +383,6 @@ employmentsList.each{ employeeId->
 							}
 						}
 						
-						
 						List condList = FastList.newInstance();
 						condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_SDA"));
 						condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_DA_ARREARS"));
@@ -398,6 +397,7 @@ employmentsList.each{ employeeId->
 								periodBillingIds.each{ perBillId ->
 									List payHeadCondList = FastList.newInstance();
 									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, perBillId));
+									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.NOT_EQUAL, "SDA12000"));
 									payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 									payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
 									EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
@@ -413,6 +413,7 @@ employmentsList.each{ employeeId->
 									}
 									payHeadCondList.clear();
 									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, perBillId));
+									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.NOT_EQUAL, "SDA12000"));
 									payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 									payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_LEAVENCAS"));
 									EntityCondition payHeadCond1 = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
@@ -767,6 +768,7 @@ employmentsList.each{ employeeId->
 								periodBillingIds.each{ perBillId ->
 									List payHeadCondList = FastList.newInstance();
 									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, perBillId));
+									payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.NOT_EQUAL, "SDA12000"));
 									payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 									payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_PF"));
 									EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
