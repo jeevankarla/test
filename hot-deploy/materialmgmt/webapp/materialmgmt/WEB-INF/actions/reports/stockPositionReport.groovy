@@ -42,6 +42,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 rounding = RoundingMode.HALF_UP;
   
 fromDate = parameters.fromDate;
+ledgerFolioNo=parameters.ledgerFolioNo;
 totalQuantity = 0;
 totalRevenue = 0;
 dctx = dispatcher.getDispatchContext();
@@ -61,10 +62,25 @@ dctx = dispatcher.getDispatchContext();
  dayEnd = UtilDateTime.getDayEnd(fromDate);
  
  Map finalStockPositionMap = FastMap.newInstance();
+ if(UtilValidate.isNotEmpty(ledgerFolioNo)){	 
+ ProductAttributeId = delegator.findList("ProductAttribute",EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS , ledgerFolioNo)  , UtilMisc.toSet("productId"), null, null, false );
+ if(UtilValidate.isNotEmpty(ProductAttributeId)){
+ List prodIds= EntityUtil.getFieldListFromEntityList(ProductAttributeId, "productId", true);  
+ if(UtilValidate.isNotEmpty(prodIds)){	 
+
+ List conditionList = [];
+ conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, UtilMisc.toList("STORE","ICP_STORE")));
+ conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIds));
+ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+ productFacilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
+    }
+   }
+ }else{ 
  List conditionList = [];
  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, UtilMisc.toList("STORE","ICP_STORE")));
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
  productFacilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
+   }   
  if(UtilValidate.isNotEmpty(productFacilityList)){
 	 List productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
 	 condition=EntityCondition.makeCondition([EntityCondition.makeCondition("productId",EntityOperator.IN,productIdList),EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"RAW_MATERIAL")],EntityOperator.AND);

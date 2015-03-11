@@ -31,16 +31,41 @@ import org.ofbiz.party.party.PartyHelper;
 
 fromDate=parameters.fromDateMr;
 thruDate=parameters.thruDateMr;
-productId=parameters.productId;
-context.productId=productId;
+productIds=[];
+if(UtilValidate.isNotEmpty(parameters.productId)){	
+if(UtilValidate.isEmpty(parameters.issueToFacilityId)){		
+productIds.add(parameters.productId);
+//context.productId=parameters.productId;
+	}
+ }
+facilityId=parameters.issueToFacilityId;
+
 fromDateTime = null;
 thruDateTime = null;
 
-prodDetails = delegator.findOne("Product", [productId : productId], false);
-if(UtilValidate.isNotEmpty(prodDetails)){
-   materialName = prodDetails.productName;
-  context.put("materialName",materialName);
+if(UtilValidate.isNotEmpty(facilityId)){
+context.facilityId=facilityId;
+
+conditionList =[];
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+if(UtilValidate.isNotEmpty(parameters.productId)){
+conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
+   }
+EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+ProductFacilityIds = delegator.findList("ProductFacility", condition, null,null, null, false);
+productIds=EntityUtil.getFieldListFromEntityList(ProductFacilityIds, "productId", true);
 }
+
+if(UtilValidate.isEmpty(facilityId)){
+prodDetails = delegator.findOne("Product", [productId : parameters.productId], false);
+if(UtilValidate.isNotEmpty(prodDetails)){
+   materialName = prodDetails.description;
+   internalName = prodDetails.internalName;
+   context.put("internalName",internalName);
+   
+  context.put("materialName",materialName);
+  }
+ }
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
@@ -51,19 +76,19 @@ try {
 
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
-
+shipmentMap=[:];mrrList=[];
+if(UtilValidate.isNotEmpty(productIds)){	
 condList =[];
-if(UtilValidate.isNotEmpty(productId)){	
-condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-}
+condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 shipmentReceiptList = delegator.findList("ShipmentReceipt", cond, null,null, null, false);
-shipmentMap=[:];
+
+
 shipmentMap["totalInvoiceAmt"]=BigDecimal.ZERO;
 shipmentMap["totalPaidAmt"]=BigDecimal.ZERO;
-mrrList=[];
+
 if(UtilValidate.isNotEmpty(shipmentReceiptList)){
 shipmentReceiptList.each{shipmentData->	
    shipmentDetailMap=[:];
@@ -181,6 +206,7 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    
  
    }
+  }
 }
 context.shipmentMap=shipmentMap;
 context.mrrList=mrrList;
