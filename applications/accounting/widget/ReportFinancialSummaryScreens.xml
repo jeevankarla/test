@@ -3806,6 +3806,44 @@
 		    </widgets>								
 		</section>
 	</screen>   -->
+	<screen name="EmployeeAdvancesAndSubScheduleReportCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<!-- <set field="parameters.screenFlag" value="TreasurerPortal" /> -->
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/EmployeeAdvances.groovy"/>
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="EmployeeAdvancesAndSubScheduleReportCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="GroupPaymentCSV">
 		<section>
 			<actions>

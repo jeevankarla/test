@@ -19,6 +19,11 @@
 
 import org.ofbiz.base.util.*
 
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+
 reportTypeFlag = parameters.reportTypeFlag;
 finAccountReconciliationList=[];
 finAccountReconciliationListMap=[:];
