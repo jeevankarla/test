@@ -39,7 +39,7 @@ basicSalDate=UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 conList=[];
 conList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
 conList.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"SP_LEAVE_ENCASH"));
-conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"GENERATED"));
+conList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("GENERATED","APPROVED")));
 con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 periodList=delegator.findList("PeriodBilling",con,null,null,null,false);
 if(periodList){
