@@ -108,7 +108,8 @@ categoryType=context.get("categoryType");
 							  tempMap.put("partyName", partyName);
 							  }
 							  prvinvoiceId=invoiceId;
-							  if(Util.Validate.isNotEmpty(parameters.categoryType)){
+							  
+							  if(UtilValidate.isNotEmpty(parameters.categoryType)){
 							  tempMap.put("Description", productDtls.getKey());
 							  }else{
 							  productDes = delegator.findOne("Product", [productId : productDtls.getKey()], false);

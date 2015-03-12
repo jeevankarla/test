@@ -123,7 +123,7 @@ under the License.
                     <fo:table-cell><fo:block text-align="left" keep-together="always">${emp.get("name")?upper_case}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="left" keep-together="always">${emp.get("position")}</fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(emp.get("appDate"), "dd-MMM-yy")}</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block text-align="left" keep-together="always">${emp.get("appDate")}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="center" keep-together="always">${emp.get("leaveTypeId")}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
