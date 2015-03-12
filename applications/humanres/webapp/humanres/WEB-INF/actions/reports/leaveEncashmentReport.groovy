@@ -12,6 +12,7 @@ import in.vasista.vbiz.humanres.EmplLeaveService;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresApiService;
 import in.vasista.vbiz.humanres.HumanresService;
+import org.ofbiz.party.party.PartyHelper;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
@@ -42,20 +43,25 @@ conList.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,
 conList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("GENERATED","APPROVED")));
 con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 periodList=delegator.findList("PeriodBilling",con,null,null,null,false);
+periodBillingIds=EntityUtil.getFieldListFromEntityList(periodList,"periodBillingId",true);
+periodBillingMap=[:];
 if(periodList){
-	period=EntityUtil.getFirst(periodList);
-	periodBillingId=period.get("periodBillingId");
-	basicSalDate=period.get("basicSalDate");
+	for(GenericValue period:periodList){
+		periodBillingId=period.get("periodBillingId");
+		basicSalDate=period.get("basicSalDate");
+		if(UtilValidate.isEmpty(periodBillingMap[periodBillingId])){
+			periodBillingMap[periodBillingId]=basicSalDate;
+		}
+	}
 }
-
 employementIds=[];
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.EQUALS,periodBillingId));
+conditionList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.IN,periodBillingIds));
 conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,"Company"));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 payrollHeaderList=delegator.findList("PayrollHeader",condition,null,null,null,false);
 employementIds = EntityUtil.getFieldListFromEntityList(payrollHeaderList, "partyIdFrom", true);
-emplInputMap = [:];
+/*emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
 emplInputMap.put("fromDate", fromDate);
@@ -63,19 +69,19 @@ emplInputMap.put("thruDate", thruDate);
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
-finalList=[];
-if(UtilValidate.isNotEmpty(employementList)){
-	employementList.each{employment->
-		if(employementIds.contains(employment.partyId)){
+*/finalList=[];
+if(UtilValidate.isNotEmpty(payrollHeaderList)){
+	payrollHeaderList.each{payrolHead->
+		//if(employementIds.contains(employment.partyId)){
 			employee=[:];
 			//name
-			String lastName="";
-			if(employment.lastName!=null){
+			partyName=PartyHelper.getPartyName(delegator, payrolHead.partyIdFrom, false);
+			/*if(employment.lastName!=null){
 				lastName=employment.lastName;
-			}
+			}*/
 			//possition
 			employeePosition = "";
-			emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));
+			emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : payrolHead.partyIdFrom]));
 			emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
 			if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
 				emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
@@ -87,27 +93,28 @@ if(UtilValidate.isNotEmpty(employementList)){
 				}
 			}
 			//Leave Balance
+			billingId=payrolHead.periodBillingId;
 			String leaveTypeId="EL";
 			int balance=0;
 			int appDays=15;
 			inputMap = [:];
-			inputMap.put("balanceDate", UtilDateTime.toSqlDate(basicSalDate));
-			inputMap.put("employeeId", employment.partyIdTo);
+			inputMap.put("balanceDate", UtilDateTime.toSqlDate(periodBillingMap.get(billingId)));
+			inputMap.put("employeeId", payrolHead.partyIdFrom);
 			inputMap.put("leaveTypeId", leaveTypeId);
 			Map EmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
 			if(UtilValidate.isNotEmpty(EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId))){
 				balance=EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId);
 			}	
 			employee.put("balance", balance);
-			employee.put("name", employment.firstName + " " + lastName)
-			employee.put("partyId",employment.partyIdTo);
+			employee.put("name", partyName)
+			employee.put("partyId",payrolHead.partyIdFrom);
 			employee.put("position", employeePosition);
-			employee.put("appDate", basicSalDate);
+			employee.put("appDate", UtilDateTime.toDateString(periodBillingMap.get(billingId),"dd-MMM-yy"));
 			employee.put("appDays", appDays);
 			employee.put("leaveTypeId", leaveTypeId);
 			
 			finalList.add(employee);
-		}
+		
 	}
 }
 if(UtilValidate.isEmpty(finalList)){

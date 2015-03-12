@@ -108,6 +108,7 @@ categoryType=context.get("categoryType");
 							  tempMap.put("partyName", partyName);
 							  }
 							  prvinvoiceId=invoiceId;
+							  
 							  if(UtilValidate.isNotEmpty(parameters.categoryType)){
 							  tempMap.put("Description", productDtls.getKey());
 							  }else{
