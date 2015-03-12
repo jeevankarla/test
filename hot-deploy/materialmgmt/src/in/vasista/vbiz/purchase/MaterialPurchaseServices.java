@@ -1627,6 +1627,7 @@ public class MaterialPurchaseServices {
 				termCreateCtx.put("userLogin", userLogin);
 				termCreateCtx.put("orderId", orderId);
 				termCreateCtx.put("termTypeId", (String)eachTermMap.get("termTypeId"));
+				termCreateCtx.put("description", (String)eachTermMap.get("description"));
 				Map orderTermResult = dispatcher.runSync("createOrderTerm",termCreateCtx);
 				if (ServiceUtil.isError(orderTermResult)) {
 					String errMsg =  ServiceUtil.getErrorMessage(orderTermResult);

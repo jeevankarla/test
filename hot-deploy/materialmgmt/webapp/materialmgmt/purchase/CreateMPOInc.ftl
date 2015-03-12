@@ -259,7 +259,7 @@
 				var inputAdjVal = jQuery("<input>").attr("type", "hidden").attr("name", "adjustmentValue_o_" + rowCount).val(adjValue);
 				var inputUom = jQuery("<input>").attr("type", "hidden").attr("name", "uomId_o_" + rowCount).val(uomId);
 				var inputDays = jQuery("<input>").attr("type", "hidden").attr("name", "termDays_o_" + rowCount).val(termDays);
-				var inputDescription = jQuery("<input>").attr("type", "hidden").attr("name", "termDescription_o_" + rowCount).val(description);
+				var inputDescription = jQuery("<input>").attr("type", "hidden").attr("name", "description_o_" + rowCount).val(description);
 				
 				jQuery(formId).append(jQuery(inputTermId));				
 				jQuery(formId).append(jQuery(inputApplicable));
