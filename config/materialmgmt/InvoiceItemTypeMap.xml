@@ -10,4 +10,5 @@
 <InvoiceItemTypeMap invoiceItemMapKey="COGS_TNS_CHG" invoiceItemTypeId="COGS_TNS_CHG" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
 <InvoiceItemTypeMap invoiceItemMapKey="COGS_PCK_FWD_ATR" invoiceItemTypeId="COGS_PCK_FWD_ATR" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
 <InvoiceItemTypeMap invoiceItemMapKey="COGS_DISC_ATR" invoiceItemTypeId="COGS_DISC_ATR" invoiceTypeId="PURCHASE_INVOICE" organizationPartyId="Company"/> 
+<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="COGS_HANDLING_CHRGS" invoiceItemTypeId="COGS_HANDLING_CHRGS"/>
 </entity-engine-xml>
