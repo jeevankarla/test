@@ -13,4 +13,6 @@
 <OrderAdjustmentType description="Transportation Charges" hasTable="N" orderAdjustmentTypeId="COGS_TNS_CHG"/>
 <OrderAdjustmentType description="Packing And Forwarding Charges After Tax" hasTable="N" orderAdjustmentTypeId="COGS_PCK_FWD_ATR"/>
 <OrderAdjustmentType description="Discount After" hasTable="N" orderAdjustmentTypeId="COGS_DISC_ATR"/>
+<OrderAdjustmentType  description="Sales Order Adjustments" orderAdjustmentTypeId="SALE_ORDER_ADJUSTMNT"/>
+<OrderAdjustmentType  description="Handling Charges On Sales" hasTable="N"  orderAdjustmentTypeId="COGS_HANDLING_CHRGS" parentTypeId="SALE_ORDER_ADJUSTMNT"/> 
 </entity-engine-xml>
