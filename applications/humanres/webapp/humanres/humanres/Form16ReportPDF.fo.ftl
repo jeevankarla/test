@@ -1126,22 +1126,10 @@
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
-	                           		<#if (employeeValues.getValue().get("totalIncome") < 500000) >
-	                           			<#assign rebate = 2000>
-	                           		<#else>
-	                           			<#assign rebate = 0>
-	                           		</#if>
-	                           		<#if (rebate > employeeValues.getValue().get("tax"))>
-	                           			<#assign rebate = employeeValues.getValue().get("tax")>
-	                           		</#if>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if rebate?has_content>${rebate?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("rebate")?has_content>${employeeValues.getValue().get("rebate")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
-			                   	<#assign taxAfterRebate = 0>
-			                   	<#if employeeValues.getValue().get("tax")!= 0>
-			                   		<#assign taxAfterRebate = employeeValues.getValue().get("tax") - rebate>
-			                   	</#if>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(14) Tax on total after Rebate </fo:block>
@@ -1153,12 +1141,12 @@
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if taxAfterRebate?has_content>${taxAfterRebate?if_exists?string("#0.00")}&#160;&#160;<#else> &#160;</#if></fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("taxAfterRebate")?has_content>${employeeValues.getValue().get("taxAfterRebate")?if_exists?string("#0.00")}&#160;&#160;<#else> &#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(15) Education Cess @ 3% on (tax at S.No.12)</fo:block>
+	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(15) Education Cess @ 3% on (tax at S.No.14)</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
@@ -1167,11 +1155,11 @@
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("educationalCessAmount")?has_content>${(employeeValues.getValue().get("educationalCessAmount"))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("educationalCessAmount")?has_content>${employeeValues.getValue().get("educationalCessAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<#if employeeValues.getValue().get("educationalCessAmount")?has_content>
-			                   		<#assign taxPay = taxAfterRebate + employeeValues.getValue().get("educationalCessAmount")>
+			                   		<#assign taxPay = employeeValues.getValue().get("taxAfterRebate") + employeeValues.getValue().get("educationalCessAmount")>
 			                   	</#if>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
@@ -1185,6 +1173,11 @@
 	                           		</fo:table-cell>
 	                           		<#assign taxPayable = 0>
 	                           		<#assign actualTaxPayable = 0>
+	                           		<#if employeeValues.getValue().get("rebate")?has_content>
+	                           			<#assign rebate = employeeValues.getValue().get("rebate")>
+	                           		<#else>
+	                           			<#assign rebate = 0>
+	                           		</#if>
 	                           		<#if employeeValues.getValue().get("taxPayable")?has_content>
 	                           			<#assign taxPayable = employeeValues.getValue().get("taxPayable") - rebate>
 	                           		</#if>
