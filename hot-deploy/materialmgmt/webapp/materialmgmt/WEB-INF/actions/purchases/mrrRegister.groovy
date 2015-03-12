@@ -74,6 +74,16 @@ try {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
 
+
+if(UtilValidate.isNotEmpty(parameters.Unions)){	
+	partyRoleData = delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"Unions")  , null, null, null, false );
+	partyRoleIds=EntityUtil.getFieldListFromEntityList(partyRoleData, "partyId", true);
+	if(UtilValidate.isNotEmpty(partyRoleIds)){	
+	OrderRoleData = delegator.findList("OrderRole",EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyRoleIds)  , null, null, null, false );		
+	OrderRoleIds=EntityUtil.getFieldListFromEntityList(OrderRoleData, "orderId", true);		
+	}		
+ }
+	
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 shipmentMap=[:];mrrList=[];
@@ -82,6 +92,13 @@ condList =[];
 condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+if(UtilValidate.isNotEmpty(parameters.Unions)){
+	if(UtilValidate.isNotEmpty(partyRoleIds)){
+		if(UtilValidate.isNotEmpty(OrderRoleIds)){
+condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, OrderRoleIds));
+	} 
+   }
+ }	
 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 shipmentReceiptList = delegator.findList("ShipmentReceipt", cond, null,null, null, false);
 
