@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProductCategoryGlAccount productCategoryId="TRANS_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="MULT_MEC_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="ELCT_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="BOILER_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="REF_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="POWDER_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="ICP_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="CIVIL_ITEMS" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="FUEL" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="OIL_LUB" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="UNIFORMS" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="CONSUMABLES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="COMP_PARTS" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="COMP_SOFT" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="CLNG_MTRL" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="LAB_SPARES" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="FURN_FIX_WOFF" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="GEL_STATIONERY" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="FXD_ASST" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="ICP_RAW" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="OTHER_PUR" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="DAIRY_RAW" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="POWDER_RAW" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="NEW_PRODUCT_RAW" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="FXD_ASST_DAIRY" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="FXD_ASST_ICP" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="FXD_ASST_POWDER" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401021"/>
+    <ProductCategoryGlAccount productCategoryId="PACK_MTRL_DAIRY" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401022"/>
+    <ProductCategoryGlAccount productCategoryId="PACK_MTRL_AMUL" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401022"/>
+    <ProductCategoryGlAccount productCategoryId="PACK_MTRL_NANDINI" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401022"/>
+    <ProductCategoryGlAccount productCategoryId="PACK_MTRL_POWDER" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401022"/>
+    <ProductCategoryGlAccount productCategoryId="PACK_MTRL_PRDT_PLAN" organizationPartyId="Company" glAccountTypeId="SALES_ACCOUNT" glAccountId="401022"/>
+</entity-engine-xml>
