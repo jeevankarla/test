@@ -12,4 +12,5 @@
 <InvoiceItemType defaultGlAccountId="510002" description="Transportation Charges" hasTable="N" invoiceItemTypeId="COGS_TNS_CHG"/>
 <InvoiceItemType defaultGlAccountId="510002" description="Packing And Forwarding Charges After Tax" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD_ATR"/>
 <InvoiceItemType defaultGlAccountId="510002" description="Discount After" hasTable="N" invoiceItemTypeId="COGS_DISC_ATR"/>
+<InvoiceItemType description="Invoice Item Handling Chrages" hasTable="N" invoiceItemTypeId="COGS_HANDLING_CHRGS" defaultGlAccountId="409032"/>
 </entity-engine-xml>
