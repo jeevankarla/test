@@ -3,15 +3,19 @@ import java.lang.*;
 import java.sql.*;
 import java.util.Calendar;
 import java.sql.Timestamp;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
+import java.util.concurrent.TimeUnit;
 import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.*;
@@ -751,37 +755,42 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			totalIncome = 0;
 		}
 		BigDecimal totIncome = new BigDecimal(totalIncome);
-		employeeDetails = PayrollService.getEmployeePayrollCondParms(dctx,UtilMisc.toMap("employeeId",employee,"timePeriodStart",fromDateStart,"timePeriodEnd",thruDateEnd,"userLogin",userLogin));
-		if(UtilValidate.isNotEmpty(employeeDetails)){
-			age = employeeDetails.get("age");
-			Debug.log("age================"+age);
-			List employeeTaxSlabList=[];
-			employeeTaxSlabList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
-			employeeTaxSlabList.add(EntityCondition.makeCondition("age", EntityOperator.EQUALS, "60"));
-			if(age < "60"){
-				employeeTaxSlabList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_LT"));
-			}else{
-				employeeTaxSlabList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_GTE"));
+		currDayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+		//employeeDetails = PayrollService.getEmployeePayrollCondParms(dctx,UtilMisc.toMap("employeeId",employee,"timePeriodStart",fromDateStart,"timePeriodEnd",currDayEnd,"userLogin",userLogin));
+		person = delegator.findOne("Person", [partyId : employee], false);
+		String age = "";
+		if(UtilValidate.isNotEmpty(person)){
+			if(UtilValidate.isNotEmpty(person.getDate("birthDate"))){
+				ageTime = (UtilDateTime.toSqlDate(thruDateEnd)).getTime()- (person.getDate("birthDate")).getTime();
+				age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_DOWN)).toString());
 			}
-			employeeTaxSlabList.add(EntityCondition.makeCondition("totalIncomeFrom", EntityOperator.LESS_THAN_EQUAL_TO, totIncome));
-			employeeTaxSlabList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("totalIncomeTo", EntityOperator.GREATER_THAN_EQUAL_TO, totIncome), EntityOperator.OR,
-				EntityCondition.makeCondition("totalIncomeTo", EntityOperator.EQUALS, null)));
-			taxSlabCondition=EntityCondition.makeCondition(employeeTaxSlabList,EntityOperator.AND);
-			employeeTaxList = delegator.findList("TaxSlabs", taxSlabCondition , null, null, null, false );
+		}
+		List employeeTaxSlabList=[];
+		employeeTaxSlabList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
+		employeeTaxSlabList.add(EntityCondition.makeCondition("age", EntityOperator.EQUALS, "60"));
+		if(age < "60"){
+			employeeTaxSlabList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_LT"));
+		}else{
+			employeeTaxSlabList.add(EntityCondition.makeCondition("operatorEnumId", EntityOperator.EQUALS, "PRC_GTE"));
+		}
+		employeeTaxSlabList.add(EntityCondition.makeCondition("totalIncomeFrom", EntityOperator.LESS_THAN_EQUAL_TO, totIncome));
+		employeeTaxSlabList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("totalIncomeTo", EntityOperator.GREATER_THAN_EQUAL_TO, totIncome), EntityOperator.OR,
+			EntityCondition.makeCondition("totalIncomeTo", EntityOperator.EQUALS, null)));
+		taxSlabCondition=EntityCondition.makeCondition(employeeTaxSlabList,EntityOperator.AND);
+		employeeTaxList = delegator.findList("TaxSlabs", taxSlabCondition , null, null, null, false );
+		if(UtilValidate.isNotEmpty(employeeTaxList)){
+			employeeTaxList = EntityUtil.getFirst(employeeTaxList);
 			if(UtilValidate.isNotEmpty(employeeTaxList)){
-				employeeTaxList = EntityUtil.getFirst(employeeTaxList);
-				if(UtilValidate.isNotEmpty(employeeTaxList)){
-					taxPercentage = employeeTaxList.get("taxPercentage");
-					refundAmount = employeeTaxList.get("refundAmount");
-					if(taxPercentage != 0){
-						totalIncomeFrom = employeeTaxList.get("totalIncomeFrom");
-						if(UtilValidate.isNotEmpty(totalIncomeFrom)){
-							excess = totalIncome - totalIncomeFrom;
-							tax = (taxPercentage/100)*excess;
-						}
-						if(refundAmount != 0){
-							tax = tax + refundAmount;
-						}
+				taxPercentage = employeeTaxList.get("taxPercentage");
+				refundAmount = employeeTaxList.get("refundAmount");
+				if(taxPercentage != 0){
+					totalIncomeFrom = employeeTaxList.get("totalIncomeFrom");
+					if(UtilValidate.isNotEmpty(totalIncomeFrom)){
+						excess = totalIncome - totalIncomeFrom;
+						tax = (taxPercentage/100)*excess;
+					}
+					if(refundAmount != 0){
+						tax = tax + refundAmount;
 					}
 				}
 			}
@@ -824,6 +833,15 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			totalTaxDeductedatSource = totalTaxDeductedatSource.setScale(0, BigDecimal.ROUND_HALF_UP);
 			employeeDetailsMap.put("totalTaxDeductedatSource",totalTaxDeductedatSource);
 		}
+		rebate = 0;
+		taxAfterRebate = 0;
+		educationalCessAmount = 0;
+		BigDecimal taxAfterRebateValue = BigDecimal.ZERO;
+		if(totalIncome < 500000){
+			rebate = 2000;
+		}else{
+			rebate = 0;
+		}
 		employeeDetailsMap.put("totalLICAmt",totalLICAmt);
 		employeeDetailsMap.put("employeeName",employeeName);
 		employeeDetailsMap.put("balance",balance);
@@ -835,6 +853,23 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		BigDecimal taxOnIncome = new BigDecimal(tax);
 		taxOnIncome=taxOnIncome.setScale(0, BigDecimal.ROUND_HALF_UP);
 		employeeDetailsMap.put("tax",taxOnIncome);
+		if(UtilValidate.isNotEmpty(taxOnIncome)){
+			if(rebate > taxOnIncome){
+				rebate = taxOnIncome;
+		   }
+			taxAfterRebate = taxOnIncome - rebate;
+			taxAfterRebateValue = new BigDecimal(taxAfterRebate);
+			taxAfterRebateValue = taxAfterRebateValue.setScale(0, BigDecimal.ROUND_HALF_UP);
+			employeeDetailsMap.put("rebate",rebate);
+			employeeDetailsMap.put("taxAfterRebate",taxAfterRebateValue);
+		}
+		if(UtilValidate.isNotEmpty(taxAfterRebateValue)){
+			educationalCessAmount = taxAfterRebateValue * (0.03);
+			BigDecimal educationalCessAmt = new BigDecimal(educationalCessAmount);
+			educationalCessAmt = educationalCessAmt.setScale(0, BigDecimal.ROUND_HALF_UP);
+			employeeDetailsMap.put("educationalCessAmount",educationalCessAmt);
+		}
+		
 		if(conveyAlw != 0){
 			employeeDetailsMap.put("totalConveyanceTaxableAmount",conveyAlw);
 		}
