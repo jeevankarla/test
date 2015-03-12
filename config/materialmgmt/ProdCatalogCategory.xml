@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="TRANS_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="MULT_MEC_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="ELCT_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="BOILER_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="REF_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="POWDER_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="ICP_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="CIVIL_ITEMS" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="FUEL" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="OIL_LUB" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="UNIFORMS" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="CONSUMABLES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="COMP_PARTS" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="COMP_SOFT" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="CLNG_MTRL" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="LAB_SPARES" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="FURN_FIX_WOFF" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="GEL_STATIONERY" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="FXD_ASST" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="ICP_RAW" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="OTHER_PUR" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="DAIRY_RAW" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="POWDER_RAW" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="NEW_PRODUCT_RAW" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="FXD_ASST_DAIRY" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="FXD_ASST_ICP" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="FXD_ASST_POWDER" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="PACK_MTRL_DAIRY" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="PACK_MTRL_AMUL" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="PACK_MTRL_NANDINI" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="PACK_MTRL_POWDER" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+    <ProdCatalogCategory prodCatalogId="FGS_SALE_INVENTORY" productCategoryId="PACK_MTRL_PRDT_PLAN" prodCatalogCategoryTypeId="PCCT_BROWSE_INVNTRY" fromDate="2011-01-01 00:00:00"/>
+</entity-engine-xml>
