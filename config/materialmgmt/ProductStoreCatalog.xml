@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProductStoreCatalog fromDate="2014-01-20 00:00:00" prodCatalogId="FGS_SALE_INVENTORY" productStoreId="1012"/>
+    <ProductStoreCatalog fromDate="2014-01-20 00:00:00" prodCatalogId="FGS_SALE_INVENTORY" productStoreId="1013"/>
+</entity-engine-xml>
