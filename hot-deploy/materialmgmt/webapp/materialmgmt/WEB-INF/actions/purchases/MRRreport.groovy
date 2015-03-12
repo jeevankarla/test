@@ -200,7 +200,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	List cList=[];
 	cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
 	cList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS,grnData.shipmentItemSeqId));
-	cList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"SR_ACCEPTED"));
+	cList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN,['SR_ACCEPTED','SR_REJECTED']));
 	condit=EntityCondition.makeCondition(cList,EntityOperator.AND);
 	
 	shipmtReciptList = delegator.findList("ShipmentReceipt", condit , null, null, null, false );

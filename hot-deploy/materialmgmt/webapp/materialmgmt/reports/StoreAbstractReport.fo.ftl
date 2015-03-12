@@ -244,22 +244,22 @@ under the License.
 					                     <fo:block text-align="center"  font-size="9pt" >${productDetails.get("unit")?if_exists}</fo:block>
 					           </fo:table-cell>
                                 <fo:table-cell border-style="solid">
-								    <fo:block text-align="right"  font-size="9pt" >${productDetails.get("openingQty")?if_exists}</fo:block>
+								    <fo:block text-align="right"  font-size="9pt" ><#if productDetails.get("openingQty")?has_content>${productDetails.get("openingQty")?if_exists}<#else>0</#if></fo:block>
 							   </fo:table-cell>
 							   <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="9pt"  ><#if productDetails.get("openingTot")?has_content>${productDetails.get("openingTot")?if_exists?string("##0.00")?if_exists}<#else></#if></fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ><#if productDetails.get("openingTot")?has_content>${productDetails.get("openingTot")?if_exists?string("##0.00")?if_exists}<#else>0.00</#if></fo:block>
 							  </fo:table-cell>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="9pt"  >${productDetails.get("ReceiptQty")?if_exists}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ><#if productDetails.get("ReceiptQty")?has_content> ${productDetails.get("ReceiptQty")?if_exists}<#else>0</#if></fo:block>
 							  </fo:table-cell>
 							  <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="9pt"  ><#if productDetails.get("ReceiptAmount")?has_content>${productDetails.get("ReceiptAmount")?if_exists?string("##0.00")?if_exists}<#else></#if></fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ><#if productDetails.get("ReceiptAmount")?has_content>${productDetails.get("ReceiptAmount")?if_exists?string("##0.00")?if_exists}<#else>0.00</#if></fo:block>
 							  </fo:table-cell>
-                               <#assign totQty=productDetails.get("openingQty")+productDetails.get("ReceiptQty")> 							  
+                     <#if productDetails.get("ReceiptQty")?has_content>          <#assign totQty=productDetails.get("openingQty")+productDetails.get("ReceiptQty")> 	<#else> <#assign totQty=productDetails.get("openingQty")></#if>						  
                               <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="9pt"  >${totQty?if_exists}</fo:block>
 							  </fo:table-cell>
-							  <#assign totVal=productDetails.get("openingTot")+productDetails.get("ReceiptAmount")> 
+					<#if productDetails.get("ReceiptAmount")?has_content> 		  <#assign totVal=productDetails.get("openingTot")+productDetails.get("ReceiptAmount")> <#else> <#assign totVal=productDetails.get("openingTot")></#if>	
                               <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="9pt"  ><#if totVal?has_content>${totVal?if_exists?string("##0.00")?if_exists}<#else></#if></fo:block>
 							  </fo:table-cell>
@@ -270,7 +270,7 @@ under the License.
 								<#assign issQty = 0>
 							</#if>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="9pt"  >${issQty}</fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ><#if issQty?has_content>${issQty}<#else>0</#if></fo:block>
 							  </fo:table-cell>
 							  <#assign amt=productDetails.get("IssueAmount")>
 							  <#if amt?has_content>
@@ -279,13 +279,13 @@ under the License.
 								<#assign issAmt = 0>
 							  </#if>
                               <fo:table-cell border-style="solid">
-								   <fo:block text-align="right" font-size="9pt"  ><#if issAmt?has_content>${issAmt?if_exists?string("##0.00")?if_exists}<#else></#if></fo:block>
+								   <fo:block text-align="right" font-size="9pt"  ><#if issAmt?has_content>${issAmt?if_exists?string("##0.00")?if_exists}<#else>0.00</#if></fo:block>
 							  </fo:table-cell>
-							  <#assign closeQty=totQty- issQty>
+						<#if issQty?has_content>	  <#assign closeQty=totQty- issQty> <#else><#assign closeQty=totQty></#if>
                               <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="9pt"  >${closeQty?if_exists}</fo:block>
 							  </fo:table-cell> 
-                              <#assign closeVal=totVal- issAmt>
+                        <#if issAmt?has_content>      <#assign closeVal=totVal- issAmt> <#else> <#assign closeVal=totVal></#if>
                               <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="9pt"  ><#if closeVal?has_content>${closeVal?if_exists?string("##0.00")?if_exists}<#else></#if></fo:block>
 							  </fo:table-cell>
