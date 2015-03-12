@@ -59,4 +59,284 @@
 		</section>
     </screen>
 
+<screen name="DepotSalesIndent">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Depot Sales Indent"/>              
+			   <set field="tabButtonItem" value="DepositIndent" />	
+			   <set field="tabButtonItem2" value="indent"/>  
+			    <set field="changeFlag" value="DepotSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				 <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
+                      	<section>
+                      	
+	                    	<condition>
+	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                        </condition>
+                      		<widgets>
+           						<include-screen name="DepotSaleInner"/>
+                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                          <widgets>
+      						 <include-screen name="SalesInnerDepotScreen"/>
+                 		</widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DepotSaleInner">
+        <section>
+            <actions>
+               <set field="changeFlag" from-field="changeFlag"/> 
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+              
+            
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <set field="checkListType" value="indentEntry"/>
+               <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>  
+                    	<condition-expr field-name="enumId" operator="not-equals" value="CARD"/> 
+                    	 <condition-expr field-name="enumId" operator="not-equals" value="LEAK"/>  
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+              
+               <!--  <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition> -->                
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+               <set field="routeId" from-field="parameters.routeId"/>            
+            </actions>
+            <widgets>
+               	<section>
+                 	 <widgets>
+          					<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/indentAdhocSaleDepot.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen> 
+    
+    <screen name="SalesInnerDepotScreen">
+        <section>
+            <actions>
+            	<set field="changeFlag" from-field="changeFlag"/>  
+               	<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               	<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/> 
+               	<set field="boothId" from-field="parameters.boothId"/>
+                <!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                    <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition> -->
+                <set field="checkListType" value="indentEntry"/>
+                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+                <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+                <set field="PONumber" from-field="parameters.PONumber"/>
+                <set field="promotionAdj" from-field="parameters.promotionAdj"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <set field="vehicleId" from-field="parameters.vehicleId"/>
+                 <set field="productStoreId" from-field="parameters.productStoreIdFrom"/>
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/AdhocIndentFormDepot.groovy"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              
+               <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>    -->             
+            </actions>
+            <widgets>
+                   <section>
+                       	<widgets>
+                       	    <platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/indentAdhocSaleDepot.ftl"/></html></platform-specific>
+                        </widgets>
+                       <fail-widgets>
+                           <platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/indentAdhocSaleDepot.ftl"/></html></platform-specific>								                           
+                       </fail-widgets>
+                   </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ProcessDepotOrders">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Process Depot Orders"/>              
+			    <set field="tabButtonItem" value="DepositIndent" />	
+			   <set field="tabButtonItem2" value="ProcessDepotOrders"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="depotSales"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+              <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
+                        <section>
+                            <widgets>
+               					<screenlet title="Depot Orders">
+               						<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/ListSearchOrdersDepot.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+    <screen name="IndentPrintReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/nonRouteMktGatePass.groovy" />  
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/IndentPrintReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+    
+    <screen name="NonRouteGatePassPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/nonRouteMktGatePass.groovy" />  
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/nonRouteMktGatePass.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="FindDepotShipment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Depot Sale Shipments"/>              
+			    <set field="tabButtonItem" value="DepositIndent" />	
+			   <set field="tabButtonItem2" value="FindDepotShipment"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindDepotShipment"/>
+               <set field="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+               <set field="screenFlag" value="depotSales"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+			                            			<include-form name="FindShipmentDepot" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<include-form name="listShipmentsDepot" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+    <screen name="BuyerInvoicePDF">
+            <section>
+                <actions>
+                   <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/buyerInvoicePrint.groovy"/>
+                </actions>           
+                <widgets>
+                    	<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/buyerInvoiceSlipsDepot.fo.ftl"/></html></platform-specific>                 
+                </widgets>
+            </section>
+   </screen>
+   
+   <screen name="TaxInvoicePDF">
+            <section>
+                <actions>
+                   <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                   <!-- <set field="invoiceIds" from-field="parameters.invoiceIds" type="List"/> -->
+                   <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/printInvoices.groovy"/>  -->
+                   <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/invoiceSlips.groovy"/> -->
+                   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/buyerInvoicePrint.groovy"/>
+                </actions>           
+                <widgets>
+                    	<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/TaxInvoiceDepotPDF.fo.ftl"/></html></platform-specific>                 
+                </widgets>
+            </section>
+   </screen> 
+
 </screens>
