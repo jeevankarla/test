@@ -109,7 +109,7 @@ under the License.
 					                 </fo:table-row>
 		                        	<fo:table-row>
 		                        			<fo:table-cell>
-							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false"><#if stockDet != "Others">Ledger Folio Total<#else>Others Total</#if></fo:block>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Ledger Folio Total</fo:block>
 							       			</fo:table-cell>
 											<fo:table-cell>
 							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
@@ -139,6 +139,89 @@ under the License.
 		                        			</fo:table-cell>
 					                 </fo:table-row>
 	                    			</#list>
+	                                <#if otherStockPositionMap?has_content>
+									<#assign others=otherStockPositionMap.entrySet()>
+                                    <#list others as otherValues> 
+                                    <#assign ledgerTotalPromise = 0>
+				                     <#assign ledgerQtyHnd = 0>
+                                     <#assign ledgerQtyRecvd = 0>
+                                     <fo:table-row>
+		                        			<fo:table-cell>
+		                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">${otherValues.getKey()?if_exists}</fo:block>  
+		                        			</fo:table-cell>
+		                        	</fo:table-row>
+		                        	<fo:table-row>
+		                        			<fo:table-cell>
+		                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
+		                        			</fo:table-cell>
+					                 </fo:table-row>
+					                 <#assign otherDetails=otherValues.getValue()>
+                                     <#list otherDetails as details>
+    								<fo:table-row>
+		                        			<fo:table-cell>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
+							       			</fo:table-cell>
+											<fo:table-cell>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${details.get("internalName")?if_exists}</fo:block>
+							       			</fo:table-cell>
+							       			<fo:table-cell>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${details.get("productName")?if_exists}</fo:block>
+							       			</fo:table-cell>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${details.get("uomDescription")?if_exists}</fo:block>
+							       			</fo:table-cell>
+							       			<#assign ledgerTotalPromise = ledgerTotalPromise+details.get("quantityOnHandTotal")>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always"  text-align="right" font-size="12pt" white-space-collapse="false">${details.get("quantityOnHandTotal")?if_exists?string("##0.000")}</fo:block>
+							       			</fo:table-cell>
+							       			<#assign ledgerQtyHnd = ledgerQtyHnd+details.get("qcQuantity")>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always"   text-align="right" font-size="12pt" white-space-collapse="false">${details.get("receivedQty")?if_exists?string("##0.000")}</fo:block>
+							       			</fo:table-cell>
+                                             <#assign ledgerQtyRecvd = ledgerQtyRecvd+details.get("receivedQty")>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always"   text-align="right" font-size="12pt" white-space-collapse="false">${details.get("qcQuantity")?if_exists?string("##0.000")}</fo:block>
+							       			</fo:table-cell>
+						  			</fo:table-row>
+						  			</#list>
+						  			<fo:table-row>
+		                        			<fo:table-cell>
+		                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
+		                        			</fo:table-cell>
+					                 </fo:table-row>
+		                        	<fo:table-row>
+		                        			<fo:table-cell>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Ledger Folio Total</fo:block>
+							       			</fo:table-cell>
+											<fo:table-cell>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
+							       			</fo:table-cell>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
+							       			</fo:table-cell>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
+							       			</fo:table-cell>
+							       			<#assign ledgerGrandTotalPromise = ledgerGrandTotalPromise+ledgerTotalPromise>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerTotalPromise?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
+                                            <#assign ledgerGrandQtyRecvd = ledgerGrandQtyRecvd + ledgerQtyRecvd>
+                                             <fo:table-cell>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerQtyRecvd?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
+							       			<#assign ledgerGrandQtyHnd = ledgerGrandQtyHnd+ ledgerQtyHnd>
+							       			<fo:table-cell>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerQtyHnd?if_exists?string("#0.000")}</fo:block>
+							       			</fo:table-cell>
+						  			</fo:table-row>
+						  			<fo:table-row>
+		                        			<fo:table-cell>
+		                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
+		                        			</fo:table-cell>
+					                 </fo:table-row>
+                                    </#list>
+						  			</#if>
 	                    			<fo:table-row>
 		                        			<fo:table-cell>
 							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Grand Total</fo:block>

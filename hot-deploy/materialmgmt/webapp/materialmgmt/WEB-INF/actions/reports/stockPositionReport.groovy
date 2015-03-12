@@ -62,6 +62,7 @@ dctx = dispatcher.getDispatchContext();
  dayEnd = UtilDateTime.getDayEnd(fromDate);
  
  Map finalStockPositionMap = FastMap.newInstance();
+ Map otherStockPositionMap = FastMap.newInstance();
  if(UtilValidate.isNotEmpty(ledgerFolioNo)){	 
  ProductAttributeId = delegator.findList("ProductAttribute",EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS , ledgerFolioNo)  , UtilMisc.toSet("productId"), null, null, false );
  if(UtilValidate.isNotEmpty(ProductAttributeId)){
@@ -174,24 +175,24 @@ dctx = dispatcher.getDispatchContext();
 				 if(UtilValidate.isNotEmpty(attrName)){
 					 if(attrName.equalsIgnoreCase("LEDGERFOLIONO")){
 						 if(UtilValidate.isNotEmpty(attrValue)){
-							 if(UtilValidate.isEmpty(finalStockPositionMap.get(attrValue))){
-								 finalStockPositionMap.put(attrValue,tempList);
+							 if(UtilValidate.isEmpty(finalStockPositionMap.get(Integer.parseInt(attrValue)))){
+								 finalStockPositionMap.put(Integer.parseInt(attrValue),tempList);
 							 }else{
 								 List existingList = FastList.newInstance();
-								 existingList = finalStockPositionMap.get(attrValue);
+								 existingList = finalStockPositionMap.get(Integer.parseInt(attrValue));
 								 existingList.add(productValueMap);
-								 finalStockPositionMap.put(attrValue,existingList);
+								 finalStockPositionMap.put(Integer.parseInt(attrValue),existingList);
 							 }
 						 }
 					 }
 				 }else{
-				     if(UtilValidate.isEmpty(finalStockPositionMap.get("Others"))){
-						 finalStockPositionMap.put("Others",tempList);
+				     if(UtilValidate.isEmpty(otherStockPositionMap.get("Others"))){
+						 otherStockPositionMap.put("Others",tempList);
 					 }else{
 						 List existingList = FastList.newInstance();
-						 existingList = finalStockPositionMap.get("Others");
+						 existingList = otherStockPositionMap.get("Others");
 						 existingList.add(productValueMap);
-						 finalStockPositionMap.put("Others",existingList);
+						 otherStockPositionMap.put("Others",existingList);
 					 }
 				 }
 			 }
@@ -210,4 +211,5 @@ if(UtilValidate.isNotEmpty(finalStockPositionMap)){
 }
 Map<String, List> newSortedMap = new TreeMap<String, List>(sortedMap);
 context.put("finalStockPositionMap",newSortedMap);
+context.otherStockPositionMap=otherStockPositionMap;
 
