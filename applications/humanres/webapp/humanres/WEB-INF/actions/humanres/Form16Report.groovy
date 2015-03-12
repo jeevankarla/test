@@ -250,6 +250,9 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		dasupplyPayrollEarnings = 0;
 		totalSupplyPT = 0;
 		totalSupplyPF = 0;
+		totalSupplyBASIC = 0;
+		totalSupplyHRA = 0;
+		totSupplyLeaveEnc = 0;
 		if(UtilValidate.isNotEmpty(supplyPayrollIdsMap)){
 			Iterator supplyPayrollIdsMapIter = supplyPayrollIdsMap.entrySet().iterator();
 			while(supplyPayrollIdsMapIter.hasNext()){
@@ -281,11 +284,21 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 											if(UtilValidate.isNotEmpty(grossBenefitAmt)){
 												totalgrossBenefitAmt = totalgrossBenefitAmt + grossBenefitAmt;
 											}
-											if(payrollTypeId.equals("SP_DA_ARREARS")){
-												daArrearsAmount = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_BEN_DA");
-												if(UtilValidate.isNotEmpty(daArrearsAmount)){
-													dasupplyPayrollEarnings = dasupplyPayrollEarnings + daArrearsAmount;
-												}
+											daArrearsAmount = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_BEN_DA");
+											if(UtilValidate.isNotEmpty(daArrearsAmount)){
+												dasupplyPayrollEarnings = dasupplyPayrollEarnings + daArrearsAmount;
+											}
+											supplyHRA = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_BEN_HRA");
+											supplyBASIC = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_BEN_SALARY");
+											supplyLeaveEnc = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_BEN_LEAVENCAS");
+											if(UtilValidate.isNotEmpty(supplyLeaveEnc)){
+												totSupplyLeaveEnc = totSupplyLeaveEnc + supplyLeaveEnc;
+											}
+											if(UtilValidate.isNotEmpty(supplyHRA)){
+												totalSupplyHRA = totalSupplyHRA + supplyHRA;
+											}
+											if(UtilValidate.isNotEmpty(supplyBASIC)){
+												totalSupplyBASIC = totalSupplyBASIC + supplyBASIC;
 											}
 											supplyprofessionalTax = suppplyEachPeriodTotalsIterEntry.getValue().get("PAYROL_DD_EMP_PR");
 											if(UtilValidate.isNotEmpty(supplyprofessionalTax)){
@@ -333,17 +346,24 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 						daAmount = customTimePeriodEntry.getValue().get("PAYROL_BEN_DA");
 						totalTaxDeducted = customTimePeriodEntry.getValue().get("PAYROL_DD_INC_TAX");
 						sec80cPFAmt = 0;
+						if(UtilValidate.isNotEmpty(actualHRA)){
+							totalSupplyHRA = totalSupplyHRA + actualHRA;
+						}
+						if(UtilValidate.isNotEmpty(basic)){
+							totalSupplyBASIC = totalSupplyBASIC + basic;
+						}
 						if(UtilValidate.isNotEmpty(lic)){
 							licAmount = licAmount - lic;
 						}
 						if(UtilValidate.isNotEmpty(licKmf)){
 							licAmount = licAmount - licKmf;
 						}
-						
+						if(UtilValidate.isNotEmpty(GSLISAmount)){
+							employeeDetailsMap.put("sec80cGSLISAmt",GSLISAmount);
+						}
 						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
 							if(UtilValidate.isNotEmpty(GSLISAmount)){
 								sec80CDedAmount = sec80CDedAmount - GSLISAmount;
-								employeeDetailsMap.put("sec80cGSLISAmt",GSLISAmount);
 							}
 							
 							if(UtilValidate.isNotEmpty(providuntFund)){
@@ -367,7 +387,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 								sec80CDedAmount = sec80CDedAmount + licAmount;
 							}
 						}
-						if(UtilValidate.isNotEmpty(sec80CDedAmount)){
+						if(UtilValidate.isNotEmpty(sec80cPFAmt)){
 							employeeDetailsMap.put("sec80cPFAmt",sec80cPFAmt);
 						}
 						if(totalEarnings != 0){
@@ -380,13 +400,16 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 								aggregate = professionalTax;
 							}
 						}
-						if(basic != 0){
-							employeeSalary = employeeSalary + basic;
+						if(totalSupplyBASIC != 0){
+							employeeSalary = employeeSalary + totalSupplyBASIC;
 							if(UtilValidate.isNotEmpty(dasupplyPayrollEarnings)){
 								employeeSalary = employeeSalary + dasupplyPayrollEarnings;
 							}
 							if(UtilValidate.isNotEmpty(daAmount)){
 								employeeSalary = employeeSalary + daAmount;
+							}
+							if(UtilValidate.isNotEmpty(totSupplyLeaveEnc)){
+								employeeSalary = employeeSalary + totSupplyLeaveEnc;
 							}
 						}
 					}
@@ -482,7 +505,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 										sec80CDedAmount = sec80CDedAmount + subDeductableAmount;
 									}
 									//Debug.log("subDeductableAmount================="+subDeductableAmount);
-									Debug.log("licAmount================="+licAmount);
+									//Debug.log("licAmount================="+licAmount);
 									if(subSectionId.equals("LIC_POLICY")){
 										if(UtilValidate.isNotEmpty(subDeductableAmount)){
 											totalLICAmt = totalLICAmt + subDeductableAmount;
@@ -611,8 +634,10 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 				if(UtilValidate.isNotEmpty(TDSRemittancesValues)){
 					BSRcode = TDSRemittancesValues.get("BSRcode");
 					challanNumber = TDSRemittancesValues.get("challanNumber");
+					taxDepositedDate = TDSRemittancesValues.get("taxDepositedDate");
 					monthWiseDetailsMap.put("BSRcode",BSRcode);
 					monthWiseDetailsMap.put("challanNumber",challanNumber);
+					monthWiseDetailsMap.put("taxDepositedDate",taxDepositedDate);
 				}
 				if(UtilValidate.isNotEmpty(monthWiseBillingDetailsMap)){
 					periodBilId = monthWiseBillingDetailsMap.get(currMonth);
@@ -675,13 +700,13 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					}
 				}
 			}
-			if(salary40Percent < actualHRA){
+			if(salary40Percent < totalSupplyHRA){
 				if(UtilValidate.isNotEmpty(salary40Percent)){
 					leastValue = salary40Percent;
 				}
 			}else{
-				if(UtilValidate.isNotEmpty(actualHRA)){
-					leastValue = actualHRA;
+				if(UtilValidate.isNotEmpty(totalSupplyHRA)){
+					leastValue = totalSupplyHRA;
 				}
 			}
 			if(leastValue < rentPaidExcess){
@@ -694,13 +719,16 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		}else{
 			leastValue = 0;
 		}
+		BigDecimal leastAmt = BigDecimal.ZERO;
 		if(UtilValidate.isNotEmpty(leastValue)){
-			employeeDetailsMap.put("leastValue",leastValue);
+			leastAmt = new BigDecimal(leastValue);
+			leastAmt=leastAmt.setScale(0, BigDecimal.ROUND_HALF_UP);
+			employeeDetailsMap.put("leastValue",leastAmt);
 		}
 		totalExtentAlw = 0;
 		
 		if(UtilValidate.isNotEmpty(conveyAlw)){
-			totalExtentAlw = leastValue + conveyAlw;
+			totalExtentAlw = leastAmt + conveyAlw;
 		}
 		if(UtilValidate.isNotEmpty(otherAlwDeductableAmount)){
 			totalExtentAlw = totalExtentAlw + otherAlwDeductableAmount;
@@ -726,6 +754,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		employeeDetails = PayrollService.getEmployeePayrollCondParms(dctx,UtilMisc.toMap("employeeId",employee,"timePeriodStart",fromDateStart,"timePeriodEnd",thruDateEnd,"userLogin",userLogin));
 		if(UtilValidate.isNotEmpty(employeeDetails)){
 			age = employeeDetails.get("age");
+			Debug.log("age================"+age);
 			List employeeTaxSlabList=[];
 			employeeTaxSlabList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 			employeeTaxSlabList.add(EntityCondition.makeCondition("age", EntityOperator.EQUALS, "60"));

@@ -7669,9 +7669,20 @@ public class PayrollService {
   	    HttpSession session = request.getSession();
   	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");	
   	    String yearMonthDate = (String) request.getParameter("yearMonthDate");	
+  	    String taxDepositedDate = (String) request.getParameter("taxDepositedDate");
   	    String bsrCode= "";
   	    String challanNo= "";
   	    String timePeriodId = "";
+  	    Timestamp taxDepstdDate = null;
+  	    
+	  	 SimpleDateFormat sdf1 = new SimpleDateFormat("MMMM d,yyyy");	
+	     if(UtilValidate.isNotEmpty(taxDepositedDate)){
+	  	 try {
+	  		 	taxDepstdDate = new java.sql.Timestamp(sdf1.parse(taxDepositedDate).getTime());
+			  } catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + taxDepositedDate, module);
+			  }
+	     }
   	    
   	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
   	    Timestamp challanDate = null;
@@ -7745,11 +7756,16 @@ public class PayrollService {
 	  			  	newEntity.put("customTimePeriodId",timePeriodId);
 	  			  	newEntity.put("BSRcode",BSRcode);
 	  			  	newEntity.put("challanNumber",challanNumber);
+	  			  	if(UtilValidate.isNotEmpty(taxDepstdDate)){
+	  			  		newEntity.put("taxDepositedDate",taxDepstdDate);
+	  			  	}
 	  			  	newEntity.create();
   	    	    }else{
   	    	    	tdsRemittanceSearchList.set("BSRcode",BSRcode);
   	    	    	tdsRemittanceSearchList.set("challanNumber",challanNumber);
-				  	
+  	    	    	if(UtilValidate.isNotEmpty(taxDepstdDate)){
+  	    	    		tdsRemittanceSearchList.set("taxDepositedDate",taxDepstdDate);
+	  			  	}
   	    	    	tdsRemittanceSearchList.store();
   	    	    }
   			  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries.."); 

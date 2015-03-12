@@ -2051,6 +2051,7 @@ under the License.
      		<field name="customTimePeriodId" type="id-ne"></field>
      		<field name="BSRcode" type="id-long"></field>
      		<field name="challanNumber" type="long-varchar"></field>
+     		<field name="taxDepositedDate" type="date-time"></field>
      		<field name="ReceiptNumber" type="long-varchar"></field>
      		<field name="surchargePercentage" type="fixed-point"></field>
      		<field name="educationalCessPercentage" type="fixed-point"></field>

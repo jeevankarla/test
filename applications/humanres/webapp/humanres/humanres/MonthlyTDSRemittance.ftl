@@ -292,6 +292,7 @@
 				jQuery(formId).append(jQuery(BSRcode));
 				jQuery(formId).append(jQuery(challanNumber));
 				jQuery(formId).append(jQuery(yearMonthDate));
+				jQuery(formId).append(jQuery(taxDepositedDate));
 		}
 		
 		jQuery(formId).submit();
@@ -343,9 +344,20 @@
 	
 	$(document).ready(function(){
 		makeDatePicker2("yearMonthDate","");
-		$('#ui-datepicker-div').css('clip', 'auto');		
+		$('#ui-datepicker-div').css('clip', 'auto');	
+		makeDatePicker("taxDepositedDate","thruDate");       
+		$('#ui-datepicker-div').css('clip', 'auto');	
 	});
-
+function makeDatePicker(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+}	
 	$(document).ready(function(){
     	$(".monthPicker").datepicker( {
 	        changeMonth: true,
@@ -376,11 +388,16 @@
 <div name ="updateEntryMsg" id="updateEntryMsg"> </div> 
 <h3><div align="left">
 	<table width="50%" border="0" cellspacing="0" cellpadding="0">  
-	    <tr><td width="15%">Month: <input type='text' id='yearMonthDate' name='yearMonthDate' readonly class="FDate" value = ${parameters.yearMonthDate?if_exists}></td></tr>
+	    <tr>
+	    	<td width="45%">Month: <input type='text' id='yearMonthDate' name='yearMonthDate' readonly class="FDate" value = ${parameters.yearMonthDate?if_exists}></td>
+	    	<td width="5%">&nbsp</td>
+	    	<td width="25%"><span class='h4'>Tax Deposited Date : </span></td><td><input  type="text" size="15pt" id="taxDepositedDate" name="taxDepositedDate" value = "${parameters.taxDepositedDate?if_exists}"></td>
+	    </tr>
 	    <tr><td width="15%">&nbsp</td></tr>
-	    <tr><td width="15%">&nbsp</td></tr>
+	    <tr><td width="1%">&nbsp</td></tr>
 	    <tr><td align='left'>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span class='h4'><input type="submit"  size="10" value="Find" class="buttontext h4"/></span> </td></tr>
 	    <tr><td width="15%">&nbsp</td></tr>
+	    
 	 </table>
 </div></h3>   
 </form>
