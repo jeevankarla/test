@@ -1036,6 +1036,8 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		BigDecimal grandTotal = BigDecimal.ZERO;
 		Map tempUpdateMap = FastMap.newInstance();
+		Map adjValueMap = FastMap.newInstance();
+		// iterate adjustment to calculate landing cost of the item and recalculate tax when there is term before tax
 		for(Map eachAdj : adjustmentTerms){
 			String applicableTo = (String)eachAdj.get("applicableTo");
 			BigDecimal amount = (BigDecimal)eachAdj.get("amount");
@@ -1062,12 +1064,12 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					
 				Iterator prodIter = productItems.entrySet().iterator();
 				while (prodIter.hasNext()) {
+					BigDecimal totalItemValue = BigDecimal.ZERO;
 					Map.Entry tempEntry = (Entry) prodIter.next();
 					Map prodItem = (Map) tempEntry.getValue();
 					String productId = (String) tempEntry.getKey();
 					BigDecimal quantity = (BigDecimal) prodItem.get("quantity"); 
 					Map prodMap = FastMap.newInstance();
-					
 					if(UtilValidate.isNotEmpty(tempUpdateMap.get(productId))){
 						prodMap = (Map)tempUpdateMap.get(productId);
 					}else{
@@ -1078,16 +1080,35 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					BigDecimal itemValue = BigDecimal.ZERO;
 					BigDecimal vatUnitAmt = ((BigDecimal)prodMap.get("vatAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
 					BigDecimal cstUnitAmt = ((BigDecimal)prodMap.get("cstAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+					
+					itemValue = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+					if(UtilValidate.isNotEmpty(prodMap.get("bedAmount"))){
+						itemValue = itemValue.add((BigDecimal)prodMap.get("bedAmount"));
+					}
+					if(UtilValidate.isNotEmpty(prodMap.get("bedcessAmount"))){
+						itemValue = itemValue.add((BigDecimal)prodMap.get("bedcessAmount"));
+					}
+					if(UtilValidate.isNotEmpty(prodMap.get("bedseccessAmount"))){
+						itemValue = itemValue.add((BigDecimal)prodMap.get("bedseccessAmount"));
+					}
+					
 					if(recalculateVAT){
-						BigDecimal listAmt = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
-						itemValue = listAmt.subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
+						BigDecimal listAmt = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
 						unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
 					}
 					else{
-						itemValue = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+						
+						if(UtilValidate.isNotEmpty(prodMap.get("vatAmount"))){
+							itemValue = itemValue.add((BigDecimal)prodMap.get("vatAmount"));
+						}
+						if(UtilValidate.isNotEmpty(prodMap.get("cstAmount"))){
+							itemValue = itemValue.add((BigDecimal)prodMap.get("cstAmount"));
+						}
 						unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
 					}
+					
 					recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
+					totalItemValue = totalItemValue.add(recalcAdjPrice);
 					BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 					BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
 					BigDecimal basicPrice = uPrice.multiply(quantity);
@@ -1115,11 +1136,19 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					else{
 						prodMap.put("unitListPrice", uPrice);
 					}
+					
+					if(UtilValidate.isNotEmpty(adjValueMap.get(productId))){
+						BigDecimal extAmt = (BigDecimal)adjValueMap.get(productId);
+						adjValueMap.put(productId, extAmt.add(totalItemValue));
+					}else{
+						adjValueMap.put(productId, totalItemValue);
+					}
 					tempUpdateMap.put(productId, prodMap);
 				}
 			}
 			else{
 				
+				BigDecimal totalItemValue = BigDecimal.ZERO;
 				Map prodItem = (Map)productItems.get(applicableTo);
 				String productId = (String) prodItem.get("productId");
 				Map prodMap = FastMap.newInstance();
@@ -1137,18 +1166,36 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				BigDecimal vatUnitAmt = ((BigDecimal)prodMap.get("vatAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal cstUnitAmt = ((BigDecimal)prodMap.get("cstAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
 				
+				itemValue = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+				if(UtilValidate.isNotEmpty(prodMap.get("bedAmount"))){
+					itemValue = itemValue.add((BigDecimal)prodMap.get("bedAmount"));
+				}
+				if(UtilValidate.isNotEmpty(prodMap.get("bedcessAmount"))){
+					itemValue = itemValue.add((BigDecimal)prodMap.get("bedcessAmount"));
+				}
+				if(UtilValidate.isNotEmpty(prodMap.get("bedseccessAmount"))){
+					itemValue = itemValue.add((BigDecimal)prodMap.get("bedseccessAmount"));
+				}
+				
 				if(recalculateVAT){
 					BigDecimal listAmt = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
-					itemValue = listAmt.subtract(((BigDecimal)prodMap.get("vatAmount")).add((BigDecimal)prodMap.get("cstAmount")));
 					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
 				}
 				else{
-					itemValue = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+					if(UtilValidate.isNotEmpty(prodMap.get("vatAmount"))){
+						itemValue = itemValue.add((BigDecimal)prodMap.get("vatAmount"));
+					}
+					if(UtilValidate.isNotEmpty(prodMap.get("cstAmount"))){
+						itemValue = itemValue.add((BigDecimal)prodMap.get("cstAmount"));
+					}
+					
 					unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
 				}
 				
 				//recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				recalcAdjPrice = amount;
+				totalItemValue = totalItemValue.add(recalcAdjPrice);
+				
 				BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
 				BigDecimal basicPrice = uPrice.multiply(quantity);
@@ -1176,6 +1223,13 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				else{
 					prodMap.put("unitListPrice", uPrice);
 				}
+				
+				if(UtilValidate.isNotEmpty(adjValueMap.get(productId))){
+					BigDecimal extAmt = (BigDecimal)adjValueMap.get(productId);
+					adjValueMap.put(productId, extAmt.add(totalItemValue));
+				}else{
+					adjValueMap.put(productId, totalItemValue);
+				}
 				tempUpdateMap.put(productId, prodMap);
 			}
 		}
@@ -1189,7 +1243,38 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			}
 		}
 		
-		result.put("productItemsRevised", tempUpdateMap);
+		Map listPriceRevisedMap = FastMap.newInstance();
+		Iterator itemIter = tempUpdateMap.entrySet().iterator();
+		while (itemIter.hasNext()) {
+			Map.Entry tempProdEntry = (Entry) itemIter.next();
+			String productId = (String) tempProdEntry.getKey();
+			Map itemDetail = (Map) tempProdEntry.getValue();
+			if(UtilValidate.isNotEmpty(adjValueMap.get(productId))){
+				BigDecimal itemAdjValue = (BigDecimal)adjValueMap.get(productId);
+				BigDecimal qty = (BigDecimal)itemDetail.get("quantity");
+				BigDecimal totalAmt = ((BigDecimal)itemDetail.get("unitPrice")).multiply(qty);
+				
+				if(UtilValidate.isNotEmpty(itemDetail.get("bedAmount"))){
+					totalAmt = totalAmt.add((BigDecimal)itemDetail.get("bedAmount"));
+				}
+				if(UtilValidate.isNotEmpty(itemDetail.get("bedcessAmount"))){
+					totalAmt = totalAmt.add((BigDecimal)itemDetail.get("bedcessAmount"));
+				}
+				if(UtilValidate.isNotEmpty(itemDetail.get("bedseccessAmount"))){
+					totalAmt = totalAmt.add((BigDecimal)itemDetail.get("bedseccessAmount"));
+				}
+				if(UtilValidate.isNotEmpty(itemDetail.get("vatAmount"))){
+					totalAmt = totalAmt.add((BigDecimal)itemDetail.get("vatAmount"));
+				}
+				if(UtilValidate.isNotEmpty(itemDetail.get("cstAmount"))){
+					totalAmt = totalAmt.add((BigDecimal)itemDetail.get("cstAmount"));
+				}
+				totalAmt = totalAmt.add(itemAdjValue);
+				itemDetail.put("unitListPrice", totalAmt.divide(qty, purchaseTaxFinalDecimals, purchaseTaxRounding));
+			}
+			listPriceRevisedMap.put(productId, itemDetail);
+		}
+		result.put("productItemsRevised", listPriceRevisedMap);
 		return result;
 	   }
 		
