@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProductStoreGroupMember fromDate="2011-01-01 00:00:00" productStoreGroupId="FGS_SALE_STORE" productStoreId="1012"/>
+    <ProductStoreGroupMember fromDate="2011-01-01 00:00:00" productStoreGroupId="FGS_SALE_STORE" productStoreId="1013"/>
+</entity-engine-xml>
