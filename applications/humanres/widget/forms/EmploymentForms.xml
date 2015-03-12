@@ -139,10 +139,15 @@
                 </sub-hyperlink>
 		</display-entity>
 		</field>
-		<field name="fromDate" title="FromDate"><display/></field>
-		<field name="thruDate" title="ThruDate"><date-time type="timestamp" /></field>
-		<field name="terminationReasionId" title="TerminationReasionId"><display/></field>
-		<field name="terminationTypeId" title="TerminationTypeId"><display/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/></field>
+		<field name="thruDate" title="ThruDate"><date-time type="date" /></field>
+		<field name="terminationTypeId" title="Employment Closure Reason" tooltip="${uiLabelMap.CommonRequired}">
+			 <drop-down allow-empty="true" current-description="">
+                <entity-options description="${description}" key-field-name="terminationTypeId" entity-name="TerminationType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+		</field>
 		<field name="appointmentDate" title="AppointmentDate"><display/></field>
 		<field name="resignationDate" title="ResignationDate"><display/></field>
 		<field name="locationGeoId" title="LocationGeoId"><display/></field>
@@ -171,7 +176,7 @@
          <field name="roleTypeIdTo"  title="${uiLabelMap.HumanResEmploymentroleTypeIdTo}" tooltip="${uiLabelMap.CommonRequired}"><hidden/></field>
         <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         <field name="partyIdTo"  title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
-        <field name="fromDate"  title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>
+        <field name="fromDate"  title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName}[${partyId}]">
@@ -180,20 +185,6 @@
 					<entity-order-by field-name="partyId" />
 				</entity-options>
 			</drop-down>
-        </field>
-        <field name="terminationReasonId"  title="${uiLabelMap.HumanResTerminationReasonId}">
-            <drop-down allow-empty="true" no-current-selected-key="------">
-                <entity-options description="${description}" key-field-name="terminationReasonId" entity-name="TerminationReason">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="terminationTypeId" >
-            <drop-down allow-empty="true" no-current-selected-key="------">
-                <entity-options description="${description}" key-field-name="terminationTypeId" entity-name="TerminationType">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
         </field>
         <field name="submitButton"  title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

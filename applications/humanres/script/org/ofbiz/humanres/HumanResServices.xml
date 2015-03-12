@@ -286,7 +286,24 @@
     <simple-method method-name="updateEmployment" short-description="Update Employment">
         <entity-one entity-name="Employment" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+        <if-not-empty field="parameters.thruDate">
+        	<if-not-empty field="parameters.terminationTypeId">   
+             	<store-value value-field="lookedUpValue"/>
+             	<set field="responseMessage" value="Updated successfully."/>
+        	<field-to-result field="responseMessage" result-name="successMessage"/>
+            <else>
+               	<add-error>
+                  <fail-message message="please provide reason for closure"/>
+               	</add-error>
+	            <check-errors/>
+        	</else>
+       		</if-not-empty>
+        <else>
+             <store-value value-field="lookedUpValue"/>
+             <set field="responseMessage" value="Updated successfully."/>
+        	<field-to-result field="responseMessage" result-name="successMessage"/>
+        </else>
+        </if-not-empty>
     </simple-method>
 
     <simple-method method-name="deleteEmployment" short-description="Delete Employment">
