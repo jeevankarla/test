@@ -1873,4 +1873,11 @@ under the License.emplpunch
         <attribute name="fatherName" mode="IN" type="String" optional="true"/>
         <attribute name="designation" mode="IN" type="String" optional="true"/>
     </service>
+     <service name="updateLocationGeo" engine="java"
+                location="in.vasista.vbiz.humanres.HumanresService" invoke="updateLocationGeo" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="company" mode="IN" type="String" optional="false"/>
+        <attribute name="locationGeoId" mode="IN" type="String" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+    </service>
 </services>
