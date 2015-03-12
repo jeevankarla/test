@@ -129,6 +129,9 @@
                            		<fo:table-row >
 	                           		<fo:table-cell border-style = "solid"> 
 	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt" font-weight = "bold">CIT(TDS)</fo:block>
+	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">The Commissioner Income Tax</fo:block>
+	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">Room No : 59, HMT Bhavan, Bollaram rd</fo:block>
+	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">Ganganagar,Bangalore.</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell> 
 	                           			<fo:block>
@@ -141,6 +144,7 @@
 						                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt" font-weight = "bold">Assessment Year</fo:block>
 						                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 						                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(employeeValues.getValue().get("subSequentFromDate"), "yyyy")}  - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(employeeValues.getValue().get("subSequentThruDate"), "yyyy")}</fo:block>
+						                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 						                           		</fo:table-cell>
 						                           		<fo:table-cell border-right-style="solid" border-left-style="solid">
 						                           			<fo:block text-align="center" font-size="11pt" line-height = "18pt"  border-bottom-style="solid" font-weight = "bold">Period</fo:block>
@@ -153,10 +157,12 @@
 											                     			<fo:table-cell border-right-style="solid">
 											                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">From</fo:block>
 											                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "yyyy")} </fo:block>
+										                           				<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 										                           			</fo:table-cell>
 										                           			<fo:table-cell >
 											                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">To</fo:block>
 											                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "yyyy")} </fo:block>
+										                           				<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 										                           			</fo:table-cell>
 										                           		</fo:table-row>
 														              </fo:table-body>
@@ -343,7 +349,7 @@
 	                           	</fo:table-row>
 			              	</fo:table-body>
                			</fo:table>
-               		</fo:block>
+               		</fo:block> 
                		<fo:block font-family="Arial">
 		            	<fo:table>
 		                    <fo:table-column column-width="50pt"/>
@@ -477,7 +483,7 @@
 								                           			<fo:block text-align="right" font-size="11pt" line-height = "18pt">${monthWiseTaxDepositedList.getValue().get("BSRcode")?if_exists}&#160;&#160;</fo:block>
 								                           		</fo:table-cell>
 								                           		<fo:table-cell border-style = "solid"> 
-								                           			<fo:block text-align="right" font-size="11pt" line-height = "18pt">${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthWiseTaxDepositedList.getValue().get("customTimePeriodDayEnd"), "dd-MM-yyyy")).toUpperCase()}&#160;&#160;</fo:block>
+								                           			<fo:block text-align="right" font-size="11pt" line-height = "18pt"><#if monthWiseTaxDepositedList.getValue().get("taxDepositedDate")?has_content>${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthWiseTaxDepositedList.getValue().get("taxDepositedDate"), "dd/MM/yyyy")).toUpperCase()}&#160;&#160;<#else>&#160;</#if></fo:block>
 								                           		</fo:table-cell>
 								                           		<fo:table-cell border-style = "solid"> 
 								                           			<fo:block text-align="right" font-size="11pt" line-height = "18pt">${monthWiseTaxDepositedList.getValue().get("challanNumber")?if_exists}&#160;&#160;</fo:block>
@@ -486,7 +492,11 @@
 								                           			<fo:block text-align="right" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 								                           		</fo:table-cell>
 								                           		<#assign sNo = sNo + 1>
-								                           		<#assign totalMonthwiseTax = totalMonthwiseTax - monthWiseTaxDepositedList.getValue().get("taxAmount")>
+								                           		<#if monthWiseTaxDepositedList.getValue().get("taxAmount")?exists>
+								                           			<#if monthWiseTaxDepositedList.getValue().get("taxAmount")?has_content>
+								                           				<#assign totalMonthwiseTax = totalMonthwiseTax - monthWiseTaxDepositedList.getValue().get("taxAmount")>
+								                           			</#if>
+								                           		</#if>
 								                           	</fo:table-row>
 								                       	</#if>
 							                       	</#list>
@@ -547,7 +557,10 @@
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt" font-weight = "bold">&#160;&#160;Place</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-style = "solid"> 
-	                           			<fo:block text-align="left" font-size="11pt" line-height = "18pt">Karnataka</fo:block>
+	                           			<fo:block text-align="left" font-size="11pt" line-height = "18pt">BANGALORE</fo:block>
+	                           		</fo:table-cell>
+	                           		<fo:table-cell border-style = "solid"> 
+	                           			<fo:block text-align="left" font-size="11pt" line-height = "18pt">For KMF Unit : Mother Dairy, Bangalore.</fo:block>
 	                           		</fo:table-cell>
 	                           	</fo:table-row>
 	                           	<fo:table-row >
@@ -604,7 +617,7 @@
 	                           			<fo:block text-align="center" font-size="11pt" line-height = "15pt" font-weight = "bold">Deductor Name</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-style = "solid"> 
-	                           			<fo:block text-align="center" font-size="11pt" line-height = "15pt">${(employeeValues.getValue().get("employeeName")).toUpperCase()}</fo:block>
+	                           			<fo:block text-align="center" font-size="11pt" line-height = "15pt">DIRECTOR Mother Dairy</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-style = "solid"> 
 	                           			<fo:block text-align="center" font-size="11pt" line-height = "15pt"><fo:inline font-weight="bold">TAN:</fo:inline> ${employeeValues.getValue().get("tanNumberOfCompany")}</fo:block>
@@ -761,57 +774,56 @@
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;3. Balance (1-2)</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt"><#if employeeValues.getValue().get("balance")!= 0>${(employeeValues.getValue().get("balance"))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("balance")!= 0>${(employeeValues.getValue().get("balance"))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;4. Deductions :</fo:block>
-	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "15pt">&#160;&#160;&#160;&#160;(a) Entertainment allowance </fo:block>
-	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "15pt">&#160;&#160;&#160;&#160;(b) Tax on Employment </fo:block>
+	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;&#160;&#160;(a) Entertainment allowance </fo:block>
+	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;&#160;&#160;(b) Tax on Employment </fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
-		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt"><#if employeeValues.getValue().get("professionalTax")?has_content>${((employeeValues.getValue().get("professionalTax"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("professionalTax")?has_content>${((employeeValues.getValue().get("professionalTax"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;5. Aggregate of 4(a) and (b)</fo:block>
 	                           		</fo:table-cell>
-	                           		
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt"><#if employeeValues.getValue().get("aggregate")!= 0>${((employeeValues.getValue().get("aggregate"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
-		                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "15pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("aggregate")!= 0>${((employeeValues.getValue().get("aggregate"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt">&#160;</fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
@@ -831,9 +843,11 @@
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;7. Add : Any other income reported by employee</fo:block>
-	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;&#160;&#160;&#160;&#160;a. Interest on HBA u/s 24</fo:block>
+	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;&#160;&#160;&#160;&#160;a. Loss from Home Property</fo:block>
 	                           		</fo:table-cell>
-                           			<#assign interestHBA = employeeValues.getValue().get("interestHBA")>
+	                           		<#if employeeValues.getValue().get("interestHBA")?has_content>
+                           				<#assign interestHBA = employeeValues.getValue().get("interestHBA")>
+                           			</#if>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
@@ -843,7 +857,7 @@
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if interestHBA?has_content>(${interestHBA?if_exists?string("#0.00")})&#160;&#160;<#else>&#160;</#if></fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if interestHBA != 0>(-)${interestHBA?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
@@ -896,7 +910,7 @@
 				                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 				                           		</fo:table-cell>
 				                           		<fo:table-cell border-right-style = "solid">
-					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("SECTION_80C").get("grossAmount")?has_content>${employeeWiseSectionDetails.getValue().get("SECTION_80C").get("grossAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("SECTION_80C").get("grossAmount")?has_content><#if employeeWiseSectionDetails.getValue().get("SECTION_80C").get("grossAmount") != 0>${employeeWiseSectionDetails.getValue().get("SECTION_80C").get("grossAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if><#else>&#160;</#if></fo:block>
 					                           		<#if employeeWiseSectionDetails.getValue().get("LIC_POLICY")?has_content>
 					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("LIC_POLICY").get("grossAmount")?has_content>${employeeWiseSectionDetails.getValue().get("LIC_POLICY").get("grossAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 					                           		<#else>
@@ -919,24 +933,32 @@
 				                           			<#if employeeWiseSectionDetails.getValue().get("SECTION_80C").get("deductableAmount")?has_content>
 				                           				<#assign deductableAmount = employeeWiseSectionDetails.getValue().get("SECTION_80C").get("deductableAmount")>
 				                           			</#if>
-				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if deductableAmount?has_content>${deductableAmount?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+				                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if deductableAmount?has_content><#if deductableAmount != 0>${deductableAmount?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if><#else>&#160;</#if></fo:block>
 					                           		<#if employeeValues.getValue().get("totalLICAmt")?has_content>
-					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("totalLICAmt")!= 0>${employeeValues.getValue().get("totalLICAmt")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("totalLICAmt")!= 0>${employeeValues.getValue().get("totalLICAmt")?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
 					                           		<#else>
 					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 					                           		</#if>
 					                           		<#if employeeWiseSectionDetails.getValue().get("HBA_PRICIPAL")?has_content>
-					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("HBA_PRICIPAL").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("HBA_PRICIPAL").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("HBA_PRICIPAL").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("HBA_PRICIPAL").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;</#if></fo:block>
 					                           		<#else>
 					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 					                           		</#if>
 					                           		<#if employeeWiseSectionDetails.getValue().get("HBA_PRICIPAL")?has_content>
-					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("TUITION_FEE").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("TUITION_FEE").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("TUITION_FEE").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("TUITION_FEE").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;</#if></fo:block>
 					                           		<#else>
 					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 					                           		</#if>
-					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("sec80cPFAmt")!= 0>${((employeeValues.getValue().get("sec80cPFAmt"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
-					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("sec80cGSLISAmt")!= 0>${((employeeValues.getValue().get("sec80cGSLISAmt"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+					                           		<#if employeeValues.getValue().get("sec80cPFAmt")?exists>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("sec80cPFAmt")!= 0>${((employeeValues.getValue().get("sec80cPFAmt"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;</#if></fo:block>
+					                           		<#else>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+					                           		</#if>
+					                           		<#if employeeValues.getValue().get("sec80cGSLISAmt")?exists>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("sec80cGSLISAmt")!= 0>${((employeeValues.getValue().get("sec80cGSLISAmt"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;</#if></fo:block>
+					                           		<#else>
+					                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
+					                           		</#if>
 					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("SECTION_80CCC").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("SECTION_80CCC").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 					                           		<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeWiseSectionDetails.getValue().get("SECTION_80CCD").get("deductableAmount")?has_content>${employeeWiseSectionDetails.getValue().get("SECTION_80CCD").get("deductableAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 				                           		</fo:table-cell>
@@ -1116,9 +1138,13 @@
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if rebate?has_content>${rebate?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
+			                   	<#assign taxAfterRebate = 0>
+			                   	<#if employeeValues.getValue().get("tax")!= 0>
+			                   		<#assign taxAfterRebate = employeeValues.getValue().get("tax") - rebate>
+			                   	</#if>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
-	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(14) Surcharge(on tax computed at S.No.12) </fo:block>
+	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(14) Tax on total after Rebate </fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
@@ -1127,7 +1153,7 @@
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("surchargeAmount")?has_content>${(employeeValues.getValue().get("surchargeAmount"))?if_exists?string("#0.00")}&#160;&#160;<#else> &#160;</#if></fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if taxAfterRebate?has_content>${taxAfterRebate?if_exists?string("#0.00")}&#160;&#160;<#else> &#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
@@ -1144,6 +1170,9 @@
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("educationalCessAmount")?has_content>${(employeeValues.getValue().get("educationalCessAmount"))?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
+			                   	<#if employeeValues.getValue().get("educationalCessAmount")?has_content>
+			                   		<#assign taxPay = taxAfterRebate + employeeValues.getValue().get("educationalCessAmount")>
+			                   	</#if>
 			                   	<fo:table-row>
 	                           		<fo:table-cell border-right-style = "solid">
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt">&#160;&#160;(16) Tax payable (12+13+14) </fo:block>
@@ -1157,14 +1186,14 @@
 	                           		<#assign taxPayable = 0>
 	                           		<#assign actualTaxPayable = 0>
 	                           		<#if employeeValues.getValue().get("taxPayable")?has_content>
-	                           			<#assign taxPayable = employeeValues.getValue().get("taxPayable") + rebate>
+	                           			<#assign taxPayable = employeeValues.getValue().get("taxPayable") - rebate>
 	                           		</#if>
 	                           		<#if employeeValues.getValue().get("educationalCessAmount")?has_content>
 	                           			<#assign taxPayable = taxPayable + employeeValues.getValue().get("educationalCessAmount")>
+	                           			<#assign actualTaxPayable = employeeValues.getValue().get("educationalCessAmount") - taxPayable>
 	                           		</#if>
-	                           		<#assign actualTaxPayable = employeeValues.getValue().get("educationalCessAmount") - taxPayable>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if taxPayable?has_content>${taxPayable?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
+	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if taxPay?has_content>${taxPay?if_exists?string("#0.00")}&#160;&#160;<#else>&#160;</#if></fo:block>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
@@ -1194,10 +1223,8 @@
 	                           		<fo:table-cell >
 	                           			<#assign taxDiff = 0>
 	                           			<#assign totalTaxDeductedatSource = (employeeValues.getValue().get("totalTaxDeductedatSource"))*(-1)>
-	                           			<#if (totalTaxDeductedatSource > taxPayable )>
-	                           				<#assign taxDiff = (totalTaxDeductedatSource - taxPayable)>
-	                           			<#else>
-	                           				<#assign taxDiff = (taxPayable - totalTaxDeductedatSource)>
+	                           			<#if taxPay?has_content>
+	                           				<#assign taxDiff = (taxPay - totalTaxDeductedatSource)>
 	                           			</#if>
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if taxDiff != 0>${taxDiff  ?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
 	                           		</fo:table-cell>
@@ -1233,7 +1260,7 @@
 	                           			<fo:block text-align="left" keep-together="always" font-size="11pt" line-height = "18pt" font-weight = "bold">&#160;&#160;Place</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-style = "solid"> 
-	                           			<fo:block text-align="left" font-size="11pt" line-height = "18pt">Karnataka</fo:block>
+	                           			<fo:block text-align="left" font-size="11pt" line-height = "18pt">BANGALORE</fo:block>
 	                           		</fo:table-cell>
 	                           	</fo:table-row>
 	                           	<fo:table-row >
