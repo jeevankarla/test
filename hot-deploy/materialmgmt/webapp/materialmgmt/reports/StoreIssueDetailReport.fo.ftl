@@ -55,34 +55,34 @@ under the License.
 					        <fo:table-body>
 						       <fo:table-row >
 						            <fo:table-cell>
-										<fo:block text-align="center" keep-together="always">DATE</fo:block>
+										<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="12pt">DATE</fo:block>
 									</fo:table-cell>
 									<fo:table-cell>
-										<fo:block text-align="left" keep-together="always">INDENT</fo:block>
-										<fo:block text-align="left" keep-together="always">NO.</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">INDENT</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">NO.</fo:block>
 									</fo:table-cell>
 									<fo:table-cell>
-										<fo:block text-align="left" keep-together="always">ITEM</fo:block>
-										<fo:block text-align="left" keep-together="always">CODE</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">ITEM</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">CODE</fo:block>
 									</fo:table-cell>
 									<fo:table-cell>
-										<fo:block text-align="left" keep-together="always" >DESCRPTION</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">DESCRPTION</fo:block>
 									</fo:table-cell>
 									<fo:table-cell>
-										<fo:block text-align="left" keep-together="always">UNIT</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">UNIT</fo:block>
 									</fo:table-cell>
 									
 									<fo:table-cell>
-										<fo:block text-align="left" keep-together="always">ISS.</fo:block>
-										<fo:block text-align="left" keep-together="always">QTY</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">ISS.</fo:block>
+										<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">QTY</fo:block>
 									</fo:table-cell>
 								<#--	<fo:table-cell>
 									    <fo:block text-align="left" keep-together="always">UNIT</fo:block>
 									    <fo:block text-align="left" keep-together="always">RATE</fo:block>
 									</fo:table-cell> -->
 	                                <fo:table-cell>
-									    <fo:block text-align="left" keep-together="always">TOT</fo:block>
-									    <fo:block text-align="left" keep-together="always">VALUE</fo:block>
+									    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">TOT</fo:block>
+									    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">VALUE</fo:block>
 									</fo:table-cell>
 							 </fo:table-row>
 						     <fo:table-row >
@@ -112,14 +112,23 @@ under the License.
 					     <fo:table-cell><fo:block text-align="left" keep-together="always" font-weight="bold">${deptName?if_exists}</fo:block>  </fo:table-cell>
 					     <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block> </fo:table-cell>                         							
 				     </fo:table-row>
-                    <#assign prodCatNames=storeEntry.getValue()>
+				     <#assign primaryCat = storeEntry.getValue()>
+                     <#assign parentCatName = primaryCat.entrySet()>
+                     <#list parentCatName as primaryCategory> 
+                     <#assign primaryCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : primaryCategory.getKey()}, false)>                                           
+				     <fo:table-row >
+					     <fo:table-cell><fo:block text-align="left" keep-together="always" font-weight="bold">TYPE ${primaryCatDesc.description?if_exists}</fo:block>  </fo:table-cell>
+					     <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block> </fo:table-cell>
+                         <fo:table-cell><fo:block text-align="left"></fo:block> </fo:table-cell>                         							                                                 							
+				     </fo:table-row>
+                    <#assign prodCatNames=primaryCategory.getValue()>
              	    <#assign prodCatName = prodCatNames.entrySet()>  
                    <#if prodCatName?has_content>
                    <#list prodCatName as Category>   
                    	   <#assign ProductCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : Category.getKey()}, false)>                   
 			          <#assign total=0> 
 					 <fo:table-row >
-					     <fo:table-cell><fo:block text-align="left" keep-together="always">TYPE   ${ProductCatDesc.description?if_exists}</fo:block>  </fo:table-cell>
+					     <fo:table-cell><fo:block text-align="left" keep-together="always">TYPE  ${ProductCatDesc.description?if_exists}</fo:block>  </fo:table-cell>
 					     <fo:table-cell><fo:block text-align="left"></fo:block> </fo:table-cell>  		
 		                <fo:table-cell><fo:block text-align="left"></fo:block> </fo:table-cell>                         							
 				     </fo:table-row>
@@ -128,15 +137,15 @@ under the License.
 		         <#list prodNames as products> 
                     <#assign qty = products.get("totQty")?if_exists> 
                   <#if qty != 0> 
-                  <fo:table-row>
-					    <fo:table-cell><fo:block text-align="left">  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(products.get("custRequestDate"), "dd/MM/yyyy")?if_exists}</fo:block>  </fo:table-cell>
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("custRequestId")?if_exists}</fo:block> </fo:table-cell> 
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("productId")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("description")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="center" > ${products.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="right" > ${products.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
+                  <fo:table-row height="30pt">
+					    <fo:table-cell><fo:block text-align="left" font-size="11pt">  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(products.get("custRequestDate"), "dd/MM/yyyy")?if_exists}</fo:block>  </fo:table-cell>
+		                <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${products.get("custRequestId")?if_exists}</fo:block> </fo:table-cell> 
+		                <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${products.get("internalName")?if_exists}</fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${products.get("description")?if_exists}</fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="center" font-size="11pt"> ${products.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="right" font-size="11pt"> ${products.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
 		         <#--       <fo:table-cell><fo:block text-align="right"> ${products.get("unitPrice")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>  -->                         							
-		                <fo:table-cell><fo:block text-align="right" > ${products.get("totVal")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          
+		                <fo:table-cell><fo:block text-align="right" font-size="11pt"> ${products.get("totVal")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          
 				  </fo:table-row>
              <#assign amount=products.get("totVal")?if_exists>
             <#if  amount?has_content> 
@@ -166,7 +175,8 @@ under the License.
 			    </fo:table-cell>
 			</fo:table-row>   
 		  </#list>                              
-        </#if>                          
+        </#if> 
+     </#list>
      </#list>
     </#if>	                          
     </fo:table-body>
@@ -175,54 +185,152 @@ under the License.
  <fo:block break-before="page"/>
 <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">                                              ABSTRACT                                                  </fo:block>
 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-<fo:block text-align="left" keep-together="always"  >&#160;&#160;&#160;&#160;&#160;&#160;&#160;-----------------------------------------------------------------</fo:block>
-<fo:block text-align="left" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160; SI NO     TYPE                                        VALUE	</fo:block>
-<fo:block text-align="left" keep-together="always"  >&#160;&#160;&#160;&#160;&#160;&#160;&#160;-----------------------------------------------------------------</fo:block>				
 <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="13pt">&#160;&#160;&#160;&#160;&#160;&#160;STORE ISSUES                                                                                              </fo:block>
-<fo:block text-align="center">			 
+<fo:block text-align="center">
+   <#if deptMap?has_content>		             		
+        <#assign storeAbsList = deptMap.entrySet()> 			 
     <fo:table>
-		<fo:table-column column-width="80pt"/>
-		<fo:table-column column-width="250pt"/>
-		<fo:table-column column-width="160pt"/>
+		<fo:table-column column-width="60pt"/>
+		<fo:table-column column-width="260pt"/>
+		<fo:table-column column-width="230pt"/>
 		   <fo:table-body>
 		   <#assign grandTotal=0>  
-		      <#if storeList?has_content>
+		      <#if storeAbsList?has_content>
                <#assign sno=1>   
-                <#list storeList as storeEntry>   
-                  <#assign deptName=storeEntry.getKey()>                                                 
+                <#list storeAbsList as storeAbsEntry>   
+                  <#assign deptName=storeAbsEntry.getKey()>                                                 
 					 <fo:table-row >
 					     <fo:table-cell><fo:block text-align="left" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;${deptName?if_exists}</fo:block>  </fo:table-cell>
 					     <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block> </fo:table-cell>
                          <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block> </fo:table-cell>                         							                                                 							
 				     </fo:table-row>
-                    <#assign prodCatNames=storeEntry.getValue()>
-             		<#assign prodCatName = prodCatNames.entrySet()> 
-                   <#if prodCatName?has_content>
-                   <#list prodCatName as Category>  
-                        <#assign ProductCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : Category.getKey()}, false)>                    			                                                
+                    <#assign absPrimaryCat = storeAbsEntry.getValue()>
+                     <#assign absParentCatName = absPrimaryCat.entrySet()>
+                     <#list absParentCatName as absPrimaryCategory> 
+                     <#assign absPrimaryCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : absPrimaryCategory.getKey()}, false)>                                           
+				     <fo:table-row >
+				          <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block> </fo:table-cell>				          
+					     <fo:table-cell><fo:block text-align="left" keep-together="always" font-weight="bold">${absPrimaryCatDesc.description?if_exists}</fo:block>  </fo:table-cell>
+                         <fo:table-cell><fo:block text-align="left"></fo:block> </fo:table-cell>				     </fo:table-row>
+                    <#assign absProdCatNames= absPrimaryCategory.getValue()>
+             		<#assign absProdCatName = absProdCatNames.entrySet()> 
+                   <#if absProdCatName?has_content>
+                   <#list absProdCatName as absCategory>  
+                        <#assign ProductCatDesc = delegator.findOne("ProductCategory", {"productCategoryId" : absCategory.getKey()}, false)>                    			                                                
 					 <fo:table-row >                         
-                         <fo:table-cell><fo:block text-align="right">${sno?if_exists}</fo:block> </fo:table-cell>                         							  
-					     <fo:table-cell><fo:block text-align="left" keep-together="always">&#160;&#160;&#160;&#160;&#160;${ProductCatDesc.description?if_exists}</fo:block>  </fo:table-cell>                          
-                          <#assign prodNames=Category.getValue()>
-                            <#if prodNames?has_content>
-                              <#assign total=0>                               
-		                      <#list prodNames as products>   
-                                  <#assign amount = products.get("totVal")?if_exists>
-                                   <#if  amount?has_content> 
-                                     <#assign total = total+amount>
-                                    	                            
-                                   </#if>
-                               
-                              </#list> 
-							 <#assign grandTotal = grandTotal+total> 
-							<#assign sno=sno+1>  
-	                      </#if>      
-					     <fo:table-cell><fo:block text-align="right" > ${total?if_exists?string("##0.00")}</fo:block> </fo:table-cell>		
-				     </fo:table-row>                                                                                                                         
-                   </#list>                              
-                 </#if>                                      
-              </#list>
-           </#if>
+                         <fo:table-cell><fo:block text-align="right">&#160;&#160;${sno?if_exists}</fo:block> </fo:table-cell>                         							  
+					     <fo:table-cell><fo:block text-align="left" keep-together="always">&#160;&#160;${ProductCatDesc.description?if_exists}</fo:block>
+                             <fo:block text-align="left" keep-together="always"  >&#160;&#160;----------------------------------------------------------------------------------</fo:block>				   	
+                             <fo:block font-family="Courier,monospace">
+				                <fo:table>
+                                   <fo:table-column column-width="10pt"/>
+									<fo:table-column column-width="90pt"/>
+									<fo:table-column column-width="200pt"/>
+									<fo:table-column column-width="80pt"/>
+									<fo:table-column column-width="60pt"/>
+									<fo:table-column column-width="70pt"/>
+									<fo:table-column column-width="90pt"/>
+					                    <fo:table-body>
+						                   <fo:table-row >	
+                                               	<fo:table-cell>
+													<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt"></fo:block>
+												</fo:table-cell>				            									
+												<fo:table-cell>
+													<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">PRODUCTID</fo:block>
+												</fo:table-cell>
+												<fo:table-cell>
+													<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">PRODUCT NAME</fo:block>
+												</fo:table-cell>
+												<fo:table-cell>
+													<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">UNIT</fo:block>
+												</fo:table-cell>									
+												<fo:table-cell>
+													<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">ISS.</fo:block>
+													<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">QTY</fo:block>
+												</fo:table-cell>									
+				                                <fo:table-cell>
+												    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">TOT</fo:block>
+												    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">VALUE</fo:block>
+												</fo:table-cell>
+												<fo:table-cell>
+												    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">AVERAGE</fo:block>
+												    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">COST</fo:block>
+												</fo:table-cell>
+							               </fo:table-row>
+						                   <fo:table-row >
+												 <fo:table-cell >
+													<fo:block text-align="left" keep-together="always" >&#160;&#160;----------------------------------------------------------------------------------</fo:block>
+											     </fo:table-cell>
+							               </fo:table-row>
+					                   </fo:table-body>
+				                  </fo:table>
+			                 </fo:block> 
+			                 <fo:block>
+			                     <fo:table>
+                                    <fo:table-column column-width="10pt"/>   
+									<fo:table-column column-width="90pt"/>
+									<fo:table-column column-width="200pt"/>
+									<fo:table-column column-width="40pt"/>
+									<fo:table-column column-width="60pt"/>
+									<fo:table-column column-width="90pt"/>
+									<fo:table-column column-width="80pt"/>
+					                    <fo:table-body>
+					                    <#assign prodAbsNames= absCategory.getValue()>
+                                        <#assign absProducts = prodAbsNames.entrySet()>
+                                        <#list absProducts as productDetails> 
+                                          	<#assign absProductDetails= productDetails.getValue()>
+                                            <#assign qty = absProductDetails.get("totQty")?if_exists> 
+                                            <#assign totVal = absProductDetails.get("totVal")?if_exists>
+                                            <#assign avgCost = totVal / qty>                                                      
+					                       <fo:table-row height="30pt">
+     								           <fo:table-cell><fo:block text-align="left" font-size="11pt"> </fo:block></fo:table-cell>                         							
+								               <fo:table-cell><fo:block text-align="left" font-size="11pt">${absProductDetails.get("internalName")}</fo:block> </fo:table-cell> 
+                                               <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${absProductDetails.get("productName")?if_exists}</fo:block> </fo:table-cell>                         							
+		                                       <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${absProductDetails.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
+		                                       <fo:table-cell><fo:block text-align="right" font-size="11pt"> ${absProductDetails.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
+		                                       <fo:table-cell><fo:block text-align="right" font-size="11pt"> ${absProductDetails.get("totVal")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>
+		                                       <fo:table-cell><fo:block text-align="right" font-size="11pt"> ${avgCost?if_exists?string("##0.00")}</fo:block> </fo:table-cell>                                  							
+		                                                                         							
+										  </fo:table-row>
+                                       </#list>
+									 </fo:table-body>
+                                 </fo:table>				      
+                             </fo:block>	  										  										  					                       
+					     </fo:table-cell>                            
+					   <fo:table-cell><fo:block text-align="right" ></fo:block> </fo:table-cell>		
+		     </fo:table-row> 
+		     <#if absProducts?has_content>
+                <#assign total=0>  
+                <#list absProducts as productDetails> 
+                   <#assign absProductDetails= productDetails.getValue()>  
+                   <#assign amount = absProductDetails.get("totVal")?if_exists>
+                   <#if  amount?has_content> 
+                        <#assign total = total+amount>                                  	                            
+                   </#if>  
+               </#list>                                
+			   <#assign grandTotal = grandTotal+total> 
+			   <#assign sno=sno+1>                  
+	           </#if>
+               <fo:table-row >
+				  <fo:table-cell >                               
+					 <fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;------------------------------</fo:block>
+				  </fo:table-cell>
+			   </fo:table-row> 
+               <fo:table-row>
+	    		   <fo:table-cell><fo:block text-align="left" ></fo:block> </fo:table-cell>                         							
+	    		   <fo:table-cell><fo:block text-align="right" > TOTAL</fo:block> </fo:table-cell>                         							
+	    		   <fo:table-cell><fo:block text-align="right" > ${total?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          
+			 </fo:table-row>  
+             <fo:table-row >
+				 <fo:table-cell >
+					 <fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;------------------------------</fo:block>
+			    </fo:table-cell>
+			</fo:table-row>                                                                                                                              
+           </#list>                              
+          </#if>                                      
+         </#list>
+       </#list>
+        </#if>
            <fo:table-row >
 				        <fo:table-cell >                               
 					        <fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;&#160;&#160;-----------------------------------------------------------------</fo:block>
@@ -239,7 +347,8 @@ under the License.
 				        </fo:table-cell>
 			        </fo:table-row>    	        
 		   </fo:table-body>
-        </fo:table>				      
+        </fo:table>	
+       </#if> 			      
     </fo:block>
     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>

@@ -60,33 +60,33 @@ productIds=[];
 partyId=parameters.partyId;
 facilityId=parameters.issueToFacilityId;
 if(UtilValidate.isNotEmpty(facilityId)){
-	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId )],EntityOperator.AND);
-	productFacilityList = delegator.findList("ProductFacility", ecl, UtilMisc.toSet("facilityId","productId"), null, null, false);
-	productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
-	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("productId",EntityOperator.IN,productIdList),EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"RAW_MATERIAL")],EntityOperator.AND);
-	productList=delegator.findList("Product",condition,UtilMisc.toSet("productId"),null,null,false);
-	productIds=EntityUtil.getFieldListFromEntityList(productList,"productId", true);
+		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId )],EntityOperator.AND);
+		productFacilityList = delegator.findList("ProductFacility", ecl, UtilMisc.toSet("facilityId","productId"), null, null, false);
+		productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
+		condition=EntityCondition.makeCondition([EntityCondition.makeCondition("productId",EntityOperator.IN,productIdList),EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"RAW_MATERIAL")],EntityOperator.AND);
+		productList=delegator.findList("Product",condition,UtilMisc.toSet("productId"),null,null,false);
+		productIds=EntityUtil.getFieldListFromEntityList(productList,"productId", true);
 }
-custRequestIds=[];
-conditionList=[];
+		custRequestIds=[];
+		conditionList=[];
 /*if(UtilValidate.isNotEmpty(facilityId)){
 	conditionList.add(EntityCondition.makeCondition("facilityId", ,EntityOperator.EQUALS, facilityId));
 }*/
-	issueCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin),
-												 EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)],EntityOperator.AND);
-	storeIssuedDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",issueCondition,UtilMisc.toSet("custRequestId"),null,null,false);
-	custRequestIds=EntityUtil.getFieldListFromEntityList(storeIssuedDetails,"custRequestId",true);
+		issueCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin),
+													 EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)],EntityOperator.AND);
+		storeIssuedDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",issueCondition,UtilMisc.toSet("custRequestId"),null,null,false);
+		custRequestIds=EntityUtil.getFieldListFromEntityList(storeIssuedDetails,"custRequestId",true);
 if(UtilValidate.isNotEmpty(partyId)){
-	conditionList.add(EntityCondition.makeCondition("fromPartyId", ,EntityOperator.EQUALS, partyId));
+	    conditionList.add(EntityCondition.makeCondition("fromPartyId", ,EntityOperator.EQUALS, partyId));
 }
 /*
 conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)));
 conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)));*/
-conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,custRequestIds));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-storeAbst= delegator.findList("CustRequestAndCustRequestItem",condition,UtilMisc.toSet("custRequestId","custRequestDate","productId","custRequestItemSeqId","fromPartyId"),null,null,false);
-deptIds = EntityUtil.getFieldListFromEntityList(storeAbst, "fromPartyId", true);
-prodDeptMap=[:];
+		conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,custRequestIds));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		storeAbst= delegator.findList("CustRequestAndCustRequestItem",condition,UtilMisc.toSet("custRequestId","custRequestDate","productId","custRequestItemSeqId","fromPartyId"),null,null,false);
+		deptIds = EntityUtil.getFieldListFromEntityList(storeAbst, "fromPartyId", true);
+		prodDeptMap=[:];
 if(UtilValidate.isNotEmpty(deptIds)){
 		 
 	     deptIds.each{fromPartyId->
@@ -109,123 +109,184 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		 productCatDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false),dayBegin);
-		 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);	
-         if(UtilValidate.isNotEmpty(productCatIds)){
-	             prodMap=[:];
-				 
-	         productCatIds.each{productCatId->
-				 
-	             prodList=[];
-                 if(UtilValidate.isNotEmpty(productIdsDetails)){
+		 primaryParentCategoryDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false),dayBegin);
+         primaryParentCategoryIds = EntityUtil.getFieldListFromEntityList(primaryParentCategoryDetails,"primaryParentCategoryId", true);		 
+		 parentCategoryMap = [:];
+		 
+		 if(UtilValidate.isNotEmpty(primaryParentCategoryIds)){
+			  conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId",EntityOperator.IN, primaryParentCategoryIds));
+			  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			  productCatDetails = EntityUtil.filterByCondition(primaryParentCategoryDetails,condition);
+			  productCatIds = EntityUtil.getFieldListFromEntityList(primaryParentCategoryDetails,"productCategoryId", true);
+			  primaryParentCategoryIds.each{primaryParentCategoryId->								 
+						 
+			     if(UtilValidate.isNotEmpty(productCatIds)){
+				        prodMap=[:];
+ 
+                        productCatIds.each{productCatId->
+ 
+				             prodList=[];
+			                 if(UtilValidate.isNotEmpty(productIdsDetails)){
+								 
+				                      productIdsDetails.each{custReq->						
+					                        productDetailMap=[:];
+											
+					                        custRequestId=custReq.custRequestId;
+					                        custRequestDate=custReq.custRequestDate;
+					                        productId=custReq.productId;
+											
+											if(productId){								
+											conditionList.clear();
+											conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
+											condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+											productCatTypeDetails = EntityUtil.filterByCondition(primaryParentCategoryDetails,condition);							
+											productCatTypes= EntityUtil.getFirst(productCatTypeDetails); 
+											if((productCatTypes) && (productCatTypes.productCategoryId)){								
+											      productCatTypeId=productCatTypes.productCategoryId;	
+												  if(productCatTypeId.equals(productCatId)){									 									     
+						                                 custRequestItemSeqId=custReq.custRequestItemSeqId;								   
+											             quantity=custReq.quantity;							
+						                                 productDetailMap["custRequestId"]=custRequestId;
+						                                 //productDetailMap["custRequestDate"]=custRequestDate;														
+												         productDetails = delegator.findOne("Product",["productId":productId],false);
+												         if(productDetails){
+															 productDetailMap["productId"]=productDetails.productId;															 
+												             productDetailMap["internalName"]=productDetails.internalName;
+															 productDetailMap["productName"]=productDetails.productName;											 
+								                                     productDetailMap["description"]=productDetails.description;
+														             uomId=productDetails.quantityUomId;
+														  }
+											             if(UtilValidate.isNotEmpty(uomId)){
+												                unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+											                    productDetailMap["unit"]=unitDesciption.abbreviation;
+											              }							
+						                                 conditionList.clear();
+							                             conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+							                             conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+							                             conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+														 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
+							                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+														 
+							                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,UtilMisc.toSet("quantity","cancelQuantity","issuedDateTime","unitCost"),null,null,false);
+														 productDetailMap.
+														 unitPrice=0;
+							                             totQty=0;
+							                             totunitCost=0;
+														 totVal=0;
+						                                if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
+															if(storeAbstQtyDetails.size()>1){
+						                                      storeAbstQtyDetails.each{storeAbstQty->	
+									                              itemquantity=storeAbstQty.quantity;												  
+																  if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
+																	  itemquantity=itemquantity-storeAbstQty.cancelQuantity;
+																  }			
+																  totQty =totQty+itemquantity;
+									                              unitCost=storeAbstQty.unitCost;
+									                             /* totunitCost=totunitCost+unitCost;*/
+																  totVal+=itemquantity*unitCost;
+																  productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
+						                                      }
+															}else{
+																storeAbstQty=EntityUtil.getFirst(storeAbstQtyDetails);
+																quantity=storeAbstQty.quantity;
+																if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
+																	quantity-=storeAbstQty.cancelQuantity;
+																}
+																totQty=quantity;
+																unitCost=storeAbstQty.unitCost;
+																 totVal=quantity*unitCost;
+																 productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
+															}
+															 /* if(storeAbstQtyDetails.size()>1){
+														         if(totunitCost != 0){  
+							                                           unitPrice=totQty/totunitCost;
+																	   productDetailMap["unitPrice"]=unitPrice;
+																	   totVal=	totQty*	unitPrice;
+														         }else{
+																 productDetailMap["unitPrice"]=unitPrice;
+														         }
+															  }
+															  else{
+																  productDetailMap["unitPrice"]=unitCost;
+																  totVal=	totQty*	unitCost;
+															  }*/
+								                            
+								                            productDetailMap["totQty"]=totQty;				                           
+								                            productDetailMap["totVal"]=totVal;
+						                              }
+						                              else{									
+								                            productDetailMap["totQty"]=0;
+								                            productDetailMap["unitPrice"]=0;
+								                            productDetailMap["totVal"]=0;									
+						                              }	
+													  if(totQty != 0){										  
+						                                 prodList.addAll(productDetailMap);
+													  }						  					 
+							                    }
+					                       }																	
+				                       }						
+                                 }					 
 					 
-                      productIdsDetails.each{custReq->						
-	                        productDetailMap=[:];
-							
-	                        custRequestId=custReq.custRequestId;
-	                        custRequestDate=custReq.custRequestDate;
-	                        productId=custReq.productId;
-							
-							if(productId){								
-							conditionList.clear();
-							conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
-							condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-							productCatTypeDetails = EntityUtil.filterByCondition(productCatDetails,condition);							
-							productCatTypes= EntityUtil.getFirst(productCatTypeDetails); 
-							if((productCatTypes) && (productCatTypes.productCategoryId)){								
-							      productCatTypeId=productCatTypes.productCategoryId;	
-							      if(productCatTypeId.equals(productCatId)){									
-	                                     custRequestItemSeqId=custReq.custRequestItemSeqId;								   
-							             quantity=custReq.quantity;							
-	                                     productDetailMap["custRequestId"]=custRequestId;
-		                                 //productDetailMap["custRequestDate"]=custRequestDate;														
-								         productDetails = delegator.findOne("Product",["productId":productId],false);
-								         if(productDetails){
-								             productDetailMap["productId"]=productDetails.internalName;
-		                                     productDetailMap["description"]=productDetails.description;
-								             uomId=productDetails.quantityUomId;
-								         }
-							             if(UtilValidate.isNotEmpty(uomId)){
-								                unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-							                    productDetailMap["unit"]=unitDesciption.abbreviation;
-							              }							
-		                                 conditionList.clear();
-			                             conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
-			                             conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
-										 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-										 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
-										 
-			                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-										 
-			                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,UtilMisc.toSet("quantity","cancelQuantity","issuedDateTime","unitCost"),null,null,false);
-										 productDetailMap.
-										 unitPrice=0;
-			                             totQty=0;
-			                             totunitCost=0;
-										 totVal=0;
-	                                    if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
-											if(storeAbstQtyDetails.size()>1){
-		                                      storeAbstQtyDetails.each{storeAbstQty->	
-					                              itemquantity=storeAbstQty.quantity;												  
-												  if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
-													  itemquantity=itemquantity-storeAbstQty.cancelQuantity;
-												  }			
-												  totQty =totQty+itemquantity;
-					                              unitCost=storeAbstQty.unitCost;
-					                             /* totunitCost=totunitCost+unitCost;*/
-												  totVal+=itemquantity*unitCost;
-												  productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
-		                                      }
-											}else{
-												storeAbstQty=EntityUtil.getFirst(storeAbstQtyDetails);
-												quantity=storeAbstQty.quantity;
-												if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
-													quantity-=storeAbstQty.cancelQuantity;
-												}
-												totQty=quantity;
-												unitCost=storeAbstQty.unitCost;
-												 totVal=quantity*unitCost;
-												 productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
-											}
-											  /*if(storeAbstQtyDetails.size()>1){
-										         if(totunitCost != 0){  
-			                                           unitPrice=totQty/totunitCost;
-													   productDetailMap["unitPrice"]=unitPrice;
-													   totVal=	totQty*	unitPrice;
-										         }else{
-												 productDetailMap["unitPrice"]=unitPrice;
-										         }
-											  }
-											  else{
-												  productDetailMap["unitPrice"]=unitCost;
-												  totVal=	totQty*	unitCost;
-											  }*/
-				                            
-				                            productDetailMap["totQty"]=totQty;				                           
-				                            productDetailMap["totVal"]=totVal;
-	                                  }
-	                                  else{									
-				                            productDetailMap["totQty"]=0;
-				                            productDetailMap["unitPrice"]=0;
-				                            productDetailMap["totVal"]=0;									
-	                                  }	
-									  if(totQty != 0){										  
-	                                     prodList.addAll(productDetailMap);
-									  }						  					 
-	                            }
-						}																	
-				  }						
-             }					 
-					 
-	     }	
-		 if(UtilValidate.isNotEmpty(prodList)){					 
-	         prodMap.put(productCatId,prodList);			 
-		 }
+	                      }	
+						 if(UtilValidate.isNotEmpty(prodList)){					 
+					         prodMap.put(productCatId,prodList);			 
+						 }
+                       }
+                    }
+			        if(UtilValidate.isNotEmpty(prodMap)){					 
+			          parentCategoryMap.put(primaryParentCategoryId,prodMap);			 
+				    }
+                  }
+                }
+				if(UtilValidate.isNotEmpty(parentCategoryMap)){
+			       prodDeptMap.put(deptName,parentCategoryMap);
+			    }
        }
-    }
-	if(UtilValidate.isNotEmpty(prodMap)){
-       prodDeptMap.put(deptName,prodMap);
-	}
-   }
-  context.prodDeptMap=prodDeptMap;
+	  context.prodDeptMap=prodDeptMap;
 }
+//get productDetails for abstract
+deptMap=[:];
+for(Map.Entry entryDep : prodDeptMap.entrySet()){
+	dept = entryDep.getKey();
+	deptDetails = entryDep.getValue();
+	CatMap=[:];
+	for(Map.Entry entryCat : deptDetails.entrySet()){
+		cat=entryCat.getKey();
+		catDetails = entryCat.getValue();
+		SubCatMap=[:];
+		for(Map.Entry entrySubCat : catDetails.entrySet()){
+			subCat=entrySubCat.getKey();
+			subCatDetails = entrySubCat.getValue();
+			productsMap=[:];
+			for(eachentry in subCatDetails){
+				productId = eachentry.productId;				
+				tempMap=[:];
+				if(UtilValidate.isEmpty(productsMap[productId])){
+					tempMap = [:];
+					tempMap["internalName"]=eachentry.internalName;					
+					tempMap["productName"]=eachentry.productName;
+					tempMap["unit"]=eachentry.unit;					
+					tempMap["totQty"]=eachentry.totQty;
+					tempMap["totVal"]=eachentry.totVal;
+					productsMap.put(productId,tempMap);
+				}else{
+					tempProdMap = [:];
+					tempProdMap.putAll(productsMap.get(productId));
+					tempProdMap.put("totQty",tempProdMap.get("totQty")+eachentry.totQty);
+					tempProdMap.put("totVal",tempProdMap.get("totVal")+eachentry.totVal);
+					productsMap.put(productId,tempProdMap);
+				}
+				
+			}
+			SubCatMap.put(subCat, productsMap);
+		}
+		CatMap.put(cat, SubCatMap);
+	}
+	deptMap.put(dept, CatMap);
+}
+context.deptMap=deptMap;
+
+
+
+
+	 
