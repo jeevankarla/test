@@ -17,6 +17,8 @@
     				<#assign totalExtentAlw = 0>
     				<#assign balance = 0>
     				<#assign totalEmployeeEarnings = 0>
+    				<#if employeeValues.getValue().get("totalEarnings") ?has_content>
+    				<#if employeeValues.getValue().get("totalEarnings") != 0>
     				<fo:block font-family="Arial">
 		            	<fo:table>
 		                    <fo:table-column column-width="640pt"/>
@@ -1200,7 +1202,11 @@
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">&#160;</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
-	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("totalTaxDeductedatSource") != 0>${((employeeValues.getValue().get("totalTaxDeductedatSource"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
+	                           			<#if employeeValues.getValue().get("totalTaxDeductedatSource")?has_content>
+	                           				<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if employeeValues.getValue().get("totalTaxDeductedatSource") != 0>${((employeeValues.getValue().get("totalTaxDeductedatSource"))*(-1))?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
+	                           			<#else>
+	                           				<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt">0.00&#160;&#160;</fo:block>
+	                           			</#if>
 	                           		</fo:table-cell>
 			                   	</fo:table-row>
 			                   	<fo:table-row>
@@ -1215,9 +1221,11 @@
 	                           		</fo:table-cell>
 	                           		<fo:table-cell >
 	                           			<#assign taxDiff = 0>
-	                           			<#assign totalTaxDeductedatSource = (employeeValues.getValue().get("totalTaxDeductedatSource"))*(-1)>
-	                           			<#if taxPay?has_content>
-	                           				<#assign taxDiff = (taxPay - totalTaxDeductedatSource)>
+	                           			<#if employeeValues.getValue().get("totalTaxDeductedatSource")?has_content>
+	                           				<#assign totalTaxDeductedatSource = (employeeValues.getValue().get("totalTaxDeductedatSource"))*(-1)>
+	                           				<#if taxPay?has_content>
+		                           				<#assign taxDiff = (taxPay - totalTaxDeductedatSource)>
+		                           			</#if>
 	                           			</#if>
 	                           			<fo:block text-align="right" keep-together="always" font-size="11pt" line-height = "18pt"><#if taxDiff != 0>${taxDiff  ?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
 	                           		</fo:table-cell>
@@ -1286,6 +1294,23 @@
 	                       	</fo:table-body>
                			</fo:table>
                		</fo:block>
+               		</#if>
+               		<#else>
+               			<#if (parameters.employeeId)?has_content>
+	               			<fo:block font-family="Arial">
+				            	<fo:table>
+				                    <fo:table-column column-width="640pt"/>
+									<fo:table-body> 
+			                 			<fo:table-row >
+			                           		<fo:table-cell border-style = "solid"> 
+			                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt" font-weight = "bold">FORM NO.16</fo:block>
+			                           		</fo:table-cell>
+			                           	</fo:table-row>
+					              	</fo:table-body>
+		               			</fo:table>
+	               			</fo:block>
+	               		</#if>
+               		</#if>
                	</#list>
            	</fo:flow>
 		</fo:page-sequence>

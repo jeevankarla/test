@@ -141,15 +141,23 @@ employeeIdsList = [];
 if(UtilValidate.isNotEmpty(parameters.employeeId)){
 	employeeIdsList.add(parameters.employeeId);
 }else{
-	emplInputMap = [:];
+	/*emplInputMap = [:];
 	emplInputMap.put("userLogin", userLogin);
 	emplInputMap.put("orgPartyId", parameters.partyIdFrom);
 	emplInputMap.put("fromDate", fromDateStart);
 	emplInputMap.put("thruDate", thruDateEnd);
 	Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 	employments=EmploymentsMap.get("employementList");
-	employementList = EntityUtil.orderBy(employments, UtilMisc.toList("partyIdTo"));
-	employeeIdsList = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+	employementList = EntityUtil.orderBy(employments, UtilMisc.toList("partyIdTo"));*/
+	List emplConditionList=[];
+	emplConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+	emplConditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPLOYEE"));
+	emplCondition =EntityCondition.makeCondition(emplConditionList,EntityOperator.AND);
+	def orderBy1 = UtilMisc.toList("partyIdTo");
+	employementList = delegator.findList("Employment", emplCondition , null, orderBy1, null, false );
+	if(UtilValidate.isNotEmpty(employementList)){
+		employeeIdsList = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+	}
 }
 
 sectionTypesList = [];
@@ -631,8 +639,8 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			currMonthKeyList.each { currMonth ->
 				monthWiseDetailsMap = [:];
 				GenericValue customTimePeriodDetails = delegator.findOne("CustomTimePeriod", [customTimePeriodId : currMonth], false);
-				fromDateStart=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("fromDate"));
-				customTimePeriodDayEnd = UtilDateTime.getMonthEnd(fromDateStart, timeZone, locale);
+				currMonthStart=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("fromDate"));
+				customTimePeriodDayEnd = UtilDateTime.getMonthEnd(currMonthStart, timeZone, locale);
 				monthWiseDetailsMap.put("customTimePeriodDayEnd",customTimePeriodDayEnd);
 				TDSRemittancesValues = delegator.findOne("TDSRemittances", ["partyId" :"Company", "customTimePeriodId":currMonth], true);
 				if(UtilValidate.isNotEmpty(TDSRemittancesValues)){
@@ -643,6 +651,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 					monthWiseDetailsMap.put("challanNumber",challanNumber);
 					monthWiseDetailsMap.put("taxDepositedDate",taxDepositedDate);
 				}
+				periodBilId = "";
 				if(UtilValidate.isNotEmpty(monthWiseBillingDetailsMap)){
 					periodBilId = monthWiseBillingDetailsMap.get(currMonth);
 				}

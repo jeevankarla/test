@@ -1107,6 +1107,7 @@
                 </entity-condition>  	
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getDefaultTimePeriod.groovy"/>
     			<set field="reportFrequencyFlag" value="StatutoryReports"/>
     		</actions>
     		<widgets>

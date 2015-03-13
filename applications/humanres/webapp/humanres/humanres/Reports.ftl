@@ -1362,7 +1362,7 @@ function setOrgPartyId() {
 										<td width="30%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 												<#list customTimePeriodIdsList as customTimePeriod>
-													 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+													 <#if finYearId?exists && (finYearId == customTimePeriod.customTimePeriodId)>
 								      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 								      					<#else>
 								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
