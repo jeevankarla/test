@@ -1279,6 +1279,7 @@ public class HumanresService {
 			String pfNumber =(String)context.get("pfNumber");
 			String partyIdFrom =(String)context.get("partyIdFrom");
 			Date dateOfJoining =  (Date)context.get("dateOfJoining");
+			Date employmentDate = (Date)context.get("employmentDate");
 			Date passportExpireDate =  (Date)context.get("passportExpireDate");
 			String backgroundVerification =(String)context.get("backgroundVerification");
 			String emplPositionTypeId = (String) context.get("emplPositionTypeId");
@@ -1375,6 +1376,12 @@ public class HumanresService {
 					return ServiceUtil.returnError("Error while creating  PartyClassification" + e);	
 				}
 				
+				Timestamp employmentDateStart = null;
+				if (UtilValidate.isNotEmpty(employmentDate)){
+					employmentDateStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(employmentDate));
+				}else{
+					employmentDateStart =  UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+				}
 				// Create Employement
 				if (UtilValidate.isNotEmpty(ownerPartyId)){
 		            input.clear();
@@ -1382,7 +1389,7 @@ public class HumanresService {
 		            input.put("partyIdTo", ownerPartyId);
 		            input.put("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 		            input.put("roleTypeIdTo", "EMPLOYEE");
-		            input.put("fromDate", UtilDateTime.nowTimestamp());
+		            input.put("fromDate", employmentDateStart);
 		            input.put("partyIdFrom", partyIdFrom);
 		            input.put("appointmentDate", dateOfJoining);
 		            input.put("locationGeoId", locationGeoId);
