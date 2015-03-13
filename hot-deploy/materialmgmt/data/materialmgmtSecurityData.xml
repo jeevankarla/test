@@ -465,4 +465,41 @@
     <SecurityGroup description="Add Material" groupId="MM_ADD_MATERIAL"/>
     <SecurityGroupPermission groupId="MM_ADD_MATERIAL"  permissionId="MM_ADD_MATERIAL"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_ADD_MATERIAL"/>
+    
+    <SecurityPermission description="Purchase Vat Report" permissionId="MMPURCHASEVAT_VIEW"/>
+    <SecurityGroup description="Viewing the  Purchase Vat Report!" groupId="MMPURCHASEVAT_VIEW"/>
+    <SecurityGroupPermission groupId="MMPURCHASEVAT_VIEW"  permissionId="MMPURCHASEVAT_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MMPURCHASEVAT_VIEW"/>
+   
+     <!-- Inter Unit Transfer and sale   permissions -->
+    <SecurityGroup description="All 'Icp Sale' permissions like create,veiw " groupId="MM_ICP_CREATE"/>    
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_ICP_CREATE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_VIEW"/
+   
+    
+     <!-- Inter Unit Transfer and sale   permissions -->
+    <SecurityGroup description="All 'Inter Unit Transfer' permissions like create,veiw " groupId="MM_INTERUNIT_CREATE"/>    
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_INTERUNIT_CREATE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_VIEW"/
+ 
 </entity-engine-xml>
