@@ -50,5 +50,226 @@
             </hyperlink>
         </field> 
     </form> 
+    
+    <form name="FindShipmentReceipt" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        <field name="datetimeReceived"><date-find/></field>
+        <field name="productId"><text-find/></field>
+        <field name="receiptId" title="GRN Item No"><text-find/></field>
+        <field name="statusId">
+        	<drop-down allow-empty="true"   >
+        		<entity-options description="${description}" entity-name="StatusItem" >
+        			<entity-constraint name="statusTypeId" operator="equals" value="RECEIPT_STATUS"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="orderId" title="PO Order"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+   <form name="listMaterialShipmentReceipt" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar">
+      
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+      	<field name="receiptId" title="GRN Item No">
+      		<display/>
+      	</field>
+      	<field name="productId" title="Code- Name [UOM]">
+      		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
+      	</field>
+        <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
+        <field name="shipmentId" title="GRN ShipmentId"><display/></field>
+       <field name="orderId" title="PO No"><display/></field> 
+        <field name="statusId" title="Status">
+        	<display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+      	<field name="quantityAccepted" title="Quantity"><display/></field>
+      	<field name="quantityRejected" title="Qty Rejected"><display/></field>
+      	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
+      	
+        <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
+         
+      	<field name="SendtoQC" use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"  title="Send to QC" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:showQCApprovalQTip('${receiptId}');"></hyperlink>
+        </field> 
+    </form>
+    
+    <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
+        <field name="primaryOrderId" title="PO no"><text-find/></field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="vehicleId" title="Vehicle No"><text-find/></field>
+        <field name="statusId" title="Status"  >
+        <drop-down no-current-selected-key="GENERATED" allow-empty="true" > 
+        <option key="SHIPMENT_CANCELLED" description="Cancelled" > </option>
+        <option key="GENERATED" description="Generated"  ></option>
+        </drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listMaterialShipments" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        </actions>
+        <row-actions>
+        	<entity-condition entity-name="Invoice" list="invoices">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+        			<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="invSize" value="${groovy: invoices.size();}"/>
+        	<entity-condition entity-name="ShipmentReceipt" list="shipmentReceiptList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId" />
+        			<condition-expr field-name="statusId" operator="equals" value="SR_RECEIVED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="shipmentReceiptSize" value="${groovy: shipmentReceiptList.size();}"/>
+        	<entity-condition entity-name="ShipmentReceipt" list="invoiceReceiptList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId" />
+        			<condition-expr field-name="statusId" operator="equals" value="SR_ACCEPTED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="invoiceReceiptSize" value="${groovy: invoiceReceiptList.size();}"/>
+        </row-actions>
+      	<field name="shipmentId" widget-style="buttontext h3" title="GRN Shipment Id">
+      		<hyperlink target="MaterialShipmentOverview" description="${shipmentId}" target-window="_blank" >
+                <parameter param-name="shipmentId"/>
+            </hyperlink>
+      	</field>
+        <field name="estimatedShipDate" title="GRN Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field>
+        <field name="primaryOrderId" title="PO No" widget-style="buttontext">
+        	<hyperlink target="POoverview" description="${primaryOrderId}" target-window="_blank">
+      			<parameter param-name="orderId" value="${primaryOrderId}"/>
+      		</hyperlink>
+        </field>
+        <field name="partyId">
+        <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="statusId" title="Status">
+        	<display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+        <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot; &amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}" >
+            <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}','${partyId}');" description="Link GRN With PO">
+            </hyperlink>
+        </field> 
+        <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}">
+            <hyperlink target="CancelGrnShipment" description="Cancel GRN">
+                <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field>
+        <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            <hyperlink target="MRRreport.pdf" description="Report" target-window="_blank">
+             	<parameter param-name="shipmentId" value="${shipmentId}"/>
+             	<parameter param-name="orderId" value="${primaryOrderId}"/>
+               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
+            </hyperlink>
+        </field>
+        <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Send to QC" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
+        </field>
+        <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+            <hyperlink target="MaterialInvoiceInit" description="Invoice">
+                <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+    </form>
+    
+    <form name="shipmentInfo" type="single" title="request information" default-map-name="shipmentHeader"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentId" title="shipment No"><display/></field>
+        <field name="primaryOrderId" title="PO no"><display/></field>
+        <field name="statusId" title="Status"><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display/></field>
+        <field name="supplierId" title="Supplier">
+        	<display default-value="${supplierId}"/>
+        </field>
+        <field name="supplierInvoiceId" title="Supplier Invoice No"><display/></field>
+        <field name="supplierInvoiceDate" title="Supplier Invoice Date"><display /></field>
+        <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="createdDate" title="Created Date"><display/></field>
+        <field name="createdByUserLogin" title="Created User Login"><display/></field>
+    </form>
+    
+    <form name="shipmentItemInfo" type="list" title="request information" default-map-name="" list-name="shipmentItems"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentItemSeqId" title="Item No"><display/></field>
+        <field name="productId" title="Material Code">
+        	<display-entity entity-name="Product" key-field-name="productId" description="${productName} - [${productId}]"/>
+        </field>
+        <field name="quantity" title="Qty"><display/></field>
+    </form>
+    
+    <form name="shipmentReceiptsForInvoice" type="list" title="request information" default-map-name="" list-name="shipmentReceipts"
+        header-row-style="header-row" default-table-style="basic-table" target="">
+        <field name="shipmentId"><hidden/></field>
+        <field name="receiptId" title="GRN No"><display/></field>
+        <field name="productId" title="Material Code">
+        	<display-entity entity-name="Product" key-field-name="productId" description="${productName} - [${productId}]"/>
+        </field>
+        <field name="orderId" title="Order No."><display/></field>
+        <field name="orderItemSeqId" title="Order Item Ref."><display/></field>
+        <field name="quantityAccepted" title="Accepted Qty"><display/></field>
+        <field name="quantityRejected" title="Rejected Qty"><display/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+    </form>
 
+	<form name="orderAmendments" type="list" list-name="orderAmendmentsList" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+      <actions>
+      	<entity-condition entity-name="OrderItemChange" list="orderAmendmentsList">
+      		<condition-expr field-name="orderId" operator="equals" from-field="parameters.orderId"/>
+      	</entity-condition>
+      </actions>  
+      <row-actions>
+      	<entity-one value-field="OrderItem" entity-name="OrderItem">
+      		<field-map field-name="orderId" from-field="orderId"/>
+      		<field-map field-name="orderItemSeqId" from-field="orderItemSeqId"/>
+      	</entity-one>
+      	<set field="productId"  from-field="OrderItem.productId"/>
+      </row-actions>
+      <field name="orderId"><hidden/></field>
+      <field name="orderItemSeqId" title="Item No"><hidden/></field>
+      <field name="productId" title="Product">
+      		<display-entity entity-name="Product" description="${description}"/>
+      	</field>
+      <field name="quantity"><display></display></field>
+      <field name="unitPrice"><display></display></field>
+      <field name="effectiveDatetime" title="Effective Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(effectiveDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeDatetime" title="Changed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(changeDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeUserLogin" title="Changed By"><display></display></field>
+      <field name="changeComments" title="Comments"><display></display></field>
+     </form>   
+     
+     <form name="invoiceDetailList" type="list" list-name="invoiceDetailList"  odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+    	<field name="invoiceId" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
+    	<field name="statusId" title="Status">
+    		<display-entity entity-name="StatusItem" description="${description}" ></display-entity>
+    	</field>
+    	<field name="invoiceDate" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
+          <field name="createdByUserLogin" title="Entry by"><display/></field>	  
+    </form>
 </forms>

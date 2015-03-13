@@ -59,6 +59,9 @@
             <link target="DepotSale">
             </link>
         </menu-item>
+        <menu-item name="FindGRNReceipts" title="Receipts">
+	        	<link target="FindGRNReceipts"/>
+	        </menu-item>
       </menu>
       
       <menu name="DepotSalesIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -80,5 +83,42 @@
 	        	<link target="FindDepotShipment" />
 	        </menu-item>
        </menu>
+       
+       <menu name="ReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindGRNReceipts" title="Find GRN Items">
+        	<link target="FindGRNReceipts"/>
+        </menu-item>
+        <menu-item name="POMaterialReceipts" title="GRN Entry">
+        	<link target="POMaterialReceipts"/>
+        </menu-item>
+        <menu-item name="FindGRNShipments" title="Find GRN">
+        	<link target="FindGRNShipments"/>
+        </menu-item>
+        <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialShipmentOverview">
+            </link>
+        </menu-item>
+        <menu-item name="MaterialInvoiceInit" title="Invoice For Shipment">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialInvoiceInit">
+            </link>
+        </menu-item>
+        <menu-item name="POoverView" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+        
+        
+      </menu>
       
 </menus>

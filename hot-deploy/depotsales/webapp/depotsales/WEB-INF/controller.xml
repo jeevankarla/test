@@ -112,6 +112,81 @@
         <response name="success" type="request" value="FindDepotShipment"/>
         <response name="error" type="request" value="FindDepotShipment"/>
     </request-map>
+    
+    <request-map uri="FindGRNReceipts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindGRNReceipts"/>
+       <response name="error" type="view" value="FindGRNReceipts"/>
+     </request-map>
+     
+      <request-map uri="POMaterialReceipts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="POMaterialReceipts"/>
+       <response name="error" type="view" value="POMaterialReceipts"/>
+     </request-map>
+     
+     <request-map uri="processReceiptItems">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReceiptItems" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="POMaterialReceipts"/>
+       <response name="error" type="view" value="POMaterialReceipts"/>
+     </request-map>
+     
+      <request-map uri="FindGRNShipments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindGRNShipments"/>
+       <response name="error" type="view" value="FindGRNShipments"/>
+     </request-map>
+     
+      <request-map uri="MaterialShipmentOverview">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialShipmentOverview"/>
+       <response name="error" type="view" value="MaterialShipmentOverview"/>
+    </request-map>
+    
+    <request-map uri="POoverview">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="PurchageOrderOverView"/>
+       <response name="error" type="view" value="PurchageOrderOverView"/>
+     </request-map>
+     
+     <request-map uri="MRRreport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MRRreportPDF"/>
+    </request-map>
+    
+    <request-map uri="shipmentSendForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="shipmentSendForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNShipments"/>
+     </request-map>
+     
+     <request-map uri="CancelGrnShipment">
+       <security https="true" auth="true"/>
+        <event type="service" path="" invoke="processCancelGrnShipment"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
+       <response name="error" type="view" value="FindGRNShipments"/>
+     </request-map>
+     
+     <request-map uri="MaterialInvoiceInit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialInvoiceInit"/>
+       <response name="error" type="view" value="MaterialInvoiceInit"/>
+     </request-map>
+     
+     <request-map uri="processPurchaseInvoice">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processPurchaseInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="FindMaterialInvoices"/>
+       <response name="error" type="view" value="FindMaterialInvoices"/>
+     </request-map>
+     
+     <request-map uri="FindMaterialInvoices">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindMaterialInvoices"/>
+        <response name="error" type="view" value="FindMaterialInvoices"/>
+    </request-map>
        
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
@@ -123,4 +198,12 @@
     <view-map name="FindDepotShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
     <view-map name="BuyerInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoicePDF" content-type="application/pdf"/>
     <view-map name="TaxInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#TaxInvoicePDF" content-type="application/pdf"/>
+    <view-map name="FindGRNReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNReceipts"/>
+    <view-map name="POMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#POMaterialReceiptsDepot"/>
+    <view-map name="FindGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNShipments"/>
+    <view-map name="MaterialShipmentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialShipmentOverview"/>
+    <view-map name="PurchageOrderOverView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PurchageOrderOverView"/>
+    <view-map name="MRRreportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
+    <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
+    <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
 </site-conf>
