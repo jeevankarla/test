@@ -27,8 +27,7 @@
                 <set field="tabButtonItem" value="main"/>
 <!--                <set field="facilityId" from-field="parameters.facilityId"/>-->
 <!--                <set field="isTreeRoot" value="Y"/>-->
-				<script  
-					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/facilityTreeNetwork.groovy" />                                
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/facilityTreeDepoNetwork.groovy"/>
             </actions>          
             <widgets>
             <section>
@@ -58,6 +57,48 @@
         </widgets>     
 		</section>
     </screen>
+    <screen name="ChannelWiseDepoSalesChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="channelSalesChart" />
+ 				<entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="or">
+               		 	<condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
+               			<condition-expr field-name="enumId" operator="equals" value="CR_INST"/>   
+               			<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
+               			</condition-list>
+         		</entity-condition>		                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="ChannelWiseDepoSalesChartInternal" type="String"/>
+            </actions>            
+            <widgets>
+            <!-- 	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml"> -->
+            	 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">     
+                        <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://depotsales/webapp/depotsales/depotsales/depoSalesMixedTrend.ftl"/></html>
+                        	</platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    <screen name="ChannelWiseDepoSalesChartInternal">
+        <section>
+            <actions>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ChannelWiseDepotSales.groovy"/>  
+				<set field="chartType" value="SalesMix"/>                           
+            </actions>            
+            <widgets>
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/channelWiseSalesCharts.ftl"/></html>
+                        	</platform-specific>   
+            </widgets>
+        </section>
+    </screen>       
 
 <screen name="DepotSalesIndent">
         <section>

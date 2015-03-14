@@ -28,6 +28,15 @@
  <!--    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map> -->
      <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FacilityTree"/></request-map>
      
+     <request-map uri="ChannelWiseDepoSalesChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ChannelWiseDepoSalesChart"/>
+    </request-map>
+    <request-map uri="ChannelWiseDepoSalesChartInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ChannelWiseDepoSalesChartInternal"/>
+    </request-map> 
+    
      <request-map uri="DepotSale"><security https="true" auth="true"/><response name="success" type="view" value="DepotSale"/></request-map>
      
       <request-map uri="processDepotSale">
@@ -191,6 +200,10 @@
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
+    
+    <view-map name="ChannelWiseDepoSalesChart" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChart"/>
+	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
+    
     <view-map name="DepotSale" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesIndent"/>
     <view-map name="ProcessDepotOrders" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>

@@ -1,4 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 
+ <Party partyId="DemoCustCompany" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="DemoCustCompany" groupName="Demo Customer Company"/>
+    <UserLogin partyId="DemoCustCompany" userLoginId="DemoCustCompany"/>
+    <PartyRole partyId="DemoCustCompany" roleTypeId="CUSTOMER"/>
+    <PartyRole partyId="DemoCustCompany" roleTypeId="BILL_TO_CUSTOMER"/>
+    <PartyRole partyId="DemoCustCompany" roleTypeId="_NA_"/>
+    
+    
+     <Party partyId="Company" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="Company" groupName="Demo Company Company"/>
+    <UserLogin partyId="DemoCustCompany" userLoginId="DemoCustCompany"/>
+    <PartyRole partyId="DemoCustCompany" roleTypeId="CUSTOMER"/>
+    <PartyRole partyId="DemoCustCompany" roleTypeId="BILL_TO_CUSTOMER"/>
+    <PartyRole partyId="DemoCustCompany" roleTypeId="_NA_"/>
+    
+    
+    
+     <StatusType description="Budget" hasTable="N" parentTypeId="" statusTypeId="BUDGET_STATUS"/>
+    <StatusType description="Party Asset" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
+
+    <!-- invoice status -->
+    <StatusType description="Invoice Status" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="INVOICE_IN_PROCESS" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Approved" sequenceId="02" statusCode="APPROVED" statusId="INVOICE_APPROVED" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Sent" sequenceId="10" statusCode="SENT" statusId="INVOICE_SENT" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Received" sequenceId="11" statusCode="RECEIVED" statusId="INVOICE_RECEIVED" statusTypeId="INVOICE_STATUS"/>
+    <!-- READY is a very important state - it triggers general ledger postings.  Make sure your invoices go through this state -->
+    <StatusItem description="Ready for Posting" sequenceId="20" statusCode="READY" statusId="INVOICE_READY" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Paid" sequenceId="30" statusCode="PAID" statusId="INVOICE_PAID" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Write Off" sequenceId="31" statusCode="WRITE OFF" statusId="INVOICE_WRITEOFF" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="INVOICE_CANCELLED" statusTypeId="INVOICE_STATUS"/>
+    <!-- this is the simplest process: IN_PROCESS -> READY or CANCELLED -->
+    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
+    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    <!-- this is a more complicated process: IN_PROCESS -> SENT -> (optionally RECEIVED) -> READY or CANCELLED -->
+    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_SENT" transitionName="Send"/>
+    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
+    <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_APPROVED" transitionName="Mark Approved"/>
+    <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
+    <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
+    <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_READY" transitionName="Mark Receive"/>
+    <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    <!-- this is a process to enable modification via the Status IN_PROCESS when the receiver/sender wants an invoice change or to cancel it -->
+    <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_IN_PROCESS" transitionName="Enable sales invoice update"/>
+    <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_IN_PROCESS" transitionName="Enable purch.invoice update"/>
+    <!-- an optional approval state is put in before invoice is sent or after it is received -->
+    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_APPROVED" transitionName="Approve"/>
+    <StatusValidChange condition="" statusId="INVOICE_APPROVED" statusIdTo="INVOICE_SENT" transitionName="Send"/>
+    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
+    <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_APPROVED" transitionName="Approve"/>
+    <StatusValidChange condition="" statusId="INVOICE_APPROVED" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
+    <!-- finally the invoice can be paid or written off.   -->
+    <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_PAID" transitionName="Pay"/>
+    <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_WRITEOFF" transitionName="Write Off"/>
+    <StatusValidChange condition="" statusId="INVOICE_PAID" statusIdTo="INVOICE_READY" transitionName="Unpay"/>
+    <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="INVOICE_PAID" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
 </entity-engine-xml>
