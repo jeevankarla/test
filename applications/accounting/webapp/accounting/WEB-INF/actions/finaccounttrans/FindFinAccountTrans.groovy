@@ -17,6 +17,7 @@
 * under the License.
 */
 
+
 import org.ofbiz.base.util.*
 import java.util.ArrayList;
 import org.ofbiz.base.util.UtilHttp;
@@ -73,7 +74,7 @@ if(parameters.multifinAccount == "Y"){
 			getmultipleFinAccountList(eachFinAccount.getKey(),eachFinAccount.getValue());
 			}
 }else{
-	//Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
+//	Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
 	finAccountIdList= EntityUtil.getFieldListFromEntityList(finAccountTransList,"finAccountId", true);
 getmultipleFinAccountList("",finAccountTransList);
 }
@@ -186,12 +187,14 @@ context.finAccountReconciliationList=finAccountReconciliationList;
 context.partyFinAccountTransList=partyFinAccountTransList;
 context.partyTotalDebits=partyTotalDebits;
 context.partyTotalCredits=partyTotalCredits;
+if(parameters.multifinAccount != "Y"){
 context.partyDayWiseFinHistryMap=partyDayWiseFinHistryMap;
+}
 
 }
-if(parameters.multifinAccount == "Y"){
-context.finalpartyDayWiseFinHistryMap=finalpartyDayWiseFinHistryMap;
-}
+/*if(parameters.multifinAccount != "Y"){
+	context.finalpartyDayWiseFinHistryMap=finalpartyDayWiseFinHistryMap;
+	}*/
 //Debug.log("==finAccountReconciliationList=="+finAccountReconciliationList);
 //Debug.log("==partyFinAccountTransList=="+partyFinAccountTransList);
 
