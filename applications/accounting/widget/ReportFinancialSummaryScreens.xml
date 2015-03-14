@@ -4179,6 +4179,35 @@
 			</widgets>
 		</section>
 	</screen>
+	<!-- <screen name="PartyFinancialHistoryWithDrCrPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="fromDate" from-field="parameters.fromDate" type="Timestamp"
+					default-value="${findLastClosedDateOutMap.lastClosedDate}" />
+				<set field="thruDate" from-field="parameters.thruDate" type="Timestamp"
+					default-value="${nowTimestamp}" />
+				<script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/ledger/GenericPartyFinancialHistoryNew.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen> -->
 	<screen name="PartyFinancialHistoryWithDrCrPDF">
 		<section>
 			<actions>
@@ -4187,12 +4216,15 @@
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				 <set field="parameters.multifinAccount" value="Y"></set>
 				<!-- <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"
 					default-value="${findLastClosedDateOutMap.lastClosedDate}" />
 				<set field="thruDate" from-field="parameters.thruDate" type="Timestamp"
 					default-value="${nowTimestamp}" /> -->
-				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
+					 <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
+					 <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
+					<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
+					
 			</actions>
 			<widgets>
 				<section>
@@ -4233,7 +4265,6 @@
 			</widgets>
 		</section>
 	</screen>
-	
 	<screen name="InterUnitLedgerAndAcntHistoryWithDrCr">
 		<section>
 			<actions>
@@ -4244,10 +4275,11 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 			    <set field="finAccountTransList" type="List"  />
 			    <set field="parameters.noConditionFind" value="Y"/>
-			    <set field="parameters.multifinAccount" value="Y"></set>
+			   
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
 			    <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
-			    <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/></actions>
+			  </actions>
 			<widgets>
                 <platform-specific> 
                      <xsl-fo><html-template location="component://accounting/webapp/accounting/ledger/GenericPartyFinancialHistoryNew.fo.ftl" /></xsl-fo>
