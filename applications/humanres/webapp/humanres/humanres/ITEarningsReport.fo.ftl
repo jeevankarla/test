@@ -119,6 +119,8 @@ under the License.
 			                        <#assign washing =0>
 			                        <#assign bonus =0>
 			                        <#assign DADAAmount=0>
+			                        <#assign DAARLEAmount=0>
+			                        
 			                        <#assign others = 0>
 			                        <#assign benefits = 0>
 			                        
@@ -145,8 +147,6 @@ under the License.
 			                    	<#assign SBEOthers =0>
 			                        <#assign SBE = 0>
 			                        
-			                        <#assign DAARDAAmount2 =0>
-			                        <#assign DAARLEAmount2=0>
 			                        
 			                    
 				                    <#assign monthKey = partyBenefits.getKey()>
@@ -171,6 +171,7 @@ under the License.
 				                    <#assign washing = partyBenefits.getValue().get("washing")?if_exists>
 				                    <#assign bonus = partyBenefits.getValue().get("bonus")?if_exists>
 				                    <#assign DADAAmount = partyBenefits.getValue().get("DADAAmount")?if_exists>
+				                    <#assign DAARLEAmount = partyBenefits.getValue().get("DAARLEAmount")?if_exists>
 				                    <#assign others = partyBenefits.getValue().get("others")?if_exists>
 			                    	<#assign benefits = partyBenefits.getValue().get("totalBenefits")?if_exists>
 			                    	
@@ -194,10 +195,6 @@ under the License.
 			                    	<#assign SBECCAmount = partyBenefits.getValue().get("SBECCAmount")?if_exists>
 			                    	<#assign SBEInterMrlf = partyBenefits.getValue().get("SBEInterMrlf")?if_exists>
 			                    	<#assign SBEOthers = partyBenefits.getValue().get("SBEOthers")?if_exists>
-			                    	
-			                    	
-			                    	<#assign DAARDAAmount2 = partyBenefits.getValue().get("DAARDAAmount")?if_exists>
-			                    	<#assign DAARLEAmount2 = partyBenefits.getValue().get("DAARLEAmount")?if_exists>
 			                    	
 			                    	
 			                    	<#assign totalLESalary = totalLESalary + LESalary>
@@ -224,19 +221,18 @@ under the License.
 			                    	<#assign leaveEncash = LESalary+LEDAAmount+LEHRAAmount+LECCAmount+LESpecPay>
 			                    	<#assign TE = TESalary+TEDAAmount+TEHRAAmount+TECCAmount+TEBonusEX+TEOthers>
 			                    	<#assign SBE = SBESalary+SBEDAAmount+SBEHRAAmount+SBECCAmount+SBEOthers+SBEInterMrlf>
-			                    	<#assign DAAR = DAARDAAmount2+DAARLEAmount2>
 			                    	
 			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic>
-			                    	<#assign totalDA = totalDA + DADAAmount+LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance>
+			                    	<#assign totalDA = totalDA + DADAAmount++DAARLEAmount+LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance>
 			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance>
 			                    	<#assign totalConvey = totalConvey + convey>
 			                    	<#assign totalCityComp = totalCityComp + LECCAmount+TECCAmount+SBECCAmount+cityComp>
 			                    	<#assign totalBonus = totalBonus + bonus+TEBonusEX>
 			                    	<#assign totalDADAAmount = totalDADAAmount + DADAAmount>
 			                    	<#assign totalOthers = totalOthers + others+LESpecPay+TEOthers+SBEOthers>
-			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DADAAmount>
+			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DADAAmount+DAARLEAmount>
 			                    	
-			                    	
+			                   <#if (basic?has_content && basic!=0)>
        							<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >${fromDate?if_exists}-${thruDate?if_exists}</fo:block>  
@@ -269,6 +265,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${benefits?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
+							    </#if>
 							    <#if (LESalary?has_content && LESalary!=0) || (LEDAAmount?has_content && LEDAAmount!=0) || (LEHRAAmount?has_content && LEHRAAmount!=0) || (LECCAmount?has_content && LECCAmount!=0) || (LESpecPay?has_content && LESpecPay!=0)>
 							    	<fo:table-row>
        								<fo:table-cell>
@@ -405,42 +402,7 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    </#list>
-							    <#if (DAARDAAmount1?has_content && DAARDAAmount1!=0)>
-							    	<fo:table-row>
-       								<fo:table-cell>
-							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Arrears:</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARDAAmount1?if_exists?string("#0.00")}</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
-							         </fo:table-cell>
-							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARDAAmount1?if_exists?string("#0.00")}</fo:block>  
-							         </fo:table-cell>
-							    </fo:table-row>
-							    </#if>
-							    <#if (DAARLEAmount1?has_content && DAARLEAmount1!=0)>
+							    <#if (DAARLEAmount?has_content && DAARLEAmount!=0)>
 							    	<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Leave Encash:</fo:block>  
@@ -449,7 +411,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount1?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
@@ -470,17 +432,16 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount1?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
+							    </#list>
 							    <fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						</fo:table-row>
-          						<#assign totalDA = totalDA+DAARDAAmount1+DAARLEAmount1>
-          						<#assign totalBenefits = totalBenefits + DAARDAAmount1+DAARLEAmount1>
 							    <fo:table-row font-weight= "bold">
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Grand Total</fo:block>  
