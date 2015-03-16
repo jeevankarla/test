@@ -709,6 +709,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		List condExpr = FastList.newInstance();
 		Map productItemRef = FastMap.newInstance();
 		List productItemDetails = FastList.newInstance();
+		Map productAdjustmentPerUnit = FastMap.newInstance();
 		try{
 			
 			if(UtilValidate.isNotEmpty(incTax)){
@@ -721,14 +722,17 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				tempMap.put("description", "");
 				termsDetail.add(tempMap);
 			}
-			
 			String productId = "";
+			Map taxInputAmountMap = FastMap.newInstance();
 			BigDecimal quantity = BigDecimal.ZERO;
 			for (Map<String, Object> prodQtyMap : productQty) {
 				
 				Map productItemMap = FastMap.newInstance();
 				BigDecimal unitPrice = BigDecimal.ZERO;
 				BigDecimal totalTaxAmt =  BigDecimal.ZERO;
+				BigDecimal bedInputAmount = null;
+				BigDecimal vatInputAmount = null;
+				BigDecimal cstInputAmount = null;
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 					productId = (String)prodQtyMap.get("productId");
 				}
@@ -737,6 +741,22 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 					unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
+					bedInputAmount = (BigDecimal)prodQtyMap.get("bedAmount");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+					vatInputAmount = (BigDecimal)prodQtyMap.get("vatAmount");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+					cstInputAmount = (BigDecimal)prodQtyMap.get("cstAmount");
+				}
+				if(UtilValidate.isNotEmpty(bedInputAmount) || UtilValidate.isNotEmpty(vatInputAmount) || UtilValidate.isNotEmpty(cstInputAmount)){
+					Map tempMap = FastMap.newInstance();
+					tempMap.put("bedInputAmount", bedInputAmount);
+					tempMap.put("vatInputAmount", vatInputAmount);
+					tempMap.put("cstInputAmount", cstInputAmount);
+					taxInputAmountMap.put(productId, tempMap);
 				}
 				// this is to calculate inclusive tax
 				BigDecimal vatUnitRate = BigDecimal.ZERO;
@@ -873,7 +893,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 						exBedRate = (BigDecimal)exBedRateMap.get("taxAmount");
 						bedUnitRate = exBedRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 						totalTaxAmt = totalTaxAmt.add(exBedRate);
-
 						Map<String,Object> exBedCessRateMap = UtilAccounting.getExclusiveTaxRate(exBedRate,bedcessTaxPercent);
 						exBedCessRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
 						bedCessUnitRate = exBedCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
@@ -883,9 +902,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 						exBedSecCessRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
 						bedSecCessUnitRate = exBedSecCessRate.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 						totalTaxAmt = totalTaxAmt.add(exBedSecCessRate);
-						
 					}
-					
 				}
 				else{
 					
@@ -926,7 +943,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					}
 					
 				}
-				
+
 				BigDecimal totalTaxUnitAmt = totalTaxAmt.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				if(UtilValidate.isNotEmpty(incTax)){
 					unitListPrice = unitPrice;
@@ -950,7 +967,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				itemDetail.add(productItemMap);
 				productItemRef.put(productId, productItemMap);
 			}
-			
 			String otherTermId = "";
 			String applicableTo = "";
 			String uomId = "";
@@ -959,7 +975,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			BigDecimal termValue = BigDecimal.ZERO;
 			
 			for (Map<String, Object> eachItem : otherCharges) {
-				
 				Map adjustmentItemMap = FastMap.newInstance();
 				Map termItemMap = FastMap.newInstance();
 				
@@ -991,10 +1006,8 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				termItemMap.put("uomId", uomId);
 				termItemMap.put("description", description);
 				termsDetail.add(termItemMap);
-
 			}
-			
-			Map adjInputCtx = UtilMisc.toMap("productItems", productItemRef, "otherCharges", otherCharges, "userLogin", userLogin, "incTax", incTax);
+			Map adjInputCtx = UtilMisc.toMap("productItems", productItemRef, "otherCharges", otherCharges, "inputTaxAmount", taxInputAmountMap, "userLogin", userLogin, "incTax", incTax);
 			
 			Map adjResult = getItemAdjustments(ctx, adjInputCtx);
 			
@@ -1004,8 +1017,8 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
   		  		return ServiceUtil.returnError(errMsg);
   		  	}
 			Map revisedProdItems = (Map)adjResult.get("productItemsRevised");
-			
 			adjustmentDetail = (List)adjResult.get("adjustmentTerms");
+			productAdjustmentPerUnit = (Map)adjResult.get("productAdjustmentPerUnit");
 			Iterator tempIter = revisedProdItems.entrySet().iterator();
 			while (tempIter.hasNext()) {
 				Map.Entry tempEntry = (Entry) tempIter.next();
@@ -1013,7 +1026,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				productItemDetails.add(eachItem);
 				grandTotal = grandTotal.add(((BigDecimal)eachItem.get("unitListPrice")).multiply((BigDecimal)eachItem.get("quantity")));
 			}
-			
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
@@ -1023,6 +1035,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		result.put("itemDetail", productItemDetails);
 		result.put("adjustmentDetail", adjustmentDetail);
 		result.put("termsDetail", termsDetail);
+		result.put("productAdjustmentPerUnit", productAdjustmentPerUnit);
 		return result;
 	}
 	
@@ -1031,11 +1044,13 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		Delegator delegator = ctx.getDelegator();
 		Map productItems = (Map) context.get("productItems");
 		String incTax = (String) context.get("incTax");
+		Map inputTaxAmount = (Map) context.get("inputTaxAmount");
 		List<Map> adjustmentTerms = (List) context.get("adjustmentTerms");
 		Map result = ServiceUtil.returnSuccess();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		BigDecimal grandTotal = BigDecimal.ZERO;
 		Map tempUpdateMap = FastMap.newInstance();
+		Map productAdjPerUnit = FastMap.newInstance();
 		Map adjValueMap = FastMap.newInstance();
 		// iterate adjustment to calculate landing cost of the item and recalculate tax when there is term before tax
 		for(Map eachAdj : adjustmentTerms){
@@ -1049,6 +1064,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			BigDecimal poValue = BigDecimal.ZERO;
 			
 			Iterator prodPOIter = productItems.entrySet().iterator();
+			// loop to get PO Value
 			while (prodPOIter.hasNext()) {
 				Map.Entry tempEntry = (Entry) prodPOIter.next();
 				Map prodItemTemp = (Map) tempEntry.getValue();
@@ -1060,106 +1076,33 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}
 		    	poValue = poValue.add(unitListPriceAmt);
 			}
+			
+			boolean perProdAdjFlag = Boolean.FALSE;
+			Iterator prodIter = null;
+			Map tempIterator = FastMap.newInstance();
 			if(applicableTo.equals("_NA_")){
-					
-				Iterator prodIter = productItems.entrySet().iterator();
-				while (prodIter.hasNext()) {
-					BigDecimal totalItemValue = BigDecimal.ZERO;
-					Map.Entry tempEntry = (Entry) prodIter.next();
-					Map prodItem = (Map) tempEntry.getValue();
-					String productId = (String) tempEntry.getKey();
-					BigDecimal quantity = (BigDecimal) prodItem.get("quantity"); 
-					Map prodMap = FastMap.newInstance();
-					if(UtilValidate.isNotEmpty(tempUpdateMap.get(productId))){
-						prodMap = (Map)tempUpdateMap.get(productId);
-					}else{
-						prodMap.putAll(prodItem);
-					}
-					BigDecimal recalcAdjPrice = BigDecimal.ZERO;
-					BigDecimal unitListPrice = BigDecimal.ZERO;
-					BigDecimal itemValue = BigDecimal.ZERO;
-					BigDecimal vatUnitAmt = ((BigDecimal)prodMap.get("vatAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
-					BigDecimal cstUnitAmt = ((BigDecimal)prodMap.get("cstAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
-					
-					itemValue = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
-					if(UtilValidate.isNotEmpty(prodMap.get("bedAmount"))){
-						itemValue = itemValue.add((BigDecimal)prodMap.get("bedAmount"));
-					}
-					if(UtilValidate.isNotEmpty(prodMap.get("bedcessAmount"))){
-						itemValue = itemValue.add((BigDecimal)prodMap.get("bedcessAmount"));
-					}
-					if(UtilValidate.isNotEmpty(prodMap.get("bedseccessAmount"))){
-						itemValue = itemValue.add((BigDecimal)prodMap.get("bedseccessAmount"));
-					}
-					
-					if(recalculateVAT){
-						BigDecimal listAmt = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
-						unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
-					}
-					else{
-						
-						if(UtilValidate.isNotEmpty(prodMap.get("vatAmount"))){
-							itemValue = itemValue.add((BigDecimal)prodMap.get("vatAmount"));
-						}
-						if(UtilValidate.isNotEmpty(prodMap.get("cstAmount"))){
-							itemValue = itemValue.add((BigDecimal)prodMap.get("cstAmount"));
-						}
-						unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
-					}
-					
-					recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
-					totalItemValue = totalItemValue.add(recalcAdjPrice);
-					BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
-					BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
-					BigDecimal basicPrice = uPrice.multiply(quantity);
-					BigDecimal vatPercent = (BigDecimal) prodMap.get("vatPercent");
-					BigDecimal cstPercent = (BigDecimal) prodMap.get("cstPercent");
-					
-					if(recalculateVAT){
-						if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
-							
-							BigDecimal vatReCalc = (basicPrice.multiply(vatPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
-							BigDecimal vatUnitPrice = vatReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
-							uPrice = uPrice.add(vatUnitPrice);
-							prodMap.put("vatAmount", vatReCalc);
-							prodMap.put("unitListPrice", uPrice);
-						}
-						if(UtilValidate.isNotEmpty(cstPercent) && cstPercent.compareTo(BigDecimal.ZERO)>0){
-							
-							BigDecimal cstReCalc = (basicPrice.multiply(cstPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
-							BigDecimal cstUnitPrice = cstReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
-							uPrice = uPrice.add(cstUnitPrice);
-							prodMap.put("cstAmount", cstReCalc);
-							prodMap.put("unitListPrice", uPrice);
-						}
-					}
-					else{
-						prodMap.put("unitListPrice", uPrice);
-					}
-					
-					if(UtilValidate.isNotEmpty(adjValueMap.get(productId))){
-						BigDecimal extAmt = (BigDecimal)adjValueMap.get(productId);
-						adjValueMap.put(productId, extAmt.add(totalItemValue));
-					}else{
-						adjValueMap.put(productId, totalItemValue);
-					}
-					tempUpdateMap.put(productId, prodMap);
-				}
+				prodIter = productItems.entrySet().iterator();
 			}
 			else{
-				
-				BigDecimal totalItemValue = BigDecimal.ZERO;
+				perProdAdjFlag = Boolean.TRUE;
 				Map prodItem = (Map)productItems.get(applicableTo);
 				String productId = (String) prodItem.get("productId");
+				tempIterator.put(productId, prodItem);
+				prodIter = tempIterator.entrySet().iterator();
+			}
+			//Apportioned for single item or entire order
+			while (prodIter.hasNext()) {
+				BigDecimal totalItemValue = BigDecimal.ZERO;
+				Map.Entry tempEntry = (Entry) prodIter.next();
+				Map prodItem = (Map) tempEntry.getValue();
+				String productId = (String) tempEntry.getKey();
+				BigDecimal quantity = (BigDecimal) prodItem.get("quantity"); 
 				Map prodMap = FastMap.newInstance();
 				if(UtilValidate.isNotEmpty(tempUpdateMap.get(productId))){
 					prodMap = (Map)tempUpdateMap.get(productId);
 				}else{
-					prodMap.putAll((Map)productItems.get(applicableTo));
+					prodMap.putAll(prodItem);
 				}
-				
-		    	BigDecimal quantity = (BigDecimal) prodMap.get("quantity"); 
-				
 				BigDecimal recalcAdjPrice = BigDecimal.ZERO;
 				BigDecimal unitListPrice = BigDecimal.ZERO;
 				BigDecimal itemValue = BigDecimal.ZERO;
@@ -1178,29 +1121,31 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}
 				
 				if(recalculateVAT){
-					BigDecimal listAmt = ((BigDecimal)prodMap.get("unitListPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+					//BigDecimal listAmt = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
 					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
 				}
 				else{
+					
 					if(UtilValidate.isNotEmpty(prodMap.get("vatAmount"))){
 						itemValue = itemValue.add((BigDecimal)prodMap.get("vatAmount"));
 					}
 					if(UtilValidate.isNotEmpty(prodMap.get("cstAmount"))){
 						itemValue = itemValue.add((BigDecimal)prodMap.get("cstAmount"));
 					}
-					
 					unitListPrice = (BigDecimal)prodMap.get("unitListPrice");
 				}
+				recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
+				if(perProdAdjFlag){
+					recalcAdjPrice = amount;
+				}
 				
-				//recalcAdjPrice = (itemValue.multiply(amount)).divide(poValue, purchaseTaxFinalDecimals, purchaseTaxRounding);
-				recalcAdjPrice = amount;
 				totalItemValue = totalItemValue.add(recalcAdjPrice);
-				
 				BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
 				BigDecimal basicPrice = uPrice.multiply(quantity);
 				BigDecimal vatPercent = (BigDecimal) prodMap.get("vatPercent");
 				BigDecimal cstPercent = (BigDecimal) prodMap.get("cstPercent");
+				
 				if(recalculateVAT){
 					if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
 						
@@ -1218,7 +1163,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 						prodMap.put("cstAmount", cstReCalc);
 						prodMap.put("unitListPrice", uPrice);
 					}
-					
 				}
 				else{
 					prodMap.put("unitListPrice", uPrice);
@@ -1230,10 +1174,22 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				}else{
 					adjValueMap.put(productId, totalItemValue);
 				}
+				
+				if(UtilValidate.isNotEmpty(productAdjPerUnit.get(productId))){
+					Map extAdjUnitMap = (Map)productAdjPerUnit.get(productId);
+					extAdjUnitMap.put(termTypeId, adjUnitAmt);
+					productAdjPerUnit.put(productId, extAdjUnitMap);
+				}else{
+					Map tempMap = FastMap.newInstance();
+					tempMap.put(termTypeId, adjUnitAmt);
+					productAdjPerUnit.put(productId, tempMap);
+				}
+				
 				tempUpdateMap.put(productId, prodMap);
 			}
 		}
 		
+		// adding rest of the items that doesn't have adjustments to the map
 		Iterator prodItemIter = productItems.entrySet().iterator();
 		while (prodItemIter.hasNext()) {
 			Map.Entry tempProdEntry = (Entry) prodItemIter.next();
@@ -1242,7 +1198,29 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				tempUpdateMap.put(productId, (Map)tempProdEntry.getValue());
 			}
 		}
+		// adding rest of the items that doesnot have adjustments to the map
+		Iterator prodTaxItemIter = tempUpdateMap.entrySet().iterator();
+		while (prodTaxItemIter.hasNext()) {
+			Map.Entry tempProdEntry = (Entry) prodTaxItemIter.next();
+			String productId = (String) tempProdEntry.getKey();
+			Map tempMap = (Map) tempProdEntry.getValue();
+			if(UtilValidate.isNotEmpty(inputTaxAmount.get(productId))){
+				Map inputTaxMap = (Map)inputTaxAmount.get(productId);
+				if(UtilValidate.isNotEmpty(inputTaxMap.get("bedInputAmount"))){
+					tempMap.put("bedAmount", (BigDecimal)inputTaxMap.get("bedInputAmount"));
+				}
+				if(UtilValidate.isNotEmpty(inputTaxMap.get("vatInputAmount"))){
+					tempMap.put("vatAmount", (BigDecimal)inputTaxMap.get("vatInputAmount"));
+				}
+				if(UtilValidate.isNotEmpty(inputTaxMap.get("cstInputAmount"))){
+					tempMap.put("cstAmount", (BigDecimal)inputTaxMap.get("cstInputAmount"));
+				}
+			}
+			tempUpdateMap.put(productId, tempMap);
+			
+		}
 		
+		// calculating unitListPrice based on unitprice+tax+adjustment
 		Map listPriceRevisedMap = FastMap.newInstance();
 		Iterator itemIter = tempUpdateMap.entrySet().iterator();
 		while (itemIter.hasNext()) {
@@ -1274,14 +1252,15 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			}
 			listPriceRevisedMap.put(productId, itemDetail);
 		}
+		
 		result.put("productItemsRevised", listPriceRevisedMap);
+		result.put("productAdjustmentPerUnit", productAdjPerUnit);
 		return result;
 	   }
 		
 	   public static Map<String, Object> calculatePOTermValue(DispatchContext ctx, Map<String, ? extends Object> context) {
 	   	   
 		   BigDecimal termAmount = BigDecimal.ZERO;
-	   	   
 	       String termTypeId = (String)context.get("termTypeId");
 	       String applicableTo = (String)context.get("applicableTo");
 	       String uomId = (String)context.get("uomId");
@@ -1389,11 +1368,13 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		Map productItems = (Map) context.get("productItems");
 		String incTax = (String) context.get("incTax");
+		Map inputTaxAmount = (Map) context.get("inputTaxAmount");
 		List<Map> otherCharges = (List) context.get("otherCharges");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		List<Map> adjustmentTerms = FastList.newInstance();
 		Map productItemsRevised = FastMap.newInstance();
+		Map productAdjustmentPerUnit = FastMap.newInstance();
 		try{
 			
 			for(Map eachItem : otherCharges){
@@ -1405,7 +1386,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				String uomId = (String)eachItem.get("uomId");
 				
 				BigDecimal termAmount =BigDecimal.ZERO;
-				
 				Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 	    		inputMap.put("termTypeId", adjustmentTypeId);
 	    		inputMap.put("uomId", uomId);
@@ -1422,11 +1402,11 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				adjustmentTerms.add(adjustmentMap);
 	    		
 			}
-			
 			Map inputCtx = FastMap.newInstance();
 			inputCtx.put("userLogin", userLogin);
 			inputCtx.put("productItems", productItems);
 			inputCtx.put("adjustmentTerms", adjustmentTerms);
+			inputCtx.put("inputTaxAmount", inputTaxAmount);
 			inputCtx.put("incTax", incTax);
     		Map resultCtx = getTermValuePerProduct(ctx,inputCtx);
     		if (ServiceUtil.isError(resultCtx)) {
@@ -1435,7 +1415,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
   		  		return ServiceUtil.returnError(errMsg);
   		  	}
     		productItemsRevised = (Map)resultCtx.get("productItemsRevised");
-			
+    		productAdjustmentPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
     		BigDecimal vatAmount = BigDecimal.ZERO;
     		BigDecimal cstAmount = BigDecimal.ZERO;
     		BigDecimal bedAmount = BigDecimal.ZERO;
@@ -1452,7 +1432,6 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				bedcessAmount = bedcessAmount.add((BigDecimal)eachItem.get("bedcessAmount"));
 				bedseccessAmount = bedseccessAmount.add((BigDecimal)eachItem.get("bedseccessAmount"));
 			}
-			
 			if(vatAmount.compareTo(BigDecimal.ZERO)>0){
 				Map tempAdjMap = FastMap.newInstance();
 				tempAdjMap.put("applicableTo", "_NA_");
@@ -1495,6 +1474,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		}
 		result.put("productItemsRevised", productItemsRevised);
 		result.put("adjustmentTerms", adjustmentTerms);
+		result.put("productAdjustmentPerUnit", productAdjustmentPerUnit);
 		return result;
 	}
 	

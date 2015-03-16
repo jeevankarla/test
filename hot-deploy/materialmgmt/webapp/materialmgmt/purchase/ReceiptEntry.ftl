@@ -164,8 +164,25 @@
 				          </#if>
 		          			
 				        </tr>
-						<tr><td><br/></td></tr>
+						<#--<tr><td><br/></td></tr>
 		 				<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.freightCharges)?exists && (parameters.freightCharges)?has_content> 
+			          		<input type="hidden" name="freightCharges" id="freightCharges" value="${parameters.freightCharges}"/>  
+				          	<td valign='middle'>
+				            	<div class='tabletext h3'>${parameters.freightCharges}         
+				            	</div>
+				          	</td>
+			         	 <#else> 
+				         	 <td valign='middle'>
+		          				<input type="text" name="freightCharges" id="freightCharges" />
+		          			 </td>
+				          </#if>
+				        </tr>-->
+				        <tr><td><br/></td></tr>
+				        <tr>
 				          <td>&nbsp;</td>
 				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Delivery Challan No: </div></td>
 				          <td>&nbsp;</td>
@@ -217,6 +234,24 @@
 				          </#if>
 		          			
 				        </tr>
+				        <tr><td><br/></td></tr>
+						<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Remarks: </div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.remarks)?exists && (parameters.remarks)?has_content> 
+				          		<input type="hidden" name="remarks" id="remarks" value="${parameters.remarks}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.remarks}         
+					            	</div>
+					          	</td>
+				         	 <#else> 
+				         	 <td valign='middle'>
+		          				<input type="text" name="remarks" id="remarks" />
+		          			</td>
+				          </#if>
+		          			
+				        </tr>
 						<tr><td><br/></td></tr>
 		 				<tr>
 				          <td>&nbsp;</td>
@@ -232,24 +267,6 @@
 				         	 <td valign='middle'>
 		          				<input type="text" name="suppInvoiceId" id="suppInvoiceId" />
 		          				 <span class="tooltip">Input InvoiceId and press Enter</span>
-		          			</td>
-				          </#if>
-		          			
-				        </tr>
-						<tr><td><br/></td></tr>
-						<tr>
-				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Remarks: </div></td>
-				          <td>&nbsp;</td>
-				          <#if (parameters.remarks)?exists && (parameters.remarks)?has_content> 
-				          		<input type="hidden" name="remarks" id="remarks" value="${parameters.remarks}"/>  
-					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${parameters.remarks}         
-					            	</div>
-					          	</td>
-				         	 <#else> 
-				         	 <td valign='middle'>
-		          				<input type="text" name="remarks" id="remarks" />
 		          			</td>
 				          </#if>
 		          			
@@ -271,7 +288,15 @@
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
-		 			<label>Receipt Items Entry</label>
+		 			<label>Additional Charges</label>
+				</div>
+				<div id="myGrid2" style="width:100%;height:120px;"></div>
+			</div>
+		</div>
+		<div class="screenlet">
+    		<div class="screenlet-body">
+		 		<div class="grid-header" style="width:100%">
+		 			<label>Material Items Entry</label>
 				</div>
 				<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  

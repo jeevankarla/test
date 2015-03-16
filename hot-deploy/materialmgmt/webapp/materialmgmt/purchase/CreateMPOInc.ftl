@@ -162,7 +162,8 @@
             dataType: 'json',
             success: function(result) {
                var grandTotal = result["grandTotal"];
-               var dspMsg = "Rs. "+grandTotal;
+               var dspTotal = Math.round(grandTotal);
+               var dspMsg = "Rs. "+dspTotal;
                $("#totalPOAmount").html(dspMsg);
             },
             error: function (xhr, textStatus, thrownError){

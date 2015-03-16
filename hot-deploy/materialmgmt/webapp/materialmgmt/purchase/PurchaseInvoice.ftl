@@ -106,13 +106,13 @@ $(document).ready(function(){
 	          	</#if>
 	        </tr>
 	        <tr><td><br/></td></tr>
-	        <tr>  
+	        <#--<tr>  
 	   			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
 		      	<td valign='middle' align='left'> 
 		         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
 		         	<span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span>
 	    		</td>
-	    	</tr>               
+	    	</tr> -->               
 	      </table>
 	      <div id="sOFieldsDiv" >
 	      </div> 

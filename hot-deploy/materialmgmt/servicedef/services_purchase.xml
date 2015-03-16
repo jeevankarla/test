@@ -20,10 +20,12 @@
         <attribute name="incTax" type="String" mode="IN" optional="true"/>
         <attribute name="productQty" type="List" mode="IN" optional="false"/>
         <attribute name="otherCharges" type="List" mode="IN" optional="true"/>
+        <attribute name="inputTaxAmount" type="Map" mode="IN" optional="true"/>
         <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="itemDetail" type="List" mode="OUT" optional="true"/>
         <attribute name="adjustmentDetail" type="List" mode="OUT" optional="true"/>
         <attribute name="termsDetail" type="List" mode="OUT" optional="true"/>
+        <attribute name="productAdjustmentPerUnit" type="Map" mode="OUT" optional="true"/>
     </service>
     
     <service name="setCustRequestItemStatus" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="setCustRequestItemStatus">
