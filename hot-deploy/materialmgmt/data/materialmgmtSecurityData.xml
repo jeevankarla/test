@@ -484,7 +484,7 @@
     <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_ENTRY"/>
     <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
     <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_VIEW"/
+    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_VIEW"/>
    
     
      <!-- Inter Unit Transfer and sale   permissions -->
@@ -500,6 +500,6 @@
     <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_SALES_ENTRY"/>
     <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
     <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_VIEW"/
+    <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_VIEW"/>
  
 </entity-engine-xml>

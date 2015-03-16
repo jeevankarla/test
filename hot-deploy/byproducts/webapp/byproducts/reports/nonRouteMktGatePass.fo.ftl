@@ -61,6 +61,7 @@ under the License.
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell number-columns-spanned="4">
+			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;                                                                                                   UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
@@ -72,8 +73,9 @@ under the License.
 			            </fo:table-body>
 			        </fo:table>
         		</fo:block>
-        	</fo:static-content>	        	
+        	</fo:static-content>	      
         	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
+        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
         		<fo:block>
              		<fo:table border-style="solid">
 			            <fo:table-column column-width="150pt"/>
