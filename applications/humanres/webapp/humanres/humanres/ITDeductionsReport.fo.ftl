@@ -157,7 +157,7 @@ under the License.
 			                    	
 			                    	<#assign SBEDeductions = SBEEmpProFund+SBEInsurance+othersDed>
 			                    	
-			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund>
+			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund+DAAREmpProFund>
 			                    	<#assign totalVpf = totalVpf + vpf>
 			                    	<#assign totalGsls = totalGsls + gsls+SBEGrSav>
 			                    	<#assign totalLicp = totalLicp + licp+SBEInsurance>
@@ -166,7 +166,7 @@ under the License.
 			                    	<#assign totalFRFNSC = totalFRFNSC + fRFNSC>
 			                    	<#assign totalPPFGSAS = totalPPFGSAS + pPFGSAS>
 			                    	<#assign totalExterLoan = totalExterLoan + exterLoan>
-			                    	<#assign totalDeductions = totalDeductions + deductions+SBEDeductions+TEEmpProFund>
+			                    	<#assign totalDeductions = totalDeductions + deductions+SBEDeductions+TEEmpProFund+DAAREmpProFund>
 			                    	
 			                    	<#assign totalOthersDed = totalOthersDed + othersDed>
 			                    	
@@ -290,14 +290,13 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    </#list>
-							    <#if (DAAREmpProFund1?has_content && DAAREmpProFund1!=0)>
+							    <#if (DAAREmpProFund?has_content && DAAREmpProFund!=0)>
 							    <fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >DA Arrears:</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund1?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
@@ -321,7 +320,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund1?if_exists?string("#0.00")}</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
@@ -331,14 +330,12 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
+							    </#list>
 							    <fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						</fo:table-row>
-          						<#assign totalEpf = totalEpf + DAAREmpProFund1>
-          						<#assign totalDeductions = totalDeductions + DAAREmpProFund1>
-          						
 							    <fo:table-row font-weight= "bold">
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Grand Total</fo:block>  
