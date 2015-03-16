@@ -1833,6 +1833,7 @@ under the License.emplpunch
         <attribute name="passportNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="pfNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="dateOfJoining" mode="IN" type="Date" optional="true"></attribute>
+        <attribute name="employmentDate" mode="IN" type="Date" optional="true"></attribute>
         <attribute name="passportExpireDate" mode="IN" type="Date" optional="true"></attribute> 
         <attribute name="caste" mode="IN" type="String" optional="true"></attribute>
         <attribute name="backgroundVerification" mode="IN" type="String" optional="true"></attribute>

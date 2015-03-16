@@ -1585,6 +1585,7 @@
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><text></text></field>
 		<field name="pfNumber" title="${uiLabelMap.PreviousPfNumber}"><text></text></field>
 		<field name="dateOfJoining" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time></date-time></field>
+		<field name="employmentDate" title="Employment Date" ><date-time></date-time></field>
 		<field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><date-time></date-time></field>
 		<!-- <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
