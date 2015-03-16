@@ -1607,7 +1607,7 @@ public class MaterialRequestServices {
 	            return ServiceUtil.returnError("Problem in calling service issueInventoryItemToCustRequest");
 	        }
 	        return result;
-	    }
+	   }
 	 public static Map<String, Object> cancelEnquiry(DispatchContext ctx,Map<String, ? extends Object> context) {
 			Delegator delegator = ctx.getDelegator();
 			LocalDispatcher dispatcher = ctx.getDispatcher();

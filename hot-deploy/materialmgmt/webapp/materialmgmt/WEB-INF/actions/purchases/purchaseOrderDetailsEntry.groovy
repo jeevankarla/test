@@ -127,6 +127,28 @@ if(orderId){
 	context.productLabelIdJSON = productLabelIdJSON;
 
 }
+
+considerTerms = ["COGS_INSTL_CHG", "COGS_FREIGHT", "COGS_TNS_CHG"];
+
+termTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), null, null, null, false);
+JSONArray additionalChargesJSON = new JSONArray();
+JSONObject addChargesIdLabelJSON = new JSONObject();
+JSONObject addChargesLabelIdJSON=new JSONObject();
+
+termTypes.each{ eachItem ->
+	if(considerTerms.contains(eachItem.termTypeId)){
+		JSONObject newObj = new JSONObject();
+		newObj.put("termTypeId",eachItem.termTypeId);
+		newObj.put("amount", "");
+		additionalChargesJSON.add(newObj);
+		addChargesIdLabelJSON.put(eachItem.termTypeId, eachItem.description+" [ "+eachItem.termTypeId +"]");
+		addChargesLabelIdJSON.put(eachItem.description+" [ "+eachItem.termTypeId+"]", eachItem.termTypeId);
+	}
+}
+context.additionalChargesJSON = additionalChargesJSON;
+context.addChargesIdLabelJSON = addChargesIdLabelJSON;
+context.addChargesLabelIdJSON = addChargesLabelIdJSON;
+
 //context.dataJSON = orderItemsJSON;
 context.orderId = orderId;
 

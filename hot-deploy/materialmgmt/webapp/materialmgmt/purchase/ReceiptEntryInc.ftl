@@ -72,8 +72,13 @@
 	var dataView;
 	var dataView2;
 	var grid;
+	var grid2;
+	var data2 = ${StringUtil.wrapString(additionalChargesJSON)!'[]'};
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
+	var addChargesIdLabelJSON = ${StringUtil.wrapString(addChargesIdLabelJSON)!'{}'};
+	var addChargesLabelIdJSON = ${StringUtil.wrapString(addChargesLabelIdJSON)!'{}'};
+	
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
@@ -130,6 +135,20 @@
    			  
 		}
 		
+		var rowIndex = 0;
+		for (var rowCount=0; rowCount < data2.length; ++rowCount)
+		{ 
+			var termTypeId = data2[rowCount]["termTypeId"];
+						
+			var amt = parseFloat(data2[rowCount]["amount"]);
+	 		if (!isNaN(amt) && amt>0 ) {	 		
+				var inputTerm = jQuery("<input>").attr("type", "hidden").attr("name", "termTypeId_o_" + rowIndex).val(termTypeId);
+				var inputAmt = jQuery("<input>").attr("type", "hidden").attr("name", "amount_o_" + rowIndex).val(amt);
+				jQuery(formId).append(jQuery(inputTerm));				
+				jQuery(formId).append(jQuery(inputAmt));
+				rowIndex++;
+   			}
+		}
 		var dataString = $("#indententryinit").serializeArray();
 		var orderId = $("#orderId").val();
 		var vehicleId = $("#vehicleId").val();
@@ -138,9 +157,9 @@
 		
 		if(vehicleId == '')
 		{
-		alert("Vehilce Id Missing..!");
-		window.location.reload(true);
-   		return false;	 
+			alert("Vehilce Id Missing..!");
+			window.location.reload(true);
+   			return false;	 
    		}
 		var supplierId = $("#supplierId").val();
 		var supplier = jQuery("<input>").attr("type", "hidden").attr("name", "supplierId").val(supplierId);
@@ -165,6 +184,7 @@
 	
 		var deliveryChallanNo = $("#deliveryChallanNo").val();
 		var dcNo = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanNo").val(deliveryChallanNo);
+		
 		var deliveryChallanDate = $("#deliveryChallanDate").val();
 		var dcDate = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanDate").val(deliveryChallanDate);
 		var effectiveDate = $("#effectiveDate").val();
@@ -184,10 +204,7 @@
 		jQuery(formId).append(jQuery(dcNo));
 		jQuery(formId).append(jQuery(dcDate));
 		jQuery(formId).append(jQuery(remarksOption));
-		
-		
 		jQuery(formId).attr("action", action);
-		
 		jQuery(formId).submit();
 	}
 	var enableSubmit = true;
@@ -202,7 +219,10 @@
     function productFormatter(row, cell, value, columnDef, dataContext) {   
         return productIdLabelMap[value];
     }
-
+    function termFormatter(row, cell, value, columnDef, dataContext) {   
+        return addChargesIdLabelJSON[value];
+    }
+	
     function productValidator(value,item) {
       
     	var currProdCnt = 1;
@@ -425,12 +445,136 @@
 		mainGrid = grid;
 	}
 	
+	function setupGrid2() {
+		   var columns = [
+					{id:"termTypeId", name:"Type", field:"termTypeId", width:300, minWidth:300, cssClass:"readOnlyColumnClass", editor: TextCellEditor, sortable:false, formatter: termFormatter, focusable :false,toolTip:""},
+					{id:"amount", name:"Amount", field:"amount", width:150, minWidth:150, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			];
+		
+			var options = {
+				editable: true,		
+				forceFitColumns: false,			
+				enableCellNavigation: true,
+				enableColumnReorder: false,
+				enableAddRow: true,
+				asyncEditorLoading: false,			
+				autoEdit: true,
+	            secondaryHeaderRowHeight: 25
+			};
+		
+
+		grid2 = new Slick.Grid("#myGrid2", data2, columns, options);
+        grid2.setSelectionModel(new Slick.CellSelectionModel());        
+		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid2, options);
+		
+		// wire up model events to drive the grid
+        if (data2.length > 0) {			
+			$(grid2.getCellNode(0, 1)).click();
+		}else{
+			$(grid2.getCellNode(0,0)).click();
+		}
+         grid2.onKeyDown.subscribe(function(e) {
+			var cellNav = 2;
+			var cell = grid2.getCellFromEvent(e);		
+			if(e.which == $.ui.keyCode.UP && cell.row == 0){
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();
+			}
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data2.length && cell.cell == cellNav){
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(0, 2)).click();
+				e.stopPropagation();
+			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data2.length-1) && cell.cell == cellNav){
+				grid2.getEditController().commitCurrentEdit();
+				grid2.gotoCell(data2.length, 0, true);
+				$(grid2.getCellNode(data2.length, 0)).edit();
+				
+				e.stopPropagation();
+			}
+			
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
+				&& cell.row == data.length && cell.cell == cellNav){
+  				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row, 0)).click();
+				e.stopPropagation();
+			
+			}else if (e.which == $.ui.keyCode.RIGHT &&
+				cell && (cell.cell == cellNav) && 
+				cell.row != data2.length) {
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid2.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();	
+			}
+			else if (e.which == $.ui.keyCode.LEFT &&
+				cell && (cell.cell == 0) && 
+				cell.row != data2.length) {
+				grid2.getEditController().commitCurrentEdit();	
+				$(grid.getCellNode(cell.row, cellNav)).click();
+				e.stopPropagation();	
+			}else if (e.which == $.ui.keyCode.ENTER) {
+        		grid2.getEditController().commitCurrentEdit();
+				if(cell.cell == 1 || cell.cell == 2){
+					jQuery("#changeSave").click();
+				}
+            	e.stopPropagation();
+            	e.preventDefault();        	
+            }else if (e.keyCode == 27) {
+            //here ESC to Save grid
+        		if (cell && cell.cell == 0) {
+        			$(grid2.getCellNode(cell.row - 1, cellNav)).click();
+        			return false;
+        		}  
+        		grid2.getEditController().commitCurrentEdit();
+				   
+            	e.stopPropagation();
+            	e.preventDefault();        	
+            }
+            
+            else {
+            	return false;
+            }
+        });
+        
+                
+    	grid2.onAddNewRow.subscribe(function (e, args) {
+      		var item = args.item;   
+      		grid2.invalidateRow(data2.length);
+      		data2.push(item);
+      		grid2.updateRowCount();
+      		grid2.render();
+    	});
+        grid2.onCellChange.subscribe(function(e,args) {
+			
+		}); 
+		
+		grid2.onActiveCellChanged.subscribe(function(e,args) {
+			
+		});
+		
+		grid2.onValidationError.subscribe(function(e, args) {
+        var validationResult = args.validationResults;
+        var activeCellNode = args.cellNode;
+        var editor = args.editor;
+        var errorMessage = validationResult.msg;
+        var valid_result = validationResult.valid;
+        
+        if (!valid_result) {
+           $(activeCellNode).attr("tittle", errorMessage);
+            }else {
+           $(activeCellNode).attr("tittle", "");
+        }
+
+	    });
+	}
+	
 	jQuery(function(){
 	     var orderId=$('[name=orderId]').val();
 	     var withoutPO = "${withoutPO?if_exists}";
 	    
 		 if(orderId || withoutPO){
 		 	setupGrid1();
+		 	setupGrid2();
 	     }
 				
         jQuery(".grid-header .ui-icon")
