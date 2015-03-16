@@ -227,7 +227,18 @@ invoiceIds.each { invoiceId ->
 			prodDetail = EntityUtil.getFirst(prodDetails);
 			tempMap.put("productId", eachItem.productId);
 			tempMap.put("itemDescription", prodDetail.description);
-			tempMap.put("quantityLtr", (eachItem.quantity)*prodDetail.quantityIncluded);
+			prodUomDescription="Kg/Ltr";
+			//ge UOM description for UomId
+			if(UtilValidate.isNotEmpty(prodDetail.quantityUomId)){
+			uomIdValue = delegator.findOne("Uom",[uomId:prodDetail.quantityUomId], false);
+			prodUomDescription=uomIdValue.description;
+			}
+			tempMap.put("quantityUomId", prodUomDescription);
+			if(UtilValidate.isNotEmpty(prodDetail.quantityIncluded)){
+				tempMap.put("quantityLtr", (eachItem.quantity)*prodDetail.quantityIncluded);
+			}else{
+	 	      tempMap.put("quantityLtr", (eachItem.quantity));
+		    }
 			tempMap.put("quantity", eachItem.quantity);
 			tempMap.put("mrpPrice", mrpPrice);
 			tempMap.put("defaultPrice", eachItem.unitPrice);
