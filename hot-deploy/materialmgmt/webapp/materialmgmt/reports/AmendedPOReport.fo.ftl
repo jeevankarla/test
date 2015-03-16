@@ -39,18 +39,41 @@ under the License.
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
        </fo:static-content>
        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TEL NO:22179004 /41           FAX :080-20462652                         TIN:${allDetailsMap.get("tinNumber")?if_exists} </fo:block>
-           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;     22179074 /55           Email: purchase@motherdairykmf.in         KST NO: ${allDetailsMap.get("kstNumber")?if_exists} </fo:block>
-           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                      CST NO: ${allDetailsMap.get("cstNumber")?if_exists} </fo:block>
+           <fo:block >
+			   <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
+                   <fo:table-column column-width="165pt"/>               
+                   <fo:table-column column-width="280pt"/>               
+	               <fo:table-column column-width="200pt"/>               
+	           	   <fo:table-body>
+                       <fo:table-row>
+			               <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Phone No :${allDetailsMap.get("companyPhone")?if_exists}</fo:block></fo:table-cell>       			
+		                   <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >FAX&#160; :${allDetailsMap.get("companyFax")?if_exists}</fo:block></fo:table-cell>       		
+		                   <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >TIN NO:${allDetailsMap.get("tinNumber")?if_exists}</fo:block></fo:table-cell>       		
+                      </fo:table-row>
+                      <fo:table-row>
+                         <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${allDetailsMap.get("partySecondPhone")?if_exists}</fo:block></fo:table-cell>       			
+                         <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >Email:${allDetailsMap.get("companyMail")?if_exists}</fo:block></fo:table-cell>       		
+                         <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >KST NO:${allDetailsMap.get("kstNumber")?if_exists}</fo:block></fo:table-cell>       		
+                      </fo:table-row>
+                      <fo:table-row>
+				         <fo:table-cell><fo:block text-align="left" font-size="12pt"></fo:block></fo:table-cell>
+                         <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >&#160;&#160;&#160;&#160;&#160;&#160;${allDetailsMap.get("compSecondMail")?if_exists}</fo:block> </fo:table-cell>       		
+                         <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >CST NO:${allDetailsMap.get("cstNumber")?if_exists}</fo:block></fo:table-cell>       		
+                     </fo:table-row>
+        	     </fo:table-body>
+            </fo:table>
+        </fo:block>	
+				
            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >---------------------------------------------------------------------------------------------- </fo:block>
 	       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">AMENDED PURCHASE ORDER </fo:block>  
 	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PO NO:${allDetailsMap.get("orderId")?if_exists}                                                       PO DATED:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">To                                                                 FAX NO: ${allDetailsMap.get("faxNumber")?if_exists}</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">To                                                                 FAX NO: ${partyAddressMap.get("faxNumber")?if_exists}</fo:block>
 	       <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("address1")?if_exists}</fo:block>
 		   <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("address2")?if_exists}</fo:block>
 		   <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("city")?if_exists}</fo:block>				 
 		   <fo:block text-align="left" white-space-collapse="false" font-weight="bold">${partyAddressMap.get("postalCode")?if_exists}</fo:block>
-		   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PHONE NO                : ${contactNumber?if_exists}</fo:block>	                
+		   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PHONE NO                : ${partyAddressMap.get("contactNumber")?if_exists}</fo:block>
+           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">TIN NO                  : ${fromPartyTinNo?if_exists}</fo:block>	                          	                
 	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">VENDOR CODE             : ${partyAddressMap.get("fromPartyId")?if_exists}</fo:block>
 	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">MOTHER DAIRY ENQUIRY NO : ${allDetailsMap.get("custRequestId")?if_exists}</fo:block>
 	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">YOUR QUOTATION NO       : ${allDetailsMap.get("quoteId")?if_exists}  </fo:block>
