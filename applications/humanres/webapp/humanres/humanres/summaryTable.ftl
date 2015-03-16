@@ -22,12 +22,10 @@ var dataSet = ${StringUtil.wrapString(employeesJSON!'[]')};
 
 $(document).ready(function() {
     
-    $('#example tfoot th').each( function () {
-        var title = $('#example thead th').eq( $(this).index() ).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-    } );
+
     
 	var table = $('#example').DataTable( {
+
 		"data": dataSet,
 		"columns": [
 			{ "title": "Employee" },
@@ -35,8 +33,12 @@ $(document).ready(function() {
 			{ "title": "Department" },
 			{ "title": "Position" },			
 			{ "title": "Join Date" },			
-			{ "title": "Phone" }],
-			"columnDefs": [{ type: 'date-eu', targets: 4 }],			
+			{ "title": "Phone" },
+			{ "title": "Gender"},
+			{ "title": "Blood Group"}],
+			"columnDefs": [
+				{ type: 'date-eu', targets: 4 }
+				],			
             "sDom": 'lfTrtip',
             "tableTools": {
                 "sSwfPath": "<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf</@ofbizContentUrl>",
@@ -57,7 +59,7 @@ $(document).ready(function() {
                 } 
                 ]
             },
-		"iDisplayLength" : 25,		
+		"iDisplayLength" : 25,		            
      	"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
      		<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
 		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
@@ -73,7 +75,7 @@ $(document).ready(function() {
     		//});
 		}
 	} );	
-	
+  			
 	table.columns().eq( 0 ).each( function ( colIdx ) {
         $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
             table
@@ -81,7 +83,19 @@ $(document).ready(function() {
                 .search( this.value )
                 .draw();
         } );
+
+		if (colIdx == 6 || colIdx == 7) {        
+			table
+    		.column(colIdx)
+    		.nodes()
+    		.to$()      // Convert to a jQuery object
+    		.css('text-align', 'center');
+    	}
     } );
+    
+//    table.fnAdjustColumnSizing();
+    
+//    new $.fn.DataTable.FixedColumns( table );
 	
 } );
 
@@ -99,26 +113,30 @@ $(document).ready(function() {
         <br class="clear"/>
     	</div>
     	</#if>
-		<table id="example" class="display" cellspacing="0" width="100%">
+		<table id="example" class="display" cellspacing="0" width="100%" >
         <thead>
             <tr>
-                <th>Employee</th>
-                <th>Employee Id</th>
-                <th>Department</th>
-                <th>Position</th>
-                <th>Join Date date</th>
-                <th>Phone</th>
+                <th style='width: 20%;'>Employee</th>
+                <th style='width: 10%;'>Employee Id</th>
+                <th style='width: 20%;'>Department</th>
+                <th style='width: 20%;'>Position</th>
+                <th style='width: 10%;'>Join Date date</th>
+                <th style='width: 10%;'>Phone</th>
+                <th style='width: 5%; text-align: center'>Gender</th>
+                <th style='width: 5%;'>Blood Group</th>                
             </tr>
         </thead>
  		<tbody></tbody>
         <tfoot>
             <tr>
-                <th>Employee</th>
-                <th>Employee Id</th>
-                <th>Department</th>
-                <th>Position</th>
-                <th>Join Date date</th>
-                <th>Phone</th>
+                <th><input type="text" placeholder="<Name>" /></th>
+                <th><input type="text" style="width: 65px;" placeholder="<Id>" /></th>
+                <th><input type="text" placeholder="<Department>" /></th>
+                <th><input type="text" placeholder="<Position>" /></th>
+                <th><input type="text" style="width: 80px;" placeholder="<Date>" /></th>
+                <th><input type="text" style="width: 80px;" placeholder="<Phone>" /></th>
+                <th><input type="text" style="width: 75px;" placeholder="<Gender>" /></th>
+                <th><input type="text" style="width: 85px;" placeholder="<Blood Group>" /></th>                 
             </tr>
         </tfoot>
 		</table>
