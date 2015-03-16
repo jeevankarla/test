@@ -276,11 +276,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                   
 			<fo:block  keep-together="always" text-align="center"  font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
 			<fo:block  keep-together="always" text-align="center"  font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
- 				<#if listSize gt 10>
-               <fo:block page-break-before="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;  Please send back the duplicate copy of the P.O. duly signed and sealed as a token of acceptance. You are requested to submit the bills in quadruplicate towards the supply of said  materials. Also please quote the Purchase Order No  and  Date in all your Letters, Delivery, Notes, and Invoices etc. </fo:block>
-				<#else>
+ 				
 				<fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;   You are requested to submit the bills in quadruplicate towards the supply of said  materials. Also please quote the Purchase Order No  and  Date in all your Letters, Delivery, Notes, and Invoices etc. </fo:block>
-               </#if>
 
                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
