@@ -612,10 +612,7 @@ public class MaterialPurchaseServices {
 			if (paramMap.containsKey("adjAmt" + thisSuffix)) {
 				adjAmtStr = (String) paramMap.get("adjAmt" + thisSuffix);
 			}
-			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing Adjustment Amount");
-				return "error";			  
-			}
+			
 			if(UtilValidate.isNotEmpty(adjAmtStr)){
 				try {
 					adjAmt = new BigDecimal(adjAmtStr);
