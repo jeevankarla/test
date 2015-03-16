@@ -73,14 +73,23 @@ if(shipments){
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR") ));
 		condition3 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		orderRole = delegator.findList("OrderRole", condition3, null, null, null, false);
 		
 		partyId = "";
 		
+		billToPartyId="";
+
 		if(orderRole){
-			partyId = (EntityUtil.getFirst(orderRole)).getString("partyId");
+			billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			if(billToPartyIdList){
+			billToPartyId=(EntityUtil.getFirst(billToPartyIdList)).getString("partyId");
+			}
+			supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+			if(supplierPartyIdList){
+			partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");	
+			}		
 		}
 		
 		orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -114,6 +123,7 @@ if(shipments){
 		context.invoiceAdjLabelIdJSON = invoiceAdjLabelIdJSON;
 		context.orderId = orderId;
 		context.partyId = partyId;
+		context.billToPartyId = billToPartyId;
 		context.shipmentDate = shipment.estimatedShipDate;
 		context.vehicleId = shipment.vehicleId;
 		

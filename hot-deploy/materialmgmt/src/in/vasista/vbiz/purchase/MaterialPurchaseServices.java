@@ -963,6 +963,25 @@ public class MaterialPurchaseServices {
 				invoice.store();
 				
 				result.put("invoiceId", invoiceId);
+				 // creating invoiceRole for order
+				 Map<String, Object> createInvoiceRoleContext = FastMap.newInstance();
+			        createInvoiceRoleContext.put("invoiceId", result.get("invoiceId"));
+			        createInvoiceRoleContext.put("userLogin", userLogin);
+			   
+			    	   List condLIst = FastList.newInstance();
+			    	   condLIst.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						EntityCondition condExpr1 = EntityCondition.makeCondition(condLIst, EntityOperator.AND);
+						List<GenericValue> orderRoles = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+			   
+			      for (GenericValue orderRole : orderRoles) {
+				            createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+				            createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
+				            Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
+				            if (ServiceUtil.isError(createInvoiceRoleResult)) {
+				            	Debug.logError("Error creating InvoiceRole  for orderId : "+orderId, module);	
+								return ServiceUtil.returnError("Error creating Invoice Role for orderId : "+orderId);
+				            }
+				        }
 			}catch(Exception e){
 				try {
 					// only rollback the transaction if we started one...

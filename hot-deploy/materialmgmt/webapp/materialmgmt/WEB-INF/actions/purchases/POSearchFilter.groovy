@@ -15,7 +15,7 @@ if(UtilValidate.isEmpty(parameters.productId)){
 		resultList = [];
 		GenericValue poEntry = null;
 		while ((poEntry=list.next()) != null) {
-		if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+		if((poEntry.roleTypeId).equals("SUPPLIER_AGENT")){
 			resultList.add(poEntry);
 			}
 		}
