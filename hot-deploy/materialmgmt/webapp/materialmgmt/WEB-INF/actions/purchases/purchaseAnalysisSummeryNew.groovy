@@ -63,29 +63,37 @@ if(totalDays > 32){
 // Purchase abstract Sales report
 reportTypeFlag = parameters.reportTypeFlag;
 taxType=parameters.taxType;
-//get Product Catagory 
-/*exprList=[];
-exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
-condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
-productCategoryId = EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true);
-//get product from ProductCategory
-productCategoryMember = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryId), null, null, null, false);
-productCatMap=[:];
-productCategoryMember.each{prodCatMember ->
-	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
-}
-*/
+
 exprList=[];
 exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
 condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 //get product from ProductCategory
 productCategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+purchaseAnalysisProductIdsList=EntityUtil.getFieldListFromEntityList(productCategoryMember, "productId", true);
 productCatMap=[:]
 productPrimaryCatMap=[:]
 productCategoryMember.each{prodCatMember ->
 	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
 	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.primaryParentCategoryId;
+}
+
+//get Product Catagory
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
+condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
+productCategoryId = EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true);
+//get product from ProductCategory
+
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryId));
+exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, purchaseAnalysisProductIdsList));
+condition2 = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+productCategoryGlMember = delegator.findList("ProductCategoryAndMember",condition2 , null, null, null, false);
+
+productCategoryGlMember.each{prodCatMember ->
+	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
+	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.productCategoryId;
 }
 
 //Debug.log("==productCatMap="+productCatMap.size()+"==productCatMap=="+productCatMap);
