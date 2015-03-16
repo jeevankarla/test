@@ -52,7 +52,7 @@ if(shipmentId){
 	shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
 	
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED","ORDER_COMPLETED")));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	
 	orderHeaders = delegator.findList("OrderHeader", condition, null, null, null, false);
