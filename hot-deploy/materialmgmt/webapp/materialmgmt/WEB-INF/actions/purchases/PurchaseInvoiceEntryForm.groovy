@@ -176,10 +176,18 @@ if(shipments){
 		otherCharges = [];
 		orderAdjustments.each{ eachOdrAdj ->
 			tempMap = [:];
-			applicableTo = eachOdrAdj.orderItemSeqId;
-			if(eachOdrAdj.orderItemSeqId && eachOdrAdj.orderItemSeqId == "_NA_"){
+			
+			seqId = eachOdrAdj.orderItemSeqId;
+			if(seqId && seqId == "_NA_"){
 				applicableTo = "ALL";
 			}
+			else{
+				ordItm = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seqId));
+				if(ordItm){
+					applicableTo = (EntityUtil.getFirst(ordItm)).get("productId");
+				}
+			}
+			
 			tempMap.put("otherTermId", eachOdrAdj.orderAdjustmentTypeId);
 			tempMap.put("applicableTo", applicableTo);
 			tempMap.put("termValue", eachOdrAdj.amount);
@@ -220,7 +228,6 @@ if(shipments){
 				return ServiceUtil.returnError(errMsg);
 		}
 		Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
-		Debug.log("###adjPerUnit####"+adjPerUnit);
 		
 		shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
 		JSONArray adjustmentJSON = new JSONArray();
@@ -268,14 +275,6 @@ if(shipments){
 			newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
 			adjustmentJSON.add(newObj);
 			
-			/*tempMap = [:];
-			tempMap.otherTermId = eachAdj.attrName;
-			tempMap.applicableTo = "ALL";
-			tempMap.termValue = amt;
-			tempMap.uomId = "INR";
-			tempMap.termDays = null;
-			tempMap.description = "";
-			adjustmentTypes.add(tempMap);*/
 		}
 		
 		context.adjustmentJSON = adjustmentJSON;
