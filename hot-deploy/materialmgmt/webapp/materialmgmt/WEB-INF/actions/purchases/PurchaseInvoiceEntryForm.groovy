@@ -73,14 +73,19 @@ if(shipments){
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR") ));
 		condition3 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		orderRole = delegator.findList("OrderRole", condition3, null, null, null, false);
 		
 		partyId = "";
 		
+		billToPartyId="";
+
 		if(orderRole){
-			partyId = (EntityUtil.getFirst(orderRole)).getString("partyId");
+			billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			billToPartyId=(EntityUtil.getFirst(billToPartyIdList)).getString("partyId");
+			supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+			partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");			
 		}
 		
 		orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -114,6 +119,7 @@ if(shipments){
 		context.invoiceAdjLabelIdJSON = invoiceAdjLabelIdJSON;
 		context.orderId = orderId;
 		context.partyId = partyId;
+		context.billToPartyId = billToPartyId;
 		context.shipmentDate = shipment.estimatedShipDate;
 		context.vehicleId = shipment.vehicleId;
 		
@@ -176,10 +182,18 @@ if(shipments){
 		otherCharges = [];
 		orderAdjustments.each{ eachOdrAdj ->
 			tempMap = [:];
-			applicableTo = eachOdrAdj.orderItemSeqId;
-			if(eachOdrAdj.orderItemSeqId && eachOdrAdj.orderItemSeqId == "_NA_"){
+			
+			seqId = eachOdrAdj.orderItemSeqId;
+			if(seqId && seqId == "_NA_"){
 				applicableTo = "ALL";
 			}
+			else{
+				ordItm = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seqId));
+				if(ordItm){
+					applicableTo = (EntityUtil.getFirst(ordItm)).get("productId");
+				}
+			}
+			
 			tempMap.put("otherTermId", eachOdrAdj.orderAdjustmentTypeId);
 			tempMap.put("applicableTo", applicableTo);
 			tempMap.put("termValue", eachOdrAdj.amount);
@@ -220,7 +234,6 @@ if(shipments){
 				return ServiceUtil.returnError(errMsg);
 		}
 		Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
-		Debug.log("###adjPerUnit####"+adjPerUnit);
 		
 		shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
 		JSONArray adjustmentJSON = new JSONArray();
@@ -268,14 +281,6 @@ if(shipments){
 			newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
 			adjustmentJSON.add(newObj);
 			
-			/*tempMap = [:];
-			tempMap.otherTermId = eachAdj.attrName;
-			tempMap.applicableTo = "ALL";
-			tempMap.termValue = amt;
-			tempMap.uomId = "INR";
-			tempMap.termDays = null;
-			tempMap.description = "";
-			adjustmentTypes.add(tempMap);*/
 		}
 		
 		context.adjustmentJSON = adjustmentJSON;

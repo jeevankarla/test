@@ -23,7 +23,7 @@
 	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
 	        	</drop-down>
         </field>
-        <field name="roleTypeId"><hidden value="BILL_FROM_VENDOR"/></field>
+        <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field>
     	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -292,7 +292,7 @@
             <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}','${partyId}');" description="Link GRN With PO">
             </hyperlink>
         </field> 
-        <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}">
+        <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}">
             <hyperlink target="CancelGrnShipment" description="Cancel GRN">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -403,6 +403,9 @@
         <field name="estimatedShipDate" title="Ship Date"><display/></field>
         <field name="supplierId" title="Supplier">
         	<display default-value="${supplierId}"/>
+        </field>
+        <field name="billToPartyId" title="BillTOParty">
+        	<display default-value="${billToPartyId}"/>
         </field>
         <field name="supplierInvoiceId" title="Supplier Invoice No"><display/></field>
         <field name="supplierInvoiceDate" title="Supplier Invoice Date"><display /></field>

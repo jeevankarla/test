@@ -64,11 +64,24 @@ $(document).ready(function(){
 	        <tr>
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Supplier:</div></td>
 				<#if partyId?exists && partyId?has_content>  
-		  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
+		  	  		  <#--  <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  -->
 	          		<td valign='middle'>
 	            		<div class='tabletext h2'>
 	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : partyId}, true) />
 	               			${partyId?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
+	            		</div>
+	          		</td>       
+	          	</#if>
+	        </tr>
+	         <#-- Showing BillToParty: -->
+	         <tr><td><br/></td></tr> <tr>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>BillToParty:</div></td>
+				<#if billToPartyId?exists && billToPartyId?has_content>  
+		  	  	  <#--	<input type="hidden" name="partyId" id="partyId" value="${billToPartyId?if_exists}"/>  -->
+	          		<td valign='middle'>
+	            		<div class='tabletext h2'>
+	            			<#assign supplierName = delegator.findOne("PartyNameView", {"partyId" : billToPartyId}, true) />
+	               			${billToPartyId?if_exists} [ ${supplierName.groupName?if_exists} ${supplierName.firstName?if_exists} ${supplierName.lastName?if_exists}]             
 	            		</div>
 	          		</td>       
 	          	</#if>
@@ -119,7 +132,12 @@ $(document).ready(function(){
 	</form>
 	<br/>
     <form method="post" id="indententry" action="<@ofbizUrl>purchaseEntryInit</@ofbizUrl>">  
-		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
+	<#-- passing BillToPartyId: -->
+       	<#if billToPartyId?exists>
+				<input type="hidden" name="partyId" id="partyId" value="${billToPartyId?if_exists}"/>
+		 <#else> 
+		 		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
+		 </#if>
 		<input type="hidden" name="shipmentId" id="billToPartyId" value="${parameters.shipmentId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>
 		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>

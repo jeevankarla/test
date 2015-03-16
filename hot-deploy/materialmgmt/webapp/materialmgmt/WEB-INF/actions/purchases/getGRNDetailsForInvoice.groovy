@@ -22,22 +22,26 @@ if(shipmentId){
 	
 	shipmentHeader = EntityUtil.getFirst(shipmentHeader);
 	supplierId ="";
+	billToPartyId="";
 	purchaseOrderId = shipmentHeader.primaryOrderId;
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR") ));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderRole = delegator.findList("OrderRole", cond, null, null, null, false);
 	if(shipmentHeader && shipmentHeader.partyIdFrom){
-		supplierId = shipmentHeader.partyIdFrom;
+		billToPartyId = shipmentHeader.partyIdFrom;
 		
 	}else{
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId));
-		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		orderRole = delegator.findList("OrderRole", cond, null, null, null, false);
 		if(orderRole){
-			supplierId = (EntityUtil.getFirst(orderRole)).get("partyId");
+				billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+				billToPartyId=(EntityUtil.getFirst(billToPartyIdList)).getString("partyId");
 		}
-
 	}
-		
+	if(orderRole){
+	supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+			supplierId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");	
+	}
 	
 	shipmentItems = delegator.findList("ShipmentItem", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null,false);
 	
@@ -53,4 +57,6 @@ if(shipmentId){
 	context.shipmentHeader = shipmentHeader;
 	context.shipmentReceipts = shipmentReceipts;
 	context.supplierId = supplierId;
+	context.billToPartyId = billToPartyId;
+	
 }
