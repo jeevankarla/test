@@ -5295,6 +5295,27 @@ public class PayrollService {
 			    			}
 			    			c1.add(Calendar.DATE,1);
 			    		}
+			    		//calculating loss of Pay for HPL here
+						Map leaveCtx = FastMap.newInstance();
+						leaveCtx.put("timePeriodStart", timePeriodStart);
+						leaveCtx.put("timePeriodEnd", timePeriodEnd);
+						leaveCtx.put("partyId", employeeId);
+						leaveCtx.put("leaveTypeId", "HPL");
+						Map hplResultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, leaveCtx);
+			    		if(ServiceUtil.isError(hplResultMap)){
+			    			Debug.logError(ServiceUtil.getErrorMessage(hplResultMap), module);
+			            	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(hplResultMap), 
+			            			null, null, null);
+			    		}
+			    		BigDecimal noOfLeaveDays = (BigDecimal) hplResultMap.get("noOfLeaveDays");
+			    		BigDecimal HPLlossOfPayDays = BigDecimal.ZERO;
+			    		if(UtilValidate.isNotEmpty(noOfLeaveDays)){
+			    			HPLlossOfPayDays = noOfLeaveDays.divide(new BigDecimal(2));
+			    		}
+			    		if(UtilValidate.isNotEmpty(HPLlossOfPayDays)){
+			    			lossOfPayDays =  lossOfPayDays + (HPLlossOfPayDays.doubleValue());
+			    		}
+			    		
 			    		newEntity.set("lateMin",  new BigDecimal(lateMin));
 		        		newEntity.set("extraMin", new BigDecimal(extraMin));
 			    		newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
