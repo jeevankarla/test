@@ -83,9 +83,13 @@ if(shipments){
 
 		if(orderRole){
 			billToPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			if(billToPartyIdList){
 			billToPartyId=(EntityUtil.getFirst(billToPartyIdList)).getString("partyId");
+			}
 			supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
-			partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");			
+			if(supplierPartyIdList){
+			partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");	
+			}		
 		}
 		
 		orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
