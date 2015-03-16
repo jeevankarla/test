@@ -311,7 +311,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    </td>
 					</tr>
 					<tr>
-					    <td class="label"><b>PO Date : </b></td>
+					    <#assign purchaseTypeFlag = parameters.purchaseTypeFlag?if_exists>
+					    <#if purchaseTypeFlag?has_content && purchaseTypeFlag == "contractPurchase">
+					    <td class="label"><b>Date : </b></td>
+                        <#else><td class="label"><b>PO Date : </b></td> 
+                        </#if> 
 					    <td>
 					    	<#if orderId?exists && orderInfo.get("orderDate")?exists>
 					    		<input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderDate")?if_exists}"/>
