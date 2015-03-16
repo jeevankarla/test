@@ -97,7 +97,7 @@ employeeList.each {employee ->
 	employeesJSON.add(employeeJSON);
 }
 context.employeesJSON = employeesJSON;
-Debug.logError("employeeList="+employeeList,"");
-Debug.logError("employeesJSON="+employeesJSON,"");
+//Debug.logError("employeeList="+employeeList,"");
+//Debug.logError("employeesJSON="+employeesJSON,"");
 
 

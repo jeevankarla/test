@@ -92,10 +92,6 @@ $(document).ready(function() {
     		.css('text-align', 'center');
     	}
     } );
-    
-//    table.fnAdjustColumnSizing();
-    
-//    new $.fn.DataTable.FixedColumns( table );
 	
 } );
 
