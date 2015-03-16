@@ -2387,6 +2387,12 @@ public class ByProductNetworkServices {
 			for (GenericValue orderItem : orderItems) {
 				Map tempChangeProdMap = FastMap.newInstance();
 				String productId = orderItem.getString("productId");
+				GenericValue orderItemTemp= delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderItem.getString("orderId"),"orderItemSeqId",orderItem.getString("orderItemSeqId")), false);
+				List<GenericValue> adjustements = orderItemTemp.getRelated("OrderAdjustment");
+				List promos = EntityUtil.getFieldListFromEntityList(adjustements, "productPromoId", true);
+				if(UtilValidate.isNotEmpty(promos)){
+					continue;
+				}
 				String prodName = (EntityUtil.getFirst(EntityUtil.filterByAnd(products, UtilMisc.toMap("productId", productId)))).getString("description");
 				BigDecimal quantity = orderItem.getBigDecimal("quantity");
 				tempChangeProdMap.put("id", productId);
