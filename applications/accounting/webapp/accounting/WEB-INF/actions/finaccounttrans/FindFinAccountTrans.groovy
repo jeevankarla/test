@@ -69,8 +69,13 @@ finalpartyDayWiseFinHistryMap=[:];
 partyTotalDebits=0;
 partyTotalCredits=0;
 
+localMultipleFinAccountHistoryMap=[:];
+
+if(UtilValidate.isNotEmpty(context.multipleFinAccountHistoryMap)){
+		localMultipleFinAccountHistoryMap=context.multipleFinAccountHistoryMap;
+	}
 if(parameters.multifinAccount == "Y"){
-		multipleFinAccountHistoryMap.each{ eachFinAccount ->
+		localMultipleFinAccountHistoryMap.each{ eachFinAccount ->
 			getmultipleFinAccountList(eachFinAccount.getKey(),eachFinAccount.getValue());
 			}
 }else{
