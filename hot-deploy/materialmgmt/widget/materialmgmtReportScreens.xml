@@ -74,7 +74,8 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
+				 <!-- <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/> -->
+				  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReportNew.groovy"/>
 			</actions>
 			<widgets>
 				<section>
@@ -97,7 +98,8 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
+			<!-- 	 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/> -->
+				  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReportNew.groovy"/>
 				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxCsvReport.groovy"/>
 			</actions>
 			<widgets>
@@ -117,7 +119,8 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
-				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
+				<!--  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/> -->
+				  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReportNew.groovy"/>
 			</actions>
 			<widgets>
 				<section>
@@ -141,7 +144,8 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
-				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
+				<!--  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/> -->
+				  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReportNew.groovy"/>
 				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxCsvReport.groovy"/>
 				 
 			</actions>
