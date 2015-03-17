@@ -5012,7 +5012,7 @@ public class PayrollService {
 	        	}
 	        	Timestamp timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
 	        	Timestamp timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
-	        	double noOfCalenderDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd)+1;
+	        	double actualCalenderDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd)+1;
 	        	// get attendance period here 
 	        	input.put("timePeriodId", payrollPeriodId);
 	        	input.put("timePeriodStart", timePeriodStart);
@@ -5063,6 +5063,7 @@ public class PayrollService {
 	    		//Debug.log("employementList===="+employementList.size());
 	    		
 	        	for(GenericValue employement : employementList) {
+	        		double noOfCalenderDays= actualCalenderDays;
 	        		String employeeId = employement.getString("partyIdTo");
 	        		GenericValue newEntity = delegator.makeValue("PayrollAttendance");
 	        		newEntity.set("customTimePeriodId", lastCloseAttedancePeriod.getString("customTimePeriodId"));
