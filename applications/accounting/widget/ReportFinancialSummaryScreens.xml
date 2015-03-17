@@ -4326,6 +4326,7 @@
             </actions>
 			<widgets>
 			<container>
+			 <include-form name="PartyLedgerAbstractCsvHeadingForm"	location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 		         <include-form name="PartyLedgerAbstractCsvForm"	location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 			</container>
 			</widgets>
