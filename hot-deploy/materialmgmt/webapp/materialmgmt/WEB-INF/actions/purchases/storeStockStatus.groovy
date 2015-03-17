@@ -35,8 +35,10 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  
 dctx = dispatcher.getDispatchContext();
 facilityId=parameters.issueToFacilityId;
-thruDate = UtilDateTime.nowTimestamp();
-dayEnd = UtilDateTime.getDayEnd(thruDate);
+nowDate = UtilDateTime.nowTimestamp();
+nextDay = UtilDateTime.addDaysToTimestamp(nowDate, 1);
+nextDayBegin = UtilDateTime.getDayStart(nextDay);
+
 prodMap=[:];
 
  productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
@@ -87,7 +89,7 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	  bookStock = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:effdayEnd,productId:productDetails.productId,facilityId:facilityId ]);
 	  Debug.log("bookStock==============================="+bookStock);
 	  productDetailMap["inventoryCount"]=bookStock.quantityOnHandTotal;*/
-	  invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: productDetails.productId,effectiveDate:dayEnd, facilityId : facilityId ,ownerPartyId:"Company", userLogin: userLogin]);
+	  invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: productDetails.productId,effectiveDate:nextDayBegin, facilityId : facilityId ,ownerPartyId:"Company", userLogin: userLogin]);
 	  if(UtilValidate.isNotEmpty(invCountMap)){
 		   openingQty = invCountMap.get("inventoryCount");
 		   productDetailMap.put("openingQty", openingQty);
