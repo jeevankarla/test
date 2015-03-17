@@ -167,7 +167,7 @@ conditionList.add( EntityCondition.makeCondition([
 					],EntityOperator.AND)
 				],EntityOperator.OR));
 	
-}else{
+}else if(UtilValidate.isNotEmpty(parameters.partyId) || UtilValidate.isEmpty(parameters.isLedgerCallFor)){
 conditionList.add( EntityCondition.makeCondition([
             EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
@@ -388,7 +388,7 @@ conditionList.add( EntityCondition.makeCondition([
 					],EntityOperator.AND)
 				],EntityOperator.OR));
 	
-}else{
+}else if(UtilValidate.isNotEmpty(parameters.partyId) || UtilValidate.isEmpty(parameters.isLedgerCallFor)){
 conditionList.add(EntityCondition.makeCondition([
                EntityCondition.makeCondition([
                 EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyId),
