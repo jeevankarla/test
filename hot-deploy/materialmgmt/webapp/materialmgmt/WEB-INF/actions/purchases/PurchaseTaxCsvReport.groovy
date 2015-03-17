@@ -31,8 +31,50 @@ import org.ofbiz.party.party.PartyHelper;
 
 finalpurchasetaxDetails=[];
 
-tempMap=context.get("taxDetails5pt5List");
+
+temp5pt0Map=context.get("taxDetails5pt0List");
 partyMap=context.get("InvoicePartyMap");
+
+if( UtilValidate.isNotEmpty(temp5pt0Map))
+{
+	tax5pt0list=[];
+	taxDetails5pt0List=[];
+	temp5pt0Map.each{ eachtemp ->
+		productNameMap=[:];
+		tax5pt0InnerMap=eachtemp.getValue();
+		partyId=null;
+		partyName=null;
+	if( UtilValidate.isNotEmpty(partyMap.get(tax5pt0InnerMap.invoiceId))){
+		partyId=partyMap.get(tax5pt0InnerMap.invoiceId);
+		partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator,partyId, false);
+	}
+	else{
+		partyId=tax5pt0InnerMap.partyId;
+		partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator,partyId, false);
+		
+		}
+		productNameMap.put("invoiceDate",tax5pt0InnerMap.invoiceDate);
+		productNameMap.put("invoiceId",tax5pt0InnerMap.invoiceId);
+		productNameMap.put("partyId",tax5pt0InnerMap.partyId);
+		productNameMap.put("productId",tax5pt0InnerMap.productId);
+		productNameMap.put("tinNumber",tax5pt0InnerMap.tinNumber);
+		productNameMap.put("vchrType",tax5pt0InnerMap.vchrType);
+		productNameMap.put("crOrDbId",tax5pt0InnerMap.crOrDbId);
+		productNameMap.put("invTotalVal",tax5pt0InnerMap.invTotalVal);
+		productNameMap.put("vatAmount",tax5pt0InnerMap.vatAmount);
+		productNameMap.put("partyName",partyName);
+		taxDetails5pt0List.addAll(productNameMap);
+		}
+		tax5pt0TotalMap=context.get("tax5pt0TotalMap");
+		taxDetails5pt0List.addAll(tax5pt0TotalMap);
+		//Debug.log("======tax5ptTotalMap==== from ========tax5ptTotalMap=========tax5ptTotalMap==========="+tax5ptTotalMap);
+		finalpurchasetaxDetails.addAll(taxDetails5pt0List);
+}
+//Debug.log("======finalpurchasetaxDetails============finalpurchasetaxDetails=========finalpurchasetaxDetails==========="+finalpurchasetaxDetails);
+
+
+//5.5 totals are here
+tempMap=context.get("taxDetails5pt5List");
 
 if( UtilValidate.isNotEmpty(tempMap))
 {
@@ -69,7 +111,6 @@ if( UtilValidate.isNotEmpty(tempMap))
 		//Debug.log("======tax5ptTotalMap==== from ========tax5ptTotalMap=========tax5ptTotalMap==========="+tax5ptTotalMap);
 		finalpurchasetaxDetails.addAll(taxDetails5pt5List);
 }
-//Debug.log("======finalpurchasetaxDetails============finalpurchasetaxDetails=========finalpurchasetaxDetails==========="+finalpurchasetaxDetails);
 
 temp14ptMap=context.get("taxDetails14pt5List");
 if( UtilValidate.isNotEmpty(temp14ptMap))
@@ -155,7 +196,7 @@ if( UtilValidate.isNotEmpty(tempCstMap))
 		}
 		
 		taxCstTotalMap=context.get("taxCstTotalMap");
-		Debug.log("======taxCstTotalMap============taxCstTotalMap=========taxCstTotalMap==========="+taxCstTotalMap.get("cstAmount"));
+		//Debug.log("======taxCstTotalMap============taxCstTotalMap=========taxCstTotalMap==========="+taxCstTotalMap.get("cstAmount"));
 		FinaltaxCstTotalMap=[:];
 		FinaltaxCstTotalMap.put("invTotalVal",taxCstTotalMap.get("invTotalVal"));
 		FinaltaxCstTotalMap.put("vatAmount",taxCstTotalMap.get("cstAmount"));
@@ -178,6 +219,8 @@ issueToDeptInvMap.each{ eachissueToDeptInvMap ->
 	//Debug.log("eachissueToDeptInvMap======================"+eachissueToDeptInvMap.getValue());
 	invoicetaxvaluesMap=eachissueToDeptInvMap.getValue();
 	deptId=eachissueToDeptInvMap.getKey();
+	tax5pt0CatMap=invoicetaxvaluesMap.get("tax5pt0CatMap");
+	tax5pt0TotalMap=invoicetaxvaluesMap.get("tax5pt0TotalMap");
 	tax5pt5CatMap=invoicetaxvaluesMap.get("tax5pt5CatMap");
 	tax5pt5TotalMap=invoicetaxvaluesMap.get("tax5pt5TotalMap");
 	tax14pt5CatMap=invoicetaxvaluesMap.get("tax14pt5CatMap");
@@ -195,9 +238,57 @@ issueToDeptInvMap.each{ eachissueToDeptInvMap ->
 	//Debug.log("tax14pt5TotalMap====================tax14pt5TotalMap========================"+tax14pt5TotalMap);
 	//Debug.log("tax5pt5TotalMap====================tax5pt5TotalMap========================"+tax5pt5TotalMap);
 	
+	if( UtilValidate.isNotEmpty(tax5pt0CatMap))
+	{
+		final5ptlist=[];
+		productList=[];
+		tax5pt0CatMap.each{ eachtax5pt5CatMap ->
+			
+			if(eachtax5pt5CatMap.getKey()!="discount")
+			{
+						codeIdMap=eachtax5pt5CatMap.getValue();
+						codeIdList=codeIdMap.get("invoiceList");
+						codeIdList.each{ eachCodeIdList ->
+							productNameMap=[:];
+						productId=null;
+						description=null;
+						productId=eachCodeIdList.productId;
+						product = delegator.findOne("Product", ["productId" : productId], true);
+						description=product.description;
+						productNameMap.put("deptName",deptName);
+						productNameMap.put("invoiceDate",eachCodeIdList.invoiceDate);
+						productNameMap.put("invoiceId",eachCodeIdList.invoiceId);
+						productNameMap.put("partyId",eachCodeIdList.partyId);
+						productNameMap.put("productName",description);
+						productNameMap.put("productId",eachCodeIdList.productId);
+						productNameMap.put("vchrType",eachCodeIdList.vchrType);
+						productNameMap.put("crOrDbId",eachCodeIdList.crOrDbId);
+						productNameMap.put("invTotalVal",eachCodeIdList.invTotalVal);
+						productNameMap.put("vatAmount",eachCodeIdList.vatAmount);
+						finalList.addAll(productNameMap);
+					}
+						totalvalueMap=[:];
+						totalvalue=null;
+						totalvalue=codeIdMap.get("totalValue");
+						totalvalueMap.put("invTotalVal",totalvalue);
+						finalList.addAll(totalvalueMap);
+			}
+		}
+		dicountList=[];
+		dicountMap=[:];
+	discount=null;
+	discount=tax5pt0CatMap.get("discount");
+	dicountMap.put("invTotalVal",discount);
+	dicountMap.put("crOrDbId","discount");
 	
+	dicountList.addAll(dicountMap);
+	finalList.addAll(dicountList);
+	tax5pt0TotalMap.put("crOrDbId","TOTAL");
+		finalList.addAll(tax5pt0TotalMap);
+		
+	}
 	
-	
+	//adding 5.5 total Map here
 	if( UtilValidate.isNotEmpty(tax5pt5CatMap))
 	{
 		final5ptlist=[];
@@ -256,7 +347,6 @@ issueToDeptInvMap.each{ eachissueToDeptInvMap ->
 			if(eachtax5pt5CatMap.getKey()!="discount")
 			{
 						codeIdMap=eachtax5pt5CatMap.getValue();
-						Debug.log("totalValue============================="+codeIdMap.get("totalValue"));
 						codeIdList=codeIdMap.get("invoiceList");
 					 codeIdList.each{ eachCodeIdList ->
 							productNameMap=[:];

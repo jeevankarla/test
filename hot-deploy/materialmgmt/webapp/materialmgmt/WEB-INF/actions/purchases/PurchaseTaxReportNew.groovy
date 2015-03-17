@@ -180,16 +180,23 @@ orgList=[];
 def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 	EntityListIterator invoiceItemsIter = null;
 	List taxDetails5pt5List=[];
+	List taxDetails5pt0List=[];
 	List taxDetails14pt5List=[];
 	taxDetailsOthrList=[];
 
 	taxDetails5pt5Map=[:];
+	taxDetails5pt0Map=[:];
 	taxDetails14pt5Map=[:];
 
 	//Debug.log("invoiceIdsList====="+invoiceIdsList);
 	tax5pt5TotalMap=[:];
 	tax5pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
 	tax5pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
+	
+	tax5pt0TotalMap=[:];
+	tax5pt0TotalMap["invTotalVal"]=BigDecimal.ZERO;
+	tax5pt0TotalMap["vatAmount"]=BigDecimal.ZERO;
+	
 	tax14pt5TotalMap=[:];
 	tax14pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
 	tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
@@ -207,6 +214,9 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 
 	tax5pt5CatMap=[:];
 	tax5pt5CatMap["discount"]=BigDecimal.ZERO;
+	
+	tax5pt0CatMap=[:];
+	tax5pt0CatMap["discount"]=BigDecimal.ZERO;
 
 
 	tax14pt5CatMap=[:];
@@ -362,6 +372,131 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 					taxDetails5pt5Map[invoiceItem.invoiceId]=invDetailMap;
 				}
 			}
+			//vat 5.0 type  adding here
+					if(invoiceItem.vatPercent==5.0){
+					BigDecimal vatRevenue = invoiceItem.vatAmount;
+					productId = invoiceItem.productId;
+					invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
+					BigDecimal totalBed = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(invoiceItem.bedPercent) && UtilValidate.isNotEmpty(invoiceItem.bedAmount)){
+						totalBed+=invoiceItem.bedAmount;
+					}
+					if(UtilValidate.isNotEmpty(invoiceItem.bedcessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedcessAmount)){
+						totalBed+=invoiceItem.bedcessAmount;
+					}
+					if(UtilValidate.isNotEmpty(invoiceItem.bedseccessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedseccessAmount)){
+						totalBed+=invoiceItem.bedseccessAmount;
+					}
+					invTotalVal+=totalBed;
+		
+					//preparing Another Map here for Category
+					innerItemMap=[:];
+					innerItemMap["invoiceDate"]=invoiceItem.invoiceDate;
+					innerItemMap["invoiceId"]=invoiceItem.invoiceId;
+					innerItemMap["partyId"]=invoiceItem.partyIdFrom;
+					innerItemMap["productId"]=invoiceItem.productId;
+					innerItemMap["tinNumber"]="";
+					innerItemMap["vchrType"]="Purchase";
+					innerItemMap["crOrDbId"]="D";
+					innerItemMap["invTotalVal"]=invTotalVal;
+					innerItemMap["vatAmount"]=vatRevenue;
+					taxDetails5pt0List.addAll(innerItemMap);
+					// get category
+					if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
+						prodCategoryId=productCatMap.get(productId);
+						prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+						if(UtilValidate.isEmpty(tax5pt0CatMap[prodPrimaryCategoryId])){
+							innerTaxCatMap=[:];
+							innerTaxCatMap["totalValue"]=invTotalVal;
+							innerTaxCatMap["vatAmount"]=vatRevenue;
+							
+							invoiceList=[];
+							invoiceList.addAll(innerItemMap);
+							innerTaxCatMap["invoiceList"]=invoiceList;
+							//inside category ProductWise starts
+							productMap=[:];
+							if(UtilValidate.isEmpty(productMap[prodCategoryId])){
+								innerProdMap=[:];
+								innerProdMap["totalValue"]=invTotalVal;
+								innerProdMap["taxAmount"]=0;
+								prodInvItemList=[];
+								prodInvItemList.addAll(innerItemMap);
+								innerProdMap["prodInvItemList"]=prodInvItemList;
+								productMap[prodCategoryId]=innerProdMap;
+							}
+							innerTaxCatMap["productDetailMap"]=productMap;
+							tax5pt0CatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+						}else if(UtilValidate.isNotEmpty(tax5pt0CatMap[prodPrimaryCategoryId])){
+							Map innerTaxCatMap=tax5pt0CatMap[prodPrimaryCategoryId];
+							innerTaxCatMap["totalValue"]+=invTotalVal;
+							innerTaxCatMap["vatAmount"]+=vatRevenue;
+							invoiceList=innerTaxCatMap["invoiceList"];
+							invoiceList.addAll(innerItemMap);
+							innerTaxCatMap["invoiceList"]=invoiceList;
+							//update proddetailsMap
+							updateProductMap=innerTaxCatMap["productDetailMap"];
+							if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
+								innerProdMap=[:];
+								innerProdMap["totalValue"]=invTotalVal;
+								innerProdMap["taxAmount"]=0;
+								prodInvItemList=[];
+								prodInvItemList.addAll(innerItemMap);
+								innerProdMap["prodInvItemList"]=prodInvItemList;
+								updateProductMap[prodCategoryId]=innerProdMap;
+							}else{
+							innerProdMap=updateProductMap[prodCategoryId];
+							innerProdMap["totalValue"]+=invTotalVal;
+							innerProdMap["taxAmount"]+=0;
+							prodInvItemList=innerProdMap["prodInvItemList"];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							updateProductMap[prodCategoryId]=innerProdMap;
+							}
+							innerTaxCatMap["productDetailMap"]=updateProductMap;
+						   //productWise update ends
+							tax5pt0CatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+						}
+					}
+					//category ends here
+		
+					invDetailMap=taxDetails5pt0Map[invoiceItem.invoiceId];
+					if(UtilValidate.isEmpty(invDetailMap)){
+						innerTaxItemMap=[:];
+						innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
+						innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
+						innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
+						innerTaxItemMap["tinNumber"]="";
+						innerTaxItemMap["vchrType"]="Purchase";
+						innerTaxItemMap["crOrDbId"]="D";
+						invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
+								EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_DISC"))  , null, null, null, false );
+						if(UtilValidate.isNotEmpty(invoiceDisItemList)){
+							discountInvoiceItem=invoiceDisItemList.getFirst();
+							invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
+							tax5pt0CatMap["discount"]+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
+						}
+		
+						innerTaxItemMap["invTotalVal"]=invTotalVal;
+						innerTaxItemMap["vatAmount"]=vatRevenue;
+						tax5pt0TotalMap["invTotalVal"]+=invTotalVal;
+						tax5pt0TotalMap["vatAmount"]+=vatRevenue;
+						fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
+						if(UtilValidate.isNotEmpty(fromPartyDetail)){
+							innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
+						}
+						//intilize inner map when empty
+						taxDetails5pt0Map[invoiceItem.invoiceId]=innerTaxItemMap;
+					}else if(UtilValidate.isNotEmpty(invDetailMap)){
+						invDetailMap["vatAmount"]+=vatRevenue;
+						tax5pt0TotalMap["vatAmount"]+=vatRevenue;
+		
+						invDetailMap["invTotalVal"]+=invTotalVal;
+						tax5pt0TotalMap["invTotalVal"]+=invTotalVal;
+		
+						taxDetails5pt0Map[invoiceItem.invoiceId]=invDetailMap;
+					}
+				}
+			//vat 14.5
 			if(invoiceItem.vatPercent==14.5){
 				productId = invoiceItem.productId;
 				BigDecimal vatRevenue = invoiceItem.vatAmount;
@@ -596,51 +731,71 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 	}
 	if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT5")){
 		context.put("taxDetails5pt5List",taxDetails5pt5Map.entrySet());
+	}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT0")){
+		context.put("taxDetails5pt0List",taxDetails5pt0Map.entrySet());
 	}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT14PT5")){
 		context.put("taxDetails14pt5List",taxDetails14pt5Map.entrySet());
 	}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="CST")){
 		context.put("taxDetailsCstList",taxDetailsCstMap.entrySet());
 	}else{
 		context.put("taxDetails5pt5List",taxDetails5pt5Map.entrySet());
+		context.put("taxDetails5pt0List",taxDetails5pt0Map.entrySet());
 		context.put("taxDetails14pt5List",taxDetails14pt5Map.entrySet());
 		context.put("taxDetailsCstList",taxDetailsCstMap.entrySet());
 	}
 	context.put("tax5pt5TotalMap",tax5pt5TotalMap);
+	context.put("tax5pt0TotalMap",tax5pt0TotalMap);
 	context.put("tax14pt5TotalMap",tax14pt5TotalMap);
 	context.put("taxCstTotalMap",taxCstTotalMap);
-
+	
+	context.put("tax5pt0InvList",taxDetails5pt0List);
 	context.put("tax5pt5InvList",taxDetails5pt5List);
 	context.put("tax14pt5InvList",taxDetails14pt5List);
 	//
 	
 	//preparing catageoryMap for Vat and CST
-
+	context.put("tax5pt0CatMap",tax5pt0CatMap);
 	context.put("tax5pt5CatMap",tax5pt5CatMap);
 	context.put("tax14pt5CatMap",tax14pt5CatMap);
 	context.put("taxCstCatMap",taxCstCatMap);
-	Debug.log("tax14pt5CatMap====="+tax14pt5CatMap);
+	
 
 	Map tempDeptCatItemMap=FastMap.newInstance();
 	
-	if( UtilValidate.isNotEmpty(taxDetails5pt5Map) || UtilValidate.isNotEmpty(taxDetails14pt5Map) || UtilValidate.isNotEmpty(taxDetailsCstMap)){
-		if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT5") &&UtilValidate.isNotEmpty(taxDetails5pt5Map) ){
+	if( UtilValidate.isNotEmpty(taxDetails5pt5Map) || UtilValidate.isNotEmpty(taxDetails5pt0Map) || UtilValidate.isNotEmpty(taxDetails14pt5Map) || UtilValidate.isNotEmpty(taxDetailsCstMap)){
+		//Debug.log("taxType====FO======>"+taxType);
+		 if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT0") && UtilValidate.isNotEmpty(taxDetails5pt0Map) ){
+			tempDeptCatItemMap.put("tax5pt0CatMap",tax5pt0CatMap);
+			tempDeptCatItemMap.put("tax5pt0TotalMap",tax5pt0TotalMap);
+			//Debug.log("taxType====5.0=====invokinggg>"+taxType+"====FFFFFFFFF");
+		}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT5") && UtilValidate.isNotEmpty(taxDetails5pt5Map) ){
 			tempDeptCatItemMap.put("tax5pt5CatMap",tax5pt5CatMap);
 			tempDeptCatItemMap.put("tax5pt5TotalMap",tax5pt5TotalMap);
+			//Debug.log("taxType====5.5=====invokinggg>"+taxType);
 		}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT14PT5") && UtilValidate.isNotEmpty(taxDetails14pt5Map)){
 			tempDeptCatItemMap.put("tax14pt5CatMap",tax14pt5CatMap);
 			tempDeptCatItemMap.put("tax14pt5TotalMap",tax14pt5TotalMap);
+			//Debug.log("taxType====14.5=====invokinggg>"+taxType);
 		}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="CST") && UtilValidate.isNotEmpty(taxDetailsCstMap)){
 			tempDeptCatItemMap.put("taxCstCatMap",taxCstCatMap);
 			tempDeptCatItemMap.put("taxCstTotalMap",taxCstTotalMap);
-		}else{
+		}else if(UtilValidate.isEmpty(taxType)){
+		
 			if(UtilValidate.isNotEmpty(taxDetails5pt5Map)){
 				tempDeptCatItemMap.put("tax5pt5CatMap",tax5pt5CatMap);
-				tempDeptCatItemMap.put("tax5pt5TotalMap",tax5pt5TotalMap)
+				tempDeptCatItemMap.put("tax5pt5TotalMap",tax5pt5TotalMap);
+				//Debug.log("taxType==ELSEE==5.5====invokinggg>"+taxType);
 				
+			} 
+			if(UtilValidate.isNotEmpty(taxDetails5pt0Map)){
+				tempDeptCatItemMap.put("tax5pt0CatMap",tax5pt0CatMap);
+				tempDeptCatItemMap.put("tax5pt0TotalMap",tax5pt0TotalMap);
+				//Debug.log("taxType==ELSEE==5.0=====invokinggg>"+taxType);
 			}
 			if(UtilValidate.isNotEmpty(taxDetails14pt5Map)){
 				tempDeptCatItemMap.put("tax14pt5CatMap",tax14pt5CatMap);
 				tempDeptCatItemMap.put("tax14pt5TotalMap",tax14pt5TotalMap);
+				Debug.log("taxType==ELSEE==14.5=====invokinggg>"+taxType);
 				//Debug.log("==taxDetails5pt5Map=="+taxDetails14pt5Map+"==tempDeptCatItemMap="+tempDeptCatItemMap);
 			}
 			if(UtilValidate.isNotEmpty(taxDetailsCstMap)){

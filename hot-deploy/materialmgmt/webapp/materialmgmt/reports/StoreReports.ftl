@@ -190,6 +190,7 @@ function reportTypeChangeFunc() {
 				      			<td width="15%">Tax Type
 									<select name='taxType' id = "taxType">
 									    <option value=''>All</option>
+									     <option value='VAT5PT0'>Vat(5.0)</option>
 									    <option value='VAT5PT5'>Vat(5.5)</option>
 										<option value='VAT14PT5'>Vat(14.5)</option>
 										<option value='CST'>CST</option>
@@ -210,6 +211,7 @@ function reportTypeChangeFunc() {
 				      			<td width="15%">Tax Type
 									<select name='taxType' id = "taxType">
 									    <option value=''>All</option>
+									    <option value='VAT5PT0'>Vat(5.0)</option>
 									    <option value='VAT5PT5'>Vat(5.5)</option>
 										<option value='VAT14PT5'>Vat(14.5)</option>
 										<option value='CST'>CST</option>
