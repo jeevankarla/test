@@ -112,8 +112,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				  	   <fo:table-cell ><fo:block text-align="left"  font-size="11pt">${product.internalName?if_exists}</fo:block></fo:table-cell>  
   				       <fo:table-cell ><fo:block text-align="left"   font-size="11pt" >${productIds.description?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="center"   font-size="11pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right" keep-together="always"  font-size="11pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="11pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="right" keep-together="always"  font-size="11pt" >${productIds.openingQty?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="11pt" >${productIds.openingQty?if_exists}</fo:block></fo:table-cell>     
   				     </fo:table-row>
      </#list>
   	  <#assign sNo=sNo+1>
