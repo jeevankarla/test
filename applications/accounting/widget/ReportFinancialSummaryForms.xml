@@ -1082,8 +1082,13 @@ under the License.
         <field name="creditValue" title="Credit"><display/></field>
            	
     </form>
+      <form name="PartyLedgerAbstractCsvHeadingForm" type="list" list-name="headingList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
+        <field name="partyId" title="Party Id" ><display/></field>
+        <field name="heading" title=" MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BANGALORE:560065" ><display/></field>
+    </form>
      <form name="PartyLedgerAbstractCsvForm" type="list" list-name="partyLedgerAbstractCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
         <field name="partyId" title="Party Id" ><display/></field>
+        <field name="partyName" title="Party Name"><display/></field>
          <field name="OB" title="Opening Balance" ><display/></field>
          <field name="invTotal" title="Sale/Purchase" ><display/></field>
          <field name="paymentTotal" title="Payments"><display/></field>

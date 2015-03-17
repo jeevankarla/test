@@ -60,9 +60,16 @@ partyLedgerAbstractCsvMap=[:];
 if(UtilValidate.isNotEmpty(context.partyWiseLedgerAbstractMap)){
 	partyLedgerAbstractCsvMap=context.partyWiseLedgerAbstractMap;
 }
-
+fomDate=[context.fromDate];
+thruDate=[context.thruDate];
 partyLedgerAbstractCsvMap.each{ eachPartyLedger->
 	partyLedgerAbstractCsvList.addAll(eachPartyLedger.getValue());
 }
-Debug.log("===partyLedgerAbstractCsvList==IN==CSVVVVV======"+partyLedgerAbstractCsvList);
+//Debug.log("===partyLedgerAbstractCsvList==IN==CSVVVVV======"+partyLedgerAbstractCsvList);
 context.partyLedgerAbstractCsvList=partyLedgerAbstractCsvList;
+headingMap=[:];
+headingList=[];
+datestr="fromDate"+fomDate+"thruDate"+thruDate;
+headingMap.put("heading", datestr);
+headingList.addAll(headingMap);
+context.headingList=headingList;
