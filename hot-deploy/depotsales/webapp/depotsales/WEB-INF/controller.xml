@@ -37,16 +37,16 @@
         <response name="success" type="view" value="ChannelWiseDepoSalesChartInternal"/>
     </request-map> 
     
-     <request-map uri="DepotSale"><security https="true" auth="true"/><response name="success" type="view" value="DepotSale"/></request-map>
+     <request-map uri="DepotSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrder"/></request-map>
      
-      <request-map uri="processDepotSale">
+      <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
-        <response name="success"  type="request-redirect-noparam" value="DepotSale">
+        <response name="success"  type="request-redirect-noparam" value="DepotSalesOrder">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
-        <response name="error" type="view" value="DepotSale"/>
+        <response name="error" type="view" value="DepotSalesOrder"/>
     </request-map>
     
     <request-map uri="processDepotOrders">
@@ -196,7 +196,11 @@
         <response name="success" type="view" value="FindMaterialInvoices"/>
         <response name="error" type="view" value="FindMaterialInvoices"/>
     </request-map>
-       
+    <request-map uri="getDepotStoreCatalogCatagory">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="getStoreCatalogCatagory.groovy"/>
+       <response name="success" type="request" value="json"/>    
+    </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
@@ -204,7 +208,7 @@
     <view-map name="ChannelWiseDepoSalesChart" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChart"/>
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
     
-    <view-map name="DepotSale" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesIndent"/>
+    <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
     <view-map name="ProcessDepotOrders" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
     <view-map name="NonRouteGatePassPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>

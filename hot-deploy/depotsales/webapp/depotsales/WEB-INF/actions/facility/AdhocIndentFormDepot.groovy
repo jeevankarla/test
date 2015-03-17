@@ -27,6 +27,7 @@ if(UtilValidate.isNotEmpty(parameters.productStoreIdFrom)){
 	productStoreId=parameters.productStoreIdFrom;
 }
 boothId = parameters.boothId;
+
 subscriptionTypeId = parameters.subscriptionTypeId;
 productSubscriptionTypeId = parameters.productSubscriptionTypeId;
 shipmentTypeId = parameters.shipmentTypeId;
@@ -34,6 +35,7 @@ dctx = dispatcher.getDispatchContext();
 effectiveDate = parameters.effectiveDate;
 priceTypeId=parameters.priceTypeId;
 changeFlag=parameters.changeFlag;
+
 
 productCatageoryId=parameters.productCatageoryId;
 
@@ -85,20 +87,29 @@ orderTaxType = parameters.orderTaxType;
 packingType = parameters.packingType;
 facility = null;
 prodPriceMap = [:];
+parentRoleTypeId="CUSTOMER_TRADE_TYPE";
+if(UtilValidate.isNotEmpty(parameters.parentRoleTypeId)){
+	parentRoleTypeId=parameters.parentRoleTypeId;
+}
+Debug.log("==productCatageoryId==="+productCatageoryId);
 if(changeFlag != "AdhocSaleNew"){
 	partyId = parameters.partyId;
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
 	roleTypeId = parameters.roleTypeId;
 	partyRole = null;
 	if(party){
+		if(UtilValidate.isNotEmpty(parentRoleTypeId) && UtilValidate.isEmpty(parameters.roleTypeId)) {//to handle parentRoleTypeIds only when roleTypeId is empty
+			roleTypeAndPartyList = delegator.findByAnd("RoleTypeAndParty",["parentTypeId" :parentRoleTypeId,"partyId":partyId]);
+			partyRole=EntityUtil.getFirst(roleTypeAndPartyList);
+		}else{
 		partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
-	}
+	    }
+     }
 	if(!party || !partyRole){
 		context.errorMessage = partyId+" incorrect for the transaction !!";
 		displayGrid = false;
 		return result;
 	}
-	Debug.log("==productCatageoryId==="+productCatageoryId);
 	if(UtilValidate.isEmpty(productCatageoryId)){
 		context.errorMessage = "Please Select At Least One productCatageoryId !";
 		displayGrid = false;
@@ -137,6 +148,7 @@ if(partyPostalAddress){
 
 prodList=[];
 //productCatageoryId = "INDENT";
+Debug.log("==prodCatString==="+prodCatString);
 if(prodCatString && UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 	prodList= ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
 }else if(UtilValidate.isNotEmpty(productCatageoryId)){
@@ -251,7 +263,7 @@ JSONObject productCostJSON = new JSONObject();
 productCostJSON=prodPriceMap;
 JSONObject prodIndentQtyCat = new JSONObject();
 JSONObject qtyInPieces = new JSONObject();
-
+Debug.log("==productItemsJSON=================>"+productItemsJSON);
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelJSON;
 context.productCostJSON = productCostJSON;

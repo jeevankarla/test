@@ -63,11 +63,9 @@
                 <set field="titleProperty" value="Analytics"/>
                 <set field="tabButtonItem" value="analytics"/>
  				<set field="tabButtonItem2" value="channelSalesChart" />
- 				<entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+ 				<entity-condition list="roleTypeList" entity-name="RoleType" use-cache="true">
                 	<condition-list combine="or">
-               		 	<condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
-               			<condition-expr field-name="enumId" operator="equals" value="CR_INST"/>   
-               			<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
+               			<condition-expr field-name="parentTypeId" operator="equals" value="CUSTOMER_TRADE_TYPE"/>
                			</condition-list>
          		</entity-condition>		                                           
                 <set field="headerItem" value="charts"/>
@@ -94,18 +92,18 @@
             </actions>            
             <widgets>
                         	<platform-specific> 
-                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/channelWiseSalesCharts.ftl"/></html>
+                        	      <html><html-template location="component://depotsales/webapp/depotsales/depotsales/depoSalesChartResult.ftl"/></html>
                         	</platform-specific>   
             </widgets>
         </section>
     </screen>       
 
-<screen name="DepotSalesIndent">
+<screen name="DepotSalesOrder">
         <section>
             <actions>
                <set field="titleProperty" value="Depot Sales Indent"/>              
-			   <set field="tabButtonItem" value="DepositIndent" />	
-			   <set field="tabButtonItem2" value="indent"/>  
+			   <set field="tabButtonItem" value="DepotSalesOrder" />	
+			   <set field="tabButtonItem2" value="DepotSalesOrder"/>  
 			    <set field="changeFlag" value="DepotSales"/>  
                <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                <set field="orderStatus" from-field="parameters.orderStatus"/> 
@@ -115,28 +113,28 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/>
+				<!--  <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/> -->
             </actions>
             <widgets>
               <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                      <decorator-section name="body">   
+                      <decorator-section name="body"> 
+                       <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container>  
                       <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
-                      	<section>
-                      	
+                      <section>
 	                    	<condition>
 	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
 	                        </condition>
-                      		<widgets>
+                      		<widgets >
            						<include-screen name="DepotSaleInner"/>
                       		</widgets>
-                      	</section>
-                      <section>
-                      <condition>
-                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
-                      </condition>
-                          <widgets>
-      						 <include-screen name="SalesInnerDepotScreen"/>
-                 		</widgets>
+                       </section>
+                       <section> 
+		                      <condition>
+		                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+		                      </condition>
+		                      <widgets>
+		     						 <include-screen name="SalesInnerDepotScreen"/>
+		                	  </widgets>
                       </section>
                     </decorator-section>                                       
                 </decorator-screen>
@@ -173,10 +171,10 @@
               
                <!--  <entity-condition entity-name="Product" list="productList" use-cache="true">
                 </entity-condition> -->                
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
+            <!--     <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy"/>
                <set field="routeId" from-field="parameters.routeId"/>            
             </actions>
             <widgets>
@@ -213,6 +211,7 @@
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
                  <set field="productStoreId" from-field="parameters.productStoreIdFrom"/>
+                 	<set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/AdhocIndentFormDepot.groovy"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              

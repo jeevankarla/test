@@ -89,7 +89,7 @@ $(document).ready(function(){
             "${ajaxUrl}",  
             { fromDate: $("#fromDate").val() ,thruDate: $("#thruDate").val() ,
               facilityId : $("input[name=facilityId]").val(), productId : $("input[name=productId]").val(),partyId : $("input[name=partyId]").val(),
-              productCategoryId : $("select[name=productCategoryId]").val(), subscriptionTypeId : $("select[name=subscriptionTypeId]").val(),categoryTypeEnum : $("select[name=categoryTypeEnum]").val()},  
+              productCategoryId : $("select[name=productCategoryId]").val(), subscriptionTypeId : $("select[name=subscriptionTypeId]").val(),roleTypeId : $("select[name=roleTypeId]").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -115,8 +115,12 @@ $(document).ready(function(){
 	  <form name="byproductsAnalysis">
 		<table class="basic-table" cellspacing="0">
 			<tr>
+			   <td align="right" width="10%"><span class='h3'>Party Id: </span></td>
+				<td  align="left" width="10%"><@htmlTemplate.lookupField value='${partyId?if_exists}' formName="byproductsAnalysis" name="partyId" id="partyId" fieldFormName="LookupPerson"/></td>
+				<#--
         		<td align="right" width="10%"><span class='h3'>Retailer/Route: </span></td>
             	<td align="left" width="10%"><@htmlTemplate.lookupField value="${facilityId?if_exists}" formName="byproductsAnalysis" name="facilityId" id="facilityId" fieldFormName="LookupFacility"/></td>
+				-->
 				<td width="10%"><span class='h3'>Product: </span></td>
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="byproductsAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
 				<td width="10%"><span class='h3'>Product Category: </span></td>
@@ -131,14 +135,19 @@ $(document).ready(function(){
   	    				<option value='Other Products'>Other</option>
 					</select>
 				</td>
+				<td align="right" width="10%"><span class='h3'></span></td>
+				<td  align="left" width="10%"></td>
+				<#--
 				<td align="right" width="10%"><span class='h3'>Owner Party: </span></td>
 				<td  align="left" width="10%"><@htmlTemplate.lookupField value='${partyId?if_exists}' formName="byproductsAnalysis" name="partyId" id="partyId" fieldFormName="LookupPerson"/></td>
+			      -->
 			</tr>
         	<tr>
         		<td align="right" width="10%"><span class='h3'>From: </span></td>
             	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate"/></td>
 				<td width="2%"><span class='h3'>To: </span></td>
 				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
+				<#--
 				<td align="right" width="10%"><span class='h3'>Shift: </span></td>
 				<td align="left" width="10%">
 					<select name="subscriptionTypeId" class='h3'><option value='All'>ALL</option>
@@ -147,12 +156,13 @@ $(document).ready(function(){
   	    				<option value='ADHOC'>COUNTER SALE</option>
 					</select>
 				</td>
+				-->
 				<td align="right" width="10%"><span class='h3'>Category: </span></td>
 				<td width="15%">
-					<select name="categoryTypeEnum" id="categoryTypeEnum" class='h3'>
+					<select name="roleTypeId" id="roleTypeId" class='h3'>
 						<option value="All">All Types</option>
-		            	<#list categoryTypeList as categoryType>    
-		            	   	<option value='${categoryType.enumId}'>	${categoryType.description}</option>
+		            	<#list roleTypeList as roleType>    
+		            	   	<option value='${roleType.roleTypeId}'>	${roleType.description}</option>
 		                </#list>            
 					</select>
 			    </td>

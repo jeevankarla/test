@@ -72,33 +72,12 @@ try {
 
 subscriptionTypeId = parameters.subscriptionTypeId;
 
-shipmentIds = [];
-if(subscriptionTypeId && subscriptionTypeId != "All"){
-	condList = [];
-	condList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-	condList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-	
-	if(subscriptionTypeId != "ADHOC"){
-		condList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, subscriptionTypeId+"_SHIPMENT"));
-	}
-	else{
-		condList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "RM_DIRECT_SHIPMENT"));
-	}
-	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	shipments = delegator.findList("Shipment", cond, ["shipmentId"] as Set, null, null, false);
-	shipmentIds = EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", true);
-}
-
-
-
 filterProductSale = [];
 prodCategory = parameters.productCategoryId;
 if(parameters.productCategoryId != 'allProducts' && parameters.productCategoryId){
 	catProd = delegator.findList("Product", EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, parameters.productCategoryId), ["productId"] as Set, null, null, false);
 	filterProductSale = EntityUtil.getFieldListFromEntityList(catProd, "productId", true);
 }
-Debug.log("=====filterProductSale===="+filterProductSale);
 dailySalesRevenueTrend = context.dailySalesRevenueTrend;
 if(dailySalesRevenueTrend){
 	try {
@@ -130,49 +109,40 @@ dctx = dispatcher.getDispatchContext();
 conditionList = [];
 returnCondition = [];
 conditionList.clear();
-shipments = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate);
-addShipments = ByProductNetworkServices.getShipmentIdsByType(delegator, fromDate, thruDate, "RM_DIRECT_SHIPMENT");
-if(addShipments){
-	shipments.addAll(addShipments);
-}
+
+roleTypeAndPartyList = delegator.findByAnd("RoleTypeAndParty",["parentTypeId" :"CUSTOMER_TRADE_TYPE"]);
+
 //conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
-returnCondition.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
+//returnCondition.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
 List boothsList = FastList.newInstance();
 routeId = "";
-if(UtilValidate.isNotEmpty(parameters.facilityId)){
-	facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", parameters.facilityId), false);
-	if(!facility && facility.facilityTypeId == "ROUTE" && facility.facilityTypeId == "BOOTH"){
-		context.errorMessage = "'"+parameters.facilityId+"' is not a Route or Booth.";
-		return;
+roleTypeId=parameters.roleTypeId;
+Debug.log("===roleTypeId==============>"+roleTypeId);
+if(UtilValidate.isNotEmpty(roleTypeId)){
+	inputMap = [:];
+	inputMap.put("userLogin", userLogin);
+	inputMap.put("roleTypeId", roleTypeId);
+	if(UtilValidate.isNotEmpty(parameters.partyStatusId)){
+			inputMap.put("statusId", parameters.partyStatusId);
 	}
-	
-	if(facility.facilityTypeId == "ROUTE"){
-		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , facility.facilityId));
-		routeId = facility.facilityId;
-		
-	}else{
-		boothsList.add(facility.facilityId);
-	}
-	
+	Map unionPartyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx,inputMap);
+	partyIds = unionPartyDetailsMap.get("partyIds");
+	Debug.log("===partyIds=====>"+partyIds+"==for=Role======>"+roleTypeId);
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
 }
-/*if(boothsList){
-	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, boothsList));
-	returnCondition.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN , boothsList));
-	context.facilityId = parameters.facilityId;
-}
-if(UtilValidate.isNotEmpty(routeId)){
-	conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-	returnCondition.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-}*/
 /*if(UtilValidate.isNotEmpty(parameters.productCategoryId)){
 	Map result = ByProductReportServices.getCategoryProducts(dctx, UtilMisc.toMap("productCategoryId", parameters.productCategoryId));
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, result.productIdsList));
 	context.productCategoryId = parameters.productCategoryId;
 }*/
-if(parameters.categoryTypeEnum != "All" && parameters.categoryTypeEnum){
-	conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, parameters.categoryTypeEnum));
-	returnCondition.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, parameters.categoryTypeEnum));
+
+
+if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate) ){
+	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 }
+
+
 if(UtilValidate.isNotEmpty(parameters.productId)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
 	returnCondition.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
@@ -183,8 +153,8 @@ if(UtilValidate.isNotEmpty(filterProductSale)){
 	returnCondition.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
 }
 if(UtilValidate.isNotEmpty(parameters.partyId)){
-	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyId));
-	returnCondition.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyId));
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+	returnCondition.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
 }
 /*if(subscriptionTypeId && subscriptionTypeId != "All"){
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
@@ -206,7 +176,7 @@ orderItemList = delegator.findList("OrderHeaderItemAndRoles", condition, null, n
 returnCondExpr = EntityCondition.makeCondition(returnCondition,EntityOperator.AND);
 returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondExpr, null, null, null, false);
 
-Debug.log("===orderItemList=="+orderItemList+"===returnItemsList="+returnItemsList);
+//Debug.log("===orderItemList=="+orderItemList+"===returnItemsList="+returnItemsList);
 returnItemList = [];
 returnItemsList.each{ eachItem ->
 	returnPrice = 0;
@@ -234,49 +204,11 @@ dctx = dispatcher.getDispatchContext();
 //tempBoothList = EntityUtil.getFieldListFromEntityList(orderItemList, "originFacilityId", true);
 
 tempPartyIdsList = EntityUtil.getFieldListFromEntityList(orderItemList, "partyId", true);
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
-conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, tempPartyIdsList));
-conditionBooth = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-tempBoothsList = delegator.findList("Facility", conditionBooth, null, null, null, false);
 
-tempBoothList = EntityUtil.getFieldListFromEntityList(tempBoothsList, "facilityId", true);
-Debug.log("===tempBoothList=="+tempBoothList);
-distinctFacility = [];
-if(tempBoothList){
-	tempBoothList.each{eachBooth ->
-		eachBooth = eachBooth.toUpperCase();
-		if(!distinctFacility.contains(eachBooth)){
-			distinctFacility.add(eachBooth);
-		}
-	}
-}
+
 facilityPriceMap = [:];
 classificationMap = [:];
-/*if(distinctFacility){
-	distinctFacility.each{eachFacility ->
-		classifyGroupId = "";
-		facilityParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", eachFacility), false);
-		if(facilityParty){
-			partyId = facilityParty.getString("ownerPartyId");
-			partyClassificationGroup = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null, null, null, false);
-			//partyClassificationGroup = EntityUtil.filterByDate(partyClassificationGroup, fromDate);
-			if(partyClassificationGroup){
-				classifyGroupId = EntityUtil.getFirst(partyClassificationGroup).get("partyClassificationGroupId");
-			}
-		}
-		if(classificationMap.get(classifyGroupId)){
-			tempMap = [:];
-			tempMap = classificationMap.get(classifyGroupId);
-			facilityPriceMap.put(eachFacility, tempMap);
-		}else{
-			productsPrice = ByProductReportServices.getByProductPricesForFacility(dctx, UtilMisc.toMap( "userLogin",userLogin,"facilityId", eachFacility, "priceDate", fromDate)).get("productsPrice");
-			facilityPriceMap.put(eachFacility, productsPrice);
-			classificationMap.put(classifyGroupId, productsPrice);
-		}
-		
-	}
-}*/
+
 
 SortedMap DataMap = new TreeMap();
 productMap = [:];
@@ -328,8 +260,8 @@ if(dailySalesRevenueTrend){
 	
 }else{
 	
-	productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","CONTINUES_INDENT","salesDate",fromDate ));
-	productCatMap.putAll(ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","DAILY_INDENT" ,"salesDate",fromDate)));
+	productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","BYPROD","salesDate",fromDate ));
+	//productCatMap.putAll(ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","DAILY_INDENT" ,"salesDate",fromDate)));
 	/*Debug.log("orderItems ###########################"+orderItemList);*/
 	subsidyOrderItems = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "EMP_SUBSIDY"));
 	subsidyOrderIds = EntityUtil.getFieldListFromEntityList(subsidyOrderItems, "orderId", true);
@@ -338,33 +270,36 @@ if(dailySalesRevenueTrend){
 						
 	if(orderItemList){
 		orderItemList.each{ eachItem ->	
-			boothRegionMap =[:];
-			if(UtilValidate.isNotEmpty(boothsRegionMap)){
-				boothRegionMap = boothsRegionMap.get((eachItem.getAt("originFacilityId")));
-			}
+			boothPartyId=eachItem.getAt("partyId");
+			//Debug.log("==boothPartyId=="+boothPartyId);
+			partyRoleType=null;
+			booth=null;
 			
+			partyRoleList=EntityUtil.filterByCondition(roleTypeAndPartyList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, boothPartyId));
+			//Debug.log("==partyRoleList=="+partyRoleList);
+			partyRoleDetails=EntityUtil.getFirst(partyRoleList);
+			if(UtilValidate.isNotEmpty(partyRoleDetails)){
+				partyRoleType=partyRoleDetails.roleTypeId;
+			}
+			//Debug.log("==partyRoleType=="+partyRoleType);
+			boothRegionMap =[:];
+			if(UtilValidate.isNotEmpty(boothsRegionMap) && UtilValidate.isNotEmpty(booth)){
+				boothRegionMap = boothsRegionMap.get((booth));
+			}
+			//Debug.log("boothRegionMap=========AFTERRRR="+boothRegionMap);
 			regionId = null;
 			if(boothRegionMap){
 				regionId = boothRegionMap.getAt("regionId");
 			}
 			
 			productId = eachItem.getAt("productId").toUpperCase();
-			Debug.log("productId=========="+productId);
-			boothPartyId=eachItem.getAt("partyId");
-			boothFacilityList = delegator.findByAnd("Facility",["facilityTypeId" :"BOOTH","ownerPartyId":boothPartyId]);
-			facilityBooth=EntityUtil.getFirst(boothFacilityList);
-			Debug.log("facilityBooth=========="+facilityBooth+"==boothPartyId=="+boothPartyId);
-			categoryTypeEnum=null;
-			booth=null;
-			if(UtilValidate.isNotEmpty(facilityBooth)){
-				categoryTypeEnum=facilityBooth.categoryTypeEnum;
-				booth=facilityBooth.facilityId;
-			}
+			//Debug.log("productId=========AFTERRRR="+productId);
 			
-			if(categoryTypeEnum != null){
+			
+			if(partyRoleType != null){
 			
 				// for now lets take unit price without vat
-				Debug.log("categoryTypeEnum=========="+categoryTypeEnum);
+				//Debug.log("partyRoleType=========="+partyRoleType);
 				unitPrice = eachItem.getAt("unitListPrice");
 				quantity = eachItem.getAt("quantity");
 				totalAmount = quantity * unitPrice;
@@ -389,16 +324,16 @@ if(dailySalesRevenueTrend){
 					productCategoryId = productCatMap.get(productId).getAt("primaryProductCategoryId");
 				}else{
 					productCategoryId ="Other Products";
-					Debug.log("productId=========="+productId);
+					//Debug.log("productId=========="+productId);
 				}
 				
-				if(DataMap.containsKey(categoryTypeEnum)){
-					totAmount = DataMap.get(categoryTypeEnum);
+				if(DataMap.containsKey(partyRoleType)){
+					totAmount = DataMap.get(partyRoleType);
 					resultAmount = totAmount+totalAmount;
-					DataMap.putAt(categoryTypeEnum, resultAmount);
+					DataMap.putAt(partyRoleType, resultAmount);
 				}
 				else{
-					DataMap.putAt(categoryTypeEnum, totalAmount);
+					DataMap.putAt(partyRoleType, totalAmount);
 				}
 				if(productMap.containsKey(itemDescription)){
 					
@@ -437,10 +372,10 @@ if(dailySalesRevenueTrend){
 			
 		}
 	}
-	categoryTypeEnumList = delegator.findByAnd("Enumeration",["enumTypeId" :"BOOTH_CAT_TYPE"]);
+	categoryTypeEnumList = delegator.findByAnd("RoleType",["parentTypeId" :"CUSTOMER_TRADE_TYPE"]);
 	categoryTypeEnumMap=[:];
 	for(GenericValue categoryTypeEnum:categoryTypeEnumList){
-		categoryTypeEnumMap[categoryTypeEnum.enumId] = categoryTypeEnum.description;
+		categoryTypeEnumMap[categoryTypeEnum.roleTypeId] = categoryTypeEnum.description;
 	}
 
 	// Region list json

@@ -235,4 +235,28 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="DepotSalesCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://depotsales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="DEPOTSALES" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                            	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="DepotSaleMenuTabBar"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.DepotSalesViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

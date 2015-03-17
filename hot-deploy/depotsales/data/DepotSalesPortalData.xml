@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>	
+		<SecurityPermission permissionId="MYPORTAL_DEPOTSALES" description="To use the depot sales component Screens in Myportal."/>
+        <SecurityGroup description="DepotSales user of myportal, Limited access to the Depot Sales component" groupId="MYPORTAL_DEPOTSALES"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="MYPORTAL_DEPOTSALES"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="FACILITY_VIEW"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="DEPOTSALES_VIEW"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="MYPORTALBASE_ADMIN"/>
+		 <PortalPage portalPageId="MYPORTAL_DEPOTSALES" sequenceNum="0" portalPageName="Main" description="The DepotSales Component Main Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOTSALES"/>
+			
+		 <PortalPortlet portalPortletId="DEPOTSALES" portletName="DepotSales"
+        	screenName="MyPortalDepotSalesFacilityTreeNg"
+        screenLocation="component://depotsales/widget/CommonScreens.xml"
+        description="DepotSales Portal Main Screen"/>                
+    	<PortletPortletCategory portalPortletId="DEPOTSALES" portletCategoryId="MYPORTAL_DEPOT"/>
+    	
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_DEPOT" sequenceNum="0" portalPageName="DEPOTSALES" description="The Milkosoft System Depot Sales Main Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOTSALES"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_DEPOT" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_DEPOT" portalPortletId="DEPOTSALES" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+
+</entity-engine-xml>
+
+
+ 

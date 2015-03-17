@@ -926,7 +926,7 @@
 		 	setupGrid2();
 	     }
 	    
-				
+			//  alert("=After==Setup==partyId==="+partyId+"==boothId=="+boothId);	
         jQuery(".grid-header .ui-icon")
             .addClass("ui-state-default ui-corner-all")
             .mouseover(function(e) {

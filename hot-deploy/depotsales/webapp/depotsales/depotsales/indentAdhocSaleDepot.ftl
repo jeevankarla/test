@@ -67,7 +67,7 @@ $(document).ready(function(){
        var dataString="productStoreId=" + productStoreId ;
       $.ajax({
              type: "POST",
-             url: "getStoreCatalogCatagory",
+             url: "getDepotStoreCatalogCatagory",
            	 data: dataString ,
            	 dataType: 'json',
            	 async: false,
@@ -148,52 +148,22 @@ $(document).ready(function(){
      </div>
       
     <div class="screenlet-body">
-    <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
-     	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesAmulMm</@ofbizUrl>" id="indententryinit">  
-    <#elseif changeFlag?exists && changeFlag=='IcpSales'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesMm</@ofbizUrl>" id="indententryinit">
-    	<#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesBellaryMm</@ofbizUrl>" id="indententryinit">
-    <#elseif changeFlag?exists && changeFlag=='DepotSales'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>DepotSale</@ofbizUrl>" id="indententryinit">  
-    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSaleMm</@ofbizUrl>" id="indententryinit">  
-    <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTrMm</@ofbizUrl>" id="indententryinit">
-    <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpStockTransferMm</@ofbizUrl>" id="indententryinit">
+  
+    <#if changeFlag?exists && changeFlag=='DepotSales'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>DepotSalesOrder</@ofbizUrl>" id="indententryinit">  
     <#else>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNewMm</@ofbizUrl>" id="indententryinit">  
     </#if>
 	
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
-      
         <tr>
         	<td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 		      	<input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
-		        <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
-		        	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/> 
-		          	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/>
-		          	<input type="hidden" name="billToCustomer" id="billToCustomer" value="GCMMF"/>  
-		        <#elseif changeFlag?exists && changeFlag=='IcpSales'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/>
-		        <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_BELLARY_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_BELLARY_CHANNEL"/>    	 
-		        <#elseif changeFlag?exists && changeFlag=='DepotSales'>
+		           	 
+		        <#if changeFlag?exists && changeFlag=='DepotSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="DEPOT_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="DEPOT_CHANNEL"/>
-		        <#elseif changeFlag?exists && changeFlag=='FgsSales'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="FGS_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="FGS_PRODUCT_CHANNEL"/> 
-		        <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/>
-		        <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_TR_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_TRANS_CHANNEL"/>
 		        <#else>
 		          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -436,7 +406,7 @@ $(document).ready(function(){
 		    <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
 		         <#assign formAction='processIcpBellarySaleMm'>     
 		    <#elseif changeFlag?exists && changeFlag=='DepotSales'>
-		         <#assign formAction='processDepotSale'>
+		         <#assign formAction='processDepotSalesOrder'>
 		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         <#assign formAction='processFGSProductSaleMm'>     
 		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
