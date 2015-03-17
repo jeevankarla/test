@@ -64,8 +64,8 @@
             </condition>       
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-        <menu-item name="DepositIndent" title="Order">
-            <link target="DepotSale">
+        <menu-item name="DepotSalesOrder" title="Sales Order">
+            <link target="DepotSalesOrder">
             </link>
         </menu-item>
         <menu-item name="FindGRNReceipts" title="Receipts">
@@ -124,11 +124,11 @@
       <menu name="DepotSalesIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 
-	            <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
-	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/>
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
 			</actions>		          
-			 <menu-item name="indent" title="Order Entry">
-        		<link target="DepotSale"/>
+			 <menu-item name="DepotSalesOrder" title="Order Entry">
+        		<link target="DepotSalesOrder"/>
         	 </menu-item>
         	  <menu-item name="ProcessDepotOrders" title="Process Orders">
         	<link target="processDepotOrders">

@@ -51,4 +51,27 @@
             </widgets>
         </section>
     </screen>
+    <screen name="MyPortalDepotSalesFacilityTreeNg">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                  <set field="titleProperty" value="DepotSalesApplication"/>
+                <set field="headerItem" value="facility"/>
+                 <set field="tabButtonItem" value="main"/>
+               <!--  <set field="tabButtonItem" value="FacilityTreeNetwork"/> -->
+              
+               <!--  <set field="isTreeRoot" value="Y"/> -->
+               <set field="indentDate" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;MMMMM dd, yyyy&quot;);}"  value="${parameters.indentDate}"/>
+				 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/facilityTreeDepoNetwork.groovy"/>
+		   </actions>
+            <widgets>  
+             	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="DepotSaleMenuTabBar"/>
+	            	<container style="lefthalf">
+	             		<screenlet title="Zone Network">  
+	            			 <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/facilityTree.ftl"></html-template></html></platform-specific>
+						</screenlet>
+					</container>
+            </widgets>
+         </section>
+    </screen>
 </screens>
