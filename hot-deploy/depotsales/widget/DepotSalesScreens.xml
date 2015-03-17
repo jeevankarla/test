@@ -387,7 +387,7 @@
 			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
 			    <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-               <set field="targetRequest" value="FindGRNReceipts"/>
+               <set field="targetRequest" value="FindGRNReceiptsDepot"/>
              <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="ShipmentReceipt"/>
@@ -527,7 +527,7 @@
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-               <set field="targetRequest" value="FindGRNShipments"/>
+               <set field="targetRequest" value="FindGRNShipmentsDepot"/>
                <set field="noConditionFind" value="Y"/>
                 <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

@@ -29,18 +29,18 @@
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
-            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
+            <hyperlink target="nonRouteGatePassDepot.pdf" description="GatePass" target-window="_blank">
                	  <parameter param-name="shipmentId" />
                	  <parameter param-name="screenFlag" /> 
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
-            <hyperlink target="buyerInvoice.pdf" description="Invoice Slips" target-window="_blank"> 	
+            <hyperlink target="buyerInvoiceDepot.pdf" description="Invoice Slips" target-window="_blank"> 	
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
       	<field name="taxInvoice" widget-style="buttontext" id-name = "taxInvoice">
-            <hyperlink target="taxInvoice.pdf" description="Tax Invoice" target-window="_blank"> 	
+            <hyperlink target="taxInvoiceDepot.pdf" description="Tax Invoice" target-window="_blank"> 	
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>

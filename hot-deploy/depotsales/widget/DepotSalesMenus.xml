@@ -69,7 +69,7 @@
             </link>
         </menu-item>
         <menu-item name="FindGRNReceipts" title="Receipts">
-	        	<link target="FindGRNReceipts"/>
+	        	<link target="FindGRNReceiptsDepot"/>
 	        </menu-item>
       </menu>
        <menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -144,13 +144,13 @@
        <menu name="ReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindGRNReceipts" title="Find GRN Items">
-        	<link target="FindGRNReceipts"/>
+        	<link target="FindGRNReceiptsDepot"/>
         </menu-item>
         <menu-item name="POMaterialReceipts" title="GRN Entry">
-        	<link target="POMaterialReceipts"/>
+        	<link target="POMaterialReceiptsDepot"/>
         </menu-item>
         <menu-item name="FindGRNShipments" title="Find GRN">
-        	<link target="FindGRNShipments"/>
+        	<link target="FindGRNShipmentsDepot"/>
         </menu-item>
         <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
         	<condition>

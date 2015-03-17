@@ -87,7 +87,7 @@
        <response name="failed" type="view" value="ProcessDepotOrders"/>  
     </request-map>
     
-     <request-map uri="nonRouteGatePass.pdf">
+     <request-map uri="nonRouteGatePassDepot.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="NonRouteGatePassPDF"/>
     </request-map>
@@ -105,12 +105,12 @@
        	<response name="failed" type="view" value="FindDepotShipment"/>  
     </request-map>
     
-    <request-map uri="buyerInvoice.pdf">
+    <request-map uri="buyerInvoiceDepot.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="BuyerInvoicePDF"/>
     </request-map>
     
-    <request-map uri="taxInvoice.pdf">
+    <request-map uri="taxInvoiceDepot.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="TaxInvoicePDF"/>
     </request-map>
@@ -122,13 +122,13 @@
         <response name="error" type="request" value="FindDepotShipment"/>
     </request-map>
     
-    <request-map uri="FindGRNReceipts">
+    <request-map uri="FindGRNReceiptsDepot">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="FindGRNReceipts"/>
        <response name="error" type="view" value="FindGRNReceipts"/>
      </request-map>
      
-      <request-map uri="POMaterialReceipts">
+      <request-map uri="POMaterialReceiptsDepot">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="POMaterialReceipts"/>
        <response name="error" type="view" value="POMaterialReceipts"/>
@@ -137,11 +137,11 @@
      <request-map uri="processReceiptItems">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReceiptItems" global-transaction="true"/>
-       <response name="success" type="request-redirect" value="POMaterialReceipts"/>
+       <response name="success" type="request-redirect" value="POMaterialReceiptsDepot"/>
        <response name="error" type="view" value="POMaterialReceipts"/>
      </request-map>
      
-      <request-map uri="FindGRNShipments">
+      <request-map uri="FindGRNShipmentsDepot">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="FindGRNShipments"/>
        <response name="error" type="view" value="FindGRNShipments"/>
