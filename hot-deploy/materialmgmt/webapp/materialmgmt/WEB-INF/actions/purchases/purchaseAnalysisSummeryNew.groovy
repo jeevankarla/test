@@ -1116,6 +1116,32 @@ purchaseSumInvDetaildMap=[:];
 		prchaseCategorySummeryMap["Purchase-5.5%VAT"]=purchaseAt5pt5Map;
 		purchaseSumCatDetaildMap["Purchase-5.5%VAT"]=tax5pt5CatMap;
 		
+		//purchase 5.0 newly added
+		purchaseAt5pt0Map=[:];
+		purchaseAt5pt0Map["DR"]=BigDecimal.ZERO;
+		purchaseAt5pt0Map["CR"]=BigDecimal.ZERO;
+		purchaseAt5pt0Map["total"]=BigDecimal.ZERO;
+		
+		Map tax5pt0TotalMap=context.get("tax5pt0TotalMap");
+		Map tax5pt0CatMap=context.get("tax5pt0CatMap");
+		List tax5pt0InvList=context.get("tax5pt0InvList");
+		if(UtilValidate.isNotEmpty(tax5pt0TotalMap)){
+			purchaseAt5pt0Map["DR"]+=(tax5pt0TotalMap.get("invTotalVal"));
+			purchaseAt5pt0Map["total"]+=(tax5pt0TotalMap.get("invTotalVal"));
+			
+			purchaseGrandTotMap["DR"]+=(tax5pt0TotalMap.get("invTotalVal"));
+			purchaseGrandTotMap["total"]+=(tax5pt0TotalMap.get("invTotalVal"));
+			
+			/*purchaseAt5pt5Map["DR"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
+			purchaseAt5pt5Map["total"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
+			
+			purchaseGrandTotMap["DR"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
+			purchaseGrandTotMap["total"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));*/
+		}
+		purchaseSumInvDetaildMap["Purchase-5.0%VAT"]=tax5pt0InvList;
+		prchaseCategorySummeryMap["Purchase-5.0%VAT"]=purchaseAt5pt0Map;
+		purchaseSumCatDetaildMap["Purchase-5.0%VAT"]=tax5pt0CatMap;
+		
 		//fright Total Value
 		purchaseFreightMap=[:];
 		purchaseFreightMap["DR"]=BigDecimal.ZERO;

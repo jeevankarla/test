@@ -43,6 +43,10 @@ under the License.
 	   <#list issueToDeptInvList as issueDeptDetailEach>
 	    <#assign deptId=issueDeptDetailEach.getKey()>
 	    <#assign issueDeptDetailMap=issueDeptDetailEach.getValue()>
+	    
+	     <#assign tax5pt0CatMap=issueDeptDetailMap.get("tax5pt0CatMap")?if_exists>
+	     <#assign tax5pt0TotalMap=issueDeptDetailMap.get("tax5pt0TotalMap")?if_exists>
+	     
 	    <#assign tax5pt5CatMap=issueDeptDetailMap.get("tax5pt5CatMap")?if_exists>
 	     <#assign tax5pt5TotalMap=issueDeptDetailMap.get("tax5pt5TotalMap")?if_exists>
 	    
@@ -58,6 +62,265 @@ under the License.
 			<#else>
 			 <#assign partyName="OTHER">
 			</#if>
+			 <#if tax5pt0CatMap?has_content>
+	        <fo:page-sequence master-reference="main" font-size="12pt">	
+	        <fo:static-content font-size="12pt" flow-name="xsl-region-before">
+              		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
+              		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+          			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">VAT Classification Vouchers </fo:block>
+          			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">VAT INPUT 5.0% </fo:block>
+          			<fo:block text-align="center"   keep-together="always"  white-space-collapse="false"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
+          			<fo:block text-align="left"     keep-together="always"  font-size="12pt" white-space-collapse="false" >ACCOUNT CODE:${invItemTypeGl.defaultGlAccountId?if_exists}  &#160;&#160;&#160;&#160;&#160;                                &#160;&#160;ISSUE TO DEPT.:${partyName?if_exists}</fo:block>
+          			<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	        		<fo:block>
+        				<fo:table>
+        				<fo:table-column column-width="82pt"/>
+        				 <fo:table-column column-width="170pt"/>
+		                    <fo:table-column column-width="80pt"/>
+		                    <fo:table-column column-width="82pt"/>                
+		                    <fo:table-column column-width="50pt"/>
+		                    <fo:table-column column-width="30pt"/>
+		                    <fo:table-column column-width="93pt"/> 
+		                    <fo:table-column column-width="80pt"/>
+		                    <fo:table-body>
+       							<fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block   text-align="left" font-size="11pt" >VOUCHER DATE</fo:block>  
+							            </fo:table-cell>
+					                    <fo:table-cell>
+					                    <fo:block   text-align="left" font-size="11pt"  >PRODUCT NAME</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block   text-align="left" font-size="11pt"   ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block   text-align="left" font-size="11pt"   >VOUCHER </fo:block>  
+							            	<fo:block   text-align="left" font-size="11pt"   > TYPE</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block   text-align="left" font-size="11pt"   >PDB</fo:block> 
+							            	<fo:block   text-align="left" font-size="11pt"   >RefNo</fo:block> 
+							            </fo:table-cell>
+							            <fo:table-cell> 
+							            	<fo:block  text-align="left" font-size="10pt"  >CR/DB</fo:block>  
+							            		<fo:block  text-align="center" font-size="10pt"  >ID</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block   text-align="left" font-size="11pt"  >ASSESSABLE</fo:block>  
+							            	<fo:block   text-align="left" font-size="11pt"  >VALUE</fo:block> 
+							            </fo:table-cell>
+							            <#--
+							            <fo:table-cell>
+							            	<fo:block   text-align="left" font-size="11pt"  >VAT AMOUNT</fo:block>  
+							            </fo:table-cell> -->
+							     </fo:table-row>
+	    					</fo:table-body>
+                		</fo:table>
+        			</fo:block> 	
+        			<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	
+               </fo:static-content>
+	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+        			<fo:block>
+        				<fo:table>
+        				<fo:table-column column-width="82pt"/>
+        				 <fo:table-column column-width="170pt"/>
+		                    <fo:table-column column-width="80pt"/>
+		                    <fo:table-column column-width="82pt"/>                
+		                    <fo:table-column column-width="50pt"/>
+		                    <fo:table-column column-width="30pt"/>
+		                    <fo:table-column column-width="93pt"/> 
+		                    <fo:table-column column-width="80pt"/>
+		                    <fo:table-body>
+		                    <#-- catageory wise starts here -->
+		                      <#assign totalAssRevenue=0>
+		                    <#if tax5pt0CatMap?has_content>
+		                       <#assign tax5pt0CatList=tax5pt0CatMap.entrySet()>
+          						  <#list tax5pt0CatList as tax5pt0Cat>
+          						  <#if tax5pt0Cat.getKey()!="discount">
+          						   <#assign codeId=tax5pt0Cat.getKey()>
+          						   <#assign codeIdMap=tax5pt0Cat.getValue()>
+          						    <#assign codeIdList=codeIdMap.get("invoiceList")>
+          						    
+          						    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : codeId}, true)?if_exists/>
+		   							<fo:table-row>
+		   							       <fo:table-cell number-columns-spanned="6">
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :${productCategory.description}</fo:block>  
+								            </fo:table-cell>
+								    </fo:table-row> 
+          						   <#list codeIdList as invTaxMap>
+          						   <fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
+							            </fo:table-cell>
+							            <#-->
+							            <#assign  partyName="">
+					            			<#if invTaxMap.get("partyId")?exists>
+					            			<#assign partyId=invTaxMap.get("partyId")>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            			</#if> -->
+					            			 <#assign  productName="">
+					            			<#if invTaxMap.get("productId")?exists>
+					            			<#assign productId=invTaxMap.get("productId")>
+					            			<#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
+					            			<#assign productName =product.description>
+					            			</#if>
+					                    <fo:table-cell number-columns-spanned="2">
+					                    <fo:block text-align="left" font-size="11pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productName?if_exists)),35)}</fo:block>
+							            </fo:table-cell>
+							            
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("invoiceId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
+							            </fo:table-cell>
+							              <#assign assableValue=invTaxMap.get("invTotalVal")>
+							            <#assign totalAssRevenue=totalAssRevenue+assableValue>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${assableValue?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <#--
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell> -->
+							     </fo:table-row>
+          						    </#list>
+          						    <fo:table-row>
+					                   <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+					                   <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" font-size="11pt">Analysis Code-Total</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <#-->
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell> -->
+							     </fo:table-row>
+          						   </#if>
+          					  </#list>
+          					  <fo:table-row>
+					                   <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" >TOTAL-Discount For All Analysis Codes</fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <#assign totalAssRevenue=totalAssRevenue+tax5pt0CatMap.get("discount")>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax5pt0CatMap.get("discount")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          					  <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row>
+          					</#if>
+          					 <#-- catageory wise ends here -->
+          					 <#-->
+		                    <#assign totalRevenue=0>
+		                    <#assign totalTaxRevenue=0>
+       							<#list taxDetails5pt5List as invTaxMapObj>
+       							<#assign invTaxMap= invTaxMapObj.getValue()>
+       							<fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
+							            </fo:table-cell>
+							            <#assign  partyName="">
+					            			<#if invTaxMap.get("partyId")?exists>
+					            			<#assign partyId=invTaxMap.get("partyId")>
+					            			
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            			</#if>
+					                    <fo:table-cell>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("invoiceId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+								</#list>
+								<fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> -->
+								<fo:table-row>
+					                   <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+					                    <fo:table-cell>
+					                    <fo:block text-align="left" font-size="13pt">TOTAL</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${totalAssRevenue?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <#-->
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax5pt5TotalMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell> -->
+							     </fo:table-row>
+								<fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> 
+	    					</fo:table-body>
+                		</fo:table>
+        			</fo:block> 		
+				</fo:flow>
+			</fo:page-sequence>
+		    </#if>   
        <#if tax5pt5CatMap?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        <fo:static-content font-size="12pt" flow-name="xsl-region-before">
