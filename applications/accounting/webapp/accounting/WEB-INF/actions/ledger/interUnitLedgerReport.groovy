@@ -114,11 +114,11 @@ conditionList = [];
 		parameters.finAccountId=interUnitFinAccount.finAccountId;
 		finAccountId=interUnitFinAccount.finAccountId;
 		context.finAccount=interUnitFinAccount;
-	}else{
+	}/*else{
 	Debug.logError("Party Id:"+parameters.partyId+ "' Don't have any Accounts !!", "");
 	context.errorMessage ="Party Id:"+parameters.partyId+"'Don't have any Accounts!!";
 	return "error";
-	}
+	}*/
 	
 	finAccountTransInputMap=[:];
 	finAccountTransInputMap["fromTransactionDate"]=parameters.fromDateReport;
