@@ -45,8 +45,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> MOTHER DAIRY, GKVK POST, YELAHANKA, BANGALORE 560 065</fo:block>
  	<fo:block text-align="center" border-style="solid">
  	<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
-		 <fo:table-column column-width="40%"/>
-	     <fo:table-column column-width="21%"/>
+		 <fo:table-column column-width="38%"/>
+	     <fo:table-column column-width="23%"/>
 	     <fo:table-column column-width="22%"/>
 	     <fo:table-column column-width="17%"/>
 	     <fo:table-body>
@@ -236,17 +236,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 	 	 </fo:table-body> 
  	</fo:table>
  	<fo:table  table-layout="fixed" width="100%">
-		 <fo:table-column column-width="5%"/>
-		 <fo:table-column column-width="35%"/>
-	     <fo:table-column column-width="17%"/>
-	     <fo:table-column column-width="13%"/>
-	     <fo:table-column column-width="15%"/>
+		 <fo:table-column column-width="3.5%"/>
+		 <fo:table-column column-width="34.5%"/>
+	     <fo:table-column column-width="23%"/>
+	     <fo:table-column column-width="10%"/>
+	     <fo:table-column column-width="14%"/>
 	     <fo:table-column column-width="15%"/>
 		     <fo:table-body>
 			     <fo:table-row> 
 				     <fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
-				 	     font-weight="bold" keep-together="always">S No</fo:block>
+				 	     font-weight="bold" keep-together="always">SNo</fo:block>
 				 	</fo:table-cell>
 				     <fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
@@ -254,7 +254,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 				 	</fo:table-cell>
 				 	 <fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
-				 	     font-weight="bold" keep-together="always">Quantity(Kg/Ltr)</fo:block>
+				 	     font-weight="bold" keep-together="always">Quantity(UOM)</fo:block>
 				 	</fo:table-cell>
 				 	<fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
@@ -282,7 +282,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         						<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachItem.get('itemDescription')?if_exists}</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string("#0.00")}</fo:block>
+        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string("#0.00")}(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
         						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${shipment.get('shipmentId')?if_exists}</fo:block>
@@ -345,6 +345,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
             						<#assign text = "PPD Promotion Adjustment">
             					<#else>
             						<#assign text = "Other Adjustments">
+            							 <#assign invoiceTaxItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : eachTax.getKey()}, false)>
+            							 <#if invoiceTaxItemType?has_content>
+            						    	<#assign text=invoiceTaxItemType.description?if_exists>
+            							 </#if>
             					</#if>
             					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 									<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
