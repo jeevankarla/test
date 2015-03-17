@@ -55,11 +55,22 @@ def populateChildren(org, employeeList) {
 			phoneNumber = partyTelephone.contactNumber;
 		}
 		employee.put("phoneNumber", phoneNumber);
-		//partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: employment.partyId, userLogin: userLogin]);
-		//if (partyPostalAddress != null) {
-		//	address = partyPostalAddress.address1+partyPostalAddress.address2+partyPostalAddress.city+"-"+partyPostalAddress.postalCode;
-		//}
-		//employee.put("address", address);
+		gender = "";
+		if (UtilValidate.isNotEmpty(employment.gender)) {
+			gender = employment.gender;
+		}		
+		employee.put("gender",employment.gender);
+		bloodGroup = "";
+		if(UtilValidate.isNotEmpty(employment.bloodGroup)){
+			bloodGroups=delegator.findByAnd("Enumeration",[enumId:employment.bloodGroup]);
+			if(UtilValidate.isNotEmpty(bloodGroups)){
+				bloodGroup=bloodGroups.get(0).description;
+			}
+			else {
+				bloodGroup = employment.bloodGroup;
+			}
+		}
+		employee.put("bloodGroup",bloodGroup);
 		employeeList.add(employee);
 		
 		
@@ -81,7 +92,8 @@ employeeList.each {employee ->
 	employeeJSON.add(employee.position);
 	employeeJSON.add(employee.joinDate);
 	employeeJSON.add(employee.phoneNumber);
-	//employeeJSON.add(employee.address);
+	employeeJSON.add(employee.gender);
+	employeeJSON.add(employee.bloodGroup);	
 	employeesJSON.add(employeeJSON);
 }
 context.employeesJSON = employeesJSON;
