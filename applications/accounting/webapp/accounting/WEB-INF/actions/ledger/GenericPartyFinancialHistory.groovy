@@ -710,7 +710,11 @@ context.partyCBMap=partyCBMap;
 	
 	partyWiseLedgerAbstractMap.each{partyEntry->
 		partyId=partyEntry.getKey();
+		
 		Map partyAbstractTotalInner=partyEntry.getValue();
+		
+		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		partyAbstractTotalInner.putAt("partyName",partyName);
 		
 		arPartyOB  =BigDecimal.ZERO;
 		arPartyCB  =BigDecimal.ZERO;
