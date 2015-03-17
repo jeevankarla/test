@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 
+<EnumerationType description="Booth Facility Category Type" enumTypeId="BOOTH_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+<Enumeration description="Credit Institution" enumCode="CR_INST" enumId="CR_INST" sequenceId="01" enumTypeId="BOOTH_CAT_TYPE"/>
+<Enumeration  description="Whole Sale dealers" enumCode="WSD" enumId="WSD" enumTypeId="BOOTH_CAT_TYPE"  sequenceId="02"/> 
+
+ <RoleType  description="Customer Business Type" hasTable="N"  parentTypeId="TRADE_ASSOCIATE" roleTypeId="CUSTOMER_TRADE_TYPE"/> 
+  <RoleType  description="Wholesale customer " hasTable="N"  parentTypeId="CUSTOMER_TRADE_TYPE" roleTypeId="WSD_CUSTOMER"/>
+  <RoleType  description="Credit Institution  " hasTable="N"  parentTypeId="CUSTOMER_TRADE_TYPE" roleTypeId="CR_INST_CUSTOMER"/>
+ 
 </entity-engine-xml>

@@ -16,6 +16,7 @@
     <PartyRole partyId="DemoCustCompany" roleTypeId="BILL_TO_CUSTOMER"/>
     <PartyRole partyId="DemoCustCompany" roleTypeId="_NA_"/>
     
+     <PartyRole  partyId="CR1001" roleTypeId="CR_INST_CUSTOMER"/>
     
     
      <StatusType description="Budget" hasTable="N" parentTypeId="" statusTypeId="BUDGET_STATUS"/>

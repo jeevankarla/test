@@ -32,6 +32,7 @@
     <include location="component://projectmgr/webapp/projectmgr/WEB-INF/controller.xml"/>
     <include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
     <include location="component://procurement/webapp/procurement/WEB-INF/controller.xml"/>
+    <include location="component://depotsales/webapp/depotsales/WEB-INF/controller.xml"/>
    <!--  <include location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/controller.xml"/> -->
    <!--  <include location="component://motherdairy/webapp/motherdairy/WEB-INF/controller.xml"/>
     --> 
