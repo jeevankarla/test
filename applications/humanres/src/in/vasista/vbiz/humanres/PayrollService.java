@@ -5298,8 +5298,8 @@ public class PayrollService {
 			    		}
 			    		//calculating loss of Pay for HPL here
 						Map leaveCtx = FastMap.newInstance();
-						leaveCtx.put("timePeriodStart", timePeriodStart);
-						leaveCtx.put("timePeriodEnd", timePeriodEnd);
+						leaveCtx.put("timePeriodStart", attdTimePeriodStart);
+						leaveCtx.put("timePeriodEnd", attdTimePeriodEnd);
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId", "HPL");
 						Map hplResultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, leaveCtx);
