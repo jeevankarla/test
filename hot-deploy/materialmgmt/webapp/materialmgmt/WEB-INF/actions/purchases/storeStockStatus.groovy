@@ -35,7 +35,8 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  
 dctx = dispatcher.getDispatchContext();
 facilityId=parameters.issueToFacilityId;
-
+thruDate = UtilDateTime.nowTimestamp();
+dayEnd = UtilDateTime.getDayEnd(thruDate);
 prodMap=[:];
 
  productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
@@ -78,15 +79,19 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	  uomId=productDetails.quantityUomId;
 	  Map resultOutput = null;
 	  
-	  bookStock = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productDetails.productId, facilityId : facilityId ,ownerPartyId :"Company"]);
+	  /*bookStock = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productDetails.productId, facilityId : facilityId ,ownerPartyId :"Company"]);
 	 
-//	  totalInventory = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productDetails.productId, facilityId : facilityId]);
-//	  Debug.log("totalInventory==============================="+totalInventory);
+      totalInventory = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productDetails.productId, facilityId : facilityId]);
+	  Debug.log("totalInventory==============================="+totalInventory);
 	  
-	// bookStock = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:effdayEnd,productId:productDetails.productId,facilityId:facilityId ]);
-	// Debug.log("bookStock==============================="+bookStock);
-	  productDetailMap["inventoryCount"]=bookStock.quantityOnHandTotal;
-	  
+	  bookStock = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:effdayEnd,productId:productDetails.productId,facilityId:facilityId ]);
+	  Debug.log("bookStock==============================="+bookStock);
+	  productDetailMap["inventoryCount"]=bookStock.quantityOnHandTotal;*/
+	  invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: productDetails.productId,effectiveDate:dayEnd, facilityId : facilityId ,ownerPartyId:"Company", userLogin: userLogin]);
+	  if(UtilValidate.isNotEmpty(invCountMap)){
+		   openingQty = invCountMap.get("inventoryCount");
+		   productDetailMap.put("openingQty", openingQty);
+	  }
 	  if(UtilValidate.isNotEmpty(uomId)){
 		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
 	   productDetailMap["unit"]=unitDesciption.get("abbreviation");
