@@ -87,10 +87,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${fileNumber?if_exists}   </fo:block>
                        			</fo:table-cell>
                                  <fo:table-cell>
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; REFERENCE NO.: </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; REFERENCE NO.			: </fo:block>  
                        			</fo:table-cell>
                                 <fo:table-cell>
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${refNumber?if_exists}   </fo:block>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;&#160;&#160;  ${refNumber?if_exists}   </fo:block>
                        			</fo:table-cell>  
                             </fo:table-row >
                             <fo:table-row >      
@@ -107,10 +107,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if orderDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}<#else></#if></fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; VENDOR CODE  :</fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; VENDOR CODE			  :</fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${shipmentMap.get("partyId")}      </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;&#160;&#160;  ${shipmentMap.get("partyId")}      </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" > STORE:</fo:block>  
@@ -133,10 +133,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("dcDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("dcDate"), "dd-MMM-yy")?if_exists}   </#if> </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; VENDOR NAME  : </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; VENDOR NAME   	 : </fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;  ${shipmentMap.get("partyName")?if_exists}      </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;&#160;&#160;  ${shipmentMap.get("partyName")?if_exists}      </fo:block>  
                        			</fo:table-cell>
                 			</fo:table-row>
                         <fo:table-row >
@@ -151,7 +151,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("invoiceDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("invoiceDate"), "dd-MMM-yy")?if_exists}    </#if> </fo:block>  
-                       			</fo:table-cell>           		                   		
+                       			</fo:table-cell>  
+                       			<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">BILL TO PARTY CODE:</fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;&#160;   ${shipmentMap.get("billToPartyId")?if_exists}      </fo:block>  
+                       			</fo:table-cell>         		                   		
                 			</fo:table-row>
                 	   		<fo:table-row >
                 	   		   <fo:table-cell >
@@ -165,7 +171,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                        		   </fo:table-cell> 
                                <fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("description")?if_exists}   </fo:block>
-                       			</fo:table-cell>	        
+                       			</fo:table-cell>	
+								<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">BILL TO PARTY NAME:</fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;&#160;   ${shipmentMap.get("billToPartyName")?if_exists}      </fo:block>  
+                       			</fo:table-cell>         
                 	   		</fo:table-row>
                     </fo:table-body>
                 </fo:table>
