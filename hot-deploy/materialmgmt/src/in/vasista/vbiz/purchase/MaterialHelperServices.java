@@ -18,6 +18,7 @@ import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.accounting.util.UtilAccounting;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +54,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+
 import java.util.Map.Entry;
 
 public class MaterialHelperServices{
@@ -495,6 +497,228 @@ public class MaterialHelperServices{
 		}
 		result.put("productSupplyDetails", supplyDetailMap);
 		return result;
+	}
+	
+	public static Map<String, Object> populateGRNLandingCostForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		if(UtilValidate.isEmpty(thruDate)){
+			thruDate = UtilDateTime.nowTimestamp();
+		}
+		try{
+			condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			condList.add(EntityCondition.makeCondition("quantityAccepted", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+			condList.add(EntityCondition.makeCondition("orderId", EntityOperator.NOT_EQUAL, null));
+			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue>	shipmentReceiptList = delegator.findList("ShipmentReceipt", cond, null,null, null,false);
+			
+			List<String> orderIds = EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "orderId", true);
+			Map resultMap = FastMap.newInstance();
+			for(String orderId : orderIds){
+				resultMap = getOrderItemAndTermsMapForCalculation(ctx, UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+				if (ServiceUtil.isError(resultMap)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+	  		  		Debug.logError(errMsg , module);
+	  		  		return ServiceUtil.returnError(errMsg);
+	  		  	}
+				List<Map> otherCharges = (List)resultMap.get("otherCharges");
+				List<Map> productQty = (List)resultMap.get("productQty");
+				Map resultCtx = getMaterialItemValuationDetails(ctx, UtilMisc.toMap("userLogin", userLogin, "productQty", productQty, "otherCharges", otherCharges, "incTax", ""));
+				if(ServiceUtil.isError(resultCtx)){
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+	  		  		Debug.logError(errMsg , module);
+	  		  		return ServiceUtil.returnError(errMsg);
+				}
+				
+				List<Map> itemDetails = (List)resultCtx.get("itemDetail");
+				Map itemDetailRef = FastMap.newInstance();
+				Map itemLandingCostMap = FastMap.newInstance();
+				for(Map item : itemDetails){
+					itemLandingCostMap.put((String)item.get("productId"), (BigDecimal)item.get("unitListPrice"));
+					itemDetailRef.put((String)item.get("productId"), item);
+				}
+				Debug.log("landing cost Map : "+itemLandingCostMap);
+				
+				List<GenericValue> shipReceiptForOrder = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				List<String> shipmentIds = EntityUtil.getFieldListFromEntityList(shipReceiptForOrder, "shipmentId", true);
+				
+				List<GenericValue> shipmentAttr = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds), null, null, null, false);
+				if(UtilValidate.isNotEmpty(shipmentAttr)){
+					for(String shipId : shipmentIds){
+						List<GenericValue> shipAttr = EntityUtil.filterByCondition(shipmentAttr, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipId));
+						List<GenericValue> receiptForShipment = EntityUtil.filterByCondition(shipReceiptForOrder, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipId));
+						if(UtilValidate.isNotEmpty(shipAttr)){
+							List<Map> tempProdQty = FastList.newInstance();
+							List<Map> tempOtherCharges = FastList.newInstance();
+							for(GenericValue eachReceipt : receiptForShipment){
+								Map tempMap = FastMap.newInstance();
+								String prodId = eachReceipt.getString("productId");
+								tempMap.put("productId", prodId);
+								tempMap.put("quantity", eachReceipt.getBigDecimal("quantityAccepted"));
+								tempMap.put("unitPrice", (BigDecimal)itemLandingCostMap.get(prodId));
+								tempMap.put("bedPercent", BigDecimal.ZERO);
+								tempMap.put("vatPercent", BigDecimal.ZERO);
+								tempMap.put("cstPercent", BigDecimal.ZERO);
+								tempProdQty.add(tempMap);
+							}
+							for(GenericValue eachAttr : shipAttr){
+								Map tempMap = FastMap.newInstance();
+								
+								tempMap.put("otherTermId", eachAttr.getString("attrName"));
+								tempMap.put("applicableTo", "ALL");
+								tempMap.put("termValue", new BigDecimal(eachAttr.getString("attrValue")));
+								tempMap.put("termDays", null);
+								tempMap.put("uomId", "INR");
+								tempMap.put("description", "");
+								tempOtherCharges.add(tempMap);
+							}
+							resultCtx = getMaterialItemValuationDetails(ctx, UtilMisc.toMap("userLogin", userLogin, "productQty", tempProdQty, "otherCharges", tempOtherCharges, "incTax", ""));
+							if(ServiceUtil.isError(resultCtx)){
+				  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+				  		  		Debug.logError(errMsg , module);
+				  		  		return ServiceUtil.returnError(errMsg);
+							}
+							
+							List<Map> revisedItemDetails = (List)resultCtx.get("itemDetail");
+							Map revisedItemLandingCostMap = FastMap.newInstance();
+							for(Map revItem : revisedItemDetails){
+								revisedItemLandingCostMap.put((String)revItem.get("productId"), (BigDecimal)revItem.get("unitListPrice"));
+							}
+							for(GenericValue eachReceipt : receiptForShipment){
+								String inventoryItemId = eachReceipt.getString("inventoryItemId");
+								String productId = eachReceipt.getString("productId");
+								if(UtilValidate.isNotEmpty(revisedItemLandingCostMap.get(productId))){
+									BigDecimal landingCost = (BigDecimal)revisedItemLandingCostMap.get(productId);
+									GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+									inventoryItem.set("unitCost", landingCost);
+									inventoryItem.store();
+									
+								}
+							}
+							
+						}
+						else{
+							for(GenericValue eachReceipt : receiptForShipment){
+								String inventoryItemId = eachReceipt.getString("inventoryItemId");
+								String productId = eachReceipt.getString("productId");
+								if(UtilValidate.isNotEmpty(itemLandingCostMap.get(productId))){
+									BigDecimal landingCost = (BigDecimal)itemLandingCostMap.get(productId);
+									GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+									inventoryItem.set("unitCost", landingCost);
+									inventoryItem.store();
+								}
+							}
+						}
+					}
+				}
+				else{
+					
+					for(GenericValue shipReceipt : shipReceiptForOrder){
+						String inventoryItemId = shipReceipt.getString("inventoryItemId");
+						String productId = shipReceipt.getString("productId");
+						if(UtilValidate.isNotEmpty(itemLandingCostMap.get(productId))){
+							BigDecimal landingCost = (BigDecimal)itemLandingCostMap.get(productId);
+							GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+							inventoryItem.set("unitCost", landingCost);
+							inventoryItem.store();
+						}
+					}
+				}
+				
+			}
+				  
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}
+	
+	public static Map<String,Object> getOrderItemAndTermsMapForCalculation(DispatchContext ctx, Map<String, ? extends Object> context){
+    	Map<String, Object> result = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String)context.get("orderId");
+        try{
+        	
+        	GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+        	List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+        	
+        	List<GenericValue> otherTermTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), null, null, null, false);
+        	List<String> otherTermTypeIds = EntityUtil.getFieldListFromEntityList(otherTermTypes, "termTypeId", true);
+        	
+        	List conditionList = FastList.newInstance();
+        	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+        	conditionList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.IN, otherTermTypeIds));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	List<GenericValue> otherChargesOrderTerms = delegator.findList("OrderTerm", condition, null, null, null, false);
+        	
+        	List<Map> otherCharges = FastList.newInstance();
+        	List<Map> productQty = FastList.newInstance();
+        	Map productItemRef = FastMap.newInstance();
+
+        	for(GenericValue eachItem : orderItems){
+        		Map tempMap = FastMap.newInstance();
+        		tempMap.put("productId", eachItem.getString("productId"));
+        		tempMap.put("quantity", eachItem.getBigDecimal("quantity"));
+        		tempMap.put("unitPrice", eachItem.getBigDecimal("unitPrice"));
+        		tempMap.put("cstPercent", BigDecimal.ZERO);
+        		tempMap.put("vatPercent", BigDecimal.ZERO);
+        		tempMap.put("bedPercent", BigDecimal.ZERO);
+        		if(UtilValidate.isNotEmpty(eachItem.get("cstPercent"))){
+        			tempMap.put("cstPercent", eachItem.getBigDecimal("cstPercent"));
+        		}
+        		if(UtilValidate.isNotEmpty(eachItem.get("vatPercent"))){
+        			tempMap.put("vatPercent", eachItem.getBigDecimal("vatPercent"));
+        		}
+        		if(UtilValidate.isNotEmpty(eachItem.get("bedPercent"))){
+        			BigDecimal componentRate = (BigDecimal)eachItem.get("bedPercent");
+        			Debug.log("componentRate ################"+componentRate);
+        			Map taxResultCtx = getOrderTaxRateForComponentRate(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "EXCISE_DUTY_PUR", "componentRate", componentRate, "effectiveDate", orderHeader.getTimestamp("orderDate")));
+    				BigDecimal bedPercentage = (BigDecimal)taxResultCtx.get("taxRate");
+    				Debug.log("bedPercentage ################"+bedPercentage);
+    				tempMap.put("bedPercent", bedPercentage);
+        		}
+        		productQty.add(tempMap);
+        		productItemRef.put(eachItem.getString("productId"), tempMap);
+        	}
+        	
+			for(GenericValue otherTerm : otherChargesOrderTerms){
+				
+				String applicableTo = "ALL";
+				String sequenceId = otherTerm.getString("orderItemSeqId");
+				if(UtilValidate.isNotEmpty(sequenceId) && !(sequenceId.equals("_NA_"))){
+					List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, sequenceId));
+        			if(UtilValidate.isNotEmpty(orderItem)){
+        				applicableTo = (EntityUtil.getFirst(orderItem)).getString("productId");
+        			}
+				}
+        		Map tempMap = FastMap.newInstance();
+        		tempMap.put("otherTermId", otherTerm.getString("termTypeId"));
+        		tempMap.put("applicableTo", applicableTo);
+        		tempMap.put("termValue", otherTerm.getBigDecimal("termValue"));
+        		tempMap.put("uomId", otherTerm.getString("uomId"));
+        		tempMap.put("termDays", null);
+        		tempMap.put("description", "");
+        		otherCharges.add(tempMap);
+        	}
+			result.put("otherCharges", otherCharges);
+			result.put("productQty", productQty);
+        }
+        catch(Exception e){
+        	Debug.logError("Error updating quote status", module);
+		    return ServiceUtil.returnError("Error updating quote status");
+        }
+        return result;
 	}
 	
 	public static Map<String, Object> getCustRequestIndentsForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
