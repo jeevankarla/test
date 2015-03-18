@@ -808,7 +808,6 @@ public class MaterialQuoteServices {
 			List<Map> itemDetail = (List)resultCtx.get("itemDetail");
 			List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
 			Map productAdjustmentPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
-			
 			List<Map> revisedProdQty = FastList.newInstance();
 			for(GenericValue quoteItem : quoteItemList){
 				String productId  = quoteItem.getString("productId");
@@ -847,7 +846,8 @@ public class MaterialQuoteServices {
 					}
 				} 
 				else{
-					List<GenericValue> quoteItm = EntityUtil.filterByCondition(quoteItemList, EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, applicableTo));
+					List<GenericValue> quoteItm = EntityUtil.filterByCondition(quoteItemList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+					
 					if(UtilValidate.isNotEmpty(quoteItm)){
 						
 						String prodId = (EntityUtil.getFirst(quoteItm)).getString("productId");
@@ -867,7 +867,6 @@ public class MaterialQuoteServices {
 				revisedOtherCharges.add(tempMap);
 				
 			}
-			
 			resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", revisedProdQty, "otherCharges", revisedOtherCharges, "userLogin", userLogin, "incTax", ""));
 			if(ServiceUtil.isError(resultCtx)){
 				String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
