@@ -282,6 +282,12 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="isOrdered" type="Boolean" mode="OUT" optional="true"/>
     </service>
+    <service name="populateGRNLandingCostForPeriod" engine="java" location="in.vasista.vbiz.purchase.MaterialHelperServices" invoke="populateGRNLandingCostForPeriod" >
+        <description>Populate GRN Landing Cost for Period from Orders </description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    
     <service name="createNewProduct" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="createNewProduct">
         <description>Creating new Product</description>
         <attribute name="productTypeId" type="String" mode="IN" optional="true"/>
