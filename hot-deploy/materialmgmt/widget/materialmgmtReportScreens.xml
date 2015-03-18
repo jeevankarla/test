@@ -408,14 +408,31 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/StoreIssueDetailReport.groovy"/>								
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/StoreIssueDetailReport.groovy"/>
+				<set field="flag" from-field="parameters.reportTypeFlag"/>								
 			</actions>
 			<widgets>
-				<platform-specific> 
-				  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreIssueDetailReport.fo.ftl" /></xsl-fo> 
-                </platform-specific>
+			<section>
+			<condition>
+				<if-compare operator="equals" value="Detailed" field="flag"/>
+			</condition>
+				<widgets>
+					<platform-specific> 
+					  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreIssueDetailReport.fo.ftl" /></xsl-fo> 
+	                </platform-specific>
+				</widgets>
+			</section>
+			<section>
+			<condition>
+				<if-compare operator="equals" value="Abstract" field="flag"/>
+			</condition>
+				<widgets>
+					<platform-specific> 
+					  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreIssueDetailAbstractReport.fo.ftl" /></xsl-fo> 
+	                </platform-specific>
+                </widgets>
+                </section>
 			</widgets>
-			
 		</section>
 	</screen>
 	<screen name="MaterialEnquiryReport">
