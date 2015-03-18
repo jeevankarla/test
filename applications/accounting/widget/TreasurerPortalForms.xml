@@ -84,7 +84,7 @@ under the License.
         </field> -->
     </form>
     
-    <form name="ListNonBankAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindNonBankAccount" paginate="true"
+    <form name="ListNonBankAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
      
         <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
