@@ -214,6 +214,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker3("IULAcntFromDateCrDr","IULAcntThruDateCrDr");
 		makeDatePicker4("OtherAdvSehFromDate","OtherAdvSehThruDate");
 		makeDatePicker4("PLAFinFromDate","PLAFinThruDate");
+		makeDatePicker4("ASLFinFromDate","PLAFinThruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -312,8 +313,8 @@ function reportTypeChangeFunc() {
               </tr>
                <tr class="alternate-row">
 			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
-			             <td width="30%">Party Financial History With Dr/Cr</td>
-			             <td width="15%">From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
+			             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
+			             <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
 			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
 			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
@@ -340,6 +341,7 @@ function reportTypeChangeFunc() {
 			      		 <td width="15%">Thru<input  type="text" size="15pt" id="IULAcntThruDateCrDr" readonly  name="partythruDate"/></td>
 			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="InterUnitLedgerAndAcntHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			             <td width="15%"></td>
+			             
 			             <#--><td width="10%"><input type="submit" value="Download" class="buttontext"/></td> -->
 			             <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('InterUnitLedgerAndAcntHistoryWithDrCr', '<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.pdf</@ofbizUrl>');" class="buttontext"/>
 					                    <input type="submit" value="CSV" onClick="javascript:appendParams('InterUnitLedgerAndAcntHistoryWithDrCr', '<@ofbizUrl>InterUnitLedgerAndAcntHistoryWithDrCr.csv</@ofbizUrl>');" class="buttontext"/>
@@ -359,7 +361,8 @@ function reportTypeChangeFunc() {
 					                 </#list>
 					              </select>
 					            </div>
-                                      </td> 
+                           </td> 
+                         
 			             <td width="15%">
 			                <div>
 				              <select name="isLedgerCallFor">
@@ -368,12 +371,54 @@ function reportTypeChangeFunc() {
 				              </select>
 					       </div>
 			             </td>
-			             <td width="10%"><#--> <input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerAbstaracFintHistory', '<@ofbizUrl>PartyLedgerAbstaracFintHistory.pdf</@ofbizUrl>');" class="buttontext"/>-->
+			             <td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#--> <input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerAbstaracFintHistory', '<@ofbizUrl>PartyLedgerAbstaracFintHistory.pdf</@ofbizUrl>');" class="buttontext"/>-->
 					                    <input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerAbstaracFintHistory', '<@ofbizUrl>PartyLedgerAbstaracFintHistory.csv</@ofbizUrl>');" class="buttontext"/>
 					     </td>
 			           </form>
+			  </tr>
+			  <tr class="alternate-row">
+			      	   <form id="PartySubLedgerByPurposeType" name="PartySubLedgerByPurposeType" method="post" action="<@ofbizUrl>PartySubLedgerByPurposeType.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%" nowrap>AR/AP Sub-ledger By Type</td>
+			             <td  colspan='3'> 
+			             	<table>
+			             	<tr>
+			             	<td width="20%">Date:<input  type="text" size="15pt" id="ASLFinFromDate" readonly  name="partyfromDate"/></td>
+			             	<td>Channel Type:<div>
+					              <select name="purposeTypeId">
+					                <option value="">-All-</option>
+					                <#list purposeTypeIdsList as purposeType>
+					                   <option value="${purposeType.enumId}">${purposeType.description?if_exists}</option>
+					                 </#list>
+					              </select>
+					         </div>
+					         </td>
+					         <td>
+					     ${uiLabelMap.PartyRoleTypeId} <div>
+					              <select name="partyRoleTypeId">
+					                <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
+					                <#list roleTypes as roleType>
+					                   <option value="${roleType.roleTypeId}">${roleType.description?if_exists}</option>
+					                 </#list>
+					              </select>
+					            </div>
+					           </td>
+					           <td>
+					            <div>
+						              <select name="isLedgerCallFor">
+						                <option value="ArOnly">AR Ledger</option>
+						                <option value="ApOnly">AP Ledger</option>
+						              </select>
+							       </div>
+							    </td>
+					            </tr>
+					            </table>
+                          </td>
+                          <td width="15%"></td> 
+                          <td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#--> <input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerAbstaracFintHistory', '<@ofbizUrl>PartySubLedgerByPurposeType.pdf</@ofbizUrl>');" class="buttontext"/>-->
+					                    <input type="submit" value="CSV" onClick="javascript:appendParams('PartySubLedgerByPurposeType', '<@ofbizUrl>PartySubLedgerByPurposeType.csv</@ofbizUrl>');" class="buttontext"/>
+					     </td>
+			           </form>
 			        </tr>
-              
               <tr class="alternate-row">
 				   	<form id="MonthlyTDSAnnexure" name="MonthlyTDSAnnexure" method="post" action="<@ofbizUrl>TDSReport.pdf</@ofbizUrl>" target="_blank">
 									<td width="30%">Monthly TDS Annexure<input  type="hidden"  value="MonthlyTDSAnnexure"   name="reportTypeFlag"/></td>
@@ -517,7 +562,7 @@ function reportTypeChangeFunc() {
     </div>
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
-       	<tr> 
+       	<tr class="alternate-row"> 
       	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="30%">GL History Report<input type="hidden" name="reportType" value="byAccount"/></td>
 				<#-- <td width="25%">From<input  type="text" size="18pt" id="glLedgerFromDate" readonly  name="fromDate"/></td>
@@ -533,7 +578,7 @@ function reportTypeChangeFunc() {
 			  	  <td width="25%"> &#160;</td>
 			  	  <td width="75%"><input type="hidden" name="organizationPartyId" value="Company"/></td>&#160;</td> 
 			</tr>
-			 <tr>
+			 <tr class="alternate-row">
 			  	 <td width="25%"> &#160;</td>
 			  	 <td width="50%">AccountCode
 			  	  	<select name='AccountCode' id ="AccountCode">	
