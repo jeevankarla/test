@@ -260,6 +260,8 @@
                  <set field="tabButtonItem2" value="FindNonBankAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                 <set field="parameters.targetRequest" value="FindNonBankAccount"/>
+                 <set field="targetRequest" value="FindNonBankAccount"/>
                <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
                 <set field="parameters.ownerPartyId" value="Company"/>
                <!--  <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/> -->
@@ -301,6 +303,8 @@
                  <set field="tabButtonItem2" value="FindInterUnitBankAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                 <set field="parameters.targetRequest" value="FindInterUnitBankAccount"/>
+                 <set field="targetRequest" value="FindInterUnitBankAccount"/>
                <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
                 <set field="parameters.ownerPartyId" value="Company"/>
                <!--  <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/> -->
@@ -342,6 +346,10 @@
                  <set field="tabButtonItem2" value="FindEmpLoanFinAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                
+                 <set field="parameters.targetRequest" value="FindEmpLoanFinAccount"/>
+                 <set field="targetRequest" value="FindEmpLoanFinAccount"/>
+                 
                <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
                 <set field="parameters.ownerPartyId" value="Company"/>
                <!--  <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/> -->
