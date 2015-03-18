@@ -1726,11 +1726,13 @@ under the License.
       <alias name="custRequestItemSeqId" entity-alias="QITM"/>
       <alias name="quantity" entity-alias="QITM"/>
       <alias name="quoteUnitPrice" entity-alias="QITM"/>
+      <alias name="itemTotal" entity-alias="QITM"/>
       <alias name="quoteId" entity-alias="QUO"/>
       <alias name="quoteTypeId" entity-alias="QUO"/>
       <alias name="partyId" entity-alias="QUO"/>
       <alias name="issueDate" entity-alias="QUO"/>
       <alias name="statusId" entity-alias="QUO"/>
+      <alias name="grandTotal" entity-alias="QUO"/>
       <alias name="validFromDate" entity-alias="QUO"/>
       <alias name="validThruDate" entity-alias="QUO"/>
       <alias name="quoteName" entity-alias="QUO"/>

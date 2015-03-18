@@ -128,6 +128,7 @@ under the License.
           <td>Material Name-[Code][UOM]</td>
           <td>Quantity</td>
           <td>Quote Price</td>
+          <td>Total Amount</td>
           <td>Status</td>
           <td>Comments</td>
           <td>Tech.Eval</td>
@@ -149,6 +150,7 @@ under the License.
           <td>${productName.productName?if_exists} [${productName.productId?if_exists}][${uom.description?if_exists}]</td>
           <td>${eachQuote.quantity?if_exists}</td>
           <td>${eachQuote.quoteUnitPrice?if_exists}</td>
+          <td>Rs. ${eachQuote.itemTotal?if_exists}</td>
           <#assign statusEntry = (delegator.findOne("StatusItem", {"statusId" : eachQuote.qiStatusId}, true))!>
           <td>${statusEntry.description?if_exists}</td>
           <td><#if !(eachQuote.qiStatusId).equals("QTITM_NEGOTIATION")><input type="text"  id="comments"  name="comments"/></#if></td>
