@@ -188,14 +188,14 @@ if(shipments){
 			tempMap = [:];
 			
 			seqId = eachOdrAdj.orderItemSeqId;
-			if(seqId && seqId == "_NA_"){
-				applicableTo = "ALL";
-			}
-			else{
+			if(seqId && seqId != "_NA_"){
 				ordItm = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seqId));
 				if(ordItm){
 					applicableTo = (EntityUtil.getFirst(ordItm)).get("productId");
 				}
+			}
+			else{
+				applicableTo = "ALL";
 			}
 			
 			tempMap.put("otherTermId", eachOdrAdj.orderAdjustmentTypeId);

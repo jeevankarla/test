@@ -15,6 +15,11 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <service name="calculateQuoteGrandTotal" engine="java" location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="calculateQuoteGrandTotal">
+        <description>Calculate Quote Grand Total</description>
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="getMaterialItemValuationDetails" engine="java" location="in.vasista.vbiz.purchase.MaterialHelperServices" invoke="getMaterialItemValuationDetails">
         <description>Get Material Item Valuation Details</description>
         <attribute name="incTax" type="String" mode="IN" optional="true"/>

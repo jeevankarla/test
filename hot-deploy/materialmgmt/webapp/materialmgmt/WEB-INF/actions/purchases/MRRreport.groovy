@@ -163,7 +163,9 @@ if(UtilValidate.isNotEmpty(shipmentId)){
  grnDetailsList.each{grnData->
 	grnDetailsMap=[:];
 	
+	inventoryItemId = grnData.inventoryItemId;
 	
+	unitPrice = 0;
 	List colist=[];
 	colist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
 	colist.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS,grnData.shipmentItemSeqId));
@@ -200,6 +202,10 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	//DC QTY
 	grnDetailsMap["deliveryChallanQty"]=grnData.deliveryChallanQty;
 	
+	inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+	unitPrice = inventoryItem.unitCost;
+	grnDetailsMap["unitPrice"]= unitPrice;
+	    
 	// OrderItems Details
 	if(UtilValidate.isNotEmpty(orderId)){
 	List condlist=[];
@@ -210,10 +216,9 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	ordDetails = delegator.findList("OrderItem", condition , null, null, null, false );
 	orderDetails=EntityUtil.getFirst(ordDetails);
 	quantity=orderDetails.quantity;
-	unitPrice=orderDetails.unitListPrice;
-	grnDetailsMap["unitPrice"]=unitPrice;
 	grnDetailsMap["quantity"]=quantity;
 	}
+	
 	// Received and Accepted Quantity
 	List cList=[];
 	cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
@@ -224,15 +229,14 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	shipmtReciptList = delegator.findList("ShipmentReceipt", condit , null, null, null, false );
 	shipmtReciptList=EntityUtil.getFirst(shipmtReciptList);
 	if(UtilValidate.isNotEmpty(shipmtReciptList)){
-		
-
-    grnDetailsMap["quantityAccepted"]=shipmtReciptList.quantityAccepted;
-    grnDetailsMap["quantityRejected"]=shipmtReciptList.quantityRejected;
-	if(UtilValidate.isNotEmpty(orderId)){
-	amount=((shipmtReciptList.quantityAccepted)*(unitPrice));
-	grnDetailsMap["amount"]=amount;
-	shipmentMap["total"]+=amount;
-	}}
+		grnDetailsMap["quantityAccepted"]=shipmtReciptList.quantityAccepted;
+	    grnDetailsMap["quantityRejected"]=shipmtReciptList.quantityRejected;
+		if(UtilValidate.isNotEmpty(orderId)){
+			amount=((shipmtReciptList.quantityAccepted)*(unitPrice));
+			grnDetailsMap["amount"]=amount;
+			shipmentMap["total"]+=amount;
+		}
+	}
 	if(UtilValidate.isNotEmpty(orderId)){
 	if(UtilValidate.isEmpty(shipmtReciptList)){
 	grnDetailsMap["quantityAccepted"]=0;
@@ -244,6 +248,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	}
 	grnList.addAll(grnDetailsMap);
 }
+ 
 context.shipmentMap=shipmentMap;
 context.grnList=grnList;
 //Debug.log("shipmentList=================shipmentMap=================="+shipmentMap);
