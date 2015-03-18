@@ -3141,6 +3141,12 @@
                </entity-condition>
                <entity-condition list="roleTypes" entity-name="RoleType">
                </entity-condition>
+               
+               <entity-condition list="purposeTypeIdsList" entity-name="Enumeration">
+               	<condition-list>
+               		<condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
+               	</condition-list>
+               </entity-condition>
               </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 

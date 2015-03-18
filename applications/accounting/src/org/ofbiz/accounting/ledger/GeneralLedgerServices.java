@@ -104,6 +104,7 @@ public class GeneralLedgerServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String partyId = (String) context.get("partyId");
 		Timestamp tillDate = (Timestamp) context.get("tillDate");
+		String purposeTypeId=(String)context.get("purposeTypeId");
 		List exprListForParameters = FastList.newInstance();
 		List boothPaymentsList = FastList.newInstance();
 		List partyInvoicesList = FastList.newInstance();
@@ -137,6 +138,10 @@ public class GeneralLedgerServices {
 			//conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,"Company"));
 			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 		}
+		
+		if(UtilValidate.isNotEmpty(context.get("purposeTypeId"))){
+			exprListForParameters.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, purposeTypeId));
+		}
 		//exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId));
 		//exprListForParameters.add(EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS, "SALES_INVOICE"));
 		//exprListForParameters.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN, dayBegin));
@@ -158,7 +163,7 @@ public class GeneralLedgerServices {
 		if (!UtilValidate.isEmpty(partyInvoicesList)) {
 			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityList(partyInvoicesList,"invoiceId", false));
 			List invoiceIds = new ArrayList(invoiceIdSet);
-			Debug.log("===invoiceIds=in==GenericPartyLedger=="+invoiceIds);
+			//Debug.log("===invoiceIds=in==GenericPartyLedger=="+invoiceIds);
 			// First compute the total invoice outstanding amount as of opening balance date.
 			for (int i = 0; i < invoiceIds.size(); i++) {
 				String invoiceId = (String) invoiceIds.get(i);
@@ -289,6 +294,8 @@ public class GeneralLedgerServices {
 		}
 		openingBalance = invoicePendingAmount.subtract(advancePaymentAmount);
 		openingBalanceMap.put("openingBalance", openingBalance);
+		openingBalanceMap.put("invoicePendingAmount", invoicePendingAmount);
+		openingBalanceMap.put("advancePaymentAmount", advancePaymentAmount);
 		return openingBalanceMap;
 	}
     public static Map<String, Object> getGlAccountOpeningBalance(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
