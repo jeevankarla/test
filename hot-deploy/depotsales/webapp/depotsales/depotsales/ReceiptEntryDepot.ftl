@@ -69,7 +69,7 @@
       
     		<div class="screenlet-body">
      
-      			<form method="post" name="indententryinit" action="<@ofbizUrl>POMaterialReceipts</@ofbizUrl>" id="indententryinit">  
+      			<form method="post" name="indententryinit" action="<@ofbizUrl>POMaterialReceiptsDepot</@ofbizUrl>" id="indententryinit">  
 			    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				        <tr>
 				        	<td>
@@ -280,7 +280,7 @@
 			    	<div align="center">
 			    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 			    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>POMaterialReceipts</@ofbizUrl>');"/>   	
+			    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>POMaterialReceiptsDepot</@ofbizUrl>');"/>   	
 			    	</div>     
 				</#if>  
 			</div>

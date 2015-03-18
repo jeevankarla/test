@@ -30,7 +30,7 @@ under the License.
         	screenName="MyPortalDepotSalesFacilityTreeNg"
         screenLocation="component://depotsales/widget/CommonScreens.xml"
         description="DepotSales Portal Main Screen"/>                
-    	<PortletPortletCategory portalPortletId="DEPOTSALES" portletCategoryId="MYPORTAL_DEPOT"/>
+    	<PortletPortletCategory portalPortletId="DEPOTSALES" portletCategoryId="PRODUCTS"/>
     	
     	    	
     	<PortalPage portalPageId="MYPORTAL_DEPOT" sequenceNum="0" portalPageName="DEPOTSALES" description="The Milkosoft System Depot Sales Main Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOTSALES"/>

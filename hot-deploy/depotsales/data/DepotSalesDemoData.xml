@@ -60,4 +60,11 @@
     <StatusValidChange condition="" statusId="INVOICE_PAID" statusIdTo="INVOICE_READY" transitionName="Unpay"/>
     <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
     <StatusValidChange condition="" statusId="INVOICE_PAID" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    
+    <PartyRole  partyId="10030" roleTypeId="SUPPLIER"/>
+    <ProductCategory productCategoryTypeId="BYPROD" />
+    <ProductAndCategoryMember productCategoryId="BYPROD" />
+        
+    <Enumeration enumId="DEPOT_SALES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="DepotSales Configurations"/>
+<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="DEPOT_SALES" description="KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD."/>
 </entity-engine-xml>

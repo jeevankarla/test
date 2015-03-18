@@ -128,7 +128,7 @@ under the License.
 	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
 		action="approveICPBellaryOrder"
 	<#elseif screenFlag?exists && screenFlag=="depotSales">
-		action="approveDepotOrder"
+		action="approveDepotSalesOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="approveFGSOrder"
 	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
@@ -146,7 +146,7 @@ under the License.
 	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
 		action="createShipmentAndInvoiceForBellaryOrders"
 	<#elseif screenFlag?exists && screenFlag=="depotSales">
-		action="createShipmentAndInvoiceForDepotOrders"
+		action="createShipmentAndInvoiceForDepotSalesOrders"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="createShipmentAndInvoiceForFGSOrders"
 	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
