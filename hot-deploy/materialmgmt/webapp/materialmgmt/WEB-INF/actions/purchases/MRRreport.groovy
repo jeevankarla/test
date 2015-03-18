@@ -88,15 +88,26 @@ shipmentMap.put("description",description);
 //}
 
 //get PartyId from Role for Vendor
-if(UtilValidate.isNotEmpty(orderId)){
+partyId="";
+billToPartyId="";
+billToPartyName="";
 List conlist=[];
 conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
+conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN , UtilMisc.toList("SUPPLIER_AGENT","BILL_FROM_VENDOR") ));
 cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
-vendorDetail=EntityUtil.getFirst(vendorDetails);
-if(UtilValidate.isNotEmpty(vendorDetail.partyId)){
-partyId=vendorDetail.partyId;
+billToPartyIdList=EntityUtil.filterByCondition(vendorDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+if(billToPartyIdList){
+billToPartyId=(EntityUtil.getFirst(billToPartyIdList)).getString("partyId");
+}
+billToPartyName =  PartyHelper.getPartyName(delegator, billToPartyId, false);
+
+if(UtilValidate.isNotEmpty(orderId)){
+if(UtilValidate.isNotEmpty(vendorDetails)){
+supplierPartyIdList=EntityUtil.filterByCondition(vendorDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+if(supplierPartyIdList){
+partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");
+}
 shipmentMap.put("partyId",partyId);
 	partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentMap.put("partyName",partyName);
@@ -110,6 +121,13 @@ shipmentMap.put("partyId",partyId);
 partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 shipmentMap.put("partyName",partyName);
 }
+}
+if(billToPartyId==shipmentMap.partyId){
+	shipmentMap.put("billToPartyId","");
+	shipmentMap.put("billToPartyName","");
+}else{
+shipmentMap.put("billToPartyId",billToPartyId);
+shipmentMap.put("billToPartyName",billToPartyName);
 }
 //orderSequenceNO
 OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
