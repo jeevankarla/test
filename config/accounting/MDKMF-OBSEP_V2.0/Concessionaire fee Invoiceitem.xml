@@ -1,0 +1,26 @@
+<entity-engine-xml>
+    <InvoiceItem invoiceId="CON_FEE_SEP_01" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="9450" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_02" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="3000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_03" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="4000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_04" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="4000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_05" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="9000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_06" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="15000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_07" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="9000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_08" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="9000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_09" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="3000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_10" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="9000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_11" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="3000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_12" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="2000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_13" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_14" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_15" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="8000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_16" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_17" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="7500" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_18" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_19" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_20" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_21" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_22" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="12000" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_23" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="5742" description="" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="CON_FEE_SEP_24" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="5613" description="" taxAuthorityPartyId="NULL"/>
+</entity-engine-xml>
