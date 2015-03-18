@@ -130,14 +130,14 @@
 			 <menu-item name="DepotSalesOrder" title="Order Entry">
         		<link target="DepotSalesOrder"/>
         	 </menu-item>
-        	  <menu-item name="ProcessDepotOrders" title="Process Orders">
-        	<link target="processDepotOrders">
+        	  <menu-item name="processOrdersDepotSales" title="Process Orders">
+        	<link target="processOrdersDepotSales">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
         	</link>
 	        </menu-item>
-	        <menu-item name="FindDepotShipment" title="Find Shipments">
-	        	<link target="FindDepotShipment" />
+	        <menu-item name="FindDepotSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotSalesShipment" />
 	        </menu-item>
        </menu>
        

@@ -49,10 +49,10 @@
         <response name="error" type="view" value="DepotSalesOrder"/>
     </request-map>
     
-    <request-map uri="processDepotOrders">
+    <request-map uri="processOrdersDepotSales">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProcessDepotOrders"/>   
-       <response name="failed" type="view" value="ProcessDepotOrders"/>  
+        <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
+       <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
     
     <request-map uri="getStoreCatalogCatagory">
@@ -73,18 +73,18 @@
 	        <response name="success" type="view" value="IndentPrintReportPDF"/>
     </request-map>
     
-    <request-map uri="approveDepotOrder">
+    <request-map uri="approveDepotSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
-        <response name="success" type="view" value="ProcessDepotOrders"/>   
-       <response name="failed" type="view" value="ProcessDepotOrders"/>  
+        <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
+       <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
     
     <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelICPOrder"/>
-        <response name="success" type="view" value="ProcessDepotOrders"/>   
-       <response name="failed" type="view" value="ProcessDepotOrders"/>  
+        <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
+       <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
     
      <request-map uri="nonRouteGatePassDepot.pdf">
@@ -92,17 +92,17 @@
 	        <response name="success" type="view" value="NonRouteGatePassPDF"/>
     </request-map>
     
-    <request-map uri="createShipmentAndInvoiceForDepotOrders">
+    <request-map uri="createShipmentAndInvoiceForDepotSalesOrders">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
-        <response name="success" type="view" value="ProcessDepotOrders"/>   
-       <response name="failed" type="view" value="ProcessDepotOrders"/>  
+        <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
+       <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
     
-     <request-map uri="FindDepotShipment">
+     <request-map uri="FindDepotSalesShipment">
     	<security https="true" auth="true"/>
-        <response name="success" type="view" value="FindDepotShipment"/>   
-       	<response name="failed" type="view" value="FindDepotShipment"/>  
+        <response name="success" type="view" value="FindDepotSalesShipment"/>   
+       	<response name="failed" type="view" value="FindDepotSalesShipment"/>  
     </request-map>
     
     <request-map uri="buyerInvoiceDepot.pdf">
@@ -118,8 +118,8 @@
     <request-map uri="cancelShipmentDepot">
      	<security https="true" auth="true"/>     	
         <event type="service" invoke="cancelICPShipment"/>
-        <response name="success" type="request" value="FindDepotShipment"/>
-        <response name="error" type="request" value="FindDepotShipment"/>
+        <response name="success" type="request" value="FindDepotSalesShipment"/>
+        <response name="error" type="request" value="FindDepotSalesShipment"/>
     </request-map>
     
     <request-map uri="FindGRNReceiptsDepot">
@@ -143,8 +143,8 @@
      
       <request-map uri="FindGRNShipmentsDepot">
        <security https="true" auth="true"/>
-       <response name="success" type="view" value="FindGRNShipments"/>
-       <response name="error" type="view" value="FindGRNShipments"/>
+       <response name="success" type="view" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="view" value="FindGRNShipmentsDepot"/>
      </request-map>
      
       <request-map uri="MaterialShipmentOverview">
@@ -159,23 +159,23 @@
        <response name="error" type="view" value="PurchageOrderOverView"/>
      </request-map>
      
-     <request-map uri="MRRreport.pdf">
+     <request-map uri="MRRreportDepotSales.pdf">
         <security https="true" auth="true"/>
-    	<response name="success" type="view" value="MRRreportPDF"/>
+    	<response name="success" type="view" value="MRRreportDepotSalesPDF"/>
     </request-map>
     
     <request-map uri="shipmentSendForQC">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="shipmentSendForQC"></event>
-       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
-       <response name="error" type="request-redirect-noparam" value="FindGRNShipments"/>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
      </request-map>
      
      <request-map uri="CancelGrnShipment">
        <security https="true" auth="true"/>
         <event type="service" path="" invoke="processCancelGrnShipment"></event>
-       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
-       <response name="error" type="view" value="FindGRNShipments"/>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="view" value="FindGRNShipmentsDepot"/>
      </request-map>
      
      <request-map uri="MaterialInvoiceInit">
@@ -209,18 +209,18 @@
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
     
     <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
-    <view-map name="ProcessDepotOrders" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
+    <view-map name="ProcessOrdersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
     <view-map name="NonRouteGatePassPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>
-    <view-map name="FindDepotShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
+    <view-map name="FindDepotSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
     <view-map name="BuyerInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoicePDF" content-type="application/pdf"/>
     <view-map name="TaxInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#TaxInvoicePDF" content-type="application/pdf"/>
     <view-map name="FindGRNReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNReceipts"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#POMaterialReceiptsDepot"/>
-    <view-map name="FindGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNShipments"/>
+    <view-map name="FindGRNShipmentsDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNShipments"/>
     <view-map name="MaterialShipmentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialShipmentOverview"/>
     <view-map name="PurchageOrderOverView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PurchageOrderOverView"/>
-    <view-map name="MRRreportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
+    <view-map name="MRRreportDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
 </site-conf>

@@ -180,7 +180,7 @@
             </hyperlink>
         </field>
         <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
-            <hyperlink target="MRRreport.pdf" description="Report" target-window="_blank">
+            <hyperlink target="MRRreportDepotSales.pdf" description="Report" target-window="_blank">
              	<parameter param-name="shipmentId" value="${shipmentId}"/>
              	<parameter param-name="orderId" value="${primaryOrderId}"/>
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>

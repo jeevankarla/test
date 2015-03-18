@@ -118,7 +118,7 @@
             <widgets>
               <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body"> 
-                       <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container>  
+<!--                        <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container>   -->
                       <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
                       <section>
 	                    	<condition>
@@ -234,9 +234,8 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Process Depot Orders"/>              
-			    <set field="tabButtonItem" value="DepositIndent" />	
-			   <set field="tabButtonItem2" value="ProcessDepotOrders"/>       
-               <set field="headerItem" value="byProductsOrderEntry"/>
+			    <set field="tabButtonItem" value="DepotSalesOrder" />	
+			   <set field="tabButtonItem2" value="processOrdersDepotSales"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" 
@@ -315,10 +314,10 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Find Depot Sale Shipments"/>              
-			    <set field="tabButtonItem" value="DepositIndent" />	
-			   <set field="tabButtonItem2" value="FindDepotShipment"/>       
+			    <set field="tabButtonItem" value="DepotSalesOrder" />	
+			   <set field="tabButtonItem2" value="FindDepotSalesShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
-               <set field="targetRequest" value="FindDepotShipment"/>
+               <set field="targetRequest" value="FindDepotSalesShipment"/>
                <set field="shipmentTypeId" value="DEPOT_SHIPMENT"/>
                <set field="screenFlag" value="depotSales"/>
             </actions>
@@ -443,7 +442,7 @@
 				<set field="defaulteffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd:MM:yyyy hh:mm&quot;);}" />
 			   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
-			   <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrderDetailsEntry.groovy"/>
+			   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/purchaseOrderDetailsEntryDepot.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -827,7 +826,7 @@
 					<widgets>
 					<platform-specific>
 							<xsl-fo>
-							<html-template location="component://materialmgmt/webapp/materialmgmt/purchase/MRRreport.fo.ftl" />
+							<html-template location="component://depotsales/webapp/depotsales/depotsales/MRRreportDepotSales.fo.ftl" />
 							</xsl-fo>
 						</platform-specific> 
 					</widgets>
