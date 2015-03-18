@@ -53,6 +53,7 @@ import org.ofbiz.security.Security;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
+import java.util.Map.Entry;
 
 public class MaterialQuoteServices {
 
@@ -262,6 +263,168 @@ public class MaterialQuoteServices {
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ");
 		return "success";
 	}
+	public static Map<String,Object> getQuoteItemAndTermsMap(DispatchContext ctx, Map<String, ? extends Object> context){
+    	Map<String, Object> result = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String quoteId = (String)context.get("quoteId");
+        try{
+        	List<GenericValue> quoteItems = delegator.findList("QuoteItem", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+        	
+        	List<GenericValue> termTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("TAX", "OTHERS")), null, null, null, false);
+        	List<String> termTypeIds = EntityUtil.getFieldListFromEntityList(termTypes, "termTypeId", true);
+        	
+        	List conditionList = FastList.newInstance();
+        	conditionList.add(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+        	conditionList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.IN, termTypeIds));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	List<GenericValue> quoteTerms = delegator.findList("QuoteTerm", condition, null, null, null, false);
+        	List<GenericValue> taxTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "TAX"));
+        	List taxTermIds = EntityUtil.getFieldListFromEntityList(taxTermTypes, "termTypeId", true);
+        	List<GenericValue> taxTerms = EntityUtil.filterByCondition(quoteTerms, EntityCondition.makeCondition("termTypeId", EntityOperator.IN, taxTermIds));
+        	List<GenericValue> otherTermTypes = EntityUtil.filterByCondition(termTypes, EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"));
+        	List otherTermIds = EntityUtil.getFieldListFromEntityList(otherTermTypes, "termTypeId", true);
+        	List<GenericValue> otherTerms = EntityUtil.filterByCondition(quoteTerms, EntityCondition.makeCondition("termTypeId", EntityOperator.IN, otherTermIds));
+        	List<Map> otherCharges = FastList.newInstance();
+        	List<Map> productQty = FastList.newInstance();
+        	Map productItemRef = FastMap.newInstance();
+        	for(GenericValue quoteItem : quoteItems){
+        		Map tempMap = FastMap.newInstance();
+        		tempMap.put("productId", quoteItem.getString("productId"));
+        		tempMap.put("quantity", quoteItem.getBigDecimal("quantity"));
+        		tempMap.put("unitPrice", quoteItem.getBigDecimal("quoteUnitPrice"));
+        		tempMap.put("vatPercent", BigDecimal.ZERO);
+        		tempMap.put("cstPercent", BigDecimal.ZERO);
+        		tempMap.put("bedPercent", BigDecimal.ZERO);
+        		productItemRef.put(quoteItem.getString("productId"), tempMap);
+        	}
+        	for(GenericValue taxTerm : taxTerms){
+        		String quoteItemSeqId = taxTerm.getString("quoteItemSeqId");
+        		String termTypeId = taxTerm.getString("termTypeId");
+        		List<GenericValue> iterateValues = FastList.newInstance();
+        		if(UtilValidate.isNotEmpty(quoteItemSeqId) && !(quoteItemSeqId.equals("_NA_"))){
+        			List<GenericValue> quoteItm = EntityUtil.filterByCondition(quoteItems, EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
+        			if(UtilValidate.isNotEmpty(quoteItm)){
+        				GenericValue item = EntityUtil.getFirst(quoteItm);
+        				iterateValues.add(item);
+        			}
+        		}
+        		else{
+        			iterateValues.addAll(quoteItems);
+        		}
+        		for(GenericValue item : iterateValues){
+    				String prodId = item.getString("productId");
+    				Map prodQtyMap = (Map)productItemRef.get(prodId);
+    				if(termTypeId.equals("VAT_PUR")){
+    					prodQtyMap.put("vatPercent", taxTerm.getBigDecimal("termValue"));
+    				}
+    				if(termTypeId.equals("CST_PUR")){
+    					prodQtyMap.put("cstPercent", taxTerm.getBigDecimal("termValue"));
+    				}
+    				if(termTypeId.equals("BED_PUR")){
+    					prodQtyMap.put("bedPercent", taxTerm.getBigDecimal("termValue"));
+    				}
+    				productItemRef.put(prodId, prodQtyMap);
+        		}
+        	}
+        	Iterator prodItemsIter = productItemRef.entrySet().iterator();
+			while (prodItemsIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) prodItemsIter.next();
+				Map eachItem = (Map) tempEntry.getValue();
+				productQty.add(eachItem);
+			}
+			for(GenericValue otherTerm : otherTerms){
+				
+				String applicableTo = "ALL";
+				String sequenceId = otherTerm.getString("quoteItemSeqId");
+				if(UtilValidate.isNotEmpty(sequenceId) && !(sequenceId.equals("_NA_"))){
+					List<GenericValue> quoteItm = EntityUtil.filterByCondition(quoteItems, EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, sequenceId));
+        			if(UtilValidate.isNotEmpty(quoteItm)){
+        				applicableTo = (EntityUtil.getFirst(quoteItm)).getString("productId");
+        			}
+				}
+        		Map tempMap = FastMap.newInstance();
+        		tempMap.put("otherTermId", otherTerm.getString("termTypeId"));
+        		tempMap.put("applicableTo", applicableTo);
+        		tempMap.put("termValue", otherTerm.getBigDecimal("termValue"));
+        		tempMap.put("uomId", otherTerm.getString("uomId"));
+        		tempMap.put("termDays", otherTerm.getLong("termDays"));
+        		tempMap.put("description", otherTerm.getString("description"));
+        		otherCharges.add(tempMap);
+        	}
+			result.put("otherCharges", otherCharges);
+			result.put("productQty", productQty);
+        }
+        catch(Exception e){
+        	Debug.logError("Error updating quote status", module);
+		    return ServiceUtil.returnError("Error updating quote status");
+        }
+      //otherCharges = [{otherTermId, applicableTo(ALL/RM1201), termValue, uomId, termDays, description}]
+    	//productQty = [{productId, quantity, unitPrice, bedPercent, cstPercent, vatPercent}]
+    	
+        return result;
+	}
+	
+	public static Map<String,Object> calculateQuoteGrandTotal(DispatchContext ctx, Map<String, ? extends Object> context){
+    	Map<String, Object> result = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String quoteId = (String)context.get("quoteId");
+        try{
+        	
+        	List<GenericValue> quoteItems = delegator.findList("QuoteItem", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+        	Map resultCtx = getQuoteItemAndTermsMap(ctx, UtilMisc.toMap("quoteId", quoteId, "userLogin", userLogin));
+        	if(ServiceUtil.isError(resultCtx)){
+				String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+				return ServiceUtil.returnError(errMsg);
+			}
+			List<Map> otherCharges = (List)resultCtx.get("otherCharges");
+			List<Map> productQty = (List)resultCtx.get("productQty");
+			
+			resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQty, "otherCharges", otherCharges, "userLogin", userLogin, "incTax", ""));
+			if(ServiceUtil.isError(resultCtx)){
+				String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+				return ServiceUtil.returnError(errMsg);
+			}
+			BigDecimal grandTotal = (BigDecimal)resultCtx.get("grandTotal");
+			List<Map> itemDetail = (List)resultCtx.get("itemDetail");
+			
+			GenericValue quote = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+			quote.set("grandTotal", grandTotal);
+			quote.store();
+			
+			for(Map eachItem : itemDetail){
+				String productId = (String)eachItem.get("productId");
+				BigDecimal unitListPrice = (BigDecimal) eachItem.get("unitListPrice");
+				List<GenericValue> quotItm = EntityUtil.filterByCondition(quoteItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId)); 
+				if(UtilValidate.isNotEmpty(quotItm)){
+					GenericValue eachQuoteItem = EntityUtil.getFirst(quotItm);
+					BigDecimal newItemTotal = (unitListPrice.multiply(eachQuoteItem.getBigDecimal("quantity"))).setScale(2, BigDecimal.ROUND_HALF_UP);
+					if(UtilValidate.isNotEmpty(eachQuoteItem.getBigDecimal("itemTotal"))){
+						BigDecimal extItemTotal = (eachQuoteItem.getBigDecimal("itemTotal")).setScale(2, BigDecimal.ROUND_HALF_UP);
+						if(UtilValidate.isEmpty(extItemTotal) || (UtilValidate.isNotEmpty(extItemTotal) && extItemTotal.compareTo(newItemTotal)!=0)){
+							eachQuoteItem.set("itemTotal", newItemTotal);
+							eachQuoteItem.store();
+						}
+					}
+					else{
+						eachQuoteItem.set("itemTotal", newItemTotal);
+						eachQuoteItem.store();
+					}
+					
+				}
+			}        	
+        }catch(Exception e){
+        	Debug.logError("Error calculating quote total", module);
+		    return ServiceUtil.returnError("Error calculating quote total");
+        }
+        result = ServiceUtil.returnSuccess("Quote total calculated successfully");
+		return result;
+    }//End of Service
 	
 	public static Map<String,Object> changeQuoteItemStatus(DispatchContext ctx, Map<String, ? extends Object> context){
     	Map<String, Object> result = FastMap.newInstance();
@@ -596,16 +759,21 @@ public class MaterialQuoteServices {
     	String partyId ="";
     	String billFromPartyId ="Company";
     	String billToPartyId="";
-    	BigDecimal quantity = BigDecimal.ZERO;
-    	BigDecimal quoteUnitPrice = BigDecimal.ZERO;
     	String salesChannel = (String) context.get("salesChannelEnumId");
     	List<GenericValue> quoteItemList = FastList.newInstance();
+    	List<Map> productItemDetail = FastList.newInstance();
+    	List<Map> orderAdjustmentDetail = FastList.newInstance();
+    	List<Map> otherChargesTermDetail = FastList.newInstance();
+    	BigDecimal grandTotal = BigDecimal.ZERO;
     	//getting productStoreId 
 		String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
-         if (UtilValidate.isEmpty(salesChannel)) {
+        if (UtilValidate.isEmpty(salesChannel)) {
              salesChannel = "MATERIAL_PUR_CHANNEL";
-         }     
-    	 try {  
+        }
+        String custRequestId = "";
+        List<GenericValue> quoteTerm = FastList.newInstance();
+    	try {
+    		
     		quote=delegator.findOne("Quote",UtilMisc.toMap("quoteId", quoteId), false);
     		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
 	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "QTITM_QUALIFIED"));
@@ -613,13 +781,123 @@ public class MaterialQuoteServices {
     		quoteItemList = delegator.findList("QuoteItem", condition, null, UtilMisc.toList("quoteItemSeqId"), null, false);
     		partyId = quote.getString("partyId");
     		
-         	/*GenericValue product=delegator.findOne("Product",UtilMisc.toMap("productId", (String)quoteItemList.get(0).getString("productId")), false);*/
-         	
-         } catch (GenericEntityException e) {
+    		if(UtilValidate.isNotEmpty(quoteItemList)){
+    			custRequestId = (EntityUtil.getFirst(quoteItemList)).getString("custRequestId");
+    		}
+    		
+    		List<GenericValue> termTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("TAX", "OTHERS")), null, null, null, false);
+    		List termTypeIds = EntityUtil.getFieldListFromEntityList(termTypes, "termTypeId", true);
+    		conditionList.clear();
+    		conditionList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.NOT_IN, termTypeIds));
+    		conditionList.add(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+    		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    		quoteTerm = delegator.findList("QuoteTerm", cond, null, null, null, false);
+    		Map resultCtx = getQuoteItemAndTermsMap(ctx, UtilMisc.toMap("quoteId", quoteId, "userLogin", userLogin));
+			if(ServiceUtil.isError(resultCtx)){
+				String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+				return ServiceUtil.returnError(errMsg);
+			}
+			
+			List<Map> otherCharges = (List)resultCtx.get("otherCharges");
+			List<Map> productQty = (List)resultCtx.get("productQty");
+			resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", productQty, "otherCharges", otherCharges, "userLogin", userLogin, "incTax", ""));
+			if(ServiceUtil.isError(resultCtx)){
+				String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+				return ServiceUtil.returnError(errMsg);
+			}
+			List<Map> itemDetail = (List)resultCtx.get("itemDetail");
+			List<Map> adjustmentDetail = (List)resultCtx.get("adjustmentDetail");
+			Map productAdjustmentPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
+			
+			List<Map> revisedProdQty = FastList.newInstance();
+			for(GenericValue quoteItem : quoteItemList){
+				String productId  = quoteItem.getString("productId");
+				for(Map eachItem : itemDetail){
+					String itemProdId = (String)eachItem.get("productId");
+					if(itemProdId.equals(productId)){
+						Map tempMap = FastMap.newInstance();
+						tempMap.put("productId", productId);
+						tempMap.put("quantity", quoteItem.getBigDecimal("quantity"));
+						tempMap.put("unitPrice", quoteItem.getBigDecimal("quoteUnitPrice"));
+						tempMap.put("vatPercent", (BigDecimal)eachItem.get("vatPercent"));
+						tempMap.put("bedPercent", (BigDecimal)eachItem.get("bedPercent"));
+						tempMap.put("cstPecent", (BigDecimal)eachItem.get("cstPercent"));
+						revisedProdQty.add(tempMap);
+					}
+				}
+			}
+	    	List<Map> revisedOtherCharges = FastList.newInstance();
+			for(Map eachOthrCharge : adjustmentDetail){
+				Map tempMap = FastMap.newInstance();
+				String adjTypeId = (String)eachOthrCharge.get("adjustmentTypeId");
+				tempMap.put("otherTermId", adjTypeId);
+				String applicableTo = (String)eachOthrCharge.get("applicableTo");
+				BigDecimal totalAdjAmt = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(applicableTo) && applicableTo.equals("_NA_")){
+					tempMap.put("applicableTo", "ALL");
+					for(Map eachProd : revisedProdQty){
+						String prodId = (String)eachProd.get("productId");
+						BigDecimal qty = (BigDecimal)eachProd.get("quantity");
+						Map prodAdjUnitAmt = (Map)productAdjustmentPerUnit.get(prodId);
+						if(UtilValidate.isNotEmpty(prodAdjUnitAmt) && UtilValidate.isNotEmpty(prodAdjUnitAmt.get(adjTypeId))){
+							BigDecimal adjAmt = qty.multiply((BigDecimal)prodAdjUnitAmt.get(adjTypeId));
+							totalAdjAmt = totalAdjAmt.add(adjAmt);
+						}
+						
+					}
+				} 
+				else{
+					List<GenericValue> quoteItm = EntityUtil.filterByCondition(quoteItemList, EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, applicableTo));
+					if(UtilValidate.isNotEmpty(quoteItm)){
+						
+						String prodId = (EntityUtil.getFirst(quoteItm)).getString("productId");
+						Map prodAdjUnitAmt = (Map)productAdjustmentPerUnit.get(prodId);
+						tempMap.put("applicableTo", prodId);
+						BigDecimal qty = (BigDecimal)(EntityUtil.getFirst(quoteItm)).get("quantity");
+						if(UtilValidate.isNotEmpty(prodAdjUnitAmt) && UtilValidate.isNotEmpty(prodAdjUnitAmt.get(adjTypeId))){
+							BigDecimal adjAmt = qty.multiply((BigDecimal)prodAdjUnitAmt.get(adjTypeId));
+							totalAdjAmt = totalAdjAmt.add(adjAmt);
+						}
+					}
+				}
+				tempMap.put("termValue", totalAdjAmt);
+				tempMap.put("uomId", "INR");
+				tempMap.put("termDays", null);
+				tempMap.put("description", "");
+				revisedOtherCharges.add(tempMap);
+				
+			}
+			
+			resultCtx = dispatcher.runSync("getMaterialItemValuationDetails", UtilMisc.toMap("productQty", revisedProdQty, "otherCharges", revisedOtherCharges, "userLogin", userLogin, "incTax", ""));
+			if(ServiceUtil.isError(resultCtx)){
+				String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+				return ServiceUtil.returnError(errMsg);
+			}
+			productItemDetail = (List)resultCtx.get("itemDetail");
+			orderAdjustmentDetail = (List)resultCtx.get("adjustmentDetail");
+	    	otherChargesTermDetail = (List)resultCtx.get("termsDetail");
+	    	grandTotal = (BigDecimal)resultCtx.get("grandTotal");
+         } catch (Exception e) {
              Debug.logError(e, "Problem getting product store Id", module);
      		return ServiceUtil.returnError("Problem getting product store Id: " + e);          	
              
          }
+    	
+    	GenericValue custReqDetails = null;
+        String custRequestName=null;
+        if(UtilValidate.isNotEmpty(custRequestId)){
+            try{
+                custReqDetails = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId",custRequestId), false);
+                if(UtilValidate.isNotEmpty(custReqDetails)){ 
+                    custRequestName=(String) custReqDetails.get("custRequestName");
+                 }
+    	    }
+            catch(Exception e) {
+    		     Debug.logError("Error While fecting data from CustRequest", module);
+    		     return ServiceUtil.returnError("Error While fecting data from CustRequest");
+    	   }
+        }
+        
     	 ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currencyUomId);
          cart.setOrderType("PURCHASE_ORDER");
          cart.setChannelType(salesChannel);
@@ -628,241 +906,270 @@ public class MaterialQuoteServices {
          cart.setPlacingCustomerPartyId(billFromPartyId);
          cart.setShipToCustomerPartyId(billFromPartyId);
          cart.setEndUserCustomerPartyId(billFromPartyId);
-		//cart.setShipmentId(shipmentId);
-		//for PurchaseOrder we have to use for SupplierId
-		if(UtilValidate.isNotEmpty(billToPartyId)){
+		 if(UtilValidate.isNotEmpty(billToPartyId)){
 			 cart.setBillFromVendorPartyId(billToPartyId);
-		}else{
+		 }else{
 			cart.setBillFromVendorPartyId(partyId);
-		}
-	    cart.setShipFromVendorPartyId(partyId);
-	    cart.setSupplierAgentPartyId(partyId);
-        cart.setQuoteId(quoteId); 
-        try {
+		 }
+		 if(UtilValidate.isNotEmpty(custRequestId)){
+			cart.setOrderAttribute("REF_NUMBER",custRequestId);
+		 }
+		 if(UtilValidate.isNotEmpty(custRequestName)){
+			cart.setOrderAttribute("FILE_NUMBER",custRequestName);
+		 }
+	     cart.setShipFromVendorPartyId(partyId);
+	     cart.setSupplierAgentPartyId(partyId);
+         cart.setQuoteId(quoteId); 
+         try {
              cart.setUserLogin(userLogin, dispatcher);
          } catch (Exception exc) {
              Debug.logWarning("Error setting userLogin in the cart: " + exc.getMessage(), module);
      		return ServiceUtil.returnError("Error setting userLogin in the cart: " + exc.getMessage());          	            
-         }   
-         Iterator<GenericValue> i = quoteItemList.iterator();
-         String custRequestId="";
-         List taxList=FastList.newInstance();
-         List quoteTermVatList=FastList.newInstance();
-         List quoteTermBedList=FastList.newInstance();
-         List quoteTermCstList=FastList.newInstance();
-         while (i.hasNext()) {
-             GenericValue quoteItem = i.next();
-             if (quoteItem != null) {
-            	 custRequestId=quoteItem.getString("custRequestId");            	 
-             	try { 
-                    
-             		ShoppingCartItem item = null;
-    				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), quoteItem.getString("productId"), null, quoteItem.getBigDecimal("quantity"), quoteItem.getBigDecimal("quoteUnitPrice"),
-    					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-    					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
-    					
-    					item = cart.findCartItem(itemIndx);
-    					
-    					quantity = quoteItem.getBigDecimal("quantity");
-    					quoteUnitPrice = quoteItem.getBigDecimal("quoteUnitPrice");
-    					String quoteItemSeqId = quoteItem.getString("quoteItemSeqId");
-    					if(UtilValidate.isNotEmpty(quoteId) && UtilValidate.isNotEmpty(quoteItemSeqId)){
-    						//Vat Here
-    						List qouteTermVatCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-    						qouteTermVatCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
-    						qouteTermVatCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
-    						qouteTermVatCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "VAT_PUR"));
-    				        EntityCondition quotVatCond = EntityCondition.makeCondition(qouteTermVatCondList, EntityOperator.AND);
-    				        quoteTermVatList = delegator.findList("QuoteTerm", quotVatCond, null, null, null, false);
-    				        if(UtilValidate.isNotEmpty(quoteTermVatList)){
-    				        	GenericValue quoteTermVat = EntityUtil.getFirst(quoteTermVatList); 
-    				        	if(UtilValidate.isNotEmpty(quoteTermVat)){
-    				        		BigDecimal vatPercent = quoteTermVat.getBigDecimal("termValue");
-            					    if(UtilValidate.isNotEmpty(vatPercent)){
-            							Map<String,Object> inVatRateMap = UtilAccounting.getInclusiveTaxRate(quoteUnitPrice,vatPercent);
-            							BigDecimal vatUnitRate = (BigDecimal)inVatRateMap.get("taxAmount");
-            							if(UtilValidate.isNotEmpty(vatUnitRate)){
-            								BigDecimal vatAmount = vatUnitRate.multiply(quantity);
-            								if(vatAmount.compareTo(BigDecimal.ZERO)>0){
-            									vatAmount=vatAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
-                    			        		Map taxDetailMap = FastMap.newInstance();
-                    				    		taxDetailMap.put("taxType", "VAT_PUR");
-                    				    		taxDetailMap.put("amount", vatAmount);
-                    				    		taxDetailMap.put("percentage", vatPercent);
-                    				    		taxList.add(taxDetailMap);
-                    				    		item.setTaxDetails(taxList);
-                    					    }
-            							}
-            						}
-    				        	}
-    				        }
-    				        //Bed Here
-    				        List qouteTermBedCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-    				        qouteTermBedCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
-    				        qouteTermBedCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
-    				        qouteTermBedCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "BED_PUR"));
-    				        EntityCondition quotBedCond = EntityCondition.makeCondition(qouteTermBedCondList, EntityOperator.AND);
-    				        quoteTermBedList = delegator.findList("QuoteTerm", quotBedCond, null, null, null, false);
-    				        if(UtilValidate.isNotEmpty(quoteTermBedList)){
-    				        	GenericValue quoteTermBed = EntityUtil.getFirst(quoteTermBedList); 
-    				        	if(UtilValidate.isNotEmpty(quoteTermBed)){
-    				        		BigDecimal bedPercent = quoteTermBed.getBigDecimal("termValue");
-            					    if(UtilValidate.isNotEmpty(bedPercent)){
-            							Map<String,Object> inBedRateMap = UtilAccounting.getInclusiveTaxRate(quoteUnitPrice,bedPercent);
-            							BigDecimal bedUnitRate = (BigDecimal)inBedRateMap.get("taxAmount");
-            							if(UtilValidate.isNotEmpty(bedUnitRate)){
-            								BigDecimal bedAmount = bedUnitRate.multiply(quantity);
-            								if(bedAmount.compareTo(BigDecimal.ZERO)>0){
-            									bedAmount=bedAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
-                    			        		Map taxDetailMap = FastMap.newInstance();
-                    				    		taxDetailMap.put("taxType", "BED_PUR");
-                    				    		taxDetailMap.put("amount", bedAmount);
-                    				    		taxDetailMap.put("percentage", bedPercent);
-                    				    		taxList.add(taxDetailMap);
-                    				    		item.setTaxDetails(taxList);
-                    					    }
-            								
-        									Map<String,Object> inBedCessRateMap = UtilAccounting.getInclusiveTaxRate(bedUnitRate,new BigDecimal(2));
-        									BigDecimal bedCessUnitRate = (BigDecimal)inBedCessRateMap.get("taxAmount");
-        									BigDecimal bedCessAmount = bedCessUnitRate.multiply(quantity);
-        									if(bedCessAmount.compareTo(BigDecimal.ZERO)>0){
-        										bedCessAmount=bedCessAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
-                    			        		Map taxDetailMap = FastMap.newInstance();
-                    				    		taxDetailMap.put("taxType", "BEDCESS_PUR");
-                    				    		taxDetailMap.put("amount", bedCessAmount);
-                    				    		taxDetailMap.put("percentage", new BigDecimal(2));
-                    				    		taxList.add(taxDetailMap);
-                    				    		item.setTaxDetails(taxList);
-                    					    }
-        									
-        									Map<String,Object> inBedSecCessRateMap = UtilAccounting.getInclusiveTaxRate(bedUnitRate,new BigDecimal(1));
-        									BigDecimal bedSecCessUnitRate = (BigDecimal)inBedSecCessRateMap.get("taxAmount");
-        									BigDecimal bedSecCessAmount = bedSecCessUnitRate.multiply(quantity);
-        									if(bedSecCessAmount.compareTo(BigDecimal.ZERO)>0){
-        										bedSecCessAmount=bedSecCessAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
-                    			        		Map taxDetailMap = FastMap.newInstance();
-                    				    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
-                    				    		taxDetailMap.put("amount", bedSecCessAmount);
-                    				    		taxDetailMap.put("percentage", new BigDecimal(1));
-                    				    		taxList.add(taxDetailMap);
-                    				    		item.setTaxDetails(taxList);
-                    					    }
-            							}
-            						}
-    				        	}
-    				        }
-    				        //Cst Here
-    				        List qouteTermCstCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-    				        qouteTermCstCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
-    				        qouteTermCstCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
-    				        qouteTermCstCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "CST_PUR"));
-    				        EntityCondition quotCstCond = EntityCondition.makeCondition(qouteTermCstCondList, EntityOperator.AND);
-    				        quoteTermCstList = delegator.findList("QuoteTerm", quotCstCond, null, null, null, false);
-    				        if(UtilValidate.isNotEmpty(quoteTermCstList)){
-    				        	GenericValue quoteTermCst = EntityUtil.getFirst(quoteTermCstList); 
-    				        	if(UtilValidate.isNotEmpty(quoteTermCst)){
-    				        		BigDecimal cstPercent = quoteTermCst.getBigDecimal("termValue");
-            					    if(UtilValidate.isNotEmpty(cstPercent)){
-            							Map<String,Object> inCstRateMap = UtilAccounting.getInclusiveTaxRate(quoteUnitPrice,cstPercent);
-            							BigDecimal cstUnitRate = (BigDecimal)inCstRateMap.get("taxAmount");
-            							if(UtilValidate.isNotEmpty(cstUnitRate)){
-            								BigDecimal cstAmount = cstUnitRate.multiply(quantity);
-            								if(cstAmount.compareTo(BigDecimal.ZERO)>0){
-            									cstAmount=cstAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
-                    			        		Map taxDetailMap = FastMap.newInstance();
-                    				    		taxDetailMap.put("taxType", "CST_PUR");
-                    				    		taxDetailMap.put("amount", cstAmount);
-                    				    		taxDetailMap.put("percentage", cstPercent);
-                    				    		taxList.add(taxDetailMap);
-                    				    		item.setTaxDetails(taxList);
-                    					    }
-            							}
-            						}
-    				        	}
-    				        }
-    					}
-    					//item.setListPrice(totalPrice);
-    					//item.setTaxDetails(taxList);
-    	        		item.setQuoteId(quoteItem.getString("quoteId"));
-    	        		item.setQuoteItemSeqId(quoteItem.getString("quoteItemSeqId"));
-             		
-                 } catch (Exception exc) {
-                     Debug.logWarning("Error adding product with id " + quoteItem.getString("productId") + " to the cart: " + exc.getMessage(), module);
-             		return ServiceUtil.returnError("Error adding product with id " + quoteItem.getString("productId") + " to the cart: " + exc.getMessage());          	            
-                 }
-                
-             }  
          }
-         GenericValue custReqDetails = null;
-         String custRequestName=null;
-         if(UtilValidate.isNotEmpty(custRequestId)){
-             try{
-        	        custReqDetails = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId",custRequestId), false);
-        	        if(UtilValidate.isNotEmpty(custReqDetails)){ 
-        	            custRequestName=(String) custReqDetails.get("custRequestName");
-        	         }
-    	        }
-               catch(Exception e) {
-    	  		     Debug.logError("Error While fecting data from CustRequest", module);
-    	  		     return ServiceUtil.returnError("Error While fecting data from CustRequest");
-    	  	   }
-          
-         }
-         if(UtilValidate.isNotEmpty(custRequestId)){
-				cart.setOrderAttribute("REF_NUMBER",custRequestId);
-         }
-         if(UtilValidate.isNotEmpty(custRequestName)){
-				cart.setOrderAttribute("FILE_NUMBER",custRequestName);
-         }
-      
-         cart.setDefaultCheckoutOptions(dispatcher);
-         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
-         Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
-         String orderId = (String) orderCreateResult.get("orderId");
+        
+        
+         String productId = "";
+		
+		 for (Map<String, Object> prodQtyMap : productItemDetail) {
+			List taxList=FastList.newInstance();
+			
+			String quoteItemSeqId = "";
+			BigDecimal quantity = BigDecimal.ZERO;
+			BigDecimal unitPrice = BigDecimal.ZERO;
+			BigDecimal unitListPrice = BigDecimal.ZERO;
+			BigDecimal vatPercent = BigDecimal.ZERO;
+			BigDecimal vatAmount = BigDecimal.ZERO;
+			BigDecimal cstAmount = BigDecimal.ZERO;
+			BigDecimal cstPercent = BigDecimal.ZERO;
+			BigDecimal bedAmount = BigDecimal.ZERO;
+			BigDecimal bedPercent = BigDecimal.ZERO;
+			BigDecimal bedcessPercent = BigDecimal.ZERO;
+			BigDecimal bedcessAmount = BigDecimal.ZERO;
+			BigDecimal bedseccessAmount = BigDecimal.ZERO;
+			BigDecimal bedseccessPercent = BigDecimal.ZERO;
+			
+			
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+				productId = (String)prodQtyMap.get("productId");
+				
+				List<GenericValue> quoteItms = EntityUtil.filterByCondition(quoteItemList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				if(UtilValidate.isNotEmpty(quoteItms)){
+					quoteItemSeqId = (EntityUtil.getFirst(quoteItms)).getString("quoteItemSeqId");
+				}
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+				quantity = (BigDecimal)prodQtyMap.get("quantity");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
+				unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("unitListPrice"))){
+				unitListPrice = (BigDecimal)prodQtyMap.get("unitListPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+				vatAmount = (BigDecimal)prodQtyMap.get("vatAmount");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
+				vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+				cstAmount = (BigDecimal)prodQtyMap.get("cstAmount");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
+				cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
+				bedAmount = (BigDecimal)prodQtyMap.get("bedAmount");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
+				bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedcessAmount"))){
+				bedcessAmount = (BigDecimal)prodQtyMap.get("bedcessAmount");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedcessPercent"))){
+				bedcessPercent = (BigDecimal)prodQtyMap.get("bedcessPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedseccessAmount"))){
+				bedseccessAmount = (BigDecimal)prodQtyMap.get("bedseccessAmount");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedseccessPercent"))){
+				bedseccessPercent = (BigDecimal)prodQtyMap.get("bedseccessPercent");
+			}
+
+			if(bedAmount.compareTo(BigDecimal.ZERO)>0){
+        		Map taxDetailMap = FastMap.newInstance();
+	    		taxDetailMap.put("taxType", "BED_PUR");
+	    		taxDetailMap.put("amount", bedAmount);
+	    		taxDetailMap.put("percentage", bedPercent);
+	    		taxList.add(taxDetailMap);
+			}
+			if(vatAmount.compareTo(BigDecimal.ZERO)>0){
+        		Map taxDetailMap = FastMap.newInstance();
+	    		taxDetailMap.put("taxType", "VAT_PUR");
+	    		taxDetailMap.put("amount", vatAmount);
+	    		taxDetailMap.put("percentage", vatPercent);
+	    		taxList.add(taxDetailMap);
+			}
+			if(cstAmount.compareTo(BigDecimal.ZERO)>0){
+        		Map taxDetailMap = FastMap.newInstance();
+	    		taxDetailMap.put("taxType", "CST_PUR");
+	    		taxDetailMap.put("amount", cstAmount);
+	    		taxDetailMap.put("percentage", cstPercent);
+	    		taxList.add(taxDetailMap);
+			}
+			if(bedcessAmount.compareTo(BigDecimal.ZERO)>0){
+        		Map taxDetailMap = FastMap.newInstance();
+	    		taxDetailMap.put("taxType", "BEDCESS_PUR");
+	    		taxDetailMap.put("amount", bedcessAmount);
+	    		taxDetailMap.put("percentage", bedcessPercent);
+	    		taxList.add(taxDetailMap);
+			}
+			if(bedseccessAmount.compareTo(BigDecimal.ZERO)>0){
+        		Map taxDetailMap = FastMap.newInstance();
+	    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
+	    		taxDetailMap.put("amount", bedseccessAmount);
+	    		taxDetailMap.put("percentage", bedseccessPercent);
+	    		taxList.add(taxDetailMap);
+			}
+			
+			ShoppingCartItem item = null;
+			try{
+				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, unitPrice,
+			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+			
+				item = cart.findCartItem(itemIndx);
+				item.setListPrice(unitListPrice);
+				item.setTaxDetails(taxList);
+				
+				item.setQuoteId(quoteId);
+        		item.setQuoteItemSeqId(quoteItemSeqId);
+			}
+			catch (Exception exc) {
+				Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
+				return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
+	        }
+		
+		}
+		
+		cart.setDefaultCheckoutOptions(dispatcher);
+		//ProductPromoWorker.doPromotions(cart, dispatcher);
+		CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
+	
+		Map<String, Object> orderCreateResult=checkout.createOrder(userLogin);
+		if (ServiceUtil.isError(orderCreateResult)) {
+			String errMsg =  ServiceUtil.getErrorMessage(orderCreateResult);
+			Debug.logError(errMsg, "While Creating Order",module);
+			return ServiceUtil.returnError(" Error While Creating Order !"+errMsg);
+		}
+	
+		String orderId = (String) orderCreateResult.get("orderId");
+		try {
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderItemSeqId", "productId"), null, null, false);
+			for(GenericValue eachTerm : quoteTerm){
+				Map termCreateCtx = FastMap.newInstance();
+				termCreateCtx.put("userLogin", userLogin);
+				termCreateCtx.put("orderId", orderId);
+				termCreateCtx.put("termTypeId", (String)eachTerm.get("termTypeId"));
+				termCreateCtx.put("description", (String)eachTerm.get("description"));
+				Map orderTermResult = dispatcher.runSync("createOrderTerm",termCreateCtx);
+				if (ServiceUtil.isError(orderTermResult)) {
+					String errMsg =  ServiceUtil.getErrorMessage(orderTermResult);
+					Debug.logError(errMsg, "While Creating Order Payment/Delivery Term",module);
+					return ServiceUtil.returnError(" Error While Creating Order Payment/Delivery Term !"+errMsg);
+				}
+			}
+			for(Map eachTermItem : otherChargesTermDetail){
+				
+				String termId = (String)eachTermItem.get("otherTermId");
+				String applicableTo = (String)eachTermItem.get("applicableTo");
+				if(!applicableTo.equals("ALL")){
+					List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+					if(UtilValidate.isNotEmpty(sequenceItems)){
+						GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
+						applicableTo = sequenceItem.getString("orderItemSeqId");
+					}
+				}
+				else{
+					applicableTo = "_NA_";
+				}
+				
+				Map termCreateCtx = FastMap.newInstance();
+				termCreateCtx.put("userLogin", userLogin);
+				termCreateCtx.put("orderId", orderId);
+				termCreateCtx.put("orderItemSeqId", applicableTo);
+				termCreateCtx.put("termTypeId", (String)eachTermItem.get("termTypeId"));
+				termCreateCtx.put("termValue", (BigDecimal)eachTermItem.get("termValue"));
+				termCreateCtx.put("termDays", null);
+				if(UtilValidate.isNotEmpty(eachTermItem.get("termDays"))){
+					termCreateCtx.put("termDays", ((BigDecimal)eachTermItem.get("termDays")).longValue());
+				}
+				
+				termCreateCtx.put("uomId", (String)eachTermItem.get("uomId"));
+				termCreateCtx.put("description", (String)eachTermItem.get("description"));
+				
+				Map orderTermResult = dispatcher.runSync("createOrderTerm",termCreateCtx);
+				if (ServiceUtil.isError(orderTermResult)) {
+					String errMsg =  ServiceUtil.getErrorMessage(orderTermResult);
+					Debug.logError(errMsg, "While Creating Order Adjustment Term",module);
+					return ServiceUtil.returnError(" Error While Creating Order Adjustment Term !"+errMsg);
+				}
+					
+			}
+			for(Map eachAdj : orderAdjustmentDetail){
+				
+				String adjustmentTypeId = (String)eachAdj.get("adjustmentTypeId");
+				String applicableTo = (String)eachAdj.get("applicableTo");
+				if(!applicableTo.equals("_NA_")){
+					List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+					if(UtilValidate.isNotEmpty(sequenceItems)){
+						GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
+						applicableTo = sequenceItem.getString("orderItemSeqId");
+					}
+				}
+				BigDecimal amount =(BigDecimal)eachAdj.get("amount");
+				Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);
+				adjustCtx.put("orderId", orderId);
+		    	adjustCtx.put("orderItemSeqId", applicableTo);
+		    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+	    		adjustCtx.put("amount", amount);
+	    		Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  	 		Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+			  		return adjResultMap;			  
+			  	}
+			}
+			
+		}catch (Exception e) {
+ 			Debug.logError(e, "Error while creating order adjustment for orderId :"+orderId, module);
+ 			return ServiceUtil.returnError("Error while creating order adjustment for orderId :"+orderId);			  
+ 		}
+		
+		Map resetTotalCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+		resetTotalCtx.put("orderId", orderId);
+		Map resetMap=FastMap.newInstance();
+ 		try{
+ 			resetMap = dispatcher.runSync("resetGrandTotal",resetTotalCtx);  		  		 
+	 		if (ServiceUtil.isError(resetMap)) {
+	 			String errMsg =  ServiceUtil.getErrorMessage(resetMap);
+	 			Debug.logError(errMsg , module);
+	 			return ServiceUtil.returnError(" Error While reseting order totals for Purchase Order !"+orderId);
+	 		}
+ 		}catch (Exception e) {
+ 			Debug.logError(e, " Error While reseting order totals for Purchase Order !"+orderId, module);
+ 			return resetMap;			  
+ 		}
+		
          
-         try { 
-        	 
-        	 List<GenericValue> otherChargesTerms = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), UtilMisc.toSet("termTypeId"), null, null, false);
-        	 List<String> otherChargesIds = EntityUtil.getFieldListFromEntityList(otherChargesTerms, "termTypeId", true);
-        	 
-             List qouteTermCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-             qouteTermCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.IN, otherChargesIds));
-             EntityCondition quoteCond = EntityCondition.makeCondition(qouteTermCondList, EntityOperator.AND);
-             List<GenericValue> quoteTermList = delegator.findList("QuoteTerm", quoteCond, null, null, null, false);
-             if(UtilValidate.isNotEmpty(quoteTermList)){
-            	 
-            	for(GenericValue eachTerm : quoteTermList){
-            		BigDecimal otherAmt = eachTerm.getBigDecimal("termValue");
-            		String termTypeId = eachTerm.getString("termTypeId");
-            		String uomId = eachTerm.getString("uomId");
-            		if(UtilValidate.isNotEmpty(otherAmt) && otherAmt.compareTo(BigDecimal.ZERO)>0){
-            			// handle percentage 
-            			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-             	    	adjustCtx.put("orderId", orderId);
-             	    	adjustCtx.put("orderAdjustmentTypeId", termTypeId);
-             	    	adjustCtx.put("amount", otherAmt);
-             	    	Map adjResultMap=FastMap.newInstance();
-         		  	 	try{
-         		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-         		  	 		if (ServiceUtil.isError(adjResultMap)) {
-         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-         		  	 			Debug.logError(errMsg , module);
-         		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
-         		  	 		}
-         		  	 	}catch (Exception e) {
-         		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
-         		  			  return adjResultMap;			  
-         		  	 	}
-            		}
-            	}
-             }
-             
-         }catch(Exception e) {
-   	  		Debug.logError("Error While creating The QuoteItem", module);
-   	  		return ServiceUtil.returnError("Error While creating The QuoteItem");
-   	  	 }
-         
-         try{
+        try{
         	 for(GenericValue eachQuoteItem : quoteItemList){
             	 Map inputMap = FastMap.newInstance();
             	 inputMap.put("userLogin", userLogin);
@@ -880,36 +1187,35 @@ public class MaterialQuoteServices {
         	 Debug.logError("Error While updating quote item status to ORDERED", module);
     	  	 return ServiceUtil.returnError("Error While updating quote item status to ORDERED");
          }
-            boolean isOrdered=false;
-	 		Map statusCtx = FastMap.newInstance();
-	 		statusCtx.put("custRequestId", custRequestId);
-	 		statusCtx.put("userLogin", userLogin);
-	 		try {
-		 		Map<String, Object> enquiryResult = (Map)dispatcher.runSync("enquiryStatusValidation", statusCtx);
-		 		isOrdered=(Boolean)enquiryResult.get("isOrdered");
-	 		}catch(Exception e){
- 	        	Debug.logError("Error in enquiryStatusValidation Service", module);
- 			    return ServiceUtil.returnError("Error in enquiryStatusValidation Service");
+        boolean isOrdered=false;
+ 		Map statusCtx = FastMap.newInstance();
+ 		statusCtx.put("custRequestId", custRequestId);
+ 		statusCtx.put("userLogin", userLogin);
+ 		try {
+	 		Map<String, Object> enquiryResult = (Map)dispatcher.runSync("enquiryStatusValidation", statusCtx);
+	 		isOrdered=(Boolean)enquiryResult.get("isOrdered");
+ 		}catch(Exception e){
+        	Debug.logError("Error in enquiryStatusValidation Service", module);
+		    return ServiceUtil.returnError("Error in enquiryStatusValidation Service");
+        }
+ 		if (isOrdered) {
+ 			statusCtx.clear();
+ 			statusCtx.put("statusId", "ENQ_ORDERED");
+ 			statusCtx.put("custRequestId", custRequestId);
+ 			statusCtx.put("userLogin", userLogin);
+ 			try{
+	 			Map<String, Object> resultCtx = dispatcher.runSync("setRequestStatus", statusCtx);
+	 			if (ServiceUtil.isError(resultCtx)) {
+	 				Debug.logError("Error While Updating Enquiry Status: " + custRequestId, module);
+	 				return resultCtx;
+	 			}
+ 			}catch(Exception e){
+ 	        	Debug.logError("Error While Updating Enquiry Status:" + custRequestId, module);
+ 			    return ServiceUtil.returnError("Error While Updating Enquiry Status:");
  	        }
-	 		if (isOrdered) {
-	 			statusCtx.clear();
-	 			statusCtx.put("statusId", "ENQ_ORDERED");
-	 			statusCtx.put("custRequestId", custRequestId);
-	 			statusCtx.put("userLogin", userLogin);
-	 			try{
-		 			Map<String, Object> resultCtx = dispatcher.runSync("setRequestStatus", statusCtx);
-		 			if (ServiceUtil.isError(resultCtx)) {
-		 				Debug.logError("Error While Updating Enquiry Status: " + custRequestId, module);
-		 				return resultCtx;
-		 			}
-	 			}catch(Exception e){
-	 	        	Debug.logError("Error While Updating Enquiry Status:" + custRequestId, module);
-	 			    return ServiceUtil.returnError("Error While Updating Enquiry Status:");
-	 	        }
-	 		}
+ 		}
          result = ServiceUtil.returnSuccess("Created Purchase Order for Quote : "+quoteId);
          result.put("orderId", orderId);
-        // result.put("custRequestName", custRequestName);
          return result;
     }
 	
@@ -1031,20 +1337,46 @@ public class MaterialQuoteServices {
 	  				Timestamp thruDate=(Timestamp) quotes.get("validThruDate");
 	  				String quName = (String) quotes.get("quoteName");
 	  				String id = (String) quotes.get("partyId");
-	  				if(!partyId.equals(id)){
-	  					quotes.set("partyId",partyId);
+	  				if(UtilValidate.isNotEmpty(partyId) && UtilValidate.isNotEmpty(id)){
+	  					if(!partyId.equals(id)){
+	  						quotes.set("partyId",partyId);
+	  					}
 	  				}
-	  				if(!quoteName.equals(quName)){
-	  					quotes.set("quoteName",quoteName);
+	  				if(UtilValidate.isNotEmpty(quoteName)){
+	  					if(UtilValidate.isNotEmpty(quName)){
+	  						if(!quoteName.equals(quName)){
+	  							quotes.set("quoteName",quoteName);
+	  						}
+	  					}else{
+	  						quotes.set("quoteName",quoteName);
+	  					}
 	  				}
-	  				if((issueDate.compareTo(issDate)>0) || (issueDate.compareTo(issDate)<0)){
-	  					quotes.set("issueDate",issueDate);
+	  				if(UtilValidate.isNotEmpty(issueDate)){
+	  					if(UtilValidate.isNotEmpty(issDate)){
+	  						if((issueDate.compareTo(issDate)>0) || (issueDate.compareTo(issDate)<0)){
+	  							quotes.set("issueDate",issueDate);
+	  						}
+	  					}else{
+	  						quotes.set("issueDate",issueDate);
+	  					}
 	  				}
-	  				if((validFromDate.compareTo(fromDate)>0) || (validFromDate.compareTo(fromDate)<0)){
-	  					quotes.set("validFromDate",validFromDate);
+	  				if(UtilValidate.isNotEmpty(validFromDate)){
+	  					if(UtilValidate.isNotEmpty(fromDate)){	
+	  						if((validFromDate.compareTo(fromDate)>0) || (validFromDate.compareTo(fromDate)<0)){
+	  							quotes.set("validFromDate",validFromDate);
+	  					}
+	  					}else{
+	  						quotes.set("validFromDate",validFromDate);
+	  					}
 	  				}
-	  				if((validThruDate.compareTo(thruDate)>0) || (validThruDate.compareTo(thruDate)<0)){
-	  					quotes.set("validThruDate",validThruDate);
+	  				if(UtilValidate.isNotEmpty(validThruDate)){
+	  					if(UtilValidate.isNotEmpty(thruDate)){
+	  						if((validThruDate.compareTo(thruDate)>0) || (validThruDate.compareTo(thruDate)<0)){
+	  							quotes.set("validThruDate",validThruDate);
+	  						}
+	  					}else{
+	  						quotes.set("validThruDate",validThruDate);
+	  					}
 	  				}
 	  				quotes.set("lastModifiedDate",nowTimeStamp);
   					quotes.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));

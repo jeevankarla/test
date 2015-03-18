@@ -47,6 +47,13 @@
        <response name="error" type="view" value="FindMaterialReturns"/>
      </request-map>
      
+     <request-map uri="calculateQuoteGrandTotal">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="calculateQuoteGrandTotal"/>
+       <response name="success" type="view-last" value="ViewMaterialQuote"/>
+       <response name="error" type="view-last" value="ViewMaterialQuote"/>
+     </request-map>
+     
      <request-map uri="POoverview">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="PurchageOrderOverView"/>
@@ -331,8 +338,8 @@
      <request-map uri="createPOForQuote">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createPOForQuote"></event>
-       <response name="success" type="request" value="editMaterialPO"/>
-        <response name="error" type="view" value="ViewMaterialQuote"/>
+       <response name="success" type="view" value="FindMaterialPO"/>
+        <response name="error" type="view" value="FindMaterialPO"/>
      </request-map>
      <request-map uri="MRRreport.pdf">
         <security https="true" auth="true"/>

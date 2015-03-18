@@ -37,4 +37,10 @@ under the License.
         <condition field-name="statusId" operator="is-not-empty"/>
         <action service="changeOrderPaymentStatus" mode="sync"/>
     </eca>
+     <eca entity="QuoteTerm" operation="create-store-remove" event="return">
+        <action service="calculateQuoteGrandTotal" mode="sync"/>
+    </eca>
+    <eca entity="QuoteItem" operation="create-store-remove" event="return">
+        <action service="calculateQuoteGrandTotal" mode="sync"/>
+    </eca>
 </entity-eca>

@@ -29,19 +29,15 @@ import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
 
-statusFlag="N";
-quoteDetails = delegator.findList("QuoteItem",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
+statusFlag="Y";
+List<GenericValue> quoteDetails = delegator.findList("QuoteItem",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(quoteDetails)){
-	quoteDetails.each{quoteitems->
-if("QTITM_QUALIFIED".equals(quoteitems.statusId)){
-	poOrder = delegator.findList("OrderItem",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
-if(UtilValidate.isNotEmpty(poOrder)){
-	statusFlag="N";
-}
-if(UtilValidate.isEmpty(poOrder)){
-	statusFlag="Y";
-}
-}		
+	for(GenericValue eachItem : quoteDetails){
+		statusId = eachItem.statusId;
+		if(!(statusId == "QTITM_QUALIFIED" || statusId == "QTITM_REJECETED")){
+			statusFlag = "N";
+		}
+		break;
 	}
 }
 context.statusFlag=statusFlag;

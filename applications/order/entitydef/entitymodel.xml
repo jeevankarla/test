@@ -1493,6 +1493,7 @@ under the License.
       <field name="validThruDate" type="date-time"></field>
       <field name="quoteName" type="name"></field>
       <field name="description" type="description"></field>
+      <field name="grandTotal" type="currency-amount"></field>
       <field name="createdDate" type="date-time"></field>
 	  <field name="createdByUserLogin" type="id-vlong"></field>
 	  <field name="lastModifiedDate" type="date-time"></field>
@@ -1589,6 +1590,7 @@ under the License.
       <field name="quantity" type="fixed-point"></field>
       <field name="selectedAmount" type="fixed-point"></field>
       <field name="quoteUnitPrice" type="currency-amount"></field>
+      <field name="itemTotal" type="currency-amount"></field>
       <field name="reservStart" type="date-time"></field>
       <field name="reservLength" type="fixed-point"></field>
       <field name="reservPersons" type="fixed-point"></field>
