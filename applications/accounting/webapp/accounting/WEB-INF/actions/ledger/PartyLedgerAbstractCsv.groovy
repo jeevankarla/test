@@ -60,8 +60,8 @@ partyLedgerAbstractCsvMap=[:];
 if(UtilValidate.isNotEmpty(context.partyWiseLedgerAbstractMap)){
 	partyLedgerAbstractCsvMap=context.partyWiseLedgerAbstractMap;
 }
-fomDate=[context.fromDate];
-thruDate=[context.thruDate];
+fomDate=context.fromDate;
+thruDate=context.thruDate;
 partyLedgerAbstractCsvMap.each{ eachPartyLedger->
 	partyLedgerAbstractCsvList.addAll(eachPartyLedger.getValue());
 }
@@ -69,7 +69,7 @@ partyLedgerAbstractCsvMap.each{ eachPartyLedger->
 context.partyLedgerAbstractCsvList=partyLedgerAbstractCsvList;
 headingMap=[:];
 headingList=[];
-datestr="fromDate"+fomDate+"thruDate"+thruDate;
+datestr="fromDate:  "+fomDate+"  thruDate:  "+thruDate;
 headingMap.put("heading", datestr);
 headingList.addAll(headingMap);
 context.headingList=headingList;
