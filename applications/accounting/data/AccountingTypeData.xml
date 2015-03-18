@@ -101,6 +101,8 @@ under the License.
     <FinAccountType description="Credit Card Account" finAccountTypeId="CREDIT_CARD_ACCOUNT" hasTable="N" replenishEnumId="FARP_MANUAL" isRefundable="Y" parentTypeId="LOAN_ACCOUNT"/>
     <FinAccountType description="Equity Line Account" finAccountTypeId="EQUITY_LINE_ACCOUNT" hasTable="N" replenishEnumId="FARP_MANUAL" isRefundable="Y" parentTypeId="LOAN_ACCOUNT"/>
 
+    <FinAccountType description="Apex Bank Lakkasandra" finAccountTypeId="FINEMP_ABL" hasTable="N" isRefundable="Y"  parentTypeId="LOAN_ACCOUNT" replenishEnumId="FARP_MANUAL"/>
+    
     <StatusType description="Financial Account Status" hasTable="N" parentTypeId="" statusTypeId="FINACCT_STATUS"/>
     <StatusItem description="Active" sequenceId="01" statusCode="ACTIVE" statusId="FNACT_ACTIVE" statusTypeId="FINACCT_STATUS"/>
     <!-- This is set automatically by the auto-replenishment code to allow one transaction to bring the balance below zero and then if any other transactions are attempted during replenishment they will be rejected. Was inGoodStanding -->
