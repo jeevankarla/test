@@ -713,7 +713,7 @@ context.partyCBMap=partyCBMap;
 		
 		Map partyAbstractTotalInner=partyEntry.getValue();
 		
-		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 		partyAbstractTotalInner.putAt("partyName",partyName);
 		
 		arPartyOB  =BigDecimal.ZERO;
