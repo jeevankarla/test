@@ -2050,6 +2050,15 @@
 			<link target="FindInterUnitBankAccount">
 			</link>
 		 </menu-item>
+		  <menu-item name="FindEmpLoanFinAccount" title="Loan Accounts">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindEmpLoanFinAccount">
+			</link>
+		 </menu-item>
 		 <menu-item name="FindDepositAccount" title="Deposit Accounts">
           <condition>
 				<or>

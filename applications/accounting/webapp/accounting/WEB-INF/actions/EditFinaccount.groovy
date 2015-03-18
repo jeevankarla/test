@@ -45,6 +45,12 @@ if (context.finAccount != null) {
 context.ctxFinAccountId = session.getAttribute("ctxFinAccountId");
 if (context.ctxFinAccountId != null) {
 	ctxFinAccount = delegator.findByPrimaryKey("FinAccount", [finAccountId : context.ctxFinAccountId]);
+	//find parentType by finAccountId
+	ctxFinAccountParentTypeId="";
+	ctxFinAccountParentType = delegator.findByPrimaryKey("FinAccountType", [finAccountTypeId : ctxFinAccount.finAccountTypeId]);
+	if(UtilValidate.isNotEmpty(ctxFinAccountParentType)){
+		ctxFinAccountParentTypeId=ctxFinAccountParentType.parentTypeId;
+	}
 	if(UtilValidate.isNotEmpty(ctxFinAccount)){
 		if("BANK_ACCOUNT"==ctxFinAccount.finAccountTypeId){
 			tabButtonItem="FindFinAccountAlt";
@@ -56,7 +62,13 @@ if (context.ctxFinAccountId != null) {
 			tabButtonItem="FindInterUnitBankAccount";
 			context.tabButtonItem="FindInterUnitBankAccount";
 			parameters.tabButtonItem="FindInterUnitBankAccount";
-			Debug.log("=ToBe ==Invoke For INTER_UNIT Account==tabButtonItem="+tabButtonItem);
+			//Debug.log("=ToBe ==Invoke For INTER_UNIT Account==tabButtonItem="+tabButtonItem);
+		}//Employee All Loan Accounts
+		else if((parameters.screenFlag && parameters.screenFlag=="FIND_LOAN_ACCOUNT") || ("LOAN_ACCOUNT"==ctxFinAccountParentTypeId)){
+			tabButtonItem="FindEmpLoanFinAccount";
+			context.tabButtonItem="FindEmpLoanFinAccount";
+			parameters.tabButtonItem="FindEmpLoanFinAccount";
+			//Debug.log("=ToBe ==Invoke For FIND_LOAN_ACCOUNT Account==tabButtonItem="+tabButtonItem);
 		}else {//Non Bank Accounts
 		tabButtonItem="FindNonBankAccount";
 		context.tabButtonItem="FindNonBankAccount";
@@ -66,10 +78,14 @@ if (context.ctxFinAccountId != null) {
 	}
 	
 	context.ctxFinAccount = ctxFinAccount;
+	//Debug.log("=============== ctxFinAccount ="+ctxFinAccount);
 }
 
 
 finAccountTypes = delegator.findList("FinAccountAndType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DEPOSIT_RECEIPT", "DEPOSIT_PAID")), UtilMisc.toSet("finAccountTypeId"), null, null, false);
+if(parameters.screenFlag && parameters.screenFlag=="FIND_LOAN_ACCOUNT"){//find Loan Accounts
+	finAccountTypes = delegator.findList("FinAccountAndType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("LOAN_ACCOUNT")), UtilMisc.toSet("finAccountTypeId"), null, null, false);
+}
 finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
 if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 	conditionList = [];
@@ -78,6 +94,9 @@ if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
 	}else if(parameters.screenFlag && parameters.screenFlag=="INTERUNIT_ACCOUNT"){//for InterUnit accounts
 	  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"));
+	  conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	}else if(parameters.screenFlag && parameters.screenFlag=="FIND_LOAN_ACCOUNT"){//find Loan Accounts
+	  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountTypeIds));
 	  conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
 	}else{
 		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.NOT_EQUAL, "BANK_ACCOUNT"));
