@@ -91,7 +91,7 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 					unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
 					productDetailsMap.put("unit",unitDesciption.abbreviation);
 			 }
-			 invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProduct,effectiveDate:dayEnd, ownerPartyId:"Company", userLogin: userLogin]);
+			 invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProduct,effectiveDate:dayBegin, ownerPartyId:"Company", userLogin: userLogin]);
 			 if(UtilValidate.isNotEmpty(invCountMap)){
 			 	 openingQty = invCountMap.get("inventoryCount");
 			 openingTotCost=invCountMap.get("inventoryCost");
@@ -107,10 +107,10 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 					 ReceiptQty=ReceiptQty+receiptDetails.get("quantity");
 					 ReceiptAmount=ReceiptAmount+receiptDetails.get("amount");
 				 }
-				 productDetailsMap.put("ReceiptQty",ReceiptQty);
-				 productDetailsMap.put("ReceiptAmount",ReceiptAmount);
-				 
 			 }
+			 productDetailsMap.put("ReceiptQty",ReceiptQty);
+			 productDetailsMap.put("ReceiptAmount",ReceiptAmount);
+			 
 			 itemIssueMap=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:dayBegin, thruDate:dayEnd,productId: eachProduct, userLogin: userLogin]);
 			 StoreIssueList=itemIssueMap.get("itemIssuanceList");
 			 IssueQty=0;IssueAmount=0;
@@ -119,10 +119,14 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 					 IssueQty=IssueQty+storeIssueDetails.get("quantity");
 					 IssueAmount=IssueAmount+storeIssueDetails.get("amount");
 				 }
-				 productDetailsMap.put("IssueQty",IssueQty);
-				 productDetailsMap.put("IssueAmount",IssueAmount);
-			 }			 																						   
+			 }	
+			 productDetailsMap.put("IssueQty",IssueQty);
+			 productDetailsMap.put("IssueAmount",IssueAmount);
+			 
+		 if( ((ReceiptQty) != 0) && ((IssueQty) != 0) || ((openingQty) != 0)){
+		  
 			 productMap.put(eachProduct,productDetailsMap);
+			 }
 		 }						
 }
 context.productMap=productMap;

@@ -209,7 +209,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 			amount = 0;
 		}
 		
-		bedTaxPercent = 0;
+		/*bedTaxPercent = 0;
 		if(eachItem.bedPercent){
 			bedCompare = (eachItem.bedPercent).setScale(6);
 			condList = [];
@@ -224,7 +224,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 				bedTaxPercent = (BigDecimal)(EntityUtil.getFirst(taxComponent)).get("taxRate");
 			}
 			
-		}
+		}*/
 		
 		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = EntityUtil.getFirst(prodDetails);
@@ -234,13 +234,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);
-		if(eachItem.bedPercent){
+		/*if(eachItem.bedPercent){
 			newObj.put("bedPercent", bedTaxPercent);
 		}
 		else{
 			newObj.put("bedPercent", 0);
-		}
-//		newObj.put("bedPercent", eachItem.bedPercent);
+		}*/
+		newObj.put("bedPercent", eachItem.bedPercent);
 		newObj.put("cstPercent", eachItem.cstPercent);
 		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
