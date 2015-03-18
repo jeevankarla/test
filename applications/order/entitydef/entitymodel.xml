@@ -558,6 +558,8 @@ under the License.
       <field name="cstAmount" type="currency-precise" ></field>
       <field name="serviceTaxPercent" type="fixed-point"></field>
       <field name="serviceTaxAmount" type="currency-precise" ></field>
+      <field name="tcsPercent" type="fixed-point"></field>
+      <field name="tcsAmount" type="currency-precise" ></field>
       
       <field name="recurringFreqUomId" type="id"></field>
       <field name="itemDescription" type="description"></field>
