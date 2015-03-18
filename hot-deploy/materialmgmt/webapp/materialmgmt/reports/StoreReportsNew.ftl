@@ -215,14 +215,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="StoreReport" name="StoreReport" mothed="post" action="<@ofbizUrl>StoreReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Store Issue Report(Category)</span></td>
+					     <td width="10%"><span class='h3'>Store Issue Report(Category)</span></td>
 						 <td width="25%">
 						 <span class='h3'>
 						    From <input  type="text" size="18pt" id="storeFromDate"   name="storeFromDate"/>
 							To   <input  type="text" size="18pt" id="storeThruDate"   name="storeThruDate"/>
 						 </span>
 						 </td>
-						 <td width="15%"><span class='h3'>Department
+						 <td width="12%"><span class='h3'>Department
 							    <select name="partyId" id="partyId">
 							        <option value=""></option>
 							        <#list  finalDepartmentList as eachDeparment>
@@ -230,7 +230,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							        </#list> 
 							    </select>    								
 					  	 </span></td>
-						 <td width="10%"><span class='h3'>Store
+						 <td width="6%"><span class='h3'>Store
 							    <select name="issueToFacilityId" id="issueToFacilityId">
 							        <option value=""></option>
 							        <#list  storeList as store>
@@ -238,7 +238,11 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							        </#list> 
 							    </select>    								
 						   </span></td>
-						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						   <td width="8%"><span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag">
+							        <option value="Detailed">Detailed</option>
+							         <option value="Abstract">Abstract</option>
+							    </select></span></td>
+						 <td width="8%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
 				 </table>
 			 </form>

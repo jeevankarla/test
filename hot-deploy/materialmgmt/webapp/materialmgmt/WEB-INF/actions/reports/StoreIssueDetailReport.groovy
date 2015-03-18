@@ -59,6 +59,11 @@ if(totalDays > 32){
 productIds=[];
 partyId=parameters.partyId;
 facilityId=parameters.issueToFacilityId;
+			if(UtilValidate.isNotEmpty(facilityId)){
+				facilities=delegator.findOne("Facility",["facilityId":facilityId],false);
+				context.facilityId=facilities.facilityName;
+			}
+
 if(UtilValidate.isNotEmpty(facilityId)){
 		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId )],EntityOperator.AND);
 		productFacilityList = delegator.findList("ProductFacility", ecl, UtilMisc.toSet("facilityId","productId"), null, null, false);
@@ -109,26 +114,17 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		 primaryParentCategoryDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false),dayBegin);
-         primaryParentCategoryIds = EntityUtil.getFieldListFromEntityList(primaryParentCategoryDetails,"primaryParentCategoryId", true);		 
-		 parentCategoryMap = [:];
-		 
-		 if(UtilValidate.isNotEmpty(primaryParentCategoryIds)){
-			  conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId",EntityOperator.IN, primaryParentCategoryIds));
-			  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			  productCatDetails = EntityUtil.filterByCondition(primaryParentCategoryDetails,condition);
-			  productCatIds = EntityUtil.getFieldListFromEntityList(primaryParentCategoryDetails,"productCategoryId", true);
-			  primaryParentCategoryIds.each{primaryParentCategoryId->								 
-						 
+		 productCatDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false),dayBegin);
+         productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);
 			     if(UtilValidate.isNotEmpty(productCatIds)){
 				        prodMap=[:];
  
                         productCatIds.each{productCatId->
- 
+							
 				             prodList=[];
 			                 if(UtilValidate.isNotEmpty(productIdsDetails)){
 								 
-				                      productIdsDetails.each{custReq->						
+				                      productIdsDetails.each{custReq->	
 					                        productDetailMap=[:];
 											
 					                        custRequestId=custReq.custRequestId;
@@ -139,7 +135,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 											conditionList.clear();
 											conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
 											condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-											productCatTypeDetails = EntityUtil.filterByCondition(primaryParentCategoryDetails,condition);							
+											productCatTypeDetails = EntityUtil.filterByCondition(productCatDetails,condition);							
 											productCatTypes= EntityUtil.getFirst(productCatTypeDetails); 
 											if((productCatTypes) && (productCatTypes.productCategoryId)){								
 											      productCatTypeId=productCatTypes.productCategoryId;	
@@ -176,24 +172,27 @@ if(UtilValidate.isNotEmpty(deptIds)){
 						                                if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
 															if(storeAbstQtyDetails.size()>1){
 						                                      storeAbstQtyDetails.each{storeAbstQty->	
-									                              itemquantity=storeAbstQty.quantity;												  
+									                              itemquantity=storeAbstQty.quantity;
+																  unitCost=storeAbstQty.unitCost;
 																  if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
 																	  itemquantity=itemquantity-storeAbstQty.cancelQuantity;
+																	  unitCost = unitCost - storeAbstQty.unitCost;
 																  }			
 																  totQty =totQty+itemquantity;
-									                              unitCost=storeAbstQty.unitCost;
-									                             /* totunitCost=totunitCost+unitCost;*/
+									                             totunitCost=totunitCost+unitCost;
 																  totVal+=itemquantity*unitCost;
 																  productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
 						                                      }
 															}else{
 																storeAbstQty=EntityUtil.getFirst(storeAbstQtyDetails);
 																quantity=storeAbstQty.quantity;
+																unitCost=storeAbstQty.unitCost;
 																if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
 																	quantity-=storeAbstQty.cancelQuantity;
+																	unitCost = unitCost - storeAbstQty.unitCost;
 																}
 																totQty=quantity;
-																unitCost=storeAbstQty.unitCost;
+																totunitCost=totunitCost+unitCost;
 																 totVal=quantity*unitCost;
 																 productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
 															}
@@ -213,6 +212,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 								                            
 								                            productDetailMap["totQty"]=totQty;				                           
 								                            productDetailMap["totVal"]=totVal;
+															productDetailMap["totunitCost"]=totunitCost;
 						                              }
 						                              else{									
 								                            productDetailMap["totQty"]=0;
@@ -221,7 +221,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 						                              }	
 													  if(totQty != 0){										  
 						                                 prodList.addAll(productDetailMap);
-													  }						  					 
+													  }
 							                    }
 					                       }																	
 				                       }						
@@ -233,13 +233,8 @@ if(UtilValidate.isNotEmpty(deptIds)){
 						 }
                        }
                     }
-			        if(UtilValidate.isNotEmpty(prodMap)){					 
-			          parentCategoryMap.put(primaryParentCategoryId,prodMap);			 
-				    }
-                  }
-                }
-				if(UtilValidate.isNotEmpty(parentCategoryMap)){
-			       prodDeptMap.put(deptName,parentCategoryMap);
+				if(UtilValidate.isNotEmpty(prodMap)){
+			       prodDeptMap.put(deptName,prodMap);
 			    }
        }
 	  context.prodDeptMap=prodDeptMap;
@@ -253,12 +248,8 @@ for(Map.Entry entryDep : prodDeptMap.entrySet()){
 	for(Map.Entry entryCat : deptDetails.entrySet()){
 		cat=entryCat.getKey();
 		catDetails = entryCat.getValue();
-		SubCatMap=[:];
-		for(Map.Entry entrySubCat : catDetails.entrySet()){
-			subCat=entrySubCat.getKey();
-			subCatDetails = entrySubCat.getValue();
 			productsMap=[:];
-			for(eachentry in subCatDetails){
+			for(eachentry in catDetails){
 				productId = eachentry.productId;				
 				tempMap=[:];
 				if(UtilValidate.isEmpty(productsMap[productId])){
@@ -268,24 +259,22 @@ for(Map.Entry entryDep : prodDeptMap.entrySet()){
 					tempMap["unit"]=eachentry.unit;					
 					tempMap["totQty"]=eachentry.totQty;
 					tempMap["totVal"]=eachentry.totVal;
+					tempMap["totunitCost"]=eachentry.totunitCost;
 					productsMap.put(productId,tempMap);
 				}else{
 					tempProdMap = [:];
 					tempProdMap.putAll(productsMap.get(productId));
 					tempProdMap.put("totQty",tempProdMap.get("totQty")+eachentry.totQty);
 					tempProdMap.put("totVal",tempProdMap.get("totVal")+eachentry.totVal);
+					tempProdMap.put("totunitCost", tempProdMap.get("totunitCost")+eachentry.totunitCost);
 					productsMap.put(productId,tempProdMap);
 				}
-				
 			}
-			SubCatMap.put(subCat, productsMap);
-		}
-		CatMap.put(cat, SubCatMap);
+		CatMap.put(cat, productsMap);
 	}
 	deptMap.put(dept, CatMap);
 }
 context.deptMap=deptMap;
-
 
 
 
