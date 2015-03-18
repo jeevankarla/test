@@ -2032,6 +2032,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindInterUnitBankAccount"/>
     </request-map>
+     <request-map uri="FindEmpLoanFinAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindEmpLoanFinAccount"/>
+    </request-map>
+    
     <request-map uri="NonBankAccount.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="NonBankAccountCSV"/>    	
@@ -3863,6 +3868,7 @@ under the License.
     <view-map name="DepositToDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositToDepositAcct"/>
     <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
     <view-map name="FindInterUnitBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindInterUnitBankAccount"/>
+     <view-map name="FindEmpLoanFinAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmpLoanFinAccount"/>
     
     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/>
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
