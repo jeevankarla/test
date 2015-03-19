@@ -6944,12 +6944,14 @@ public class ByProductNetworkServices {
 	    BigDecimal basicPrice = (BigDecimal) context.get("basicPrice");
 	    BigDecimal bedPrice = (BigDecimal) context.get("bedPrice");
 	    BigDecimal cstPrice = (BigDecimal) context.get("cstPrice");
+	    BigDecimal tcsPrice = (BigDecimal) context.get("tcsPrice");
 	    BigDecimal vatPrice = (BigDecimal) context.get("vatPrice");
 	    BigDecimal serviceTaxPrice = (BigDecimal) context.get("serviceTaxPrice");
 	    
 	    BigDecimal bedPercent=(BigDecimal)context.get("bedPercent");
 		BigDecimal vatPercent=(BigDecimal)context.get("vatPercent");
 		BigDecimal cstPercent=(BigDecimal)context.get("cstPercent");
+		BigDecimal tcsPercent=(BigDecimal)context.get("tcsPercent");
 		BigDecimal serviceTaxPercent=(BigDecimal)context.get("serviceTaxPercent");	
 	    GenericValue product;
 	    String currencyDefaultUomId = (String) context.get("currencyUomId");
@@ -6984,6 +6986,17 @@ public class ByProductNetworkServices {
 			taxDetailList.add(taxDetailMap);
 			
 			totalTaxAmt = totalTaxAmt.add(vatPrice);
+			
+		}
+		if(tcsPrice.compareTo(BigDecimal.ZERO)>0){
+			
+			Map taxDetailMap = FastMap.newInstance();
+			taxDetailMap.put("taxType", "TCS_206C");
+			taxDetailMap.put("amount", tcsPrice);
+			taxDetailMap.put("percentage", tcsPercent);
+			taxDetailList.add(taxDetailMap);
+			
+			totalTaxAmt = totalTaxAmt.add(tcsPrice);
 			
 		}
 		if(bedPrice.compareTo(BigDecimal.ZERO)>0){

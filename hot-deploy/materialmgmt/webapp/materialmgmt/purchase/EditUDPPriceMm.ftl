@@ -79,6 +79,7 @@
 			var vatPrice  = 0;
 			var bedPrice  = 0;
 			var cstPrice  = 0;
+			var tcsPrice  = 0;
 			var serviceTaxPrice  = 0;
 			if(dataRow["basicPrice"]){
 				basicPrice = dataRow["basicPrice"];
@@ -92,11 +93,14 @@
 			if(dataRow["cstPrice"]){
 				cstPrice = dataRow["cstPrice"];
 			}
+			if(dataRow["tcsPrice"]){
+				tcsPrice = dataRow["tcsPrice"];
+			}
 			if(dataRow["serviceTaxPrice"]){
 				serviceTaxPrice = dataRow["serviceTaxPrice"];
 			}
 			
-			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || serviceTaxPrice>0){
+			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || tcsPrice>0 || serviceTaxPrice>0){
 				priceExists = "Y";
 			}
 			
@@ -104,6 +108,7 @@
 			var bedPercent=0;
 			var vatPercent=0;
 			var cstPercent=0;
+			var tcsPercent=0;
 			var serviceTaxPercent=0;
 		
 		    if(dataRow["bedPercent"]){
@@ -114,6 +119,9 @@
 			}
 			if(dataRow["cstPercent"]){
 				cstPercent = dataRow["cstPercent"];
+			}
+			if(dataRow["tcsPercent"]){
+				tcsPercent = dataRow["tcsPercent"];
 			}
 			if(dataRow["serviceTaxPercent"]){
 				serviceTaxPercent = dataRow["serviceTaxPercent"];
@@ -126,6 +134,7 @@
 			message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
 			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount'></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'></td></tr>";
+			message += "<tr class='h3'><td align='left'>TCS % : </td><td><input type='text' name='tcsPercent' id='tcsPercent' onblur='getTcsAmount();' /></td><td align='left'>TCS Amount : </td><td><input type='text' name='tcsAmount' id='tcsAmount'></td></tr>";
 			message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
 			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}else{
@@ -133,6 +142,7 @@
 			message += "<tr class='h3'><td align='left'>BED % : </td><td><input type='text' name='bedPercent' id='bedPercent' value='"+bedPercent+"' onblur='getBedAmount();' /></td><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>VAT %: </td><td><input type='text' name='vatPercent' id='vatPercent' value='"+vatPercent+"' onblur='getVatAmount();'/></td><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"' ></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST % : </td><td><input type='text' name='cstPercent' id='cstPercent' value='"+cstPercent+"' onblur='getCstAmount();' /></td><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'></td></tr>";
+			message += "<tr class='h3'><td align='left'>TCS % : </td><td><input type='text' name='tcsPercent' id='tcsPercent' value='"+tcsPercent+"' onblur='getTcsAmount();' /></td><td align='left'>TCS Amount : </td><td><input type='text' name='tcsAmount' id='tcsAmount' value='"+tcsPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>Service Percent : </td><td><input type='text' name='serviceTaxPercent' id='serviceTaxPercent' value='"+serviceTaxPercent+"' onblur='getServiceTaxAmount();' /></td><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"' /></td></tr>";
 			<#--
 			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
@@ -178,6 +188,16 @@
 		var cstAmount=bPrice*percentUnit;
 		$('#cstAmount').val(cstAmount);
 	}
+	function getTcsAmount(){
+		var bPrice = $('#basicAmount').val();
+		var tcsPercent = $('#tcsPercent').val();
+			if(isNaN(tcsPercent)){
+				tcsPercent = 0;
+			}
+		var percentUnit = tcsPercent/100;
+		var tcsAmount=bPrice*percentUnit;
+		$('#tcsAmount').val(tcsAmount);
+	}
 	function getServiceTaxAmount(){
 		var bPrice = $('#basicAmount').val();
 		var serviceTaxPercent = $('#serviceTaxPercent').val();
@@ -194,10 +214,12 @@
 		var cstPrice = $('#cstAmount').val();
 		var vatPrice = $('#vatAmount').val();
 		var bedPrice = $('#bedAmount').val();
+		var tcsPrice = $('#tcsAmount').val();
 		
 		var bedPercent = $('#bedPercent').val();
 		var vatPercent = $('#vatPercent').val();
 		var cstPercent = $('#cstPercent').val();
+		var tcsPercent = $('#tcsPercent').val();
 		var serviceTaxPercent = $('#serviceTaxPercent').val();
 		
 		var serviceTaxPrice = $('#serviceTaxAmount').val();
@@ -215,6 +237,16 @@
 			cstPercent = 0;
 		}else{
 			cstPercent = parseFloat(cstPercent);
+		}
+		if(!tcsPrice){
+			tcsPrice = 0;
+		}else{
+			tcsPrice = parseFloat(tcsPrice);
+		}
+		if(!tcsPercent){
+			tcsPercent = 0;
+		}else{
+			tcsPercent = parseFloat(tcsPercent);
 		}
 		if(!vatPrice){
 			vatPrice = 0;
@@ -249,6 +281,7 @@
 		var totalUnitPrice = bPrice+cstPrice+vatPrice+bedPrice+serviceTaxPrice;
 		dataRow['basicPrice'] = bPrice;
 		dataRow['cstPrice'] = cstPrice;
+		dataRow['tcsPrice'] = tcsPrice;
 		dataRow['vatPrice'] = vatPrice;
 		dataRow['bedPrice'] = bedPrice;
 		dataRow['serviceTaxPrice'] = serviceTaxPrice;
@@ -256,6 +289,7 @@
 		dataRow['bedPercent'] = bedPercent;
 		dataRow['vatPercent'] = vatPercent;
 		dataRow['cstPercent'] = cstPercent;
+		dataRow['tcsPercent'] = tcsPercent;
 		dataRow['serviceTaxPercent'] = serviceTaxPercent;
 		
 		dataRow['unitPrice'] = totalUnitPrice;

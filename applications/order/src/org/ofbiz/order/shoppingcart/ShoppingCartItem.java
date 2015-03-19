@@ -166,6 +166,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     private BigDecimal cstAmount = null;
     private BigDecimal serviceTaxPercent = null;
     private BigDecimal serviceTaxAmount = null;
+    private BigDecimal tcsPercent = null;
+    private BigDecimal tcsAmount = null;
     
     
   
@@ -737,7 +739,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.bedcessAmount = item.getBedcessAmount();
         this.bedseccessPercent = item.getBedseccessPercent();
         this.bedseccessAmount = item.getBedseccessAmount();
-       
+        this.tcsAmount = item.getTcsAmount();
+        this.tcsPercent = item.getTcsPercent();
         
         
         if (this._product == null) {
@@ -2200,7 +2203,14 @@ public class ShoppingCartItem implements java.io.Serializable {
     public BigDecimal getCstAmount() {
         return cstAmount;
     }
-    
+    /** Returns the tcs Percent**/
+    public BigDecimal getTcsPercent(){
+    	return tcsPercent;
+    }
+    /** Returns the tcs Amount**/
+    public BigDecimal getTcsAmount(){
+    	return tcsAmount;
+    }
     /** Returns the serviceTax percent. */
     public BigDecimal getServiceTaxPercent() {
         return serviceTaxPercent;
@@ -2271,6 +2281,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     		 else if(taxType.startsWith("SERTAX_")){
     			 this.serviceTaxPercent = percentage;
     			 this.serviceTaxAmount = amount;
+    		 }
+    		 else if(taxType.startsWith("TCS_")){
+    			 this.tcsAmount = amount;
+    			 this.tcsPercent = percentage;
     		 }
     	}// end of tax list 
     }

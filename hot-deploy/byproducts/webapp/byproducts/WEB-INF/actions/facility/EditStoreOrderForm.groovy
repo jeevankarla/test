@@ -156,12 +156,19 @@ if(partyOrderIds){
 			}else{
 				newObj.put("serviceTaxPrice", 0);
 			}
+			if(eachItem.tcsAmount){
+				newObj.put("tcsPrice", eachItem.tcsAmount);
+			}else{
+				newObj.put("tcsAmount", 0);
+			}
 			//adding perecenatges
 			if(eachItem.bedPercent){newObj.put("bedPercent", eachItem.bedPercent); }else{ newObj.put("bedPercent", 0); }
 			
 			if(eachItem.vatPercent){newObj.put("vatPercent", eachItem.vatPercent); }else{ newObj.put("vatPercent", 0); }
 			
 			if(eachItem.cstPercent){newObj.put("cstPercent", eachItem.cstPercent); }else{ newObj.put("cstPercent", 0); }
+			
+			if(eachItem.tcsPercent){newObj.put("tcsPercent", eachItem.tcsPercent); }else{ newObj.put("tcsPercent", 0); }
 			
 			if(eachItem.serviceTaxPercent){newObj.put("serviceTaxPercent", eachItem.serviceTaxPercent); }else{ newObj.put("serviceTaxPercent", 0); }
 		

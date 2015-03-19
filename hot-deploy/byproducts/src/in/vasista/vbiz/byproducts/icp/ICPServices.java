@@ -346,6 +346,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
 			BigDecimal cstPrice = BigDecimal.ZERO;
+			BigDecimal tcsPrice = BigDecimal.ZERO;
 			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
@@ -373,6 +374,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPrice"))){
 				cstPrice = (BigDecimal)prodQtyMap.get("cstPrice");
 			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("tcsPrice"))){
+				tcsPrice = (BigDecimal)prodQtyMap.get("tcsPrice");
+			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
 				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
 			}
@@ -381,6 +385,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			BigDecimal bedPercent=BigDecimal.ZERO;
 			BigDecimal vatPercent=BigDecimal.ZERO;
 			BigDecimal cstPercent=BigDecimal.ZERO;
+			BigDecimal tcsPercent=BigDecimal.ZERO;
 			BigDecimal serviceTaxPercent=BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 				bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
@@ -390,6 +395,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
 				cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("tcsPercent"))){
+				tcsPercent = (BigDecimal)prodQtyMap.get("tcsPercent");
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPercent"))){
 				serviceTaxPercent = (BigDecimal)prodQtyMap.get("serviceTaxPercent");
@@ -408,10 +416,12 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				priceContext.put("bedPrice", bedPrice);
 				priceContext.put("vatPrice", vatPrice);
 				priceContext.put("cstPrice", cstPrice);
+				priceContext.put("tcsPrice", tcsPrice);
 				priceContext.put("serviceTaxPrice", serviceTaxPrice);
 				priceContext.put("bedPercent", bedPercent);
 				priceContext.put("vatPercent", vatPercent);
 				priceContext.put("cstPercent", cstPercent);
+				priceContext.put("tcsPercent", tcsPercent);
 				priceContext.put("serviceTaxPercent", serviceTaxPercent);
 				priceResult = ByProductNetworkServices.calculateUserDefinedProductPrice(delegator, dispatcher, priceContext);
 			}
@@ -863,11 +873,13 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String vatPriceStr = null;
 		String bedPriceStr = null;
 		String cstPriceStr = null;
+		String tcsPriceStr = null;
 		String serTaxPriceStr = null;
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal basicPrice = BigDecimal.ZERO;
 		BigDecimal cstPrice = BigDecimal.ZERO;
+		BigDecimal tcsPrice = BigDecimal.ZERO;
 		BigDecimal vatPrice = BigDecimal.ZERO;
 		BigDecimal bedPrice = BigDecimal.ZERO;
 		BigDecimal serviceTaxPrice = BigDecimal.ZERO;
@@ -875,11 +887,13 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String bedPercentStr = null;
 		String vatPercentStr = null;
 		String cstPercentStr = null;
+		String tcsPercentStr = null;
 		String serviceTaxPercentStr = null;
 		
 		BigDecimal bedPercent=BigDecimal.ZERO;
 		BigDecimal vatPercent=BigDecimal.ZERO;
 		BigDecimal cstPercent=BigDecimal.ZERO;
+		BigDecimal tcsPercent=BigDecimal.ZERO;
 		BigDecimal serviceTaxPercent=BigDecimal.ZERO;
 		
 		
@@ -981,6 +995,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					cstPriceStr = (String) paramMap
 							.get("cstPrice" + thisSuffix);
 				}
+				if (paramMap.containsKey("tcsPrice" + thisSuffix)) {
+					tcsPriceStr = (String) paramMap
+							.get("tcsPrice" + thisSuffix);
+				}
 				if (paramMap.containsKey("serviceTaxPrice" + thisSuffix)) {
 					serTaxPriceStr = (String) paramMap.get("serviceTaxPrice"
 							+ thisSuffix);
@@ -998,6 +1016,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					cstPercentStr = (String) paramMap.get("cstPercent"
 							+ thisSuffix);
 				}
+				if (paramMap.containsKey("tcsPercent" + thisSuffix)) {
+					tcsPercentStr = (String) paramMap.get("tcsPercent"
+							+ thisSuffix);
+				}
 				if (paramMap.containsKey("serviceTaxPercent" + thisSuffix)) {
 					serviceTaxPercentStr = (String) paramMap
 							.get("serviceTaxPercent" + thisSuffix);
@@ -1010,6 +1032,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					}
 					if (UtilValidate.isNotEmpty(cstPriceStr)) {
 						cstPrice = new BigDecimal(cstPriceStr);
+					}
+					if (UtilValidate.isNotEmpty(tcsPriceStr)) {
+						tcsPrice = new BigDecimal(tcsPriceStr);
 					}
 					if (UtilValidate.isNotEmpty(bedPriceStr)) {
 						bedPrice = new BigDecimal(bedPriceStr);
@@ -1027,8 +1052,11 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					if (UtilValidate.isNotEmpty(vatPercentStr)) {
 						vatPercent = new BigDecimal(vatPercentStr);
 					}
-					if (UtilValidate.isNotEmpty(vatPercentStr)) {
-						vatPercent = new BigDecimal(vatPercentStr);
+					if (UtilValidate.isNotEmpty(cstPercentStr)) {
+						cstPercent = new BigDecimal(cstPercentStr);
+					}
+					if (UtilValidate.isNotEmpty(tcsPercentStr)) {
+						tcsPercent = new BigDecimal(tcsPercentStr);
 					}
 					if (UtilValidate.isNotEmpty(serviceTaxPercentStr)) {
 						serviceTaxPercent = new BigDecimal(serviceTaxPercentStr);
@@ -1048,12 +1076,14 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				productQtyMap.put("basicPrice", basicPrice);
 				productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cstPrice", cstPrice);
+				productQtyMap.put("tcsPrice", tcsPrice);
 				productQtyMap.put("vatPrice", vatPrice);
 				productQtyMap.put("serviceTaxPrice", serviceTaxPrice);
 
 				productQtyMap.put("bedPercent", bedPercent);
 				productQtyMap.put("vatPercent", vatPercent);
 				productQtyMap.put("cstPercent", cstPercent);
+				productQtyMap.put("tcsPercent", tcsPercent);
 				productQtyMap.put("serviceTaxPercent", serviceTaxPercent);
 
 				indentProductList.add(productQtyMap);

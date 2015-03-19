@@ -472,19 +472,19 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MMPURCHASEVAT_VIEW"/>
    
      <!-- Inter Unit Transfer and sale   permissions -->
-    <SecurityGroup description="All 'Icp Sale' permissions like create,veiw " groupId="MM_ICP_CREATE"/>    
+    <SecurityGroup description="All 'Sale' permissions like create,veiw " groupId="MM_SALE_CREATE"/>    
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_ICP_CREATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCOUNTING_READ"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCTG_PREF_VIEW"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ACCTG_ATX_CREATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_CREATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_CREATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_ENTRY"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="MM_ICP_CREATE" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_SALE_CREATE" permissionId="ORDERMGR_VIEW"/>
    
     
      <!-- Inter Unit Transfer and sale   permissions -->

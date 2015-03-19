@@ -151,6 +151,7 @@
 				var vatPrice = data[rowCount]["vatPrice"];
 				var cstPrice = data[rowCount]["cstPrice"];
 				var bedPrice = data[rowCount]["bedPrice"];
+				var tcsPrice = data[rowCount]["tcsPrice"];
 				var serviceTaxPrice = data[rowCount]["serviceTaxPrice"];
 				if(bPrice && bPrice>0){
 					var bPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "basicPrice_o_"+ rowCount).val(bPrice);
@@ -159,6 +160,8 @@
 					jQuery(formId).append(jQuery(vatPriceField));
 					var cstPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "cstPrice_o_"+ rowCount).val(cstPrice);
 					jQuery(formId).append(jQuery(cstPriceField));
+					var tcsPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "tcsPrice_o_"+ rowCount).val(tcsPrice);
+					jQuery(formId).append(jQuery(tcsPriceField));
 					var bedPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "bedPrice_o_"+ rowCount).val(bedPrice);
 					jQuery(formId).append(jQuery(bedPriceField));
 					var serviceTaxPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "serviceTaxPrice_o_"+ rowCount).val(serviceTaxPrice);
@@ -168,6 +171,7 @@
 					var bedPercent=data[rowCount]["bedPercent"];
 					var vatPercent=data[rowCount]["vatPercent"];
 					var cstPercent=data[rowCount]["cstPercent"];
+					var tcsPercent=data[rowCount]["tcsPercent"];
 					var serviceTaxPercent=data[rowCount]["serviceTaxPercent"];
 			
 			        var bedPercentField = jQuery("<input>").attr("type", "hidden").attr("name", "bedPercent_o_"+ rowCount).val(bedPercent);
@@ -176,6 +180,8 @@
 					jQuery(formId).append(jQuery(vatPercentField));
 					var cstPercentField = jQuery("<input>").attr("type", "hidden").attr("name", "cstPercent_o_"+ rowCount).val(cstPercent);
 					jQuery(formId).append(jQuery(cstPercentField));
+					var tcsPercentField = jQuery("<input>").attr("type", "hidden").attr("name", "tcsPercent_o_"+ rowCount).val(tcsPercent);
+					jQuery(formId).append(jQuery(tcsPercentField));
 					var serviceTaxPercentField = jQuery("<input>").attr("type", "hidden").attr("name", "serviceTaxPercent_o_"+ rowCount).val(serviceTaxPercent);
 					jQuery(formId).append(jQuery(serviceTaxPercentField));
 			
@@ -1068,4 +1074,4 @@
 		grid.render();    
 		
 	}-->
-</script>			
+</script>

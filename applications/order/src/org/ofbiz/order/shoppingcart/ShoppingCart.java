@@ -3652,6 +3652,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 orderItem.set("cancelBackOrderDate", item.getCancelBackOrderDate());
                 orderItem.set("changeDatetime",UtilDateTime.nowTimestamp());
                 
+                orderItem.set("tcsPercent" ,item.getTcsPercent());
+                orderItem.set("tcsAmount" ,item.getTcsAmount());
                 orderItem.set("vatPercent" ,item.getVatPercent());
                 orderItem.set("vatAmount", item.getVatAmount());
                 orderItem.set("cstPercent" ,item.getCstPercent());
