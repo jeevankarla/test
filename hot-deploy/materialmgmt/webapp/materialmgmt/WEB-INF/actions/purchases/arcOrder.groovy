@@ -115,22 +115,32 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 // partyId,partyName ,party Address
 List conlist=[];
 conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
+conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"SUPPLIER_AGENT"));
 cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
 vendorDetail=EntityUtil.getFirst(vendorDetails);
 partyId="";
 if(UtilValidate.isNotEmpty(vendorDetail)){
-partyId=vendorDetail.partyId;
+   partyId=vendorDetail.partyId;
 }
-   if(UtilValidate.isNotEmpty(partyId)){
+if(UtilValidate.isEmpty(vendorDetail)){
+	conlist.clear();
+	conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"BILL_FROM_VENDOR"));
+	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
+	vendorDetailsList = delegator.findList("OrderRole", cond , null, null, null, false );	
+	vendorData=EntityUtil.getFirst(vendorDetailsList);	
+	if(UtilValidate.isNotEmpty(vendorData)){
+		partyId=vendorData.partyId;
+	}
+}
+if(UtilValidate.isNotEmpty(partyId)){
 	   
 	   allDetailsMap.put("partyId",partyId);
 	   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
-	   if(UtilValidate.isNotEmpty(partyName)){
-		   
-	   allDetailsMap.put("partyName",partyName);
-	 }
+	   if(UtilValidate.isNotEmpty(partyName)){		   
+     	   allDetailsMap.put("partyName",partyName);
+	   }
 	   
 	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 	   address1="";address2="";city="";postalCode="";
