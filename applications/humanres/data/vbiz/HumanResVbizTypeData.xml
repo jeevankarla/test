@@ -243,7 +243,8 @@
    <PayrollTypePayheadTypeMap payrollTypeId="SP_DA_ARREARS" payHeadTypeId="PAYROL_BEN_DA"/>
    <PayrollTypePayheadTypeMap payrollTypeId="SP_DA_ARREARS" payHeadTypeId="PAYROL_DD_PF"/>
     
-    
+    <!-- HR Bonus --> 
+    <PayrollType  parentTypeId="PAYROLL_BILL" payrollTypeId="SP_BONUS" periodTypeId="HR_BONUS" serviceName="processBonusService"/>
     
     
     

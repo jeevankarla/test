@@ -120,6 +120,8 @@ under the License.
 			                    	<#assign SBEDeductions = 0>
 			                    	
 			                    	<#assign DAAREmpProFund = 0>
+			                    	<#assign IncPF = 0>
+			                    	
 			                    
 				                    <#assign monthKey = partyDeductions.getKey()>
 				                    
@@ -154,10 +156,13 @@ under the License.
 			                    	
 			                    	
 			                    	<#assign DAAREmpProFund = partyDeductions.getValue().get("DAAREmpProFund")?if_exists>
+			                    	<#assign IncPF = partyDeductions.getValue().get("IncPF")?if_exists>
+			                    	
+			                    	
 			                    	
 			                    	<#assign SBEDeductions = SBEEmpProFund+SBEInsurance+othersDed>
 			                    	
-			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund+DAAREmpProFund>
+			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund+DAAREmpProFund+IncPF>
 			                    	<#assign totalVpf = totalVpf + vpf>
 			                    	<#assign totalGsls = totalGsls + gsls+SBEGrSav>
 			                    	<#assign totalLicp = totalLicp + licp+SBEInsurance>
@@ -166,12 +171,12 @@ under the License.
 			                    	<#assign totalFRFNSC = totalFRFNSC + fRFNSC>
 			                    	<#assign totalPPFGSAS = totalPPFGSAS + pPFGSAS>
 			                    	<#assign totalExterLoan = totalExterLoan + exterLoan>
-			                    	<#assign totalDeductions = totalDeductions + deductions+SBEDeductions+TEEmpProFund+DAAREmpProFund>
+			                    	<#assign totalDeductions = totalDeductions + deductions+SBEDeductions+TEEmpProFund+DAAREmpProFund+IncPF>
 			                    	
 			                    	<#assign totalOthersDed = totalOthersDed + othersDed>
 			                    	
 			                    	
-			                    	
+			                    	<#if epf?has_content && epf!=0>
        							<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >${fromDate?if_exists}-${thruDate?if_exists}</fo:block>  
@@ -210,6 +215,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${prfTax?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
+							    </#if>
 							    <#if (TEEmpProFund?has_content && TEEmpProFund!=0) || (TEIncTax?has_content && TEIncTax!=0)>
 							    <fo:table-row>
        								<fo:table-cell>
@@ -321,6 +327,46 @@ under the License.
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAAREmpProFund?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
+							    <#if (IncPF?has_content && IncPF!=0)>
+							    <fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Inc Arrears:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${IncPF?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${IncPF?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  

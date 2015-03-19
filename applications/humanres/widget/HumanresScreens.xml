@@ -690,7 +690,8 @@
                 		<condition-expr field-name="periodTypeId" operator="equals" value="RATE_QUARTER"/>
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_LEAVEENCASH"/>         
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_DAARREARS"/> 
-                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_SDA"/>               	
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_SDA"/> 
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_BONUS"/>               	
                 	</condition-list>
                 	<order-by field-name="-thruDate"/>
                     <order-by field-name="periodNum"/>
