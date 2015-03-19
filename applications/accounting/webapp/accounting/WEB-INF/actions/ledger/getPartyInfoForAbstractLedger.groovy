@@ -109,5 +109,5 @@ if(UtilValidate.isNotEmpty(parameters.partyRoleTypeId)){//to handle IceCream Par
 context.partyIdsList=partyIdsList;
 	
    
-Debug.log("==partyIdsList====="+partyIdsList+"==partyRoleTypeId==="+parameters.partyRoleTypeId);
+//Debug.log("==partyIdsList====="+partyIdsList+"==partyRoleTypeId==="+parameters.partyRoleTypeId);
 return  "success";
