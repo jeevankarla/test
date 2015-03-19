@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="2.5in"/>
+        <fo:region-body margin-top="2.6in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -69,8 +69,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			        	  </fo:block>	 
 
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >__________________________________________________________________________________________________________________________</fo:block>
-              	    <fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160; LEDGER              ITEM                         DESCRIPTION                                                 UNIT                             BOOK                  CLOSING  </fo:block>
-              		<fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;  FOLIO                 CODE                                                                                                                                      STOCK                  STOCK   </fo:block>
+              	    <fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" > LEDGER              ITEM                         DESCRIPTION                                                 UNIT                 BOOK                  CLOSING                CLOSING  </fo:block>
+              		<fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >  FOLIO                 CODE                                                                                                                          STOCK                  STOCK                   STOCK</fo:block>
+              		<fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" text-align="left">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                                                                                                                                                                                                     VALUE  </fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >___________________________________________________________________________________________________________________________</fo:block>               
            <fo:block text-align="right"  font-size="12pt"  >&#160;&#160;</fo:block>     		
 
@@ -84,8 +85,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="190pt"/>  
                	    <fo:table-column column-width="80pt"/>
-               	    <fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/> 		
+               	    <fo:table-column column-width="40pt"/>
+            		<fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="90pt"/> 		 		
                     <fo:table-body>
                      <#assign sNo=1>
     <#assign prodDetails = prodMap.entrySet()> 
@@ -99,7 +101,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				       <fo:table-cell ><fo:block text-align="left" font-weight="bold"  font-size="10pt">&#160; </fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
   				         <fo:table-cell ><fo:block text-align="left"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     	       
-  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>
+  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>       				            
   				     </fo:table-row>
                   
     <#list prodCatids.getValue() as productIds>
@@ -113,7 +116,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
   				       <fo:table-cell ><fo:block text-align="left"   font-size="11pt" >${productIds.description?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="center"   font-size="11pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="right" keep-together="always"  font-size="11pt" >${productIds.openingQty?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="11pt" >${productIds.openingQty?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="11pt" >${productIds.openingQty?if_exists}</fo:block></fo:table-cell>
+                       <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="11pt" >${productIds.openingTotCost?if_exists}</fo:block></fo:table-cell>                                
   				     </fo:table-row>
      </#list>
   	  <#assign sNo=sNo+1>

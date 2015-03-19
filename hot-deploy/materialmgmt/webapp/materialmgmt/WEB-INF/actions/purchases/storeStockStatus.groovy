@@ -93,6 +93,8 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	  if(UtilValidate.isNotEmpty(invCountMap)){
 		   openingQty = invCountMap.get("inventoryCount");
 		   productDetailMap.put("openingQty", openingQty);
+		   openingTotCost=invCountMap.get("inventoryCost");
+		   productDetailMap.put("openingTotCost", openingTotCost);
 	  }
 	  if(UtilValidate.isNotEmpty(uomId)){
 		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
