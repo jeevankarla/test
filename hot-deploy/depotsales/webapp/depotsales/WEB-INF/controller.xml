@@ -235,6 +235,19 @@
        <response name="success" type="view" value="ApproveMaterialRequirement"/>
        <response name="error" type="view" value="ApproveMaterialRequirement"/>
      </request-map>
+     
+     <request-map uri="stockPositionDepotSales">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="StockPositionDepotSales"/>
+    </request-map>
+    
+     <request-map uri="DepotSalesReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotSalesReports"/>
+    </request-map>
+    
+     
+     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
@@ -258,5 +271,9 @@
     <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
     <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
+    <view-map name="StockPositionDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockPositionDepotSales"/>
+    <view-map name="DepotSalesReports" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesReports"/>
+    
+    
     
 </site-conf>
