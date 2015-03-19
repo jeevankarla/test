@@ -197,5 +197,7 @@
   <InvoiceItemType description="Handling Chrages" hasTable="N" invoiceItemTypeId="COGS_HANDLING_CHRGS" />
   <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="COGS_HANDLING_CHRGS" invoiceItemTypeId="COGS_HANDLING_CHRGS"/>
 
-
+   <OrderAdjustmentType  description="Tcs_Sale" hasTable="N"  orderAdjustmentTypeId="TCS_206C" parentTypeId="SALES_TAX"/>	
+   <InvoiceItemType  defaultGlAccountId="217121" description="TCS on Sale of Scrape (Sec. 206C)" hasTable="N" invoiceItemTypeId="TCS_206C"  taxAuthPartyId="TAX1"/>
+    <ProductPriceType  description="Tax Collected At Source"  parentTypeId="TAX" productPriceTypeId="TCS_206C"/>
 </entity-engine-xml>
