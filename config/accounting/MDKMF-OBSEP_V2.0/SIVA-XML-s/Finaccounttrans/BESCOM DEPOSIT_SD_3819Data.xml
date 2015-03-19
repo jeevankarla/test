@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <FinAccountTrans finAccountTransId="" finAccountTransTypeId="DEPOSIT" finAccountId="SD_B901_1" partyId="B901" transactionDate="2014-09-30 00:00:00" entryDate="2014-09-30 00:00:00" amount="14790" statusId="FINACT_TRNS_APPROVED" comments="180316"/>
+    <FinAccountTrans finAccountTransId="" finAccountTransTypeId="DEPOSIT" finAccountId="SD_B901_2" partyId="B901" transactionDate="2014-09-30 00:00:00" entryDate="2014-09-30 00:00:00" amount="6640" statusId="FINACT_TRNS_APPROVED" comments="2149"/>
+    <FinAccountTrans finAccountTransId="" finAccountTransTypeId="DEPOSIT" finAccountId="SD_B902_1_BDS" partyId="B902" transactionDate="2014-09-30 00:00:00" entryDate="2014-09-30 00:00:00" amount="20250" statusId="FINACT_TRNS_APPROVED" comments="180316"/>
+    <FinAccountTrans finAccountTransId="" finAccountTransTypeId="DEPOSIT" finAccountId="SD_B903_1_BDS" partyId="B903" transactionDate="2014-09-30 00:00:00" entryDate="2014-09-30 00:00:00" amount="8590" statusId="FINACT_TRNS_APPROVED" comments="180316"/>
+    <FinAccountTrans finAccountTransId="" finAccountTransTypeId="DEPOSIT" finAccountId="SD_B904_1_BDS" partyId="B904" transactionDate="2014-09-30 00:00:00" entryDate="2014-09-30 00:00:00" amount="12200" statusId="FINACT_TRNS_APPROVED" comments="180316"/>
+    <FinAccountTrans finAccountTransId="" finAccountTransTypeId="DEPOSIT" finAccountId="SD_B910_1" partyId="B910" transactionDate="2014-09-30 00:00:00" entryDate="2014-09-30 00:00:00" amount="7470" statusId="FINACT_TRNS_APPROVED" comments="180403"/>
+</entity-engine-xml>
