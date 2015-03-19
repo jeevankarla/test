@@ -314,7 +314,7 @@
         </field> 
         
     </form>
-    <form name="FindMaterialQCApproval" type="single" target="FindMaterialQCApproval">
+    <form name="FindMaterialQCApproval" type="single" target="${targetRequest}">
     	<field name="receiptId" title ="GRN No"><text-find></text-find>	</field>
     	<field name="productId" title="Product">
              <lookup target-form-name="LookupProduct" size="15" />
@@ -345,7 +345,7 @@
         </actions>
     </form>
     <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  separate-columns="true" target="acceptReceiptQtyByQC">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  separate-columns="true" target="${targetRequestForAccept}">
         <row-actions>
         	<entity-one value-field="product" entity-name="Product">
 				<field-map field-name="productId" from-field="productId"/>
