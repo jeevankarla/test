@@ -2951,7 +2951,9 @@ public class PayrollService {
 	            if(UtilValidate.isNotEmpty(person) && UtilValidate.isNotEmpty(person.getDate("birthDate"))){
 	            	long ageTime = (UtilDateTime.toSqlDate(timePeriodEnd)).getTime()- (person.getDate("birthDate")).getTime();
 	            	Long age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_UP)).toString());
+	            	BigDecimal ageInDecimals = new BigDecimal((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),2,RoundingMode.HALF_UP)).toString());
 	            	result.put("age",(new Long(age)).toString());
+	            	result.put("ageInDecimals",(ageInDecimals).toString());
 	            }
 	            // get pay grade here
 	            Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
