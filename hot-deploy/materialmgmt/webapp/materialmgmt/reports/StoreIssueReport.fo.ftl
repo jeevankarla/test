@@ -257,8 +257,9 @@ under the License.
 	<#else>
 	       <fo:page-sequence master-reference="main">
 	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-	       		 		<fo:block font-size="14pt" text-align="center">
-	            			 No Records Found....!
+	       		 		<fo:block font-size="16pt" text-align="center">
+	            		<#if productId?has_content> No Records Found....!<#else> ${errorMessage} </#if>   			   
+	            			
 	       		 		</fo:block>
 	    			</fo:flow>
 				</fo:page-sequence>

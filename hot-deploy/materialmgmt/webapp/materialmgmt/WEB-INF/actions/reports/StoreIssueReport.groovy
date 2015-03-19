@@ -41,6 +41,10 @@ issueToFacilityId=parameters.issueToFacilityId;
 context.put("issueToFacilityId",issueToFacilityId);
 context.put("productId",productId);
 
+if(UtilValidate.isEmpty(productId)){
+	context.errorMessage = "Please select MaterialCode";
+	return ;
+}
 reportTypeFlag = parameters.reportTypeFlag;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
