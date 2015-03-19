@@ -201,6 +201,40 @@
        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="getStoreCatalogCatagory.groovy"/>
        <response name="success" type="request" value="json"/>    
     </request-map>
+    <request-map uri="sendReceiptQtyForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="sendReceiptQtyForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNReceiptsDepot"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNReceiptsDepot"/>
+     </request-map>
+     <request-map uri="shipmentSendForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="shipmentSendForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+     </request-map>
+      <request-map uri="MaterialForQCApproval">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="error" type="view" value="MaterialForQCApproval"/>
+     </request-map>
+      <request-map uri="acceptReceiptQtyByQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="acceptReceiptQtyByQC"></event>
+       <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
+       <response name="error" type="request-redirect-noparam" value="MaterialForQCApproval"/>
+     </request-map>
+    <!--  <request-map uri="FindMaterialEnquiry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialEnquiry"/>
+       <response name="error" type="view" value="FindMaterialEnquiry"/>
+     </request-map> -->
+     
+     <request-map uri="ApproveMaterialRequirement">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApproveMaterialRequirement"/>
+       <response name="error" type="view" value="ApproveMaterialRequirement"/>
+     </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
@@ -223,4 +257,6 @@
     <view-map name="MRRreportDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
+    <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
+    
 </site-conf>

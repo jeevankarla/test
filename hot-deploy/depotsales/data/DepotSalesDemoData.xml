@@ -67,4 +67,16 @@
         
     <Enumeration enumId="DEPOT_SALES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="DepotSales Configurations"/>
 <TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="DEPOT_SALES" description="KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD."/>
+ 
+  <Party partyId="MD" partyTypeId="PARTY_GROUP"/>
+   <PartyGroup partyId="MD" groupName="MOTHER DAIRY"/>
+  <PartyRole partyId="MD" roleTypeId="SUPPLIER_AGENT"/>
+   <PartyRole  partyId="MD" roleTypeId="SUPPLIER"/>
+  <PartyRole partyId="MD" roleTypeId="UNITS"/>
+  
+   <Party partyId="DEPOT" partyTypeId="PARTY_GROUP"/>
+   <PartyGroup partyId="DEPOT" groupName="DEPOT INERNAL DEPARTMENTS"/>
+   <PartyRole partyId="DEPOT" roleTypeId="INTERNAL_ORGANIZATIO"/>
+  
+  
 </entity-engine-xml>

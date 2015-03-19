@@ -176,7 +176,7 @@ orderItemList = delegator.findList("OrderHeaderItemAndRoles", condition, null, n
 returnCondExpr = EntityCondition.makeCondition(returnCondition,EntityOperator.AND);
 returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondExpr, null, null, null, false);
 
-//Debug.log("===orderItemList=="+orderItemList+"===returnItemsList="+returnItemsList);
+//Debug.log("===orderItemList=="+orderItemList+"===returnItemsList="+returnItemsList+"==condition=="+condition);
 returnItemList = [];
 returnItemsList.each{ eachItem ->
 	returnPrice = 0;
