@@ -1,0 +1,3 @@
+<entity-engine-xml>
+    <AcctgTrans acctgTransId="OB1000" acctgTransTypeId="CAPITALIZATION" description="Initial Capital Stock" transactionDate="2014-09-30 00:00:00.00" isPosted="N" postedDate="2014-09-30 00:00:00.00" glFiscalTypeId="ACTUAL"/>
+</entity-engine-xml>
