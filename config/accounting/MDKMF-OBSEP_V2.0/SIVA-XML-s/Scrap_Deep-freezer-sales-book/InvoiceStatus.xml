@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_01" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_02" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_03" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_04" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_05" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_06" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_07" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_08" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_09" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_10" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="SHP_SCRP_SEP_11" statusDate="2014-09-30 00:00:00"/>
+</entity-engine-xml>
