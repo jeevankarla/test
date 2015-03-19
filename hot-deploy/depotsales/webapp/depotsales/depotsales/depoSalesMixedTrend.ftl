@@ -160,7 +160,7 @@ $(document).ready(function(){
 				<td align="right" width="10%"><span class='h3'>Category: </span></td>
 				<td width="15%">
 					<select name="roleTypeId" id="roleTypeId" class='h3'>
-						<option value="All">All Types</option>
+						<option value="">All Types</option>
 		            	<#list roleTypeList as roleType>    
 		            	   	<option value='${roleType.roleTypeId}'>	${roleType.description}</option>
 		                </#list>            

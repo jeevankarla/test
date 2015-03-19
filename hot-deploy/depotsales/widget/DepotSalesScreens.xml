@@ -568,6 +568,44 @@
             </widgets>            
         </section>
     </screen>
+     <screen name="MaterialForQCApproval">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Receipts For QC"/>              
+			    <set field="tabButtonItem" value="MaterialForQCApproval" />	
+               <set field="entityName" value="ShipmentReceiptAndShipmentReceiptRole"/>
+               <!-- <entity-condition list="receiptItems" entity-name="ShipmentReceipt">
+               
+					<condition-list combine="and">
+						
+						<condition-expr field-name="statusId" value="SR_RECEIVED"/>
+					</condition-list>		
+					<order-by field-name="-datetimeReceived"/>        
+               </entity-condition> -->
+                <set field="targetRequest" value="FindMaterialQCApproval"/>
+                <set field="targetRequestForAccept" value="acceptReceiptQtyByQC"/>
+                
+      			<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
+      			<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+            </actions>
+            <widgets>
+                   <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                            <screenlet title="Search-Options">
+                                <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="FindMaterialQCApproval"/>
+                            </screenlet> 
+                            <screenlet title="Search-Results">
+                                <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="ListMaterialQCApproval"/>
+                            </screenlet>    
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
     
     <screen name="MaterialShipmentOverview">
         <section>
