@@ -254,17 +254,10 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		else{
 			sequenceId = "ALL"
 		}
-		value = eachOtherTerm.termValue;
-		
-		termTypeId = eachOtherTerm.termTypeId;
-		
-		if(termTypeId == "COGS_DISC" || termTypeId == "COGS_DISC_ATR"){
-			value = value.negate();
-		}
 		JSONObject newObj = new JSONObject();
-		newObj.put("adjustmentTypeId",termTypeId);
+		newObj.put("adjustmentTypeId",eachOtherTerm.termTypeId);
 		newObj.put("applicableTo", sequenceId);
-		newObj.put("adjValue",value);
+		newObj.put("adjValue",eachOtherTerm.termValue);
 		newObj.put("uomId", eachOtherTerm.uomId);
 		newObj.put("termDays", eachOtherTerm.termDays);
 		newObj.put("description", eachOtherTerm.description);
