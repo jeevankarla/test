@@ -98,7 +98,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 			 
 	     deptName =  PartyHelper.getPartyName(delegator, fromPartyId, false);
 		 conditionList.clear();
-		 if(UtilValidate.isNotEmpty(productIds)){
+		 if(UtilValidate.isNotEmpty(facilityId)){
 			 conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN, productIds));
 		 }
 		 conditionList.add(EntityCondition.makeCondition("fromPartyId",EntityOperator.EQUALS, fromPartyId));
@@ -107,7 +107,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,custRequestIds));
 		 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		 productIdsDetails = delegator.findList("CustRequestAndCustRequestItem", condition , null, null, null, false );
-		 if(UtilValidate.isEmpty(productIds)){
+		 if(UtilValidate.isEmpty(facilityId)){
 			 productIds = EntityUtil.getFieldListFromEntityList(productIdsDetails, "productId", true);		
 		 } 
          conditionList.clear();
@@ -162,13 +162,13 @@ if(UtilValidate.isNotEmpty(deptIds)){
 							                             conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 														 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
 							                             condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-														 
-							                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,UtilMisc.toSet("quantity","cancelQuantity","issuedDateTime","unitCost"),null,null,false);
-														 productDetailMap.
+							                             storeAbstQtyDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);
+														 //productDetailMap.
 														 unitPrice=0;
 							                             totQty=0;
 							                             totunitCost=0;
 														 totVal=0;
+														 dateWiseMap=[:];
 						                                if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
 															if(storeAbstQtyDetails.size()>1){
 						                                      storeAbstQtyDetails.each{storeAbstQty->	
@@ -196,6 +196,50 @@ if(UtilValidate.isNotEmpty(deptIds)){
 																 totVal=quantity*unitCost;
 																 productDetailMap.custRequestDate=storeAbstQty.issuedDateTime;
 															}
+															storeAbstQtyDetails.each{storeAbs->
+																dateIssued=UtilDateTime.toDateString(storeAbs.issuedDateTime,"dd/MM/yyyy");
+																itemQuantity=storeAbs.quantity;
+																itemIssuedDate=storeAbs.issuedDateTime;
+																itemUnitCost = storeAbs.unitCost;
+																if(UtilValidate.isNotEmpty(storeAbs.cancelQuantity)){
+																	itemQuantity-=storeAbs.cancelQuantity;
+																	itemUnitCost-= storeAbs.unitCost;
+																}
+																 totalValue=itemQuantity*itemUnitCost;
+																 internalCode=storeAbs.internalName;
+																 itemCustId=storeAbs.custRequestId;
+																 itemProductId=storeAbs.productId;
+																 pdctDetail = delegator.findOne("Product",["productId":itemProductId],false);
+																 itemUnit="Non";
+																 if(UtilValidate.isNotEmpty(pdctDetail)){
+																 Id=pdctDetail.quantityUomId;
+																 if(UtilValidate.isNotEmpty(Id)){
+																 unitDesc = delegator.findOne("Uom",["uomId":Id],false);
+																 itemUnit=unitDesc.abbreviation;
+																 }
+																 }
+																 itemDescription=storeAbs.description;
+																 
+																if(UtilValidate.isEmpty(dateWiseMap[dateIssued])){
+																	tempMap=[:];
+																	tempMap.itemQuantity=itemQuantity;
+																	tempMap.itemIssuedDate=itemIssuedDate;
+																	tempMap.totalValue=totalValue;
+																	tempMap.internalCode=internalCode;
+																	tempMap.itemCustId=itemCustId;
+																	tempMap.itemProductId=itemProductId;
+																	tempMap.itemDescription=itemDescription;
+																	tempMap.itemUnit=itemUnit;
+																	dateWiseMap[dateIssued]=tempMap;
+																}else{
+																	tempProdMap = [:];
+																	tempProdMap.putAll(dateWiseMap.get(dateIssued));
+																	tempProdMap.put("totalValue",tempProdMap.get("totalValue")+totalValue);
+																	tempProdMap.put("itemQuantity",tempProdMap.get("itemQuantity")+itemQuantity);
+																	dateWiseMap[dateIssued]=tempProdMap;
+																}
+															}	
+																productDetailMap["dateWiseMap"]=dateWiseMap;
 															 /* if(storeAbstQtyDetails.size()>1){
 														         if(totunitCost != 0){  
 							                                           unitPrice=totQty/totunitCost;

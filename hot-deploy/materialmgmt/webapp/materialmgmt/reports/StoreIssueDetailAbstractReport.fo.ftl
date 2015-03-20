@@ -135,7 +135,7 @@ under the License.
                                              <#assign lineNo=lineNo+1>                                                   
 					                       <fo:table-row height="30pt">
      								           <fo:table-cell><fo:block text-align="left" font-size="11pt"> </fo:block></fo:table-cell>                         							
-								               <fo:table-cell><fo:block text-align="left" font-size="11pt">${absProductDetails.get("internalName")}-${lineNo}</fo:block> </fo:table-cell> 
+								               <fo:table-cell><fo:block text-align="left" font-size="11pt">${absProductDetails.get("internalName")}</fo:block> </fo:table-cell> 
                                                <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${absProductDetails.get("productName")?if_exists}</fo:block> </fo:table-cell>                         							
 		                                       <fo:table-cell><fo:block text-align="left" font-size="11pt"> ${absProductDetails.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
 		                                       <fo:table-cell><fo:block text-align="right" font-size="11pt"> ${absProductDetails.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
