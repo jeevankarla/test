@@ -27,7 +27,44 @@ under the License.
             this.checked = master.checked;
         });
     }
-*/  
+*/ 
+
+ function processNegotiation(current){
+  //  	jQuery(current).attr( "disabled", "disabled");    
+	    var updateQuotesForNegotiation = 'updateQuotesForNegotiation';	
+	    var action;
+    	var appendStr = "<table id=parameters>";
+           
+            	var domObj = $(current).parent().parent().parent();
+            	            	             
+            	
+            	var quoteIdObj = $(domObj).find("#quoteId");
+            	var quoteItemSeqIdObj = $(domObj).find("#quoteItemSeqId");
+            	var custRequestIdObj = $(domObj).find("#custRequestId");
+             	var quoteUnitPriceObj = $(domObj).find("#quoteUnitPrice");
+            	           
+            	var quoteId= $(quoteIdObj).val();           
+        	   	var quoteItemSeqId= $(quoteItemSeqIdObj).val();
+              	var custRequestId= $(custRequestIdObj).val();
+              	var quoteUnitPrice = $(quoteUnitPriceObj).val();              	            	
+            	              
+            	                      	
+            	appendStr += "<tr><td><input type=hidden name=quoteId  id=quoteId value="+quoteId+" />";
+            	appendStr += "<input type=hidden name=quoteItemSeqId id=quoteItemSeqId value="+quoteItemSeqId+" />";
+            	appendStr += "<input type=hidden name=custRequestId id=custRequestId value="+custRequestId+" />";
+                appendStr += "<input type=hidden name=quoteUnitPrice id=quoteUnitPrice value="+quoteUnitPrice+" /></td></tr>";
+          
+        	$("#updateQuoteStatusForm").append(appendStr);
+        
+        appendStr += "</table>";
+      
+      action= updateQuotesForNegotiation;
+    jQuery('#updateQuoteStatusForm').attr("action", action);
+    jQuery('#updateQuoteStatusForm').submit();   
+        
+    }
+
+ 
    function processQuotes(current){
     	jQuery(current).attr( "disabled", "disabled");
     	var index = 0;
@@ -157,7 +194,7 @@ under the License.
           <td><#if (eachQuote.qiStatusId).equals("QTITM_ACCEPTED")><input type="checkbox" id="quoteCheckBoxId_${eachQuote_index}" name="quoteCheckBoxId" value="${eachQuote?if_exists}"/></#if></td>
           <td><#if (eachQuote.qiStatusId).equals("QTITM_TECH_EVAL")><input type="checkbox" id="quoteCheckBoxId_${eachQuote_index}" name="quoteCheckBoxId" value="${eachQuote.quoteId?if_exists}"/></#if></td>
           <td><#if (eachQuote.qiStatusId).equals("QTITM_FIN_EVAL")><input type="text"  id="quoteUnitPrice"  name="quoteUnitPrice" value = "${eachQuote.quoteUnitPrice}"/></#if></td>
-         <td><#if (eachQuote.qiStatusId).equals("QTITM_FIN_EVAL")><h2><a class="buttontext" href="<@ofbizUrl>updateQuotesForNegotiation?quoteId=${eachQuote.quoteId?if_exists}&amp;quoteItemSeqId=${eachQuote.quoteItemSeqId?if_exists}&amp;custRequestId=${eachQuote.custRequestId?if_exists}&amp;quoteUnitPrice=${eachQuote.quoteUnitPrice?if_exists}</@ofbizUrl>"/>Negotiation</h2></#if></td>
+         <td><#if (eachQuote.qiStatusId).equals("QTITM_FIN_EVAL")><h2><input id="submitButton" type="button"  onclick="processNegotiation(this)" value="Negotiation"/></h2></#if></td>
          
          <#if (eachQuote.qiStatusId).equals("QTITM_ACCEPTED")>
           <input type = "hidden" name = "quoteId" id = "quoteId" value = "${eachQuote.quoteId}">
@@ -170,7 +207,13 @@ under the License.
           <input type = "hidden" name = "quoteItemSeqId" id = "quoteItemSeqId" value = "${eachQuote.quoteItemSeqId}">
           <input type = "hidden" name = "custRequestId" id = "custRequestId" value = "${eachQuote.custRequestId}">
           <input type = "hidden" name = "statusId" id = "statusId" value = "QTITM_FIN_EVAL">
-         </#if>
+           </#if>
+      <#if (eachQuote.qiStatusId).equals("QTITM_FIN_EVAL")>
+          <input type = "hidden" name = "quoteId" id = "quoteId" value = "${eachQuote.quoteId}">
+          <input type = "hidden" name = "quoteItemSeqId" id = "quoteItemSeqId" value = "${eachQuote.quoteItemSeqId}">
+          <input type = "hidden" name = "custRequestId" id = "custRequestId" value = "${eachQuote.custRequestId}">
+          <input type = "hidden" name = "statusId" id = "statusId" value = "QTITM_FIN_EVAL">
+      </#if> 
         </tr>
      </#list>
       </tbody>
