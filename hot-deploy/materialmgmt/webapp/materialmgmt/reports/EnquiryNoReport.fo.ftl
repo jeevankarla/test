@@ -47,7 +47,7 @@ under the License.
 	                     <fo:table-column column-width="100pt"/>
 					     <fo:table-column column-width="170pt"/>
 					     <#list partyDetList as partyNameList>
-					      <fo:table-column column-width="75pt"/>					      
+					      <fo:table-column column-width="77pt"/>					      
 					      </#list> 
 					         <fo:table-body>
 					             <fo:table-row height="20pt">
@@ -91,7 +91,7 @@ under the License.
 					     <fo:table-column column-width="40pt"/>
 					     <fo:table-column column-width="50pt"/>
 					     <#list partyDetList as partyNameList>
-					     <fo:table-column column-width="75pt"/>
+					     <fo:table-column column-width="77pt"/>
 					      </#list> 				    
 					         <fo:table-body>	
                                 <#assign sno=1>					         
@@ -126,7 +126,8 @@ under the License.
 		  					        <#list priceList as pList>
 		  					        <#if pList.getValue().get("price")?has_content>
 		  					        <fo:table-cell border-style="solid" >
-		  					            <fo:block text-align="center" font-size="11pt" >${pList.getValue().get("price")?if_exists}/${pList.getValue().get("amount")?if_exists}</fo:block>
+		  					            <fo:block text-align="center" font-size="11pt" >${pList.getValue().get("price")?if_exists} /</fo:block>
+                                        <fo:block text-align="left" font-size="11pt" >${pList.getValue().get("amount")?if_exists}</fo:block>
 		  					        </fo:table-cell> 
 		  					        <#else>
 		  					        <fo:table-cell border-style="solid" >
@@ -245,41 +246,49 @@ under the License.
 									          		<fo:table-row >
 									          		<#assign TermType=delegator.findOne("TermType",{"termTypeId":values.get("termTypeId")},true)>
 													<#if (TermType.parentTypeId == "FEE_PAYMENT_TERM") || (TermType.parentTypeId == "DELIVERY_TERM")>
-														<fo:table-cell>
-																 <fo:block text-align="center"  font-size="10pt" ></fo:block>
-														</fo:table-cell>
-														<fo:table-cell>
-																 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
-														</fo:table-cell>
-																			
+                                                        <#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_"> 
+															<fo:table-cell border-style="solid">
+																	 <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
+															</fo:table-cell>
+															<fo:table-cell border-style="solid">
+																	 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
+															</fo:table-cell>
+														<#else>	
+															<fo:table-cell >
+																	 <fo:block text-align="center"  font-size="10pt" ></fo:block>
+															</fo:table-cell>
+															<fo:table-cell >
+																	 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
+															</fo:table-cell>
+														</#if>				
 													<#else>		
-														<#if values.get("quoteItemSeqId")?has_content>
+														<#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_">
 											          		<fo:table-cell border-style="solid">
 											                      <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
 											                  </fo:table-cell>
 											                <#else>
 																<fo:table-cell >
-											                      <fo:block text-align="center"  font-size="10pt" >--</fo:block>
+											                      <fo:block text-align="center"  font-size="10pt" ></fo:block>
 											                  </fo:table-cell>
 		                                                </#if>  
 										                  <#if values.get("uomId")=="PERCENT">
-			                                                  <#if values.get("termValue")?has_content>
+			                                                  <#if values.get("termValue")?has_content && values.get("quoteItemSeqId")!="_NA_">
 											                  <fo:table-cell border-style="solid">
 											                      <fo:block text-align="right"  font-size="11pt" > ${values.get("termValue")?if_exists} %</fo:block>
 											                  </fo:table-cell>
 											                  <#else>
 			                                                   <fo:table-cell >
-											                      <fo:block text-align="center"  font-size="11pt" >--</fo:block>
+											                      <fo:block text-align="center"  font-size="11pt" >${values.get("termValue")?if_exists} %</fo:block>
 											                  </fo:table-cell>
 		                                                   </#if>
 														  <#else>
-		                                                   <#if values.get("termValue")?has_content>
+		                                                   <#if values.get("termValue")?has_content && values.get("quoteItemSeqId")!="_NA_">
 		                                                     <fo:table-cell border-style="solid">
 										                      <fo:block text-align="right"  font-size="11pt" > ${values.get("termValue")?if_exists} INR</fo:block>
 										                  </fo:table-cell>
 		                                                  <#else>
 		                                                      <fo:table-cell >
-										                      <fo:block text-align="center"  font-size="11pt" > --</fo:block>
+										                      <fo:block text-align="center"  font-size="11pt" > ${values.get("termValue")?if_exists} INR</fo:block>
 										                  </fo:table-cell>
 		                                                  </#if>
 		                                                  </#if>	
@@ -310,7 +319,11 @@ under the License.
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>				   
+				   <#if signature?has_content>
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       ${signature?if_exists}                         PRE AUDITOR</fo:block>
+                    <#else>				   
+					<fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>
+					</#if>
 			    </fo:flow>	
 		 </fo:page-sequence>	
 		 <#-- </#if>   --> 	

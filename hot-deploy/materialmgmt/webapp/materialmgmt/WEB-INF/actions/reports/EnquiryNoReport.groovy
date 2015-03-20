@@ -21,6 +21,11 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.party.contact.ContactHelper;
 
 custRequestId=parameters.issueToEnquiryNo;
+
+if(UtilValidate.isNotEmpty(parameters.sign)){
+	signature=parameters.sign;
+	context.signature=signature;
+}
 CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
 CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);
 if(CustRequestSequence){
@@ -46,7 +51,7 @@ if(UtilValidate.isNotEmpty(custRequestItem)){
 List EnquiryDetList=[];
 quoteItemList=delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),null, null,null,false);
 partyIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "partyId", true);
-
+quoteIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "quoteId", true);
 productIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "productId", true);
 productPriceMap = [:];
 poDateMap = [:];
@@ -75,13 +80,14 @@ if(UtilValidate.isNotEmpty(productIds)){
 				priceMap = [:];
 				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,eachproductId));
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachPartyId));
+				conditionList.add(EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds));
 				conditionList.add(EntityCondition.makeCondition("crStatusId", EntityOperator.NOT_EQUAL,"CRQ_CANCELLED"));			
 				cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				prodList=delegator.findList("QuoteAndItemAndCustRequest",cond,null,null,null,false);
 				if(prodList){
 				    price=(prodList.get(0)).quoteUnitPrice;
 					quantity=(prodList.get(0)).quantity;	
-					amount=price*quantity;
+					amount=(prodList.get(0)).itemTotal;
 					priceMap.put("price",price);
 					priceMap.put("quantity",quantity);
 					priceMap.put("amount",amount);
@@ -122,7 +128,6 @@ context.partyDetList=partyDetList;
 context.poDateMap=poDateMap;
 //Comapare  termValue Of All Vendors 
 allTermsMap=[:];
-quoteIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "quoteId", true);
 termTypeDetails = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
 termTypeIds = EntityUtil.getFieldListFromEntityList(termTypeDetails, "termTypeId", true);
 /*termTypeIds.each{eachTermType->
@@ -150,20 +155,27 @@ termTypeIds = EntityUtil.getFieldListFromEntityList(termTypeDetails, "termTypeId
 	allTermsMap.put(description,termDetailsMap);
 }
 context.allTermsMap=allTermsMap;*/
+newQuoteTerms=delegator.findList("QuoteTerm",EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
+quotesMap=[:];
 partyMap=[:];
 quoteIds.each{quoteId->
 	partyDetails = delegator.findOne("Quote", ["quoteId" : quoteId], false);
 	partyId=partyDetails.partyId;
 	partyMap[quoteId]=partyId;
+	quoteTermsQuoteWise=EntityUtil.filterByCondition(newQuoteTerms,EntityCondition.makeCondition([EntityCondition.makeCondition("quoteId",EntityOperator.EQUALS,quoteId)],EntityOperator.AND));
+		quotesMap[partyId]=quoteTermsQuoteWise;
+	
 }
+//Debug.log("quotesMap==================="+quotesMap);
 
-quoteTermsList=delegator.findList("QuoteTermAndItemAndQuote", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
+//quoteTermsList=delegator.findList("QuoteTermAndItemAndQuote", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
 finalMap=[:];
 termTypeIds.each{termType->
 	tempList=[];
 		partyIds.each{partyId->
 		tempMap=[:];
-		quoteTerms=EntityUtil.filterByCondition(quoteTermsList,EntityCondition.makeCondition([EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId),EntityCondition.makeCondition("termTypeId",EntityOperator.EQUALS,termType)],EntityOperator.AND));
+		quoteTerms=quotesMap.get(partyId);
+		quoteTerms=EntityUtil.filterByCondition(quoteTerms,EntityCondition.makeCondition([EntityCondition.makeCondition("termTypeId",EntityOperator.EQUALS,termType)],EntityOperator.AND));
 				tempMap.put(partyId, quoteTerms);	
 			if(UtilValidate.isNotEmpty(tempMap)){
 				tempList.add(tempMap);
@@ -173,6 +185,5 @@ termTypeIds.each{termType->
 	}
 }
 context.finalMap=finalMap;
-
 
 
