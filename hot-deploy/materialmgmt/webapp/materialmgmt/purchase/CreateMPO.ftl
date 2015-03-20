@@ -347,26 +347,22 @@ function makeDatePicker(fromDateId ,thruDateId){
 						</td>
 					</tr>
 					</#if>
-      		        <tr>
-      		        	<td class="label"><b>Quote No: </b></td>
-					    <td>
-					    	<#if orderId?exists && quoteInfo.get("quoteId")?exists>
-					    		<input type="text" name="quoteNum" id="quoteNum" size="18" maxlength="60" autocomplete="off" value="${quoteInfo.get("quoteId")?if_exists}"/>
-					    	<#else>
-						      	<input type="text" name="quoteNum" id="quoteNum" size="18" maxlength="60" autocomplete="off"/>
-					      	</#if>
-        				 </td>
-					</tr>
-					<tr>
-					    <td class="label"><b>Quote Date : </b></td>
-					    <td>
-					    	<#if orderId?exists && quoteInfo.get("quoteIssueDate")?exists>
-					    		<input type="text" name="quoteDate" id="quoteDate" size="18" maxlength="60" autocomplete="off" value="${quoteInfo.get("quoteIssueDate")?if_exists}"/>
-					    	<#else>
-						      	<input type="text" name="quoteDate" id="quoteDate" size="18" maxlength="60" autocomplete="off"/>
-					      	</#if>
-        				 </td>
-					</tr>
+					<#if orderId?exists && quoteInfo.get("quoteId")?exists>
+	      		        <tr>
+	      		        	<td class="label"><b>Quote No: </b></td>
+						    <td>
+						    	${quoteInfo.get("quoteId")?if_exists}
+	        				 </td>
+						</tr>
+					</#if>
+					<#if orderId?exists && quoteInfo.get("quoteIssueDate")?exists>
+						<tr>
+					    	<td class="label"><b>Quote Date : </b></td>
+					    	<td>
+					    		${quoteInfo.get("quoteIssueDate")?if_exists}
+	        				 </td>
+						</tr>
+					</#if>
       		        <tr>
 					    <td class="label">Bill To Party :</td>
 					    <td>
