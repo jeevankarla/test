@@ -3407,7 +3407,7 @@
                 <set field="finAccntTransGroupId" from-field="parameters.finAccntTransGroupId"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PrintContraGroupCheques.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/printContraGroupCheques.groovy"/>
             </actions>
            <widgets>
                 <platform-specific>
