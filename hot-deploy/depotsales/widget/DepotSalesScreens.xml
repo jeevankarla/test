@@ -1009,7 +1009,7 @@
             </actions>
             <widgets>
                 <!--  <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}"> -->
-                    <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-screen name="CommonInventoryDecoratorDepot" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body"> 
                         <section>
                             <widgets>
