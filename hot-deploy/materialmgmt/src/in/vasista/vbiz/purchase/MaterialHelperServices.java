@@ -641,6 +641,41 @@ public class MaterialHelperServices{
 		return result;
 	}
 	
+	public static Map<String, Object> populateQuoteTotal(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		if(UtilValidate.isEmpty(thruDate)){
+			thruDate = UtilDateTime.nowTimestamp();
+		}
+		try{
+			condList.add(EntityCondition.makeCondition("issueDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			condList.add(EntityCondition.makeCondition("issueDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue>	quotes = delegator.findList("Quote", cond, UtilMisc.toSet("quoteId"), null, null, false);
+			List<String> quoteIds = EntityUtil.getFieldListFromEntityList(quotes, "quoteId", true);
+			
+			Map resultCtx = FastMap.newInstance();
+			for(String quoteId : quoteIds){
+				resultCtx = dispatcher.runSync("calculateQuoteGrandTotal", UtilMisc.toMap("userLogin", userLogin, "quoteId", quoteId));
+				if (ServiceUtil.isError(resultCtx)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+	  		  		Debug.logError(errMsg , module);
+	  		  		return ServiceUtil.returnError(errMsg);
+	  		  	}
+				Debug.log("quoteId #################"+quoteId);
+			}
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}
+	
 	public static Map<String,Object> getOrderItemAndTermsMapForCalculation(DispatchContext ctx, Map<String, ? extends Object> context){
     	Map<String, Object> result = FastMap.newInstance();
     	Delegator delegator = ctx.getDelegator();
