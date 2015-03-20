@@ -278,10 +278,10 @@
       		</hyperlink>
         </field>
         <field name="partyId">
-        <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
-                    <parameter param-name="partyId" from-field="partyId"/>
-                </sub-hyperlink>
+        <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}[${partyId}]">
+<!--                 <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app"> -->
+<!--                     <parameter param-name="partyId" from-field="partyId"/> -->
+<!--                 </sub-hyperlink> -->
             </display-entity>
         </field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
