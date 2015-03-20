@@ -222,6 +222,7 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
     partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("partyName",partyName);
      }
+  // filter out qc approval materials from shipment receipt materials
   if((invoiceAmount) != 0) {
    mrrList.addAll(shipmentDetailMap);
    } 
