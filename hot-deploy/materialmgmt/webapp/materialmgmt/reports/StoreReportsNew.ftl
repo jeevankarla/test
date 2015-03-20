@@ -482,7 +482,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						 <td width="25%">
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
 						  </td>
-						  <td width="15%"><span class='h3'>							</span></td>
+						   <td width="15%"><span class='h3'>Signature<input type="textfield" id="sign" name="sign"></span></td>
 						      <td width="15%"><span class='h3'>   				       </span></td>	
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
