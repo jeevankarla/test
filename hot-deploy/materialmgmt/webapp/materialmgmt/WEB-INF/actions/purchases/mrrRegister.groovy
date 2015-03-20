@@ -70,6 +70,8 @@ def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
 	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
+	context.fromDateTime=fromDateTime;
+	context.thruDateTime=thruDateTime;
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
@@ -136,13 +138,16 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    if(UtilValidate.isNotEmpty(partyIdOfDept)){
   deptGroupName= delegator.findList("PartyRelationshipAndDetail",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdOfDept)  , null, null, null, false );
   deptGroupName=EntityUtil.getFirst(deptGroupName);
+  if(UtilValidate.isNotEmpty(deptGroupName)){
   if(UtilValidate.isNotEmpty(deptGroupName.groupName)){
 	  
    deptName=deptGroupName.groupName;  
    shipmentDetailMap.put("deptName",deptName);
-	     }}
-  	  }
-   //invoiceno,date
+	     }
+       }
+     }
+   }
+	   //invoiceno,date
    invoiceData = delegator.findOne("Shipment",["shipmentId":shipmentData.shipmentId],false);   
    if(invoiceData){
 	   invoiceId=invoiceData.get("supplierInvoiceId");
@@ -193,7 +198,6 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 	     if(inventoryItemDetails){
 		   quantityAccepted=shipmentData.quantityAccepted;
 		   unitCost=inventoryItemDetails.get("unitCost");
-		   unitCost=0;
 		   invoiceAmount=quantityAccepted*unitCost;		   
 		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);		   
 		  shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
@@ -218,9 +222,10 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
     partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("partyName",partyName);
      }
-  
+  // filter out qc approval materials from shipment receipt materials
+  if((invoiceAmount) != 0) {
    mrrList.addAll(shipmentDetailMap);
-   
+   } 
  
    }
   }
