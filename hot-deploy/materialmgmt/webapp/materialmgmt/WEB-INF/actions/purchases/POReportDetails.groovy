@@ -255,8 +255,31 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		enquiryDate=enquiryDetails.custRequestDate;
 		allDetailsMap.put("enquiryId",enquiryId);
 		allDetailsMap.put("enquiryDate",enquiryDate);
-	   }
 	}
+	else{
+		quoteNoAttr = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"QUOTE_NO"],false);
+		if(quoteNoAttr){
+			quoteNo=quoteNoAttr.get("attrValue");
+			allDetailsMap.put("quoteId",quoteNo);
+		}
+		
+		quoteDateAttr = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"QUOTE_DATE"],false);
+		if(quoteDateAttr){
+			quoteDate=quoteDateAttr.get("attrValue");
+			def sdf = new SimpleDateFormat("dd/MM/yyyy");
+			quoteDateTimestamp= null
+			try {
+				quoteDateTimestamp = new java.sql.Timestamp(sdf.parse(quoteDate).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+quoteDate, "");
+			}
+			
+			allDetailsMap.put("qutationDate",quoteDateTimestamp);
+		}
+		
+	}
+}
+	
 
 // party Address
 	List conlist=[];
