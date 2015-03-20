@@ -195,6 +195,9 @@
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
         <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
  		<field name="fromPartyId" title="From Department">
 			<drop-down allow-empty="true" >
 				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
