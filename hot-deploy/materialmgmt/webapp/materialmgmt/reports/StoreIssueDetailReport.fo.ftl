@@ -127,24 +127,29 @@ under the License.
                 <#if prodNames?has_content>
                   		     <#assign lineNo=lineNo+1>
                    <#list prodNames as products> 
-                    <#assign qty = products.get("totQty")?if_exists> 
-                  <#if qty != 0> 
+                    <#assign dateWiseMap = products.get("dateWiseMap")?if_exists>
+                    <#assign dayWiseMap =dateWiseMap.entrySet()> 
+                      <#list dayWiseMap as eachDay>
+                      <#assign eachDayValue=eachDay.getValue()>
+                  <#if eachDayValue.get("itemQuantity") gt 0>
+                    <#assign amount=eachDayValue.get("totalValue")?if_exists>
                  <#assign lineNo=lineNo+1>
                   <fo:table-row>
-					    <fo:table-cell><fo:block text-align="left">  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(products.get("custRequestDate"), "dd/MM/yyyy")?if_exists}</fo:block>  </fo:table-cell>
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("custRequestId")?if_exists}</fo:block> </fo:table-cell> 
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("internalName")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="left" > ${products.get("description")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="center" > ${products.get("unit")?if_exists}</fo:block> </fo:table-cell>                         							
-		                <fo:table-cell><fo:block text-align="right" > ${products.get("totQty")?if_exists}</fo:block> </fo:table-cell>                         							
+					    <fo:table-cell><fo:block text-align="left"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachDayValue.get("itemIssuedDate"), "dd/MM/yyyy")} </fo:block>  </fo:table-cell>
+		                <fo:table-cell><fo:block text-align="left" >${eachDayValue.get("itemCustId")} </fo:block> </fo:table-cell> 
+		                <fo:table-cell><fo:block text-align="left" >${eachDayValue.get("internalCode")} </fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="left" > ${eachDayValue.get("itemDescription")}</fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="center" >${eachDayValue.get("itemUnit")} </fo:block> </fo:table-cell>                         							
+		                <fo:table-cell><fo:block text-align="right" >${eachDayValue.get("itemQuantity")?if_exists?string("##0.00")} </fo:block> </fo:table-cell>                         							
 		          <#--   <fo:table-cell><fo:block text-align="right"> ${products.get("totunitCost")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>   -->                       							
-		                <fo:table-cell><fo:block text-align="right" > ${products.get("totVal")?if_exists?string("##0.00")}</fo:block> </fo:table-cell>          
+		                <fo:table-cell><fo:block text-align="right" >${amount?if_exists?string("##0.00")} </fo:block> </fo:table-cell>          
 				  </fo:table-row>
-             <#assign amount=products.get("totVal")?if_exists>
+             
             <#if  amount?has_content> 
             <#assign total=total+amount> 	                            
             </#if>  
-          </#if>   
+            </#if>            
+          </#list>  
 		 </#list> 
 	   </#if>   
              <fo:table-row >
