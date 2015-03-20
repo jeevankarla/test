@@ -42,7 +42,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065  </fo:block>
 			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ______________________________________________________________________________________________________________________________________________________________________________________________ </fo:block>
 			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
-						        <fo:block  font-size="12pt" font-weight="bold"  keep-together="always" text-align="center"> &#160;&#160;  MRR REGISTER REPORT </fo:block>
+						        <fo:block  font-size="12pt" font-weight="bold"  keep-together="always" text-align="center"> &#160;&#160;  MRR REGISTER REPORT BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd-MMM-yyyy")} </fo:block>
 						        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="7pt" > &#160;&#160;  </fo:block>
 			
 		          
