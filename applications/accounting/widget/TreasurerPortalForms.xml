@@ -310,6 +310,31 @@ under the License.
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
+     <form name="FindBatchContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="finAccountId" title="From Financial Account" >
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+                   <entity-constraint name="organizationPartyId" value="Company"/> 
+                    <entity-constraint name="ownerPartyId" value="Company"/>
+                     <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="transactionDate"><date-time type="timestamp"/></field>
+        <field name="finAccountTransGroupId" title="Finaccount Trans Group Id"><text ></text></field>
+        <field name="amount" ><text ></text></field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>
+        <field name="finAccountTransTypeId">
+        	<drop-down allow-empty="false">
+        		<option key="WITHDRAWAL" description="WITHDRAWAL"/>
+        		<option key="DEPOSIT" description="DEPOSIT"/>
+        	</drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
     <form name="ListContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
       default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
     	 <actions>
@@ -334,6 +359,45 @@ under the License.
              <parameter param-name="amount"/>
              <parameter param-name="comments"/>
              <parameter param-name="transactionDate"/>
+             <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field> 
+    </form>
+     <form name="ListBatchContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
+      default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
+    	 <actions>
+			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListBatchContraEntries.groovy"/>	
+        </actions>
+        <field name="finAccntTransGroupId" title="Finaccount Trans Group Id"><display></display></field>
+    	<field name="finAccountId" title = "Fin Account">
+          <display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountName}"/>
+        </field>
+        <field name="contraRefNum" title="Instrument Number"><display></display></field>
+        <field name="finAccntTransDate"><display></display></field>
+    	<field name="amount" title="Amount(Rs)"><display/></field>
+    	 <field name="Print Voucher" widget-style="buttontext" >
+            <hyperlink target="printContraGroupVoucher.pdf" description="Voucher" target-window="_blank">
+               	  <parameter param-name="finAccntTransGroupId" />
+            </hyperlink>
+        </field>
+        <field name="AbstractVoucher" widget-style="buttontext" >
+            <hyperlink target="printContraGroupVoucherAbstract.pdf" description="Abstract Voucher" target-window="_blank">
+               	  <parameter param-name="finAccntTransGroupId" />
+            </hyperlink>
+        </field> 
+    	<!-- <field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
+            <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
+                <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field> -->
+    	<field  name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printContraGroupCheque.pdf" description="Print Cheque" target-window="_blank">
+             <parameter param-name="finAccountId"/>
+             <parameter param-name="finAccntTransGroupId"/>
+             <parameter param-name="amount"/>
+             <parameter param-name="comments"/>
+             <parameter param-name="finAccntTransDate"/>
              <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field> 

@@ -1174,6 +1174,53 @@
             </widgets>
         </section>
     </screen>
+        <screen name="BatchBankContraEntry">
+        <section>
+             <actions>
+                <set field="titleProperty" value="Batch Contra Transactions" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="BatchContraEntry"/>
+                <set field="tabButtonItem4" value="BatchBankContraEntry"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="BatchContraEntryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="CreateNewBatchContra" text="Create Batch Contra" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Find Contra Entries">				
+									<include-form name="FindBatchContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<container>
+									<link target="BankContraEntry.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="amount" from-field="parameters.amount"/>
+									<parameter param-name="contraRefNum" from-field="parameters.contraRefNum"/>
+									<parameter param-name="transactionDate" from-field="parameters.transactionDate"/>
+									<parameter param-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+									</link>
+								</container>
+								<screenlet title="List Contra Entries">				
+									<include-form name="ListBatchContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="CreateNewContra">
         <section>
             <actions>
@@ -1206,7 +1253,37 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="CreateNewBatchContra">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Batch Contra Transactions" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="BatchContraEntry"/>
+                <set field="tabButtonItem4" value="BatchBankContraEntry"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="BatchContraEntryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Contra Entry">				
+									<include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <!-- ==================================== Outgoing Advances  ===================================   -->
     
     <screen name="OutgoingAdvancesRefund">
@@ -3311,13 +3388,28 @@
 	<screen name="PrintPayGroupCheque">
         <section>
             <actions>
-                pass in paymentId to print one check, otherwise use multi form input
+               <!--  pass in paymentId to print one check, otherwise use multi form input -->
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/PrintPayGroupCheques.groovy"/>
             </actions>
             <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PrintContraGroupCheque">
+        <section>
+            <actions>
+                <set field="finAccntTransGroupId" from-field="parameters.finAccntTransGroupId"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PrintContraGroupCheques.groovy"/>
+            </actions>
+           <widgets>
                 <platform-specific>
                    <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
                 </platform-specific>
@@ -3343,6 +3435,25 @@
             </widgets>
         </section>
     </screen>
+     <screen name="PrintContraGroupVoucher">
+        <section>
+            <actions>
+                pass in paymentId to print one check, otherwise use multi form input
+                <set field="finAccntTransGroupId" from-field="parameters.finAccntTransGroupId"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PrintContraGroupVoucher.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <html><html-template location="component://accounting/webapp/accounting/reports/printContraGroupVoucher.fo.ftl"></html-template></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="PrintPayGroupVoucherAbstract">
         <section>
             <actions>
@@ -3361,6 +3472,24 @@
             </widgets>
         </section>
     </screen> 
+     <screen name="PrintContraGroupVoucherAbstract">
+        <section>
+            <actions>
+                <set field="finAccntTransGroupId" from-field="parameters.finAccntTransGroupId"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PrintContraGroupVoucher.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <html><html-template location="component://accounting/webapp/accounting/reports/printContraGroupAbstractVoucher.fo.ftl"></html-template></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 	 <screen name="FindGroupPayment">
         <section>
             <actions>

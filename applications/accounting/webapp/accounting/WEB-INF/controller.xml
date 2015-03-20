@@ -2102,10 +2102,19 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewContra"/>
     </request-map>
+     <request-map uri="CreateNewBatchContra">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewBatchContra"/>
+    </request-map>
     <request-map uri="BankContraEntry">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankContraEntry"><redirect-parameter name=""/></response>
         <response name="error" type="view" value="BankContraEntry"/>
+    </request-map>
+    <request-map uri="BatchBankContraEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BatchBankContraEntry"><redirect-parameter name=""/></response>
+        <response name="error" type="view" value="BatchBankContraEntry"/>
     </request-map>
     <request-map uri="preCreateDepositAcctContraEntry">
         <security https="true" auth="true"/>
@@ -2657,9 +2666,21 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupVoucher"/>
     </request-map>
+     <request-map uri="printContraGroupVoucherAbstract.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintContraGroupVoucherAbstract"/>
+     </request-map>
+    <request-map uri="printContraGroupVoucher.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintContraGroupVoucher"/>
+    </request-map>
   <request-map uri="printPayGroupCheque.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupCheque"/>
+    </request-map>
+     <request-map uri="printContraGroupCheque.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintContraGroupCheque"/>
     </request-map>
     <request-map uri="processGroupPaymentDeposit">
      	<security https="true" auth="true"/>
@@ -3873,7 +3894,10 @@ under the License.
     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/>
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
+    <view-map name="BatchBankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BatchBankContraEntry"/>
     <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
+    <view-map name="CreateNewBatchContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewBatchContra"/>
+    
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
     <view-map name="FinAccountTransForReconsileNEWWW" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsileNNNN"/>
@@ -4233,7 +4257,11 @@ under the License.
    <view-map name="FindGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGroupPayment"/>
    <view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
    <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
+    <view-map name="PrintContraGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
+   <view-map name="PrintContraGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="PrintPayGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
+      <view-map name="PrintContraGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupCheque" content-type="application/pdf" encoding="none"/> 
+   
    <view-map name="EmployeeAdvancesAndSubScheduleReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvancesAndSubScheduleReport" content-type="application/pdf" encoding="none"/>
    <view-map name="EmployeeAdvancesAndSubScheduleReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#EmployeeAdvancesAndSubScheduleReportCSV" content-type="text/csv" encoding="none"/>
    <!-- end of view mappings -->
