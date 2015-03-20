@@ -1111,4 +1111,29 @@ under the License.
          <field name="paymentTotal" title="Payments"><display/></field>
         <field name="CB" title="Closing Balance"><display/></field> -->
     </form>
+    <form name="InvoiceSummaryReportCsv" type="list" list-name="finalInvoiceItemList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
+        
+        <field name="invoiceDate" title="invoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="invoiceTypeId" title="invoiceTypeId"><display/></field>
+        <field name="statusId" title="statusId"><display/></field> 
+        <field name="invoiceItemTypeId" title="invoiceItemTypeId"><display/></field>  
+        <field name="glAccountId" title="glAccountId"><display/></field> 
+        <field name="postedDrAmount" title="postedDrAmount"><display/></field> 
+        <field name="unPostedDrAmount" title="unPostedDrAmount"><display/></field>
+        <field name="postedCrAmount" title="postedCrAmount"><display/></field> 
+        <field name="unPostedCrAmount" title="unPostedCrAmount"><display/></field> 
+           	
+    </form>
+    <form name="GlSummaryReportCsv" type="list" list-name="glSummaryFinalList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
+        
+        <field name="invoiceItemTypeId" title="invoiceItemTypeId"><display/></field>
+        <field name="glAccountId" title="glAccountId"><display/></field> 
+        <field name="postedDrAmount" title="postedDrAmount"><display/></field> 
+        <field name="unPostedDrAmount" title="unPostedDrAmount"><display/></field>
+        <field name="postedCrAmount" title="postedCrAmount"><display/></field> 
+        <field name="unPostedCrAmount" title="unPostedCrAmount"><display/></field> 
+           	
+    </form>
 </forms>

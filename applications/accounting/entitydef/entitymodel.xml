@@ -1907,6 +1907,8 @@
 		<member-entity entity-alias="IIM" entity-name="InvoiceItemTypeMap" />
 		<member-entity entity-alias="IIT" entity-name="InvoiceItemType"/>
 		<alias name="parentTypeId" entity-alias="IVT"/>
+		<alias name="invoiceTypeId" entity-alias="IVT"/>
+		<alias name="organizationPartyId" entity-alias="IIM"/>
 		<alias name="invoiceItemTypeId" entity-alias="IIM"/>
 		<alias name="description" entity-alias="IVT" />
 		<alias name="invoiceItemTyeDescription" entity-alias="IIT" field="description"></alias>
