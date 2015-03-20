@@ -147,7 +147,10 @@ under the License.
 			                    	<#assign SBEOthers =0>
 			                        <#assign SBE = 0>
 			                        
-			                        
+			                        <#assign IncBasic =0>
+			                        <#assign IncDAAmount =0>
+			                        <#assign IncHRAmount =0>
+			                        <#assign totalIncArr = 0>
 			                    
 				                    <#assign monthKey = partyBenefits.getKey()>
 				                    
@@ -196,6 +199,11 @@ under the License.
 			                    	<#assign SBEInterMrlf = partyBenefits.getValue().get("SBEInterMrlf")?if_exists>
 			                    	<#assign SBEOthers = partyBenefits.getValue().get("SBEOthers")?if_exists>
 			                    	
+			                    	<#assign IncBasic = partyBenefits.getValue().get("IncBasic")?if_exists>
+			                    	<#assign IncDAAmount = partyBenefits.getValue().get("IncDAAmount")?if_exists>
+			                    	<#assign IncHRAmount = partyBenefits.getValue().get("IncHRAmount")?if_exists>
+			                    	<#assign totalIncArr = totalIncArr+IncBasic+IncDAAmount+IncHRAmount>
+			                    	
 			                    	
 			                    	<#assign totalLESalary = totalLESalary + LESalary>
 			                    	<#assign totalLEDAAmount = totalLEDAAmount + LEDAAmount>
@@ -222,17 +230,17 @@ under the License.
 			                    	<#assign TE = TESalary+TEDAAmount+TEHRAAmount+TECCAmount+TEBonusEX+TEOthers>
 			                    	<#assign SBE = SBESalary+SBEDAAmount+SBEHRAAmount+SBECCAmount+SBEOthers+SBEInterMrlf>
 			                    	
-			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic>
-			                    	<#assign totalDA = totalDA + DADAAmount++DAARLEAmount+LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance>
-			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance>
+			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic+IncBasic>
+			                    	<#assign totalDA = totalDA + DADAAmount++DAARLEAmount+LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance+IncDAAmount>
+			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance+IncHRAmount>
 			                    	<#assign totalConvey = totalConvey + convey>
 			                    	<#assign totalCityComp = totalCityComp + LECCAmount+TECCAmount+SBECCAmount+cityComp>
 			                    	<#assign totalBonus = totalBonus + bonus+TEBonusEX>
 			                    	<#assign totalDADAAmount = totalDADAAmount + DADAAmount>
 			                    	<#assign totalOthers = totalOthers + others+LESpecPay+TEOthers+SBEOthers>
-			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DADAAmount+DAARLEAmount>
+			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE+DADAAmount+DAARLEAmount+totalIncArr>
 			                    	
-			                   <#if (basic?has_content && basic!=0)>
+			                   <#if ((basic?has_content && basic!=0) || (bonus?has_content && bonus!=0))>
        							<fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >${fromDate?if_exists}-${thruDate?if_exists}</fo:block>  
@@ -433,6 +441,40 @@ under the License.
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${DAARLEAmount?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
+							    <#if (IncBasic?has_content && IncBasic!=0) || (IncDAAmount?has_content && IncDAAmount!=0) || (IncHRAmount?has_content && IncHRAmount!=0)>
+							    	<fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Inc Arrears:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${IncBasic?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${IncDAAmount?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${IncHRAmount?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalIncArr?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>

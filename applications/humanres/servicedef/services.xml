@@ -1482,7 +1482,13 @@ under the License.emplpunch
         <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
         <attribute name="geoId" mode="IN" type="String" optional="true"></attribute>
         <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
-        
+    </service> 
+    <service name="processBonusService"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="processBonusService" auth="true" transaction-timeout="5000">
+        <description>DA Arrears Payroll</description>
+        <attribute name="partyId" mode="IN" type="String"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
+        <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
     </service> 
     <service name="generateEmployerContributionPayrollBilling"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="generateEmployerContributionPayrollBilling" auth="true" transaction-timeout="5000">

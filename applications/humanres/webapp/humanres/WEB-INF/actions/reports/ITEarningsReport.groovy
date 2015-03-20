@@ -117,6 +117,7 @@ employmentsList.each{ employeeId->
 			fixedPay = 0;
 			spec = 0;
 			fixedTra = 0;
+			benMis = 0;
 			
 			
 			bonus = 0;
@@ -154,6 +155,9 @@ employmentsList.each{ employeeId->
 			DAARDAAmount = 0;
 			DAARLEAmount = 0;
 			
+			IncBasic = 0;
+			IncDAAmount = 0;
+			IncHRAmount = 0;
 			
 			epf = 0;
 			vpf =0;
@@ -167,6 +171,7 @@ employmentsList.each{ employeeId->
 			canf =0;
 			hdfc =0;
 			hbac =0;
+			IncPF = 0;
 			
 			bankL = 0;
 			cbBank = 0;
@@ -292,6 +297,11 @@ employmentsList.each{ employeeId->
 							if(UtilValidate.isEmpty(fixedTra)){
 								fixedTra = 0;
 							}
+							benMis = periodTotals.get("PAYROL_BEN_MIS");
+							if(UtilValidate.isEmpty(fixedTra)){
+								benMis = 0;
+							}
+							
 						}
 						
 						if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "ITDeductionsReport"){
@@ -465,7 +475,29 @@ employmentsList.each{ employeeId->
 						}
 					}
 				}
-				
+				//Increment Arrears
+				IncArrearsPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_INCARREARS","billingTypeId","SP_INCARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+				if(UtilValidate.isNotEmpty(IncArrearsPeriodTotals)){
+					Iterator IncArrearsPeriodTotalsIter = IncArrearsPeriodTotals.entrySet().iterator();
+					while(IncArrearsPeriodTotalsIter.hasNext()){
+						Map.Entry IncArrearsEntry = IncArrearsPeriodTotalsIter.next();
+						if(IncArrearsEntry.getKey() != "customTimePeriodTotals"){
+							IncArrearsTotals = IncArrearsEntry.getValue().get("periodTotals");
+							IncBasic = IncArrearsTotals.get("PAYROL_BEN_SALARY");
+							if(UtilValidate.isEmpty(IncBasic)){
+								IncBasic = 0;
+							}
+							IncDAAmount = IncArrearsTotals.get("PAYROL_BEN_DA");
+							if(UtilValidate.isEmpty(IncDAAmount)){
+								IncDAAmount = 0;
+							}
+							IncHRAmount = IncArrearsTotals.get("PAYROL_BEN_HRA");
+							if(UtilValidate.isEmpty(IncHRAmount)){
+								IncHRAmount = 0;
+							}
+						}
+					}
+				}
 				// Leave Encashment Here
 				leaveEncashPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_LEAVEENCASH","billingTypeId","SP_LEAVE_ENCASH","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 				if(UtilValidate.isNotEmpty(leaveEncashPeriodTotals)){
@@ -588,15 +620,13 @@ employmentsList.each{ employeeId->
 					}
 				}
 				
-			others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift+cash+heatallow+specPay+field+fixedPay+spec+fixedTra;
+			others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift+cash+heatallow+specPay+field+fixedPay+spec+fixedTra+benMis;
 			totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance+bonus;
 		
 			SBEOthers = SBEPerPay+SBESecndSat+SBEGenHol+SBEConver+SBESpecPay;
 			TEOthers = TESpec+TESpecPay;
 			
 			tempMap = [:];
-			
-			
 			tempMap["basic"] = basic;
 			tempMap["dearnessAllowance"] = dearnessAllowance;
 			tempMap["houseRentAllowance"] = houseRentAllowance;
@@ -608,6 +638,10 @@ employmentsList.each{ employeeId->
 			
 			tempMap["DADAAmount"] = DADAAmount;
 			tempMap["DAARLEAmount"] = DAARLEAmount;
+			
+			tempMap["IncBasic"] = IncBasic;
+			tempMap["IncDAAmount"] = IncDAAmount;
+			tempMap["IncHRAmount"] = IncHRAmount;
 			
 			tempMap["LESalary"] = LESalary;
 			tempMap["LEDAAmount"] = LEDAAmount;
@@ -638,7 +672,6 @@ employmentsList.each{ employeeId->
 				partyBenefitsMap.put(customTimePeriodKey,benefitsMap);
 			}
 			}
-			
 			if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "ITDeductionsReport"){
 				
 				//for SBE and TE Deductions
@@ -717,6 +750,21 @@ employmentsList.each{ employeeId->
 						}
 					}
 				}
+				//Increment Arrears
+				IncArrearsPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_INCARREARS","billingTypeId","SP_INCARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+				if(UtilValidate.isNotEmpty(IncArrearsPeriodTotals)){
+					Iterator IncArrearsPeriodTotalsIter = IncArrearsPeriodTotals.entrySet().iterator();
+					while(IncArrearsPeriodTotalsIter.hasNext()){
+						Map.Entry IncArrearsEntry = IncArrearsPeriodTotalsIter.next();
+						if(IncArrearsEntry.getKey() != "customTimePeriodTotals"){
+							IncArrearsTotals = IncArrearsEntry.getValue().get("periodTotals");
+							IncPF = IncArrearsTotals.get("PAYROL_DD_EMP_PR");
+							if(UtilValidate.isEmpty(IncPF)){
+								IncPF = 0;
+							}
+						}
+					}
+				}
 			
 			othersDed = SBEWFTrust+SBEMisDed;
 			
@@ -749,6 +797,7 @@ employmentsList.each{ employeeId->
 			tempMap1["othersDed"] = -(othersDed);
 			
 			tempMap1["DAAREmpProFund"] = -(DAAREmpProFund);
+			tempMap1["IncPF"] = -(IncPF);
 			
 			deductionsMap = [:];
 			if(UtilValidate.isNotEmpty(tempMap1)){
@@ -759,7 +808,6 @@ employmentsList.each{ employeeId->
 			}
 			}
 		}
-		
 	}
 	if(UtilValidate.isNotEmpty(partyBenefitsMap)){
 		partyBenefitFinalMap.put(employeeId,partyBenefitsMap);
@@ -825,6 +873,5 @@ employementList.each{employment->
 context.grandTotal=grandTotal;
 context.ITAXFinalList=ITAXFinalList;
 }
-
 
 

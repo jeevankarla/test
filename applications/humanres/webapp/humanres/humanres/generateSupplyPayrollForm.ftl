@@ -85,7 +85,7 @@
 function payrollTypeOnchange(){
 	var str=$('#billingTypeId').val();	
 	if(str){
-		if(str=="SP_LEAVE_ENCASH"){
+		if(str=="SP_LEAVE_ENCASH" || str == "SP_BONUS"){
 			jQuery("input[name='basicSalDate']").parent().parent().show();
 		}else{			
 			jQuery("input[name='basicSalDate']").parent().parent().hide();
