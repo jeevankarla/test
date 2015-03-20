@@ -1008,7 +1008,8 @@
                <set field="ajaxUrl" value="StockPositionDepotInternal" type="String"/>
             </actions>
             <widgets>
-                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <!--  <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}"> -->
+                    <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body"> 
                         <section>
                             <widgets>
