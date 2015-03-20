@@ -55,7 +55,17 @@ partyId=parameters.partyId;
 basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
 salary=basicSalAndGradeMap.get("amount");
 grade=basicSalAndGradeMap.get("payGradeId");
-locations=delegator.findByAnd("Employment",[partyIdTo:partyId,thruDate:null]);
+
+fromDateStart = UtilDateTime.getDayStart(nowDate);
+List conditionList = FastList.newInstance();
+conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
+conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart)));
+
+EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+locations = delegator.findList("Employment", condition, null, null, null, false);
+//locations=delegator.findByAnd("Employment",[partyIdTo:partyId,thruDate:null]);
 if(UtilValidate.isNotEmpty(locations)){
 	geoId=locations.get(0).locationGeoId;
 	if(UtilValidate.isNotEmpty(geoId)){
@@ -65,10 +75,12 @@ if(UtilValidate.isNotEmpty(locations)){
 			context.location=location;
 		}
 	}
-	context.salary=salary;
-	context.grade=grade;
+	appointmentDate=locations.get(0).appointmentDate;
+	resignationDate=locations.get(0).resignationDate;
 }
-
-
+context.appointmentDate=appointmentDate;
+context.resignationDate=resignationDate;
+context.salary=salary;
+context.grade=grade;
 	
 	

@@ -112,7 +112,7 @@
                 <parameter param-name="roleTypeIdTo"/>
             </hyperlink>
         </field>
-    </form>
+    </form> 
     <form name="ListEmployment" odd-row-style="alternate-row" header-row-style="header-row" type="list" target="updateEmployment"
     	default-table-style="basic-table hover-bar" separate-columns="true" list-name="employmentList">
     	<actions>
@@ -157,7 +157,7 @@
 		<field name="createdTxStamp" title="CreatedTxStamp"><hidden/></field>
 		<field name="submitButton" title="Update" separate-column="true">
             <submit button-type="button"/>
-         </field>   
+         </field>
        <field name="deleteLink" title="Delete" widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmployment">
                 <parameter param-name="roleTypeIdFrom"/>
@@ -185,6 +185,14 @@
 					<entity-order-by field-name="partyId" />
 				</entity-options>
 			</drop-down>
+        </field>
+         <field name="locationGeoId" title="New Location" tooltip="${uiLabelMap.CommonRequired}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
+                    <entity-constraint name="geoTypeId" value="CITY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="submitButton"  title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
