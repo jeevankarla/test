@@ -125,6 +125,10 @@
                		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
                		<select-field field-name="propertyValue"/>
                  </entity-one>
+                <entity-condition list="productCategoryTypeList" entity-name="ProductCategoryGlAccount" use-cache="true" filter-by-date="false" >
+                	 <condition-expr field-name="glAccountTypeId" operator="equals" value="SALES_ACCOUNT"/>
+                	<order-by field-name="productCategoryId"/>
+                </entity-condition>
                 <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
                 <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" 
@@ -2329,6 +2333,29 @@
 						<container>	
 				           <include-form name="IceCreamTaxEnclosuerCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
 			    	   </container>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ChannelWiseProductWiseSalesPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ChannelWiseProductWiseSales.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/ChannelWiseProductWiseSales.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
 					</widgets>
 				</section>
 			</widgets>
