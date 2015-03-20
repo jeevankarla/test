@@ -31,6 +31,7 @@ import javolution.util.FastList;
 
 import java.sql.Date;
 
+
 if (!fromDate) {
     return;
 }
@@ -43,13 +44,22 @@ if (!glFiscalTypeId) {
 
 // Find the last closed time period to get the fromDate for the transactions in the current period and the ending balances of the last closed period
 Map lastClosedTimePeriodResult = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", organizationPartyId, "findDate", new Date(fromDate.getTime()),"userLogin", userLogin));
-Timestamp lastClosedDate = (Timestamp)lastClosedTimePeriodResult.lastClosedDate;
+Timestamp lastClosedDate = lastClosedTimePeriodResult.lastClosedDate;
+
 GenericValue lastClosedTimePeriod = null; 
 if (lastClosedDate) {
+	
     lastClosedTimePeriod = (GenericValue)lastClosedTimePeriodResult.lastClosedTimePeriod;
+	if(lastClosedTimePeriod && (lastClosedDate.equals(UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastClosedTimePeriod.thruDate))))){
+		lastClosedTimePeriodResult = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", organizationPartyId, "findDate", new Date(UtilDateTime.addDaysToTimestamp(fromDate,-1).getTime()),"userLogin", userLogin));
+		lastClosedDate = lastClosedTimePeriodResult.lastClosedDate;
+		//Debug.log("in findLastClosedDate======"+(lastClosedDate.equals(UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastClosedTimePeriod.thruDate)))));
+	}
+	lastClosedTimePeriod = (GenericValue)lastClosedTimePeriodResult.lastClosedTimePeriod;
+	lastClosedDate = UtilDateTime.getDayEnd(lastClosedDate);
 }
-
-
+//Debug.log("lastClosedTimePeriod======"+lastClosedTimePeriod);
+//Debug.log("lastClosedDate======"+lastClosedDate);
 // POSTED
 // Posted transactions totals and grand totals
 postedTotals = [];
@@ -62,7 +72,10 @@ andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUA
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, lastClosedDate));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN, fromDate));
 andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
+//Debug.log("andCond======"+andCond);
 List allPostedOpeningTransactionTotals = delegator.findList("AcctgTransEntrySums", andCond, null, UtilMisc.toList("glAccountId"), null, false);
+
+//Debug.log("allPostedOpeningTransactionTotals======"+allPostedOpeningTransactionTotals);
 
 andExprs = FastList.newInstance();
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
