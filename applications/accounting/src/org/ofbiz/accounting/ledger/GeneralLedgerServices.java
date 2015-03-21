@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import java.util.TimeZone;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -43,6 +45,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -367,6 +370,85 @@ public class GeneralLedgerServices {
         } catch (Exception e) {
             Debug.logError(e, "Problem getting openingBal for glAccountId" + glAccountId, module);
             return ServiceUtil.returnError("Problem getting openingBal for glAccountId" + glAccountId);
+        }
+        return result;
+    }
+    //reCalculateGlHistoryForPeriod
+    public static Map<String, Object> reCalculateGlHistoryForPeriod(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
+    	Delegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customTimePeriodId = (String) context.get("customTimePeriodId");
+        String organizationPartyId = (String)context.get("organizationPartyId");
+        String glFiscalTypeId = (String)context.get("glFiscalTypeId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+        	 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",customTimePeriodId), false);
+    	     //emtpy or not a fiscal period then return
+        	 if(UtilValidate.isEmpty(customTimePeriod) || !(customTimePeriod.getString("periodTypeId").contains("FISCAL")) || (customTimePeriod.getString("isClosed").equals("Y"))){
+    	    	 return result;
+    	     }
+        	 
+    	     Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
+    	     Timestamp thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
+ 			 
+    	     List andExprs = FastList.newInstance();
+    	     if(UtilValidate.isEmpty(organizationPartyId)){
+    	    	 organizationPartyId = "Company";
+    	     }
+    	     andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
+    	     if(UtilValidate.isNotEmpty(organizationPartyId)){
+    	    	 //get internal orgs and do in query here
+    	    	 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+    	     }
+    	     
+    	     if(UtilValidate.isNotEmpty(glFiscalTypeId)){
+    	    	 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
+    	     }
+    	     
+    	     andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+    	     andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+    	     EntityCondition andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
+    	     //Debug.log("andCond======="+andCond);
+    	     EntityListIterator allPostedTransactionTotalItr = delegator.find("AcctgTransEntrySums", andCond, null, null, null, null);
+    	     GenericValue transTotalEntry;
+    	     Map<String ,Object> postedTransactionTotalsMap = FastMap.newInstance();
+    	     
+    	     while(allPostedTransactionTotalItr != null && (transTotalEntry = allPostedTransactionTotalItr.next()) != null) {
+    	    	 String glAccountId = transTotalEntry.getString("glAccountId");
+    	    	 Map accountMap = (Map)postedTransactionTotalsMap.get(transTotalEntry.getString("glAccountId"));
+    	    	 if (UtilValidate.isEmpty(accountMap)) {
+    	    		 accountMap = FastMap.newInstance();
+    	    		 accountMap.put("glAccountId", glAccountId);
+	                 accountMap.put("D", BigDecimal.ZERO);
+	                 accountMap.put("C", BigDecimal.ZERO);
+	             }
+    	    	 
+    	         UtilMisc.addToBigDecimalInMap(accountMap , transTotalEntry.getString("debitCreditFlag"), transTotalEntry.getBigDecimal("amount"));
+    	         postedTransactionTotalsMap.put(glAccountId, accountMap);
+    	     }
+    	     allPostedTransactionTotalItr.close();
+    	     andExprs.clear();
+    	     andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+    	     andExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+    	     List glHistoryList = delegator.findList("GlAccountHistory", EntityCondition.makeCondition(andExprs,EntityOperator.AND), null, null, null, false);
+    	     delegator.removeAll(glHistoryList);
+    	     for ( Map.Entry<String, Object> entry : postedTransactionTotalsMap.entrySet() ) {
+    	    	  Map postedTotalEntry = (Map)entry.getValue();
+    	    	 GenericValue glAccountHistory = delegator.makeValue("GlAccountHistory");
+    	    	 glAccountHistory.set("glAccountId", (String)postedTotalEntry.get("glAccountId"));
+    	    	 glAccountHistory.set("organizationPartyId",organizationPartyId);
+    	    	 glAccountHistory.set("customTimePeriodId",customTimePeriodId);
+    	    	 glAccountHistory.set("postedDebits",(BigDecimal)postedTotalEntry.get("D") );
+    	    	 glAccountHistory.set("postedCredits", (BigDecimal)postedTotalEntry.get("C"));
+    	    	 delegator.createOrStore(glAccountHistory);
+    	    	 //Debug.log("glAccountHistory============="+glAccountHistory);
+    	     }	 
+    	    	 
+    	   
+        } catch (Exception e) {
+            Debug.logError(e, "Problem in reCalculateGlHistory", module);
+            return ServiceUtil.returnError("Problem in reCalculateGlHistory");
         }
         return result;
     }

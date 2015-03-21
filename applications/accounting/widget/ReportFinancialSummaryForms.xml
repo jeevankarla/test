@@ -85,8 +85,8 @@ under the License.
                 <list-options list-name="monthList" key-name="value" description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" required-field="false"><date-time type="timestamp"/></field>
-        <field name="thruDate" required-field="false"><date-time type="timestamp"/></field>
+        <field name="fromDate" required-field="false"><date-time type="date" /></field>
+        <field name="thruDate" required-field="false"><date-time type="date"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
