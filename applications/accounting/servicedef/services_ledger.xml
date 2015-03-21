@@ -381,6 +381,20 @@ under the License.
          <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
          <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+    <service name="reCalculateGlHistoryForPeriod"  engine="java"
+            location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="reCalculateGlHistoryForPeriod" auth="true"
+            transaction-timeout="3000">
+        <description> ReCalculate GlHistory for given fiscal period and update GlHistory entity.
+        </description>
+        <required-permissions join-type="OR">
+        	<permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
+        	<permission-service service-name="acctgTransactionPermissionCheck" main-action="EDIT_INTERNAL"/>
+        	<permission-service service-name="acctgTransactionPermissionCheck" main-action="EDIT"/>
+        </required-permissions>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="glFiscalTypeId" type="String" mode="IN" optional="true"/>
+    </service>
     <service name="closeFinancialTimePeriod" default-entity-name="CustomTimePeriod" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="closeFinancialTimePeriod" auth="true">
         <description>Close a financial time period</description>

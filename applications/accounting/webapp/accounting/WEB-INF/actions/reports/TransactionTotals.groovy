@@ -42,7 +42,9 @@ if (!glFiscalTypeId) {
     return;
 }
 
-// Find the last closed time period to get the fromDate for the transactions in the current period and the ending balances of the last closed period
+fromDate = UtilDateTime.getDayStart(fromDate);
+thruDate = UtilDateTime.getDayEnd(thruDate);
+//  Find the last closed time period to get the fromDate for the transactions in the current period and the ending balances of the last closed period
 Map lastClosedTimePeriodResult = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", organizationPartyId, "findDate", new Date(fromDate.getTime()),"userLogin", userLogin));
 Timestamp lastClosedDate = lastClosedTimePeriodResult.lastClosedDate;
 
@@ -85,6 +87,7 @@ andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GRE
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
 List allPostedTransactionTotals = delegator.findList("AcctgTransEntrySums", andCond, null, UtilMisc.toList("glAccountId"), null, false);
+//Debug.log("allPostedTransactionTotalItr======="+allPostedTransactionTotals.size());
 if (allPostedTransactionTotals) {
     Map postedTransactionTotalsMap = [:]
     allPostedTransactionTotals.each { postedTransactionTotal ->
