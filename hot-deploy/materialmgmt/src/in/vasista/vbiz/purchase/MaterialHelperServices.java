@@ -717,11 +717,12 @@ public class MaterialHelperServices{
         		}
         		if(UtilValidate.isNotEmpty(eachItem.get("bedPercent"))){
         			BigDecimal componentRate = (BigDecimal)eachItem.get("bedPercent");
-        			Debug.log("componentRate ################"+componentRate);
-        			Map taxResultCtx = getOrderTaxRateForComponentRate(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "EXCISE_DUTY_PUR", "componentRate", componentRate, "effectiveDate", orderHeader.getTimestamp("orderDate")));
-    				BigDecimal bedPercentage = (BigDecimal)taxResultCtx.get("taxRate");
-    				Debug.log("bedPercentage ################"+bedPercentage);
-    				tempMap.put("bedPercent", bedPercentage);
+        			BigDecimal bedPercentage = BigDecimal.ZERO;
+        			if(componentRate.compareTo(BigDecimal.ZERO)>0){
+        				Map taxResultCtx = getOrderTaxRateForComponentRate(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "EXCISE_DUTY_PUR", "componentRate", componentRate, "effectiveDate", orderHeader.getTimestamp("orderDate")));
+        				bedPercentage = (BigDecimal)taxResultCtx.get("taxRate");
+        			}
+        			tempMap.put("bedPercent", bedPercentage);
         		}
         		productQty.add(tempMap);
         		productItemRef.put(eachItem.getString("productId"), tempMap);
