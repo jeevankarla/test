@@ -103,8 +103,7 @@ under the License.
 		                      <#assign unionQty=0> 
 		                      <#assign retailerQty=0>
 		                      <#assign tradeQty=0>
-		                       <#assign qty=0>
-		                       <#assign subQty=0>
+		                      <#assign subQty=0>
 		                       <fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  text-align="left"   font-size="12pt" white-space-collapse="false" font-weight="bold">${prodCat.getKey()}</fo:block>  
@@ -115,46 +114,47 @@ under the License.
 	                       		</fo:table-row>
 	                       		<#assign productDtls = prodCat.getValue().entrySet()>
 	                       		<#list productDtls as prod>
-	                       		   <#if prod.getValue().get("UNITS")?has_content>
-		                       		  <#assign unitQty=unitQty+prod.getValue().get("UNITS")> 
-		                       		 </#if>
-		                       		 
+	                       		  <#assign prodUnitQty=0> 
+			                      <#assign prodUnionQty=0> 
+			                      <#assign prodRetailerQty=0>
+			                      <#assign prodTradeQty=0>
+	                       		  <#assign qty=0>
+	                       		 <#assign product=delegator.findOne("Product",{"productId":prod.getKey()},true)>
+	                       		 <#if prod.getValue().get("UNITS")?has_content>
+			                       			<#assign prodUnitQty=prod.getValue().get("UNITS")> 
+			                       		    <#assign unitQty=unitQty+prod.getValue().get("UNITS")> 
+		                       		   </#if>
 		                       		  <#if prod.getValue().get("UNION")?has_content>
+		                       		   <#assign prodUnionQty=prod.getValue().get("UNION")> 
 	                       		       <#assign unionQty=unionQty+prod.getValue().get("UNION")> 
 	                       		     </#if>
 	                       		     
 	                       		     <#if prod.getValue().get("Retailer")?has_content>
+	                       		       <#assign prodRetailerQty=prod.getValue().get("Retailer")> 
 	                       		       <#assign retailerQty=retailerQty+prod.getValue().get("Retailer")> 
 	                       		     </#if>
 	                       		     
 	                       		     <#if prod.getValue().get("TRADE_CUSTOMER")?has_content>
+	                       		        <#assign prodTradeQty=prod.getValue().get("TRADE_CUSTOMER")> 
 	                       		        <#assign tradeQty=tradeQty+prod.getValue().get("TRADE_CUSTOMER")> 
 	                       		     </#if>
-	                       		     <#assign  qty= qty+ tradeQty+retailerQty+unionQty+unitQty>
+	                       		     <#assign  qty= qty+ prodTradeQty+prodRetailerQty+prodUnionQty+prodUnitQty>
 	                       		      <#assign  totQty= totQty+qty>
 	                       		      <#assign subQty=subQty+qty>
-	                       		 <#assign product=delegator.findOne("Product",{"productId":prod.getKey()},true)>
 		                       		 <fo:table-row>
 	                    				<fo:table-cell>
 		                            		<fo:block  text-align="left"   font-size="12pt" white-space-collapse="false" >${product.brandName}</fo:block>  
 		                       			</fo:table-cell>
-		                       			 <fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prod.getValue().get("UNITS")?if_exists}</fo:block>  
-		                       			</fo:table-cell>
-		                       			 <fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prod.getValue().get("UNION")?if_exists}</fo:block>  
-		                       			</fo:table-cell>
-		                       			 <fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prod.getValue().get("Retailer")?if_exists}</fo:block>  
-		                       			</fo:table-cell>
-		                       			 <fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prod.getValue().get("TRADE_CUSTOMER")?if_exists}</fo:block>  
-		                       			</fo:table-cell>
+		                        	  <#list roleTypeList as roleType>
 		                       			<fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${qty}</fo:block>  
+		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${(prod.getValue().get(roleType)?if_exists)}</fo:block>  
+		                       			</fo:table-cell>
+		                       			</#list>
+		                       			<fo:table-cell>
+		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${qty?string("#0.00")}</fo:block>  
 		                       			</fo:table-cell>
 		                       		</fo:table-row>
-	                       		</#list>
+	                       		 </#list>
 	                       		<fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -164,22 +164,31 @@ under the License.
                     				<fo:table-cell >
 	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">subTotal</fo:block>  
 	                       			</fo:table-cell>
+	                       			<#list roleTypeList as roleType>
+	                       			<#if roleType == "UNITS">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${unitQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if unitQty &gt; 0>${unitQty?string("#0.00")}</#if></fo:block>  
 	                       			</fo:table-cell>
+	                       			</#if>
+	                       			<#if roleType == "UNION">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${unionQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if unionQty &gt; 0>${unionQty?string("#0.00")}</#if></fo:block>  
 	                       			</fo:table-cell>
+	                       			</#if>
+	                       			<#if roleType == "Retailer">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${retailerQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if retailerQty &gt; 0>${retailerQty?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
+	                       			 </#if>
+	                       			 <#if roleType == "TRADE_CUSTOMER">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${tradeQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if tradeQty &gt; 0>${tradeQty?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
+	                       			  </#if>
+	                       			</#list>
 	                       			  <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${subQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if subQty &gt; 0>${subQty?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
-	                       			 
 	                       		</fo:table-row>
 	                       		  <#assign totUnitQty=totUnitQty+unitQty> 
 	                       		  <#assign totUnionQty=totUnionQty+unionQty> 
@@ -195,20 +204,30 @@ under the License.
                     				<fo:table-cell >
 	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">Total</fo:block>  
 	                       			</fo:table-cell>
+	                       			<#list roleTypeList as roleType>
+	                       			<#if roleType == "UNITS">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totUnitQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totUnitQty &gt; 0>${totUnitQty?string("#0.00")}</#if></fo:block>  
 	                       			</fo:table-cell>
+	                       			</#if>
+	                       			<#if roleType == "UNION">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totUnionQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totUnionQty &gt; 0>${totUnionQty?string("#0.00")}</#if></fo:block>  
 	                       			</fo:table-cell>
+	                       			 </#if>
+	                       			<#if roleType == "Retailer">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totRetailerQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totRetailerQty &gt; 0>${totRetailerQty?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
+	                       			 </#if>
+	                       			<#if roleType == "TRADE_CUSTOMER">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totTradeQty}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totTradeQty &gt; 0>${totTradeQty?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
+	                       			  </#if>
+	                       			  </#list>
 	                       			 <fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totQty}</fo:block>  
+		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totQty &gt; 0>${totQty?string("#0.00")}</#if></fo:block>  
 		                       			</fo:table-cell>
 	                       		</fo:table-row>
 	                       		 <fo:table-row> 
