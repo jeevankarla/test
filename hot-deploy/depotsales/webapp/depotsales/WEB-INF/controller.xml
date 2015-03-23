@@ -246,6 +246,16 @@
         <response name="success" type="view" value="DepotSalesReports"/>
     </request-map>
     
+    <request-map uri="DepotSalesBookReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DepotSalesBookReportPDF"/>
+    </request-map>
+    
+    <request-map uri="DepotSalesBookAbstractReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DepotSalesBookAbstractReportPDF"/>
+    </request-map>
+    
      
      
     <!-- View Mappings -->
@@ -273,6 +283,8 @@
     <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
     <view-map name="StockPositionDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockPositionDepotSales"/>
     <view-map name="DepotSalesReports" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesReports"/>
+    <view-map name="DepotSalesBookReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesBookReportPDF" content-type="application/pdf"/>
+    <view-map name="DepotSalesBookAbstractReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesBookAbstractReportPDF" content-type="application/pdf"/>
     
     
     
