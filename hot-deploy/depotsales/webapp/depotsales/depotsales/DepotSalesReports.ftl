@@ -42,7 +42,7 @@ $(document).ready(function(){
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row">
-						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
+						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Sale Book Report Detail</td>
 							<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
@@ -61,7 +61,7 @@ $(document).ready(function(){
 						</form>
 	                  </tr>
 	                   <tr class="alternate-row">
-						<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>iceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
+						<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookAbstractReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Sale Book Report Abstract </td>
 							<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
