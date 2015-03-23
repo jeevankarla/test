@@ -43,11 +43,13 @@ under the License.
     	var orders = jQuery("#listOrders :checkbox[name='orderId']");
         var index = 0;
         var shipDate = $("#shipDate").val();
+        //alert("==shipDate==="+shipDate);
         var vehicleId = $("#vehicleId").val();
         var carrierName = $("#carrierName").val();
         var lrNumber = $("#lrNumber").val();
         var modeOfDespatch = $("#modeOfDespatch").val();
         var shipmentTypeId = $("#shipmentTypeId").val();
+         var orderStatusId = $("#orderStatusId").val();
         jQuery.each(orders, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -67,6 +69,7 @@ under the License.
     	appStr += "<input type=hidden name=lrNumber value='"+ lrNumber +"' />";
     	appStr += "<input type=hidden name=modeOfDespatch value='"+ modeOfDespatch +"' />";
     	appStr += "<input type=hidden name=shipmentTypeId value='"+ shipmentTypeId +"' />";
+    	appStr += "<input type=hidden name=orderStatusId value='"+ orderStatusId +"' />";
     	$("#processOrdersForm").append(appStr);
     	var salesChannel = '${parameters.salesChannelEnumId?if_exists}';
     	var splStr = "<input type=hidden name=salesChannelEnumId value='"+ salesChannel +"' />";
@@ -104,53 +107,25 @@ under the License.
 
 
 <form name="orderCancelForm" id="orderCancelForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="icpSales">
-		action="cancelICPNandiniOrder"
-	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
-		action="cancelICPAmulOrder"
-	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
-		action="cancelICPBellaryOrder"
-	<#elseif screenFlag?exists && screenFlag=="depotSales">
+	
+	<#if screenFlag?exists && screenFlag=="depotSales">
 		action="cancelDepotOrder"
-	<#elseif screenFlag?exists && screenFlag=="fgsSales">
-		action="cancelFGSOrder"
-	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
-		action="cancelICPStkTrOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="cancelIUSTransferOrder"
 	</#if>>
 </form>
 <form name="orderApproveForm" id="orderApproveForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="icpSales">
-		action="approveICPNandiniOrder"
-	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
-		action="approveICPAmulOrder"
-	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
-		action="approveICPBellaryOrder"
-	<#elseif screenFlag?exists && screenFlag=="depotSales">
+	
+	<#if screenFlag?exists && screenFlag=="depotSales">
 		action="approveDepotSalesOrder"
-	<#elseif screenFlag?exists && screenFlag=="fgsSales">
-		action="approveFGSOrder"
-	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
-		action="approveICPStkTrOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="approveIUSTransferOrder"
-	</#if>>
+	</#if>> 
 </form>
 
 <form name="processOrdersForm" id="processOrdersForm" method="post" 
-	<#if screenFlag?exists && screenFlag=="icpSales">
-		action="createShipmentAndInvoiceForNandiniOrders"
-	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
-		action="createShipmentAndInvoiceForAmulOrders"
-	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
-		action="createShipmentAndInvoiceForBellaryOrders"
-	<#elseif screenFlag?exists && screenFlag=="depotSales">
+	<#if screenFlag?exists && screenFlag=="depotSales">
 		action="createShipmentAndInvoiceForDepotSalesOrders"
-	<#elseif screenFlag?exists && screenFlag=="fgsSales">
-		action="createShipmentAndInvoiceForFGSOrders"
-	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
-		action="createShipAndInvForICPTransferOrders"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="createShipAndInvForIUSTransferOrders"
 	</#if>>
@@ -160,22 +135,13 @@ under the License.
   
   <form name="listOrders" id="listOrders"  method="post" >
     <div align="right" width="100%">
-    	<#if screenFlag?exists && screenFlag=="icpSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_NANDINI_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_AMUL_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_BELLARY_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="depotSales">
+    	
+    	<#if screenFlag?exists && screenFlag=="depotSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='DEPOT_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="fgsSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_TR_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
     	</#if>
-    	
+    		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
     	<table width="100%">
     		<tr>
     			<td><span class="label"> Vehicle Number(<font color='red'>*</font>):</span><input class='h3' type='text' id='vehicleId' name='vehicleId'/></td>
