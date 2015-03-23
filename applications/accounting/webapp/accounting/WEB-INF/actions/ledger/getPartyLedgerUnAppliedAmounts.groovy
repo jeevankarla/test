@@ -170,7 +170,7 @@ partyIds.each{partyId->
 		abstractInnerMap.putAt("OB",apPartyOB);
 		abstractInnerMap.putAt("CB",apPartyCB);
 	}
-	if(pendingAmount>0){
+	if(pendingAmount!=0){
 	partyWiseLedgerAbstractMap[partyId]=abstractInnerMap;
 	partyLedgerAbstractCsvList.addAll(abstractInnerMap);
 	}
