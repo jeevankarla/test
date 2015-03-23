@@ -89,7 +89,9 @@
     
     <form name="viewQuotation" type="single"  title="" default-map-name="quote" 
         header-row-style="header-row" default-table-style="basic-table">
-        
+        <actions>
+           <set field="thruDate"  value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(quote.validThruDate)}" type="Timestamp" />
+        </actions> 
        <field name="quoteId" title="Quote No"><display/></field>
        <field name="partyId" title="Supplier Party">
        	<display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
@@ -99,9 +101,9 @@
        		<display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity>
        </field>
        <field name="grandTotal" title="Quote Value"><display/></field>
-       <field name="validFromDate" title="Valid from"><display/></field>
-       <field name="validThruDate" title="Valid till"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(quote.validThruDate)}" type="Timestamp"/></field>
-       <field name="createdStamp" title="Quote created"><display/></field>
+       <field name="validFromDate" title="Valid from"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(quote.validFromDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>
+       <field name="validThruDate" title="Valid till"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(thruDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>
+       <field name="createdStamp" title="Quote created"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(quote.createdStamp,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>
     </form>
     
     <form name="viewQuoteItemDetails" type="list" title="" default-map-name="item" list-name="quoteItemList" 
