@@ -24,6 +24,8 @@ under the License.
 	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="FACILITY_VIEW"/>
 	 	  <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="DEPOTSALES_VIEW"/>
 	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="MYPORTALBASE_ADMIN"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="PARTYMGR_UPDATE"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_DEPOTSALES" permissionId="PARTYMGR_VIEW"/>
 		 <PortalPage portalPageId="MYPORTAL_DEPOTSALES" sequenceNum="0" portalPageName="Main" description="The DepotSales Component Main Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPOTSALES"/>
 			
 		 <PortalPortlet portalPortletId="DEPOTSALES" portletName="DepotSales"

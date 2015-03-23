@@ -218,6 +218,11 @@
        <response name="success" type="view" value="MaterialForQCApproval"/>
        <response name="error" type="view" value="MaterialForQCApproval"/>
      </request-map>
+       <request-map uri="FindMaterialQCApproval">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="error" type="view" value="MaterialForQCApproval"/>
+     </request-map>
       <request-map uri="acceptReceiptQtyByQC">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="acceptReceiptQtyByQC"></event>

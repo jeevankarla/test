@@ -12,4 +12,23 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DEPOTSALES_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="DEPOTSALES_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="DEPOTSALES_ADMIN"/>
+    
+    
+    <SecurityGroup description="DepotSales Application Admin group for Sales And Receipts!" groupId="DEPOTSALES_MANAGER"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_ADMIN"/>
+     <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="FACILITY_ADMIN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_VIEW"/>
 </entity-engine-xml>
