@@ -282,9 +282,9 @@
     <view-map name="FindMaterialInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindMaterialInvoices"/>
     <view-map name="MaterialForQCApproval" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialForQCApproval"/>
     <view-map name="StockPositionDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockPositionDepotSales"/>
-    <view-map name="DepotSalesReports" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesReports"/>
-    <view-map name="DepotSalesBookReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesBookReportPDF" content-type="application/pdf"/>
-    <view-map name="DepotSalesBookAbstractReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesBookAbstractReportPDF" content-type="application/pdf"/>
+    <view-map name="DepotSalesReports" type="screen" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesReports"/>
+    <view-map name="DepotSalesBookReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesBookReportPDF" content-type="application/pdf"/>
+    <view-map name="DepotSalesBookAbstractReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesBookAbstractReportPDF" content-type="application/pdf"/>
     
     
     
