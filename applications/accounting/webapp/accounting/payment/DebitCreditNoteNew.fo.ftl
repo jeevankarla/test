@@ -245,7 +245,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                 <#if comments?exists> ${comments}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
+				            		<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                 <#if comments?has_content> ${comments?if_exists}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -271,7 +271,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  ${comments?if_exists}</fo:block>     
+				            		<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  <#if comments?has_content>${comments?if_exists}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -411,7 +411,7 @@ under the License.
 	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("##0.00000")}</fo:block> 
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<#else>
 	                   			<fo:table-cell border-style="solid">
