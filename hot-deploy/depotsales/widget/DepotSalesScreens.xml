@@ -1078,7 +1078,7 @@
  <screen name="FindPaymentNonRoute">
         <section>
             <actions>
-               <set field="titleProperty" value="Non Route Receipts Search"/>
+               <set field="titleProperty" value="Depot Receipts Search"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.paymentMethodTypeId}"/>
@@ -1141,14 +1141,14 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar" >
-                                            <link target="NewNonRouteReceipt"  text="Create New Receipt" style="buttontext create" > 
+                                            <link target="NewDepotSalesReceipt"  text="Create New Receipt" style="buttontext create" > 
                                             <parameter param-name="paymentMethodTypeId" from-field="defaultMethodTypeId" />
                                              <parameter param-name="subTabItem" value="${parameters.subTabItem}" />
                                             </link>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options" > 
-                                        <include-form name="FindPaymentNonRoute" location="component://accounting/widget/PaymentForms.xml"/>
+                                        <include-form name="FindPaymentDepotSales" location="component://accounting/widget/PaymentForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     	<platform-specific>
@@ -1164,7 +1164,7 @@
     <screen name="NonRouteFindChequeReturns">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Non Route Receipts Search"/>
+				<set field="titleProperty" value="Depot Receipts Search To Cancel"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.paymentMethodTypeId}"/>
@@ -1249,10 +1249,10 @@
 			</widgets>
 		</section>
 	</screen> 
-	<screen name="NewNonRouteReceipt">
+	<screen name="NewDepotSalesReceipt">
         <section>
             <actions>
-               <set field="titleProperty" value="Non Route Receipts Search"/>
+               <set field="titleProperty" value="Create Depot New Receipt"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.subTabItem}"/>
@@ -1293,7 +1293,7 @@
                 	<section>
                   	<widgets>
                   		 <screenlet title="New  Receipt">
-		               <include-form name="NewNonRouteReceipt" location="component://accounting/widget/PaymentForms.xml"/>
+		               <include-form name="NewDepotSalesReceipt" location="component://accounting/widget/PaymentForms.xml"/>
 		                 </screenlet>
                       </widgets>
               	</section>

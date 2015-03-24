@@ -3431,6 +3431,19 @@ under the License.
         	<redirect-parameter name="subTabItem"/>
         </response>
     </request-map>
+     <request-map uri="createDepotSalesReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPayment"/>
+        <response name="success" type="request-redirect"  value="FindPaymentDepotSales">
+           <redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"  />
+        	<redirect-parameter name="noConditionFind" value="Y" />
+        </response>
+        <response name="error" type="request-redirect-noparam"  value="FindPaymentDepotSales">
+            <redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"/>
+        </response>
+    </request-map>
      <request-map uri="newPayablePayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newPayablePayment"/>

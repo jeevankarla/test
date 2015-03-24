@@ -87,7 +87,7 @@
 					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
 				</or>
             </condition>
-            <link target="FindPaymentNonRoute">
+            <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="${subTabItem}"/>
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}"/>
             </link>	        
@@ -220,7 +220,7 @@
             		<if-has-permission permission="BYPRODUCTS"  action="_CASH"/>
             	</or>            
             </condition>
-            <link target="FindPaymentNonRoute">
+            <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="CashPayment"/>
             	<parameter param-name="defaultMethodTypeId" value="CASH_PAYIN"/>
             </link>
@@ -231,7 +231,7 @@
             		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
             	</or>            
             </condition>
-            <link target="FindPaymentNonRoute">
+            <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="ChequePayment"/>
             	<parameter param-name="defaultMethodTypeId" value="CHEQUE_PAYIN"/>
             </link>            
@@ -242,7 +242,7 @@
             		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
             	</or>            
             </condition>
-            <link target="FindPaymentNonRoute">
+            <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="FundTransfer"/>
             	<parameter param-name="defaultMethodTypeId" value="FUND_TRANSFER"/>
             </link>            
@@ -259,14 +259,14 @@
             	<parameter param-name="paymentMethodTypeId" value="CHALLAN_PAYIN"/>
             </link>            
           </menu-item>  --> 
-          <menu-item name="ChequeReturn" title="Cheque Return">
+          <!-- <menu-item name="ChequeReturn" title="Cheque Return">
             <condition>
 				<or>
             		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
             	</or>            
             </condition>
-            <link target="NonRouteFindChequeReturns"/>
-          </menu-item>      
+            <link target="FindDepotSalesChequeReturns"/>
+          </menu-item> -->      
     </menu>  
       
 </menus>
