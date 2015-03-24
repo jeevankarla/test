@@ -94,13 +94,21 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 	companyBankAccountList.each{ bankDetails->		
 		finAccountId= bankDetails.finAccountId;
 		List conList=FastList.newInstance();
+		billingTypeId = "";
+		if(UtilValidate.isNotEmpty(parameters.billingTypeId)){
+			billingTypeId = parameters.billingTypeId;
+		}
 		
-		conList=UtilMisc.toList(
-			EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
-			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate),
-			EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)),
-			EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
-		  	EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
+		conList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"));
+		if(billingTypeId.equals("SP_BONUS")){
+			conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			conList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		}else{
+		  	conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			  conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+		}
+		conList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+		EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
 		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
@@ -143,11 +151,39 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 						
 					}
 					if(UtilValidate.isNotEmpty(canraBankPartyIds)){
+						if(UtilValidate.isNotEmpty(CanaraBankMap)){
+							CanaraBankEmplDetails=CanaraBankMap.entrySet();
+							CanaraBankEmplDetails.each { canaraBank ->
+								canaraemplList = canaraBank.getValue();
+								for(emply in canaraemplList){
+									if(emplPartyIds.contains(emply)){
+										emplPartyIds.remove(emply);
+									}
+									if(canraBankPartyIds.contains(emply)){
+										canraBankPartyIds.remove(emply);
+									}
+								}
+							}
+						}
 						CanaraBankMap.put(finAccountId,canraBankPartyIds);
 					}
 				}
 				partyIds = EntityUtil.getFieldListFromEntityList(finAccountDetailsList, "ownerPartyId", true);
 				if(UtilValidate.isNotEmpty(emplPartyIds)){
+					if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
+						bankWiseEmplDetails=bankWiseEmplDetailsMap.entrySet();
+						bankWiseEmplDetails.each { bank ->
+							employeeList = bank.getValue();
+							for(employee in employeeList){
+								if(emplPartyIds.contains(employee)){
+									emplPartyIds.remove(employee);
+								}
+								if(canraBankPartyIds.contains(employee)){
+									canraBankPartyIds.remove(employee);
+								}
+							}
+						}
+					}
 					bankWiseEmplDetailsMap.put(finAccountId,emplPartyIds);
 				}
 			}
