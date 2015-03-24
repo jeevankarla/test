@@ -1982,13 +1982,17 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			if(UtilValidate.isNotEmpty(itemIssuances)){
 				for(GenericValue issuedItem:itemIssuances){
 					BigDecimal quantity=BigDecimal.ZERO;
+					BigDecimal unitCost=BigDecimal.ZERO;
 					GenericValue inventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId",issuedItem.get("inventoryItemId")),false);
-					totalUnitPrice = totalUnitPrice.add((BigDecimal)inventoryItem.get("unitCost"));
+					if(UtilValidate.isNotEmpty(inventoryItem.get("unitCost"))){
+						unitCost = (BigDecimal)inventoryItem.get("unitCost");
+					}
+					totalUnitPrice = totalUnitPrice.add(unitCost);
 					quantity = quantity.add(issuedItem.getBigDecimal("quantity"));
 					if(UtilValidate.isNotEmpty(issuedItem.getBigDecimal("cancelQuantity"))){
 						quantity = quantity.subtract(issuedItem.getBigDecimal("cancelQuantity"));
 					}
-					totalValue = totalValue.add(((BigDecimal)inventoryItem.get("unitCost")).multiply(quantity));
+					totalValue = totalValue.add((unitCost).multiply(quantity));
 					totalQty = totalQty.add(quantity);
 				}
 				totalUnitPrice = totalUnitPrice.divide(new BigDecimal((itemIssuances.size())));
