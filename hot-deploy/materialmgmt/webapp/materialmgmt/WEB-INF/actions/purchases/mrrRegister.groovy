@@ -32,8 +32,8 @@ import org.ofbiz.party.party.PartyHelper;
 fromDate=parameters.fromDateMr;
 thruDate=parameters.thruDateMr;
 productIds=[];
-if(UtilValidate.isNotEmpty(parameters.productId)){	
-if(UtilValidate.isEmpty(parameters.issueToFacilityId)){		
+if(UtilValidate.isNotEmpty(parameters.productId)){
+if(UtilValidate.isEmpty(parameters.issueToFacilityId)){
 productIds.add(parameters.productId);
 //context.productId=parameters.productId;
 	}
@@ -77,19 +77,19 @@ try {
 }
 
 
-if(UtilValidate.isNotEmpty(parameters.Unions)){	
+if(UtilValidate.isNotEmpty(parameters.Unions)){
 	partyRoleData = delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"Unions")  , null, null, null, false );
 	partyRoleIds=EntityUtil.getFieldListFromEntityList(partyRoleData, "partyId", true);
-	if(UtilValidate.isNotEmpty(partyRoleIds)){	
-	OrderRoleData = delegator.findList("OrderRole",EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyRoleIds)  , null, null, null, false );		
-	OrderRoleIds=EntityUtil.getFieldListFromEntityList(OrderRoleData, "orderId", true);		
-	}		
+	if(UtilValidate.isNotEmpty(partyRoleIds)){
+	OrderRoleData = delegator.findList("OrderRole",EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyRoleIds)  , null, null, null, false );
+	OrderRoleIds=EntityUtil.getFieldListFromEntityList(OrderRoleData, "orderId", true);
+	}
  }
 	
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 shipmentMap=[:];mrrList=[];
-if(UtilValidate.isNotEmpty(productIds)){	
+if(UtilValidate.isNotEmpty(productIds)){
 condList =[];
 condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
@@ -98,18 +98,21 @@ if(UtilValidate.isNotEmpty(parameters.Unions)){
 	if(UtilValidate.isNotEmpty(partyRoleIds)){
 		if(UtilValidate.isNotEmpty(OrderRoleIds)){
 condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, OrderRoleIds));
-	} 
+	}
    }
- }	
+ }
 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 shipmentReceiptList = delegator.findList("ShipmentReceipt", cond, null,null, null, false);
-
+shipmentReceipts=EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "shipmentId", true);
 
 shipmentMap["totalInvoiceAmt"]=BigDecimal.ZERO;
 shipmentMap["totalPaidAmt"]=BigDecimal.ZERO;
 
-if(UtilValidate.isNotEmpty(shipmentReceiptList)){
-shipmentReceiptList.each{shipmentData->	
+if(UtilValidate.isNotEmpty(shipmentReceipts)){
+shipmentReceipts.each{eachShipmentId->
+	shipmentData = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachShipmentId));
+	shipmentData=EntityUtil.getFirst(shipmentData);
+	
    shipmentDetailMap=[:];
    shipmentDetailMap["receiptId"]=shipmentData.receiptId;
    shipmentDetailMap["datetimeReceived"]=shipmentData.datetimeReceived;
@@ -120,7 +123,7 @@ shipmentReceiptList.each{shipmentData->
 coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, shipmentData.receiptId));
 coList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_QUALITYCHECK"));
 EntityCondition con = EntityCondition.makeCondition(coList,EntityOperator.AND);
-shipmentQCdate= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);   
+shipmentQCdate= delegator.findList("ShipmentReceiptStatus", con, null,null, null, false);
 shipmentQCdate=EntityUtil.getFirst(shipmentQCdate);
 if(UtilValidate.isNotEmpty(shipmentQCdate)){
 	if(UtilValidate.isNotEmpty(shipmentQCdate.statusDatetime)){
@@ -130,9 +133,9 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 
 }
  deptRole = delegator.findList("ShipmentReceiptRole",EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS , shipmentData.receiptId)  , null, null, null, false );
-    deptRole=EntityUtil.getFirst(deptRole);  
+	deptRole=EntityUtil.getFirst(deptRole);
 	
-    if(UtilValidate.isNotEmpty(deptRole)){
+	if(UtilValidate.isNotEmpty(deptRole)){
 	partyIdOfDept=deptRole.partyId;
 
    if(UtilValidate.isNotEmpty(partyIdOfDept)){
@@ -141,14 +144,14 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
   if(UtilValidate.isNotEmpty(deptGroupName)){
   if(UtilValidate.isNotEmpty(deptGroupName.groupName)){
 	  
-   deptName=deptGroupName.groupName;  
+   deptName=deptGroupName.groupName;
    shipmentDetailMap.put("deptName",deptName);
-	     }
-       }
-     }
+		 }
+	   }
+	 }
    }
 	   //invoiceno,date
-   invoiceData = delegator.findOne("Shipment",["shipmentId":shipmentData.shipmentId],false);   
+   invoiceData = delegator.findOne("Shipment",["shipmentId":shipmentData.shipmentId],false);
    if(invoiceData){
 	   invoiceId=invoiceData.get("supplierInvoiceId");
 	   invoiceDate=invoiceData.get("supplierInvoiceDate");
@@ -156,10 +159,10 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    shipmentDetailMap["invoiceId"]=invoiceId;
    shipmentDetailMap["invoiceDate"]=invoiceDate;
    }
-      cList =[];
+	  cList =[];
    cList.add(EntityCondition.makeCondition("statusId",  EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITOFF")));
    cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentData.shipmentId));
-    con = EntityCondition.makeCondition(cList,EntityOperator.AND);
+	con = EntityCondition.makeCondition(cList,EntityOperator.AND);
    invoiceDetails = delegator.findList("Invoice", con, null,null, null, false);
    invoiceDetails=EntityUtil.getFirst(invoiceDetails);
    
@@ -171,14 +174,14 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    
    invoiceId=invoiceDetails.invoiceId;
    invoiceAmount= InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
-   if(UtilValidate.isNotEmpty(invoiceAmount)){	   
+   if(UtilValidate.isNotEmpty(invoiceAmount)){
 	   shipmentDetailMap.put("invoiceAmount",invoiceAmount);
 	   shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
 	   }
    
-   invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);    
+   invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);
    if(UtilValidate.isNotEmpty(invoice)){
-    invoiceToApply = InvoiceWorker.getInvoiceNotApplied(invoice);
+	invoiceToApply = InvoiceWorker.getInvoiceNotApplied(invoice);
 	if(UtilValidate.isNotEmpty(invoiceToApply)){
 		shipmentDetailMap.put("invoiceToApply",invoiceToApply);
 		}
@@ -190,16 +193,16 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 		   shipmentMap["totalPaidAmt"]+=paidAmount;
 		   
 	   }
-   }   
-     }
+   }
+	 }
    if(UtilValidate.isEmpty(invoiceDetails)){
 	   inventoryItemDetails = delegator.findOne("InventoryItem",["inventoryItemId":shipmentData.inventoryItemId],false);
 	   
-	     if(inventoryItemDetails){
+		 if(inventoryItemDetails){
 		   quantityAccepted=shipmentData.quantityAccepted;
 		   unitCost=inventoryItemDetails.get("unitCost");
-		   invoiceAmount=quantityAccepted*unitCost;		   
-		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);		   
+		   invoiceAmount=quantityAccepted*unitCost;
+		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);
 		  shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
 
 //	   invoiceToApply=0;paidAmount=0;totalPaidAmt=0;
@@ -217,15 +220,15 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
    vendorDetails = EntityUtil.filterByCondition(vendorDeptDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
    vendorDetails=EntityUtil.getFirst(vendorDetails);
    if(UtilValidate.isNotEmpty(vendorDetails)){
-    partyId=vendorDetails.partyId;
-    shipmentDetailMap.put("partyId",partyId);
-    partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+	partyId=vendorDetails.partyId;
+	shipmentDetailMap.put("partyId",partyId);
+	partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentDetailMap.put("partyName",partyName);
-     }
+	 }
   // filter out qc approval materials from shipment receipt materials
   if((invoiceAmount) != 0) {
    mrrList.addAll(shipmentDetailMap);
-   } 
+   }
  
    }
   }
