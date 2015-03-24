@@ -81,8 +81,11 @@ $(document).ready(function(){
        	  				 // alert("catagoryList=========="+catagoryList);
        	  					if(catagoryList != undefined && catagoryList != ""){
 								$.each(catagoryList, function(key, item){
-								// alert("item.value=========="+item.value);
-								 catgoryOptionList.push('<option value="'+item.value+'" selected="selected">' +item.text+'</option>');
+								if(item.value=="BYPROD"){
+									catgoryOptionList.push('<option value="'+item.value+'" selected="selected">' +item.text+'</option>');
+								}else{
+								 catgoryOptionList.push('<option value="'+item.value+'">' +item.text+'</option>');
+								 }
 									});
 				           }
 				           $('#productCatageoryId').html(catgoryOptionList.join(''));   
