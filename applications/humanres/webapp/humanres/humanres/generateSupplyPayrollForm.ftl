@@ -25,6 +25,12 @@
 			changeMonth: false,
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
+		
+		$( "#bonusDate" ).datepicker({
+			dateFormat:'MM dd, yy',
+			changeMonth: false,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
 	}
 	function dialogue(content, title) {
 		
@@ -54,6 +60,7 @@
 					jQuery("input[name='basicSalDate']").parent().parent().hide();
 					$("#geoId").parent().parent().hide();
 					$("#daDate").parent().parent().hide();
+					$("#bonusDate").parent().parent().hide();
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
 				hide: function(event, api) { api.destroy(); }
@@ -85,7 +92,7 @@
 function payrollTypeOnchange(){
 	var str=$('#billingTypeId').val();	
 	if(str){
-		if(str=="SP_LEAVE_ENCASH" || str == "SP_BONUS"){
+		if(str=="SP_LEAVE_ENCASH"){
 			jQuery("input[name='basicSalDate']").parent().parent().show();
 		}else{			
 			jQuery("input[name='basicSalDate']").parent().parent().hide();
@@ -97,6 +104,11 @@ function payrollTypeOnchange(){
 			$("#daDate").parent().parent().hide();
 			$("#geoId").parent().parent().hide();
 		}
+		if(str=="SP_BONUS"){
+			jQuery("input[name='bonusDate']").parent().parent().show();
+		}else{			
+			jQuery("input[name='bonusDate']").parent().parent().hide();
+		}	
 	}
 }	
 function showSuplyPayrollGenerateForm() {	
@@ -114,7 +126,8 @@ function showSuplyPayrollGenerateForm() {
 	              		"<option value='' ></option><#list geoList as geo><option value='${geo.geoId?if_exists}' >${geo.geoName?if_exists}</option></#list>"+            
 						"</select></td></tr>";
 			message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>Basic Salary Date:</td><td align='left' width='60%'><input class='h4' type='text' id='basicSalDate' name='basicSalDate' onmouseover='datepick()' size='17'/></td></tr>" ;
-			message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>DA Date:</td><td align='left' width='60%'><input class='h4' type='text' id='daDate' name='daDate' onmouseover='datepick()' size='17'/></td></tr>" ;				
+			message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>DA Date:</td><td align='left' width='60%'><input class='h4' type='text' id='daDate' name='daDate' onmouseover='datepick()' size='17'/></td></tr>" ;		
+			message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>Month of Payment:</td><td align='left' width='60%'><input class='h4' type='text' id='bonusDate' name='bonusDate' onmouseover='datepick()' size='17'/></td></tr>" ;		
 			message += 	"<tr class='h3'><td align='left' class='h3' width='40%'>Custom Time Period Id:</td><td align='left' width='40%'><select name='customTimePeriodId' id='customTimePeriodId'>"+
 						"<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list></select></td></tr>"+
 						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='generatePayroll' class='smallSubmit'/></span></td><td class='h3' width='80%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";

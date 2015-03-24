@@ -298,7 +298,7 @@ employmentsList.each{ employeeId->
 								fixedTra = 0;
 							}
 							benMis = periodTotals.get("PAYROL_BEN_MIS");
-							if(UtilValidate.isEmpty(fixedTra)){
+							if(UtilValidate.isEmpty(benMis)){
 								benMis = 0;
 							}
 							
