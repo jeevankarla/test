@@ -75,7 +75,11 @@ public class PayrollService {
 				if(UtilValidate.isNotEmpty(context.get("daDate"))){
 					 basicSalDate= (String) context.get("daDate");
 				}else{
-					 basicSalDate= (String) context.get("basicSalDate");
+					 if(UtilValidate.isNotEmpty(bonusDate)){
+						 basicSalDate= (String) context.get("bonusDate");
+					 }else{
+						 basicSalDate= (String) context.get("basicSalDate");
+					 }
 				}
 				String geoId = (String) context.get("geoId");
 				String periodBillingId = null;
@@ -7621,6 +7625,7 @@ public class PayrollService {
 				EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
 				List<GenericValue> hrCustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, UtilMisc.toList("fromDate"), null, false);
 				Map employeeBonusMap = FastMap.newInstance();
+				Map employeePFBonusMap = FastMap.newInstance();
 				if(UtilValidate.isNotEmpty(hrCustomTimePeriodList)){
 					for (int i = 0; i < hrCustomTimePeriodList.size(); i++) {		
 	  	        		GenericValue timePeriod = hrCustomTimePeriodList.get(i);
@@ -7654,6 +7659,7 @@ public class PayrollService {
 				  	  	        		BigDecimal basicAmount =BigDecimal.ZERO;
 				  	  	        	    BigDecimal daAmount =BigDecimal.ZERO;
 				  	  	        	    BigDecimal spcPayAmount =BigDecimal.ZERO;
+				  	  	        	    BigDecimal ptAmount =BigDecimal.ZERO;
 				  	  	        	    
 					  	  	        	Map customTimePeriodTotals = (Map) getEmployeeSalaryTotalsForPeriod(dctx,
 					  	  					UtilMisc.toMap("partyId", emplId, "fromDate", timePeriodStart, "thruDate", timePeriodEnd, "userLogin", userLogin)).get("periodTotalsForParty");
@@ -7683,6 +7689,13 @@ public class PayrollService {
 							  	  						spcPayAmount = (BigDecimal) periodTotals.get("PAYROL_BEN_SPELPAY");
 						  	  							if (UtilValidate.isEmpty(spcPayAmount)) {
 						  	  								spcPayAmount = BigDecimal.ZERO;
+						  	  							}
+						  	  							ptAmount = (BigDecimal) periodTotals.get("PAYROL_DD_PR_TAX");
+							  	  						if (UtilValidate.isEmpty(ptAmount)) {
+							  	  							ptAmount = BigDecimal.ZERO;
+						  	  							}
+							  	  						if (UtilValidate.isNotEmpty(ptAmount) && (ptAmount.compareTo(BigDecimal.ZERO) !=0)) {
+							  	  							ptAmount = ptAmount.multiply(new BigDecimal(-1));
 						  	  							}
 							  	  						if(UtilValidate.isNotEmpty(spcPayAmount) && ((spcPayAmount).compareTo(BigDecimal.ZERO) !=0)){
 								  							netBonusAmount = netBonusAmount.add(spcPayAmount);
@@ -7746,11 +7759,62 @@ public class PayrollService {
 						  		  	    }else{
 						  		  	    		finalTotalNetBonusAmount = totalNetBonusAmount;
 						  		  	    }
-					  					if(UtilValidate.isNotEmpty(finalTotalNetBonusAmount) && ((finalTotalNetBonusAmount).compareTo(BigDecimal.ZERO) !=0)){
+							  		  	if(UtilValidate.isNotEmpty(finalTotalNetBonusAmount) && ((finalTotalNetBonusAmount).compareTo(BigDecimal.ZERO) !=0)){
 					  						if(UtilValidate.isEmpty(employeeBonusMap.get(emplId))){
 						  						employeeBonusMap.put(emplId,finalTotalNetBonusAmount);
 						  					}else{
 						  						employeeBonusMap.put(emplId,finalTotalNetBonusAmount.add((BigDecimal)employeeBonusMap.get(emplId)));
+						  					}
+					  					}
+						  		  	    //Calculating PT here  
+							  		  	BigDecimal netGrossSalary = BigDecimal.ZERO;
+							        	BigDecimal netPfAmount = BigDecimal.ZERO;
+							        	BigDecimal totalNetPfAmount = BigDecimal.ZERO;
+							  		  	BigDecimal daSuppAmount = BigDecimal.ZERO;
+							  		  	Map supplyPeriodTotals = (Map) getSupplementaryPayrollTotalsForPeriod(dctx,
+						  	  					UtilMisc.toMap("partyId", emplId, "fromDate", timePeriodStart, "thruDate", timePeriodEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS", "userLogin", userLogin)).get("supplyPeriodTotalsForParty");
+						  	  			if (UtilValidate.isNotEmpty(supplyPeriodTotals)) {
+						  	  				Iterator tempIter1 = supplyPeriodTotals.entrySet().iterator();
+						  	  				while (tempIter1.hasNext()) {
+						  	  					Map.Entry tempEntry1 = (Entry) tempIter1.next();
+						  	  					String variableName1 = (String) tempEntry1.getKey();
+						  	  					if (variableName1 != "customTimePeriodTotals") {
+						  	  						Map suppPeriodTotals = (Map) (((Map) tempEntry1.getValue()).get("periodTotals"));
+						  	  						if (UtilValidate.isNotEmpty(suppPeriodTotals)) {
+						  	  							daSuppAmount = (BigDecimal) suppPeriodTotals.get("PAYROL_BEN_DA");
+						  	  							if (UtilValidate.isEmpty(daSuppAmount)) {
+						  	  								daSuppAmount = BigDecimal.ZERO;
+						  	  							}
+						  	  						}
+						  	  					}
+						  	  				}
+						  	  			}
+							  		  	Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",emplId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd ,"timePeriodId",timePeriodId);
+							        	Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,paramCtxMap);
+							        	BigDecimal grossSalary = ((BigDecimal)grossSalaryMap.get("amount"));
+						  		  	    if(UtilValidate.isNotEmpty(grossSalary)){
+						  		  	    	netGrossSalary = grossSalary.add(finalTotalNetBonusAmount).add(daSuppAmount);
+						  		  	    	if(UtilValidate.isNotEmpty(netGrossSalary)){
+						  		  	    		if ((netGrossSalary.compareTo(new BigDecimal(9999))) < 0 || netGrossSalary.compareTo(BigDecimal.ZERO) > 0) {
+						  		  	    			netPfAmount = new BigDecimal(150);
+						  		  	    		}
+							  		  	    	if ((netGrossSalary.compareTo(new BigDecimal(10000))) >= 0) {
+						  		  	    			netPfAmount = new BigDecimal(200);
+						  		  	    		}
+						  		  	    	}
+						  		  	    	if(UtilValidate.isNotEmpty(netPfAmount)){
+						  		  	    		if ((netPfAmount.compareTo(ptAmount)) == 0) {
+						  		  	    			totalNetPfAmount = BigDecimal.ZERO;
+						  		  	    		}else{
+						  		  	    			totalNetPfAmount = netPfAmount.subtract(ptAmount);
+						  		  	    		}
+						  		  	    	}
+						  		  	    }
+					  					if(UtilValidate.isNotEmpty(totalNetPfAmount) && ((totalNetPfAmount).compareTo(BigDecimal.ZERO) !=0)){
+					  						if(UtilValidate.isEmpty(employeePFBonusMap.get(emplId))){
+						  						employeePFBonusMap.put(emplId,totalNetPfAmount);
+						  					}else{
+						  						employeePFBonusMap.put(emplId,totalNetPfAmount.add((BigDecimal)employeePFBonusMap.get(emplId)));
 						  					}
 					  					}
 						        	}
@@ -7796,7 +7860,6 @@ public class PayrollService {
 						payHeader.set("partyIdFrom", payHeaderValue.get("partyIdFrom"));
 						payHeader.setNextSeqId();
 						payHeader.create();
-						
 	   					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItem");
 	   					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 	   					payHeaderItem.set("payrollHeaderItemTypeId","PAYROL_BEN_BONUS_EX");
@@ -7807,6 +7870,18 @@ public class PayrollService {
 	   					payHeaderItem.set("amount", (itemAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
 	   				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 			            delegator.create(payHeaderItem);
+			            
+			            if((UtilValidate.isNotEmpty(employeePFBonusMap.get(payHeaderValue.get("partyIdFrom"))))){
+			            	GenericValue payHeaderItem2 = delegator.makeValue("PayrollHeaderItem");
+			            	payHeaderItem2.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+			            	payHeaderItem2.set("payrollHeaderItemTypeId","PAYROL_DD_PR_TAX");
+		   					BigDecimal ptBonusAmount=(BigDecimal) employeePFBonusMap.get(payHeaderValue.get("partyIdFrom"));
+		   					ptBonusAmount = ptBonusAmount.multiply(new BigDecimal(-1));
+		   					payHeaderItem2.set("amount",(ptBonusAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
+		   				    delegator.setNextSubSeqId(payHeaderItem2, "payrollItemSeqId", 5, 1);
+				            delegator.create(payHeaderItem2);
+			            }
+			            
 			            
 			            //calculating PF Here
 			            emplCounter++;

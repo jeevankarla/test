@@ -1443,6 +1443,7 @@ under the License.emplpunch
         <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
         <attribute name="basicSalDate" mode="IN" type="String" optional="true"/>
         <attribute name="daDate" mode="IN" type="String" optional="true"/>
+        <attribute name="bonusDate" mode="IN" type="String" optional="true"/>
         <attribute name="periodBillingId" mode="OUT" type="String"></attribute>
     </service>
     <service name="generatePayrollBilling"  engine="java"
