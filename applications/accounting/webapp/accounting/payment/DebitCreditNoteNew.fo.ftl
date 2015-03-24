@@ -245,7 +245,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                 <#if comments?exists> ${comments}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
+				            		<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                 <#if comments?has_content> ${comments?if_exists}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -271,7 +271,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  <#if comments?exists>${comments}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
+				            		<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  <#if comments?has_content>${comments?if_exists}<#else>${invoice.invoiceMessage?if_exists}</#if></fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
