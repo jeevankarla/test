@@ -97,7 +97,10 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				noOfPayableDays = 0;
 				noOfArrearDays = 0;
 				lossOfPayDays = 0;
+				noOfCalenderDays = 0;
 				bonus = 0;
+				monthlyBonusOfPayableDays = 0;
+				minimumBonus = 0;
 				customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodKey] , false);
 				if(UtilValidate.isNotEmpty(customTimePeriod)){
 					Date monthDate = (Date)customTimePeriod.get("fromDate");
@@ -149,11 +152,15 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 									if(UtilValidate.isEmpty(lossOfPayDays)){
 										lossOfPayDays = 0;
 									}
+									noOfCalenderDays=payrollAttendance.get("noOfCalenderDays");
+									if(UtilValidate.isEmpty(noOfCalenderDays)){
+										noOfCalenderDays = 0;
+									}
 								}
 							}
 						}
 					}
-					bonusPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_BONUS","billingTypeId","SP_BONUS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+					/*bonusPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_BONUS","billingTypeId","SP_BONUS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 					if(UtilValidate.isNotEmpty(bonusPeriodTotals)){
 						Iterator bonusPeriodTotalsIter = bonusPeriodTotals.entrySet().iterator();
 						while(bonusPeriodTotalsIter.hasNext()){
@@ -166,13 +173,28 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 								}
 							}
 						}
-					}
+					}*/
 				}
-				
 				totalValue = totalValue + basic;
 				totalValue = totalValue + dearnessAllowance;
 				totalValue = totalValue + specPay;
+				bonusValue = totalValue;
 				totalValue = totalValue + fixedPay;
+				percentageOfTotal = (0.1)*(bonusValue);
+				monthlyBonus = 22000/12;
+				
+				if(noOfCalenderDays != 0){
+					monthlyBonusOfPayableDays = monthlyBonus*(noOfPayableDays/noOfCalenderDays);
+				}else{
+					monthlyBonusOfPayableDays = 0;
+				}
+				if(percentageOfTotal < monthlyBonusOfPayableDays){
+					minimumBonus = percentageOfTotal;
+				}else{
+					minimumBonus = monthlyBonusOfPayableDays;
+				}
+				minimumBonusVal = new BigDecimal(minimumBonus);
+				minimumBonusVal = minimumBonusVal.setScale(0, BigDecimal.ROUND_HALF_UP);
 				
 				monthlyDetailsMap.put("basic", basic);
 				monthlyDetailsMap.put("dearnessAllowance", dearnessAllowance);
@@ -182,7 +204,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				monthlyDetailsMap.put("noOfArrearDays", noOfArrearDays);
 				monthlyDetailsMap.put("lossOfPayDays", lossOfPayDays);
 				monthlyDetailsMap.put("totalValue", totalValue);
-				monthlyDetailsMap.put("bonus", bonus);
+				monthlyDetailsMap.put("bonus", minimumBonusVal);
 				monthlyDetailsMap.put("finAccountCode", finAccountCode);
 				monthWiseMap.put(customTimePeriodKey, monthlyDetailsMap);
 			}
@@ -194,5 +216,4 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 }
 
 context.put("employeeWiseMap", employeeWiseMap);
-
 
