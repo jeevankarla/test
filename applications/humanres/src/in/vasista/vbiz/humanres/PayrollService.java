@@ -75,7 +75,7 @@ public class PayrollService {
 				if(UtilValidate.isNotEmpty(context.get("daDate"))){
 					 basicSalDate= (String) context.get("daDate");
 				}else{
-					 if(UtilValidate.isNotEmpty(bonusDate)){
+					 if(UtilValidate.isNotEmpty(context.get("bonusDate"))){
 						 basicSalDate= (String) context.get("bonusDate");
 					 }else{
 						 basicSalDate= (String) context.get("basicSalDate");
@@ -7704,6 +7704,29 @@ public class PayrollService {
 						  	  					}
 						  	  				}
 						  	  			}
+						  	  			//DA arrears here
+						  	  			BigDecimal daSuppAmount = BigDecimal.ZERO;
+							  	  		Map supplyPeriodTotals = (Map) getSupplementaryPayrollTotalsForPeriod(dctx,
+						  	  					UtilMisc.toMap("partyId", emplId, "fromDate", timePeriodStart, "thruDate", timePeriodEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS", "userLogin", userLogin)).get("supplyPeriodTotalsForParty");
+						  	  			if (UtilValidate.isNotEmpty(supplyPeriodTotals)) {
+						  	  				Iterator tempIter1 = supplyPeriodTotals.entrySet().iterator();
+						  	  				while (tempIter1.hasNext()) {
+						  	  					Map.Entry tempEntry1 = (Entry) tempIter1.next();
+						  	  					String variableName1 = (String) tempEntry1.getKey();
+						  	  					if (variableName1 != "customTimePeriodTotals") {
+						  	  						Map suppPeriodTotals = (Map) (((Map) tempEntry1.getValue()).get("periodTotals"));
+						  	  						if (UtilValidate.isNotEmpty(suppPeriodTotals)) {
+						  	  							daSuppAmount = (BigDecimal) suppPeriodTotals.get("PAYROL_BEN_DA");
+						  	  							if (UtilValidate.isEmpty(daSuppAmount)) {
+						  	  								daSuppAmount = BigDecimal.ZERO;
+						  	  							}
+						  	  						}
+						  	  					}
+						  	  				}
+						  	  			}
+						  	  			if(UtilValidate.isNotEmpty(daSuppAmount) && ((daSuppAmount).compareTo(BigDecimal.ZERO) !=0)){
+				  							netBonusAmount = netBonusAmount.add(daSuppAmount);
+				  						}
 					  					if(UtilValidate.isNotEmpty(netBonusAmount) && ((netBonusAmount).compareTo(BigDecimal.ZERO) !=0)){
 					  						 totalNetBonusAmount = netBonusAmount.multiply(new BigDecimal(0.10));
 					  						 totalNetBonusAmount = totalNetBonusAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -7766,7 +7789,7 @@ public class PayrollService {
 						  						employeeBonusMap.put(emplId,finalTotalNetBonusAmount.add((BigDecimal)employeeBonusMap.get(emplId)));
 						  					}
 					  					}
-						  		  	    //Calculating PT here  
+						  		  	    /*//Calculating PT here  
 							  		  	BigDecimal netGrossSalary = BigDecimal.ZERO;
 							        	BigDecimal netPfAmount = BigDecimal.ZERO;
 							        	BigDecimal totalNetPfAmount = BigDecimal.ZERO;
@@ -7816,7 +7839,7 @@ public class PayrollService {
 						  					}else{
 						  						employeePFBonusMap.put(emplId,totalNetPfAmount.add((BigDecimal)employeePFBonusMap.get(emplId)));
 						  					}
-					  					}
+					  					}*/
 						        	}
 				            	}
 				        	}
@@ -7871,7 +7894,7 @@ public class PayrollService {
 	   				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 			            delegator.create(payHeaderItem);
 			            
-			            if((UtilValidate.isNotEmpty(employeePFBonusMap.get(payHeaderValue.get("partyIdFrom"))))){
+			            /*if((UtilValidate.isNotEmpty(employeePFBonusMap.get(payHeaderValue.get("partyIdFrom"))))){
 			            	GenericValue payHeaderItem2 = delegator.makeValue("PayrollHeaderItem");
 			            	payHeaderItem2.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 			            	payHeaderItem2.set("payrollHeaderItemTypeId","PAYROL_DD_PR_TAX");
@@ -7880,10 +7903,7 @@ public class PayrollService {
 		   					payHeaderItem2.set("amount",(ptBonusAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
 		   				    delegator.setNextSubSeqId(payHeaderItem2, "payrollItemSeqId", 5, 1);
 				            delegator.create(payHeaderItem2);
-			            }
-			            
-			            
-			            //calculating PF Here
+			            }*/
 			            emplCounter++;
 		           		if ((emplCounter % 20) == 0) {
 		           			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
