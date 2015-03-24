@@ -127,7 +127,15 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 								if(UtilValidate.isEmpty(fixedPay)){
 									fixedPay = 0;
 								}
-								payrollAttendance=delegator.findOne("PayrollAttendance",[partyId:employeeId,customTimePeriodId:customTimePeriodKey],false);
+								customMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:monthDateStart,timePeriodEnd:monthDateEnd,timePeriodId:customTimePeriodKey,locale:locale]);
+								lastClosePeriod=customMap.get("lastCloseAttedancePeriod");
+								attenCustomTimePeriodId=lastClosePeriod.get("customTimePeriodId");
+								if(UtilValidate.isNotEmpty(attenCustomTimePeriodId)){
+									attenCustomTimePeriodId = attenCustomTimePeriodId;
+								}else{
+									attenCustomTimePeriodId = null;
+								}
+								payrollAttendance=delegator.findOne("PayrollAttendance",[partyId:employeeId,customTimePeriodId:attenCustomTimePeriodId],false);
 								if(UtilValidate.isNotEmpty(payrollAttendance)){
 									noOfPayableDays=payrollAttendance.get("noOfPayableDays");
 									if(UtilValidate.isEmpty(noOfPayableDays)){

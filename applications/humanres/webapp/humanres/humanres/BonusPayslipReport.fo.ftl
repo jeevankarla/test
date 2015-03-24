@@ -184,7 +184,7 @@
 			                            </fo:table-cell>
 			                            <#list employeeMonthWiseMap as employeeMonthWiseDetails>
 			                            	<fo:table-cell border-right-style = "solid">	
-				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt">${employeeMonthWiseDetails.getValue().get("noOfPayableDays")?if_exists?string("#0.00")}&#160;&#160;</fo:block>
+				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt">${employeeMonthWiseDetails.getValue().get("noOfPayableDays")?if_exists?string("#0.000")}&#160;&#160;</fo:block>
 				                            </fo:table-cell>
 			                            </#list>
 			                        </fo:table-row>
@@ -194,7 +194,7 @@
 			                            </fo:table-cell>
 			                            <#list employeeMonthWiseMap as employeeMonthWiseDetails>
 			                            	<fo:table-cell border-right-style = "solid">	
-				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt">${employeeMonthWiseDetails.getValue().get("noOfArrearDays")?if_exists?string("#0.00")}&#160;&#160;</fo:block>
+				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt">${employeeMonthWiseDetails.getValue().get("noOfArrearDays")?if_exists?string("#0.000")}&#160;&#160;</fo:block>
 				                            </fo:table-cell>
 			                            </#list>
 			                        </fo:table-row>
@@ -204,7 +204,7 @@
 			                            </fo:table-cell>
 			                            <#list employeeMonthWiseMap as employeeMonthWiseDetails>
 			                            	<fo:table-cell border-right-style = "solid">	
-				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt">${employeeMonthWiseDetails.getValue().get("lossOfPayDays")?if_exists?string("#0.00")}&#160;&#160;</fo:block>
+				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt">${employeeMonthWiseDetails.getValue().get("lossOfPayDays")?if_exists?string("#0.000")}&#160;&#160;</fo:block>
 				                            </fo:table-cell>
 			                            </#list>
 			                        </fo:table-row>
