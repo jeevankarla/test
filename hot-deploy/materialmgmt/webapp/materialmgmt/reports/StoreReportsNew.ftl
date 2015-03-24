@@ -100,7 +100,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDateArc","thruDateArc");
 	    makeDatePicker("datependingPOs");
 		makeDatePicker("stockDate");
-		
+		makeDatePicker("fromDateScrap","thruDateScrap");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -504,6 +504,25 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
+         <tr class="alternate-row"> 
+				<form id="ScrapDCandGatePassReport" name="ScrapDCandGatePassReport" mothed="post" action="<@ofbizUrl>ScrapDCandGatePassReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Scrap DC and Gate Pass </span></td>
+						 <td width="25%">
+						 <span class='h3'>
+						    From <input  type="text" size="18pt" id="fromDateScrap"   name="fromDateScrap"/>
+							To   <input  type="text" size="18pt" id="thruDateScrap"   name="thruDateScrap"/>
+						 </span>
+						 </td>
+						  <td width="15%"><span class='h3'>							</span></td>
+						      <td width="15%"><span class='h3'>   				       </span></td>	
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+         
 	  </table>
     </div>
   </div>
