@@ -101,7 +101,7 @@ under the License.
                            		 <#assign productId=productEntry.getKey()>
                            		 <#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
                            		 <#assign productEntryValue=productEntry.getValue()> 
-                                 <#if product.quantityUomId?if_exists>
+                                 <#if product.quantityUomId?has_content>
 									<#assign uomId =  product.quantityUomId>
                                     <#assign uom = delegator.findOne("Uom", {"uomId" : uomId}, true)?if_exists/>
                                     <#assign unit=uom.description>
@@ -120,8 +120,12 @@ under the License.
 		  					        </fo:table-cell>
 		  					        <fo:table-cell border-style="solid">
 		  					            <fo:block text-align="center" font-size="11pt" >${poDateMap.get(productId)?if_exists}</fo:block>
-		  					        </fo:table-cell>		 
+		  					        </fo:table-cell>		
+		  					         <#assign partyProdPriceMap={}>
+                                    <#if productPriceMap.get(productId)?has_content>
 		  					        <#assign partyProdPriceMap=productPriceMap.get(productId)>
+                                    </#if>
+                                   <#if partyProdPriceMap?has_content> 
 		  					        <#assign priceList =  partyProdPriceMap.entrySet()>
 		  					        <#list priceList as pList>
 		  					        <#if pList.getValue().get("price")?has_content>
@@ -134,7 +138,12 @@ under the License.
 		  					            <fo:block text-align="center" font-size="11pt">&#160;</fo:block>
 		  					        </fo:table-cell> 
 		  					        </#if>
-		  					         </#list> 		  					        	  					    
+		  					         </#list> 
+		  					         <#else>
+                                      <fo:table-cell border-style="solid" >
+		  					            <fo:block text-align="center" font-size="11pt">&#160;</fo:block>
+		  					        </fo:table-cell> 	
+                                    </#if>	  					        	  					    
 					           </fo:table-row>
 					               <#assign sno=sno+1> 					               				             
 					               </#list>
