@@ -261,17 +261,17 @@
     	<response name="success" type="view" value="DepotSalesBookAbstractReportPDF"/>
     </request-map>
       <!-- payment requests -->
-     <request-map uri="FindPaymentNonRoute">
+     <request-map uri="FindPaymentDepotSales">
     	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="FindPaymentNonRoute"/>    	
+    	<response name="success" type="view" value="FindPaymentDepotSales"/>    	
     </request-map>
-     <request-map uri="NonRouteFindChequeReturns">
+     <request-map uri="FindDepotSalesChequeReturns">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="NonRouteFindChequeReturns"/>    	
     </request-map>
-     <request-map uri="NewNonRouteReceipt">
+     <request-map uri="NewDepotSalesReceipt">
     	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="NewNonRouteReceipt"/>    	
+    	<response name="success" type="view" value="NewDepotSalesReceipt"/>    	
     </request-map>
     <request-map uri="voidCashPayment">
         <security https="true" auth="true"/>
@@ -311,9 +311,9 @@
     
     
     
-    <view-map name="FindPaymentNonRoute" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPaymentNonRoute"/>
+    <view-map name="FindPaymentDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPaymentNonRoute"/>
      <view-map name="NonRouteFindChequeReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteFindChequeReturns"/>
-     <view-map name="NewNonRouteReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewNonRouteReceipt"/>
+     <view-map name="NewDepotSalesReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewDepotSalesReceipt"/>
     
     
     
