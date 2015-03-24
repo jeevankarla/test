@@ -74,6 +74,8 @@ categoryType=context.get("categoryType");
 						if("ICE_CREAM_AMUL".equals(categoryType)){
 						  tempname=[shippingDetails.get(invoiceId).get("partyId")];
 						  partyName=temppartyName+tempname;
+						}else if(UtilValidate.isEmpty(categoryType)){
+						  partyName=shippingDetails.get(invoiceId).get("partyName");
 						}else{
 						partyName=temppartyName;
 						}
