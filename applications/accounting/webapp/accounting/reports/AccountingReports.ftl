@@ -215,7 +215,11 @@ function reportTypeChangeFunc() {
 		makeDatePicker4("OtherAdvSehFromDate","OtherAdvSehThruDate");
 		makeDatePicker4("PLAFinFromDate","PLAFinThruDate");
 		makeDatePicker4("ASLFinFromDate","PLAFinThruDate");
-		
+		makeDatePicker4("invFromDate","invThruDate");
+	    makeDatePicker4("invSummFromDate","invSummThruDate");
+	    makeDatePicker4("invFromDate","invThruDate");
+	    makeDatePicker4("invTmpSummFromDate","invTmpSummThruDate");
+	    
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -597,4 +601,126 @@ function reportTypeChangeFunc() {
       	</tr>
 	</table>
    </div>
+   <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Accounting Reconciliation Reports</h3>
+    </div>
+    <div class="screenlet-body">
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
+       	
+      	<tr> 
+      		<form id="GlAccountMasterReport" name="GlAccountMasterReport" method="post" action="<@ofbizUrl>GlAccountMasterReport.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">GlAccountMaster Report</td>
+			  	<td width="25%">Internal Org
+			  	  	<select name='partyId' id ="partyId">	
+					 	<option value=""></option>								
+						<#list intOrgList as intOrg> 	
+							<option value='${intOrg.partyId}'>${intOrg.groupName?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+			  	 <td width="20%">Gl Account Id<@htmlTemplate.lookupField size="10" maxlength="22" formName="GlAccountMasterReport" name="glAccountId" id="glAccountId" fieldFormName="LookupGlAccount"/>
+				<td width="15%">From<input  type="text" size="18pt" id="invFromDate"   name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="invThruDate"   name="thruDate"/></td>
+          		
+          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+      		</form>
+      	</tr>
+      	<tr> 
+      		<form id="InvoiceSummaryReport" name="InvoiceSummaryReport" method="post" action="<@ofbizUrl>InvoiceSummaryReport.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">Invoice Summary Report</td>
+			  	<td width="25%">Internal Org
+			  	  	<select name='partyId' id ="partyId">	
+					 	<option value=""></option>								
+						<#list intOrgList as intOrg> 	
+							<option value='${intOrg.partyId}'>${intOrg.groupName?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+			  	<td width="25%">Parent Invoice Type
+			  	  	<select name='parentTypeId' id ="parentTypeId" >	
+			  	  		<option value="">Select</option>
+					 	<option value="PURCHASE_INVOICE">Payable</option>
+					 	<option value="SALES_INVOICE">Receivable</option>								
+				 	</select>
+			  	</td>
+			  	<td width="25%">Invoice Type
+			  	  	<select name='invoiceTypeId' id ="invoiceTypeId">	
+					 	<option value=""></option>								
+						<#list invoiceTypeList as invoiceType> 	
+							<option value='${invoiceType.invoiceTypeId}'>${invoiceType.description?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+				<td width="15%">From<input  type="text" size="18pt" id="invSummFromDate"   name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="invSummThruDate"   name="thruDate"/></td>
+          		
+          		
+          		<td width="20%"><input type="submit" value="PDF" onClick="javascript:appendParams('InvoiceSummaryReport', '<@ofbizUrl>InvoiceSummaryReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				                <input type="submit" value="CSV" onClick="javascript:appendParams('InvoiceSummaryReport', '<@ofbizUrl>InvoiceSummaryReport.csv</@ofbizUrl>');" class="buttontext"/>    
+                </td>
+          		
+      		</form>
+      	</tr>
+      	<tr> 
+      		<form id="TempInvoiceSummaryReport" name="TempInvoiceSummaryReport" method="post" action="<@ofbizUrl>TempInvoiceSummaryReport.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">Temp Invoice Summary Report</td>
+			  	<td width="25%">Internal Org
+			  	  	<select name='partyId' id ="partyId">	
+					 	<option value=""></option>								
+						<#list intOrgList as intOrg> 	
+							<option value='${intOrg.partyId}'>${intOrg.groupName?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+			  	<td width="25%">Parent Invoice Type
+			  	  	<select name='parentTypeId' id ="parentTypeId" >	
+			  	  		<option value="">Select</option>
+					 	<option value="PURCHASE_INVOICE">Payable</option>
+					 	<option value="SALES_INVOICE">Receivable</option>								
+				 	</select>
+			  	</td>
+			  	<td width="25%">Invoice Type
+			  	  	<select name='invoiceTypeId' id ="invoiceTypeId">	
+					 	<option value=""></option>								
+						<#list invoiceTypeList as invoiceType> 	
+							<option value='${invoiceType.invoiceTypeId}'>${invoiceType.description?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+				<td width="15%">From<input  type="text" size="18pt" id="invTmpSummFromDate"   name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="invTmpSummThruDate"   name="thruDate"/></td>
+          		
+          		
+          		<td width="20%"><input type="submit" value="PDF" onClick="javascript:appendParams('TempInvoiceSummaryReport', '<@ofbizUrl>TempInvoiceSummaryReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				                <input type="submit" value="CSV" onClick="javascript:appendParams('TempInvoiceSummaryReport', '<@ofbizUrl>TempInvoiceSummaryReport.csv</@ofbizUrl>');" class="buttontext"/>    
+                </td>
+          		
+      		</form>
+      	</tr>
+      	<tr class="alternate-row">
+      	   <form id="InvoiceItemTypes" name="InvoiceItemTypes" method="post" action="<@ofbizUrl>invoiceItemTypes.pdf</@ofbizUrl>" target="_blank">        
+             <td width="30%">Invoice Item Type</td>
+             <td width="25%">Internal Org
+			  	  	<select name='partyId' id ="partyId">	
+					 	<option value=""></option>								
+						<#list intOrgList as intOrg> 	
+							<option value='${intOrg.partyId}'>${intOrg.groupName?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+             	<td width="25%">Invoice Type
+			  	  	<select name='parentTypeId' id ="parentTypeId">	
+			  	  		<option value="">Select</option>
+					 	<option value="PURCHASE_INVOICE">Payable</option>
+					 	<option value="SALES_INVOICE">Receivable</option>								
+				 	</select>
+			  	</td>
+      		<td width="15%"></td>
+             <td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
+           </form>
+		</tr>
+	</table>
+   </div>
+   
 </div>

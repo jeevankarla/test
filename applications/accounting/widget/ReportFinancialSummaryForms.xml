@@ -1130,10 +1130,58 @@ under the License.
         
         <field name="invoiceItemTypeId" title="invoiceItemTypeId"><display/></field>
         <field name="glAccountId" title="glAccountId"><display/></field> 
+        <field name="postedDrAmount" title="postedDrAmount(a)"><display/></field> 
+        <field name="unPostedDrAmount" title="unPostedDrAmount(b)"><display/></field>
+        <field name="postedCrAmount" title="postedCrAmount(c)"><display/></field> 
+        <field name="unPostedCrAmount" title="unPostedCrAmount(d)"><display/></field>
+        <field name="JpostedDrAmount" title="JV postedDrAmount(e)"><display/></field> 
+        <field name="JunPostedDrAmount" title="JV unPostedDrAmount(f)"><display/></field>
+        <field name="JpostedCrAmount" title="JV postedCrAmount(g)"><display/></field> 
+        <field name="JunPostedCrAmount" title="JV unPostedCrAmount(h)"><display/></field> 
+        <field name="pstDrAmount" title="totPostedDrAmount(a+e)"><display/></field> 
+        <field name="unPstDrAmount" title="totUnPostedDrAmount(b+f)"><display/></field>
+        <field name="pstCrAmount" title="totPostedCrAmount(c+g)"><display/></field> 
+        <field name="unpstCrAmount" title="totUnPostedCrAmount(d+h)"><display/></field>
+    </form>
+    
+    <form name="TempGlSummaryReportCsv" type="list" list-name="glFinalList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
+        
+        
+        <field name="glAccountId" title="glAccountId"><display/></field> 
+        <field name="glAccountIdDes" title="Description"><display/></field>
+        
+        <field name="postedDrAmount" title="postedDrAmount(a)"><display/></field> 
+        <field name="JpostedDrAmount" title="JV postedDrAmount(e)"><display/></field> 
+        
+        <field name="unPostedDrAmount" title="unPostedDrAmount(b)"><display/></field>
+        <field name="JunPostedDrAmount" title="JV unPostedDrAmount(f)"><display/></field>
+        
+        <field name="postedCrAmount" title="postedCrAmount(c)"><display/></field> 
+        <field name="JpostedCrAmount" title="JV postedCrAmount(g)"><display/></field> 
+        
+        <field name="unPostedCrAmount" title="unPostedCrAmount(d)"><display/></field>
+        <field name="JunPostedCrAmount" title="JV unPostedCrAmount(h)"><display/></field>
+        
+        <!-- <field name="pstDrAmount" title="totPostedDrAmount(a+e)"><display/></field> 
+        <field name="unPstDrAmount" title="totUnPostedDrAmount(b+f)"><display/></field>
+        <field name="pstCrAmount" title="totPostedCrAmount(c+g)"><display/></field> 
+        <field name="unpstCrAmount" title="totUnPostedCrAmount(d+h)"><display/></field> -->
+         
+        
+    </form>
+    <form name="TempInvoiceSummaryReportCsv" type="list" list-name="invoiceFinalList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
+        
+        <field name="GlAccountId" title="GlAccountId"><display/></field> 
+        <field name="invoiceDate" title="invoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="InvoiceId" title="InvoiceId"><display/></field>  
         <field name="postedDrAmount" title="postedDrAmount"><display/></field> 
         <field name="unPostedDrAmount" title="unPostedDrAmount"><display/></field>
         <field name="postedCrAmount" title="postedCrAmount"><display/></field> 
         <field name="unPostedCrAmount" title="unPostedCrAmount"><display/></field> 
-           	
     </form>
+    
+    
+    
 </forms>

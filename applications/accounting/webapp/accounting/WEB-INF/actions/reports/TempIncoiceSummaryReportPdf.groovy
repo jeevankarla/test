@@ -76,6 +76,7 @@
 	invoiceTypeCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	invoiceTypeList = EntityUtil.filterByCondition(invTypeList, invoiceTypeCondition);
 	invoiceTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceTypeList, "invoiceTypeId", true);
+	
 	statusItemList = delegator.findList("StatusItem", null, UtilMisc.toSet("description","statusId"), null, null, false );
 	
 	conditionList.clear();
@@ -90,8 +91,7 @@
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	invoiceItemCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	invoiceItemList = delegator.findList("InvoiceAndItem", invoiceItemCondition, null, ["invoiceTypeId","invoiceDate","statusId","invoiceItemTypeId"], null, false );
-	
+	invoiceItemList = delegator.findList("InvoiceAndItem", invoiceItemCondition, UtilMisc.toSet("invoiceTypeId","invoiceDate","invoiceId","invoiceItemTypeId","statusId"), ["invoiceTypeId","invoiceDate","statusId","invoiceItemTypeId"], null, false );
 	
 	invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemList, "invoiceItemTypeId", true);
 	invoiceIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemList, "invoiceId", true);
@@ -106,12 +106,18 @@
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIdsList));
 	conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountIdsList));
-	//conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, "217101"));
 	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	acctEntryCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	
-	acctgTransEntryList = delegator.findList("AcctgTransAndEntries", acctEntryCondition, null, ["glAccountId"], null, false );
+	
+	requiredFields = UtilMisc.toSet("isPosted", "glFiscalTypeId","acctgTransTypeId", "transactionDate","invoiceId", "glAccountId");
+	requiredFields1 = UtilMisc.toSet("acctgTransId", "debitCreditFlag","amount", "organizationPartyId","origAmount");
+	requiredFields.addAll(requiredFields1);
+	
+	
+	
+	acctgTransEntryList = delegator.findList("AcctgTransAndEntries", acctEntryCondition, requiredFields, ["glAccountId"], null, false );
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS, "JOURNAL"));
@@ -119,7 +125,308 @@
 	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	acctJournalCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	acctgJournalList = delegator.findList("AcctgTransAndEntries", acctJournalCondition, null, ["glAccountId"], null, false );
+	acctgJournalList = delegator.findList("AcctgTransAndEntries", acctJournalCondition, requiredFields, ["glAccountId"], null, false );
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountIdsList));
+	acctCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	acctgList = delegator.findList("GlAccount", acctCondition, UtilMisc.toSet("glAccountId","accountName"), null, null, false );
+	
+	invoiceDatesList = EntityUtil.getFieldListFromEntityList(invoiceItemList, "invoiceDate", true);
+	
+	dateList = [];
+	for(d=0;d<invoiceDatesList.size();d++){
+		
+		invoiceDate =  invoiceDatesList[d];
+		
+		invoiceStartDate = UtilDateTime.getDayStart(invoiceDate, timeZone, locale);
+		
+		dateList.add(invoiceStartDate);
+		
+	}
+	finalInvoiceDates = [];
+	for(e=0;e<dateList.size();e++){
+		tempInvoiceDate =  dateList[e];
+		if(finalInvoiceDates.contains(tempInvoiceDate)){
+		}else{
+		finalInvoiceDates.add(tempInvoiceDate);
+		}
+	}
+	
+	
+	invoiceFinalList = [];
+	glFinalList = [];
+	
+	glTotMap = [:];
+	invTotMap = [:];
+	
+	totPostedDrTotal = 0;
+	totUnPostedDrTotal = 0;
+	totPostedCrTotal = 0;
+	totUnPostedDrTotal = 0;
+	
+	totJpostedDrTotal = 0;
+	totJunPostedDrTotal = 0;
+	totJpostedCrTotal = 0;
+	totJunPostedDrTotal = 0;
+	
+	
+	for(a=0;a<glAccountIdsList.size();a++){
+		glAccountId = glAccountIdsList[a];
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+		
+		Condition4=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		filteredacctgList = EntityUtil.filterByCondition(acctgList, Condition4);
+		
+		accountName = filteredacctgList[0].get("accountName");
+		
+		postedDrTotal = 0;
+		unPostedDrTotal = 0;
+		postedCrTotal = 0;
+		unPostedDrTotal = 0;
+		
+		JpostedDrTotal = 0;
+		JunPostedDrTotal = 0;
+		JpostedCrTotal = 0;
+		JunPostedDrTotal = 0;
+		
+		for(c=0;c<finalInvoiceDates.size();c++){
+			
+			eachInvoiceDate =  finalInvoiceDates[c];
+			
+			eachInvoiceDateEnd = UtilDateTime.getDayEnd(eachInvoiceDate, timeZone, locale);
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, eachInvoiceDate),EntityOperator.AND,
+				EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, eachInvoiceDateEnd)));
+			conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIdsList));
+			Condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			filteredAcctgTransEntryList = EntityUtil.filterByCondition(acctgTransEntryList, Condition1);
+			
+			conditionList.clear();
+			
+			conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, eachInvoiceDate),EntityOperator.AND,
+				EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, eachInvoiceDateEnd)));
+			Condition2=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			filteredAcctgJournalList = EntityUtil.filterByCondition(acctgJournalList, Condition2);
+			
+			for(b=0;b<filteredAcctgTransEntryList.size();b++){
+				eachFilteredAcctgTransEntry = filteredAcctgTransEntryList[b];
+				
+				invoiceId = eachFilteredAcctgTransEntry.get("invoiceId");
+				isPosted = eachFilteredAcctgTransEntry.get("isPosted");
+				debitCreditFlag = eachFilteredAcctgTransEntry.get("debitCreditFlag");
+				postedDrAmount = 0;
+				unPostedDrAmount = 0;
+				postedCrAmount = 0;
+				unPostedCrAmount = 0;
+				amount = eachFilteredAcctgTransEntry.get("amount");
+				
+				
+				origAmount = eachFilteredAcctgTransEntry.get("origAmount");
+				
+				if((isPosted == "Y") && (debitCreditFlag == "D")){
+					
+					postedDrAmount = amount;
+					
+				}else if((isPosted == "N") && (debitCreditFlag == "D")){
+				
+					unPostedDrAmount = amount;
+				}else if((isPosted == "Y") && (debitCreditFlag == "C")){
+				
+					postedCrAmount = amount;
+				
+				}else{
+				
+					unPostedCrAmount = amount;
+				}
+				
+				invMap = [:];
+				invMap.put("GlAccountId", glAccountId);
+				invMap.put("InvoiceId", invoiceId);
+				invMap.put("InvoiceDate", eachInvoiceDate);
+				invMap.put("postedDrAmount", postedDrAmount);
+				invMap.put("unPostedDrAmount", unPostedDrAmount);
+				invMap.put("postedCrAmount", postedCrAmount);
+				invMap.put("unPostedCrAmount", unPostedCrAmount);
+				
+				
+				tempInvMap = [:];
+				tempInvMap.putAll(invMap);
+				invoiceFinalList.addAll(tempInvMap);
+				
+				postedDrTotal = postedDrTotal + postedDrAmount;
+				unPostedDrTotal = unPostedDrTotal + unPostedDrAmount;
+				postedCrTotal = postedCrTotal + postedCrAmount;
+				unPostedDrTotal = unPostedDrTotal + unPostedCrAmount;
+				
+			}
+			
+			for(d=0;d<filteredAcctgJournalList.size();d++){
+				eachFilteredAcctgJournal = filteredAcctgJournalList[d];
+				
+				acctgTransId = eachFilteredAcctgJournal.get("acctgTransId");
+				
+				isPosted = eachFilteredAcctgJournal.get("isPosted");
+				debitCreditFlag = eachFilteredAcctgJournal.get("debitCreditFlag");
+				postedDrAmount = 0;
+				unPostedDrAmount = 0;
+				postedCrAmount = 0;
+				unPostedCrAmount = 0;
+				amount = eachFilteredAcctgJournal.get("amount");
+				origAmount = eachFilteredAcctgJournal.get("origAmount");
+				
+				if((isPosted == "Y") && (debitCreditFlag == "D")){
+					
+					postedDrAmount = amount;
+					
+				}else if((isPosted == "N") && (debitCreditFlag == "D")){
+				
+					unPostedDrAmount = amount;
+				}else if((isPosted == "Y") && (debitCreditFlag == "C")){
+				
+					postedCrAmount = amount;
+				
+				}else{
+				
+					unPostedCrAmount = amount;
+				}
+				
+				invMap = [:];
+				invMap.put("GlAccountId", acctgTransId);
+				invMap.put("InvoiceId", invoiceId);
+				invMap.put("InvoiceDate", eachInvoiceDate);
+				invMap.put("postedDrAmount", postedDrAmount);
+				invMap.put("unPostedDrAmount", unPostedDrAmount);
+				invMap.put("postedCrAmount", postedCrAmount);
+				invMap.put("unPostedCrAmount", unPostedCrAmount);
+				
+				
+				tempInvMap = [:];
+				tempInvMap.putAll(invMap);
+				invoiceFinalList.addAll(tempInvMap);
+				
+				JpostedDrTotal = JpostedDrTotal + postedDrAmount;
+				JunPostedDrTotal = JunPostedDrTotal + unPostedDrAmount;
+				JpostedCrTotal = JpostedCrTotal + postedCrAmount;
+				JunPostedDrTotal = JunPostedDrTotal + unPostedCrAmount;
+				
+			}
+			
+		}
+		
+		totPostedDrTotal = totPostedDrTotal + postedDrTotal;
+		totUnPostedDrTotal = totUnPostedDrTotal + unPostedDrTotal;
+		totPostedCrTotal = totPostedCrTotal + postedCrTotal;
+		totUnPostedDrTotal = totUnPostedDrTotal + unPostedDrTotal;
+		
+		totJpostedDrTotal = totJpostedDrTotal + JpostedDrTotal;
+		totJunPostedDrTotal = totJunPostedDrTotal + JunPostedDrTotal;
+		totJpostedCrTotal = totJpostedCrTotal + JpostedCrTotal;
+		totJunPostedDrTotal = totJunPostedDrTotal + JunPostedDrTotal;
+			
+		glMap = [:];
+		glMap.put("glAccountId", glAccountId);
+		glMap.put("glAccountIdDes", accountName);
+		glMap.put("postedDrAmount", postedDrTotal);
+		glMap.put("unPostedDrAmount", unPostedDrTotal);
+		glMap.put("postedCrAmount", postedCrTotal);
+		glMap.put("unPostedCrAmount", unPostedDrTotal);
+		
+		glMap.put("JpostedDrAmount", JpostedDrTotal);
+		glMap.put("JunPostedDrAmount", JunPostedDrTotal);
+		glMap.put("JpostedCrAmount", JpostedCrTotal);
+		glMap.put("JunPostedCrAmount", JunPostedDrTotal);
+		
+		invSubMap = [:];
+		invSubMap.put("GlAccountId", "SUBTOTAL");
+		invSubMap.put("postedDrAmount", (postedDrTotal + JpostedDrTotal));
+		invSubMap.put("unPostedDrAmount", (unPostedDrTotal + JunPostedDrTotal));
+		invSubMap.put("postedCrAmount", (postedCrTotal+JpostedCrTotal));
+		invSubMap.put("unPostedCrAmount", (unPostedDrTotal + JunPostedDrTotal));
+		
+		invTotMap.put("GlAccountId", "TOTAL");
+		invTotMap.put("postedDrAmount", (totPostedDrTotal + totJpostedDrTotal));
+		invTotMap.put("unPostedDrAmount", (totUnPostedDrTotal + totJunPostedDrTotal));
+		invTotMap.put("postedCrAmount", (totPostedCrTotal+totJpostedCrTotal));
+		invTotMap.put("unPostedCrAmount", (totUnPostedDrTotal + totJunPostedDrTotal));
+		
+		
+		glTotMap.put("postedDrAmount", totPostedDrTotal);
+		glTotMap.put("unPostedDrAmount", totUnPostedDrTotal);
+		glTotMap.put("postedCrAmount", totPostedCrTotal);
+		glTotMap.put("unPostedCrAmount", totUnPostedDrTotal);
+		glTotMap.put("JpostedDrAmount", totJpostedDrTotal);
+		glTotMap.put("JunPostedDrAmount", totJunPostedDrTotal);
+		glTotMap.put("JpostedCrAmount", totJpostedCrTotal);
+		glTotMap.put("JunPostedCrAmount", totJunPostedDrTotal);
+		
+		tempGlMap = [:];
+		tempGlMap.putAll(glMap);
+		glFinalList.addAll(tempGlMap);
+		
+		if( ((postedDrTotal + JpostedDrTotal) == 0) && ((postedDrTotal + JpostedDrTotal) == 0) && ((postedDrTotal + JpostedDrTotal) == 0) && ((postedDrTotal + JpostedDrTotal) == 0) ){
+			
+		}else{
+			tempGlTotMap = [:];
+			tempGlTotMap.putAll(invSubMap);
+			invoiceFinalList.addAll(tempGlTotMap);
+		}
+		
+		
+		
+	}
+	
+	tempGltotMap = [:];
+	tempGltotMap.putAll(glTotMap);
+	glFinalList.addAll(tempGltotMap);
+	
+	
+	tempTotInvMap = [:];
+	tempTotInvMap.putAll(invTotMap);
+	invoiceFinalList.addAll(tempTotInvMap);
+	
+	context.glFinalList = glFinalList;
+	context.invoiceFinalList = invoiceFinalList;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	finalInvoiceItemList = [];
@@ -471,7 +778,7 @@
 	
 	context.finalInvoiceItemList = finalInvoiceItemList;
 	context.glSummaryFinalList = glSummaryFinalList;
-
+*/
 	
 	
 	
