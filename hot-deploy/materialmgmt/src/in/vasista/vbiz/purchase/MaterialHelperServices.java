@@ -536,7 +536,6 @@ public class MaterialHelperServices{
 	  		  		Debug.logError(errMsg , module);
 	  		  		return ServiceUtil.returnError(errMsg);
 				}
-				
 				List<Map> itemDetails = (List)resultCtx.get("itemDetail");
 				Map itemDetailRef = FastMap.newInstance();
 				Map itemLandingCostMap = FastMap.newInstance();
@@ -585,7 +584,6 @@ public class MaterialHelperServices{
 				  		  		Debug.logError(errMsg , module);
 				  		  		return ServiceUtil.returnError(errMsg);
 							}
-							
 							List<Map> revisedItemDetails = (List)resultCtx.get("itemDetail");
 							Map revisedItemLandingCostMap = FastMap.newInstance();
 							for(Map revItem : revisedItemDetails){
@@ -693,6 +691,12 @@ public class MaterialHelperServices{
         	
         	List conditionList = FastList.newInstance();
         	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+        	conditionList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "BED_PUR"));
+        	EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	List<GenericValue> bedTaxOrderTerms = delegator.findList("OrderTerm", condExpr, null, null, null, false);
+        	
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
         	conditionList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.IN, otherTermTypeIds));
         	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
         	List<GenericValue> otherChargesOrderTerms = delegator.findList("OrderTerm", condition, null, null, null, false);
@@ -703,7 +707,8 @@ public class MaterialHelperServices{
 
         	for(GenericValue eachItem : orderItems){
         		Map tempMap = FastMap.newInstance();
-        		tempMap.put("productId", eachItem.getString("productId"));
+        		String productId = eachItem.getString("productId");
+        		tempMap.put("productId", productId);
         		tempMap.put("quantity", eachItem.getBigDecimal("quantity"));
         		tempMap.put("unitPrice", eachItem.getBigDecimal("unitPrice"));
         		tempMap.put("cstPercent", BigDecimal.ZERO);
@@ -719,8 +724,24 @@ public class MaterialHelperServices{
         			BigDecimal componentRate = (BigDecimal)eachItem.get("bedPercent");
         			BigDecimal bedPercentage = BigDecimal.ZERO;
         			if(componentRate.compareTo(BigDecimal.ZERO)>0){
-        				Map taxResultCtx = getOrderTaxRateForComponentRate(ctx, UtilMisc.toMap("userLogin", userLogin, "taxType", "EXCISE_DUTY_PUR", "componentRate", componentRate, "effectiveDate", orderHeader.getTimestamp("orderDate")));
-        				bedPercentage = (BigDecimal)taxResultCtx.get("taxRate");
+        				String sequenceId = "";
+        				List<GenericValue> orderSeqList = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+        				if(UtilValidate.isNotEmpty(orderSeqList)){
+        					sequenceId = (EntityUtil.getFirst(orderSeqList)).getString("orderItemSeqId");
+        				}
+        				List<GenericValue> bedTax = EntityUtil.filterByCondition(bedTaxOrderTerms, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, sequenceId));
+        				if(UtilValidate.isNotEmpty(bedTax)){
+        					bedPercentage = (EntityUtil.getFirst(bedTax)).getBigDecimal("termValue");
+        				}
+        				else{
+        					bedTax = EntityUtil.filterByCondition(bedTaxOrderTerms, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, "_NA_"));
+        					if(UtilValidate.isEmpty(bedTax)){
+        						bedPercentage = (EntityUtil.getFirst(bedTaxOrderTerms)).getBigDecimal("termValue");
+        					}
+        					else{
+        						bedPercentage = (EntityUtil.getFirst(bedTax)).getBigDecimal("termValue");
+        					}
+        				}
         			}
         			tempMap.put("bedPercent", bedPercentage);
         		}
