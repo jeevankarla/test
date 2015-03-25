@@ -941,6 +941,7 @@ public class ByProductNetworkServices {
 		String geoTax = (String) context.get("geoTax");
 		Timestamp priceDate = (Timestamp) context.get("priceDate");
 		Map prodPriceMap = FastMap.newInstance();
+		Map prodListPriceMap = FastMap.newInstance();
 		if (UtilValidate.isEmpty(priceDate)) {
 			priceDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
@@ -999,9 +1000,11 @@ public class ByProductNetworkServices {
 					return ServiceUtil.returnError("There was an error while calculating the price: "+ ServiceUtil.getErrorMessage(priceResult));
 				}
 				prodPriceMap.put(eachProd, priceResult.get("totalPrice"));
+				prodListPriceMap.put(eachProd,priceResult.get("taxList"));
 			}
 		}
 		result.put("priceMap", prodPriceMap);
+		result.put("prodListPriceMap", prodListPriceMap);
 		return result;
 	}
 
@@ -6834,7 +6837,6 @@ public class ByProductNetworkServices {
 				//applicableTaxTypeList.remove("SERTAX_SALE");
 				taxFilter = true;
 			}
-			
 			//Calculate MRP price for excise duty amount
 			
 			List<GenericValue> MRPPriceList = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, MRPPriceType));
@@ -6883,6 +6885,7 @@ public class ByProductNetworkServices {
 			if(!(UtilValidate.isEmpty(productTaxTypes) && taxFilter)){
 				taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, productTaxTypes);
 			}
+			
 			for (GenericValue taxItem : taxList) {
 				String taxType = (String) taxItem.get("orderAdjustmentTypeId");
 				BigDecimal amount = BigDecimal.ZERO;
