@@ -34,10 +34,9 @@ List<GenericValue> quoteDetails = delegator.findList("QuoteItem",EntityCondition
 if(UtilValidate.isNotEmpty(quoteDetails)){
 	for(GenericValue eachItem : quoteDetails){
 		statusId = eachItem.statusId;
-		if(!(statusId == "QTITM_QUALIFIED" || statusId == "QTITM_REJECETED")){
+		if(!(statusId == "QTITM_QUALIFIED" || statusId == "QTITM_REJECTED")){
 			statusFlag = "N";
 		}
-		break;
 	}
 }
 context.statusFlag=statusFlag;
