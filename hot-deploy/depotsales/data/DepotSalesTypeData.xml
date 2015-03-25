@@ -8,9 +8,7 @@
  <RoleType  description="Customer Business Type" hasTable="N"  parentTypeId="TRADE_ASSOCIATE" roleTypeId="CUSTOMER_TRADE_TYPE"/> 
   <RoleType  description="Wholesale customer " hasTable="N"  parentTypeId="CUSTOMER_TRADE_TYPE" roleTypeId="WSD_CUSTOMER"/>
   <RoleType  description="Credit Institution  " hasTable="N"  parentTypeId="CUSTOMER_TRADE_TYPE" roleTypeId="CR_INST_CUSTOMER"/>
- 
- 
-  
+
     <PaymentMethodType  description="Money Equivalent"  paymentMethodTypeId="MONEY"/>
 	<PaymentMethodType  description="Statutory Funds"  paymentMethodTypeId="STATUTORY"/>
 	<PaymentMethodType  description="Service Tax Invoice"  parentTypeId="STATUTORY" paymentMethodTypeId="SERVICETAX_PAYINOUT"/>
@@ -116,5 +114,17 @@
     <StatusValidChange condition="" statusId="PMNT_CONFIRMED" statusIdTo="PMNT_SENT" transitionName="Payment Confirmed to Sent"/>
     <StatusValidChange condition="" statusId="PMNT_CONFIRMED" statusIdTo="PMNT_RECEIVED" transitionName="Payment Confirmed to Received"/>
     <StatusValidChange condition="" statusId="GLREC_CREATED" statusIdTo="GLREC_RECONCILED" transitionName="Set Created to Reconciled"/>
+    
+  <!-- other adjustments -->  
+    
+  <OrderAdjustmentType  description="Sales Order Adjustments" orderAdjustmentTypeId="SALE_ORDER_ADJUSTMNT"/>
+  
+  <OrderAdjustmentType  description="Handling Charges On Sales" hasTable="N"  orderAdjustmentTypeId="COGS_HANDLING_CHRGS" parentTypeId="SALE_ORDER_ADJUSTMNT"/> 
+  <InvoiceItemType description="Handling Chrages" hasTable="N" invoiceItemTypeId="COGS_HANDLING_CHRGS" />
+  <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="COGS_HANDLING_CHRGS" invoiceItemTypeId="COGS_HANDLING_CHRGS"/>
+  
+ <OrderAdjustmentType description="Other Charges on Sales" hasTable="N" orderAdjustmentTypeId="COGS_OTH_CHARGES" parentTypeId="SALE_ORDER_ADJUSTMNT"/>
+ <InvoiceItemType description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>
+ <InvoiceItemTypeMap  invoiceItemMapKey="COGS_OTH_CHARGES" invoiceItemTypeId="COGS_OTH_CHARGES" invoiceTypeId="SALES_INVOICE"  />
     
 </entity-engine-xml>
