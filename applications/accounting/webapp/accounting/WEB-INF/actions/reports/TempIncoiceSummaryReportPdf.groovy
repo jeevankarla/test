@@ -117,7 +117,7 @@
 	
 	
 	
-	acctgTransEntryList = delegator.findList("AcctgTransAndEntries", acctEntryCondition, requiredFields, ["glAccountId"], null, false );
+	acctgTransEntryList = delegator.findList("AcctgTransAndEntries", acctEntryCondition, requiredFields, ["glAccountId","invoiceId","acctgTransId"], null, false );
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS, "JOURNAL"));
@@ -217,6 +217,8 @@
 			for(b=0;b<filteredAcctgTransEntryList.size();b++){
 				eachFilteredAcctgTransEntry = filteredAcctgTransEntryList[b];
 				
+				
+				transactionDate = eachFilteredAcctgTransEntry.get("transactionDate");
 				invoiceId = eachFilteredAcctgTransEntry.get("invoiceId");
 				isPosted = eachFilteredAcctgTransEntry.get("isPosted");
 				debitCreditFlag = eachFilteredAcctgTransEntry.get("debitCreditFlag");
@@ -248,7 +250,8 @@
 				invMap = [:];
 				invMap.put("GlAccountId", glAccountId);
 				invMap.put("InvoiceId", invoiceId);
-				invMap.put("InvoiceDate", eachInvoiceDate);
+				invMap.put("accountTransId", "");
+				invMap.put("InvoiceDate", transactionDate);
 				invMap.put("postedDrAmount", postedDrAmount);
 				invMap.put("unPostedDrAmount", unPostedDrAmount);
 				invMap.put("postedCrAmount", postedCrAmount);
@@ -297,9 +300,10 @@
 				}
 				
 				invMap = [:];
-				invMap.put("GlAccountId", acctgTransId);
-				invMap.put("InvoiceId", invoiceId);
-				invMap.put("InvoiceDate", eachInvoiceDate);
+				invMap.put("GlAccountId", glAccountId);
+				invMap.put("InvoiceId", "");
+				invMap.put("accountTransId", acctgTransId);
+				invMap.put("InvoiceDate", transactionDate);
 				invMap.put("postedDrAmount", postedDrAmount);
 				invMap.put("unPostedDrAmount", unPostedDrAmount);
 				invMap.put("postedCrAmount", postedCrAmount);
