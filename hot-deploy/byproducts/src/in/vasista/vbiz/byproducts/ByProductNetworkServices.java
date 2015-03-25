@@ -941,6 +941,7 @@ public class ByProductNetworkServices {
 		String geoTax = (String) context.get("geoTax");
 		Timestamp priceDate = (Timestamp) context.get("priceDate");
 		Map prodPriceMap = FastMap.newInstance();
+		Map prodListPriceMap = FastMap.newInstance();
 		if (UtilValidate.isEmpty(priceDate)) {
 			priceDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
@@ -999,9 +1000,11 @@ public class ByProductNetworkServices {
 					return ServiceUtil.returnError("There was an error while calculating the price: "+ ServiceUtil.getErrorMessage(priceResult));
 				}
 				prodPriceMap.put(eachProd, priceResult.get("totalPrice"));
+				prodListPriceMap.put(eachProd,priceResult.get("taxList"));
 			}
 		}
 		result.put("priceMap", prodPriceMap);
+		result.put("prodListPriceMap", prodListPriceMap);
 		return result;
 	}
 
@@ -6834,7 +6837,6 @@ public class ByProductNetworkServices {
 				//applicableTaxTypeList.remove("SERTAX_SALE");
 				taxFilter = true;
 			}
-			
 			//Calculate MRP price for excise duty amount
 			
 			List<GenericValue> MRPPriceList = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, MRPPriceType));
@@ -6883,6 +6885,7 @@ public class ByProductNetworkServices {
 			if(!(UtilValidate.isEmpty(productTaxTypes) && taxFilter)){
 				taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, productTaxTypes);
 			}
+			
 			for (GenericValue taxItem : taxList) {
 				String taxType = (String) taxItem.get("orderAdjustmentTypeId");
 				BigDecimal amount = BigDecimal.ZERO;
@@ -11307,6 +11310,77 @@ public class ByProductNetworkServices {
 			}
 		}
 		result.put("partyReturnTotals", partyReturnDetail);
+		return result;
+	}
+	public static Map getBoothShipment(Delegator delegator,Map<String, ? extends Object> context) {
+
+		List<String> boothIds = FastList.newInstance();
+		List<GenericValue> booths = FastList.newInstance();
+		Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+		String boothCategory = (String) context.get("boothCategory");
+		String subscriptionType = (String) context.get("subscriptionType");
+		String boothId = (String) context.get("boothId");
+		List shipmentIds=FastList.newInstance();
+		Map boothRouteIdsMap = FastMap.newInstance();
+		List<String> shippedRouteIds=FastList.newInstance();;
+
+		if (UtilValidate.isEmpty(effectiveDate)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		if(!subscriptionType.equals("AM") && !subscriptionType.equals("PM") && !subscriptionType.equals("DIRECT")){			
+			 shipmentIds=null;			
+		}
+		String facilityTypeId = "";
+		String ownerPartyId = "";
+		try {
+			List condList = FastList.newInstance();
+			// get type of Facility
+			GenericValue facilityDetail = delegator.findOne("Facility",	UtilMisc.toMap("facilityId", boothId), true);
+			if (UtilValidate.isNotEmpty(facilityDetail)) {
+				facilityTypeId = facilityDetail.getString("facilityTypeId");
+				ownerPartyId = facilityDetail.getString("ownerPartyId");
+			}
+			if (UtilValidate.isNotEmpty(facilityTypeId)	&& facilityTypeId.equals("BOOTH")) {
+				condList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS, ownerPartyId));
+				// condList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS ,facilityId));
+			}
+			condList.add(EntityCondition.makeCondition("orderStatusId",EntityOperator.EQUALS, "ORDER_APPROVED"));
+			//condList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.IN, shipmentIds));
+			if (subscriptionType.equals("AM")) {
+				condList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN,UtilMisc.toList("AM_SHIPMENT", "AM_SHIPMENT_SUPPL")));
+			}else if(subscriptionType.equals("DIRECT")){
+				condList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.EQUALS,"RM_DIRECT_SHIPMENT"));
+			}else {
+				condList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN,UtilMisc.toList("PM_SHIPMENT", "PM_SHIPMENT_SUPPL")));
+			}
+			condList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+			condList.add(EntityCondition.makeCondition("estimatedDeliveryDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+			
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			List<GenericValue> orderBooths = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null,null, null, true);
+			boothIds = EntityUtil.getFieldListFromEntityList(orderBooths,"originFacilityId", true);
+			shippedRouteIds=EntityUtil.getFieldListFromEntityList(orderBooths,"routeId", true);
+			if (UtilValidate.isNotEmpty(boothIds)) {
+				booths = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN,boothIds), null, null, null, false);
+			}
+			for (String eachBooth : boothIds) {
+				List<GenericValue> boothOrderData = EntityUtil.filterByCondition(orderBooths, EntityCondition.makeCondition("originFacilityId",EntityOperator.EQUALS, eachBooth));
+				GenericValue boothData = EntityUtil.getFirst(boothOrderData);
+				boothRouteIdsMap.put(eachBooth, boothData.getString("routeId"));
+			}
+			// booths = EntityUtil.filterByDate(booths, effectiveDate);
+
+			/*for(GenericValue facilityBooth: booths){
+   		 		boothRouteIdsMap.put(facilityBooth.getString("facilityId"),facilityBooth.getString("ownerFacilityId"));
+   	 		}*/
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("boothsList", booths);
+		result.put("boothIdsList", boothIds);
+		result.put("shippedRouteIds", shippedRouteIds);
+		result.put("boothRouteIdsMap", boothRouteIdsMap);
 		return result;
 	}
 }

@@ -23,9 +23,9 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.5in" margin-bottom=".5in" margin-left=".3in" margin-right=".5in">
-        <fo:region-body margin-top="1in"/>
+        <fo:region-body margin-top="1.2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -43,12 +43,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 				<#assign facilityNumberInPage = 0>
               	<fo:block text-align="left" white-space-collapse="false">&#160; Retailer Ledger Abstract Inclusive Of Products  From:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStart, "dd-MMMM-yyyy")} To :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd-MMMM-yyyy")} </fo:block>
               	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	 <fo:block text-align="center" font-size="10pt">
-            	 <fo:table  table-layout="fixed"   font-size="10pt">                
+            	 <fo:block text-align="center" font-size="12pt">
+            	 <fo:table  table-layout="fixed"   font-size="12pt">                
 				                 <fo:table-column column-width="70pt"/>
  						  		<fo:table-column column-width="70pt"/>
  						  		<fo:table-column column-width="50pt"/>
- 						   	    <fo:table-column column-width="70pt"/>
+ 						   	    <fo:table-column column-width="90pt"/>
  						   	    <fo:table-column column-width="150pt"/>
  						   	    <fo:table-column column-width="70pt"/>
  						   	     <fo:table-column column-width="70pt"/>
@@ -64,7 +64,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
                                 	        <fo:block  text-align="left" white-space-collapse="false" keep-together="always">Shift</fo:block>
                             	          </fo:table-cell>	
 		                                  <fo:table-cell >
-                                	         <fo:block  white-space-collapse="false" text-align="right">Qty&#160;&#160;</fo:block>
+                                	         <fo:block  white-space-collapse="false" text-align="center">Qty(In Packs)&#160;&#160;</fo:block>
                             	         </fo:table-cell>
 				                      	<fo:table-cell >
 	                                	         <fo:block  white-space-collapse="false" text-align="left">ProductName</fo:block>
@@ -81,7 +81,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			    </fo:block>       
             	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    </fo:static-content>
-			<fo:flow flow-name="xsl-region-body"  font-size="10pt">
+			<fo:flow flow-name="xsl-region-body"  font-size="12pt">
 			<fo:block>	
             				 <fo:table  table-layout="fixed">                
 				                <fo:table-column column-width="70pt"/>
@@ -91,6 +91,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
  						   	    <fo:table-column column-width="150pt"/>
  						   	    <fo:table-column column-width="70pt"/>
  						   	     <fo:table-column column-width="70pt"/>
+ 						   	      <fo:table-column column-width="70pt"/>
+ 						   	        <fo:table-column column-width="70pt"/>
 				                <fo:table-body>
 				                 <fo:table-row>
 			                        <fo:table-cell>
@@ -110,17 +112,33 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                        </fo:table-cell>
 			                      </fo:table-row>
 				               <#assign boothDaySaleList= boothSaleEntry.getValue().entrySet()>
+ 								<#assign j=0>
 				               <#list boothDaySaleList as daySaleEntry>
 				               <#assign bootDetilsList= daySaleEntry.getValue().entrySet()>
 			                       <fo:table-row>
-			                        <fo:table-cell number-columns-spanned="2">
-			                          <fo:block text-align="right" text-indent="4pt" keep-together="always">OpeningBalance:</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell number-columns-spanned="2">
-			                          <fo:block text-align="left"  white-space-collapse="false" > ${daySaleEntry.getValue().get("OpeningBal")}</fo:block>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell >
+			                          <fo:block text-align="right" text-indent="4pt" keep-together="always">OpeningBalance:</fo:block>
+			                        </fo:table-cell>
+									<fo:table-cell >
+			                          <fo:block text-align="left"  white-space-collapse="false" > ${daySaleEntry.getValue().get("OpeningBal")}</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
 			                       <#list bootDetilsList as eachDayDeatils>
@@ -134,13 +152,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 						                        </fo:table-cell>
 						                        <#assign routeId = "">
 						                        <#if eachDayDeatils.getKey() == "PM">
-						                        	<#assign routeId = PMRouteId>
+						                        	<#assign routeId =daySaleEntry.getValue().get("PMroutes")>
 						                        <#else>
-						                        	<#assign routeId = AMRouteId>
+						                        	<#assign routeId =daySaleEntry.getValue().get("AMroutes")>
 						                        </#if>
+													
 						                        <fo:table-cell>
-						                          <fo:block text-align="center"  >${routeId?if_exists}</fo:block>
+												<#list routeId as route>
+						                          <fo:block text-align="center"  >${route?if_exists}</fo:block>
+													</#list>		
+
 						                        </fo:table-cell>
+													
 						                        <fo:table-cell>
 						                          <fo:block text-align="left"   keep-together="always">${eachDayDeatils.getKey()}</fo:block>
 						                        </fo:table-cell>
@@ -151,7 +174,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 						                          <fo:block text-align="left"  >&#160;${productDeatils.get("brandName")}</fo:block>
 						                        </fo:table-cell>
 						                         <fo:table-cell>
-						                          <fo:block text-align="right"  >${productEntry.getValue().get("totalRevenue")}</fo:block>
+						                          <fo:block text-align="right"  >${productEntry.getValue().get("totalRevenue")?string("##0.00")}</fo:block>
 						                        </fo:table-cell>
 						                         <fo:table-cell>
 						                          <fo:block text-align="right"  ></fo:block>
@@ -162,7 +185,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                      </#list>
 			                       <fo:table-row>
 			                         <fo:table-cell>
-			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
+			                       <fo:block font-family="Courier,monospace" font-size="12pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
  				                      </fo:table-cell>
 			                      </fo:table-row>
 			                        <fo:table-row  >
@@ -182,15 +205,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="right" ></fo:block>
 			                        </fo:table-cell>
 			                         <fo:table-cell>
-			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("totalRevenue")}</fo:block>
+			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("totalRevenue")?string("##0.00")}</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("PaidAmt")}</fo:block>
+			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("PaidAmt")?string("##0.00")}</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
 			                       <fo:table-row>
 			                         <fo:table-cell>
-			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
+			                       <fo:block font-family="Courier,monospace" font-size="12pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
  				                      </fo:table-cell>
 			                      </fo:table-row>
 			                       <fo:table-row>
@@ -213,12 +236,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="left"  ></fo:block>
 			                        </fo:table-cell>
 			                         <fo:table-cell>
-			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("ClosingBal")}</fo:block>
+			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("ClosingBal")?string("##0.00")}</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
 			                      <fo:table-row>
 			                         <fo:table-cell>
-			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
+			                       <fo:block font-family="Courier,monospace" font-size="12pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
  				                      </fo:table-cell>
 			                      </fo:table-row>
  				           </#list> 
@@ -231,7 +254,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
  <#else>
 	<fo:page-sequence master-reference="main">
     	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-       		 <fo:block font-size="9pt">
+       		 <fo:block font-size="12pt">
             	${uiLabelMap.OrderNoOrderFound}.
        		 </fo:block>
     	</fo:flow>

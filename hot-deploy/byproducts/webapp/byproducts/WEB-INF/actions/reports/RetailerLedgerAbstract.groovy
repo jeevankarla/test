@@ -71,8 +71,8 @@ List pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator
 amBoothTotals=[:];
 pmBoothTotals=[:];
 
-AMboothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId, "subscriptionTypeId":"AM"]).get("boothDetails");
-PMboothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId, "subscriptionTypeId":"PM"]).get("boothDetails");
+AMboothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId, "subscriptionTypeId":"AM", "supplyDate":fromDateTime, isByParty:Boolean.TRUE]).get("boothDetails");
+PMboothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId, "subscriptionTypeId":"PM","supplyDate":fromDateTime, isByParty:Boolean.TRUE]).get("boothDetails");
 if(UtilValidate.isNotEmpty(AMboothDeatilMap)){
 	context.AMRouteId = AMboothDeatilMap.get("routeId");
 }
@@ -83,17 +83,86 @@ if(UtilValidate.isNotEmpty(PMboothDeatilMap)){
 
 amBoothDayTotals=[:];
 pmBoothDayTotals=[:]
-
+AmRoutes=[:];
+tempAmlist=[];
+finalAmMap=[:];
 if(UtilValidate.isNotEmpty(amShipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothId),shipmentIds:amShipmentIds,fromDate:dayStart, thruDate:dayEnd]);
+
+
+
+	amShipmentIds.each{ eachShipmentId ->
+		tempMap=[:];
+		shipment = delegator.findOne("Shipment", [shipmentId : eachShipmentId], false);
+		//Debug.log("shipment====DATE===================="+shipment.estimatedShipDate);
+		//Debug.log("shipment========================"+shipment.routeId);
+		estimatedShipDate=UtilDateTime.toDateString(shipment.estimatedShipDate ,"dd/MM/yy");
+		
+		
+  
+		tempMap.put("estimatedShipDate", estimatedShipDate);
+		tempMap.put("routeId",shipment.routeId);
+		tempAmlist.add(tempMap);
+		AmRoutes.put(estimatedShipDate,shipment.routeId);	
+	}
+	//Debug.log("templist======================="+templist);
+
+    routeList=[];
+	tempAmlist.each{ eachtemp ->
+		
+		routeListLocal = [];
+		if(finalAmMap.containsKey(eachtemp.estimatedShipDate)){
+			routeListLocal = finalAmMap[eachtemp.estimatedShipDate];
+		}
+		routeListLocal.add(eachtemp.routeId);
+		
+		tempList=[];
+		tempList.addAll(routeListLocal);
+		
+		finalAmMap.put(eachtemp.estimatedShipDate, tempList);
+	}
+	context.finalAmMap=finalAmMap;
+	context.AmRoutes=AmRoutes;
+	//Debug.log("AmRoutes========================"+AmRoutes);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:[boothId],shipmentIds:amShipmentIds,fromDate:dayStart, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		amBoothDayTotals = dayTotals.get("dayWiseTotals");
 	}
 }
-
+PmRoutes=[:];
+tempPmlist=[];
+finalPmMap=[:];
 //pmShipments
 if(UtilValidate.isNotEmpty(pmShipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothId),shipmentIds:pmShipmentIds,fromDate: dayStart, thruDate: dayEnd]);
+	pmShipmentIds.each{ eachShipmentId ->
+		tempMap=[:];
+		shipment = delegator.findOne("Shipment", [shipmentId : eachShipmentId], false);
+		//Debug.log("shipment========================"+shipment.routeId);
+		estimatedShipDate=UtilDateTime.toDateString(shipment.estimatedShipDate ,"dd/MM/yy");
+		//Debug.log("shipment========================"+estimatedShipDate);
+		tempMap.put("estimatedShipDate", estimatedShipDate);
+		tempMap.put("routeId",shipment.routeId);
+		tempPmlist.add(tempMap);
+		PmRoutes.put(estimatedShipDate,shipment.routeId);	
+	}
+	context.PmRoutes=PmRoutes;
+
+	routeList=[];
+	tempPmlist.each{ eachtemp ->
+		
+		routeListLocal = [];
+		if(finalPmMap.containsKey(eachtemp.estimatedShipDate)){
+			routeListLocal = finalPmMap[eachtemp.estimatedShipDate];
+		}
+		routeListLocal.add(eachtemp.routeId);
+		
+		tempList=[];
+		tempList.addAll(routeListLocal);
+		
+		finalPmMap.put(eachtemp.estimatedShipDate, tempList);
+	}
+	context.finalPmMap=finalPmMap;
+	//Debug.log("PmRoutes========================"+PmRoutes);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:[boothId],shipmentIds:pmShipmentIds,fromDate: dayStart, thruDate: dayEnd]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		pmBoothDayTotals = dayTotals.get("dayWiseTotals");
 	}
@@ -104,42 +173,72 @@ routeWiseMap =[:];
 
 boothSalesMap=[:];
 allDaySaleMap=[:];
+allDaySaleMap=[:];
 
 obAmount=BigDecimal.ZERO;
 closingBal=BigDecimal.ZERO;
 		
 for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 	Timestamp saleDate = UtilDateTime.addDaysToTimestamp(dayStart, j);
+	Timestamp saleDate1 = UtilDateTime.addDaysToTimestamp(dayStart, j);
 	dayLmsTotalQty = 0;
 	dayTotalRevenue=BigDecimal.ZERO;
 	curntDay=UtilDateTime.toDateString(saleDate ,"yyyy-MM-dd");
+	curntDay1=UtilDateTime.toDateString(saleDate1 ,"dd/MM/yy");
+	
+	//oldPmnts = EntityUtil.filterByCondition(shipment, EntityCondition.makeCondition("estimatedShipDate",EntityOperator.EQUALS, curntDay1));
+	subscriptionType="";
 	curntDaySalesMap=[:];
 	if(UtilValidate.isNotEmpty(amBoothDayTotals.getAt(curntDay))){
+		subscriptionType="AM";
+		BoothRoutes = ByProductNetworkServices.getBoothShipment(delegator,UtilMisc.toMap("boothId",boothId,"effectiveDate",saleDate,"subscriptionType",subscriptionType));
+		routes=BoothRoutes.get("shippedRouteIds");
+		curntDaySalesMap["AMroutes"]=routes;
+		
 		curntDaySalesMap["AM"]=amBoothDayTotals.getAt(curntDay).get("productTotals");
+		
 		dayTotalRevenue=dayTotalRevenue.add(amBoothDayTotals.getAt(curntDay).get("totalRevenue"));
 	}
 	if(UtilValidate.isNotEmpty(pmBoothDayTotals.getAt(curntDay))){
+		subscriptionType="PM";
+		BoothRoutes = ByProductNetworkServices.getBoothShipment(delegator,UtilMisc.toMap("boothId",boothId,"effectiveDate",saleDate,"subscriptionType",subscriptionType));
+		routes=BoothRoutes.get("shippedRouteIds");
+		curntDaySalesMap["PMroutes"]=routes;
+		
 		curntDaySalesMap["PM"]=pmBoothDayTotals.getAt(curntDay).get("productTotals");
 		dayTotalRevenue=dayTotalRevenue.add(pmBoothDayTotals.getAt(curntDay).get("totalRevenue"));
 	}
+//	if(UtilValidate.isNotEmpty(BoothRoutes)){
+//		boothRouteIdsMap=(Map)BoothRoutes.get("boothRouteIdsMap");//to get routeIds
+//	}
+	
+	//obAmount =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId, isByParty:Boolean.TRUE])).get("openingBalance");
+	
+	
+	
 	if(UtilValidate.isNotEmpty(curntDaySalesMap)){
 		curntDaySalesMap["totalRevenue"]=dayTotalRevenue;
 		reciepts = BigDecimal.ZERO;
-		boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId]);
+		boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId, isByParty:Boolean.TRUE]);
 		if(UtilValidate.isNotEmpty(boothPaidDetail)){
 			reciepts = boothPaidDetail.get("invoicesTotalAmount");
 		}
 		curntDaySalesMap["PaidAmt"] = ((new BigDecimal(reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		if(j==0){//Opeinig Balance called only  for firstDay  in whole period
-			obAmount =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId])).get("openingBalance");
+			obAmount =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId, isByParty:Boolean.TRUE])).get("openingBalance");
+			if(UtilValidate.isEmpty(curntDaySalesMap)){
+					openingbal=obAmount;
+					context.openingbal=openingbal;
+					}
 			closingBal=obAmount+dayTotalRevenue-reciepts;
+
 		}else{
 			obAmount=closingBal;
 			closingBal=obAmount+dayTotalRevenue-reciepts;
 		}
 		curntDaySalesMap["OpeningBal"]=((new BigDecimal(obAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		curntDaySalesMap["ClosingBal"]=((new BigDecimal(obAmount+dayTotalRevenue-reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
-		allDaySaleMap[curntDay]=curntDaySalesMap;
+		allDaySaleMap[curntDay1]=curntDaySalesMap;
 	}
 }
 	
