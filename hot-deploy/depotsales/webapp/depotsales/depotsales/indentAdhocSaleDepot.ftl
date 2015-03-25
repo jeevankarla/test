@@ -112,6 +112,20 @@ $(document).ready(function(){
           }); 
            
      }
+     
+  function validateParty()
+  {
+  	if(indententryinit.partyId.value.length < 1)
+  		{
+  			alert("Party ID is Mandatory");
+  			 indententryinit.isFormSubmitted.value="";
+  		}
+  	if(indententryinit.productCatageoryId.value == "")
+  		{
+  			alert("Product Category is Mandatory");
+  			indententryinit.isFormSubmitted.value="";
+  		}
+  }
  
 </script>
 <#assign changeRowTitle = "Changes">                
@@ -153,7 +167,7 @@ $(document).ready(function(){
     <div class="screenlet-body">
   
     <#if changeFlag?exists && changeFlag=='DepotSales'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>DepotSalesOrder</@ofbizUrl>" id="indententryinit">  
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>DepotSalesOrder</@ofbizUrl>" id="indententryinit" onsubmit="validateParty()">  
     <#else>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNewMm</@ofbizUrl>" id="indententryinit">  
     </#if>
@@ -243,7 +257,7 @@ $(document).ready(function(){
 	    	<tr><td><br/></td></tr>
 		    	<tr>
 		      		<td>&nbsp;</td>
-		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
+		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:<font color="red">*</font></div></td>
 		      		<td>&nbsp;</td>
 		      		<td>
 		      		<#if productCategoryId?has_content>
@@ -324,7 +338,7 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if></div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
           <td>&nbsp;</td>
         <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 			<#if booth?exists && booth?has_content>  
