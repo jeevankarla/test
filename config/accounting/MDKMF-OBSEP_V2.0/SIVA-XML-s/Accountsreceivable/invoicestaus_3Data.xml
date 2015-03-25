@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_01" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_02" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_03" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_04" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_05" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_06" statusDate="2014-09-30 00:00:00"/>
+    <InvoiceStatus statusId="INVOICE_APPROVED" invoiceId="OBAR_SEP_07" statusDate="2014-09-30 00:00:00"/>
+</entity-engine-xml>
