@@ -259,6 +259,7 @@ public class MaterialPurchaseServices {
 				BigDecimal oldRecvdQty = BigDecimal.ZERO;
 				Map productQtyMap = FastMap.newInstance();
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	    if (paramMap.containsKey("productId" + thisSuffix)) {
 				if (paramMap.containsKey("productId" + thisSuffix)) {
 					productId = (String) paramMap.get("productId" + thisSuffix);
 				}
@@ -266,13 +267,17 @@ public class MaterialPurchaseServices {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
 					return "error";			  
 				}
-			  
+				if (productId.equals("") || UtilValidate.isEmpty(productId)) {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+					return "error";		
+				}
+
 				if (paramMap.containsKey("quantity" + thisSuffix)) {
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
 				else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
-					return "error";			  
+				    return "error";
 				}		  
 				if(UtilValidate.isNotEmpty(quantityStr)){
 					quantity = new BigDecimal(quantityStr);
@@ -339,8 +344,8 @@ public class MaterialPurchaseServices {
 					}
 
 				}
-				
-				String termTypeId = "";
+	        }
+          		String termTypeId = "";
 				BigDecimal amount = BigDecimal.ZERO;
 				String amountStr = "";
 				if (paramMap.containsKey("termTypeId" + thisSuffix)) {
@@ -365,7 +370,7 @@ public class MaterialPurchaseServices {
 					shipmentAttribute.set("attrValue", amountStr);
 					delegator.createOrStore(shipmentAttribute);
 				}
-				
+           if (paramMap.containsKey("productId" + thisSuffix)) {
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
 		        itemInMap.put("userLogin",userLogin);
@@ -446,7 +451,8 @@ public class MaterialPurchaseServices {
 					shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
 					delegator.createSetNextSeqId(shipmentReceiptStatus);
 				}
-			}
+              }
+           }
 			
 			if(UtilValidate.isNotEmpty(orderId) && landingCharges.compareTo(BigDecimal.ZERO)>0){
 				List condExpr = FastList.newInstance();
