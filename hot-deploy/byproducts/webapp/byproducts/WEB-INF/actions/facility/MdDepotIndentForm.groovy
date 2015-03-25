@@ -211,10 +211,12 @@ context.productList = prodList;
 prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
-	newObj.put("label","[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName);
+	//newObj.put("label","[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName);
+	newObj.put("label","[" +eachItem.internalName+"] " +eachItem.description+"-"+eachItem.productId);
 	productItemsJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId, eachItem.description);
-	productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName, eachItem.productId);
+	//productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName, eachItem.productId);
+	productLabelIdJSON.put("[" +eachItem.internalName+"] " +eachItem.description+"-"+eachItem.productId, eachItem.productId);
 	
 	if(productUomMap){
 		uomId = productUomMap.get(eachItem.productId);
