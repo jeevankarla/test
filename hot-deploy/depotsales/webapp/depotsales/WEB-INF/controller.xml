@@ -107,7 +107,7 @@
     
     <request-map uri="buyerInvoiceDepot.pdf">
 	        <security https="true" auth="true"/>
-	        <response name="success" type="view" value="BuyerInvoicePDF"/>
+	        <response name="success" type="view" value="BuyerInvoiceDepotPDF"/>
     </request-map>
     
     <request-map uri="taxInvoiceDepot.pdf">
@@ -293,7 +293,7 @@
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
     <view-map name="NonRouteGatePassPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>
     <view-map name="FindDepotSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
-    <view-map name="BuyerInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoicePDF" content-type="application/pdf"/>
+    <view-map name="BuyerInvoiceDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoiceDepotPDF" content-type="application/pdf"/>
     <view-map name="TaxInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#TaxInvoicePDF" content-type="application/pdf"/>
     <view-map name="FindGRNReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNReceipts"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#POMaterialReceiptsDepot"/>

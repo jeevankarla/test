@@ -175,6 +175,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	  	String PONumber = (String) context.get("PONumber");
 	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
 	  	String orderMessage = (String) context.get("orderMessage");
+	  	String disableAcctgFlag = (String) context.get("disableAcctgFlag");
 	  	List<Map> orderAdjChargesList = (List) context.get("orderAdjChargesList");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -275,7 +276,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			inventoryFacilityId=productStore.getString("inventoryFacilityId");
 			}
 			cart.setOrderType("SALES_ORDER");
-	        cart.setIsEnableAcctg("Y");
+			cart.setIsEnableAcctg("Y");
+			if("Y".equals(disableAcctgFlag)){
+				cart.setIsEnableAcctg("N");
+			}
 	        cart.setExternalId(PONumber);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
@@ -856,6 +860,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
 		String orderMessage=(String) request.getParameter("orderMessage");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
+		String disableAcctgFlag = (String) request.getParameter("disableAcctgFlag");
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
 		String shipmentId = "";
@@ -1148,6 +1153,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		processOrderContext.put("orderMessage", orderMessage);
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
+		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
+		
 		
 		result = processICPSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
