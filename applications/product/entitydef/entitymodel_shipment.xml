@@ -632,7 +632,7 @@ under the License.
       <field name="destinationTelecomNumberId" type="id"></field>
       <field name="partyIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
-      <field name="supplierInvoiceId" type="id"></field>
+      <field name="supplierInvoiceId" type="id-long"></field>
       <field name="supplierInvoiceDate" type="date-time"></field>
       <field name="deliveryChallanNumber" type="id-long-ne"></field>
       <field name="deliveryChallanDate" type="date-time"></field>
