@@ -107,9 +107,6 @@
 				serviceTaxPrice = dataRow["serviceTaxPrice"];
 			}
 			
-			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || tcsPrice>0 || serviceTaxPrice>0){
-				priceExists = "Y";
-			}
 			
 		  // add percentage fileds here
 			var bedPercent=0;
@@ -132,6 +129,10 @@
 			}
 			if(dataRow["serviceTaxPercent"]){
 				serviceTaxPercent = dataRow["serviceTaxPercent"];
+			}
+			
+			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || tcsPrice>0 || serviceTaxPrice>0 || vatPercent>0 || cstPercent>0 ){
+				priceExists = "Y";
 			}
 		}
 		
