@@ -1174,8 +1174,9 @@ under the License.
         paginate="false" default-table-style="basic-table hover-bar" >
         
         <field name="GlAccountId" title="GlAccountId"><display/></field> 
-        <field name="invoiceDate" title="invoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd/MM/yyyy&quot;);}"/></field>
-        <field name="InvoiceId" title="InvoiceId"><display/></field>  
+        <field name="invoiceDate" title="InvoiceDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(InvoiceDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="InvoiceId" title="InvoiceId"><display/></field>
+        <field name="accountTransId" title="AccountTransId"><display/></field>  
         <field name="postedDrAmount" title="postedDrAmount"><display/></field> 
         <field name="unPostedDrAmount" title="unPostedDrAmount"><display/></field>
         <field name="postedCrAmount" title="postedCrAmount"><display/></field> 
