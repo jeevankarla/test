@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <InvoiceItem invoiceId="OBAR_SEP_01" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="55715.71" description="DMU OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OBAR_SEP_02" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="0.42" description="BJP OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OBAR_SEP_03" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="72995" description="GD OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OBAR_SEP_04" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="836470.18" description="BMU OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OBAR_SEP_05" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="405607.93" description="DKM OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OBAR_SEP_06" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="2330461.2" description="C631 OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OBAR_SEP_07" invoiceItemSeqId="0001" invoiceItemTypeId="INV_FPROD_ITEM" quantity="1" amount="38662" description="GOKUL OB Balance As on SEP-30-2014" taxAuthorityPartyId="NULL"/>
+</entity-engine-xml>
