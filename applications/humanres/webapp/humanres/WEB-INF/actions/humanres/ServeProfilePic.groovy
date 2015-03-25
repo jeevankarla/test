@@ -50,6 +50,8 @@ thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
 location = null;
 salary = null;
 grade = null;
+appointmentDate=null;
+resignationDate=null;
 partyId=parameters.partyId;
 
 basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
