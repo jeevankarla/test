@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9901" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9902" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9903" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9904" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9905" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9906" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9907" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9908" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9909" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9910" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9911" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9912" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9913" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9914" statusDate="2015-03-01 00:00:00"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="D9915" statusDate="2015-03-01 00:00:00"/>
+</entity-engine-xml>
