@@ -58,32 +58,56 @@ if(totalDays > 32){
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
+List conditionList = [];
 facilityId=parameters.issueToFacilityId;
 context.facilityId=facilityId;
-
-productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
+ledgerFolioNo=parameters.ledgerFolioNo;
+context.ledgerFolioNo=ledgerFolioNo;
+if(UtilValidate.isNotEmpty(ledgerFolioNo)){
+	ProductAttributeId = delegator.findList("ProductAttribute",EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS , ledgerFolioNo)  , UtilMisc.toSet("productId"), null, null, false );
+	if(UtilValidate.isNotEmpty(ProductAttributeId)){
+		List prodIds= EntityUtil.getFieldListFromEntityList(ProductAttributeId, "productId", true);
+		if(UtilValidate.isNotEmpty(prodIds)){	
+			conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIds));
+			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			productDetails = delegator.findList("ProductFacility", condition, null, null, null, false);
+		}
+	}
+}else{
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		productDetails = delegator.findList("ProductFacility", condition, null, null, null, false);
+ }
+//productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
 productIdsFacility = EntityUtil.getFieldListFromEntityList(productDetails, "productId", true);
 
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+conditionList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsFacility));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
-custReqAndItemDetails= delegator.findList("CustRequestAndCustRequestItem",condition,null,null,null,false);
+custReqAndItemDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);
 
 productMap=[:];
-
+itecodeSort=[];
+sortedMap = [:];
 if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 		 productIds = EntityUtil.getFieldListFromEntityList(custReqAndItemDetails, "productId", true);			 
 		 productIds.each{eachProduct->
 			 productDetailsMap=[:];
+			 
 			 productDetails = delegator.findOne("Product",["productId":eachProduct],false);
 			 if(UtilValidate.isNotEmpty(productDetails)){
+				 
 					itemCode=productDetails.internalName;
 					description=productDetails.description;
-					
+					productDetailsMap.put("eachProduct",eachProduct);
 					productDetailsMap.put("itemCode",itemCode);
+					String paddedItemCode = String.format("%15s", itemCode).replace(' ', '0');
+                    productDetailsMap.put("paddedItemCode",paddedItemCode);					
 					productDetailsMap.put("description",description);
 					uomId=productDetails.quantityUomId;
 			  }
@@ -124,9 +148,15 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 			 productDetailsMap.put("IssueAmount",IssueAmount);
 			 
 		 if( ((ReceiptQty) != 0) && ((IssueQty) != 0) || ((openingQty) != 0)){
-		  
+			 itecodeSort.addAll(productDetailsMap);
 			 productMap.put(eachProduct,productDetailsMap);
 			 }
-		 }						
+		
+			 
+		 }		 			 
+		 itecodeSort = UtilMisc.sortMaps(itecodeSort, UtilMisc.toList("paddedItemCode"));
+		 for (eachOne in itecodeSort) {
+		      sortedMap.put(eachOne.eachProduct,productMap.getAt(eachOne.eachProduct));
+		 }				 				  
 }
-context.productMap=productMap;
+context.sortedMap=sortedMap;
