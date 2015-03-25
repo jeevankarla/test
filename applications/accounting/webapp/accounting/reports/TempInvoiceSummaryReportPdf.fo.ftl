@@ -293,7 +293,8 @@ under the License.
                   <fo:block>
                         <fo:table>
                             <fo:table-column column-width="10%"/>
-                            <fo:table-column column-width="13%"/>
+                            <fo:table-column column-width="8%"/>
+                            <fo:table-column column-width="8%"/>
                             <fo:table-column column-width="16%"/>
                             <fo:table-column column-width="15%"/>
                             <fo:table-column column-width="8%"/>
@@ -306,6 +307,9 @@ under the License.
                                			<fo:table-row>
 			                                <fo:table-cell >
 			                                    <fo:block text-align="left" font-size="11pt">TOTAL</fo:block>
+			                                </fo:table-cell>
+			                                <fo:table-cell >
+			                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
 			                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
@@ -326,6 +330,9 @@ under the License.
 		                                <fo:table-row>
 			                                <fo:table-cell >
 			                                    <fo:block text-align="left" font-size="11pt">--------------------------------</fo:block>
+			                                </fo:table-cell>
+			                                <fo:table-cell >
+			                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
 			                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
@@ -355,6 +362,9 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
+				                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
@@ -375,6 +385,9 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
+				                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
 				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
@@ -390,6 +403,9 @@ under the License.
 			                                <fo:table-row>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">--------------------------------</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
@@ -423,6 +439,11 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("GlAccountId")?if_exists}</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
+				                                	<fo:block text-align="left" font-size="11pt">&#160;</fo:block>
+				                                	<fo:block text-align="left" font-size="11pt">&#160;</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
@@ -443,6 +464,9 @@ under the License.
 			                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
+			                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
+			                                </fo:table-cell>
+			                                <fo:table-cell >
 			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
@@ -457,10 +481,13 @@ under the License.
 		                                 </fo:table-row>
 		                                	<fo:table-row>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">InvoiceDate</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">TransactionDate</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">InvoiceId/AccountTransId</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">InvoiceId</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                    <fo:block text-align="left" font-size="11pt">AccountTransId</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="right" font-size="11pt">PostedDr</fo:block>
@@ -483,6 +510,9 @@ under the License.
 			                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
+			                                    <fo:block text-align="left" font-size="11pt">-----------------------------------------</fo:block>
+			                                </fo:table-cell>
+			                                <fo:table-cell >
 			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
@@ -501,6 +531,9 @@ under the License.
 				                                </fo:table-cell>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("InvoiceId")?if_exists}</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("accountTransId")?if_exists}</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
@@ -523,6 +556,9 @@ under the License.
 				                                </fo:table-cell>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("InvoiceId")?if_exists}</fo:block>
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("accountTransId")?if_exists}</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
