@@ -371,7 +371,7 @@ $(document).ready(function(){
         </#if>
         </tr> 
        
-         <tr><td><br/></td></tr>    
+         <tr><td><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/><br/></td></tr>    
                    
       </table>
       <div id="sOFieldsDiv" >

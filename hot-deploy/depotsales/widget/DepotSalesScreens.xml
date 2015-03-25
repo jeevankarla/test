@@ -210,6 +210,7 @@
                 <set field="promotionAdj" from-field="parameters.promotionAdj"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
+                <set field="disableAcctgFlag" value="Y"/>
                  <set field="productStoreId" from-field="parameters.productStoreIdFrom"/>
                  	<set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/AdhocIndentFormDepot.groovy"/>
@@ -345,7 +346,7 @@
         </section>
     </screen>
     
-    <screen name="BuyerInvoicePDF">
+    <screen name="BuyerInvoiceDepotPDF">
             <section>
                 <actions>
                    <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>

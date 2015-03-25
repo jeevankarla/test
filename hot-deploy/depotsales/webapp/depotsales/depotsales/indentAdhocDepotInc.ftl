@@ -205,6 +205,7 @@
 			var partyId = $("#partyId").val();
 			var orderTaxType = $("#orderTaxType").val();
 			var poNumber = $("#PONumber").val();
+			var acctgFlag = $("#disableAcctgFlag").val();
 			var promoAdj = $("#promotionAdj").val();
 			var productStoreId = $("#productStoreId").val();
 			var orderMessage = $("#orderMessage").val();
@@ -214,6 +215,7 @@
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
+			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			<#if orderId?exists>
 				var order = '${orderId}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -226,6 +228,7 @@
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
 			jQuery(formId).append(jQuery(orderMessageInPut));
+			jQuery(formId).append(jQuery(disableAcctgFlag));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	

@@ -231,7 +231,9 @@ invoiceIds.each { invoiceId ->
 			//ge UOM description for UomId
 			if(UtilValidate.isNotEmpty(prodDetail.quantityUomId)){
 			uomIdValue = delegator.findOne("Uom",[uomId:prodDetail.quantityUomId], false);
-			prodUomDescription=uomIdValue.description;
+			if(UtilValidate.isNotEmpty(uomIdValue)){
+				prodUomDescription=uomIdValue.description;
+				}
 			}
 			tempMap.put("quantityUomId", prodUomDescription);
 			if(UtilValidate.isNotEmpty(prodDetail.quantityIncluded)){
