@@ -5,23 +5,19 @@
 	jQuery(formId).attr("action", action);	
 	jQuery(formId).submit();
     }
-    function makeDatePicker(fromDateId ,thruDateId){
+  
+//no restriction for thruDate
+	function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
 			changeMonth: true,
-			numberOfMonths: 1,
+			changeYear: true,
 			onSelect: function(selectedDate) {
-			date = $(this).datepicker('getDate');
-			var maxDate = new Date(date.getTime());
-	        	maxDate.setDate(maxDate.getDate() + 31);
-				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
-				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: null}).datepicker('setDate', date);
 			}
 		});
 	$( "#"+thruDateId ).datepicker({
 			dateFormat:'MM d, yy',
-			changeMonth: true,
-			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
 				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
 			}
