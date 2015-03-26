@@ -10,6 +10,7 @@
 			    <set field="tabButtonItem2" value="FindMaterialRequest"/> 
                 <set field="entityName" value="CustRequest"/>
                 <set field="parameters.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
+                <set field="flag" value="DEPT_HEADAPPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
@@ -69,6 +70,7 @@
 			    <set field="tabButtonItem2" value="FindMaterialReturns"/> 
                 <set field="entityName" value="ReturnHeader"/>
                 <set field="parameters.returnHeaderTypeId" value="DEPARTMENT_RETURN"/>
+                <set field="flag" value="DEPT_APPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
@@ -128,6 +130,7 @@
                 <set field="headerItem" value="Issue"/>
                 <set field="tabButtonItem" value="FindMaterialIssuance" />	
                 <set field="tabButtonItem2" value="StoreProductIssue" />	
+                <set field="flag" value="DEPT_APPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/RequestAvailableProductList.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
@@ -185,6 +188,7 @@
                 <set field="headerItem" value="Issue"/>
                 <set field="tabButtonItem" value="FindMaterialIssuance" />	
                 <set field="tabButtonItem2" value="FindMaterialIssuanceNew" />	
+                <set field="flag" value="DEPT_APPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
@@ -215,6 +219,7 @@
                 <set field="tabButtonItem2" value="ApproveRequestsByDeptHead" />
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
                 <set field="entityName" value="CustRequestAndItemAndAttribute"/>
+                <set field="flag" value="DEPT_HEADAPPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
                 <!-- <entity-condition list="custRequestItemsList" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-list combine="and">
@@ -745,6 +750,7 @@
                 <set field="tabButtonItem2" value="RequestsReceiptAcknowledgement"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
+                <set field="flag" value="DEPT_HEADAPPROVE"/>
                 <!--  <entity-condition list="indentItems" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_ISSUED"/>
                 	<order-by field-name="fromPartyId"/>

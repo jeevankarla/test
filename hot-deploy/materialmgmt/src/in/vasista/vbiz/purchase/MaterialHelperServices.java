@@ -2027,4 +2027,39 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
       }        
       return result;
 }
+  public static Map<String, Object> getDepartmentByUserLogin(DispatchContext dctx, Map context) {
+	  Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+	  Map resultMap = ServiceUtil.returnSuccess();
+	  GenericValue userLogin = (GenericValue)context.get("userLogin");
+	  String partyId = (String)userLogin.get("partyId") ;
+	  String roleTypeIdTo = (String)context.get("roleTypeIdTo");
+	  if(UtilValidate.isEmpty(partyId)){
+		  resultMap = ServiceUtil.returnError("No departyment is associated with this user");
+	  return resultMap;
+	  }
+	  List<GenericValue> departmentDetails = FastList.newInstance();
+	  GenericValue activeDepartmentParty = null;
+	  try{
+		  List conditionList = FastList.newInstance();
+		  conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyId)));
+		  conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("roleTypeIdTo",EntityOperator.EQUALS,roleTypeIdTo)));
+		  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		  departmentDetails = delegator.findList("PartyRelationship",condition, null, null, null,false);
+		  List<GenericValue> activeFacilityParties = (List<GenericValue>)EntityUtil.filterByDate(departmentDetails,UtilDateTime.nowTimestamp()); 
+		  activeDepartmentParty = EntityUtil.getFirst((List<GenericValue>)EntityUtil.filterByDate(departmentDetails,UtilDateTime.nowTimestamp()));
+		  if(UtilValidate.isEmpty(activeFacilityParties)){
+			  resultMap = ServiceUtil.returnError("No department is associated with this user ::"+userLogin.get("loginId"));
+		  return resultMap;
+		  }
+		  resultMap.put("deptId", activeDepartmentParty.getString("partyIdFrom"));
+	  
+	  	}catch(GenericEntityException e){
+		  Debug.logError("Error while getting department associated with this user"+e.getMessage(), module);
+		  resultMap = ServiceUtil.returnError("Error while getting department associated with this user ::"+userLogin.get("loginId"));
+		  return resultMap;
+	  	}
+	  return resultMap;
+	  
+	 }
 }

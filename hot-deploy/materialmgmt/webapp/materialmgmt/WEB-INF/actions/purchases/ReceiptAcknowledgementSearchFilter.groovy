@@ -14,6 +14,7 @@ productId=parameters.productId;
 custRequestId = parameters.custRequestId;
 custRequestDate = parameters.custRequestDate;
 partyId = parameters.partyId;
+fromPartyId=context.get("partyId");
 conditionList=[];
 if(UtilValidate.isNotEmpty(parameters.productId)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -23,6 +24,9 @@ if(UtilValidate.isNotEmpty(parameters.custRequestId)){
 }
 if(UtilValidate.isNotEmpty(partyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, partyId));
+}
+if(UtilValidate.isNotEmpty(fromPartyId)){
+	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, fromPartyId));
 }
 if(UtilValidate.isNotEmpty(custRequestDate)){
     def sdf = new SimpleDateFormat("yyyy-MM-dd");

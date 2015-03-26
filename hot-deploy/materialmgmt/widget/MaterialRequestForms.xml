@@ -33,6 +33,7 @@
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="orderBy" value="-custRequestDate"/>
+            <field-map field-name="inputFields.fromPartyId" value="${partyId}"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -540,6 +541,8 @@
         
     </form>
     <form name="SearchRequestsToApprove" type="single" target="SearchRequestsToApprove">
+     <actions>
+     </actions>
     	<field name="productId" title="Product">
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
