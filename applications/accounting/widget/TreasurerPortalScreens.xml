@@ -3604,9 +3604,15 @@
         </section>
     </screen>
     
-<screen name="FORM27APDF">
+      <screen name="FORM27APDF">
         <section>
-            
+            <actions>
+               <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
             <widgets>
                 <platform-specific>
                    <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/Form27A.fo.ftl"/></xsl-fo>
@@ -3616,7 +3622,12 @@
     </screen>
     <screen name="EmployeeAdvancesAndSubScheduleReport">
   	<section>
-  	<actions>
+  	    <actions>
+	     <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+		<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+		<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
      	<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/EmployeeAdvances.groovy"/>
   	</actions>
