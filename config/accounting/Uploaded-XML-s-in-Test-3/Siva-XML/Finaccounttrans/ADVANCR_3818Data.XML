@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <FinAccountTrans finAccountTransId="EMD_12762_1_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12762_1" partyId="12762" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="4000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12042_2_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12042_2" partyId="12042" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="3000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12042_1_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12042_1" partyId="12042" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="10000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12372_6_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12372_6" partyId="12372" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="2100" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12372_5_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12372_5" partyId="12372" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="2000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12372_4_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12372_4" partyId="12372" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="10000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12372_3_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12372_3" partyId="12372" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="17000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12372_2_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12372_2" partyId="12372" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="1500" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12372_1_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12372_1" partyId="12372" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="1500" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12763_1_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12763_1" partyId="12763" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="1000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+    <FinAccountTrans finAccountTransId="EMD_12000_1_TNS" finAccountTransTypeId="DEPOSIT" finAccountId="EMD_12000_1" partyId="12000" transactionDate="2014/09/30 00:00:00" entryDate="2014/09/30 00:00:00" amount="100000" statusId="FINACT_TRNS_APPROVED" comments=""/>
+</entity-engine-xml>
