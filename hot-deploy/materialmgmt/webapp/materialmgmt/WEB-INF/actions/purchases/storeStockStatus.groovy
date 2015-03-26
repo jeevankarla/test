@@ -51,8 +51,9 @@ prodMap=[:];
  exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
  exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
  condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
- productCatDetails = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
-
+// productCatDetails = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+ productCatDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, null, null, null, false));
+ 
  //productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);
 if(UtilValidate.isNotEmpty(productCatIds)){
