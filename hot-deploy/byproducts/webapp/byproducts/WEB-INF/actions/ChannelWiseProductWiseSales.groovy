@@ -127,19 +127,26 @@ if(UtilValidate.isNotEmpty(productIds)){
 				Debug.logError(e, module);
 				
 			}
+			    invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
 				// get category
 				if(UtilValidate.isEmpty(prodCatWiseMap[productCategoryId])){
 					tempMap = [:];
 					prodWiseMap = [:];
-					tempMap.put(roleType, quantity);
+					prodValMap = [:];
+					prodValMap["quantity"] = quantity;
+					prodValMap["amount"] = invTotalVal;
+					tempMap[roleType]=prodValMap;
 					prodWiseMap.put(productId, tempMap);
 					prodCatWiseMap[productCategoryId]=prodWiseMap;
 				 }else{
 					    categoryMap = [:];
 					    categoryMap.putAll(prodCatWiseMap.get(productCategoryId));
 						if(UtilValidate.isEmpty(categoryMap[productId])){
+						    prodValMap = [:];
+							prodValMap["quantity"] = quantity;
+							prodValMap["amount"] = invTotalVal;
 							catMap = [:]
-							catMap.put(roleType,quantity);
+							catMap[roleType]=prodValMap;
 							temp=FastMap.newInstance();
 							temp.putAll(catMap);
 							categoryMap[productId] = temp;
@@ -148,13 +155,20 @@ if(UtilValidate.isNotEmpty(productIds)){
 						    catMap = [:];
 							catMap.putAll(categoryMap.get(productId));
 							if(UtilValidate.isEmpty(catMap[roleType])){
-							  catMap[roleType]=quantity;
+							  tempMap = [:];
+							  tempMap["quantity"] = quantity;
+							  tempMap["amount"] = invTotalVal;
+							  catMap[roleType]=tempMap;
 						      categoryMap[productId] = catMap;
 						      temp=FastMap.newInstance();
 							  temp.putAll(categoryMap);
 						      prodCatWiseMap[productCategoryId]=temp;
 							}else{
-								catMap[roleType]+=quantity;
+							    tempMap = [:];
+							    tempMap.putAll(catMap.get(roleType));
+								tempMap["quantity"]+=quantity;
+								tempMap["amount"]+=invTotalVal;
+								catMap[roleType]=tempMap;
 							    categoryMap[productId] = catMap;
 							    temp=FastMap.newInstance();
 								temp.putAll(categoryMap);
@@ -167,7 +181,6 @@ if(UtilValidate.isNotEmpty(productIds)){
 		context.put("prodCatWiseMap",prodCatWiseMap);
 		context.put("roleTypeList",roleTypeList);
 		context.put("categoryType",parameters.categoryType);
-		
 	} catch (GenericEntityException e) {
 		Debug.logError(e, module);
 	}

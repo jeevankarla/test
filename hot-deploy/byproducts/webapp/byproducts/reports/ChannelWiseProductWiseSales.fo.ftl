@@ -97,6 +97,13 @@ under the License.
 		                     <#assign totRetailerQty=0>
 		                     <#assign totTradeQty=0>
 		                     <#assign totQty=0>
+
+		                     <#assign totUnitAmt=0> 
+		                     <#assign totUnionAmt=0> 
+		                     <#assign totRetailerAmt=0>
+		                     <#assign totTradeAmt=0>
+		                     <#assign totAmt=0>
+		                     
           					 <#assign productCatDetails = prodCatWiseMap.entrySet()>
 	                	     <#list productCatDetails as prodCat>
 	                	      <#assign unitQty=0> 
@@ -104,6 +111,12 @@ under the License.
 		                      <#assign retailerQty=0>
 		                      <#assign tradeQty=0>
 		                      <#assign subQty=0>
+		                      
+		                      <#assign unitAmt=0> 
+		                      <#assign unionAmt=0> 
+		                      <#assign retailerAmt=0>
+		                      <#assign tradeAmt=0>
+		                      <#assign subAmt=0>
 		                       <fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  text-align="left"   font-size="12pt" white-space-collapse="false" font-weight="bold">${prodCat.getKey()}</fo:block>  
@@ -118,36 +131,54 @@ under the License.
 			                      <#assign prodUnionQty=0> 
 			                      <#assign prodRetailerQty=0>
 			                      <#assign prodTradeQty=0>
+			                      
+			                      <#assign prodUnitAmt=0> 
+			                      <#assign prodUnionAmt=0> 
+			                      <#assign prodRetailerAmt=0>
+			                      <#assign prodTradeAmt=0>
 	                       		  <#assign qty=0>
+	                       		  <#assign amt=0>
 	                       		 <#assign product=delegator.findOne("Product",{"productId":prod.getKey()},true)>
 	                       		 <#if prod.getValue().get("UNITS")?has_content>
-			                       			<#assign prodUnitQty=prod.getValue().get("UNITS")> 
-			                       		    <#assign unitQty=unitQty+prod.getValue().get("UNITS")> 
+			                       			<#assign prodUnitQty=prod.getValue().get("UNITS").get("quantity")>
+			                       		    <#assign unitQty=unitQty+prod.getValue().get("UNITS").get("quantity")> 
+			                       		    <#assign prodUnitAmt=prod.getValue().get("UNITS").get("amount")> 
+			                       		    <#assign unitAmt=unitAmt+prod.getValue().get("UNITS").get("amount")> 
 		                       		   </#if>
 		                       		  <#if prod.getValue().get("UNION")?has_content>
-		                       		   <#assign prodUnionQty=prod.getValue().get("UNION")> 
-	                       		       <#assign unionQty=unionQty+prod.getValue().get("UNION")> 
+		                       		   <#assign prodUnionQty=prod.getValue().get("UNION").get("quantity")> 
+	                       		       <#assign unionQty=unionQty+prod.getValue().get("UNION").get("quantity")> 
+	                       		       <#assign prodUnionAmt=prod.getValue().get("UNION").get("amount")> 
+			                       	   <#assign unionAmt=unionAmt+prod.getValue().get("UNION").get("amount")> 
 	                       		     </#if>
 	                       		     
 	                       		     <#if prod.getValue().get("Retailer")?has_content>
-	                       		       <#assign prodRetailerQty=prod.getValue().get("Retailer")> 
-	                       		       <#assign retailerQty=retailerQty+prod.getValue().get("Retailer")> 
+	                       		       <#assign prodRetailerQty=prod.getValue().get("Retailer").get("quantity")> 
+	                       		       <#assign retailerQty=retailerQty+prod.getValue().get("Retailer").get("quantity")> 
+	                       		       <#assign prodRetailerAmt=prod.getValue().get("Retailer").get("amount")> 
+			                       	   <#assign retailerAmt=retailerAmt+prod.getValue().get("Retailer").get("amount")> 
 	                       		     </#if>
 	                       		     
 	                       		     <#if prod.getValue().get("TRADE_CUSTOMER")?has_content>
-	                       		        <#assign prodTradeQty=prod.getValue().get("TRADE_CUSTOMER")> 
-	                       		        <#assign tradeQty=tradeQty+prod.getValue().get("TRADE_CUSTOMER")> 
+	                       		        <#assign prodTradeQty=prod.getValue().get("TRADE_CUSTOMER").get("quantity")> 
+	                       		        <#assign tradeQty=tradeQty+prod.getValue().get("TRADE_CUSTOMER").get("quantity")>
+	                       		        <#assign prodTradeAmt=prod.getValue().get("TRADE_CUSTOMER").get("amount")> 
+	                       		        <#assign tradeAmt=tradeAmt+prod.getValue().get("TRADE_CUSTOMER").get("amount")>  
 	                       		     </#if>
-	                       		     <#assign  qty= qty+ prodTradeQty+prodRetailerQty+prodUnionQty+prodUnitQty>
+	                       		      <#assign  qty= qty+ prodTradeQty+prodRetailerQty+prodUnionQty+prodUnitQty>
 	                       		      <#assign  totQty= totQty+qty>
 	                       		      <#assign subQty=subQty+qty>
+	                       		      <#assign  amt= amt+ prodTradeAmt+prodRetailerAmt+prodUnionAmt+prodUnitAmt>
+	                       		      <#assign  totAmt= totAmt+amt>
+	                       		      <#assign subAmt=subAmt+amt>
+	                       		     
 		                       		 <fo:table-row>
 	                    				<fo:table-cell>
 		                            		<fo:block  text-align="left"   font-size="12pt" white-space-collapse="false" >${product.brandName}</fo:block>  
 		                       			</fo:table-cell>
 		                        	  <#list roleTypeList as roleType>
 		                       			<fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${(prod.getValue().get(roleType)?if_exists)}</fo:block>  
+		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if prod.getValue().get(roleType)?has_content>${prod.getValue().get(roleType).get("quantity")?string("#0.00")}/${prod.getValue().get(roleType).get("amount")?string("#0.00")}</#if></fo:block>  
 		                       			</fo:table-cell>
 		                       			</#list>
 		                       			<fo:table-cell>
@@ -167,27 +198,27 @@ under the License.
 	                       			<#list roleTypeList as roleType>
 	                       			<#if roleType == "UNITS">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if unitQty &gt; 0>${unitQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if unitQty &gt; 0>${unitQty?string("#0.00")}/${unitAmt?string("#0.00")}</#if></fo:block>  
 	                       			</fo:table-cell>
 	                       			</#if>
 	                       			<#if roleType == "UNION">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if unionQty &gt; 0>${unionQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if unionQty &gt; 0>${unionQty?string("#0.00")}/${unionAmt?string("#0.00")}</#if></fo:block>  
 	                       			</fo:table-cell>
 	                       			</#if>
 	                       			<#if roleType == "Retailer">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if retailerQty &gt; 0>${retailerQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if retailerQty &gt; 0>${retailerQty?string("#0.00")}/${retailerAmt?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
 	                       			 </#if>
 	                       			 <#if roleType == "TRADE_CUSTOMER">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if tradeQty &gt; 0>${tradeQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if tradeQty &gt; 0>${tradeQty?string("#0.00")}/${tradeAmt?string("#0.00")}</#if></fo:block>  
 	                       			 </fo:table-cell>
 	                       			  </#if>
 	                       			</#list>
 	                       			  <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if subQty &gt; 0>${subQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${subQty}</fo:block>  
 	                       			 </fo:table-cell>
 	                       		</fo:table-row>
 	                       		  <#assign totUnitQty=totUnitQty+unitQty> 
@@ -207,27 +238,27 @@ under the License.
 	                       			<#list roleTypeList as roleType>
 	                       			<#if roleType == "UNITS">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totUnitQty &gt; 0>${totUnitQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totUnitQty}</fo:block>  
 	                       			</fo:table-cell>
 	                       			</#if>
 	                       			<#if roleType == "UNION">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totUnionQty &gt; 0>${totUnionQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totUnionQty}</fo:block>  
 	                       			</fo:table-cell>
 	                       			 </#if>
 	                       			<#if roleType == "Retailer">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totRetailerQty &gt; 0>${totRetailerQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totRetailerQty}</fo:block>  
 	                       			 </fo:table-cell>
 	                       			 </#if>
 	                       			<#if roleType == "TRADE_CUSTOMER">
 	                       			 <fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totTradeQty &gt; 0>${totTradeQty?string("#0.00")}</#if></fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totTradeQty}</fo:block>  
 	                       			 </fo:table-cell>
 	                       			  </#if>
 	                       			  </#list>
 	                       			 <fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"><#if totQty &gt; 0>${totQty?string("#0.00")}</#if></fo:block>  
+		                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totQty}</fo:block>  
 		                       			</fo:table-cell>
 	                       		</fo:table-row>
 	                       		 <fo:table-row> 
