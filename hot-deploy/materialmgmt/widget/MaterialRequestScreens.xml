@@ -10,6 +10,7 @@
 			    <set field="tabButtonItem2" value="FindMaterialRequest"/> 
                 <set field="entityName" value="CustRequest"/>
                 <set field="parameters.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
+                <set field="parameters.flag" value="DEPT_HEADAPPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
@@ -215,6 +216,7 @@
                 <set field="tabButtonItem2" value="ApproveRequestsByDeptHead" />
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
                 <set field="entityName" value="CustRequestAndItemAndAttribute"/>
+                <set field="parameters.flag" value="DEPT_HEADAPPROVE"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
                 <!-- <entity-condition list="custRequestItemsList" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-list combine="and">
@@ -745,6 +747,7 @@
                 <set field="tabButtonItem2" value="RequestsReceiptAcknowledgement"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
+                <set field="parameters.flag" value="DEPT_HEADAPPROVE"/>
                 <!--  <entity-condition list="indentItems" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_ISSUED"/>
                 	<order-by field-name="fromPartyId"/>

@@ -16,9 +16,15 @@ dctx = dispatcher.getDispatchContext();
 statusIds = [];
 statusIds.add("CRQ_DRAFT");
 statusIds.add("CRQ_SUBMITTED");
+statusIds.add("CRQ_INPROCESS");
 parameters.statusId = statusIds;
 parameters.statusId_op = "in";
 
+
+if(UtilValidate.isNotEmpty(context.get("partyId"))){
+	parameters.partyId=context.get("partyId");
+	parameters.partyId_op="in";
+}
 /*
 shedId = parameters.shedId;
 if(UtilValidate.isEmpty(parameters.statusId)){
