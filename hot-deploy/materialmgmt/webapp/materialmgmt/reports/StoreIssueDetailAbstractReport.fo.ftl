@@ -34,12 +34,14 @@ under the License.
 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 <fo:block  keep-together="always" text-align="center" font-weight="bold" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
-<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 					            	
+<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
  <#if facilityId?has_content>
-		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">                                             ${facilityId?if_exists} ABSTRACT                                                  </fo:block>
+		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">     ${facilityId?if_exists} Issue Report(Category)<#if reportTypeFlag?has_content>-${reportTypeFlag?if_exists}   </#if>                                                                    </fo:block>
 	<#else>
-	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">                                              ABSTRACT                                                  </fo:block>
+	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">      STORES ISSUES REPORT(CATEGORY)<#if reportTypeFlag?has_content>-${reportTypeFlag?if_exists}   </#if>                                                </fo:block>
 </#if>
+<fo:block text-align="center" keep-together="always" >Period From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate?if_exists, "dd-MMM-yy")}	To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "dd-MMM-yy")}    </fo:block>
+
 <fo:block font-family="Courier,monospace">
 				                <fo:table>
                                    <fo:table-column column-width="70pt"/>

@@ -304,7 +304,7 @@
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
-        <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Send to QC" widget-style="buttontext">
+        <field name="SendtoQC" use-when="&quot;${primaryOrderId}&quot;!=&quot;&quot; &amp;&amp;(!shipmentReceiptSize.equals(&quot;0&quot;))"  title="Send to QC" widget-style="buttontext">
              <hyperlink  target-type="plain" description="Send to QC"  target="javascript:QCApprovalQTip('${shipmentId}');"></hyperlink>
         </field>
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">

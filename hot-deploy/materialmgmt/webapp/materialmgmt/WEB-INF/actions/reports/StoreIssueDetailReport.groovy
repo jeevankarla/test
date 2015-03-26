@@ -34,6 +34,7 @@ context.put("dctx",dctx);
 fromDate=parameters.storeFromDate;
 thruDate=parameters.storeThruDate;
 reportTypeFlag = parameters.reportTypeFlag;
+context.reportTypeFlag = reportTypeFlag;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -63,7 +64,6 @@ facilityId=parameters.issueToFacilityId;
 				facilities=delegator.findOne("Facility",["facilityId":facilityId],false);
 				context.facilityId=facilities.facilityName;
 			}
-
 if(UtilValidate.isNotEmpty(facilityId)){
 		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId )],EntityOperator.AND);
 		productFacilityList = delegator.findList("ProductFacility", ecl, UtilMisc.toSet("facilityId","productId"), null, null, false);

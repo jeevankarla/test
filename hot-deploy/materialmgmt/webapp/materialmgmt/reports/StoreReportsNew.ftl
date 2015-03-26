@@ -5,28 +5,32 @@
 	jQuery(formId).attr("action", action);	
 	jQuery(formId).submit();
     }
-    function makeDatePicker(fromDateId ,thruDateId){
-	$( "#"+fromDateId ).datepicker({
-			dateFormat:'MM d, yy',
-			changeMonth: true,
-			numberOfMonths: 1,
-			onSelect: function(selectedDate) {
-			date = $(this).datepicker('getDate');
-			var maxDate = new Date(date.getTime());
-	        	maxDate.setDate(maxDate.getDate() + 31);
-				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
-				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
-			}
+//one year restriction
+	function makeDatePicker(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		date = $(this).datepicker('getDate');
+		y = date.getFullYear(),
+		m = date.getMonth();
+		d = date.getDate();
+		    var maxDate = new Date(y+1, m, d);
+		
+		$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+		//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+		}
 		});
-	$( "#"+thruDateId ).datepicker({
-			dateFormat:'MM d, yy',
-			changeMonth: true,
-			numberOfMonths: 1,
-			onSelect: function( selectedDate ) {
-				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
-			}
+		$( "#"+thruDateId ).datepicker({
+	    dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function( selectedDate ) {
+		//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+		}
 		});
-	}
+	}	
 
 function makeDatePicker1(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
