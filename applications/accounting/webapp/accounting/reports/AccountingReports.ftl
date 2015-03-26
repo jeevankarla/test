@@ -301,8 +301,8 @@ function reportTypeChangeFunc() {
 		  <tr class="alternate-row">
 				<form id="BankReconciliationReports" name="BankReconciliationReports" method="post" action="<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>" target="_blank">	
 					<td width="30%"> Bank  Reconciliation  Report</td>
-					<td width="15%">From<input  type="text" size="18pt" id="FinacialFromDate" readonly  name="fromDate"/></td>
-				    <td width="15%">To<input  type="text" size="18pt" id="FinacialThruDate" readonly  name="thruDate"/></td>
+					<td width="15%"><#-- From<input  type="text" size="18pt" id="FinacialFromDate" readonly  name="fromDate"/> --></td>
+				    <td width="15%"><#--To<input  type="text" size="18pt" id="FinacialThruDate" readonly  name="thruDate"/> --></td>
 				    <td width="15%">Bank<select name='finAccountId' id ="finAccountId">	
 							<option value=""></option>								
 						<#list finAccounts as finAcunt> 	
