@@ -25,6 +25,7 @@ if(UtilValidate.isNotEmpty(parameters.custRequestId)){
 if(UtilValidate.isNotEmpty(partyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, partyId));
 }
+
 if(UtilValidate.isNotEmpty(fromPartyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, fromPartyId));
 }

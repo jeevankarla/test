@@ -2027,6 +2027,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
       }        
       return result;
 }
+  
   public static Map<String, Object> getDepartmentByUserLogin(DispatchContext dctx, Map context) {
 	  Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();

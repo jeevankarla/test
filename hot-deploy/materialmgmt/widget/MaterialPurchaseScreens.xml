@@ -168,7 +168,6 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            <set field="flag" value=""/>
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>
             </actions>
@@ -219,7 +218,6 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            <set field="flag" value=""/>
               <!--  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy"/> -->
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ShipmentPartyView.groovy"/>
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
@@ -270,7 +268,6 @@
                </entity-condition> -->
                 <set field="targetRequest" value="FindMaterialQCApproval"/>
                 <set field="targetRequestForAccept" value="acceptReceiptQtyByQC"/>
-                <set field="flag" value=""/>
       			<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
       			<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
