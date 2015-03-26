@@ -23,6 +23,7 @@
         
     <Enumeration enumId="DEPOT_SALES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="DepotSales Configurations"/>
     <TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="DEPOT_SALES" description="KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD."/>
+    <TenantConfiguration propertyName="reportSubHeaderLable" propertyValue="Y" propertyTypeEnumId="DEPOT_SALES" description="BANGALORE:560065"/>
  
    <Party partyId="MD" partyTypeId="PARTY_GROUP"/>
    <PartyGroup partyId="MD" groupName="MOTHER DAIRY"/>
@@ -37,5 +38,7 @@
   
    <InvoiceType createdStamp="2014-02-10 20:39:18.0" createdTxStamp="2014-02-10 20:39:18.0" description="Sales Invoice" hasTable="N" invoiceTypeId="SALES_INVOICE" lastUpdatedStamp="2015-03-12 16:03:03.0" lastUpdatedTxStamp="2015-03-12 16:03:03.0" parentTypeId="SALES_INVOICE" paymentTypeId="SALES_PAYIN"/>
    <ShipmentType createdStamp="2015-03-20 15:16:24.0" createdTxStamp="2015-03-20 15:16:24.0" description="Depot Shipment" hasTable="N" lastUpdatedStamp="2015-03-20 15:16:24.0" lastUpdatedTxStamp="2015-03-20 15:16:24.0" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="DEPOT_SHIPMENT"/>
+   
+   <ProductAttribute attrName="LEDGERFOLIONO" attrValue="123"  productId="HO_1"/> 
     
 </entity-engine-xml>

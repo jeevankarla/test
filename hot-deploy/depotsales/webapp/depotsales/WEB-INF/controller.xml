@@ -279,6 +279,15 @@
         <response name="success" type="view" value="FindPaymentNonRoute"/>
         <response name="error" type="view" value="FindPaymentNonRoute"/>
     </request-map>
+    <request-map uri="PartyFinancialHistoryWithDrCrDepot.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinancialHistoryWithDrCrDepotPDF"/>
+        <response name="error" type="view" value="PartyFinancialHistoryWithDrCrDepotPDF"/>
+    </request-map>
+    <request-map uri="stockPositionReportDepot.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="stockPositionReportDepotPDF"/>
+    </request-map>
      
      
     <!-- View Mappings -->
@@ -308,6 +317,8 @@
     <view-map name="DepotSalesReports" type="screen" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesReports"/>
     <view-map name="DepotSalesBookReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesBookReportPDF" content-type="application/pdf"/>
     <view-map name="DepotSalesBookAbstractReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesBookAbstractReportPDF" content-type="application/pdf"/>
+    <view-map name="PartyFinancialHistoryWithDrCrDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PartyFinancialHistoryWithDrCrDepotPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="stockPositionReportDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockPositionReportDepotPDF" content-type="application/pdf"/>
     
     
     
