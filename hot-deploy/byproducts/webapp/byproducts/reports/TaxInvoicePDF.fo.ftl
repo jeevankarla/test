@@ -40,6 +40,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         <#assign invoiceNo = invoiceDetail.get('invoiceNo')>
         <#assign invoiceItems = invoiceDetail.get('invoiceItems')>
         <#assign invoiceTaxItems = invoiceDetail.get('invoiceTaxItems')>
+        <#assign purposeTypeId="">
+        <#if invoice?has_content>
+        <#assign purposeTypeId=invoice.get("purposeTypeId")?if_exists >
+        </#if>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
 	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> MOTHER DAIRY, GKVK POST, YELAHANKA, BANGALORE 560 065</fo:block>
@@ -254,7 +258,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 				 	</fo:table-cell>
 				 	 <fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
-				 	     font-weight="bold" keep-together="always">Quantity(UOM)</fo:block>
+				 	     font-weight="bold" keep-together="always">Quantity<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(UOM)<#else><#-->(Kg/Ltr)--></#if></fo:block>
 				 	</fo:table-cell>
 				 	<fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
@@ -282,7 +286,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         						<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachItem.get('itemDescription')?if_exists}</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string("#0.00")}(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})</fo:block>
+        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string("#0.00")}<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})</#if> </fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
         						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${shipment.get('shipmentId')?if_exists}</fo:block>
