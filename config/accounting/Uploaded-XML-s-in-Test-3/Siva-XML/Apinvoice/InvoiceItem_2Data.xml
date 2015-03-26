@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <InvoiceItem invoiceId="OB_AP_01" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="8731260" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_02" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="109310167.1" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_03" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="36029574.98" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_04" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="47868579.55" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_05" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="29588286.52" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_06" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="49252020.15" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_07" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="687333.35" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+    <InvoiceItem invoiceId="OB_AP_08" invoiceItemSeqId="1" invoiceItemTypeId="MILKSTORE1" parentInvoiceId="PURCHASE_INVOICE" quantity="1" amount="5143661.66" description="OPENING BALANCE INVOICE" taxAuthorityPartyId="NULL"/>
+</entity-engine-xml>
