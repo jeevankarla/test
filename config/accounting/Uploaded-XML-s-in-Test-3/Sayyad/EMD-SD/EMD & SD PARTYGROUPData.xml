@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <PartyGroup partyId="Z_01" groupName="A P SHANMUGAM"/>
+    <PartyGroup partyId="Z_02" groupName="A S TRADERS AND FABRICATERS"/>
+    <PartyGroup partyId="Z_03" groupName="ABBANNA A"/>
+    <PartyGroup partyId="Z_04" groupName="ABBAS A A "/>
+    <PartyGroup partyId="Z_05" groupName="ABDUL GAFAR"/>
+    <PartyGroup partyId="Z_06" groupName="ACHAR SAIT"/>
+    <PartyGroup partyId="Z_07" groupName="AJAX ENGINGINEERING"/>
+    <PartyGroup partyId="Z_08" groupName="ALBEN J"/>
+    <PartyGroup partyId="Z_09" groupName="ANANDA RAO K V"/>
+    <PartyGroup partyId="Z_10" groupName="ANJANEYA"/>
+    <PartyGroup partyId="Z_11" groupName="ANNAMALI"/>
+    <PartyGroup partyId="Z_12" groupName="ANSAR PASHA"/>
+    <PartyGroup partyId="Z_13" groupName="ARMSTRONG ELECTRICALS"/>
+    <PartyGroup partyId="Z_14" groupName="AVANAPPA"/>
+    <PartyGroup partyId="Z_15" groupName="B A STEEL SYNDICATE"/>
+    <PartyGroup partyId="Z_16" groupName="B M STEEL TRDERS"/>
+    <PartyGroup partyId="Z_17" groupName="BABU K C"/>
+    <PartyGroup partyId="Z_55" groupName="BAHUBALI SWAMY"/>
+    <PartyGroup partyId="Z_18" groupName="BALAJI REFINERIES"/>
+    <PartyGroup partyId="Z_19" groupName="BALARAJ T S"/>
+    <PartyGroup partyId="Z_20" groupName="BARANAMMA"/>
+    <PartyGroup partyId="Z_21" groupName="BATRA ASSOCIATES"/>
+    <PartyGroup partyId="Z_22" groupName="BHARAT LUBRICANTS"/>
+    <PartyGroup partyId="Z_23" groupName="BHAVANI SHANKAR TRANSPORT"/>
+    <PartyGroup partyId="Z_24" groupName="BLENZOR INDIA"/>
+    <PartyGroup partyId="Z_25" groupName="BLU OZONE MONY TECH"/>
+    <PartyGroup partyId="Z_26" groupName="BROTHERS"/>
+    <PartyGroup partyId="Z_27" groupName="BVB WATER SUPPLY"/>
+    <PartyGroup partyId="Z_28" groupName="CARRIER REFRIGERATION"/>
+    <PartyGroup partyId="Z_29" groupName="CHAITANYA ELECTRICALS"/>
+    <PartyGroup partyId="Z_30" groupName="CHAMUNDESHWARI ELECTRICALS"/>
+    <PartyGroup partyId="Z_31" groupName="CHANDAN V"/>
+    <PartyGroup partyId="Z_32" groupName="CHANDRAHASA K K"/>
+    <PartyGroup partyId="Z_33" groupName="CHANDRANNA.R"/>
+    <PartyGroup partyId="Z_34" groupName="CHANNAYYA"/>
+    <PartyGroup partyId="Z_35" groupName="CHIKKAPPANNA"/>
+    <PartyGroup partyId="Z_36" groupName="CHILDREN HOSPITALS"/>
+    <PartyGroup partyId="Z_37" groupName="CITY LINKS"/>
+    <PartyGroup partyId="Z_38" groupName="CLAIMATIC INDIA"/>
+    <PartyGroup partyId="Z_39" groupName="COMFORTS MARKETING"/>
+    <PartyGroup partyId="Z_40" groupName="D G NAGARAJ"/>
+    <PartyGroup partyId="Z_41" groupName="DDE ORG SYSTEMS"/>
+    <PartyGroup partyId="Z_42" groupName="DELTA PRINT PACK"/>
+    <PartyGroup partyId="Z_43" groupName="DEVARAJA M"/>
+    <PartyGroup partyId="Z_44" groupName="DHK DEMOLISHER"/>
+    <PartyGroup partyId="Z_46" groupName="DMR CONSTRUCTIONS"/>
+    <PartyGroup partyId="Z_47" groupName="DORESWAMY RAJU C"/>
+    <PartyGroup partyId="Z_48" groupName="E.RUDRESH"/>
+    <PartyGroup partyId="Z_49" groupName="EDWIN"/>
+    <PartyGroup partyId="Z_50" groupName="EXOGAN CORPORATION"/>
+    <PartyGroup partyId="Z_51" groupName="F.M.TECHO FAB"/>
+    <PartyGroup partyId="Z_52" groupName="FATHIMA STEEL"/>
+    <PartyGroup partyId="Z_53" groupName="FODDERS LYOED CORPORATION"/>
+    <PartyGroup partyId="Z_54" groupName="FORBES MARSHAL AREAL LTD."/>
+    <PartyGroup partyId="Z_56" groupName="GANGADHAR S"/>
+    <PartyGroup partyId="Z_57" groupName="GEORGE TS"/>
+    <PartyGroup partyId="Z_58" groupName="GOPI &amp; SONS"/>
+    <PartyGroup partyId="Z_59" groupName="GOVINDARAJU"/>
+    <PartyGroup partyId="Z_60" groupName="GOVINDAREDDY"/>
+    <PartyGroup partyId="Z_61" groupName="GR CONSTRUCTIONS"/>
+    <PartyGroup partyId="Z_62" groupName="GROW MORE AGRI CLINIC"/>
+    <PartyGroup partyId="Z_63" groupName="GULAB JARAWALA"/>
+    <PartyGroup partyId="Z_64" groupName="GUNAMURTHI"/>
+    <PartyGroup partyId="Z_65" groupName="GUNNEGOWDA"/>
+    <PartyGroup partyId="Z_66" groupName="HAMMER TRADERS"/>
+    <PartyGroup partyId="Z_67" groupName="HANUMANTHAIAH"/>
+    <PartyGroup partyId="Z_68" groupName="HEGDE INDUSTRIES"/>
+    <PartyGroup partyId="Z_69" groupName="HEMANTH CHIGARI"/>
+    <PartyGroup partyId="Z_70" groupName="HLA CAN ADVANCE"/>
+    <PartyGroup partyId="Z_71" groupName="HYGIENE PRODUCTS"/>
+    <PartyGroup partyId="Z_72" groupName="IMRAN ENTERPRISES"/>
+    <PartyGroup partyId="Z_73" groupName="INAYATHULLA"/>
+    <PartyGroup partyId="Z_74" groupName="IQBAL"/>
+    <PartyGroup partyId="Z_75" groupName="IRSHAD AHAMMED"/>
+    <PartyGroup partyId="Z_76" groupName="J B MALI"/>
+    <PartyGroup partyId="Z_78" groupName="JAGANNATH SHETTY"/>
+    <PartyGroup partyId="Z_79" groupName="JAI KARNATAKA HINDULIDAVARA KSHEMABIRUDI SANGA"/>
+    <PartyGroup partyId="Z_80" groupName="JANARDAN.N"/>
+    <PartyGroup partyId="Z_81" groupName="JANARDHAN.S"/>
+    <PartyGroup partyId="Z_82" groupName="JAYALAKSHMI ELECTRICALS"/>
+    <PartyGroup partyId="Z_83" groupName="JAYARAMAIAH"/>
+    <PartyGroup partyId="Z_84" groupName="JOLY ICE CREEM"/>
+    <PartyGroup partyId="Z_85" groupName="K DEEPAK"/>
+    <PartyGroup partyId="Z_86" groupName="K SATHISH"/>
+    <PartyGroup partyId="Z_87" groupName="K SRINIVASA MURTHY"/>
+    <PartyGroup partyId="Z_88" groupName="K.B.MANJEGOWDA"/>
+    <PartyGroup partyId="Z_89" groupName="K.BOOPALAN"/>
+    <PartyGroup partyId="Z_90" groupName="K.DEEPAK"/>
+    <PartyGroup partyId="Z_91" groupName="K.NAGENDRA"/>
+    <PartyGroup partyId="Z_92" groupName="KAITHAN REFRIGERATION"/>
+    <PartyGroup partyId="Z_93" groupName="KALEEM"/>
+    <PartyGroup partyId="Z_94" groupName="KARIYAPPA.K.N"/>
+    <PartyGroup partyId="Z_95" groupName="KARNATAKA ELECTRICAL WORKS"/>
+    <PartyGroup partyId="Z_96" groupName="KAVITHA PRINTERS"/>
+    <PartyGroup partyId="Z_97" groupName="KAVYASHREE PLASTIC CO.,"/>
+    <PartyGroup partyId="Z_98" groupName="KEMPANNA.C"/>
+    <PartyGroup partyId="Z_99" groupName="KG BODE"/>
+    <PartyGroup partyId="Z_100" groupName="KHALEEL"/>
+    <PartyGroup partyId="Z_101" groupName="KHALEEL AHAMED"/>
+    <PartyGroup partyId="Z_102" groupName="KHALEELAHAMED SHARIFF"/>
+    <PartyGroup partyId="Z_103" groupName="KIRLOSKER PNEMATICS"/>
+    <PartyGroup partyId="Z_104" groupName="KRISHNARAJU.K.S"/>
+    <PartyGroup partyId="Z_105" groupName="KRONE MARSHAL LTD"/>
+    <PartyGroup partyId="Z_107" groupName="KUMAR.R"/>
+    <PartyGroup partyId="Z_108" groupName="LAKSHMI ELECTRICALS"/>
+    <PartyGroup partyId="Z_109" groupName="LAKSHMI VENKATESHWARA ENG"/>
+    <PartyGroup partyId="Z_110" groupName="LALITHA ELECTRICALS"/>
+    <PartyGroup partyId="Z_111" groupName="LATHA PLASTICS"/>
+    <PartyGroup partyId="Z_112" groupName="LEED ALLYOD PVT LTD."/>
+    <PartyGroup partyId="Z_113" groupName="LIGHTENING ELECTRICALS"/>
+    <PartyGroup partyId="Z_114" groupName="LINEAR SYSTEM INC"/>
+    <PartyGroup partyId="Z_115" groupName="M S RAJU"/>
+    <PartyGroup partyId="Z_116" groupName="M.M.TRADERS"/>
+    <PartyGroup partyId="Z_117" groupName="M.S.RAJU"/>
+    <PartyGroup partyId="Z_118" groupName="M.S.STAR SURPLUS"/>
+    <PartyGroup partyId="Z_119" groupName="M.VENKATESH"/>
+    <PartyGroup partyId="Z_120" groupName="M/S ARIES SCALES"/>
+    <PartyGroup partyId="Z_121" groupName="MAHADEVAIAH.R"/>
+    <PartyGroup partyId="Z_122" groupName="MAHALAKSHMI CHIKKIS"/>
+    <PartyGroup partyId="Z_123" groupName="MAINTENANCE OF AIR CONDITIONER"/>
+    <PartyGroup partyId="Z_124" groupName="MAJESHKUMAR"/>
+    <PartyGroup partyId="Z_125" groupName="MALAGANGADHAR M S"/>
+    <PartyGroup partyId="Z_126" groupName="MANAK MEWA"/>
+    <PartyGroup partyId="Z_127" groupName="MANIKAN.R"/>
+    <PartyGroup partyId="Z_128" groupName="MANJUNATH"/>
+    <PartyGroup partyId="Z_129" groupName="MANJUNATH.M B"/>
+    <PartyGroup partyId="Z_130" groupName="MANJUNATHA "/>
+    <PartyGroup partyId="Z_131" groupName="MANOJ CIVIL WORKS"/>
+    <PartyGroup partyId="Z_132" groupName="MANOR ENTERPRISES"/>
+    <PartyGroup partyId="Z_133" groupName="MARIYAPPA.A"/>
+    <PartyGroup partyId="Z_134" groupName="MARUDHAR MEWA"/>
+    <PartyGroup partyId="Z_135" groupName="MASTIYAVARA MUDRANAYALA"/>
+    <PartyGroup partyId="Z_136" groupName="MATESHWARA CHIKKI SWEETS"/>
+    <PartyGroup partyId="Z_137" groupName="MD. HASSAN"/>
+    <PartyGroup partyId="Z_138" groupName="MD.BASHIER"/>
+    <PartyGroup partyId="Z_139" groupName="MD.HAMEED"/>
+    <PartyGroup partyId="Z_140" groupName="MEERA MARKETING"/>
+    <PartyGroup partyId="Z_142" groupName="MOHAMAD ASHWAR"/>
+    <PartyGroup partyId="Z_143" groupName="MOHAN"/>
+    <PartyGroup partyId="Z_144" groupName="MOOKAMBIKA ENTERPRISES, B'LORE"/>
+    <PartyGroup partyId="Z_145" groupName="MUDDANNA"/>
+    <PartyGroup partyId="Z_146" groupName="MUDDAPPA ARADHYA"/>
+    <PartyGroup partyId="Z_147" groupName="MUNESHWARAPPA"/>
+    <PartyGroup partyId="Z_148" groupName="MUNIRAJU ELECTRICALS"/>
+    <PartyGroup partyId="Z_149" groupName="MUNIRAJU.M"/>
+    <PartyGroup partyId="Z_150" groupName="MUNIREDDY.M"/>
+    <PartyGroup partyId="Z_151" groupName="MURALI S-30"/>
+    <PartyGroup partyId="Z_152" groupName="MURUGESHAN.PA"/>
+    <PartyGroup partyId="Z_153" groupName="MURULIDHAR. K"/>
+    <PartyGroup partyId="Z_154" groupName="NAGANARASIMHA"/>
+    <PartyGroup partyId="Z_155" groupName="NAGARAJ S KOLOJI"/>
+    <PartyGroup partyId="Z_156" groupName="NAJUNDESHWARA TRANSPT"/>
+    <PartyGroup partyId="Z_157" groupName="NANAK CHAND AHUJA &amp; SONS"/>
+    <PartyGroup partyId="Z_158" groupName="NANDI ENTERPRISES"/>
+    <PartyGroup partyId="Z_159" groupName="NANDI PACKAGING PRODUCTS"/>
+    <PartyGroup partyId="Z_160" groupName="NANDINI BUILDERS"/>
+    <PartyGroup partyId="Z_161" groupName="NANJAPPA"/>
+    <PartyGroup partyId="Z_162" groupName="NANJAPPA.H"/>
+    <PartyGroup partyId="Z_163" groupName="NANJUDAIAH.S"/>
+    <PartyGroup partyId="Z_164" groupName="NARASIMHAMURTHY"/>
+    <PartyGroup partyId="Z_165" groupName="NARASIMHAMURTHY BR"/>
+    <PartyGroup partyId="Z_166" groupName="NARASIMHAMURTHY JN"/>
+    <PartyGroup partyId="Z_167" groupName="NARAYANAGOWDA KL"/>
+    <PartyGroup partyId="Z_168" groupName="NARAYANASWAMY"/>
+    <PartyGroup partyId="Z_169" groupName="NATARAJ P"/>
+    <PartyGroup partyId="Z_170" groupName="NAVEEN KUMAR"/>
+    <PartyGroup partyId="Z_171" groupName="NAYAZ AHAMMED"/>
+    <PartyGroup partyId="Z_172" groupName="NEVCO ENGINEERING PVT LTD"/>
+    <PartyGroup partyId="Z_173" groupName="NEW GEN SPECIALITY PLASTICS"/>
+    <PartyGroup partyId="Z_174" groupName="NIL KAMAL CRETERS &amp; BINS PVT LTD"/>
+    <PartyGroup partyId="Z_175" groupName="NIL KAMAL LTD"/>
+    <PartyGroup partyId="Z_176" groupName="NITIN CORPORATION"/>
+    <PartyGroup partyId="Z_177" groupName="OM INFOTECH"/>
+    <PartyGroup partyId="Z_179" groupName="P SURESH"/>
+    <PartyGroup partyId="Z_180" groupName="P SURESH "/>
+    <PartyGroup partyId="Z_181" groupName="P.SURESH"/>
+    <PartyGroup partyId="Z_182" groupName="P.VIJAYAKUMAR"/>
+    <PartyGroup partyId="Z_183" groupName="PACHYAPPA"/>
+    <PartyGroup partyId="Z_184" groupName="PADMANABHA"/>
+    <PartyGroup partyId="Z_185" groupName="PARAMESH"/>
+    <PartyGroup partyId="Z_186" groupName="PINTO DANIAL"/>
+    <PartyGroup partyId="Z_187" groupName="POOMANI M"/>
+    <PartyGroup partyId="Z_188" groupName="POWER FAB BANGALORE"/>
+    <PartyGroup partyId="Z_189" groupName="PRAKASH SHETTY"/>
+    <PartyGroup partyId="Z_190" groupName="PRAKASH SM"/>
+    <PartyGroup partyId="Z_191" groupName="PREMIER SALES RETREAD"/>
+    <PartyGroup partyId="Z_192" groupName="PREMIER SOLES"/>
+    <PartyGroup partyId="Z_193" groupName="PRIMIER SOLES RETREAD"/>
+    <PartyGroup partyId="Z_194" groupName="PUBLICITY PRODUCTS"/>
+    <PartyGroup partyId="Z_195" groupName="R M C PACKAGING SYATEM PVT LTD HYDERABAD AP"/>
+    <PartyGroup partyId="Z_196" groupName="R S JITENDRA "/>
+    <PartyGroup partyId="Z_197" groupName="R,RENUKESH"/>
+    <PartyGroup partyId="Z_198" groupName="R.RANGANATH"/>
+    <PartyGroup partyId="Z_199" groupName="RADHAMADHAV CORPORATION"/>
+    <PartyGroup partyId="Z_200" groupName="RAGHUMURTHY.M"/>
+    <PartyGroup partyId="Z_201" groupName="RAJ LOGISTICS"/>
+    <PartyGroup partyId="Z_202" groupName="RAJANNA.M"/>
+    <PartyGroup partyId="Z_203" groupName="RAJU HR"/>
+    <PartyGroup partyId="Z_204" groupName="RAJU.M.S"/>
+    <PartyGroup partyId="Z_205" groupName="RAKAMMA.B"/>
+    <PartyGroup partyId="Z_206" groupName="RAKSHA INDUSTRIES"/>
+    <PartyGroup partyId="Z_207" groupName="RAMACHANDRAN"/>
+    <PartyGroup partyId="Z_208" groupName="RAMASWAMYGOWDA"/>
+    <PartyGroup partyId="Z_209" groupName="RAMESH RAJU"/>
+    <PartyGroup partyId="Z_210" groupName="RAMESH.M"/>
+    <PartyGroup partyId="Z_211" groupName="RAMESH.P"/>
+    <PartyGroup partyId="Z_212" groupName="RAMESH.S"/>
+    <PartyGroup partyId="Z_213" groupName="RAMESH.T"/>
+    <PartyGroup partyId="Z_214" groupName="RAMESH.V."/>
+    <PartyGroup partyId="Z_215" groupName="RAMKY ENVIRO ENGG."/>
+    <PartyGroup partyId="Z_216" groupName="RAMU.S"/>
+    <PartyGroup partyId="Z_217" groupName="RAMULALA"/>
+    <PartyGroup partyId="Z_218" groupName="RAMYA ELECTRICALS"/>
+    <PartyGroup partyId="Z_219" groupName="RANGANATH.T"/>
+    <PartyGroup partyId="Z_220" groupName="RANGARAJA.P"/>
+    <PartyGroup partyId="Z_221" groupName="RANGASWAMY"/>
+    <PartyGroup partyId="Z_222" groupName="RAO ENTERPRISES"/>
+    <PartyGroup partyId="Z_223" groupName="RASHMI ENTERPISES"/>
+    <PartyGroup partyId="Z_224" groupName="RATNA POLY PACK P LTD."/>
+    <PartyGroup partyId="Z_225" groupName="RAVICHANDRA.N"/>
+    <PartyGroup partyId="Z_226" groupName="RAVIKUMAR"/>
+    <PartyGroup partyId="Z_227" groupName="REVANASIDDAIAH"/>
+    <PartyGroup partyId="Z_228" groupName="REVANNA.S"/>
+    <PartyGroup partyId="Z_229" groupName="RHSPL"/>
+    <PartyGroup partyId="Z_230" groupName="RIGICO PEST CONTROL DIVISION"/>
+    <PartyGroup partyId="Z_231" groupName="S.A.NAGARAJ"/>
+    <PartyGroup partyId="Z_232" groupName="S.CHINNASWAMY CHQ.NO.871786/22.3.04"/>
+    <PartyGroup partyId="Z_233" groupName="S.HARI"/>
+    <PartyGroup partyId="Z_234" groupName="S.M.SUDHA"/>
+    <PartyGroup partyId="Z_235" groupName="S.P. CHANDRA SHEKAR"/>
+    <PartyGroup partyId="Z_236" groupName="S.R.I TECHNOLOGIES"/>
+    <PartyGroup partyId="Z_237" groupName="S.R.MARKETING "/>
+    <PartyGroup partyId="Z_238" groupName="S.SADASHIVA"/>
+    <PartyGroup partyId="Z_239" groupName="SADASHIVA REDDY.T"/>
+    <PartyGroup partyId="Z_240" groupName="SAFNAL INTERNAL SYSTEMS"/>
+    <PartyGroup partyId="Z_241" groupName="SAIPRAKASH TPT"/>
+    <PartyGroup partyId="Z_242" groupName="SALEEM ANSARI"/>
+    <PartyGroup partyId="Z_243" groupName="SAMMI AHAMMED"/>
+    <PartyGroup partyId="Z_244" groupName="SAMS CRAINTERS FARMERS PVT LTD"/>
+    <PartyGroup partyId="Z_245" groupName="SANNTHAYAMMA.GM"/>
+    <PartyGroup partyId="Z_247" groupName="SARDAR KHAN.S"/>
+    <PartyGroup partyId="Z_248" groupName="SATHRICE CO"/>
+    <PartyGroup partyId="Y_53" groupName="SATHYANARAYANA TRADERS"/>
+    <PartyGroup partyId="Z_250" groupName="SATISH.P.R"/>
+    <PartyGroup partyId="Z_251" groupName="SHAKTI AUTO CRAFTS"/>
+    <PartyGroup partyId="Z_252" groupName="SHAMANNA K"/>
+    <PartyGroup partyId="Z_253" groupName="SHANMUGAM.T"/>
+    <PartyGroup partyId="Z_254" groupName="SHANTHARAJU.V"/>
+    <PartyGroup partyId="Z_255" groupName="SHARANAM ENTERPRISES"/>
+    <PartyGroup partyId="Z_256" groupName="SHARAVANA.B"/>
+    <PartyGroup partyId="Z_257" groupName="SHARIF JA "/>
+    <PartyGroup partyId="Z_258" groupName="SHIRAJ STEELS"/>
+    <PartyGroup partyId="Z_259" groupName="SHIVALINGAIAH DL"/>
+    <PartyGroup partyId="Z_260" groupName="SHIVARAJU.S"/>
+    <PartyGroup partyId="Z_261" groupName="SIDDALINGAPPA.N"/>
+    <PartyGroup partyId="Z_262" groupName="SIDDAPPA"/>
+    <PartyGroup partyId="Z_263" groupName="SREERAM INSTITUTION"/>
+    <PartyGroup partyId="Z_264" groupName="RAGHUMURTHY.M."/>
+    <PartyGroup partyId="Z_265" groupName="SURENDRAKUMAR. H.B."/>
+    <PartyGroup partyId="Z_266" groupName="SRIKANTH"/>
+    <PartyGroup partyId="Z_267" groupName="SRINIVAS HC"/>
+    <PartyGroup partyId="Z_268" groupName="SRINIVASA"/>
+    <PartyGroup partyId="Z_270" groupName="SRINIVASA.K"/>
+    <PartyGroup partyId="Z_271" groupName="SRINIVASAMURTHY BC"/>
+    <PartyGroup partyId="Z_269" groupName="SRINIVASA REDDY"/>
+    <PartyGroup partyId="Z_273" groupName="SRS TRAVELS"/>
+    <PartyGroup partyId="Z_274" groupName="SUDHAKAR.P"/>
+    <PartyGroup partyId="Z_275" groupName="SUNDARESHAN"/>
+    <PartyGroup partyId="Z_276" groupName="SUNIL"/>
+    <PartyGroup partyId="Z_277" groupName="SUNRISE TRADERS"/>
+    <PartyGroup partyId="Z_278" groupName="SUPREME INDUSTRIES"/>
+    <PartyGroup partyId="Z_279" groupName="SURENDRA.C"/>
+    <PartyGroup partyId="Z_280" groupName="SURESH RANGEGOWDA"/>
+    <PartyGroup partyId="Z_281" groupName="SURI INDUSTREIS"/>
+    <PartyGroup partyId="Z_282" groupName="SYED AHAMMED"/>
+    <PartyGroup partyId="Z_283" groupName="SYED ALI"/>
+    <PartyGroup partyId="Z_284" groupName="SYED GHOUSE"/>
+    <PartyGroup partyId="Z_285" groupName="SYED SADATH ULLA"/>
+    <PartyGroup partyId="Z_286" groupName="T &amp; T SALES"/>
+    <PartyGroup partyId="Z_287" groupName="T.NATARAJ"/>
+    <PartyGroup partyId="Z_288" groupName="T.VENKATESH"/>
+    <PartyGroup partyId="Z_289" groupName="TAHA ENTERPRISES"/>
+    <PartyGroup partyId="Z_290" groupName="TCPC PACKAGING LTD., "/>
+    <PartyGroup partyId="Z_291" groupName="TECHNOFOUR ELECTRRICALS PVT LTD., "/>
+    <PartyGroup partyId="Z_292" groupName="THAMAIAH"/>
+    <PartyGroup partyId="Z_293" groupName="THE MUSLIM B.S"/>
+    <PartyGroup partyId="Z_294" groupName="THIMMEGOWDA.T"/>
+    <PartyGroup partyId="Z_295" groupName="THIRUMALA GUNNY TRADERS"/>
+    <PartyGroup partyId="Z_296" groupName="TV DETECTIVE SERVICES"/>
+    <PartyGroup partyId="Z_297" groupName="TYCHE PERIPHERAL SYSTEM LTD."/>
+    <PartyGroup partyId="Z_298" groupName="URJA EQUIPEMENT PVT LTD., "/>
+    <PartyGroup partyId="Z_300" groupName="V.V.SYSTEMS &amp; POWER PANELS(p)LTD.,"/>
+    <PartyGroup partyId="Z_301" groupName="VAIBHAV PLASTO PRINTING &amp; PACKAGING PVT LTD"/>
+    <PartyGroup partyId="Z_302" groupName="VARSHA TRADERS"/>
+    <PartyGroup partyId="Z_303" groupName="VASANTH PLASTICS"/>
+    <PartyGroup partyId="Z_304" groupName="VENKATARAMA NAIDU"/>
+    <PartyGroup partyId="Z_305" groupName="VENKATESH"/>
+    <PartyGroup partyId="Z_306" groupName="VENKATESH BN"/>
+    <PartyGroup partyId="Z_307" groupName="VENKATESH KB"/>
+    <PartyGroup partyId="Z_308" groupName="VENKATESH MC"/>
+    <PartyGroup partyId="Z_309" groupName="VENKATESH.C"/>
+    <PartyGroup partyId="Z_310" groupName="VENKATESHAPPA"/>
+    <PartyGroup partyId="Z_311" groupName="VENKATESHWARA CASHEW"/>
+    <PartyGroup partyId="Z_312" groupName="VENKATESHWARA ENGG."/>
+    <PartyGroup partyId="Z_313" groupName="VENKOBARAO"/>
+    <PartyGroup partyId="Z_314" groupName="VENUGOPAL.R"/>
+    <PartyGroup partyId="Z_315" groupName="VENUGOPAL.T"/>
+    <PartyGroup partyId="Z_316" groupName="VIHWAS POWERTECH KOLAR KARNATAKA"/>
+    <PartyGroup partyId="Z_317" groupName="VIJAYALAKSHMI WOOD ENGG.WORKDS"/>
+    <PartyGroup partyId="Z_318" groupName="VIKAS CONSTRUCTIONS"/>
+    <PartyGroup partyId="Z_319" groupName="VISHWANATH"/>
+    <PartyGroup partyId="Z_320" groupName="VISHWANATH TR"/>
+    <PartyGroup partyId="Z_321" groupName="WESTERN AIR CONDITIONS"/>
+    <PartyGroup partyId="Z_322" groupName="WILLIAM ABRAHAM"/>
+    <PartyGroup partyId="Z_323" groupName="WILSON GARDEN"/>
+    <PartyGroup partyId="Z_324" groupName="Y V MUNIKRISHNAPPA"/>
+    <PartyGroup partyId="Z_325" groupName="YASHYA ENTERPISES"/>
+    <PartyGroup partyId="Z_326" groupName="ZENZEER INDIA LTD."/>
+    <PartyGroup partyId="Y_3015" groupName="MALI  J B"/>
+    <PartyGroup partyId="Y_4169" groupName="PADMAMMA CK"/>
+    <PartyGroup partyId="Y_4185" groupName="MICRO WORD COMPUTER"/>
+    <PartyGroup partyId="Y_4602" groupName="STATE AUTO ENGG WORKS"/>
+    <PartyGroup partyId="Y_7151" groupName="SKANDA TRADERS"/>
+    <PartyGroup partyId="Y_10103" groupName="OSIAN REMEDIES"/>
+    <PartyGroup partyId="Y_11204" groupName="MATESHWARI CHIKKI &amp; SWEETS"/>
+    <PartyGroup partyId="Y_12403" groupName="NANDI PACKAGING"/>
+    <PartyGroup partyId="Y_12654" groupName="WESTERN AIRCONDITION &amp; REFG."/>
+    <PartyGroup partyId="Y_12858" groupName="GULAB JARAWALA SIHOR"/>
+    <PartyGroup partyId="Y_12936" groupName="ASSET TECHNOLOGIES"/>
+    <PartyGroup partyId="Y_14099" groupName="GREAT WHITE TECHNOLOGIES"/>
+    <PartyGroup partyId="Y_14395" groupName="LINEAR SYSTEMS INC"/>
+    <PartyGroup partyId="Y_14630" groupName="SATYANARAYANA TRADERS"/>
+    <PartyGroup partyId="Y_15215" groupName="KAP CONES (P) LTD NEW DELHI"/>
+    <PartyGroup partyId="Y_10209" groupName="RADHA MADAV CORPORATION LTD"/>
+    <PartyGroup partyId="Y_10212" groupName="GANESH FOOD PRODUCTS"/>
+    <PartyGroup partyId="Y_10319" groupName="URJA EQUIPMENTS"/>
+    <PartyGroup partyId="Y_10393" groupName="DELTA PRINT PAC"/>
+    <PartyGroup partyId="Y_10462" groupName="PEST CONTROL INDIA"/>
+    <PartyGroup partyId="Y_10622" groupName="RAGHUMURTHY M"/>
+    <PartyGroup partyId="Y_10643" groupName="SARA ENGINEERING WORKS"/>
+    <PartyGroup partyId="Y_10984" groupName="UDAYA RETREDS"/>
+    <PartyGroup partyId="Y_11045" groupName="RATNA POLYPACK INDIA LTD"/>
+    <PartyGroup partyId="Y_12100" groupName="MYSORE TARPAULINS"/>
+    <PartyGroup partyId="Y_12118" groupName="SAGAR COMPUTERS"/>
+    <PartyGroup partyId="Y_12478" groupName="ADIT MICROSYS PVT LTD."/>
+    <PartyGroup partyId="Y_12722" groupName="ANAGHA ENGINEERING SYSTEMS"/>
+    <PartyGroup partyId="Y_12859" groupName="FLOCON INDIA"/>
+    <PartyGroup partyId="Y_14770" groupName="DTDC COURIER AND CARGO "/>
+    <PartyGroup partyId="Y_14821" groupName="SAFAL FLEXI BAND (p)LTD"/>
+    <PartyGroup partyId="Y_3035" groupName="BENSON AND COMPANY,"/>
+    <PartyGroup partyId="Y_8014" groupName="THE NATIONAL SMALL INDUSTRIES CORPORATION LTD."/>
+    <PartyGroup partyId="Y_01" groupName="ALPHA TECH AUTOMATION"/>
+    <PartyGroup partyId="Y_02" groupName="DDE ORG SYSTEMS LTD."/>
+    <PartyGroup partyId="Y_03" groupName="DISTRICT SUPPLY &amp; COOPERATIVE SOCEITY "/>
+    <PartyGroup partyId="Y_04" groupName="DR H S SHASHIDHAR KUMAR"/>
+    <PartyGroup partyId="Y_05" groupName="DUBEY CONSTRUCTION AND CONTRACTORS"/>
+    <PartyGroup partyId="Y_06" groupName="GANGARAJU"/>
+    <PartyGroup partyId="Y_07" groupName="GLOBAL MILAN"/>
+    <PartyGroup partyId="Y_08" groupName="H &amp; G TECHNO MARK"/>
+    <PartyGroup partyId="Y_09" groupName="H S SHASHIDHAR KUMAR"/>
+    <PartyGroup partyId="Y_10" groupName="HEGGADE INDUSTRIES"/>
+    <PartyGroup partyId="Y_11" groupName="HEMANTH ENTERPRISES"/>
+    <PartyGroup partyId="Y_12" groupName="IMPRA REFRIGERATION"/>
+    <PartyGroup partyId="Y_14" groupName="JERACOM LTD.,"/>
+    <PartyGroup partyId="Y_15" groupName="K G BODE"/>
+    <PartyGroup partyId="Y_16" groupName="KSDL"/>
+    <PartyGroup partyId="Y_17" groupName="KUMATHALLI ENGINEERING WORKS"/>
+    <PartyGroup partyId="Y_18" groupName="LCAPG"/>
+    <PartyGroup partyId="Y_19" groupName="LIPI INTERNATIONAL NAGPUR"/>
+    <PartyGroup partyId="Y_20" groupName="MANUJANARDAN"/>
+    <PartyGroup partyId="Y_21" groupName="PM OFF SET PRINTERS"/>
+    <PartyGroup partyId="Y_22" groupName="RELAINCE BOLTS AND NUTS"/>
+    <PartyGroup partyId="Y_24" groupName="SRIVATSAN"/>
+    <PartyGroup partyId="Y_25" groupName="TECHNO FOUR ELECTRONICS PVT LTD"/>
+    <PartyGroup partyId="Y_26" groupName="VEENU LADDERS"/>
+    <PartyGroup partyId="Y_27" groupName="VIJAYAKUMAR.B.G"/>
+    <PartyGroup partyId="Y_28" groupName="VISU POLY PRODUCTS(P) LTD"/>
+    <PartyGroup partyId="Y_30" groupName="ZENZEER INDIA"/>
+</entity-engine-xml>
