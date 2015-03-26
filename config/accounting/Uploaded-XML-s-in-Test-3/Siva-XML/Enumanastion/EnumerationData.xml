@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <Enumeration enumId="ADMIN_OUT" enumTypeId="ORDER_SALES_CHANNEL" description="Admin Expenses"/>
+    <Enumeration enumId="OBINVOICE_IN" enumTypeId="ORDER_SALES_CHANNEL" description="OB Invoice IN"/>
+    <Enumeration enumId="OBINVOICE_OUT" enumTypeId="ORDER_SALES_CHANNEL" description="OB Invoice Out"/>
+    <Enumeration enumId="MIS_INCOME_IN" enumTypeId="ORDER_SALES_CHANNEL" description="Miscellaneous Income"/>
+    <Enumeration enumId="COGS_OUT" enumTypeId="ORDER_SALES_CHANNEL" description="Manufacturing Expenses"/>
+    <Enumeration enumId="SALES_DIS_OUT" enumTypeId="ORDER_SALES_CHANNEL" description="Sales And Distribution Expenses"/>
+    <Enumeration enumId="STATUTORY_OUT" enumTypeId="ORDER_SALES_CHANNEL" description="Statutory Expenses"/>
+    <Enumeration enumId="MILK_OUT" enumTypeId="ORDER_SALES_CHANNEL" description="Purchases Milk"/>
+    <Enumeration enumId="SHOPEE_RENT" enumTypeId="ORDER_SALES_CHANNEL" description="Shopee Rent"/>
+    <Enumeration enumId="MATERIAL_PUR_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" description="Purchases Materials"/>
+</entity-engine-xml>
