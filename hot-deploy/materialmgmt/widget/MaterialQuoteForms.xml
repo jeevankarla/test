@@ -405,7 +405,7 @@
         	</hyperlink>
         </field>
         <field name="quoteId"><hidden value="${quoteId}"/></field>
-        <field name="quoteId"><hidden value="${custRequestId}"/></field>
+        <field name="custRequestId"><hidden value="${custRequestId}"/></field>
         <field name="statusId"> <hidden value="QTITM_REJECTED"/></field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}] "/></field>
         <field name="issueDate" title="Quote Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy&quot;)}" /></field>
