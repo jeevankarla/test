@@ -89,7 +89,7 @@
 						<platform-specific>
 							<xsl-fo>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/GenericPartyFinancialHistoryNewDepot.fo.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/DepotPartyFinancialHistory.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
