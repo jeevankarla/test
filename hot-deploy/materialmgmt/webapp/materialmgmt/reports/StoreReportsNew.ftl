@@ -193,7 +193,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									To   <input  type="text" size="18pt" id="storeAbstThruDate"   name="storeAbstThruDate"/>
 								 </span>
 							</td>
-							<td width="15%"><span class='h3'>							</span></td>
+							<td width="15%"><span class='h3'>ledgerFolioNos
+							    <select name="ledgerFolioNo" id="ledgerFolioNo">
+							        <option value=""></option>
+							        <#list  ledgerFolioList as ledgerFolioNos>
+							          <option value='${ledgerFolioNos?if_exists}'>${ledgerFolioNos?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
 							<td width="15%"><span class='h3'>Store
 							    <select name="issueToFacilityId" id="issueToFacilityId">
 							        <option value=""></option>
