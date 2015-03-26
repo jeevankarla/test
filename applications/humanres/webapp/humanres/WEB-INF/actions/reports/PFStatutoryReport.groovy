@@ -64,11 +64,17 @@ import in.vasista.vbiz.humanres.PayrollService;
 	}
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
-	periodBillingIdList = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
-	if(UtilValidate.isNotEmpty(daPeriodBillingIdList)){
-		periodBillingIdList.add(daPeriodBillingIdList);
+	periodBillingIdList1 = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
+	if(UtilValidate.isNotEmpty(periodBillingIdList1)){
+		periodBillingIdList1.each{ periodBillingId1 ->
+			periodBillingIdList.add(periodBillingId1);
+		}
 	}
-	
+	if(UtilValidate.isNotEmpty(daPeriodBillingIdList)){
+		daPeriodBillingIdList.each{ daPeriodBilling ->
+			periodBillingIdList.add(daPeriodBilling);
+		}
+	}
 	periodBillingId = periodBillingList.periodBillingId;
 	
 	emplInputMap = [:];
