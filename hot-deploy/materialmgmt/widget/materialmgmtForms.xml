@@ -229,7 +229,7 @@
     </form>
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders"
         odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="orderDate"><display/></field>
+        <field name="orderDate"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(orderDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>     
         <field name="orderId"><display/></field>
 <!--             <hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview" target-type="inter-app"> -->
 <!--                 <parameter param-name="orderId"/> -->
@@ -272,7 +272,7 @@
         <field name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
-        <field name="requirementStartDate"><display/></field>
+        <field name="requirementStartDate"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(requirementStartDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>   
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <!-- <field name="facilityQuantityOnHandTotal"><display/></field> -->
@@ -318,7 +318,7 @@
         <field name="supplierPrefOrderId">
             <display-entity entity-name="SupplierPrefOrder"/>
         </field>
-        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now" sort-field="true"><display/></field>
+        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now" sort-field="true"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(availableFromDate,&quot;dd-MM-yyyy HH:mm:ss&quot;)}" /></field>   
         <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="before-now" sort-field="true"><display/></field>
         <field name="quantityUomId"><display-entity entity-name="Uom" key-field-name="uomId"/></field>
         <!-- field name="supplierCommissionPerc"><display/></field-->
@@ -409,6 +409,31 @@
         <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
         
     </form>  
+    <form name="purchaseAccountSummeryNewCSV" type="list" list-name="FinalprchaseCategorySummeryCsvList" view-size="99999">
+        <field name="invoiceDate" title="Voucher Date"><display type="date-time"/></field>
+        <field name="productName" title="product Name"><display/></field>
+        <field name="vchrType" title="Voucher Type"><display/></field>
+        <field name="invoiceId" title="PDB RefNo"><display/></field>
+        <field name="crOrDbId" title="crOrDbId"><display/></field>
+        <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
+        
+    </form> 
+     <form name="purchaseAccountSummeryNewCSVDetailed" type="list" list-name="FinalprchaseCategorySummeryCsvList" view-size="99999">
+        <field name="invoiceDate" title="Voucher Date"><display type="date-time"/></field>
+        <field name="productName" title="party Name"><display/></field>
+        <field name="vchrType" title="Voucher Type"><display/></field>
+        <field name="invoiceId" title="PDB RefNo"><display/></field>
+        <field name="crOrDbId" title="crOrDbId"><display/></field>
+        <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
+        
+    </form> 
+     <form name="purchaseAccountSummeryNewCSVAll" type="list" list-name="FinalprchaseCategorySummeryCsvList" view-size="99999">
+        <field name="category" title="Category"><display/></field> 
+         <field name="dr" title="DR"><display/></field>
+         <field name="cr" title="CR"><display/></field> 
+         <field name="total" title="TOTAL"><display/></field>
+        
+    </form>   
      <form name="PurchaseAbstractReportForms" type="list" list-name="prodCatAnalysisList" view-size="99999">
         <field name="voucherCode" title="Voucher Code"><display/></field>
         <field name="analysisCode" title="Narration"><display/></field>

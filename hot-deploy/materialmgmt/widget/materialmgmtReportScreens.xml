@@ -208,6 +208,52 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="purchaseAccountSummeryNewCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="parameters.reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReportNew.groovy"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseAnalysisSummeryNew.groovy"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseAnalysisSummaryNewReportCsv.groovy"/>
+			</actions>
+			<widgets>
+			<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="" field="parameters.reportNameFlag" />
+					</and>
+					</condition>
+					<widgets>
+							<include-form name="purchaseAccountSummeryNewCSVAll" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="Detailed" field="parameters.reportNameFlag" />
+					</and>
+					</condition>
+					<widgets>
+							<include-form name="purchaseAccountSummeryNewCSVDetailed" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+				<section>
+				<condition>
+					<and>
+					  <if-compare operator="equals" value="ProductWise" field="parameters.reportNameFlag" />
+					</and>
+					</condition>
+					<widgets>
+							<include-form name="purchaseAccountSummeryNewCSV" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
     <screen name="PurchaseReportPDF">
 		<section>
 			<actions>
@@ -351,7 +397,6 @@
      				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> 
      				<set field="storeList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.purchase.MaterialHelperServices.getMaterialStores(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;storesList&quot;);}" type="List"/>	     				
      				<set field="screenFlag" value="NewReports"/>
-     				
      				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>     				
      			</actions>
                 <widgets>                
@@ -840,4 +885,27 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="ScrapDCandGatePassReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ScrapDCandGatePassReport.groovy"/>
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+						 	<xsl-fo>
+								<html-template
+								location="component://materialmgmt/webapp/materialmgmt/reports/ScrapDCandGatePassReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen> 
 </screens>

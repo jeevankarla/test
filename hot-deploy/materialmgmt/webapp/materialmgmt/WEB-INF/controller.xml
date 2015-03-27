@@ -928,6 +928,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="purchaseAccountSummeryNewPDF"/>
     </request-map>
+     <request-map uri="purchaseAccountSummeryNew.csv">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseAccountSummeryNewCSV"/>
+    </request-map>
     
     <request-map uri="stockPosition">
         <security https="true" auth="true"/>
@@ -1131,6 +1135,10 @@
      <request-map uri="pendingQuantityARC.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="pendingQuantityARCPDF"/>
+    </request-map>
+    <request-map uri="ScrapDCandGatePassReport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="ScrapDCandGatePassReportPDF"/>
     </request-map>
      <request-map uri="listofpendingPOs.pdf">
         <security https="true" auth="true"/>
@@ -1351,7 +1359,8 @@
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
-        <view-map name="purchaseAccountSummeryNewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryNewPDF" content-type="application/pdf"/>
+    <view-map name="purchaseAccountSummeryNewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryNewPDF" content-type="application/pdf"/>
+    <view-map name="purchaseAccountSummeryNewCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryNewCSV" content-type="text/csv" encoding="none"/>
     
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
        <view-map name="PurchaseTaxProductReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportCSV"  content-type="text/csv" encoding="none"/>
@@ -1393,6 +1402,8 @@
     <view-map name="extensionPurchaseOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#extensionPurchaseOrderPDF" content-type="application/pdf"/>
     <view-map name="stockPositionReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StockPositionReportPDF" content-type="application/pdf"/>
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
+    <view-map name="ScrapDCandGatePassReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ScrapDCandGatePassReportPDF" content-type="application/pdf"/>
+    
     
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
