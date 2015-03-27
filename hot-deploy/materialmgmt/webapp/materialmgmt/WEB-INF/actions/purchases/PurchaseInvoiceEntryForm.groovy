@@ -137,51 +137,6 @@ if(shipments){
 		
 		prodQty = [];
 		adjustmentTypes = [];
-		shipmentReceipts.each{ eachItem ->
-			
-			String productId = eachItem.productId;
-			qty = eachItem.quantityAccepted;
-			ordItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			orderItem = EntityUtil.getFirst(ordItem);
-			
-			vatAmt = BigDecimal.ZERO;
-			cstAmt = BigDecimal.ZERO;
-			if(orderItem.vatAmount){
-				vatAmt = (orderItem.vatAmount).divide((orderItem.quantity), purchaseTaxFinalDecimals, purchaseTaxRounding);
-				vatAmt = vatAmt.multiply(qty);
-			}
-			if(orderItem.cstAmount){
-				cstAmt = (orderItem.cstAmount).divide((orderItem.quantity), purchaseTaxFinalDecimals, purchaseTaxRounding);
-				cstAmt = cstAmt.multiply(qty);
-			}
-			prodValue = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-			totalBedPrice = eachItem.bedAmount+eachItem.bedcessAmount+eachItem.bedseccessAmount;
-			
-			totalBedPrice = 0;
-			
-			if(orderItem.bedAmount){
-				totalBedPrice += (orderItem.bedAmount)/(orderItem.quantity);
-			}
-			if(orderItem.bedcessAmount){
-				totalBedPrice += (orderItem.bedcessAmount)/(orderItem.quantity);
-			}
-			if(orderItem.bedseccessAmount){
-				totalBedPrice += (orderItem.bedseccessAmount)/(orderItem.quantity);
-			}
-			unitPrice = (orderItem.unitPrice)+totalBedPrice;
-			amount = unitPrice*qty;
-			JSONObject newObj = new JSONObject();
-			newObj.put("cProductId",eachItem.productId);
-			newObj.put("cProductName",prodValue.productName +" [ "+eachItem.productId+"]");
-			newObj.put("quantity",qty);
-			newObj.put("UPrice", unitPrice);
-			newObj.put("amount", amount);
-			newObj.put("VatPercent", orderItem.vatPercent);
-			newObj.put("VAT", vatAmt);
-			newObj.put("CSTPercent", orderItem.cstPercent);
-			newObj.put("CST", cstAmt);
-			invoiceItemsJSON.add(newObj);
-		}
 		
 		otherCharges = [];
 		orderAdjustments.each{ eachOdrAdj ->
@@ -238,6 +193,80 @@ if(shipments){
 				return ServiceUtil.returnError(errMsg);
 		}
 		Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
+		Debug.log("adjPerUnit #######################"+adjPerUnit);
+		shipmentReceipts.each{ eachItem ->
+			
+			String productId = eachItem.productId;
+			adjUnitAmtMap = [:];
+			if(adjPerUnit && adjPerUnit.get(productId)){
+				adjUnitAmtMap = adjPerUnit.get(productId);
+			}
+			deductAmt = 0;
+			addAmt = 0;
+			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_DISC")){
+				discAmt = adjUnitAmtMap.get("COGS_DISC");
+				deductAmt = deductAmt+discAmt;
+			}
+			
+			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_PCK_FWD")){
+				packFwdAmt = adjUnitAmtMap.get("COGS_DISC");
+				addAmt = addAmt+packFwdAmt;
+			}
+			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_INSURANCE")){
+				insuranceAmt = adjUnitAmtMap.get("COGS_INSURANCE");
+				addAmt = addAmt+insuranceAmt;
+			}
+			qty = eachItem.quantityAccepted;
+			ordItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			orderItem = EntityUtil.getFirst(ordItem);
+			
+			vatAmt = BigDecimal.ZERO;
+			cstAmt = BigDecimal.ZERO;
+			if(orderItem.vatAmount){
+				vatAmt = (orderItem.vatAmount).divide((orderItem.quantity), purchaseTaxFinalDecimals, purchaseTaxRounding);
+				vatAmt = vatAmt.multiply(qty);
+			}
+			if(orderItem.cstAmount){
+				cstAmt = (orderItem.cstAmount).divide((orderItem.quantity), purchaseTaxFinalDecimals, purchaseTaxRounding);
+				cstAmt = cstAmt.multiply(qty);
+			}
+			prodValue = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+			totalBedPrice = eachItem.bedAmount+eachItem.bedcessAmount+eachItem.bedseccessAmount;
+			
+			totalBedPrice = 0;
+			
+			if(orderItem.bedAmount){
+				totalBedPrice += (orderItem.bedAmount)/(orderItem.quantity);
+			}
+			if(orderItem.bedcessAmount){
+				totalBedPrice += (orderItem.bedcessAmount)/(orderItem.quantity);
+			}
+			if(orderItem.bedseccessAmount){
+				totalBedPrice += (orderItem.bedseccessAmount)/(orderItem.quantity);
+			}
+			
+			/*totalBedPrice = totalBedPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
+			deductAmt = deductAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+			addAmt = addAmt.setScale(2, BigDecimal.ROUND_HALF_UP);*/
+			
+			Debug.log("bed ################"+totalBedPrice);
+			Debug.log("deductAmt ################"+deductAmt);
+			Debug.log("addAmt ################"+addAmt);
+			unitPrice = (orderItem.unitPrice)+totalBedPrice-deductAmt+addAmt;
+			Debug.log("unitPrice ################"+unitPrice);
+			amount = unitPrice*qty;
+			JSONObject newObj = new JSONObject();
+			newObj.put("cProductId",eachItem.productId);
+			newObj.put("cProductName",prodValue.productName +" [ "+eachItem.productId+"]");
+			newObj.put("quantity",qty);
+			newObj.put("UPrice", unitPrice);
+			newObj.put("amount", amount);
+			newObj.put("VatPercent", orderItem.vatPercent);
+			newObj.put("VAT", vatAmt);
+			newObj.put("CSTPercent", orderItem.cstPercent);
+			newObj.put("CST", cstAmt);
+			invoiceItemsJSON.add(newObj);
+		}
 		
 		shipmentAttribute = delegator.findList("ShipmentAttribute", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
 		JSONArray adjustmentJSON = new JSONArray();
@@ -283,7 +312,10 @@ if(shipments){
 			JSONObject newObj = new JSONObject();
 			newObj.put("invoiceItemTypeId", adjTypeId);
 			newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
-			adjustmentJSON.add(newObj);
+			if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
+				adjustmentJSON.add(newObj);
+			}
+			
 			
 		}
 		
