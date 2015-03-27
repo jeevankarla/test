@@ -269,7 +269,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="storeStockDetails" name="storeStockDetails" mothed="post" action="<@ofbizUrl>storeStockDetails.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
-							<td width="20%"><span class='h3'>StoreStockStatus</span></td>
+							<td width="20%"><span class='h3'>Store Stock Status</span></td>
 							<td width="25%">
 							     <span class='h3'>
 									
