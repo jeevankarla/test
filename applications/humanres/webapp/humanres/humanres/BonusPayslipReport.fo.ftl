@@ -228,9 +228,16 @@
 				                            </fo:table-cell>
 				                            <#assign totBonus = totBonus + employeeMonthWiseDetails.getValue().get("bonus")>
 			                            </#list>
-			                            <fo:table-cell border-right-style = "solid">	
-			                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt" font-weight="bold">${totBonus?if_exists?string("#0.00")}&#160;&#160;</fo:block>
-			                            </fo:table-cell>
+			                            <#if emplBonusMap?has_content>
+			                            	<#assign emplBonusDetails = emplBonusMap.entrySet()>
+			                            	<#list emplBonusDetails as emplBonusVal>
+			                            		<#if emplBonusVal.getKey()==employeeValues.getKey()>
+						                            <fo:table-cell border-right-style = "solid">	
+						                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt" font-weight="bold">${emplBonusVal.getValue()?if_exists?string("#0.00")}&#160;&#160;</fo:block>
+						                            </fo:table-cell>
+						                       	</#if>
+						                  	</#list>
+						              	</#if>
 			                        </fo:table-row>
 			                        <fo:table-row border-bottom-style = "solid">
 		                     			<fo:table-cell border-right-style = "solid">	
@@ -255,24 +262,28 @@
 			                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt" font-weight="bold">&#160;<fo:inline text-decoration="underline">SUMMARY</fo:inline></fo:block>
 			                            </fo:table-cell>
 			                        </fo:table-row>
-			                        <fo:table-row>
-		                     			<fo:table-cell>	
-			                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;GROSS BONUS PAYABLE :  ${totBonus?if_exists?string("#0.00")}</fo:block>
-			                            </fo:table-cell>
-			                        </fo:table-row>
-			                        <fo:table-row >
-		                     			<fo:table-cell>	
-			                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;LESS DEDUCTIONS&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; :</fo:block>
-			                            </fo:table-cell>
-			                            <fo:table-cell>	
-			                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;Signature : </fo:block>
-			                            </fo:table-cell>
-			                        </fo:table-row>
-			                        <fo:table-row >
-		                     			<fo:table-cell>	
-			                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;NET BONUS PAYABLE&#160;&#160;&#160;&#160;&#160;&#160; : ${totBonus?if_exists?string("#0.00")}</fo:block>
-			                            </fo:table-cell>
-			                        </fo:table-row>
+	                            	<#list emplBonusDetails as emplBonusVal>
+	                            		<#if emplBonusVal.getKey()==employeeValues.getKey()>
+					                        <fo:table-row>
+				                     			<fo:table-cell>	
+					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;GROSS BONUS PAYABLE :  ${emplBonusVal.getValue()?if_exists?string("#0.00")}</fo:block>
+					                            </fo:table-cell>
+					                        </fo:table-row>
+					                        <fo:table-row >
+				                     			<fo:table-cell>	
+					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;LESS DEDUCTIONS&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; :</fo:block>
+					                            </fo:table-cell>
+					                            <fo:table-cell>	
+					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;Signature : </fo:block>
+					                            </fo:table-cell>
+					                        </fo:table-row>
+					                        <fo:table-row >
+				                     			<fo:table-cell>	
+					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;NET BONUS PAYABLE&#160;&#160;&#160;&#160;&#160;&#160; : ${emplBonusVal.getValue()?if_exists?string("#0.00")}</fo:block>
+					                            </fo:table-cell>
+					                        </fo:table-row>
+					                  	</#if>
+				                  	</#list>
 			                    </fo:table-body>
 	                     	</fo:table>
 	             		</fo:block>

@@ -40,7 +40,7 @@ if(UtilValidate.isNotEmpty(allCustomTimePeriodList)){
 
 
 bonusEmplList = [];
-
+bonusBillingId = "";
 List condList1 =[];
 condList1.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_BONUS"));
 condList1.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_BONUS"));
@@ -70,10 +70,11 @@ if(UtilValidate.isNotEmpty(parameters.employeeId)){
 	bonusEmplIdsList.addAll(bonusEmplList);
 }
 
-
+emplBonusMap = [:];
 employeeWiseMap = [:];
 if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 	bonusEmplIdsList.each{ employeeId->
+		totalBonus = 0;
 		monthWiseMap = [:];
 		finAccountCode = "";
 		List finAccConList=FastList.newInstance();
@@ -101,6 +102,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				bonus = 0;
 				monthlyBonusOfPayableDays = 0;
 				minimumBonus = 0;
+				newDAAmount = 0;
 				customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodKey] , false);
 				if(UtilValidate.isNotEmpty(customTimePeriod)){
 					Date monthDate = (Date)customTimePeriod.get("fromDate");
@@ -160,6 +162,43 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 							}
 						}
 					}
+					String rateTypeId = null;
+					Map activeEmployeeDetails = PayrollService.getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",monthDateStart,"timePeriodEnd" ,monthDateEnd ,"userLogin",userLogin));
+					if(UtilValidate.isNotEmpty(activeEmployeeDetails)){
+						String activeGeoId = (String)activeEmployeeDetails.get("geoId");
+						if(UtilValidate.isNotEmpty(activeGeoId)){
+							if(activeGeoId.equals("BAGALKOT")){
+								rateTypeId = "DA_BAGALKOT_RATE";
+							}
+							if(activeGeoId.equals("BELL")){
+								rateTypeId = "DA_BELL_RATE";
+							}
+							if(activeGeoId.equals("BGLR")){
+								rateTypeId = "DA_BGLR_RATE";
+							}
+							if(activeGeoId.equals("DRWD")){
+								rateTypeId = "DA_DRWD_RATE";
+							}
+							if(activeGeoId.equals("GULB")){
+								rateTypeId = "DA_GULB_RATE";
+							}
+						}
+					}
+					if(UtilValidate.isNotEmpty(rateTypeId)){
+						List rateAmountCondList = FastList.newInstance();
+						rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
+						rateAmountCondList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, monthDateStart));
+						rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthDateEnd)));
+						EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
+						List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("-fromDate"), null, false);
+						if(UtilValidate.isNotEmpty(rateAmountList)){
+							GenericValue rateAmountGen = EntityUtil.getFirst(rateAmountList);
+							rateAmount = (BigDecimal) rateAmountGen.get("rateAmount");
+							if(UtilValidate.isNotEmpty(rateAmount)){
+								newDAAmount = (rateAmount*basic);
+							  }
+						  }
+					 }
 					/*bonusPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_BONUS","billingTypeId","SP_BONUS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 					if(UtilValidate.isNotEmpty(bonusPeriodTotals)){
 						Iterator bonusPeriodTotalsIter = bonusPeriodTotals.entrySet().iterator();
@@ -176,7 +215,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 					}*/
 				}
 				totalValue = totalValue + basic;
-				totalValue = totalValue + dearnessAllowance;
+				totalValue = totalValue + newDAAmount;
 				totalValue = totalValue + specPay;
 				bonusValue = totalValue;
 				totalValue = totalValue + fixedPay;
@@ -193,11 +232,11 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				}else{
 					minimumBonus = monthlyBonusOfPayableDays;
 				}
+				totalBonus = totalBonus + minimumBonus;
 				minimumBonusVal = new BigDecimal(minimumBonus);
 				minimumBonusVal = minimumBonusVal.setScale(0, BigDecimal.ROUND_HALF_UP);
-				
 				monthlyDetailsMap.put("basic", basic);
-				monthlyDetailsMap.put("dearnessAllowance", dearnessAllowance);
+				monthlyDetailsMap.put("dearnessAllowance", newDAAmount);
 				monthlyDetailsMap.put("specPay", specPay);
 				monthlyDetailsMap.put("fixedPay", fixedPay);
 				monthlyDetailsMap.put("noOfPayableDays", noOfPayableDays);
@@ -212,8 +251,11 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 		if(UtilValidate.isNotEmpty(monthWiseMap)){
 			employeeWiseMap.put(employeeId, monthWiseMap);
 		}
+		totalBonusVal = new BigDecimal(totalBonus);
+		totalBonusVal = totalBonusVal.setScale(0, BigDecimal.ROUND_HALF_UP);
+		emplBonusMap.put(employeeId, totalBonusVal);
 	}
 }
 
 context.put("employeeWiseMap", employeeWiseMap);
-
+context.put("emplBonusMap", emplBonusMap);
