@@ -90,17 +90,52 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	  bookStock = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:effdayEnd,productId:productDetails.productId,facilityId:facilityId ]);
 	  Debug.log("bookStock==============================="+bookStock);
 	  productDetailMap["inventoryCount"]=bookStock.quantityOnHandTotal;*/
+	  openingQty=BigDecimal.ZERO;
+	  openingTotCost=BigDecimal.ZERO;
+	  closingQty=BigDecimal.ZERO;
 	  invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: productDetails.productId,effectiveDate:nextDayBegin, facilityId : facilityId ,ownerPartyId:"Company", userLogin: userLogin]);
 	  if(UtilValidate.isNotEmpty(invCountMap)){
 		   openingQty = invCountMap.get("inventoryCount");
-		   productDetailMap.put("openingQty", openingQty);
+		  
 		   openingTotCost=invCountMap.get("inventoryCost");
-		   productDetailMap.put("openingTotCost", openingTotCost);
+		   
 	  }
 	  if(UtilValidate.isNotEmpty(uomId)){
 		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
 	   productDetailMap["unit"]=unitDesciption.get("abbreviation");
 	  }
+	  
+	  qcQuantity = BigDecimal.ZERO;
+	  receivedQty = BigDecimal.ZERO;
+	  qcQtyValue= BigDecimal.ZERO;
+	  ecl = EntityCondition.makeCondition([
+		  EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productDetails.productId),
+		  EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("SR_RECEIVED","SR_QUALITYCHECK"))],
+		  EntityOperator.AND);
+		shipmentReceipts=delegator.findList("ShipmentReceipt",ecl,UtilMisc.toSet("statusId","quantityAccepted","quantityRejected","inventoryItemId"),null,null,false);
+		if(UtilValidate.isNotEmpty(shipmentReceipts)){
+			shipmentReceipts.each{receipt->
+				if((UtilValidate.isNotEmpty(receipt.statusId)) && (receipt.statusId == "SR_RECEIVED") && UtilValidate.isNotEmpty(receipt.quantityAccepted)){
+					receivedQty+=receipt.quantityAccepted;
+				}
+				if((UtilValidate.isNotEmpty(receipt.statusId)) && (receipt.statusId == "SR_QUALITYCHECK") && UtilValidate.isNotEmpty(receipt.quantityAccepted)){
+					qcQuantity+=receipt.quantityAccepted;
+					inventoryItem=delegator.findOne("InventoryItem",[inventoryItemId:receipt.inventoryItemId],false);
+					if(UtilValidate.isNotEmpty(inventoryItem)){
+						unitCost=BigDecimal.ZERO;
+						if(UtilValidate.isNotEmpty(inventoryItem.unitCost)){
+							unitCost=inventoryItem.unitCost;
+						}
+						qcQtyValue=qcQtyValue+(receipt.quantityAccepted*unitCost);
+					}
+				}
+			 }
+		}
+		closingQty=openingQty+qcQuantity;
+		openingTotCost=openingTotCost+qcQtyValue;
+		productDetailMap.put("closingQty", closingQty);
+		productDetailMap.put("openingQty", openingQty);
+		productDetailMap.put("openingTotCost", openingTotCost);
 	  prodList.addAll(productDetailMap);
 	  
 	  
