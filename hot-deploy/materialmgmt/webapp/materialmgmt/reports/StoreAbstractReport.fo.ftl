@@ -29,8 +29,8 @@ under the License.
 		</fo:layout-master-set>
 		<#if sortedMap?has_content>
        <fo:page-sequence master-reference="main">
-			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				
+		    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">	 				       		
+			   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>			
             </fo:static-content>
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
                 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
