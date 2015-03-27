@@ -83,7 +83,7 @@
             </hyperlink>
         </field>
         <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="(statusId.equals(&quot;REQ_CREATED&quot;) || statusId.equals(&quot;REQ_APPROVED&quot;)) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_REQ&quot;, session)))}">
-        	<hyperlink description="Cancel" target="rejectRequirement">
+        	<hyperlink description="Cancel" target="rejectRequirement" confirmation-message="Are you sure to Cancel Requirement..?">
                 <parameter param-name="requirementId"/>
                 <parameter param-name="statusId" value="REQ_REJECTED"/>
             </hyperlink>

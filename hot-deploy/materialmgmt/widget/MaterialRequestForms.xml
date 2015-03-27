@@ -260,7 +260,7 @@
         <field name="issuedByUserLoginId" title="Issued By"><display/></field>
         <!--  <field name="crqItemstatusId" title="crqItemstatusId-"><display/></field>  -->
         <field  use-when="&quot;${crqItemstatusId}&quot; != &quot;CRQ_COMPLETED&quot;" name="cancelIssue" widget-style="buttontext">
-            <hyperlink target="cancelIssuenceForCustRequest" description="CancelIssue">
+            <hyperlink target="cancelIssuenceForCustRequest" description="CancelIssue" confirmation-message="Are you sure to Cancel Issuance..?">
                 <parameter param-name="custRequestId"/>
                  <parameter param-name="custRequestItemSeqId"/>
                  <parameter param-name="itemIssuanceId"/>
@@ -356,7 +356,7 @@
             </hyperlink>
         </field>
        <field use-when="&quot;N&quot;.equals(&quot;${cancelFlag}&quot;)&amp;&amp;!(&quot;ENQ_CANCELLED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_ENQ&quot;, session)))}" name="cancel" widget-style="buttontext">
-            <hyperlink target="cancelEnquiryStatus" description="Cancel">
+            <hyperlink  target="cancelEnquiryStatus" description="Cancel" confirmation-message="Are you sure to Cancel Enquiry..?">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="ENQ_CANCELLED"/>
             </hyperlink>

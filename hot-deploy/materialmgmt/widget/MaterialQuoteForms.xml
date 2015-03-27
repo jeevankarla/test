@@ -78,7 +78,7 @@
             </hyperlink>
         </field>
         <field use-when="!((statusId.equals(&quot;QUO_ORDERED&quot;)) || (statusId.equals(&quot;QUO_REJECTED&quot;)))" name="cancelQuote" title="Cancel" widget-style="buttontext" >
-        	<hyperlink target="setQuoteStatus" description="Cancel">
+        	<hyperlink target="setQuoteStatus" description="Cancel" confirmation-message="Are you sure to Cancel Quote..?">
                  <parameter param-name="quoteId"/>
                  <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="QUO_REJECTED"/>
