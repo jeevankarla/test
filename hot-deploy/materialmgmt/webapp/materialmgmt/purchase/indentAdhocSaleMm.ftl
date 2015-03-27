@@ -382,7 +382,7 @@ $(document).ready(function(){
        		<#else>               
           		<td valign='middle'>
           		<@htmlTemplate.lookupField value="${partyId?if_exists}" formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-          		 <span class="tooltip">If input given then invoice will raise against this Party </span>
+          		 <span class="tooltip">Input party code and press Enter </span>
           		</td>
           	</#if>
     	<#else>
