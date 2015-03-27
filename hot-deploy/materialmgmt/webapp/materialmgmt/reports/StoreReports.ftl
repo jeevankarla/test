@@ -115,7 +115,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker("purchaseTaxProdFDate","purchaseTaxProdTDate");
 		makeDatePicker("purchaseSumFDate","purchaseSumTDate");
 				makeDatePicker("purchaseSumFDateNew","purchaseSumTDateNew");
-		
+		makeDatePicker("cwsFDate","cwsTDate");
+		makeDatePicker("purchaseVatFDate","purchaseVatTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -261,13 +262,66 @@ function reportTypeChangeFunc() {
                                                                        </select>
                                                                </td>
                                                                <td width="15%"></td>
-															<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseSummeryReportNew', '<@ofbizUrl>purchaseAccountSummeryNew.pdf</@ofbizUrl>');" class="buttontext"/>
-							   								 <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseSummeryReportNew', '<@ofbizUrl>purchaseAccountSummeryNew.csv</@ofbizUrl>');" class="buttontext"/></td>         			                                                       </form>
+                                                               <td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+                                                       </form>
 		                </tr>
 		                </#if>
-	  			
+	  			       <#if (security.hasEntityPermission("MMPURCHASEVAT", "_VIEW", session) )>
+		                 <tr class="alternate-row">
+							<form id="purchaseVatReport" name="purchaseVatReport" method="post" action="<@ofbizUrl>purchaseVatReport.pdf</@ofbizUrl>" target="_blank">        
+                               <td width="30%">Purchase Vat Report</td>
+                               <td width="15%">From<input  type="text" size="18pt" id="purchaseVatFDate" readonly  name="fromDate"/></td>
+                               <td width="15%">To<input  type="text" size="18pt" id="purchaseVatTDate" readonly  name="thruDate"/></td>
+                               <td width="15%">ReportType
+                                       <select name='reportTypeFlag' id = "reportTypeFlag">
+                                             <option value='ELIGIBLE'>Eligible</option>
+                                             <option value='INELIGIBLE'>Ineligible</option>
+                                       </select>
+                                </td>
+                                <td width="15%"></td>
+                                <td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+                           </form>
+		                </tr>
+		                </#if>
 				
 				
+				<tr class="alternate-row">
+						<form id="purchasechannelWiseSales" name="purchasechannelWiseSales" method="post" action="<@ofbizUrl>purchaseChannelWiseSales.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Purchase Channel Wise Sales Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="cwsFDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="cwsTDate" readonly  name="thruDate"/></td>
+						    <td width="15%">Product Type<select name='productType' id = "productType" >
+						        <option value="RAW_MATERIAL">Raw Material</option>
+				      			<option value="FINISHED_GOOD">Finished Goods</option>
+				      			</select>
+				      		</td>
+							<td width="15%">Product<@htmlTemplate.lookupField size="10" maxlength="22" formName="purchasechannelWiseSales" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+							 <td width="15%">Role Type<select name='roleType' id = "roleType" >
+		                	    <option value="All">All</option>
+		                	    <option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="UNION">Sale to Union</option>
+				      			<option value="VENDOR">Vendor</option>
+				      			<option value="SUPPLIER">Supplier</option>
+				      			<option value="TRADE_CUSTOMER">Trade Customer</option>  
+				      			
+				      			</select>
+				      		</td>
+							<tr><td width="75%"></td>
+							<td width="75%"></td>
+							<td width="75%"></td>
+							<td width="75%"></td>
+							<td width="15%">Category<select name="categoryType">${productCategoryTypeList}
+				      			 <#list productCategoryTypeList as productCategoryType>   
+		                  	    	<option value='${productCategoryType.productCategoryId}'>
+			                    		${productCategoryType.productCategoryId?if_exists}
+			                        </option>
+		                	     </#list>     
+			      			</select></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+							</tr>      			
+						
+						</form>
+				    </tr>
       			</table>
     		</div>
    	
