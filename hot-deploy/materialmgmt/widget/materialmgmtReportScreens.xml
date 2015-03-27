@@ -50,6 +50,11 @@
                     	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
                     </condition-list>                    
                 </entity-condition>
+                <entity-condition list="productCategoryTypeList" entity-name="ProductCategoryGlAccount" use-cache="true" filter-by-date="false">
+                 <condition-expr field-name="glAccountTypeId" operator="equals" value="PURCHASE_ACCOUNT" /> 
+                 <order-by field-name="productCategoryId" /> 
+               </entity-condition>
+                
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
               <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
@@ -839,27 +844,50 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="ScrapDCandGatePassReportPDF">
-		<section>
-			<actions>
-				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ScrapDCandGatePassReport.groovy"/>
-			</actions>
-			<widgets>
-				<section>
-					<widgets>
-						<platform-specific>
-						 	<xsl-fo>
-								<html-template
-								location="component://materialmgmt/webapp/materialmgmt/reports/ScrapDCandGatePassReport.fo.ftl" />
-							</xsl-fo>
-						</platform-specific>
-					</widgets>
-				</section>
-			</widgets>
-		</section>
-	</screen> 
+	<screen name="PurchaseChannelWiseSalesPDF">
+	 <section>
+		 <actions>
+			 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" /> 
+			 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" /> 
+			 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" /> 
+			 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" /> 
+			 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseChannelWiseSales.groovy" /> 
+		</actions>
+		 <widgets>
+			 <section>
+				 <widgets>
+					 <platform-specific>
+						 <xsl-fo>
+						     <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseChannelWiseSales.fo.ftl" /> 
+						  </xsl-fo>
+					  </platform-specific>
+				  </widgets>
+			  </section>
+		  </widgets>
+	  </section>
+  </screen>
+  <screen name="purchaseVatReportPDF">
+	 <section>
+	      <actions>
+			  <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <set field="reportTypeFlag" from-field="parameters.reportTypeFlag" /> 
+			  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseVatReport.groovy" /> 
+	    </actions>
+	    <widgets>
+		 <section>
+			 <widgets>
+				 <platform-specific>
+					 <xsl-fo>
+					    <html-template location="component://materialmgmt/webapp/materialmgmt/reports/PurchaseVatReport.fo.ftl" /> 
+					  </xsl-fo>
+				  </platform-specific>
+			  </widgets>
+		  </section>
+	   </widgets>
+	  </section>
+  </screen>
+  
 </screens>
