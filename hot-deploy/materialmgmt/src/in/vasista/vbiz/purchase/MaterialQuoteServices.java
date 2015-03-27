@@ -1462,27 +1462,29 @@ public class MaterialQuoteServices {
 		  		   if (paramMap.containsKey("statusId" + thisSuffix)) {
 		  			statusId = (String) paramMap.get("statusId"+thisSuffix);
 		  		  }
-		  		try{
-					Map evaluationMap = FastMap.newInstance();
-					evaluationMap.put("quoteId", quoteId);
-					evaluationMap.put("quoteItemSeqId", quoteItemSeqId);
-					evaluationMap.put("custRequestId", custRequestId);
-					evaluationMap.put("statusId", statusId);
-					evaluationMap.put("comments", comments);
-					evaluationMap.put("userLogin", userLogin);
-					evaluationMap.put("locale", locale);
-					resultCtx = dispatcher.runSync("changeQuoteItemStatus", evaluationMap);
-					custRequestId = (String)resultCtx.get("custRequestId");
-					if (ServiceUtil.isError(resultCtx)) {
-						Debug.logError("Evaluation Failed for Quote: " + quoteId+":"+quoteItemSeqId, module);
-						return "error";
-						}
-					} catch (Exception e) {
-						// TODO: handle exception
-						Debug.logError(e, module);
-						request.setAttribute("_ERROR_MESSAGE_", " Quote Evaluation Failed ");
-			  			return "error";
-					}
+			  		if(UtilValidate.isNotEmpty(quoteId)){
+				  		try{
+							Map evaluationMap = FastMap.newInstance();
+							evaluationMap.put("quoteId", quoteId);
+							evaluationMap.put("quoteItemSeqId", quoteItemSeqId);
+							evaluationMap.put("custRequestId", custRequestId);
+							evaluationMap.put("statusId", statusId);
+							evaluationMap.put("comments", comments);
+							evaluationMap.put("userLogin", userLogin);
+							evaluationMap.put("locale", locale);
+							resultCtx = dispatcher.runSync("changeQuoteItemStatus", evaluationMap);
+							custRequestId = (String)resultCtx.get("custRequestId");
+							if (ServiceUtil.isError(resultCtx)) {
+								Debug.logError("Evaluation Failed for Quote: " + quoteId+":"+quoteItemSeqId, module);
+								return "error";
+								}
+							} catch (Exception e) {
+								// TODO: handle exception
+								Debug.logError(e, module);
+								request.setAttribute("_ERROR_MESSAGE_", " Quote Evaluation Failed ");
+					  			return "error";
+							}
+			  		 }
 			  	}
 		         request.setAttribute("_EVENT_MESSAGE_", "Quote Status Updated  successfully");
 		         request.setAttribute("custRequestId", custRequestId);

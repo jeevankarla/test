@@ -1335,6 +1335,15 @@
        <response name="success" type="view" value="RequestsReceiptAcknowledgement"/>
        <response name="error" type="view" value="RequestsReceiptAcknowledgement"/>
      </request-map>
+     <request-map uri="purchaseChannelWiseSales.pdf">
+	  <security https="true" auth="true" /> 
+	  <response name="success" type="view" value="PurchaseChannelWiseSalesPDF" /> 
+    </request-map>
+     <request-map uri="purchaseVatReport.pdf">
+		<security https="true" auth="true" /> 
+	 <response name="success" type="view" value="purchaseVatReportPDF" /> 
+  </request-map>
+     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
@@ -1456,5 +1465,8 @@
     <view-map name="createNewVendor" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#createNewVendor"/>
     <view-map name="viewprofile" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#viewprofile"/>
 	<view-map name="editcontactmech" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#editcontactmech"/>
+   
+    <view-map name="PurchaseChannelWiseSalesPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseChannelWiseSalesPDF" content-type="application/pdf" /> 
+	<view-map name="purchaseVatReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatReportPDF" content-type="application/pdf" /> 
 	
 </site-conf>
