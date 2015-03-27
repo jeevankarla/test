@@ -371,6 +371,20 @@ $(document).ready(function(){
           			 <span class="tooltip">Input party code and press Enter</span>
           		</td>
           	</#if>
+        <#elseif changeFlag?exists && changeFlag=='FgsSales' >  	
+			<#if party?exists && party?has_content>  
+	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>
+               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          		<@htmlTemplate.lookupField value="${partyId?if_exists}" formName="indententryinit" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+          		 <span class="tooltip">If input given then invoice will raise against this Party </span>
+          		</td>
+          	</#if>
     	<#else>
 		 	<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  

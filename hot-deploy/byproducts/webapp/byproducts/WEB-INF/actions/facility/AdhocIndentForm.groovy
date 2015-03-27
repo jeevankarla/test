@@ -90,13 +90,15 @@ if(changeFlag != "AdhocSaleNew"){
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
 	roleTypeId = parameters.roleTypeId;
 	partyRole = null;
-	if(party){
-		partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
-	}
-	if(!party || !partyRole){
-		context.errorMessage = partyId+" incorrect for the transaction !!";
-		displayGrid = false;
-		return result;
+	if(changeFlag != "FgsSales"){//for StoreSales no need disable grid
+		if(party){
+			partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+		}
+		if(!party || !partyRole){
+			context.errorMessage = partyId+" incorrect for the transaction !!";
+			displayGrid = false;
+			return result;
+		}
 	}
 	Debug.log("==productCatageoryId==="+productCatageoryId);
 	if(UtilValidate.isEmpty(productCatageoryId)){
