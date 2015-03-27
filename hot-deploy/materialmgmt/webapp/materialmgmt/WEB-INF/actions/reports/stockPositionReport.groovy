@@ -43,6 +43,8 @@ rounding = RoundingMode.HALF_UP;
   
 fromDate = parameters.fromDate;
 ledgerFolioNo=parameters.ledgerFolioNo;
+facilityId=parameters.issueToFacilityId;
+context.facilityId=facilityId;
 totalQuantity = 0;
 totalRevenue = 0;
 dctx = dispatcher.getDispatchContext();
@@ -70,7 +72,9 @@ dctx = dispatcher.getDispatchContext();
  if(UtilValidate.isNotEmpty(prodIds)){	 
 
  List conditionList = [];
- conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, UtilMisc.toList("STORE","ICP_STORE")));
+ if(UtilValidate.isNotEmpty(facilityId)){
+	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
+ }
  conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIds));
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
  productFacilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
@@ -78,7 +82,7 @@ dctx = dispatcher.getDispatchContext();
    }
  }else{ 
  List conditionList = [];
- conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, UtilMisc.toList("STORE","ICP_STORE")));
+ conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
  productFacilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
    }   

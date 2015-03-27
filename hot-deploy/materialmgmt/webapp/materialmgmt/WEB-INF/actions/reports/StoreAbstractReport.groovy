@@ -62,7 +62,9 @@ if(UtilValidate.isNotEmpty(ledgerFolioNo)){
 	if(UtilValidate.isNotEmpty(ProductAttributeId)){
 		List prodIds= EntityUtil.getFieldListFromEntityList(ProductAttributeId, "productId", true);
 		if(UtilValidate.isNotEmpty(prodIds)){	
-			conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
+			if(UtilValidate.isNotEmpty(facilityId)){
+			     conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
+			}
 			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,prodIds));
 			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			productDetails = delegator.findList("ProductFacility", condition, null, null, null, false);
