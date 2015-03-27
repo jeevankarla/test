@@ -711,8 +711,9 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
-				<!--  <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" /> -->
+                <set field="parameters.roleTypeId" value="SUPPLIER"/>
+			   <set field="subDivDeptFlag" value="FGSProductSaleMm"/> 	
+			    <!--  <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" /> -->
 				<!--  <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FGS_SALE_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
 				<set field="prodCatalogIdResult" value="${groovy:org.ofbiz.product.catalog.CatalogWorker.getStoreCatalogs(delegator,productStoreId)}" />
