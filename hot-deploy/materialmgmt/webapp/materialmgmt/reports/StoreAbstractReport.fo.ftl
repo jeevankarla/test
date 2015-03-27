@@ -39,27 +39,26 @@ under the License.
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				<fo:block text-align="center" keep-together="always"  >&#160;------------------------------------------------------------------------------------------</fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
-				<fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >&#160;   ABSTRACT OF THE STORE RECEIPT-ISSUE BETWEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
+				<fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >&#160;   ABSTRACT OF THE STORE RECEIPT-ISSUE BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 			    <fo:block text-align="left" white-space-collapse="false">&#160;&#160;LEDGER FOLIO NO.:<#if ledgerFolioNo?has_content>${ledgerFolioNo}<#else></#if>                                                                                   STORE: ${facilityId?if_exists}</fo:block>                
 			    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				
                 <fo:block>
                    <fo:table border-style="solid">
-                       <fo:table-column column-width="30pt"/>                      
+                       <fo:table-column column-width="20pt"/>                      
 					   <fo:table-column column-width="50pt"/>
-					   <fo:table-column column-width="100pt"/>
+					   <fo:table-column column-width="120pt"/>
 					   <fo:table-column column-width="30pt"/>
+					   <fo:table-column column-width="180pt"/>
 					   <fo:table-column column-width="150pt"/>
+					   <fo:table-column column-width="200pt"/>
 					   <fo:table-column column-width="130pt"/>
 					   <fo:table-column column-width="170pt"/>
-					   <fo:table-column column-width="110pt"/>
-					   <fo:table-column column-width="150pt"/>
-					   <fo:table-column column-width="110pt"/>
 					   <fo:table-body> 
 					       <fo:table-row height="30pt">
 					           <fo:table-cell border-style="solid">
-					                     <fo:block text-align="center" padding-before="0.6cm" font-weight="bold" >SI NO</fo:block>
+					                     <fo:block text-align="center" padding-before="0.6cm" font-weight="bold" >NO</fo:block>
 					           </fo:table-cell>
 					           <fo:table-cell border-style="solid">
 					                     <fo:block text-align="center" padding-before="0.6cm" font-weight="bold" >ITEM CODE</fo:block>
@@ -73,8 +72,8 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					                     <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="75pt"/>
-											   <fo:table-column column-width="75pt"/>
+											   <fo:table-column column-width="90pt"/>
+											   <fo:table-column column-width="90pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -96,8 +95,8 @@ under the License.
                                <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="65pt"/>
-											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="75pt"/>
+											   <fo:table-column column-width="75pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -119,8 +118,8 @@ under the License.
 					          <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="85pt"/>
-											   <fo:table-column column-width="85pt"/>
+											   <fo:table-column column-width="100pt"/>
+											   <fo:table-column column-width="100pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -142,8 +141,8 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="55pt"/>
-											   <fo:table-column column-width="55pt"/>
+											   <fo:table-column column-width="65pt"/>
+											   <fo:table-column column-width="65pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -165,8 +164,8 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					                     <fo:block>
 						                   <fo:table border-style="solid">
-											   <fo:table-column column-width="75pt"/>
-											   <fo:table-column column-width="75pt"/>
+											   <fo:table-column column-width="85pt"/>
+											   <fo:table-column column-width="85pt"/>
 											   <fo:table-body> 
 											      <fo:table-row height="25pt">
 											           <fo:table-cell border-style="solid" number-columns-spanned="2">
@@ -185,7 +184,7 @@ under the License.
 											    </fo:table>
 										 </fo:block> 
 					           </fo:table-cell>
-                               <fo:table-cell border-style="solid">
+                            <#--   <fo:table-cell border-style="solid">
 					                      <fo:block>
 						                   <fo:table border-style="solid">
 											   <fo:table-column column-width="55pt"/>
@@ -208,7 +207,7 @@ under the License.
 											    </fo:table>
 										 </fo:block> 
 					           </fo:table-cell>
-					      <#--<fo:table-cell border-style="solid">
+					      <fo:table-cell border-style="solid">
 					                     <fo:block text-align="center"  font-weight="bold" padding-before="0.6cm">REMARKS</fo:block>
 					           </fo:table-cell> -->
 					       </fo:table-row>
@@ -217,22 +216,20 @@ under the License.
 			   </fo:block> 
 			   <fo:block>
                    <fo:table border-style="solid">
-                       <fo:table-column column-width="30pt"/>
+                       <fo:table-column column-width="20pt"/>
 					   <fo:table-column column-width="50pt"/>
-					   <fo:table-column column-width="100pt"/>
+					   <fo:table-column column-width="120pt"/>
 					   <fo:table-column column-width="30pt"/>
+					   <fo:table-column column-width="90pt"/>
+					   <fo:table-column column-width="90pt"/>					   
 					   <fo:table-column column-width="75pt"/>
-					   <fo:table-column column-width="75pt"/>					   
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="100pt"/>
+					   <fo:table-column column-width="100pt"/>
 					   <fo:table-column column-width="65pt"/>
 					   <fo:table-column column-width="65pt"/>
-					   <fo:table-column column-width="85pt"/>
-					   <fo:table-column column-width="85pt"/>
-					   <fo:table-column column-width="55pt"/>
-					   <fo:table-column column-width="55pt"/>
-                       <fo:table-column column-width="75pt"/>
-                       <fo:table-column column-width="75pt"/>
-                       <fo:table-column column-width="55pt"/>
-                       <fo:table-column column-width="55pt"/>
+                       <fo:table-column column-width="85pt"/>
+                       <fo:table-column column-width="85pt"/>
 					   <fo:table-body> 
 					        <#assign sno=1>	
                            <#assign productList = sortedMap.entrySet()>
@@ -247,7 +244,7 @@ under the License.
 					                     <fo:block text-align="left" font-size="10pt" >${productDetails.get("itemCode")?if_exists}</fo:block>
 					           </fo:table-cell>	
                                <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left" font-size="10pt" >${productDetails.get("description")?if_exists}</fo:block>
+					                     <fo:block text-align="left" font-size="10pt" white-space-collapse="false">${productDetails.get("description")?if_exists}</fo:block>
 					           </fo:table-cell>	
                                <fo:table-cell border-style="solid">
 					                     <fo:block text-align="center"  font-size="10pt" >${productDetails.get("unit")?if_exists}</fo:block>
@@ -298,13 +295,13 @@ under the License.
                               <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="10pt"  ><#if closeVal?has_content>${closeVal?if_exists?string("##0.00")?if_exists}<#else></#if></fo:block>
 							  </fo:table-cell>
-                              <fo:table-cell border-style="solid">
+                             <#-- <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
 							  </fo:table-cell> 
                               <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
 							  </fo:table-cell> 
-							<#--- <fo:table-cell border-style="solid">
+							  <fo:table-cell border-style="solid">
 								   <fo:block text-align="right" font-size="9pt"  ></fo:block>
 							  </fo:table-cell> -->	     				           
 					       </fo:table-row>
