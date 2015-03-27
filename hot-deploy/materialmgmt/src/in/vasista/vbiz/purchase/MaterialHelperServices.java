@@ -79,12 +79,21 @@ public class MaterialHelperServices{
 		Map result = ServiceUtil.returnSuccess();
 		List condList=FastList.newInstance();
 		try{
-			condList.add(EntityCondition.makeCondition("statusDatetime", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
+			condList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
+			EntityCondition IssuedCondition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			List<GenericValue> itemIssuances = delegator.findList("ItemIssuance", IssuedCondition, UtilMisc.toSet("custRequestId"),null, null, false);
+			if(UtilValidate.isEmpty(itemIssuances)){
+				return result;
+			}
+			condList.clear();
+			//condList.add(EntityCondition.makeCondition("statusDatetime", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
 			//condList.add(EntityCondition.makeCondition("statusDatetime", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			condList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.IN,EntityUtil.getFieldListFromEntityList(itemIssuances, "custRequestId", true)));
 			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"));
 			
 			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			List<GenericValue> custRequestStatus = delegator.findList("CustRequestStatus", cond, UtilMisc.toSet("custRequestId"),null, null, false);
+			
 			if(UtilValidate.isEmpty(custRequestStatus)){
 				return result;
 			}
@@ -112,8 +121,9 @@ public class MaterialHelperServices{
 		    
 			 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 EntityListIterator custRequestIssuesItr = null;
-			 Set fieldToSelect =UtilMisc.toSet("custRequestId","custRequestItemSeqId","facilityId","issuedDateTime" ,"quantity","unitCost");
+			 Set fieldToSelect =UtilMisc.toSet("custRequestId","custRequestItemSeqId","facilityId","issuedDateTime","quantity","unitCost");
 			 fieldToSelect.add("productId");
+			 fieldToSelect.add("shipmentId");
 			 custRequestIssuesItr = delegator.find("ItemIssuanceAndInventoryItem", cond, null,fieldToSelect, null,null);
 			 GenericValue custRequestitemIssue;
 			 List itemIssuanceList =FastList.newInstance();
@@ -123,6 +133,7 @@ public class MaterialHelperServices{
 				    Map tempMap = FastMap.newInstance();
 		            String custRequestId = custRequestitemIssue.getString("custRequestId");
 		            String tmpProductId = custRequestitemIssue.getString("productId");
+		            String shipmentId = custRequestitemIssue.getString("shipmentId");
 		            BigDecimal quantity  = custRequestitemIssue.getBigDecimal("quantity");
 		            BigDecimal price  = custRequestitemIssue.getBigDecimal("unitCost");
 		            Timestamp issuedDateTime =  custRequestitemIssue.getTimestamp("issuedDateTime");
@@ -134,6 +145,7 @@ public class MaterialHelperServices{
 		            tempMap.putAll(custRequest);
 		            //tempMap.put("storeId", storeId);
 		            tempMap.put("issuedDate", issueDate);
+		            tempMap.put("shipmentId", shipmentId);
 		            tempMap.put("deptId", deptId);
 		            tempMap.put("quantity", quantity);
 		            tempMap.put("amount", amount);
