@@ -7671,7 +7671,6 @@ public class PayrollService {
 						  	  					if (variableName != "customTimePeriodTotals") {
 						  	  						Map periodTotals = (Map) (((Map) tempEntry.getValue()).get("periodTotals"));
 						  	  						if (UtilValidate.isNotEmpty(periodTotals)) {
-						  	  							
 						  	  							basicAmount = (BigDecimal) periodTotals.get("PAYROL_BEN_SALARY");
 						  	  							if (UtilValidate.isEmpty(basicAmount)) {
 						  	  								basicAmount = BigDecimal.ZERO;
@@ -7679,7 +7678,78 @@ public class PayrollService {
 							  	  						if(UtilValidate.isNotEmpty(basicAmount) && ((basicAmount).compareTo(BigDecimal.ZERO) !=0)){
 								  							netBonusAmount = netBonusAmount.add(basicAmount);
 								  						}
-							  	  						daAmount = (BigDecimal) periodTotals.get("PAYROL_BEN_DA");
+								  	  					Map emplDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",emplId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd ,"userLogin",userLogin));
+											        	if(ServiceUtil.isError(emplDetails)){
+											            	Debug.logError(ServiceUtil.getErrorMessage(emplDetails), module);
+											                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(emplDetails));
+												        }
+										        	    String locationGeoId = (String)emplDetails.get("geoId");
+											  	  		String rateTypeId = null;
+							  							if(UtilValidate.isNotEmpty(locationGeoId)){
+							  								if(locationGeoId.equals("BAGALKOT")){
+							  									rateTypeId = "DA_BAGALKOT_RATE";
+							  								}
+							  								if(locationGeoId.equals("BELL")){
+							  									rateTypeId = "DA_BELL_RATE";
+							  								}
+							  								if(locationGeoId.equals("BGLR")){
+							  									rateTypeId = "DA_BGLR_RATE";
+							  								}
+							  								if(locationGeoId.equals("DRWD")){
+							  									rateTypeId = "DA_DRWD_RATE";
+							  								}
+							  								if(locationGeoId.equals("GULB")){
+							  									rateTypeId = "DA_GULB_RATE";
+							  								}
+							  								if(UtilValidate.isNotEmpty(rateTypeId)){
+							  									List rateAmountCondList = FastList.newInstance();
+											  					rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
+											  					rateAmountCondList.add(EntityCondition.makeCondition("effectiveDate" ,EntityOperator.LESS_THAN_EQUAL_TO , timePeriodStart));
+											  					rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
+											  					EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
+											  					List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("-fromDate"), null, false);
+											  					BigDecimal rateAmount = BigDecimal.ZERO;
+											  					if(UtilValidate.isNotEmpty(rateAmountList)){
+											  						GenericValue rateAmountGen = EntityUtil.getFirst(rateAmountList);
+											  						rateAmount = (BigDecimal) rateAmountGen.get("rateAmount");
+											  					}
+													            if(UtilValidate.isNotEmpty(basicAmount)){
+																	Evaluator evltr = new Evaluator(dctx);
+																	HashMap<String, Double> variables = new HashMap<String, Double>();
+																	String formulaId = null;
+																	if(UtilValidate.isNotEmpty(rateAmount)){
+																		if(locationGeoId.equals("BAGALKOT")){
+																			variables.put("DA_BAGALKOT_RATE",rateAmount.doubleValue());
+																			formulaId = "DA_BAGALKOT";
+										  								}
+										  								if(locationGeoId.equals("BELL")){
+										  									variables.put("DA_BELL_RATE",rateAmount.doubleValue());
+										  									formulaId = "DA_BELL_JUNE";
+										  								}
+										  								if(locationGeoId.equals("BGLR")){
+										  									variables.put("DA_BGLR_RATE",rateAmount.doubleValue());
+										  									formulaId = "DA_BGLR_JUNE";
+										  								}
+										  								if(locationGeoId.equals("DRWD")){
+										  									variables.put("DA_DRWD_RATE",rateAmount.doubleValue());
+										  									formulaId = "DA_DRWD_SEP";
+										  								}
+										  								if(locationGeoId.equals("GULB")){
+										  									variables.put("DA_GULB_RATE",rateAmount.doubleValue());
+										  									formulaId = "DA_GULB_AUG";
+										  								}
+																	}
+																	if(UtilValidate.isNotEmpty(basicAmount)){
+																		variables.put("BASIC",basicAmount.doubleValue());
+																	}
+																	evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
+																	evltr.addVariableValues(variables);
+																	daAmount = new BigDecimal( evltr.evaluate());
+																	daAmount = daAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+																}
+									  						}
+									  					}
+							  	  						//daAmount = (BigDecimal) periodTotals.get("PAYROL_BEN_DA");
 						  	  							if (UtilValidate.isEmpty(daAmount)) {
 						  	  								daAmount = BigDecimal.ZERO;
 						  	  							}
@@ -7704,29 +7774,6 @@ public class PayrollService {
 						  	  					}
 						  	  				}
 						  	  			}
-						  	  			//DA arrears here
-						  	  			BigDecimal daSuppAmount = BigDecimal.ZERO;
-							  	  		Map supplyPeriodTotals = (Map) getSupplementaryPayrollTotalsForPeriod(dctx,
-						  	  					UtilMisc.toMap("partyId", emplId, "fromDate", timePeriodStart, "thruDate", timePeriodEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS", "userLogin", userLogin)).get("supplyPeriodTotalsForParty");
-						  	  			if (UtilValidate.isNotEmpty(supplyPeriodTotals)) {
-						  	  				Iterator tempIter1 = supplyPeriodTotals.entrySet().iterator();
-						  	  				while (tempIter1.hasNext()) {
-						  	  					Map.Entry tempEntry1 = (Entry) tempIter1.next();
-						  	  					String variableName1 = (String) tempEntry1.getKey();
-						  	  					if (variableName1 != "customTimePeriodTotals") {
-						  	  						Map suppPeriodTotals = (Map) (((Map) tempEntry1.getValue()).get("periodTotals"));
-						  	  						if (UtilValidate.isNotEmpty(suppPeriodTotals)) {
-						  	  							daSuppAmount = (BigDecimal) suppPeriodTotals.get("PAYROL_BEN_DA");
-						  	  							if (UtilValidate.isEmpty(daSuppAmount)) {
-						  	  								daSuppAmount = BigDecimal.ZERO;
-						  	  							}
-						  	  						}
-						  	  					}
-						  	  				}
-						  	  			}
-						  	  			if(UtilValidate.isNotEmpty(daSuppAmount) && ((daSuppAmount).compareTo(BigDecimal.ZERO) !=0)){
-				  							netBonusAmount = netBonusAmount.add(daSuppAmount);
-				  						}
 					  					if(UtilValidate.isNotEmpty(netBonusAmount) && ((netBonusAmount).compareTo(BigDecimal.ZERO) !=0)){
 					  						 totalNetBonusAmount = netBonusAmount.multiply(new BigDecimal(0.10));
 					  						 totalNetBonusAmount = totalNetBonusAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -7789,57 +7836,40 @@ public class PayrollService {
 						  						employeeBonusMap.put(emplId,finalTotalNetBonusAmount.add((BigDecimal)employeeBonusMap.get(emplId)));
 						  					}
 					  					}
-						  		  	    /*//Calculating PT here  
-							  		  	BigDecimal netGrossSalary = BigDecimal.ZERO;
-							        	BigDecimal netPfAmount = BigDecimal.ZERO;
-							        	BigDecimal totalNetPfAmount = BigDecimal.ZERO;
-							  		  	BigDecimal daSuppAmount = BigDecimal.ZERO;
-							  		  	Map supplyPeriodTotals = (Map) getSupplementaryPayrollTotalsForPeriod(dctx,
-						  	  					UtilMisc.toMap("partyId", emplId, "fromDate", timePeriodStart, "thruDate", timePeriodEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS", "userLogin", userLogin)).get("supplyPeriodTotalsForParty");
-						  	  			if (UtilValidate.isNotEmpty(supplyPeriodTotals)) {
-						  	  				Iterator tempIter1 = supplyPeriodTotals.entrySet().iterator();
-						  	  				while (tempIter1.hasNext()) {
-						  	  					Map.Entry tempEntry1 = (Entry) tempIter1.next();
-						  	  					String variableName1 = (String) tempEntry1.getKey();
-						  	  					if (variableName1 != "customTimePeriodTotals") {
-						  	  						Map suppPeriodTotals = (Map) (((Map) tempEntry1.getValue()).get("periodTotals"));
-						  	  						if (UtilValidate.isNotEmpty(suppPeriodTotals)) {
-						  	  							daSuppAmount = (BigDecimal) suppPeriodTotals.get("PAYROL_BEN_DA");
-						  	  							if (UtilValidate.isEmpty(daSuppAmount)) {
-						  	  								daSuppAmount = BigDecimal.ZERO;
-						  	  							}
-						  	  						}
-						  	  					}
-						  	  				}
-						  	  			}
-							  		  	Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",emplId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd ,"timePeriodId",timePeriodId);
-							        	Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,paramCtxMap);
-							        	BigDecimal grossSalary = ((BigDecimal)grossSalaryMap.get("amount"));
-						  		  	    if(UtilValidate.isNotEmpty(grossSalary)){
-						  		  	    	netGrossSalary = grossSalary.add(finalTotalNetBonusAmount).add(daSuppAmount);
-						  		  	    	if(UtilValidate.isNotEmpty(netGrossSalary)){
-						  		  	    		if ((netGrossSalary.compareTo(new BigDecimal(9999))) < 0 || netGrossSalary.compareTo(BigDecimal.ZERO) > 0) {
-						  		  	    			netPfAmount = new BigDecimal(150);
-						  		  	    		}
-							  		  	    	if ((netGrossSalary.compareTo(new BigDecimal(10000))) >= 0) {
-						  		  	    			netPfAmount = new BigDecimal(200);
-						  		  	    		}
-						  		  	    	}
-						  		  	    	if(UtilValidate.isNotEmpty(netPfAmount)){
-						  		  	    		if ((netPfAmount.compareTo(ptAmount)) == 0) {
-						  		  	    			totalNetPfAmount = BigDecimal.ZERO;
-						  		  	    		}else{
-						  		  	    			totalNetPfAmount = netPfAmount.subtract(ptAmount);
-						  		  	    		}
-						  		  	    	}
-						  		  	    }
-					  					if(UtilValidate.isNotEmpty(totalNetPfAmount) && ((totalNetPfAmount).compareTo(BigDecimal.ZERO) !=0)){
-					  						if(UtilValidate.isEmpty(employeePFBonusMap.get(emplId))){
-						  						employeePFBonusMap.put(emplId,totalNetPfAmount);
-						  					}else{
-						  						employeePFBonusMap.put(emplId,totalNetPfAmount.add((BigDecimal)employeePFBonusMap.get(emplId)));
+						  		  	    //Calculating PT here  
+							  		  	if(UtilValidate.isNotEmpty(ptAmount) && ((ptAmount).compareTo(BigDecimal.ZERO) !=0)){
+								  		  	BigDecimal netGrossSalary = BigDecimal.ZERO;
+								        	BigDecimal netPfAmount = BigDecimal.ZERO;
+								        	BigDecimal totalNetPfAmount = BigDecimal.ZERO;
+								  		  	Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",emplId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd ,"timePeriodId",timePeriodId);
+								        	Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,paramCtxMap);
+								        	BigDecimal grossSalary = ((BigDecimal)grossSalaryMap.get("amount"));
+							  		  	    if(UtilValidate.isNotEmpty(grossSalary)){
+							  		  	    	netGrossSalary = grossSalary.add(finalTotalNetBonusAmount);
+							  		  	    	if(UtilValidate.isNotEmpty(netGrossSalary)){
+							  		  	    		if ((netGrossSalary.compareTo(new BigDecimal(9999))) < 0 || netGrossSalary.compareTo(BigDecimal.ZERO) > 0) {
+							  		  	    			netPfAmount = new BigDecimal(150);
+							  		  	    		}
+								  		  	    	if ((netGrossSalary.compareTo(new BigDecimal(10000))) >= 0) {
+							  		  	    			netPfAmount = new BigDecimal(200);
+							  		  	    		}
+							  		  	    	}
+							  		  	    	if(UtilValidate.isNotEmpty(netPfAmount)){
+							  		  	    		if ((netPfAmount.compareTo(ptAmount)) == 0) {
+							  		  	    			totalNetPfAmount = BigDecimal.ZERO;
+							  		  	    		}else{
+							  		  	    			totalNetPfAmount = netPfAmount.subtract(ptAmount);
+							  		  	    		}
+							  		  	    	}
+							  		  	    }
+						  					if(UtilValidate.isNotEmpty(totalNetPfAmount) && ((totalNetPfAmount).compareTo(BigDecimal.ZERO) !=0)){
+						  						if(UtilValidate.isEmpty(employeePFBonusMap.get(emplId))){
+							  						employeePFBonusMap.put(emplId,totalNetPfAmount);
+							  					}else{
+							  						employeePFBonusMap.put(emplId,totalNetPfAmount.add((BigDecimal)employeePFBonusMap.get(emplId)));
+							  					}
 						  					}
-					  					}*/
+							  		  	}
 						        	}
 				            	}
 				        	}
@@ -7894,7 +7924,7 @@ public class PayrollService {
 	   				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 			            delegator.create(payHeaderItem);
 			            
-			            /*if((UtilValidate.isNotEmpty(employeePFBonusMap.get(payHeaderValue.get("partyIdFrom"))))){
+			            if((UtilValidate.isNotEmpty(employeePFBonusMap.get(payHeaderValue.get("partyIdFrom"))))){
 			            	GenericValue payHeaderItem2 = delegator.makeValue("PayrollHeaderItem");
 			            	payHeaderItem2.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 			            	payHeaderItem2.set("payrollHeaderItemTypeId","PAYROL_DD_PR_TAX");
@@ -7903,7 +7933,7 @@ public class PayrollService {
 		   					payHeaderItem2.set("amount",(ptBonusAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
 		   				    delegator.setNextSubSeqId(payHeaderItem2, "payrollItemSeqId", 5, 1);
 				            delegator.create(payHeaderItem2);
-			            }*/
+			            }
 			            emplCounter++;
 		           		if ((emplCounter % 20) == 0) {
 		           			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;

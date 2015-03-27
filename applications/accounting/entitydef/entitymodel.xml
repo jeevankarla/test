@@ -4872,6 +4872,7 @@
 		<field name="createdByUserLogin" type="id-vlong"></field>
         <field name="lastModifiedDate" type="date-time"></field>
         <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <field name="effectiveDate" type="date-time"></field>
 		<field name="fromDate" type="date-time">
 			<description>Describes when a rate amount will be valid. If null, valid immediately.</description>
 		</field>
