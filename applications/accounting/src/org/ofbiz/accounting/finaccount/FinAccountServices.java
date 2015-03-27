@@ -1209,6 +1209,8 @@ public class FinAccountServices {
         List<GenericValue> finAccountTransList=null;
         BigDecimal withDrawal = BigDecimal.ZERO;
         BigDecimal deposit = BigDecimal.ZERO;
+        BigDecimal openingBalance = BigDecimal.ZERO;
+        BigDecimal adjustmentAmount = BigDecimal.ZERO;
         try{
         	conditionList.add(EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountId));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
@@ -1223,14 +1225,20 @@ public class FinAccountServices {
         			if(((String)finAccountTrans.get("finAccountTransTypeId")).equals("DEPOSIT") && UtilValidate.isNotEmpty((BigDecimal)finAccountTrans.get("amount"))){
         				deposit=deposit.add((BigDecimal)finAccountTrans.get("amount"));
         			}
+        			if(((String)finAccountTrans.get("finAccountTransTypeId")).equals("ADJUSTMENT") && UtilValidate.isNotEmpty((BigDecimal)finAccountTrans.get("amount"))){
+        				adjustmentAmount=adjustmentAmount.add((BigDecimal)finAccountTrans.get("amount"));
+        			}
         		}
-        		result.put("withDrawal", withDrawal);
-        		result.put("deposit", deposit);
+        		openingBalance=(adjustmentAmount.add(deposit)).subtract(withDrawal);
         	}
         }catch (Exception e) {
 	        Debug.logError(e, "Error While getting the Opening balace.!", module);
 	        return ServiceUtil.returnError(e.getMessage());
 	    }
+        result.put("withDrawal", withDrawal);
+		result.put("deposit", deposit);
+		result.put("adjustmentAmount", adjustmentAmount);
+		result.put("openingBalance", openingBalance);
         return result;
     }
 }

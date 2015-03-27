@@ -59,6 +59,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
+dctx = dispatcher.getDispatchContext();
 reportTypeFlag = parameters.reportTypeFlag;
 finAccountReconciliationList=[];
 finAccountReconciliationListMap=[:];
@@ -68,6 +69,7 @@ partyDayWiseFinHistryMap=[:];
 finalpartyDayWiseFinHistryMap=[:];
 partyTotalDebits=0;
 partyTotalCredits=0;
+partyFinAccntOB=0;
 
 localMultipleFinAccountHistoryMap=[:];
 
@@ -79,9 +81,18 @@ if(parameters.multifinAccount == "Y"){
 		getmultipleFinAccountList(eachFinAccount.getKey(),eachFinAccount.getValue());
 	}
 }else{
-	//	Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
-	finAccountIdList= EntityUtil.getFieldListFromEntityList(finAccountTransList,"finAccountId", true);
 	getmultipleFinAccountList("",finAccountTransList);
+	//get OB of FinAccount
+	if(UtilValidate.isNotEmpty(parameters.interUnitFinObDate) && UtilValidate.isNotEmpty(context.finAccountId)){
+		Map finAccObResMap =org.ofbiz.accounting.finaccount.FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",context.finAccountId,"transactionDate",parameters.interUnitFinObDate));
+		if(UtilValidate.isNotEmpty(finAccObResMap)){
+			if(UtilValidate.isNotEmpty(finAccObResMap.get("openingBalance"))){
+				partyFinAccntOB=partyFinAccntOB+finAccObResMap.get("openingBalance");
+			}
+		}
+	}
+	context.partyFinAccntOB=partyFinAccntOB;
+	//end of OB
 }
 
 def getmultipleFinAccountList(finAccountId, finAccountTransList){
@@ -200,6 +211,7 @@ def getmultipleFinAccountList(finAccountId, finAccountTransList){
 		finAccountReconciliationList.addAll(tempFinAccountTransMap);
 	}
 	//finAccountReconciliationListMap.put(finAccountId,finAccountReconciliationList);
+	
 	context.finAccountReconciliationList=finAccountReconciliationList;
 	//result for PartyLedger
 	context.partyFinAccountTransList=partyFinAccountTransList;

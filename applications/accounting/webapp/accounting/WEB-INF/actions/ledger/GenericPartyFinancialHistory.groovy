@@ -639,7 +639,14 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 	if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
 		apOpeningBalance=apOpeningBalanceRes.get("openingBalance");
     }
-	}
+}
+
+//party finHistory OB
+finAccntsOpeningBalance=BigDecimal.ZERO;
+if(UtilValidate.isNotEmpty(context.partyFinAccntOB)){
+finAccntsOpeningBalance=finAccntsOpeningBalance.add(context.partyFinAccntOB);
+}
+Debug.log("===finAccntsOpeningBalance================>"+finAccntsOpeningBalance);
 	
 partyTrTotalMap=[:];
 partyTrTotalMap["debitValue"]=BigDecimal.ZERO;
@@ -667,7 +674,7 @@ partyOBMap=[:];
 partyOBMap["debitValue"]=BigDecimal.ZERO;
 partyOBMap["creditValue"]=BigDecimal.ZERO;
 
-oB=arOpeningBalance-apOpeningBalance;
+oB=finAccntsOpeningBalance+arOpeningBalance-apOpeningBalance;
 if(oB>0){
 	partyOBMap["debitValue"]=oB;
 	partyTotalMap["debitValue"]+=(oB);

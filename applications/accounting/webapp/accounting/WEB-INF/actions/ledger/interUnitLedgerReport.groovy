@@ -67,6 +67,8 @@ if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 			 Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 			 }
    parameters.fromDateReport=UtilDateTime.getDayStart(daystart);
+   parameters.interUnitFinObDate=UtilDateTime.getDayStart(daystart);//to get finAccntOB of this party
+   
 }
 if(UtilValidate.isNotEmpty(parameters.partythruDate)){
    Timestamp dayend;
