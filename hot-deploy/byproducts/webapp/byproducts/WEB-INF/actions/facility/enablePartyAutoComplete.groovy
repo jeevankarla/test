@@ -20,7 +20,8 @@ import org.ofbiz.party.party.PartyHelper;
 JSONArray partyJSON = new JSONArray();
 JSONObject partyNameObj = new JSONObject();
 dctx = dispatcher.getDispatchContext();
-
+subDivDeptFlag=parameters.subDivDeptFlag;
+subDivDeptFlag=context.subDivDeptFlag;
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	roleTypeId =parameters.roleTypeId;
 	inputMap = [:];
@@ -33,7 +34,7 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	if(UtilValidate.isNotEmpty(partyDetailsMap)){
 		partyDetailsList = partyDetailsMap.get("partyDetails");
 	   //To handle KMFUnions along with OtherSuppliers in PurchaseOrder tab.
-		if("MAINSTORE_VENDOR"==parameters.roleTypeId){
+		if(("MAINSTORE_VENDOR"==parameters.roleTypeId) || "FGSProductSaleMm".equals(subDivDeptFlag)){
 			inputMap = [:];
 			inputMap.put("userLogin", userLogin);
 			inputMap.put("roleTypeId", "UNION");
@@ -50,8 +51,24 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 				partyDetailsList=unionPartyDetailsList;
 			}
 		}
+		if("FGSProductSaleMm".equals(subDivDeptFlag)){
+			inputMap = [:];
+			inputMap.put("userLogin", userLogin);
+			inputMap.put("roleTypeId", "Retailer");
+			if(UtilValidate.isNotEmpty(parameters.partyStatusId)){
+					inputMap.put("statusId", parameters.partyStatusId);
+			}
+			Map retailerPartyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx,inputMap);
+			retailerPartyDetailsList = retailerPartyDetailsMap.get("partyDetails");
+			//Debug.log("======unionPartyDetailsList=="+unionPartyDetailsList.size());
+			if(UtilValidate.isNotEmpty(retailerPartyDetailsList)&&(UtilValidate.isNotEmpty(partyDetailsList))){
+				partyDetailsList.addAll(retailerPartyDetailsList);
+			}
+			if(UtilValidate.isNotEmpty(unionPartyDetailsList)&&(UtilValidate.isEmpty(partyDetailsList))){
+				partyDetailsList=retailerPartyDetailsList;
+			}
+		}
 	}	
-      context.subDivDeptFlag=parameters.subDivDeptFlag;
 		// checking for PO
 		if(UtilValidate.isEmpty(subDivDeptFlag)){
 			// sub division here
