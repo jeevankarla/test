@@ -64,11 +64,11 @@ context.thruDate = dayEnd;
 totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 
 isByParty = Boolean.TRUE;
-if(totalDays > 32){
+/*if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
-}
+}*/
 
 prodDetails = delegator.findOne("Product", [productId : productId], false);
 if(UtilValidate.isNotEmpty(prodDetails)){
