@@ -107,10 +107,16 @@ under the License.
     <view-entity entity-name="ItemIssuanceAndInventoryItem" package-name="org.ofbiz.shipment.issuance">
         <member-entity entity-alias="IISS" entity-name="ItemIssuance"/>
         <member-entity entity-alias="IITM" entity-name="InventoryItem"/>
+         <member-entity entity-alias="SH" entity-name="Shipment"/>
         <alias-all entity-alias="IISS"/>
         <alias-all entity-alias="IITM"/>
+        <alias entity-alias="SH" name="shipmentTypeId"  />
+        <alias entity-alias="SH" name="shipmentStatusId" field="statusId" />
         <view-link entity-alias="IISS" rel-entity-alias="IITM">
-        <key-map field-name="inventoryItemId"/>
+           <key-map field-name="inventoryItemId"/>
+        </view-link>
+        <view-link entity-alias="IISS" rel-entity-alias="SH">
+          <key-map field-name="shipmentId" />
         </view-link>
     </view-entity>
     <view-entity entity-name="IssuanceAndShipmentAndCustRequest" package-name="org.ofbiz.shipment.issuance">

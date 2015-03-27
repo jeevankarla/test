@@ -108,7 +108,8 @@ public class MaterialHelperServices{
 			 if(UtilValidate.isNotEmpty(facilityId)){
 				 condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 			 }
-			 
+			 condList.add(EntityCondition.makeCondition("shipmentStatusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+		    
 			 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 EntityListIterator custRequestIssuesItr = null;
 			 Set fieldToSelect =UtilMisc.toSet("custRequestId","custRequestItemSeqId","facilityId","issuedDateTime" ,"quantity","unitCost");
