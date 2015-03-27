@@ -50,13 +50,8 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
 context.thruDate = dayEnd;
-totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
-if(totalDays > 32){
-	Debug.logError("You Cannot Choose More Than 31 Days.","");
-	context.errorMessage = "You Cannot Choose More Than 31 Days";
-	return;
-}
+
 productIds=[];
 partyId=parameters.partyId;
 facilityId=parameters.issueToFacilityId;
