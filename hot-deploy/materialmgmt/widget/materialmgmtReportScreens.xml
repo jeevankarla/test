@@ -213,6 +213,52 @@
 			</widgets>
 		</section>
 	</screen>
+		<screen name="purchaseAccountSummeryNewCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="parameters.reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReportNew.groovy"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseAnalysisSummeryNew.groovy"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseAnalysisSummaryNewReportCsv.groovy"/>
+			</actions>
+			<widgets>
+			<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="" field="parameters.reportNameFlag" />
+					</and>
+					</condition>
+					<widgets>
+							<include-form name="purchaseAccountSummeryNewCSVAll" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="Detailed" field="parameters.reportNameFlag" />
+					</and>
+					</condition>
+					<widgets>
+							<include-form name="purchaseAccountSummeryNewCSVDetailed" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+				<section>
+				<condition>
+					<and>
+					  <if-compare operator="equals" value="ProductWise" field="parameters.reportNameFlag" />
+					</and>
+					</condition>
+					<widgets>
+							<include-form name="purchaseAccountSummeryNewCSV" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
     <screen name="PurchaseReportPDF">
 		<section>
 			<actions>

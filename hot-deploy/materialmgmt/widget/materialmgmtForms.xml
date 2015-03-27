@@ -409,6 +409,31 @@
         <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
         
     </form>  
+    <form name="purchaseAccountSummeryNewCSV" type="list" list-name="FinalprchaseCategorySummeryCsvList" view-size="99999">
+        <field name="invoiceDate" title="Voucher Date"><display type="date-time"/></field>
+        <field name="productName" title="product Name"><display/></field>
+        <field name="vchrType" title="Voucher Type"><display/></field>
+        <field name="invoiceId" title="PDB RefNo"><display/></field>
+        <field name="crOrDbId" title="crOrDbId"><display/></field>
+        <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
+        
+    </form> 
+     <form name="purchaseAccountSummeryNewCSVDetailed" type="list" list-name="FinalprchaseCategorySummeryCsvList" view-size="99999">
+        <field name="invoiceDate" title="Voucher Date"><display type="date-time"/></field>
+        <field name="productName" title="party Name"><display/></field>
+        <field name="vchrType" title="Voucher Type"><display/></field>
+        <field name="invoiceId" title="PDB RefNo"><display/></field>
+        <field name="crOrDbId" title="crOrDbId"><display/></field>
+        <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
+        
+    </form> 
+     <form name="purchaseAccountSummeryNewCSVAll" type="list" list-name="FinalprchaseCategorySummeryCsvList" view-size="99999">
+        <field name="category" title="Category"><display/></field> 
+         <field name="dr" title="DR"><display/></field>
+         <field name="cr" title="CR"><display/></field> 
+         <field name="total" title="TOTAL"><display/></field>
+        
+    </form>   
      <form name="PurchaseAbstractReportForms" type="list" list-name="prodCatAnalysisList" view-size="99999">
         <field name="voucherCode" title="Voucher Code"><display/></field>
         <field name="analysisCode" title="Narration"><display/></field>
