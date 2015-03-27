@@ -1608,12 +1608,20 @@
          <redirect-parameter  name="parentTypeId"/> 
         </response>
     </request-map>
+    <request-map uri="purchaseAccountSummeryNew.csv">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseAccountSummeryNewCSV"/>
+    </request-map>
      <request-map uri="ArPaymentsSearch">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="ArPaymentsSearch"/>
         <response name="error" type="view" value="ArPaymentsSearch"/>
     </request-map>
     
+     <request-map uri="channelWiseProductWiseSales.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="ChannelWiseProductWiseSalesPDF"/>
+    </request-map>
     
     
     <!-- View Mappings -->
@@ -1854,8 +1862,10 @@
  <view-map name="FindStockTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindStockTranferShipment"/>
  <view-map name="FindICPTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPTranferShipment"/>
  <!-- Department Portal Views -->
- 
+ <view-map name="purchaseAccountSummeryNewCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryNewCSV" content-type="text/csv" encoding="none"/>
  <!-- <view-map name="findArDeptInvoices" type="screen" page="component://byproducts/widget/DepartmentPortalScreens.xml#findArDeptInvoices"/> -->
  <view-map name="InvoiceAndPaymentProcess" type="screen" page="component://byproducts/widget/InvoiceAndPaymentScreens.xml#ArInvoicesSearch"/>
  <view-map name="ArPaymentsSearch" type="screen" page="component://byproducts/widget/InvoiceAndPaymentScreens.xml#ArPaymentsSearch"/>
+ <view-map name="ChannelWiseProductWiseSalesPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ChannelWiseProductWiseSalesPDF" content-type="application/pdf"/>
+	 
 </site-conf>
