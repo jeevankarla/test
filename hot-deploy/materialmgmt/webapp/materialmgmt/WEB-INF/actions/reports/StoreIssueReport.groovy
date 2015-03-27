@@ -105,7 +105,7 @@ storeIssueReceipts = MaterialHelperServices.getMaterialReceiptsForPeriod(dctx, [
 receiptList =storeIssueReceipts.get("receiptsList");
 storeIssue=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:currentDayStart, thruDate:currentDayEnd,productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
 StoreIssueList=storeIssue.get("itemIssuanceList");
-bookStock=InventoryServices.getProductInventoryOpeningBalance(dctx,[ effectiveDate:currentDayEnd, productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
+bookStock=InventoryServices.getProductInventoryOpeningBalance(dctx,[ effectiveDate:currentDayStart, productId:productId,facilityId:issueToFacilityId,userLogin : userLogin]);
 if(UtilValidate.isNotEmpty(bookStock)){
 	if(UtilValidate.isNotEmpty(bookStock.inventoryCount)){
 		inventoryCount = bookStock.inventoryCount;
@@ -169,12 +169,14 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	issueNo=1;	
 	StoreIssueList.each{storeIssueDetails->
 		storeIssueDetailsMap=[:];
-		issueQty=storeIssueDetails.quantity;		
+		issueQty=storeIssueDetails.quantity;
+		mrrNo=storeIssueDetails.get("shipmentId");
 		indentNo=storeIssueDetails.get("custRequestId");		
 		custRequestDate=storeIssueDetails.get("custRequestDate");
 		issueDate = UtilDateTime.toDateString(custRequestDate);		
 		storeIssueDetailsMap.put("issueDate",storeIssueDetails.get("issueDate"));
 		storeIssueDetailsMap.put("IndentNo",storeIssueDetails.get("custRequestId"));
+		storeIssueDetailsMap.put("mrrNo",mrrNo);		
 		storeIssueDetailsMap.put("IssueQty",storeIssueDetails.get("quantity"));
 		storeIssueDetailsMap.put("IssueRate",storeIssueDetails.get("price"));
 		storeIssueDetailsMap.put("IssueAmount",storeIssueDetails.get("amount"));
