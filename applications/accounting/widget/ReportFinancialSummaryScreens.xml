@@ -3818,9 +3818,35 @@
 					<field-map field-name="mainAction" value="REPORTS" />
 				</service>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+			    <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/EmployeeAdvances.groovy"/>
 			</actions>
 			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="Abstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="EmployeeAdvancesAndSubScheduleReportCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="Detailed" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<container>
+							<include-form name="FinAccountDetailedCSV"
+								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+					</widgets>
+				</section>
+		</widgets>
+		
+			<!-- <widgets>
 				<section>
 					<condition>
 						<if-compare operator="equals" value="true"
@@ -3841,7 +3867,7 @@
 						</decorator-screen>
 					</fail-widgets>
 				</section>
-			</widgets>
+			</widgets> -->
 		</section>
 	</screen>
 	<screen name="GroupPaymentCSV">

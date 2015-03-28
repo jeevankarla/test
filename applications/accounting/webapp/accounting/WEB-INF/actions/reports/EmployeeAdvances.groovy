@@ -60,11 +60,15 @@ finAccountTypeIdsMap=[:];
 //EmployeeAdvDetails=[];
 finAccountTypeIdList=[];
 List detailTempList=FastList.newInstance();
+
+finAccntDetailedCsv=[];
+
 finAccountList.each{finAccountTypeId->
 	List tempList=FastList.newInstance();
 	
 	detailTempMap=[:];
 	tempMap=[:];
+	
 	openBalanceDebit=0;
 	openBalanceCredit=0;
 	currentDebit=0;
@@ -79,6 +83,12 @@ finAccountList.each{finAccountTypeId->
 	partyName=PartyHelper.getPartyName(delegator, finAccountTypeId.ownerPartyId, false);
 	tempMap.Name=partyName;
 	detailTempMap.Name=partyName;
+	
+	finAccntMap=[:]
+	finAccntMap["finAccountTypeId"]=finAccountTypeId.finAccountTypeId;
+	finAccntMap["Name"]=partyName;
+	finAccntMap["partyId"]=finAccountTypeId.ownerPartyId;
+	
 	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate));
 	if(UtilValidate.isNotEmpty(finAccTransMap)){
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("withDrawal"))){
@@ -92,6 +102,11 @@ finAccountList.each{finAccountTypeId->
 	tempMap.openBalanceCredit=openBalanceCredit;
 	detailTempMap.openBalanceDebit=openBalanceDebit;
 	detailTempMap.openBalanceCredit=openBalanceCredit;
+	
+	finAccntMap["openBalanceDebit"]=openBalanceDebit;
+	finAccntMap["openBalanceCredit"]=openBalanceCredit;
+	finAccntDetailedCsv.addAll(finAccntMap);
+	
 	cond=EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountTypeId.finAccountId),
 										 EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate),
 										 EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate),
@@ -103,6 +118,7 @@ finAccountList.each{finAccountTypeId->
 			List newList=FastList.newInstance();
 			debit=0;
 			credit=0;
+			
 			newTempMap=[:];
 			newTempMap.transactionDate=finAccntTrans.transactionDate;
 			if(UtilValidate.isNotEmpty(finAccntTrans.finAccountTransTypeId) && finAccntTrans.finAccountTransTypeId=="WITHDRAWAL"){
@@ -116,6 +132,14 @@ finAccountList.each{finAccountTypeId->
 			}
 			newTempMap.credit=credit;
 			newList.add(newTempMap);
+			
+			//adding DetaildTo CSV
+			finAccntTransInnerMap=[:]
+			finAccntTransInnerMap["transactionDate"]=org.ofbiz.base.util.UtilDateTime.toDateString(finAccntTrans.transactionDate, "dd-MMM-yyyy");
+			finAccntTransInnerMap["debit"]=debit;
+			finAccntTransInnerMap["credit"]=credit;
+			finAccntDetailedCsv.addAll(finAccntTransInnerMap);
+			
 			if(UtilValidate.isEmpty(DaywiseMap["Details"])){
 				DaywiseMap["Details"]=newList;
 			}else{
@@ -131,6 +155,13 @@ finAccountList.each{finAccountTypeId->
 	//EmployeeAdvDetails.add(detailTempList);
 	tempMap.currentDebit=currentDebit;
 	tempMap.currentCredit=currentCredit;
+	
+	finAccntTotMap=[:]
+	finAccntTotMap["Name"]="Total-"+finAccountTypeId.ownerPartyId;
+	finAccntTotMap["debit"]=currentDebit;
+	finAccntTotMap["credit"]=currentCredit;
+	finAccntDetailedCsv.addAll(finAccntTotMap);
+	
 	balance=((openBalanceDebit+currentDebit)-(openBalanceCredit+currentCredit));
 	if(balance>0){
 		closingCredit=balance;
@@ -139,6 +170,13 @@ finAccountList.each{finAccountTypeId->
 	}
 	tempMap.closingCredit=closingCredit;
 	tempMap.closingDebit=closingDebit;
+	
+	finAccntClosingMap=[:]
+	finAccntClosingMap["Name"]="ClosingBal-"+finAccountTypeId.ownerPartyId;
+	finAccntClosingMap["closingDebit"]=closingDebit;
+	finAccntClosingMap["closingCredit"]=closingCredit;
+	finAccntDetailedCsv.addAll(finAccntClosingMap);
+	
 	tempList.add(tempMap);
 	if(UtilValidate.isEmpty(finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId])){
 		finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId]=tempList;
@@ -154,5 +192,7 @@ finAccountList.each{finAccountTypeId->
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
 context.detailTempList=detailTempList
 context.finAccountTypeIdList=finAccountTypeIdList;
+context.finAccntDetailedCsv=finAccntDetailedCsv;
 //Debug.log("finAccountTypeIdList======================"+finAccountTypeIdList);
 //Debug.log("finAccountTypeIdsMap=========================="+finAccountTypeIdsMap);
+//Debug.log("finAccntDetailedCsv=========================="+finAccntDetailedCsv);
