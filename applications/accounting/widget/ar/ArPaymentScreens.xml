@@ -78,7 +78,7 @@ under the License.
 												<parameter param-name="paymentRefNum" from-field="paymentRefNum.comments"/>
 												<parameter param-name="paymentRefNum_op" from-field="parameters.paymentRefNum_op"/>
 												<parameter param-name="paymentRefNum_ic" from-field="parameters.paymentRefNum_ic"/>
-																				<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+												<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
 											    <parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
 											    <parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
 											    <parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>

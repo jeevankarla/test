@@ -28,6 +28,14 @@ under the License.
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="listIt" from-field="result.listIt"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -51,6 +59,38 @@ under the License.
                                         <include-form name="FindApPayments" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+	                                     <link target="PaymentSearchResultsCsv.csv" text="Export As Csv" style="buttontext">
+													<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+													<parameter param-name="paymentId_op" from-field="parameters.paymentId_op"/>
+													<parameter param-name="paymentId_ic" from-field="parameters.paymentId_ic"/>
+													<parameter param-name="parentTypeId" value="DISBURSEMENT"/>
+													<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+													<parameter param-name="facilityId_op" from-field="parameters.facilityId_op"/>
+													<parameter param-name="facilityId_ic" from-field="parameters.facilityId_ic"/>
+													<parameter param-name="comments" from-field="parameters.comments"/>
+													<parameter param-name="comments_op" from-field="parameters.comments_op"/>
+													<parameter param-name="comments_ic" from-field="parameters.comments_ic"/>
+													
+													<parameter param-name="paymentRefNum" from-field="paymentRefNum.comments"/>
+													<parameter param-name="paymentRefNum_op" from-field="parameters.paymentRefNum_op"/>
+													<parameter param-name="paymentRefNum_ic" from-field="parameters.paymentRefNum_ic"/>
+													<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+												    <parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+												    <parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+												    <parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
+												    										
+													<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+												    <parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+													<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+												    <parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+													<parameter param-name="statusId" from-field="parameters.statusId"/>
+												    <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+												    <parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+												    <parameter param-name="amount" from-field="parameters.amount"/>
+												    <parameter param-name="statusId" from-field="parameters.statusId"/>
+												    <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+												    <parameter param-name="noConditionFind" value="Y"/>
+	                                        </link>
                                         <include-form name="ListPayments" location="component://accounting/widget/PaymentForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
