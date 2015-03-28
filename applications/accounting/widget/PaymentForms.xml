@@ -59,15 +59,6 @@ under the License.
     </form>
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="PaymentAndType"/>
-                <field-map field-name="orderBy" value="effectiveDate DESC"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-        </actions>
 <!--        <row-actions>-->
 <!--            <set field="amountToApply" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>-->
 <!--        </row-actions>-->
@@ -117,7 +108,7 @@ under the License.
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="Payment"/>
+                <field-map field-name="entityName" value="PaymentAndType"/>
                 <field-map field-name="orderBy" value="effectiveDate DESC"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
