@@ -1071,6 +1071,18 @@ under the License.
     	<field name="closingDebit"><display/></field>
     	<field name="closingCredit"><display/></field>
     </form>
+     <form name="FinAccountDetailedCSV" type="list" list-name="finAccntDetailedCsv">
+    	<field name="finAccountTypeId"  use-when="finAccountTypeId!=null" title="Fin Account Type"><display-entity entity-name="FinAccountType" also-hidden="false" description="${description}"></display-entity></field>
+    	<field name="partyId"  use-when="partyId!=null" ><display/></field>
+    	<field name="Name" use-when="Name!=null" ><display/></field>
+    	<field name="transactionDate" use-when="transactionDate!=null"><display/></field>
+    	<field name="openBalanceDebit" use-when="openBalanceDebit!=null" ><display/></field>
+    	<field name="openBalanceCredit" use-when="openBalanceCredit!=null"><display/></field>
+    	<field name="debit" use-when="debit!=null" ><display/></field>
+    	<field name="credit" use-when="credit!=null"><display/></field>
+    	<field name="closingDebit" use-when="closingDebit!=null"><display/></field>
+    	<field name="closingCredit" use-when="closingCredit!=null"><display/></field>
+    </form>
      <form name="PartyLedgrCsvListForm" type="list" list-name="partyLedgerDayWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
         <field name="date" title="Date"><display/></field>  
         <field name="description" title="Particulars"><display/></field>  
