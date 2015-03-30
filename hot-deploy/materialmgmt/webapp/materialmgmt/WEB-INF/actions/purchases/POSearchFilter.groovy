@@ -8,15 +8,28 @@ import javolution.util.FastMap;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
-
+ 
 if(UtilValidate.isEmpty(parameters.productId)){
 	if(UtilValidate.isNotEmpty(result.listIt)){
 		list=result.listIt;
 		resultList = [];
 		GenericValue poEntry = null;
 		while ((poEntry=list.next()) != null) {
-		if((poEntry.roleTypeId).equals("SUPPLIER_AGENT")){
-			resultList.add(poEntry);
+			if(parameters.findPoFlag=="Y"){
+				
+			if(parameters.orderTypeId=="PURCHASE_ORDER"){
+			if((poEntry.roleTypeId).equals("SUPPLIER_AGENT")){
+				resultList.add(poEntry);
+				}
+			}else{
+			if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+				resultList.add(poEntry);
+				}
+			}
+			}else{
+			if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+				resultList.add(poEntry);
+				}
 			}
 		}
 		context.listIt=resultList;
