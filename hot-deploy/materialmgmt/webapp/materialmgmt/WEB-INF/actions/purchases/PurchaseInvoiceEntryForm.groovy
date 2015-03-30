@@ -44,10 +44,12 @@ if(shipments){
 	condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	invoice = delegator.findList("Invoice", condition1, null, null, null, false);
 	
-	if(!invoice){
+	orderId = shipment.primaryOrderId;
+	
+	if(!invoice && orderId){
 		
 		orderedInvoice = Boolean.FALSE;
-		orderId = shipment.primaryOrderId;
+		
 		if(orderId){
 			orderedInvoice = Boolean.TRUE;
 		}
@@ -88,18 +90,16 @@ if(shipments){
 			}
 			supplierPartyIdList=EntityUtil.filterByCondition(orderRole, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
 			if(supplierPartyIdList){
-			partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");	
-			}		
+			partyId = (EntityUtil.getFirst(supplierPartyIdList)).getString("partyId");
+			}
 		}
 		
-		orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-		
-		orderTypeId = orderHeader.orderTypeId;
-		
 		invoiceTypeId = "";
+		orderTypeId = orderHeader.orderTypeId;
 		if(orderTypeId == "PURCHASE_ORDER"){
 			invoiceTypeId = "PURCHASE_INVOICE";
 		}
+		
 		
 		invoiceItemAdjs = delegator.findList("InvoiceItemTypeMap", EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId), null, null, null, false);
 		adjIds = EntityUtil.getFieldListFromEntityList(invoiceItemAdjs, "invoiceItemTypeId", true);
@@ -245,15 +245,7 @@ if(shipments){
 				totalBedPrice += (orderItem.bedseccessAmount)/(orderItem.quantity);
 			}
 			
-			/*totalBedPrice = totalBedPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
-			deductAmt = deductAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-			addAmt = addAmt.setScale(2, BigDecimal.ROUND_HALF_UP);*/
-			
-			Debug.log("bed ################"+totalBedPrice);
-			Debug.log("deductAmt ################"+deductAmt);
-			Debug.log("addAmt ################"+addAmt);
 			unitPrice = (orderItem.unitPrice)+totalBedPrice-deductAmt+addAmt;
-			Debug.log("unitPrice ################"+unitPrice);
 			amount = unitPrice*qty;
 			JSONObject newObj = new JSONObject();
 			newObj.put("cProductId",eachItem.productId);
