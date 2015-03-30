@@ -8,7 +8,7 @@ import javolution.util.FastMap;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
-
+ 
 if(UtilValidate.isEmpty(parameters.productId)){
 	if(UtilValidate.isNotEmpty(result.listIt)){
 		list=result.listIt;
