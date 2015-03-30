@@ -38,7 +38,7 @@ facilityId=parameters.issueToFacilityId;
 nowDate = UtilDateTime.nowTimestamp();
 nextDay = UtilDateTime.addDaysToTimestamp(nowDate, 1);
 nextDayBegin = UtilDateTime.getDayStart(nextDay);
-
+reportTypeFlag=parameters.reportTypeFlag;
 prodMap=[:];
 
  productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
@@ -59,6 +59,7 @@ productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"product
 if(UtilValidate.isNotEmpty(productCatIds)){
 	productCatIds.each{productCatId->
     prodList=[];
+	zeroQtyList=[];
 	List conlist=[];
 	conlist.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCatId));
 	conlist.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
@@ -136,13 +137,21 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 		productDetailMap.put("closingQty", closingQty);
 		productDetailMap.put("openingQty", openingQty);
 		productDetailMap.put("openingTotCost", openingTotCost);
-	  prodList.addAll(productDetailMap);
-	  
-	  
-       }
+		
+		if(UtilValidate.isNotEmpty(reportTypeFlag) && (reportTypeFlag=="WITHOUTZEROS") && (closingQty>0)){
+			prodList.addAll(productDetailMap);
+       	}
+		if(UtilValidate.isNotEmpty(reportTypeFlag) && (reportTypeFlag=="WITHZEROS") && (closingQty<=0)){
+		   zeroQtyList.addAll(productDetailMap);
+       	}
 	 }
-  prodMap.put(productCatId,prodList);
+	if(UtilValidate.isNotEmpty(prodList) && (reportTypeFlag=="WITHOUTZEROS")){
+		prodMap.put(productCatId,prodList);
+	}else if(UtilValidate.isNotEmpty(zeroQtyList)){
+		prodMap.put(productCatId,zeroQtyList);
+	}
    }
+}
 }
 
 context.prodMap=prodMap;

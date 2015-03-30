@@ -143,11 +143,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Stock Position Report</span></td>
-							<td width="25%">
+							<td width="20%">
 							     <span class='h3'>
 									Date <input  type="text" size="18pt" id="stockDate"   name="fromDate"/>
 								 </span>
-							</td>			
+							</td>	
+							<td width="15%"><span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag">
+							        <option value="WITHOUTZEROS">Greater Than Zeros</option>
+							        <option value="WITHZEROS">Zeros</option>
+							    </select></span></td>		
 							<td width="15%"><span class='h3'>Store
 							    <select name="issueToFacilityId" id="issueToFacilityId">
 							        <option value=""></option>
@@ -270,11 +274,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Store Stock Status</span></td>
-							<td width="25%">
-							     <span class='h3'>
-									
-								 </span>
-							</td>
+							<td width="20%"><span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag">
+							        <option value="WITHOUTZEROS">Greater Than Zeros</option>
+							        <option value="WITHZEROS">Zeros</option>
+							    </select></span></td>
 							<td width="15%"><span class='h3'>							</span></td>
                             <td width="15%"><span class='h3'>Store
 							    <select name="issueToFacilityId" id="issueToFacilityId">
