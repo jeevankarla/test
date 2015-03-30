@@ -15,6 +15,9 @@
     
     
     <SecurityGroup description="DepotSales Application Admin group for Sales And Receipts!" groupId="DEPOTSALES_MANAGER"/>
+   
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_MANAGER"/>
+    
     <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_ADMIN"/>
      <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="FACILITY_ADMIN"/>
     <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
@@ -31,4 +34,18 @@
     <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_SALES_UPDATE"/>
     <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_UPDATE"/>
     <SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="ORDERMGR_VIEW"/>
+    
+      
+	<SecurityPermission permissionId="DEPOTSALES_CASH" description="Special permission to show and collect cash payments" />
+	<SecurityPermission permissionId="DEPOTSALES_CHEQUE" description="Special permission to show and collect cheque payments" />
+	<SecurityPermission permissionId="PAYMENTSTATUS_CANCEL" description="Special permission to cancel payment" />
+	<SecurityPermission permissionId="DEPOTSALES_CRATRETRN" description="Special permission to enter Crate returns" />
+	
+	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="DEPOTSALES_CASH"/>
+	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="PAYMENTSTATUS_CANCEL"/>
+	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="DEPOTSALES_CHEQUE"/>
+	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="PAYMENTSTATUS_CANCEL"/>
+    
+    
+	
 </entity-engine-xml>

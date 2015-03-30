@@ -8,7 +8,7 @@
           default-menu-item-name="FacilityProfile">
 		<actions> 
             <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
-            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/>
+            <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/PaymentPermissionsDepot.groovy"/>
 		</actions>          
         <menu-item name="main" title="${uiLabelMap.ProductFacilityLocationNetwork}">
             <link target="main">
@@ -78,18 +78,17 @@
             </link>
         </menu-item>
         <menu-item name="NonRouteCustomPayments" title="AR Payments"> 
-    		<condition>
+    		<!-- <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
-					<if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
-					<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
-					<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>
-					<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+					<if-has-permission permission="DEPOTSALES" action="_CASH"/>
+					<if-has-permission permission="DEPOTSALES" action="_CHEQUE"/>
 					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
 				</or>
-            </condition>
+            </condition> -->
             <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="${subTabItem}"/>
-            	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}"/>
+            	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
         <menu-item name="FindGRNReceipts" title="Receipts">
@@ -213,13 +212,13 @@
       </menu>
       
       <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
+          default-menu-item-name="CashPayment" selected-menuitem-context-field-name="subTabButtonItem">
            <menu-item name="CashPayment" title="Cash">
-          	<condition>
+          <!-- 	<condition>
 				<or>
-            		<if-has-permission permission="BYPRODUCTS"  action="_CASH"/>
+            		<if-has-permission permission="DEPOTSALES"  action="_CASH"/>
             	</or>            
-            </condition>
+            </condition> -->
             <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="CashPayment"/>
             	<parameter param-name="defaultMethodTypeId" value="CASH_PAYIN"/>
@@ -228,7 +227,7 @@
           <menu-item name="ChequePayment" title="Cheque">
             <condition>
 				<or>
-            		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
+            		<if-has-permission permission="DEPOTSALES"  action="_CHEQUE"/>
             	</or>            
             </condition>
             <link target="FindPaymentDepotSales">
@@ -239,7 +238,7 @@
           <menu-item name="FundTransfer" title="Fund Transfer">
             <condition>
 				<or>
-            		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
+            		<if-has-permission permission="DEPOTSALES"  action="_CHEQUE"/>
             	</or>            
             </condition>
             <link target="FindPaymentDepotSales">
