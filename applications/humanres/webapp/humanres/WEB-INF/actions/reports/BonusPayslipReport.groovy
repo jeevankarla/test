@@ -72,11 +72,13 @@ if(UtilValidate.isNotEmpty(parameters.employeeId)){
 
 emplBonusMap = [:];
 employeeWiseMap = [:];
+totEmployeePFBonusMap = [:];
 if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 	bonusEmplIdsList.each{ employeeId->
 		totalBonus = 0;
 		monthWiseMap = [:];
 		finAccountCode = "";
+		employeePFBonusMap = [:];
 		List finAccConList=FastList.newInstance();
 		finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,employeeId));
 		finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
@@ -95,6 +97,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				dearnessAllowance =0;
 				specPay = 0;
 				fixedPay = 0;
+				ptAmount = 0;
 				noOfPayableDays = 0;
 				noOfArrearDays = 0;
 				lossOfPayDays = 0;
@@ -103,6 +106,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				monthlyBonusOfPayableDays = 0;
 				minimumBonus = 0;
 				newDAAmount = 0;
+				totalEarnings = 0;
 				customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodKey] , false);
 				if(UtilValidate.isNotEmpty(customTimePeriod)){
 					Date monthDate = (Date)customTimePeriod.get("fromDate");
@@ -132,6 +136,13 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 								if(UtilValidate.isEmpty(fixedPay)){
 									fixedPay = 0;
 								}
+								ptAmount = periodTotals.get("PAYROL_DD_PR_TAX");
+								if (UtilValidate.isEmpty(ptAmount)) {
+									ptAmount = 0;
+								}
+								if (UtilValidate.isNotEmpty(ptAmount) && (ptAmount != 0)) {
+									ptAmount = ptAmount*(-1);
+								}
 								customMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:monthDateStart,timePeriodEnd:monthDateEnd,timePeriodId:customTimePeriodKey,locale:locale]);
 								lastClosePeriod=customMap.get("lastCloseAttedancePeriod");
 								attenCustomTimePeriodId=lastClosePeriod.get("customTimePeriodId");
@@ -158,6 +169,11 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 									if(UtilValidate.isEmpty(noOfCalenderDays)){
 										noOfCalenderDays = 0;
 									}
+								}
+							}
+							if(customTimePeriodEntry.getKey() == "customTimePeriodTotals"){
+								if(UtilValidate.isNotEmpty(customTimePeriodEntry.getValue())){
+									totalEarnings = customTimePeriodEntry.getValue().get("grossBenefitAmt");
 								}
 							}
 						}
@@ -235,6 +251,35 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				totalBonus = totalBonus + minimumBonus;
 				minimumBonusVal = new BigDecimal(minimumBonus);
 				minimumBonusVal = minimumBonusVal.setScale(0, BigDecimal.ROUND_HALF_UP);
+				
+				if(UtilValidate.isNotEmpty(ptAmount) && (ptAmount!=0)){
+					netGrossSalary = 0;
+					netPfAmount = 0;
+					totalNetPfAmount = 0;
+					if(UtilValidate.isNotEmpty(totalEarnings)){
+						netGrossSalary = totalEarnings + minimumBonusVal;
+						if(UtilValidate.isNotEmpty(netGrossSalary)){
+							if ((netGrossSalary < 9999) || (netGrossSalary > 0)) {
+								netPfAmount = 150;
+							}
+							if(netGrossSalary >= 10000){
+								netPfAmount = 200;
+							}
+						}
+						if(UtilValidate.isNotEmpty(netPfAmount)){
+							if ((netPfAmount.equals(ptAmount))) {
+								totalNetPfAmount = 0;
+							}else{
+								totalNetPfAmount = netPfAmount-ptAmount;
+							}
+						}
+					}
+					if(UtilValidate.isNotEmpty(totalNetPfAmount)){
+						monthlyDetailsMap.put("totalNetPfAmount", totalNetPfAmount);
+					}
+				}
+				
+				
 				monthlyDetailsMap.put("basic", basic);
 				monthlyDetailsMap.put("dearnessAllowance", newDAAmount);
 				monthlyDetailsMap.put("specPay", specPay);
@@ -250,6 +295,11 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 		}
 		if(UtilValidate.isNotEmpty(monthWiseMap)){
 			employeeWiseMap.put(employeeId, monthWiseMap);
+		}
+		if(totalBonus > 22000){
+			totalBonus = 22000;
+		}else{
+			totalBonus = totalBonus;
 		}
 		totalBonusVal = new BigDecimal(totalBonus);
 		totalBonusVal = totalBonusVal.setScale(0, BigDecimal.ROUND_HALF_UP);
