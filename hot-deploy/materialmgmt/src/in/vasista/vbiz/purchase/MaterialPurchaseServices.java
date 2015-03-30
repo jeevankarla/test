@@ -1317,6 +1317,7 @@ public class MaterialPurchaseServices {
 			}
 		}
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	  	 
+		request.setAttribute("orderId", result.get("orderId"));
 		return "success";
 	}
 		

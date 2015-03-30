@@ -15,8 +15,21 @@ if(UtilValidate.isEmpty(parameters.productId)){
 		resultList = [];
 		GenericValue poEntry = null;
 		while ((poEntry=list.next()) != null) {
-		if((poEntry.roleTypeId).equals("SUPPLIER_AGENT")){
-			resultList.add(poEntry);
+			if(parameters.findPoFlag=="Y"){
+				
+			if(parameters.orderTypeId=="PURCHASE_ORDER"){
+			if((poEntry.roleTypeId).equals("SUPPLIER_AGENT")){
+				resultList.add(poEntry);
+				}
+			}else{
+			if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+				resultList.add(poEntry);
+				}
+			}
+			}else{
+			if((poEntry.roleTypeId).equals("BILL_FROM_VENDOR")){
+				resultList.add(poEntry);
+				}
 			}
 		}
 		context.listIt=resultList;
