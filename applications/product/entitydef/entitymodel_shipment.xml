@@ -103,6 +103,9 @@ under the License.
        <key-map field-name="custRequestId"/>
        <key-map field-name="custRequestItemSeqId"/>
      </relation>
+     <index name="ITEM_ISS_ISSDT">
+     	<index-field name="issuedDateTime"/>
+     </index>
     </entity>
     <view-entity entity-name="ItemIssuanceAndInventoryItem" package-name="org.ofbiz.shipment.issuance">
         <member-entity entity-alias="IISS" entity-name="ItemIssuance"/>
