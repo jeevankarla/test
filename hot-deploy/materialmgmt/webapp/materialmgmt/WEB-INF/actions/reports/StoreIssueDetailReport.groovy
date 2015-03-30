@@ -111,8 +111,9 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 productCatDetails = EntityUtil.filterByDate(delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false),dayBegin);
          productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);
-			     if(UtilValidate.isNotEmpty(productCatIds)){
-				        prodMap=[:];
+         prodMap=[:];
+         if(UtilValidate.isNotEmpty(productCatIds)){
+				       
  
                         productCatIds.each{productCatId->
 							
@@ -166,12 +167,15 @@ if(UtilValidate.isNotEmpty(deptIds)){
 														 dateWiseMap=[:];
 						                                if(UtilValidate.isNotEmpty(storeAbstQtyDetails)){	
 															if(storeAbstQtyDetails.size()>1){
-						                                      storeAbstQtyDetails.each{storeAbstQty->	
+						                                      storeAbstQtyDetails.each{storeAbstQty->
+						                                          unitCost=0;
 									                              itemquantity=storeAbstQty.quantity;
-																  unitCost=storeAbstQty.unitCost;
-																  if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
+									                              if(UtilValidate.isNotEmpty(storeAbstQty.unitCost)&& storeAbstQty.unitCost != null){
+																	 unitCost = storeAbstQty.unitCost;
+							                                      }
+																  if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)&& storeAbstQty.cancelQuantity != null){
 																	  itemquantity=itemquantity-storeAbstQty.cancelQuantity;
-																	  unitCost = unitCost - storeAbstQty.unitCost;
+																	  //unitCost = unitCost - storeAbstQty.unitCost;
 																  }			
 																  totQty =totQty+itemquantity;
 									                             totunitCost=totunitCost+unitCost;
@@ -180,11 +184,14 @@ if(UtilValidate.isNotEmpty(deptIds)){
 						                                      }
 															}else{
 																storeAbstQty=EntityUtil.getFirst(storeAbstQtyDetails);
+																unitCost=0;
 																quantity=storeAbstQty.quantity;
-																unitCost=storeAbstQty.unitCost;
-																if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)){
+																if(UtilValidate.isNotEmpty(storeAbstQty.unitCost)&& storeAbstQty.unitCost != null){
+																	unitCost=storeAbstQty.unitCost;
+																}  
+																if(UtilValidate.isNotEmpty(storeAbstQty.cancelQuantity)&& storeAbstQty.cancelQuantity != null){
 																	quantity-=storeAbstQty.cancelQuantity;
-																	unitCost = unitCost - storeAbstQty.unitCost;
+																	//unitCost = unitCost - storeAbstQty.unitCost;
 																}
 																totQty=quantity;
 																totunitCost=totunitCost+unitCost;
@@ -195,10 +202,13 @@ if(UtilValidate.isNotEmpty(deptIds)){
 																dateIssued=UtilDateTime.toDateString(storeAbs.issuedDateTime,"dd/MM/yyyy");
 																itemQuantity=storeAbs.quantity;
 																itemIssuedDate=storeAbs.issuedDateTime;
-																itemUnitCost = storeAbs.unitCost;
-																if(UtilValidate.isNotEmpty(storeAbs.cancelQuantity)){
+																
+																if(UtilValidate.isNotEmpty(storeAbs.unitCost)&& storeAbs.unitCost != null){
+																    itemUnitCost = storeAbs.unitCost;
+																} 
+																if(UtilValidate.isNotEmpty(storeAbs.cancelQuantity)&& storeAbs.cancelQuantity != null){
 																	itemQuantity-=storeAbs.cancelQuantity;
-																	itemUnitCost-= storeAbs.unitCost;
+																	//itemUnitCost-= storeAbs.unitCost;
 																}
 																 totalValue=itemQuantity*itemUnitCost;
 																 internalCode=storeAbs.internalName;
@@ -267,7 +277,7 @@ if(UtilValidate.isNotEmpty(deptIds)){
                                  }					 
 					 
 	                      }	
-						 if(UtilValidate.isNotEmpty(prodList)){					 
+						 if(UtilValidate.isNotEmpty(prodList)){
 					         prodMap.put(productCatId,prodList);			 
 						 }
                        }
