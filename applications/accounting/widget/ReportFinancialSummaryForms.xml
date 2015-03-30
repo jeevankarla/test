@@ -624,7 +624,6 @@ under the License.
                 <option description="${uiLabelMap.CommonAll}" key="ALL"/>
             </drop-down>
         </field>
-        <field name="openingBalance" title="Opening Balance" id-name="openingBalance"><text></text></field>
         <field name="pdf" title=" " widget-style="buttontext" event="onclick" action="javascript:appendParams('FinancialAccountTransForMonth', this);" id-name="cashBookPdf">
             <hyperlink target="FinancialAccountTransForMonth.pdf" description="PDF" target-window="_blank"> 	
                   <parameter param-name="organizationPartyId" from-field="organizationPartyId"/> 
@@ -632,7 +631,6 @@ under the License.
                	  <parameter param-name="fromDate" from-field="fromDate" />
                	  <parameter param-name="thruDate" from-field="thruDate" />
                	  <parameter param-name="isPosted" from-field="isPosted" />
-               	  <parameter param-name="openingBalance" from-field="openingBalance" />
                	  <parameter param-name="reportTypeFlag" from-field="reportTypeFlag" />
             </hyperlink>
         </field>
