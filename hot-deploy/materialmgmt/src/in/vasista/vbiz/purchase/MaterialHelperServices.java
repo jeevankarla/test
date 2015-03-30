@@ -124,6 +124,7 @@ public class MaterialHelperServices{
 			 Set fieldToSelect =UtilMisc.toSet("custRequestId","custRequestItemSeqId","facilityId","issuedDateTime","quantity","unitCost");
 			 fieldToSelect.add("productId");
 			 fieldToSelect.add("shipmentId");
+			 fieldToSelect.add("inventoryItemId");
 			 custRequestIssuesItr = delegator.find("ItemIssuanceAndInventoryItem", cond, null,fieldToSelect, null,null);
 			 GenericValue custRequestitemIssue;
 			 List itemIssuanceList =FastList.newInstance();
@@ -134,6 +135,7 @@ public class MaterialHelperServices{
 		            String custRequestId = custRequestitemIssue.getString("custRequestId");
 		            String tmpProductId = custRequestitemIssue.getString("productId");
 		            String shipmentId = custRequestitemIssue.getString("shipmentId");
+		            String inventoryItemId = custRequestitemIssue.getString("inventoryItemId");
 		            BigDecimal quantity  = custRequestitemIssue.getBigDecimal("quantity");
 		            BigDecimal price  = custRequestitemIssue.getBigDecimal("unitCost");
 		            Timestamp issuedDateTime =  custRequestitemIssue.getTimestamp("issuedDateTime");
@@ -150,6 +152,7 @@ public class MaterialHelperServices{
 		            tempMap.put("quantity", quantity);
 		            tempMap.put("amount", amount);
 		            tempMap.put("price", price);
+		            tempMap.put("inventoryItemId", inventoryItemId);
 		            itemIssuanceList.add(tempMap);
 		            
 		         // Handle product totals   			
