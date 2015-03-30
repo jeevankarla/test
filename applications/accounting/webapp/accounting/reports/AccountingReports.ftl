@@ -474,7 +474,7 @@ function reportTypeChangeFunc() {
 						   <option value='Detailed'>Detailed</option>
 					   </select>
 				     </td>
-					  <td width="10%"><input type="submit" value="PDF" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+					  <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('OthersncesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 					</td>         			
 				</form>
               </tr>
@@ -496,7 +496,7 @@ function reportTypeChangeFunc() {
 						   <option value='Detailed'>Detailed</option>
 					   </select>
 				     </td>
-					  <td width="10%"><input type="submit" value="PDF" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('OthersncesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+					  <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('OthersncesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('OthersncesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 					</td>         			
 				</form>
               </tr>
