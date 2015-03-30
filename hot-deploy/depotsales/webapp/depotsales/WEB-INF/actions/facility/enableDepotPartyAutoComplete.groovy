@@ -22,6 +22,7 @@ JSONObject partyNameObj = new JSONObject();
 dctx = dispatcher.getDispatchContext();
 
 partyDetailsList=[];
+partyIdsList=[];
 
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	roleTypeId =parameters.roleTypeId;
@@ -40,7 +41,8 @@ parentRoleTypeId="CUSTOMER_TRADE_TYPE";
 if(UtilValidate.isNotEmpty(parameters.parentRoleTypeId)){
 	parentRoleTypeId=parameters.parentRoleTypeId;
 }
-Debug.log("==parameters.roleTypeId===INNNN=="+parameters.roleTypeId+"===parentRoleTypeId=="+parentRoleTypeId);
+
+//Debug.log("==parameters.roleTypeId===INNNN=="+parameters.roleTypeId+"===parentRoleTypeId=="+parentRoleTypeId);
 if(UtilValidate.isNotEmpty(parentRoleTypeId) && UtilValidate.isEmpty(parameters.roleTypeId) ){//to handle parentRoleTypeIds only when roleTypeId is empty
 	roleTypeList = delegator.findByAnd("RoleType",["parentTypeId" :parentRoleTypeId]);
 	roleTypeList.each{roleType->
@@ -54,7 +56,8 @@ if(UtilValidate.isNotEmpty(parentRoleTypeId) && UtilValidate.isEmpty(parameters.
 		Map tempPartyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
 		if(UtilValidate.isNotEmpty(tempPartyDetailsMap)){
 			tempPartyDetailsList = tempPartyDetailsMap.get("partyDetails");
-			partyDetailsList.addAll(tempPartyDetailsList);
+			tempPartyList = tempPartyDetailsMap.get("partyIds");
+			partyIdsList.addAll(tempPartyList);
 		}
 	}
 }
@@ -69,6 +72,8 @@ partyDetailsList.each{eachParty ->
 }
 context.partyNameObj = partyNameObj;
 context.partyJSON = partyJSON;
+context.partyIdsList=partyIdsList;
+//Debug.log("====partyIdsList==="+partyIdsList);
 //supplier json for supplier lookup.
 JSONArray supplierJSON = new JSONArray();
 
