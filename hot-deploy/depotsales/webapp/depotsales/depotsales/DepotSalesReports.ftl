@@ -65,14 +65,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="30%">Sale Book Report Detail</td>
 				<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
 			    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
-      			<td width="15%">By<select name="categoryType">
-      				<#--<option value="All">All</option>-->
-	      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
-	      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
-	      			<option value="UNITS">Inter Unit Transfer</option>
-	      			<option value="UNION">Sale to Union</option>
-	      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
-      			</select></td>
+      			<td></td>
       			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
@@ -84,14 +77,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="30%">Sale Book Report Abstract </td>
 				<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
 			    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
-      			<td width="15%">By<select name="categoryType">
-      				<option value="All">All</option>
-	      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
-	      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
-	      			<option value="UNITS">Inter Unit Transfer</option>
-	      			<option value="UNION">Sale to Union</option>
-	      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
-      			</select></td>
+      			<td></td>
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 			</form>
           </tr>
