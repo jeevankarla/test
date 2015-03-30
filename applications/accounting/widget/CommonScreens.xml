@@ -271,8 +271,8 @@ under the License.
                 <entity-condition entity-name="PartyRoleDetailAndPartyDetail" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition> 
-                <script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceAnalytics.groovy" />               
+               <!--  <script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceAnalytics.groovy" /> -->               
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
