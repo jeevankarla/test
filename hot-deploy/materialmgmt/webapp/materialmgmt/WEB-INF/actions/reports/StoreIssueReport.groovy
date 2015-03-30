@@ -169,14 +169,28 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	issueNo=1;	
 	StoreIssueList.each{storeIssueDetails->
 		storeIssueDetailsMap=[:];
+		String mrrNo=null;
 		issueQty=storeIssueDetails.quantity;
-		mrrNo=storeIssueDetails.get("shipmentId");
-		indentNo=storeIssueDetails.get("custRequestId");		
+		indentNo=storeIssueDetails.get("custRequestId");
+		inventoryItemId=storeIssueDetails.get("inventoryItemId");
+		
+		List<String> orderBy = UtilMisc.toList("effectiveDate");
+		shipmentIdIss = delegator.findList("InventoryItemDetail",EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId)  , null, orderBy, null, false );
+	    shipmentIdIss = EntityUtil.getFirst(shipmentIdIss);
+	    if(UtilValidate.isNotEmpty(shipmentIdIss)){
+	    receiptId=shipmentIdIss.receiptId;
+	    if(UtilValidate.isNotEmpty(receiptId)){
+        shipmentIdData = delegator.findOne("ShipmentReceipt", [receiptId : receiptId], false);
+        if(shipmentIdData){
+        	mrrNo=shipmentIdData.get("shipmentId");
+       	storeIssueDetailsMap.put("mrrNo",mrrNo);
+             }		
+	       }
+	     }
 		custRequestDate=storeIssueDetails.get("custRequestDate");
 		issueDate = UtilDateTime.toDateString(custRequestDate);		
 		storeIssueDetailsMap.put("issueDate",storeIssueDetails.get("issueDate"));
 		storeIssueDetailsMap.put("IndentNo",storeIssueDetails.get("custRequestId"));
-		storeIssueDetailsMap.put("mrrNo",mrrNo);		
 		storeIssueDetailsMap.put("IssueQty",storeIssueDetails.get("quantity"));
 		storeIssueDetailsMap.put("IssueRate",storeIssueDetails.get("price"));
 		storeIssueDetailsMap.put("IssueAmount",storeIssueDetails.get("amount"));

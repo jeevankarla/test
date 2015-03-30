@@ -22,7 +22,7 @@ under the License.
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
 					 margin-left="0.5in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
-				<fo:region-body margin-top="2.61in"/>
+				<fo:region-body margin-top="2.62in"/>
 				<fo:region-before extent="1in"/>
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
@@ -46,8 +46,8 @@ under the License.
 			    <fo:block font-family="Courier,monospace">		 
 			    <fo:table border-style="solid">
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="80pt"/>
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="60pt"/>
 					<fo:table-column column-width="90pt"/>
 					<fo:table-column column-width="90pt"/>
 					<fo:table-column column-width="100pt"/>
@@ -78,7 +78,7 @@ under the License.
 									<fo:block text-align="center" keep-together="always" font-weight = "bold">BILL NO.</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
-									<fo:block text-align="center" keep-together="always" font-weight = "bold">MRR NUMBER</fo:block>
+									<fo:block text-align="center"  font-weight = "bold">MRR NUMBER</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="center" keep-together="always" font-weight = "bold" >QUANTITY</fo:block>
@@ -155,8 +155,8 @@ under the License.
 				             <fo:table-cell >
 				                 <fo:block text-align="left" >			   	
 			                         <fo:table >
-										  <fo:table-column column-width="80pt"/>
-										  <fo:table-column column-width="80pt"/>
+										  <fo:table-column column-width="100pt"/>
+										  <fo:table-column column-width="60pt"/>
 										  <fo:table-column column-width="90pt"/>
 										  <fo:table-column column-width="90pt"/>
 										  <fo:table-column column-width="100pt"/>					  
