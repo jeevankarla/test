@@ -219,6 +219,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("invSummFromDate","invSummThruDate");
 	    makeDatePicker4("invFromDate","invThruDate");
 	    makeDatePicker4("invTmpSummFromDate","invTmpSummThruDate");
+	    makeDatePicker4("finSummFromDate","finSummThruDate");
 	    
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -619,7 +620,7 @@ function reportTypeChangeFunc() {
           		   		</#list>
 				 	</select>
 			  	</td>
-			  	 <td width="20%">Gl Account Id<@htmlTemplate.lookupField size="10" maxlength="22" formName="GlAccountMasterReport" name="glAccountId" id="glAccountId" fieldFormName="LookupGlAccount"/>
+			  	<td width="20%">Gl Account Id<@htmlTemplate.lookupField size="10" maxlength="22" formName="GlAccountMasterReport" name="glAccountId" id="glAccountId" fieldFormName="LookupGlAccount"/>
 				<td width="15%">From<input  type="text" size="18pt" id="invFromDate"   name="fromDate"/></td>
 				<td width="15%">To<input  type="text" size="18pt" id="invThruDate"   name="thruDate"/></td>
           		
@@ -680,14 +681,23 @@ function reportTypeChangeFunc() {
 					 	<option value="SALES_INVOICE">Receivable</option>								
 				 	</select>
 			  	</td>
-			  	<td width="25%">Invoice Type
+			  	<#--<td width="25%">Invoice Type
 			  	  	<select name='invoiceTypeId' id ="invoiceTypeId">	
 					 	<option value=""></option>								
 						<#list invoiceTypeList as invoiceType> 	
 							<option value='${invoiceType.invoiceTypeId}'>${invoiceType.description?if_exists}</option>
           		   		</#list>
 				 	</select>
+			  	</td>-->
+			  	<td width="25%">Gl Account Class
+			  	  	<select name='glAccountClassId' id ="glAccountClassId">	
+					 	<option value=""></option>								
+						<#list glAccountClassList as glclass> 	
+							<option value='${glclass.glAccountClassId}'>${glclass.description?if_exists}</option>
+          		   		</#list>
+				 	</select>
 			  	</td>
+			  	
 				<td width="15%">From<input  type="text" size="18pt" id="invTmpSummFromDate"   name="fromDate"/></td>
 				<td width="15%">To<input  type="text" size="18pt" id="invTmpSummThruDate"   name="thruDate"/></td>
           		
@@ -720,6 +730,33 @@ function reportTypeChangeFunc() {
              <td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
            </form>
 		</tr>
+		<tr class="alternate-row">
+      	   <form id="FinAccountSummary" name="FinAccountSummary" method="post" action="<@ofbizUrl>FinAccountSummary.pdf</@ofbizUrl>" target="_blank">        
+             <td width="30%">FinAccount Summary</td>
+             <td width="25%">Internal Org
+			  	  	<select name='partyId' id ="partyId">	
+					 	<option value=""></option>								
+						<#list intOrgList as intOrg> 	
+							<option value='${intOrg.partyId}'>${intOrg.groupName?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+			  	<td width="25%">FinAccount Type
+			  	  	<select name='finAccountTypeId' id ="finAccountTypeId">	
+					 	<option value=""></option>								
+						<#list FinAccountTypesList as finAccountType> 	
+							<option value='${finAccountType.finAccountTypeId}'>${finAccountType.description?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+			<td width="15%">From<input  type="text" size="18pt" id="finSummFromDate"   name="fromDate"/></td>
+			<td width="15%">To<input  type="text" size="18pt" id="finSummThruDate"   name="thruDate"/></td>
+          		  	
+			<td width="20%">Gl Account Id<@htmlTemplate.lookupField size="10" maxlength="22" formName="FinAccountSummary" name="glAccountId" id="glAccountId" fieldFormName="LookupGlAccount"/>
+            <td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
+           </form>
+		</tr>
+		
 	</table>
    </div>
    

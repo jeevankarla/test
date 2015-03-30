@@ -172,7 +172,7 @@ under the License.
 		                                <#list glFinalList as eachGlFinal>
 		                                <#assign srn = srn + 1>
 		                                
-		                                <#if (eachGlFinal.get("postedDrAmount")?has_content) || (eachGlFinal.get("JpostedDrAmount")?has_content) || (eachGlFinal.get("unPostedDrAmount")?has_content) || (eachGlFinal.get("JunPostedCrAmount")?has_content) || (eachGlFinal.get("postedDrAmount")?has_content) || (eachGlFinal.get("JpostedCrAmount")?has_content) || (eachGlFinal.get("unPostedCrAmount")?has_content) || (eachGlFinal.get("JunPostedCrAmount")?has_content)>
+		                                <#if (eachGlFinal.get("postedDrAmount") !=0) || (eachGlFinal.get("JpostedDrAmount")!=0) || (eachGlFinal.get("unPostedDrAmount")!=0) || (eachGlFinal.get("JunPostedCrAmount")!=0) || (eachGlFinal.get("postedDrAmount")!=0) || (eachGlFinal.get("JpostedCrAmount")!=0) || (eachGlFinal.get("unPostedCrAmount")!=0) || (eachGlFinal.get("JunPostedCrAmount")!=0)>
 			                                
 		                                <fo:table-row>
 		                            		<fo:table-cell border-style="solid">
@@ -296,9 +296,9 @@ under the License.
                             <fo:table-column column-width="8%"/>
                             <fo:table-column column-width="8%"/>
                             <fo:table-column column-width="16%"/>
-                            <fo:table-column column-width="15%"/>
-                            <fo:table-column column-width="8%"/>
-                            <fo:table-column column-width="9%"/>
+                            <fo:table-column column-width="16%"/>
+                            <fo:table-column column-width="16%"/>
+                            <fo:table-column column-width="16%"/>
                             <fo:table-body>
                                 
                                 <#assign flag = "Y">
@@ -315,17 +315,81 @@ under the License.
 			                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
-			                                </fo:table-cell>
-			                                <fo:table-cell >
-			                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>
-			                                </fo:table-cell>
-			                                <fo:table-cell >
-			                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>
-			                                </fo:table-cell>
-			                                <fo:table-cell >
-			                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>
-			                                </fo:table-cell>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>-->
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>-->
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>-->
+				                                </fo:table-cell>
+				                                <fo:table-cell >
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>-->
+				                                </fo:table-cell>
 		                                </fo:table-row>
 		                                <fo:table-row>
 			                                <fo:table-cell >
@@ -341,19 +405,19 @@ under the License.
 			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">--------------------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">-------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">--------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 		                                 </fo:table-row>
                                			
                                 		<#elseif eachInvoiceList.get("GlAccountId") == "SUBTOTAL">
                                 		<#assign flag = "Y">
-                                		<#if (eachInvoiceList.get("postedDrAmount") != 0 )||  (eachInvoiceList.get("unPostedDrAmount") != 0) || (eachInvoiceList.get("postedCrAmount") != 0) || (eachInvoiceList.get("unPostedCrAmount") != 0)>
+                                		<#if (eachInvoiceList.get("InvoicepostedDrAmount") != 0 )||  (eachInvoiceList.get("AcctpostedDrAmount") != 0) || (eachInvoiceList.get("InvoiceunPostedDrAmount") != 0) || (eachInvoiceList.get("AcctunPostedDrAmount") != 0) || (eachInvoiceList.get("InvoicepostedCrAmount") != 0 )||  (eachInvoiceList.get("AcctpostedCrAmount") != 0) || (eachInvoiceList.get("InvoiceunPostedCrAmount") != 0) || (eachInvoiceList.get("AcctunPostedCrAmount") != 0)>
 	                                		<fo:table-row>
 				                                <fo:table-cell >
 				                                    <fo:block text-align="left" font-size="11pt">--------------------------------</fo:block>
@@ -368,13 +432,13 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">--------------------------------------------------</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">-------------------------------------</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">--------------------------------------</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 			                                 </fo:table-row>
 			                                <fo:table-row>
@@ -388,16 +452,80 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">&#160;</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 			                                </fo:table-row>
 			                                <fo:table-row>
@@ -414,13 +542,13 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">--------------------------------------------------</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">-------------------------------------</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="left" font-size="11pt">--------------------------------------</fo:block>
+				                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 				                                </fo:table-cell>
 			                                 </fo:table-row>
 		                                 </#if>
@@ -470,13 +598,13 @@ under the License.
 			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">--------------------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">-------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">--------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 		                                 </fo:table-row>
 		                                	<fo:table-row>
@@ -490,16 +618,81 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">AccountTransId</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">PostedDr</fo:block>
+				                                    <fo:block text-align="center" font-size="11pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PostedDr</fo:block>
+				                                    <fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Invoice</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Account</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">UnpostedDr</fo:block>
+				                                    <fo:block text-align="center" font-size="11pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UnpostedDr</fo:block>
+				                                    <fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Invoice</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Account</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">PostedCr</fo:block>
+				                                    <fo:block text-align="center" font-size="11pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PostedCr</fo:block>
+				                                    <fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Invoice</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Account</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">UnpotsedCr</fo:block>
+				                                    <fo:block text-align="center" font-size="11pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UnpotsedCr</fo:block>
+				                                    <fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Invoice</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">Account</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
 				                                </fo:table-cell>
 			                                </fo:table-row>
 			                                <fo:table-row>
@@ -516,13 +709,13 @@ under the License.
 			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">--------------------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">-------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 			                                <fo:table-cell >
-			                                    <fo:block text-align="left" font-size="11pt">--------------------------------------</fo:block>
+			                                    <fo:block text-align="left" font-size="11pt">---------------------------------------------------</fo:block>
 			                                </fo:table-cell>
 		                                 </fo:table-row>
 			                                <fo:table-row>
@@ -536,16 +729,80 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("accountTransId")?if_exists}</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 			                                </fo:table-row>
 		                                <#else>
@@ -561,16 +818,80 @@ under the License.
 				                                    <fo:block text-align="left" font-size="11pt">${eachInvoiceList.get("accountTransId")?if_exists}</fo:block>
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedDrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedDrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedDrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoicepostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctpostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("postedCrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 				                                <fo:table-cell >
-				                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>
+				                                	<fo:block>
+								                        <fo:table>
+								                            <fo:table-column column-width="50%"/>
+								                            <fo:table-column column-width="50%"/>
+				                                    		<fo:table-body>
+						                               			<fo:table-row>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("InvoiceunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+									                                <fo:table-cell >
+									                                    <fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("AcctunPostedCrAmount")?if_exists}</fo:block>
+									                                </fo:table-cell>
+				                                    			</fo:table-row>
+				                                    		</fo:table-body>
+				                                    	</fo:table>
+				                                    </fo:block>
+				                                    <#--<fo:block text-align="right" font-size="11pt">${eachInvoiceList.get("unPostedCrAmount")?if_exists}</fo:block>-->
 				                                </fo:table-cell>
 			                                </fo:table-row>
 			                           </#if>
