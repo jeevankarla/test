@@ -3259,6 +3259,10 @@
                		<condition-expr field-name="parentTypeId" operator="equals" value="LOAN_ACCOUNT"/>
                	</condition-list>
                </entity-condition>
+               <entity-condition list="FinAccountTypesList" entity-name="FinAccountType">
+               </entity-condition>
+               <entity-condition list="glAccountClassList" entity-name="GlAccountClass">
+               </entity-condition>
                <entity-condition list="depositTypesList" entity-name="FinAccountType">
                		<condition-list combine="and">
                		<condition-expr field-name="parentTypeId" operator="not-equals" value=""/>

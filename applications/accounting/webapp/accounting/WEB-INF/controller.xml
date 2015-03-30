@@ -3738,7 +3738,19 @@ under the License.
   		<security https="true" auth="true"/>
         <response name="success" type="view" value="TempInvoiceSummaryReportCsv"/>
    </request-map>
+   <request-map uri="FinAccountSummary.pdf">
+  		<security https="true" auth="true"/>
+        <response name="success" type="view" value="FinAccountSummaryPdf"/>
+   </request-map>
     
+   
+   
+   
+   
+   
+   
+   
+   
    
    
     <!-- end of request mappings -->
@@ -4302,6 +4314,7 @@ under the License.
    <view-map name="InvoiceSummaryReportCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InvoiceSummaryReportCsv" content-type="text/csv" encoding="none"/>
    <view-map name="TempInvoiceSummaryReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TempInvoiceSummaryReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="TempInvoiceSummaryReportCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TempInvoiceSummaryReportCsv" content-type="text/csv" encoding="none"/>
+   <view-map name="FinAccountSummaryPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountSummaryPdf" content-type="application/pdf" encoding="none"/>
    
    
    <!-- end of view mappings -->
