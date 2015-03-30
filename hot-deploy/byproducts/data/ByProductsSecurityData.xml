@@ -117,6 +117,7 @@
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_TRSHEETCR"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_FINACCOUNT_EDIT"/>
     
     
     <!--  Parlour Sales Group-->
@@ -188,6 +189,7 @@
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_TRCKSHEET"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_TRSHEETCR"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ACCOUNTING_FINACCOUNT_EDIT"/>
     
     
     <SecurityGroup description=" payment API operations" groupId="PAYMENT_OPS"/>    
