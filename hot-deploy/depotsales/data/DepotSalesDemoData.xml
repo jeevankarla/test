@@ -40,5 +40,6 @@
    <ShipmentType createdStamp="2015-03-20 15:16:24.0" createdTxStamp="2015-03-20 15:16:24.0" description="Depot Shipment" hasTable="N" lastUpdatedStamp="2015-03-20 15:16:24.0" lastUpdatedTxStamp="2015-03-20 15:16:24.0" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="DEPOT_SHIPMENT"/>
    
    <ProductAttribute attrName="LEDGERFOLIONO" attrValue="123"  productId="HO_1"/> 
+   
     
 </entity-engine-xml>

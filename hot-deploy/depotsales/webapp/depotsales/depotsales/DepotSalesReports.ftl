@@ -32,6 +32,7 @@ $(document).ready(function(){
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker("stockDate");
+	    makeDatePicker("CASHFromDateId","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 
@@ -60,51 +61,65 @@ function makeDatePicker3(fromDateId ,thruDateId){
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row">
-						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Sale Book Report Detail</td>
-							<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
-						    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
-			      			<td width="15%">By<select name="categoryType">
-			      				<#--<option value="All">All</option>-->
-				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
-				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
-				      			<option value="UNITS">Inter Unit Transfer</option>
-				      			<option value="UNION">Sale to Union</option>
-				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
-			      			</select></td>
-			      			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
-							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
-							<input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-							
-						</form>
-	                  </tr>
-	                   <tr class="alternate-row">
-						<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookAbstractReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Sale Book Report Abstract </td>
-							<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
-						    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
-			      			<td width="15%">By<select name="categoryType">
-			      				<option value="All">All</option>
-				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
-				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
-				      			<option value="UNITS">Inter Unit Transfer</option>
-				      			<option value="UNION">Sale to Union</option>
-				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
-			      			</select></td>
-	      					<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
-						</form>
-	                  </tr>
-	                  <tr class="alternate-row">
-			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCrDepot.pdf</@ofbizUrl>" target="_blank">        
-			             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
-			             <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
-			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
-			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
-			             <td width="15%"></td>
-			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
-			           </form>
-			        </tr>
+			<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Sale Book Report Detail</td>
+				<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
+      			<td width="15%">By<select name="categoryType">
+      				<#--<option value="All">All</option>-->
+	      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+	      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+	      			<option value="UNITS">Inter Unit Transfer</option>
+	      			<option value="UNION">Sale to Union</option>
+	      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
+      			</select></td>
+      			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				
+			</form>
+          </tr>
+           <tr class="alternate-row">
+			<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookAbstractReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Sale Book Report Abstract </td>
+				<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
+      			<td width="15%">By<select name="categoryType">
+      				<option value="All">All</option>
+	      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+	      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+	      			<option value="UNITS">Inter Unit Transfer</option>
+	      			<option value="UNION">Sale to Union</option>
+	      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
+      			</select></td>
+				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+			</form>
+          </tr>
+          <tr class="alternate-row">
+      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCrDepot.pdf</@ofbizUrl>" target="_blank">        
+             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
+             <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
+      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
+             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
+             <td width="15%"></td>
+             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+           </form>
+        </tr>
+		<tr class="alternate-row">
+    	<form id="CashPaymentCheckList" name="CashierPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentCheckListDepot</@ofbizUrl>">	
+  			<td width="30%">Cash Payment CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+  				<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
+  			</td>
+  			<td width="15%">Date<input  type="text" size="18pt" id="CASHFromDateId" readonly  name="paymentDate"/></td>
+  			<td width="15%">
+  			    <input  type="hidden"  name="routeId" value="All"/>
+  			</td>
+  			<td width="15%"></td>
+  			<td width="15%"></td>
+			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+		</form>	
+      </tr>
 	</table>
 </div>
 <div class="screenlet">
