@@ -288,6 +288,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="stockPositionReportDepotPDF"/>
     </request-map>
+    <request-map uri="CashierPaymentCheckListDepot">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="CashierPaymentCheckListDepot"/>        
+    </request-map>
      
      
     <!-- View Mappings -->
@@ -319,6 +323,7 @@
     <view-map name="DepotSalesBookAbstractReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotSalesBookAbstractReportPDF" content-type="application/pdf"/>
     <view-map name="PartyFinancialHistoryWithDrCrDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PartyFinancialHistoryWithDrCrDepotPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="stockPositionReportDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockPositionReportDepotPDF" content-type="application/pdf"/>
+    <view-map name="CashierPaymentCheckListDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#CashierPaymentCheckListDepot" content-type="application/pdf" encoding="none"/>
     
     
     

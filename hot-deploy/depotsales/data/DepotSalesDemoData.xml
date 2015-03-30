@@ -40,5 +40,12 @@
    <ShipmentType createdStamp="2015-03-20 15:16:24.0" createdTxStamp="2015-03-20 15:16:24.0" description="Depot Shipment" hasTable="N" lastUpdatedStamp="2015-03-20 15:16:24.0" lastUpdatedTxStamp="2015-03-20 15:16:24.0" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="DEPOT_SHIPMENT"/>
    
    <ProductAttribute attrName="LEDGERFOLIONO" attrValue="123"  productId="HO_1"/> 
+   <Payment actualCurrencyUomId="INR" amount="2052.00" currencyUomId="INR" effectiveDate="2015-03-01 08:56:30.0" facilityId="S076" finAccountTransId="162842" isFullyApplied="Y" partyIdFrom="S076" partyIdTo="Company" paymentDate="2015-03-01 08:56:30.0" paymentId="182320" paymentLocation="S01" paymentMethodTypeId="CASH_PAYIN" paymentPurposeType="ROUTE_MKTG" paymentTypeId="SALES_PAYIN" statusId="PMNT_RECEIVED"/>
+   <OrderHeader createdBy="mahendrareddy" currencyUom="INR" entryDate="2015-02-28 17:30:00.0" estimatedDeliveryDate="2015-03-01 00:00:00.0" grandTotal="19614.00" isEnableAcctg="N" orderDate="2015-02-28 17:30:00.0" orderId="395018" orderTypeId="SALES_ORDER" originFacilityId="S1757" productStoreId="1003" productSubscriptionTypeId="CASH" remainingSubTotal="19614.00" salesChannelEnumId="BYPROD_SALES_CHANNEL" shipmentId="46473" statusId="ORDER_APPROVED"/>
+   <Shipment createdDate="2015-02-28 17:28:13.0" estimatedShipDate="2015-03-01 00:00:00.0" routeId="S73" shipmentId="46470" shipmentTypeId="AM_SHIPMENT" statusId="GENERATED"/>
+   
+   <PartyNameView firstName="Sumeela d" partyId="S1280" partyTypeId="PERSON"/>   
+   <PartyNameView firstName="Narayanappa " lastName="A" partyId="S076" partyTypeId="PERSON"/> 
+    
     
 </entity-engine-xml>
