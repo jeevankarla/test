@@ -261,7 +261,7 @@
         <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
         <field name="issuedByUserLoginId" title="Issued By"><display/></field>
         <!--  <field name="crqItemstatusId" title="crqItemstatusId-"><display/></field>  -->
-        <field  use-when="&quot;${crqItemstatusId}&quot; != &quot;CRQ_COMPLETED&quot;" name="cancelIssue" widget-style="buttontext">
+        <field  use-when="&quot;${crqItemstatusId}&quot; != &quot;CRQ_COMPLETED&quot; &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}" name="cancelIssue" widget-style="buttontext">
             <hyperlink target="cancelIssuenceForCustRequest" description="CancelIssue" confirmation-message="Are you sure to Cancel Issuance..?">
                 <parameter param-name="custRequestId"/>
                  <parameter param-name="custRequestItemSeqId"/>
