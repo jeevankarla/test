@@ -116,18 +116,26 @@ saleIssuesList.each{issue->
  if(UtilValidate.isEmpty(saleIssuedMap[issue.productId])){
 	 saleIssuedMap[issue.productId]=qanty;
  }else{
-	 tempMap = [:];
-	 tempMap.putAll(saleIssuedMap.get(issue.productId));
-	 qanty=qanty+tempMap.get(issue.productId);
+	// tempMap = [:];
+	// tempMap.putAll(saleIssuedMap.get(issue.productId));
+ 	issuedQty=0;
+	 if(saleIssuedMap.get(issue.productId)){
+		issuedQty= saleIssuedMap.get(issue.productId)
+	 }
+	 qanty=qanty+issuedQty;
 	 saleIssuedMap[issue.productId]=qanty;
  }
  
  if(UtilValidate.isEmpty(saleTotalValue[issue.productId])){
 	 saleTotalValue[issue.productId]=totValue;
  }else{
-    tempMap=[:];
-	tempMap.putAll(saleTotalValue.get(issue.productId));
-	totValue=totValue+saleTotalValue.get(issue.productId);
+    //tempMap=[:];
+	//tempMap.putAll(saleTotalValue.get(issue.productId));
+    issuedValue=0;
+	if(saleTotalValue.get(issue.productId)){
+		issuedValue=saleTotalValue.get(issue.productId)
+	}
+	totValue=totValue+issuedValue;
 	saleTotalValue[issue.productId]=totValue;
  }
 }
