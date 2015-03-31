@@ -36,11 +36,18 @@
 		$( "#suppInvoiceDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
+			onSelect: function( selectedDate ) {
+				$( "#deliveryChallanDate" ).datepicker("option", "minDate", selectedDate);
+			}
 			
 		});
 		$( "#deliveryChallanDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
+			minDate:"#suppInvoiceDate",
+			onSelect: function( selectedDate ) {
+				$( "#suppInvoiceDate" ).datepicker("option", "maxDate", selectedDate);
+			}
 			
 		});
 		$('#ui-datepicker-div').css('clip', 'auto');
@@ -147,23 +154,25 @@
 				      		</tr>
 				      	</#if>
 						<tr><td><br/></td></tr>
-					  	<tr>
+						
+						<tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Delivery Challan Date: </div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date: <font color='red'>*</font></div></td>
 				          <td>&nbsp;</td>
-				          <#if (parameters.deliveryChallanDate)?exists && (parameters.deliveryChallanDate)?has_content> 
-				                 <input type="hidden" name="deliveryChallanDate" id="deliveryChallanDate" value="${parameters.deliveryChallanDate}"/>  
+				          <#if (parameters.suppInvoiceDate)?exists && (parameters.suppInvoiceDate)?has_content> 
+				                 <input type="hidden" name="suppInvoiceDate" id="suppInvoiceDate" value="${parameters.suppInvoiceDate}"/>  
 					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${parameters.deliveryChallanDate}         
+					            	<div class='tabletext h3'>${parameters.suppInvoiceDate}         
 					            	</div>
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" value="${defaultEffectiveDate}" />
+		          				<input type="text" readOnly name="suppInvoiceDate" id="suppInvoiceDate" />
 		          			</td>
 				          </#if>
 		          			
 				        </tr>
+					  	
 						<tr><td><br/></td></tr>
 		 				<tr>
 				          <td>&nbsp;</td>
@@ -200,23 +209,26 @@
 				       	  </#if>
 					  	</tr>
 					  	<tr><td><br/></td></tr>
+					  	
 					  	<tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date: <font color='red'>*</font></div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Delivery Challan Date: </div></td>
 				          <td>&nbsp;</td>
-				          <#if (parameters.suppInvoiceDate)?exists && (parameters.suppInvoiceDate)?has_content> 
-				                 <input type="hidden" name="suppInvoiceDate" id="suppInvoiceDate" value="${parameters.suppInvoiceDate}"/>  
+				          <#if (parameters.deliveryChallanDate)?exists && (parameters.deliveryChallanDate)?has_content> 
+				                 <input type="hidden" name="deliveryChallanDate" id="deliveryChallanDate" value="${parameters.deliveryChallanDate}"/>  
 					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${parameters.suppInvoiceDate}         
+					            	<div class='tabletext h3'>${parameters.deliveryChallanDate}         
 					            	</div>
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input type="text" readOnly name="suppInvoiceDate" id="suppInvoiceDate" />
+		          				<input type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" value="${defaultEffectiveDate}" />
 		          			</td>
 				          </#if>
 		          			
 				        </tr>
+				        
+					  	
 						<tr><td><br/></td></tr>
 		 				<tr>
 				          <td>&nbsp;</td>
