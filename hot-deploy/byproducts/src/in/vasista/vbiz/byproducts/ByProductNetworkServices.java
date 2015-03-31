@@ -8426,7 +8426,9 @@ public class ByProductNetworkServices {
 			List<GenericValue> productAttribute = (List)EntityUtil.filterByCondition(productAttributes, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
 			Map uomMapDetail = FastMap.newInstance();
 			for(GenericValue prodAttr : productAttribute){
+				if (UtilValidate.isNotEmpty(prodAttr.getString("attrValue"))){
 				uomMapDetail.put(prodAttr.getString("attrName"), new BigDecimal(prodAttr.getString("attrValue")));
+				}
 			}
 			uomMapDetail.put("LtrKg", productDetail.getBigDecimal("quantityIncluded"));
 			productConversionDetail.put(prodId, uomMapDetail);
