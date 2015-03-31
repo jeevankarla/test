@@ -97,6 +97,20 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 	resultMap = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]).get("productTotals");
 }
 
+// handle subsidy ghee invoices
+condExpr = [];
+condExpr.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+condExpr.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+condExpr.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "SUB_GHEE"));
+condExpr.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+subGheeInvoices = delegator.findList("Invoice", cond, UtilMisc.toSet("invoiceId"), null, null, false);
+
+gheeInvoiceIds = EntityUtil.getFieldListFromEntityList(subGheeInvoices, "invoiceId", true);
+gheeInvoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, gheeInvoiceIds), null, null, null, false);
+productIds = EntityUtil.getFieldListFromEntityList(gheeInvoiceItems, "productId", true);
+gheeVatPercents = EntityUtil.getFieldListFromEntityList(gheeInvoiceItems, "vatPercent", true);
+
 vatMap = [:];
 vatList.each { vat->
 	productIdList = EntityUtil.filterByDate(delegator.findByAnd("ProductPrice", [taxPercentage : vat ,productPriceTypeId : "VAT_SALE"]));
@@ -213,7 +227,104 @@ vatList.each { vat->
 		vatMap.put(vat,productCategoryMap);
 	}
 }
-context.put("vatMap",vatMap);
+//subsidy ghee vat
+condList = [];
+condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, gheeInvoiceIds));
+condList.add(EntityCondition.makeCondition("vatAmount", EntityOperator.NOT_EQUAL, null));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+gheeInvoiceItems = delegator.findList("InvoiceItem", cond, null, null, null, false);
+gheeVatPercents = EntityUtil.getFieldListFromEntityList(gheeInvoiceItems, "vatPercent", true);
+gheeVatPercents.each{ eachVat ->
+	productIds = EntityUtil.getFieldListFromEntityList(gheeInvoiceItems, "productId", true);
+	productIds.each{ eachProd ->
+		prodInvoiceItems = EntityUtil.filterByCondition(gheeInvoiceItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
+		product = delegator.findOne("Product", UtilMisc.toMap("productId", eachProd), false);
+		primaryCategory = "";
+		virtualProdId = "Other Products";
+		condList = [];
+		condList.add(EntityCondition.makeCondition("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT"));
+		condList.add(EntityCondition.makeCondition("productIdTo", EntityOperator.EQUALS, eachProd));
+		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		prodAssoc = delegator.findList("ProductAssoc", cond, null, null, null, false);
+		prodAssoc = EntityUtil.filterByDate(prodAssoc, dayEnd);
+		if(prodAssoc){
+			virtualProdId = (EntityUtil.getFirst(prodAssoc)).productId;
+		}
+		
+		if(product){
+			primaryCategory = product.primaryProductCategoryId;
+		}
+		
+		prodInvoiceItems.each { eachItem ->
+			vatAmt = eachItem.vatAmount;
+			totRevenue = eachItem.vatAmount+eachItem.amount;
+			if(vatMap.get(eachVat)){
+				vatPercentMap = vatMap.get(eachVat);
+				if(vatPercentMap.get(primaryCategory)){
+					vatVirtualProdMap = vatPercentMap.get(primaryCategory);
+					if(vatVirtualProdMap.get(virtualProdId)){
+						productDetailMap = 	vatVirtualProdMap.get(virtualProdId);
+						if(productDetailMap.get(eachProd)){
+							productRevenueMap = productDetailMap.get(eachProd);
+							tempMap = [:];
+							tempMap["quantity"] = eachItem.quantity+productRevenueMap["quantity"];
+							tempMap["revenue"] = totRevenue+productRevenueMap["revenue"];
+							tempMap["vatRevenue"] = vatAmt+productRevenueMap["vatRevenue"];
+							productDetailMap.put(eachProd, tempMap);
+							vatVirtualProdMap.put(virtualProdId, productDetailMap);
+							vatPercentMap.put(primaryCategory, vatVirtualProdMap);
+							vatMap.put(eachVat, vatPercentMap);
+						}
+						else{
+							tempDetailMap = [:];
+							tempDetailMap["quantity"] = eachItem.quantity;
+							tempDetailMap["revenue"] = eachItem.amount;
+							tempDetailMap["vatRevenue"] = eachItem.vatAmount;
+							productDetailMap.put(eachProd, tempDetailMap);
+							vatVirtualProdMap.put(virtualProdId, productDetailMap);
+							vatPercentMap.put(primaryCategory, vatVirtualProdMap);
+							vatMap.put(eachVat, vatPercentMap);
+						}
+					}else{
+						tempDetailMap = [:];
+						prodDetailMap = [:];
+						tempDetailMap["quantity"] = eachItem.quantity;
+						tempDetailMap["revenue"] = eachItem.amount;
+						tempDetailMap["vatRevenue"] = eachItem.vatAmount;
+						prodDetailMap.put(eachProd, tempDetailMap);
+						vatVirtualProdMap.put(virtualProdId, prodDetailMap);
+						vatMap.put(eachVat, vatVirtualProdMap);
+					}
+				}else{
+					tempDetailMap = [:];
+					prodDetailMap = [:];
+					subCatDetailMap = [:];
+					tempDetailMap["quantity"] = eachItem.quantity;
+					tempDetailMap["revenue"] = eachItem.amount;
+					tempDetailMap["vatRevenue"] = eachItem.vatAmount;
+					prodDetailMap.put(eachProd, tempDetailMap);
+					subCatDetailMap.put(virtualProdId, prodDetailMap);
+					vatPercentMap.put(primaryCategory, subCatDetailMap);
+					vatMap.put(eachVat, vatPercentMap);
+				}
+				
+			}
+			else{
+				tempDetailMap = [:];
+				prodDetailMap = [:];
+				subCatDetailMap = [:];
+				categoryDetailMap = [:];
+				tempDetailMap["quantity"] = eachItem.quantity;
+				tempDetailMap["revenue"] = eachItem.amount;
+				tempDetailMap["vatRevenue"] = eachItem.vatAmount;
+				prodDetailMap.put(eachProd, tempDetailMap);
+				subCatDetailMap.put(virtualProdId, prodDetailMap);
+				categoryDetailMap.put(primaryCategory, subCatDetailMap);
+				vatMap.put(eachVat, categoryDetailMap);
+			}
+		}
+	}
+}
 // for CSV
 vatReportCsvList = [];
 if(UtilValidate.isNotEmpty(vatMap)){
@@ -258,4 +369,5 @@ if(UtilValidate.isNotEmpty(vatMap)){
 		}
 	}
 }
+context.put("vatMap",vatMap);
 context.put("vatReportCsvList",vatReportCsvList);
