@@ -418,13 +418,13 @@
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
        
         <menu-item name="calendar" title="${uiLabelMap.WorkEffortCalendar}"><link target="calendar"/></menu-item>
-        <!--<menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="FindPerfReviews"/></menu-item>-->
-        <!--<menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item>  -->
-        <!--<menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>-->
-        <!--<menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item>-->        
-        <!-- <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item> -->
-        <!--<menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><link target="FindEmploymentApps"/></menu-item>
-        <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>-->
+        <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="FindPerfReviews"/></menu-item>
+        <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item> 
+        <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
+        <menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item>        
+        <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>
+        <menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><link target="FindEmploymentApps"/></menu-item>
+        <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>
         <menu-item name="Punchinout" title="In/Out">
 			<condition>
                 <and>
@@ -972,7 +972,7 @@
         </menu-item>
     </menu>
     
-  <!--  <menu name="TrainingTypeMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
+   <menu name="TrainingTypeMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <menu-item name="TrainingCalendar" title="${uiLabelMap.HumanResTraining} ${uiLabelMap.WorkEffortCalendar}">
             <link target="TrainingCalendar"/>
         </menu-item>
@@ -984,7 +984,7 @@
             <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
             <link target="FindTrainingApprovals"/>
         </menu-item>
-    </menu>-->
+    </menu>
     
     <menu name="EmplLeaveReasonTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave Reason Type" type="simple" menu-container-style="button-bar tab-bar" 

@@ -34,6 +34,8 @@ import org.ofbiz.entity.util.EntityUtil;
 
 String currentDay = parameters.currentDay;
 String startParam = parameters.start;
+fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 context.put("nextFlag","true");
 facilityId = parameters.facilityId;
 fixedAssetId = parameters.fixedAssetId;
@@ -43,15 +45,17 @@ calendarType = parameters.calendarType;
 localDispatcherName=parameters.localDispatcherName;
 scopeEnumId="";
 	periods = delegator.findByAnd("CustomTimePeriod", [periodTypeId : "HR_YEAR"]);
-	period = EntityUtil.getFirst(periods);
-	if (period) {
-                fromDate = period.fromDate;
-                if(periods[1] && periods[1].thruDate > nowTimestamp){
-                thruDate =periods[1].thruDate; 
-               		} else{
-                thruDate =period.thruDate; 
-                	  }        
-            }
+	if(UtilValidate.isNotEmpty(periods)){
+		period = EntityUtil.getFirst(periods);
+		if (period) {
+					fromDate = period.fromDate;
+					if(periods[1] && periods[1].thruDate > nowTimestamp){
+					thruDate =periods[1].thruDate;
+						   } else{
+					thruDate =period.thruDate;
+						  }
+				}
+	}
 entityExprList = (List) context.get("entityExprList");
 filterOutCanceledEvents = parameters.filterOutCanceledEvents;
 if (!filterOutCanceledEvents) {
