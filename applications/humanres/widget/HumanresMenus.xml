@@ -418,13 +418,13 @@
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
        
         <menu-item name="calendar" title="${uiLabelMap.WorkEffortCalendar}"><link target="calendar"/></menu-item>
-        <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="FindPerfReviews"/></menu-item>
-        <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item> 
-        <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
-        <menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item>        
-        <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>
-        <menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><link target="FindEmploymentApps"/></menu-item>
-        <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>
+        <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="FindPerfReviews"/></menu-item>
+        <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="FindPartySkills"/></menu-item> 
+        <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="FindPartyQuals"/></menu-item>
+        <menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="FindJobRequisitions"/></menu-item>        
+        <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="TrainingCalendar"/></menu-item>
+        <menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="FindEmploymentApps"/></menu-item>
+        <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><condition><if-has-permission permission="FULL" action="_ADMIN"/></condition><link target="FindPartyResumes"/></menu-item>
         <menu-item name="Punchinout" title="In/Out">
 			<condition>
                 <and>
