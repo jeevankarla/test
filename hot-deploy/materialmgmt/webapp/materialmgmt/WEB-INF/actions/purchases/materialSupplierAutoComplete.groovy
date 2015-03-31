@@ -25,7 +25,8 @@ Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("custRe
 supplierList=delegator.findList("CustRequestParty",Condition,null,null,null,false);
 if(supplierList){
 	supplierList.each{ supplier ->
-		Cond = EntityCondition.makeCondition([EntityCondition.makeCondition("custRequestId", custReqId),EntityCondition.makeCondition("partyId",supplier.partyId)],EntityOperator.AND);
+		Cond = EntityCondition.makeCondition([EntityCondition.makeCondition("custRequestId", custReqId),EntityCondition.makeCondition("partyId",supplier.partyId),
+			                                  EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"QUO_REJECTED")],EntityOperator.AND);
 		existedSuppliers=delegator.findList("QuoteAndItemAndCustRequest",Cond,null,null,null,false);
 		if(UtilValidate.isEmpty(existedSuppliers)){
 			JSONObject newObj = new JSONObject();

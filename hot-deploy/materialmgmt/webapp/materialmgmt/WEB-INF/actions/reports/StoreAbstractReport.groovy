@@ -83,9 +83,54 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-itemIssuances=delegator.findList("ItemIssuance",condition,UtilMisc.toSet("productId"),null,null,false);
+itemIssuances=delegator.findList("ItemIssuance",condition,UtilMisc.toSet("productId","orderId","custRequestId","quantity","cancelQuantity","inventoryItemId"),null,null,false);
 issuedProductIds=EntityUtil.getFieldListFromEntityList(itemIssuances,"productId",true);
 
+orderCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("orderTypeId",EntityOperator.EQUALS,"SALES_ORDER"),
+	                                      EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"),
+										  EntityCondition.makeCondition("salesChannelEnumId",EntityOperator.EQUALS,"FGS_PRODUCT_CHANNEL")],EntityOperator.AND);
+orderHeaderList=delegator.findList("OrderHeader",orderCondition,UtilMisc.toSet("orderId"),null,null,false);
+orderIds=EntityUtil.getFieldListFromEntityList(orderHeaderList,"orderId",true);
+
+ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,null),
+	                               EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIds),
+								   EntityCondition.makeCondition("issuedDateTime", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin),
+								   EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)],EntityOperator.AND);
+							  
+saleIssuesList=delegator.findList("ItemIssuanceInventoryItemAndProduct",ecl,UtilMisc.toSet("productId","quantity","cancelQuantity","unitCost"),null,null,false);
+							   
+saleProductIds=EntityUtil.getFieldListFromEntityList(saleIssuesList,"productId",true);
+saleIssuedMap=[:];
+saleTotalValue=[:];
+saleIssuesList.each{issue->
+	qanty=0;
+	unitCost=0;
+	qanty=issue.quantity;
+	if(UtilValidate.isNotEmpty(issue.cancelQuantity)){
+		qanty=qanty-issue.cancelQuantity
+	}
+	if(UtilValidate.isNotEmpty(issue.unitCost)){
+		unitCost=issue.unitCost;
+	}
+	totValue=qanty*unitCost;
+ if(UtilValidate.isEmpty(saleIssuedMap[issue.productId])){
+	 saleIssuedMap[issue.productId]=qanty;
+ }else{
+	 tempMap = [:];
+	 tempMap.putAll(saleIssuedMap.get(issue.productId));
+	 qanty=qanty+tempMap.get(issue.productId);
+	 saleIssuedMap[issue.productId]=qanty;
+ }
+ 
+ if(UtilValidate.isEmpty(saleTotalValue[issue.productId])){
+	 saleTotalValue[issue.productId]=totValue;
+ }else{
+    tempMap=[:];
+	tempMap.putAll(saleTotalValue.get(issue.productId));
+	totValue=totValue+saleTotalValue.get(issue.productId);
+	saleTotalValue[issue.productId]=totValue;
+ }
+}
 /*custReqAndItemDetails= delegator.findList("ItemIssuanceInventoryItemAndProduct",condition,null,null,null,false);*/
 custReqAndItemDetails=delegator.findList("InventoryItem",EntityCondition.makeCondition("productId",EntityOperator.IN,productIdsFacility),UtilMisc.toSet("productId"),null,null,false);
 productMap=[:];
@@ -132,16 +177,19 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 			 productDetailsMap.put("ReceiptQty",ReceiptQty);
 			 productDetailsMap.put("ReceiptAmount",ReceiptAmount);
 			 IssueQty=0;IssueAmount=0;
-			 if(issuedProductIds.contains(eachProduct)){
+			 if(saleProductIds.contains(eachProduct)){
+				 IssueQty=saleIssuedMap.get(eachProduct);
+				 IssueAmount=saleTotalValue.get(eachProduct);
+			 }else if(issuedProductIds.contains(eachProduct)){
 			 itemIssueMap=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:dayBegin, thruDate:dayEnd,productId: eachProduct, userLogin: userLogin]);
 			 StoreIssueList=itemIssueMap.get("itemIssuanceList");
 			 
-			 if(UtilValidate.isNotEmpty(StoreIssueList)){
-				 StoreIssueList.each{storeIssueDetails->
-					 IssueQty=IssueQty+storeIssueDetails.get("quantity");
-					 IssueAmount=IssueAmount+storeIssueDetails.get("amount");
-				 }
-			 }	
+				 if(UtilValidate.isNotEmpty(StoreIssueList)){
+					 StoreIssueList.each{storeIssueDetails->
+						 IssueQty=IssueQty+storeIssueDetails.get("quantity");
+						 IssueAmount=IssueAmount+storeIssueDetails.get("amount");
+					 }
+				 }	
 			 }
 			 productDetailsMap.put("IssueQty",IssueQty);
 			 productDetailsMap.put("IssueAmount",IssueAmount);

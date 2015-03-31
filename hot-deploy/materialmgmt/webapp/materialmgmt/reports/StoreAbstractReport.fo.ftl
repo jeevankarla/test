@@ -232,10 +232,18 @@ under the License.
                        <fo:table-column column-width="85pt"/>
 					   <fo:table-body> 
 					        <#assign sno=1>	
+					        <#assign grandOpenTotal=0>
+                            <#assign grandReceiptTotal=0>
+                            <#assign grandIssueTotal=0>  
+                            <#assign finalOpenTotal=0>
+                            <#assign finalClosingTotal=0>  
                            <#assign productList = sortedMap.entrySet()>
                            <#list productList as productEntry>
                            <#assign productd=productEntry.getKey()> 
-                           <#assign productDetails=productEntry.getValue()>                             
+                           <#assign productDetails=productEntry.getValue()> 
+                           <#if productDetails.get("openingTot")?has_content><#assign grandOpenTotal=grandOpenTotal+productDetails.get("openingTot")></#if>                           
+                           <#if productDetails.get("ReceiptAmount")?has_content><#assign grandReceiptTotal=grandReceiptTotal+productDetails.get("ReceiptAmount")></#if>
+                           <#if productDetails.get("IssueAmount")?has_content><#assign grandIssueTotal=grandIssueTotal+productDetails.get("IssueAmount")></#if>  
 					       <fo:table-row height="30pt">
 					            <fo:table-cell border-style="solid">
 									    <fo:block text-align="left" keep-together="always" font-size="10pt" >${sno?if_exists}</fo:block>
@@ -309,7 +317,73 @@ under the License.
                               </#list> 
 			           </fo:table-body>
 				   </fo:table>
-			   </fo:block> 		      
+			   </fo:block> 	
+               <fo:block>
+                   <fo:table border-style="solid">
+                       <fo:table-column column-width="20pt"/>
+					   <fo:table-column column-width="50pt"/>
+					   <fo:table-column column-width="120pt"/>
+					   <fo:table-column column-width="30pt"/>
+					   <fo:table-column column-width="90pt"/>
+					   <fo:table-column column-width="90pt"/>					   
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="75pt"/>
+					   <fo:table-column column-width="100pt"/>
+					   <fo:table-column column-width="100pt"/>
+					   <fo:table-column column-width="65pt"/>
+					   <fo:table-column column-width="65pt"/>
+                       <fo:table-column column-width="85pt"/>
+                       <fo:table-column column-width="85pt"/>
+					   <fo:table-body>
+					   <fo:table-row>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="cemter" keep-together="always" font-size="10pt" font-weight="bold" >TOTALS :</fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="right" keep-together="always" font-size="10pt" font-weight="bold" >${grandOpenTotal?if_exists?string("##0.00")}</fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="right" keep-together="always" font-size="10pt" font-weight="bold" >${grandReceiptTotal?if_exists?string("##0.00")}</fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+                       <#assign finalOpenTotal=finalOpenTotal+grandOpenTotal+grandReceiptTotal>
+					   <fo:table-cell >
+						 <fo:block text-align="right" keep-together="always" font-size="10pt" font-weight="bold" >${finalOpenTotal?if_exists?string("##0.00")}</fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="right" keep-together="always" font-size="10pt" font-weight="bold" >${grandIssueTotal?if_exists?string("##0.00")}</fo:block>
+					   </fo:table-cell>
+					   <fo:table-cell >
+						 <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+					   </fo:table-cell>
+                       <#assign finalClosingTotal=finalOpenTotal-grandIssueTotal>
+					   <fo:table-cell >
+						 <fo:block text-align="right" keep-together="always" font-size="10pt" font-weight="bold" >${finalClosingTotal?if_exists?string("##0.00")}</fo:block>
+					   </fo:table-cell>
+					   </fo:table-row>
+					   </fo:table-body>
+				   </fo:table>
+			   </fo:block>		   	      
 		   </fo:flow>	
        </fo:page-sequence>
        <#else>
