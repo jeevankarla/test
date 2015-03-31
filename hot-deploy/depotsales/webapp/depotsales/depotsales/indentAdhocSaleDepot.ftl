@@ -202,21 +202,38 @@ $(document).ready(function(){
         </tr>
          <tr><td><br/></td></tr>
         <tr>
-      		<td>&nbsp;</td>
-      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Sale From Store:</div></td>
-      		<td>&nbsp;</td>
-   			<#if productStoreId?exists && productStoreId?has_content>  
-  	  			<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
-      			<td valign='middle'>
-        			<div class='tabletext h3'>${productStoreId?if_exists}</div>
-      			</td>       	
-   			<#else>      	         
-      			<td valign='middle'>
-      				<select name="productStoreIdFrom" id="productStoreIdFrom"   onchange="javascript:showStoreCatalog(this)"  class='h2'>
-      					<option value="1003"> STORE </option>
-      				</select>
-      			</td>
-   			</#if>
+          <td>&nbsp;</td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
+          <td>&nbsp;</td>
+        <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
+			<#if booth?exists && booth?has_content>  
+	  	  		<input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h3'>
+               			${booth.facilityId.toUpperCase()} [ ${booth.facilityName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          			<input type="text" name="boothId" id="boothId" />
+          			 <span class="tooltip">Input party code and press Enter</span>
+          		</td>
+          	</#if>
+    	<#else>
+		 	<#if party?exists && party?has_content>  
+	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>
+               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          			<input type="text" name="partyId" id="partyId" />
+          			 <span class="tooltip">Input party code and press Enter</span>
+          		</td>
+          	</#if>
+        </#if>
         </tr>
         <tr><td><br/></td></tr>
         <#if changeFlag?exists && changeFlag != "AdhocSaleNew">
@@ -254,7 +271,25 @@ $(document).ready(function(){
 		   			</#if>
 		    	</tr>
 	    	</#if>
-	    	<tr><td><br/></td></tr>
+	    	 <tr><td><br/></td></tr>
+		        <tr>
+		      		<td>&nbsp;</td>
+		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Sale From Store:</div></td>
+		      		<td>&nbsp;</td>
+		   			<#if productStoreId?exists && productStoreId?has_content>  
+		  	  			<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
+		      			<td valign='middle'>
+		        			<div class='tabletext h3'>${productStoreId?if_exists}</div>
+		      			</td>       	
+		   			<#else>      	         
+		      			<td valign='middle'>
+		      				<select name="productStoreIdFrom" id="productStoreIdFrom"   onchange="javascript:showStoreCatalog(this)"  class='h2'>
+		      					<option value="1003"> STORE </option>
+		      				</select>
+		      			</td>
+		   			</#if>
+		        </tr>
+	    	   <tr><td><br/></td></tr>
 		    	<tr>
 		      		<td>&nbsp;</td>
 		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:<font color="red">*</font></div></td>
@@ -270,7 +305,6 @@ $(document).ready(function(){
 				</tr>
 		    	<tr><td><br/></td></tr>
     	</#if>
-       
         	<#if changeFlag?exists && changeFlag !='InterUnitTransferSale' && changeFlag !='ICPTransferSale'>
         		<tr>
 	          		<td>&nbsp;</td>
@@ -335,41 +369,6 @@ $(document).ready(function(){
         </tr> 
         </#if>
         </#if>
-        <tr><td><br/></td></tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
-          <td>&nbsp;</td>
-        <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
-			<#if booth?exists && booth?has_content>  
-	  	  		<input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
-          		<td valign='middle'>
-            		<div class='tabletext h3'>
-               			${booth.facilityId.toUpperCase()} [ ${booth.facilityName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-            		</div>
-          		</td>       
-       		<#else>               
-          		<td valign='middle'>
-          			<input type="text" name="boothId" id="boothId" />
-          			 <span class="tooltip">Input party code and press Enter</span>
-          		</td>
-          	</#if>
-    	<#else>
-		 	<#if party?exists && party?has_content>  
-	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
-          		<td valign='middle'>
-            		<div class='tabletext h2'>
-               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-            		</div>
-          		</td>       
-       		<#else>               
-          		<td valign='middle'>
-          			<input type="text" name="partyId" id="partyId" />
-          			 <span class="tooltip">Input party code and press Enter</span>
-          		</td>
-          	</#if>
-        </#if>
-        </tr> 
        
          <tr><td><input type="hidden" name="disableAcctgFlag" id="disableAcctgFlag" value="${disableAcctgFlag?if_exists}"/><br/></td></tr>    
                    
