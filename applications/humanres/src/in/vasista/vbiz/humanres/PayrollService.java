@@ -5096,25 +5096,25 @@ public class PayrollService {
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
 	        		if(UtilValidate.isNotEmpty(employementFromaDate) && (employementFromaDate.compareTo(timePeriodStart) >=0)){
 	        			noOfCalenderDays = UtilDateTime.getIntervalInDays(employementFromaDate, timePeriodEnd)+1;
+	        			noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        			newEntity.set("noOfCalenderDays", new BigDecimal(noOfCalenderDays));
 	        		}
-	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
+	        		Timestamp employementThruDate = UtilDateTime.getDayEnd(employement.getTimestamp("thruDate"));
 	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <=0)){
 	        			Map inputMap = FastMap.newInstance();
 	        			inputMap.put("userLogin", userLogin);
 	        			inputMap.put("orgPartyId", employeeId);
-	        			inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(employementThruDate,1));
+	        			inputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(employementThruDate,1)));
 	    	        	resultMap = HumanresService.getActiveEmployements(dctx,inputMap);
 	    	        	List<GenericValue> empEmployementList = (List<GenericValue>)resultMap.get("employementList");
 	    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
 	    	        	if(UtilValidate.isEmpty(empEmployement)){
-	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
+	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate));
 	    	        	}
 	        		}
 	        		if(UtilValidate.isNotEmpty(noOfEmployementDays) && (noOfEmployementDays.compareTo(BigDecimal.ZERO)) <= 0){
 	        			continue;
 	        		}
-	        		//Debug.log("noOfEmployementDays==========="+noOfEmployementDays);
 	        		conditionList.clear();
 			        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));
