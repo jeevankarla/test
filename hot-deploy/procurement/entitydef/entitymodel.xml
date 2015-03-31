@@ -440,6 +440,7 @@
             package-name="org.ofbiz.product.inventory"
             title="Milk Transfer Item Entity">
       <field name="milkTransferId" type="id-ne"></field>
+      <field name="siloId" type="id"></field>
       <field name="sequenceNum" type="id-ne"></field>
       <field name="sendProductId" type="id-ne"></field>
       <field name="receivedProductId" type="id-ne"></field>
@@ -504,6 +505,10 @@
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="milkTransferId"/>
       <prim-key field="sequenceNum"/>
+      <!-- siloId represents facility which is used to store unloaded milk from tanker-->
+      <relation type="one" fk-name="MILK_XFER_SILO" rel-entity-name="Facility">
+        <key-map field-name="siloId" rel-field-name="facilityId"/>
+      </relation>
       <relation type="one" fk-name="MILK_XFER_ID" rel-entity-name="MilkTransfer">
         <key-map field-name="milkTransferId" rel-field-name="milkTransferId"/>
       </relation>
@@ -757,6 +762,50 @@
         <key-map field-name="facilityId"/>
       </relation>
   </entity>
+   <entity entity-name="VehicleRate" package-name="org.ofbiz.product.facility">
+		<field name="vehicleId" type="id-ne" />
+		<field name="rateTypeId" type="id-ne" />
+		<field name="rateCurrencyUomId" type="id-ne" />			
+		<field name="acctgFormulaId" type="id"></field>
+		<field name="uomId" type="id"></field>
+		<field name="fromDate" type="date-time">
+			<description>Describes when a rate amount will be valid. If null, valid immediately.</description>
+		</field>
+		<field name="thruDate" type="date-time">
+			<description>Describes when a rate amount will be valid untl. If null, valid indefinitly.</description>
+		</field>
+		<field name="rateAmount" type="fixed-point" />
+		<field name="createdDate" type="date-time"></field>
+	    <field name="createdByUserLogin" type="id-vlong"></field>
+	    <field name="lastModifiedDate" type="date-time"></field>
+	    <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<prim-key field="vehicleId" />
+		<prim-key field="rateTypeId" />
+		<prim-key field="rateCurrencyUomId" />		
+		<prim-key field="fromDate" />
+		<relation type="one" fk-name="VEHICLE_RATE_VID"
+			rel-entity-name="Vehicle">
+			<key-map field-name="vehicle" />
+		</relation>
+		<relation type="one" fk-name="FACILITY_RATE_RT"
+			rel-entity-name="RateType">
+			<key-map field-name="rateTypeId" />
+		</relation>
+		<relation type="one" fk-name="FACILITY_RATE_PR"
+			rel-entity-name="Product">
+			<key-map field-name="productId" />
+		</relation>
+		<relation type="one" fk-name="FACILITY_RATE_RCT"
+			rel-entity-name="Uom">
+			<key-map field-name="rateCurrencyUomId" rel-field-name="uomId" />
+		</relation>
+		<relation type="one" fk-name="FACILITY_RATE_ACTFRL"
+			rel-entity-name="AcctgFormula">
+			<key-map field-name="acctgFormulaId" />
+		</relation>	
+	</entity>
+  
+  
   <entity entity-name="WeighBridgeDetails" package-name="org.ofbiz.product.inventory "
 		title="Vehicle Entity">
 		<field name="weighmentId" type="id"></field>
@@ -773,4 +822,37 @@
 		</relation>
 		
 	</entity>
+	<!-- PTC Billing for Transporter MilkReceipts  -->
+	 <entity entity-name="PtcBillingCommission"
+            package-name="org.ofbiz.accounting.invoice"
+            title="PTC Billing Commission">
+      <field name="periodBillingId" type="id-ne"></field>
+      <field name="milkTransferId" type="id"></field>
+      <field name="commissionAmount" type="currency-amount"/>                 
+      <field name="recoveryAmount" type="currency-amount"/>                         
+      <prim-key field="periodBillingId"/>
+      <prim-key field="milkTransferId"/>
+      <relation type="one" fk-name="FCMR_XFERID" rel-entity-name="MilkTransfer">
+        <key-map field-name="milkTransferId"/>
+      </relation>
+      <relation type="one" fk-name="FCMR_PB" rel-entity-name="PeriodBilling">
+        <key-map field-name="periodBillingId"/>
+      </relation>        
+    </entity>
+    
+    <view-entity entity-name="PtcBillingCommissionAndMilkTransfer"
+          package-name="org.ofbiz.product.inventory" 
+          title="PtcBillingCommission and MilkTransfer  View Entity">
+	    <member-entity entity-alias="PBC" entity-name="PtcBillingCommission"/>
+	    <member-entity entity-alias="MT" entity-name="MilkTransfer"/>
+	    	
+		<alias-all entity-alias="PBC" />
+		<alias-all entity-alias="MT">
+			<exclude field="milkTransferId"/>
+		</alias-all>
+      	<view-link entity-alias="PBC" rel-entity-alias="MT">
+        	<key-map field-name="milkTransferId"/>
+      	</view-link>
+  	</view-entity>
+	
 </entitymodel>

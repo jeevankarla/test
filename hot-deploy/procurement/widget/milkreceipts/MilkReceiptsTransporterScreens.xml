@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="MRTransporters">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 
+        		 <set field="tabButtonItem" value="MRTransporterMargins"/>
+        		 <set field="tabButtonItem2" value="MRTransporters"/>
+        		 
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="MRTransporterBilling">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="tabButtonItem" value="MRTransporterMargins"/>
+        		 <set field="tabButtonItem2" value="MRTransporterBilling"/>
+        		 <entity-condition list="listTransporterReports" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_PTC_TRSPT_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                	<order-by field-name="-createdDate"/>
+                	<order-by field-name="-customTimePeriodId"/>
+                </entity-condition>
+        		 
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<section>
+							<condition>
+								<or>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+									<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					                <if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+								</or>
+							</condition>
+							<widgets>
+								<container style="button-bar">
+									<section>
+									<condition>	
+									<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+									</condition>
+									<widgets>
+									<link target="GenerateMRTransporterMarginReport" text="Generate PTC  Billing" style="buttontext create">				
+										<parameter param-name="billingTypeId" value="PB_MR_TRSPT_MRGN"/>
+									</link></widgets>
+									</section>
+								<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/transporter/billingStatus.ftl"></html-template></html></platform-specific>
+								</container>
+								<screenlet title="Transporter Margin Billing Reports">				
+									<include-form name="ListTransporterReports" location="component://procurement/widget/milkreceipts/MilkReceiptsTransporterForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="GenerateMRTransporterMarginReport">
+        <section>
+            <actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="tabButtonItem" value="MRTransporterMargins"/>
+        		 <set field="tabButtonItem2" value="MRTransporterBilling"/>
+        	</actions>           
+            <widgets>
+            <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<section>
+                    	<condition > 
+                    	 <or>
+                    	<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+                    	<if-has-permission permission="FACILITY" action="_ADMIN"></if-has-permission>	
+                    	</or>
+                    	</condition>
+							<widgets>
+								 <screenlet title="New TransporterMargin Billing">
+                    				<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsTransporterForms.xml" name="GenerateTransporterMarginReport"/>
+                    			</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+  </screens>
+  
+  
+  
+ 

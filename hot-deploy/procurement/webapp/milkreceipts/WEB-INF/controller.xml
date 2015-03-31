@@ -370,6 +370,11 @@
     </request-map>
     
     <!-- tanker receipt Requests -->
+    <request-map uri="MilkReceiptsTankerCip">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkReceiptsTankerCip">
+    	</response>
+    </request-map>
 	<request-map uri="MilkReceiptsTankerEntry">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="MilkReceiptsTankerEntry">
@@ -424,6 +429,13 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
     </request-map>
+    <request-map uri="updateMilkTankerReceiptEntryCIP">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkTankerReceiptEntryCIP"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
    
     <request-map uri="updateMilkTankerReceiptEntryOut">
         <security https="true" auth="true"/>
@@ -442,9 +454,50 @@
        <response name="error" type="request" value="json"/>       
     </request-map>
     
+    <request-map uri="mrTransporters">
+        <security https="true" auth="true"/>
+       <response name="success" type="view" value="mrTransporters"/>
+       <response name="error" type="view" value="mrTransporters"/>       
+    </request-map>
+    <request-map uri="mrTransporterBilling">
+        <security https="true" auth="true"/>
+       <response name="success" type="view" value="mrTransporterBilling"/>
+       <response name="error" type="view" value="mrTransporterBilling"/>       
+    </request-map>
+    <request-map uri="GenerateMRTransporterMarginReport">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="GenerateMRTransporterMarginReport"/>   
+       <response name="failed" type="view" value="GenerateMRTransporterMarginReport"/>    
+    </request-map>
+    
+    
+    <request-map uri="createMRTransporterMarginReport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="populateMRPeriodBilling"/>
+        <response name="success" type="request" value="mrTransporterBilling"/>
+        <response name="failed" type="view" value="mrTransporterBilling"/>
+        <response name="error" type="view" value="mrTransporterBilling"/>
+    </request-map>
+    
+    
+    <request-map uri="cancelPtcTranporterMargin">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelPtcTranporterMargin"/>
+        <response name="success" type="request" value="mrTransporterBilling"/>
+        <response name="failed" type="view" value="mrTransporterBilling"/>
+        <response name="error" type="view" value="mrTransporterBilling"/>
+    </request-map>
+    
+    <request-map uri="updatePTCStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePTCStatus"/>
+       <response name="success" type="request-redirect-noparam" value="mrTransporterBilling"/>
+       <response name="failed" type="request-redirect-noparam" value="mrTransporterBilling"/>
+       <response name="error" type="request-redirect-noparam" value="mrTransporterBilling"/>
+    </request-map>
     
     <!-- View Mappings -->
-    
+	    
     <view-map name="milkReceiptEntriesCsv" type="screencsv" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#milkReceiptEntriesCsv" content-type="text/csv"/>
     <view-map name="FinalizeMilkReceipts" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FinalizeMilkReceipts"/>
     <view-map name="updateMilkRecord" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#UpdateMilkRecord"/>
@@ -506,5 +559,14 @@
     <view-map name="MilkReceiptsQCEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsQCEntry"/>
     <view-map name="MilkReceiptsTankerWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerWeightEntry"/>
     <view-map name="MilkReceiptsTankerTareWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerTareWeightEntry"/>
+    <view-map name="MilkReceiptsTankerCip" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerCip"/>
+    
+    
+    
+    <!-- view maps of transporter Screens -->
+    <view-map name="mrTransporters" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporters"/>
+    <view-map name="mrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporterBilling"/>
+    <view-map name="GenerateMRTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRTransporterMarginReport"/>
+    
     
 </site-conf>

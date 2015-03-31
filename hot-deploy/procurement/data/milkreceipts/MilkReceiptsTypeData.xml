@@ -47,11 +47,83 @@
     <StatusItem description="Vehicle at Grossweight" sequenceId="2" statusCode="VEHICLE AT GROSS WEIGHT" statusId="MR_VEHICLE_GRSWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
     <StatusItem description="Vehicle at Quality Control" sequenceId="3" statusCode="VEHICLE AT QUALITY CONTROL" statusId="MR_VEHICLE_QC" statusTypeId="MR_VEHICLE_STATUS"/>
     <StatusItem description="Vehicle at TareWeight" sequenceId="4" statusCode="VEHICLE AT TARE WEIGHT" statusId="MR_VEHICLE_TARWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
-    <StatusItem description="Vehicle out" sequenceId="5" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_OUT" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle at CIP" sequenceId="5" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_CIP" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle out" sequenceId="" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_OUT" statusTypeId="MR_VEHICLE_STATUS"/>
    
     <StatusValidChange condition="" statusId="MR_VEHICLE_IN" statusIdTo="MR_VEHICLE_GRSWEIGHT" transitionName="VEHICLE IN TO GRSWEIGHT"/>
     <StatusValidChange condition="" statusId="MR_VEHICLE_GRSWEIGHT" statusIdTo="MR_VEHICLE_QC" transitionName="GRSWEIGHT TO QC"/>
     <StatusValidChange condition="" statusId="MR_VEHICLE_QC" statusIdTo="MR_VEHICLE_TARWEIGHT" transitionName="QC to TAREWEIGHT"/>
-    <StatusValidChange condition="" statusId="MR_VEHICLE_TARWEIGHT" statusIdTo="MR_VEHICLE_OUT" transitionName="TAREWEIGHT TO OUT"/>
+    <StatusValidChange condition="" statusId="MR_VEHICLE_TARWEIGHT" statusIdTo="MR_VEHICLE_CIP" transitionName="TAREWEIGHT TO CIP"/>
+    <StatusValidChange condition="" statusId="MR_VEHICLE_CIP" statusIdTo="MR_VEHICLE_OUT" transitionName="CIP TO OUT"/>
+   
+   <Enumeration description="MilkReceipts Transporter Margin Period Billing" enumCode="PB_MR_TRSPT_MRGN" enumId="PB_MR_TRSPT_MRGN" sequenceId="03" enumTypeId="PBILLING_TYPE"/>
+   
+   <RateType rateTypeId="DISTANCE_FROM_MD" description="Distance from MDKMF"/>
+   <RateType rateTypeId="TANKER_RATE" description="MilkTanker Rate"/>
+   <PartyRate rateTypeId="DISTANCE_FROM_MD" partyId="MAN" fromDate="2014-03-01 00:00:00" rateAmount="154"/>
+   <VehicleRate vehicleId="KA01B6711" rateTypeId="TANKER_RATE" rateAmount ="28.300" fromDate = "2015-03-01 00:00:00" rateCurrencyUomId="INR"/>
+   
+   
+   <EnumerationType enumTypeId="PTC_ADJUSTMENTS" hasTable="N" description="PTC Tanker Adjustments"/>
+   <EnumerationType enumTypeId="PTC_ADDN" parentTypeId="PTC_ADJUSTMENTS" description="PTC Tanker Additions"/>
+   <EnumerationType enumTypeId="PTC_DED" parentTypeId="PTC_ADJUSTMENTS" description="PTC Tanker Deductions"/>
+   
+   <Enumeration  enumId="PTC_TOLL"  enumCode="PTC_TOLL" enumTypeId="PTC_ADDN" description="TOLL CHARGES"/>
+   <Enumeration  enumId="PTC_PERMCHRG"  enumCode="PTC_PERMCHRG"  enumTypeId="PTC_ADDN" description="PERMIT CHARGES"/>
+   
+   <Enumeration  enumId="PTC_FINEMEMO" enumCode="PTC_FINEMEMO" enumTypeId="PTC_DED" description="FINE AS PER SECURITY RECORDS/MEMO" />
+   <Enumeration  enumId="PTC_VEHNOTPROVIDE" enumCode="PTC_VEHNOTPROVIDE"  enumTypeId="PTC_DED" description="VEHICLE NOT PROVIDED ON DATE" />
+   <Enumeration  enumId="PTC_FINEOTHER" enumCode="PTC_FINEOTHER" enumTypeId="PTC_DED" description="FINE AND OTHERS" />
+   <Enumeration  enumId="PTC_TDS"  enumCode="PTC_TDS" enumTypeId="PTC_DED" description="TDS" />
+   <Enumeration  enumId="PTC_OTHERS" enumCode="PTC_OTHERS" enumTypeId="PTC_DED" description="OTHERS"/>
+   <Enumeration  enumId="PTC_PROFTAX"  enumCode="PTC_PROFTAX" enumTypeId="PTC_DED" description="PROFESSIONAL TAX"/>
+   <Enumeration  enumId="PTC_DESREC"  enumCode="PTC_DESREC" enumTypeId="PTC_DED" description="DIESEL RECOVERY"/>
+   <Enumeration  enumId="PTC_CHARGES" enumCode="PTC_CHARGES" enumTypeId="PTC_DED" description="CONTRACT LAB CHARGES"/>
+   <Enumeration  enumId="PTC_MILKCOST" enumCode="PTC_MILKCOST" enumTypeId="PTC_DED" description="MILK COST"/>
+   
+   
+   <!--  Invoice ItemTypes for tanker Receipts -->
+   
+	
+	<InvoiceType invoiceTypeId="PTC_TRNSPORTOR_INV" parentTypeId="PURCHASE_INVOICE" description="Procurement Transportation Expenses" hasTable="N" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_MRGN"  hasTable="N"  description="TOLL CHARGES" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_MRGN_ADDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_MRGN" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_TOLL"  hasTable="N"  description="TOLL CHARGES" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_TOLL_ADDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_TOLL" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_PERMCHRG"  hasTable="N"  description="PERMIT CHARGES" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_PERMCHRG_ADDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_PERMCHRG" />
+	
+   
+   	<InvoiceItemType invoiceItemTypeId="PTC_FINEMEMO"  hasTable="N"  description="FINE AS PER SECURITY RECORDS/MEMO" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_FINEMEMO_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_FINEMEMO" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_VEHNOTPROVIDE"  hasTable="N"  description="VEHICLE NOT PROVIDED ON DATE" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_VEHNOTPRO_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_VEHNOTPROVIDE" />
+	
+   	<InvoiceItemType invoiceItemTypeId="PTC_FINEOTHER"  hasTable="N"  description="FINE AND OTHERS" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_FINEOTHER_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_FINEOTHER" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_OTHERS"  hasTable="N"  description="OTHERS" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_OTHERS_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_OTHERS" />
+	
+   
+   	<InvoiceItemType invoiceItemTypeId="PTC_PROFTAX"  hasTable="N"  description="PROFESSIONAL TAX" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_PROFTAX_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_PROFTAX" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_DESREC"  hasTable="N"  description="DIESEL RECOVERY" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_DESREC_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_DESREC" />
+	
+   	<InvoiceItemType invoiceItemTypeId="PTC_CHARGES"  hasTable="N"  description="CONTRACT LAB CHARGES" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_CHARGES_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_CHARGES" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_MILKCOST"  hasTable="N"  description="MILK COST" defaultGlAccountId="681009" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PTC_MILKCOST_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_MILKCOST" />
+	
+   
+   	
+   
    
 </entity-engine-xml>

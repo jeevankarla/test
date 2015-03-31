@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	
+    <form name="GenerateTransporterMarginReport" type="single" target="createMRTransporterMarginReport" header-row-style="header-row" 
+		default-table-style="basic-table" >
+		<field name="billingTypeId"><hidden value="PB_PTC_TRSPT_MRGN"/></field>
+		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
+        	<drop-down>																						
+            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  filter-by-date="false" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}">
+                	 <entity-constraint name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>
+                 	 <entity-constraint name="isClosed" operator="equals" value="N"/>
+                 	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
+                 	 <entity-order-by field-name="-thruDate"/>
+           	 	</entity-options>
+			</drop-down>
+		</field>
+		<field name="submitButton" title="${uiLabelMap.Generate}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+	<form name="ListTransporterReports" list-name="listTransporterReports" title="" type="list" paginate-target="Commissions"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="periodBillingId"><hidden/></field>       
+        <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}" />
+        </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="UnionWisePTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+           <display></display>
+           <!--  <hyperlink target="GenerateTrnsptMarginReport.pdf" description="UnionWise PTC Abstract" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="transporterMarginAbstract"/>                                  
+            </hyperlink> -->
+        </field> 
+       	<field name="UnionWisePTCDayWise" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <display></display>
+            <!-- <hyperlink target="GenerateTrnsptMarginReport.pdf" description="UnionWise PTC DayWise" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="trnsptMarginReport"/>                                  
+            </hyperlink> -->
+        </field>  
+         <field name="ContractorWisePTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <display></display>
+            <!-- <hyperlink target="GenerateTrnsptMarginReport.pdf" description="Contractor Wise PTC Abstract" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="ContractorWisePTCAbstract"/>                                  
+            </hyperlink> -->
+        </field>   
+        <field name="PTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <display></display>
+            <!-- <hyperlink target="GenerateTrnsptMarginReport.pdf" description="PTC Report" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="PTCReport"/>                                  
+            </hyperlink> -->
+        </field>
+         <field name="transporterMarginSMS" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" title="Send Sms">
+            <display></display>
+            <!-- <hyperlink target="sendTransporterMarginSMS" description="Send Sms" target-window="_blank">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+            </hyperlink> -->
+        </field>
+          <field name="updatePTCStatus" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
+            </hyperlink>
+        </field>
+         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelPtcTranporterMargin" description="${uiLabelMap.CommonCancel}" target-window="_blank">
+                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
+            </hyperlink>
+        </field>
+         
+              
+    </form>
+    
+ </forms>   

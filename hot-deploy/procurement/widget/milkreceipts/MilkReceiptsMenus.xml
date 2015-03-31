@@ -9,6 +9,24 @@
 			<!-- <link target="main" /> -->
 		</menu-item>
    </menu>
+   
+   <menu name="MilkReceiptTransporterTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="MRTransporters" title="Transporters">
+        	<link target="mrTransporters"/>
+        </menu-item>    
+        <menu-item name="MRTransporterBilling" title="Transporter Billing">
+        	<link target="mrTransporterBilling"/>
+        </menu-item>  
+        <!-- <menu-item name="TransporterAdjustments" title="Transporter Adjustments">
+         	<condition>
+         		<or>
+					
+					<if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+         		</or>
+         	</condition>
+        	 <link target="PtcAdjustmentDeductions"/>
+         </menu-item> -->
+      </menu>
 	<menu name="MilkreceiptTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml">
 		<actions> 
@@ -22,22 +40,43 @@
             <link target="MilkReceiptsTankerEntry">
 			</link>
       	</menu-item>
+      	<!-- <menu-item name="FindMilkReceiptEntry" title="Find Milk Receipts" >
+            <link target="FindMilkReceiptsTankerEntry">
+			</link>
+      	</menu-item> -->
       	
-      	<!-- <menu-item name="Facility" title="Facility">
-			<link target="MilkReceiptFacility"></link>
-		</menu-item> -->
-     	<!-- <menu-item name="MilkReceiptsBilling" title="Billing">
-			<link target="findMilkReceiptsBilling"></link>
-		</menu-item> -->
-		<!-- <menu-item name="IncomeExpenditure" title="Income Expenditure">
-			<link target="MilkReceiptsSalesEntry"></link>
-		</menu-item>		 -->
-		<!-- <menu-item name="reports" title="${uiLabelMap.CommonReports}">
-			<link target="ShedMilkReceiptReports"></link>
+      	<menu-item name="MRTransporterMargins" title="Transporters">
+            <condition>
+                <or>
+					<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					<if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+				</or>	 
+            </condition>
+			<link target="mrTransporters"></link>
+        </menu-item>
+        
+	</menu>
+	<menu name="BillingAdjustmentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="PtcAdjustmentDeductions" title="${uiLabelMap.PtcAdjustmentDeductions}">
+			<link target="PtcAdjustmentDeductions"></link>
 		</menu-item>
-		<menu-item name="FinalizeMilkReceipts" title="Finalize MilkReceipts">
-			<link target="FinalMilkReceipts"></link>
-		</menu-item> -->
+		<menu-item name="PtcAdjustmentAdditions" title="${uiLabelMap.PtcAdjustmentAdditions}">
+			<link target="PtcAdjustmentsAdditions"></link>
+		</menu-item>				
+		<menu-item name="FindAdjustment" title="${uiLabelMap.SearchAdjustments}">
+			<link target="FindPtcAdjustment"></link>
+		</menu-item>		
+	</menu>
+	<menu name="FindMilkReceiptsTankerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="SearchMilkReceiptsTankerEntry" title="Search Milk Receipts ">
+			<link target="FindMilkReceiptsTankerEntry"></link>
+		</menu-item>
+		<menu-item name="UpdateMilkReceipts" title="Update Milk Receipts">
+			<link target="UpdateMilkReceipts"></link>
+		</menu-item>				
+		<menu-item name="FindAdjustment" title="${uiLabelMap.SearchAdjustments}">
+			<link target="FindPtcAdjustment"></link>
+		</menu-item>		
 	</menu>
 	<menu name="MilkreceiptFacilityTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml">
@@ -86,8 +125,13 @@
 			<link target="MilkReceiptsQCEntry">
 			</link>
 		</menu-item>
+		
 		<menu-item name="MilkReceiptsTareWeightEntry" title="Tare Weight Entry">
 			<link target="MilkReceiptsTankerTareWeightEntry">
+			</link>
+		</menu-item>
+		<menu-item name="MilkReceiptsVehicleCip" title="CIP DETAILS">
+			<link target="MilkReceiptsTankerCip">
 			</link>
 		</menu-item>
 		<menu-item name="MilkReceiptsVehicleOutEntry" title="Tanker Out">
@@ -117,5 +161,7 @@
 			<link target="MilkReceiptsSalariesEntry"></link>
 		</menu-item>
 	</menu>   -->
+	
+	
      
 </menus>
