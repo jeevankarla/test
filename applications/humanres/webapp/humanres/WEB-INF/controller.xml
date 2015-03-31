@@ -716,7 +716,11 @@ under the License.
         <event type="service" invoke="sendPayrollSms"></event>
         <response name="success" type="view" value="EmplSupPayroll"/>
     </request-map>
-    
+    <request-map uri="sendMedRemSms">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendPayrollSms"></event>
+        <response name="success" type="view" value="EmplSupPayroll"/>
+    </request-map>
     <request-map uri="createPayrollBilling">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPayrollBilling"/>
