@@ -354,11 +354,11 @@ under the License.
         <event type="service" invoke="deletePartySkill"/>
         <response name="success" type="view" value="FindPartySkills"/>
     </request-map>
-    <!--<request-map uri="FindPerfReviews">
+    <request-map uri="FindPerfReviews">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPerfReviews"/>
-    </request-map>-->
-    <!--<request-map uri="EditPerfReview">
+    </request-map>
+    <request-map uri="EditPerfReview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPerfReviews"/>
     </request-map>
@@ -376,8 +376,8 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePerfReview"/>
         <response name="success" type="view" value="EditPerfReviews"/>
-    </request-map>-->
-    <!--<request-map uri="EditPerfReviewItems">
+    </request-map>
+    <request-map uri="EditPerfReviewItems">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPerfReviewItems"/>
     </request-map>
@@ -395,8 +395,8 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePerfReviewItem"/>
         <response name="success" type="view" value="EditPerfReviewItems"/>
-    </request-map>-->
-    <!--<request-map uri="EditPerformanceNotes">
+    </request-map>
+    <request-map uri="EditPerformanceNotes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPerformanceNotes"/>
     </request-map>
@@ -405,7 +405,7 @@ under the License.
         <event type="service" invoke="createPerformanceNote"/>
         <response name="success" type="view" value="EditPerformanceNotes"/>
         <response name="error" type="view" value="EditPerformanceNotes"/>
-    </request-map>-->
+    </request-map>
     <!-- ================Employment Group==================================== -->
     <request-map uri="FindEmployments">
         <security https="true" auth="true"/>
@@ -457,7 +457,7 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmploymentApp"/>
         <response name="success" type="view" value="FindEmploymentApps"/>
-    </request-map>-->
+    </request-map> -->
     <request-map uri="AddPayHistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AddPayHistory"/>
