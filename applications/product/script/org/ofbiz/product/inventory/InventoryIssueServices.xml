@@ -71,7 +71,6 @@ under the License.
         <!-- kind of like the inventory reservation routine (with a few variations...), find InventoryItems to issue from, but instead of doing the reservation just create an issuance and an inventory item detail for the change -->
         <if-not-empty field="orderItem.productId">
             <now-timestamp field="nowTimestamp"/>
-
             <!-- NOTE: the inventory will be issued from the OrderHeader.originFacilityId -->
             <if-empty field="parameters.orderHeader">
                 <entity-one entity-name="OrderHeader" value-field="orderHeader"/>
@@ -79,7 +78,8 @@ under the License.
                 <set field="orderHeader" from-field="parameters.orderHeader"/>
             </else>
             </if-empty>
-
+              <set field="parameters.productId" from-field="orderItem.productId"/>
+              <set field="productId" from-field="orderItem.productId"/>
             <!-- get the ProductStore to fund the reserveOrderEnumId -->
             <if-empty field="parameters.productStore">
                 <entity-one entity-name="ProductStore" value-field="productStore">
@@ -110,6 +110,7 @@ under the License.
             </if-compare>
             <field-to-list field="orderByString" list="orderByList"/>
             <set field="lookupFieldMap.productId" from-field="orderItem.productId"/>
+            
             <set field="lookupFieldMap.facilityId" from-field="orderHeader.originFacilityId"/>
             <find-by-and entity-name="InventoryItem" map="lookupFieldMap" list="inventoryItemList" order-by-list="orderByList"/>
 
@@ -123,11 +124,13 @@ under the License.
 
             <!-- if quantityNotIssued is not 0, then pull it from the last non-serialized inventory item found, in the quantityNotIssued field -->
             <if-compare field="parameters.quantityNotIssued" operator="not-equals" value="0" type="BigDecimal">
+            
                 <if-not-empty field="lastNonSerInventoryItem">
                     <!-- create ItemIssuance record -->
                     <set field="issuanceCreateMap.orderId" from-field="parameters.orderId"/>
                     <set field="issuanceCreateMap.orderItemSeqId" from-field="parameters.orderItemSeqId"/>
-                     <!-- we only added this to track issuance -->
+                     <!-- we(vasista) only added this to track issuance -->
+                     <set field="issuanceCreateMap.productId" from-field="parameters.productId"/>
                      <set field="issuanceCreateMap.shipmentId" from-field="parameters.shipmentId"/>
                     <set field="issuanceCreateMap.inventoryItemId" from-field="lastNonSerInventoryItem.inventoryItemId"/>
                     <set field="issuanceCreateMap.quantity" from-field="parameters.quantityNotIssued"/>
@@ -166,6 +169,9 @@ under the License.
                     <!-- create ItemIssuance record -->
                     <set field="issuanceCreateMap.orderId" from-field="parameters.orderId"/>
                     <set field="issuanceCreateMap.orderItemSeqId" from-field="parameters.orderItemSeqId"/>
+                    <!-- we(vasista) only added this to track issuance -->
+                    <set field="issuanceCreateMap.productId" from-field="parameters.productId"/>
+                    <set field="issuanceCreateMap.shipmentId" from-field="parameters.shipmentId"/>
                     <set field="issuanceCreateMap.inventoryItemId" from-field="createInvItemOutMap.inventoryItemId"/>
                     <set field="issuanceCreateMap.quantity" from-field="parameters.quantityNotIssued"/>
                     <call-service service-name="createItemIssuance" in-map-name="issuanceCreateMap">
@@ -210,6 +216,7 @@ under the License.
                     <set field="issuanceCreateMap.orderItemSeqId" from-field="parameters.orderItemSeqId"/>
                     <set field="issuanceCreateMap.inventoryItemId" from-field="inventoryItem.inventoryItemId"/>
                      <set field="issuanceCreateMap.shipmentId" from-field="parameters.shipmentId"/>
+                      <set field="issuanceCreateMap.productId" from-field="parameters.productId"/>
                     <calculate field="issuanceCreateMap.quantity" ><number value="1"/></calculate>
                     <call-service service-name="createItemIssuance" in-map-name="issuanceCreateMap"/>
                     <clear-field field="issuanceCreateMap"/>
@@ -244,6 +251,7 @@ under the License.
                         <set field="issuanceCreateMap.orderId" from-field="parameters.orderId"/>
                         <set field="issuanceCreateMap.orderItemSeqId" from-field="parameters.orderItemSeqId"/>
                         <set field="issuanceCreateMap.shipmentId" from-field="parameters.shipmentId"/>
+                        <set field="issuanceCreateMap.productId" from-field="parameters.productId"/>
                         <set field="issuanceCreateMap.inventoryItemId" from-field="inventoryItem.inventoryItemId"/>
                         <set field="issuanceCreateMap.quantity" from-field="parameters.deductAmount"/>
                         <call-service service-name="createItemIssuance" in-map-name="issuanceCreateMap">
