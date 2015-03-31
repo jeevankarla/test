@@ -143,8 +143,9 @@ if (organizationPartyId) {
             }
         }
     }
-	if (UtilValidate.isNotEmpty(parameters.openingBalance)) {
-		openingBalance = new BigDecimal(parameters.openingBalance);
+	
+	if (UtilValidate.isNotEmpty(context.get("openingBalance"))) {
+		openingBalance = context.get("openingBalance");
 	}
 	
 	financialAcctgTransList = [];
@@ -650,8 +651,8 @@ financialAcctgTransList.each{ dayFinAccount ->
 }
 
 openingBal = 0;
-if (UtilValidate.isNotEmpty(parameters.openingBalance)) {
-	openingBal = new BigDecimal(parameters.openingBalance);
+if (UtilValidate.isNotEmpty(context.get("openingBalance"))) {
+	openingBal = context.get("openingBalance");
 }
 closingBal = openingBal;
 finalFinAccntTransList = [];
