@@ -2,6 +2,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -236,10 +238,41 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				bonusValue = totalValue;
 				totalValue = totalValue + fixedPay;
 				percentageOfTotal = (0.1)*(bonusValue);
+				
+				Timestamp employmentThruDate = null;
+				netPayableDays = 0;
+				List employmentList = FastList.newInstance();
+				employmentList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
+				employmentList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthDateStart)));
+				EntityCondition empCondition = EntityCondition.makeCondition(employmentList, EntityOperator.AND);
+				List<GenericValue> employments = delegator.findList("Employment", empCondition, null, UtilMisc.toList("-fromDate"), null, false);
+				GenericValue employment = EntityUtil.getFirst(employments);
+				if(UtilValidate.isNotEmpty(employment)){
+					employmentThruDate = employment.getTimestamp("thruDate");
+					if(UtilValidate.isNotEmpty(employmentThruDate)){
+						Timestamp thruDateMonthStart = UtilDateTime.getMonthStart(employmentThruDate);
+						if(thruDateMonthStart.compareTo(monthDateStart)== 0){
+							double intervalDays = UtilDateTime.getIntervalInDays(thruDateMonthStart, employmentThruDate)+1;
+							BigDecimal intDays = new BigDecimal(intervalDays);
+							if(UtilValidate.isNotEmpty(intDays) && ((intDays).compareTo(BigDecimal.ZERO) != 0)){
+								netPayableDays = intDays;
+							}
+						}
+					}
+				}
+				finalPayableDays = noOfPayableDays;
+				if(UtilValidate.isNotEmpty(netPayableDays) && ((netPayableDays).compareTo(BigDecimal.ZERO) != 0)){
+					if((netPayableDays).compareTo(noOfPayableDays) < 0){
+						finalPayableDays = netPayableDays;
+					}
+				}else{
+					finalPayableDays = noOfPayableDays;
+				}
+				
 				monthlyBonus = 22000/12;
 				
 				if(noOfCalenderDays != 0){
-					monthlyBonusOfPayableDays = monthlyBonus*(noOfPayableDays/noOfCalenderDays);
+					monthlyBonusOfPayableDays = monthlyBonus*(finalPayableDays/noOfCalenderDays);
 				}else{
 					monthlyBonusOfPayableDays = 0;
 				}
@@ -284,7 +317,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				monthlyDetailsMap.put("dearnessAllowance", newDAAmount);
 				monthlyDetailsMap.put("specPay", specPay);
 				monthlyDetailsMap.put("fixedPay", fixedPay);
-				monthlyDetailsMap.put("noOfPayableDays", noOfPayableDays);
+				monthlyDetailsMap.put("noOfPayableDays", finalPayableDays);
 				monthlyDetailsMap.put("noOfArrearDays", noOfArrearDays);
 				monthlyDetailsMap.put("lossOfPayDays", lossOfPayDays);
 				monthlyDetailsMap.put("totalValue", totalValue);

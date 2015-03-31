@@ -5096,25 +5096,25 @@ public class PayrollService {
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
 	        		if(UtilValidate.isNotEmpty(employementFromaDate) && (employementFromaDate.compareTo(timePeriodStart) >=0)){
 	        			noOfCalenderDays = UtilDateTime.getIntervalInDays(employementFromaDate, timePeriodEnd)+1;
+	        			noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        			newEntity.set("noOfCalenderDays", new BigDecimal(noOfCalenderDays));
 	        		}
-	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
+	        		Timestamp employementThruDate = UtilDateTime.getDayEnd(employement.getTimestamp("thruDate"));
 	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <=0)){
 	        			Map inputMap = FastMap.newInstance();
 	        			inputMap.put("userLogin", userLogin);
 	        			inputMap.put("orgPartyId", employeeId);
-	        			inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(employementThruDate,1));
+	        			inputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(employementThruDate,1)));
 	    	        	resultMap = HumanresService.getActiveEmployements(dctx,inputMap);
 	    	        	List<GenericValue> empEmployementList = (List<GenericValue>)resultMap.get("employementList");
 	    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
 	    	        	if(UtilValidate.isEmpty(empEmployement)){
-	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
+	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate));
 	    	        	}
 	        		}
 	        		if(UtilValidate.isNotEmpty(noOfEmployementDays) && (noOfEmployementDays.compareTo(BigDecimal.ZERO)) <= 0){
 	        			continue;
 	        		}
-	        		//Debug.log("noOfEmployementDays==========="+noOfEmployementDays);
 	        		conditionList.clear();
 			        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));
@@ -7652,7 +7652,6 @@ public class PayrollService {
 				            	for (int j = 0; j < payrollHeaderIdsList.size(); j++) {		
 			  	  	        		    GenericValue payrollHeaderItems = payrollHeaderIdsList.get(j);
 			  	  	        		    String emplId= (String)payrollHeaderItems.get("partyIdFrom");
-			  	  	        		    //String emplId = "6552";
 			  	  	        		    BigDecimal netBonusAmount=BigDecimal.ZERO;
 			  	  	        		    BigDecimal totalNetBonusAmount=BigDecimal.ZERO;
 			  	  	        		    BigDecimal finalTotalNetBonusAmount=BigDecimal.ZERO;
@@ -7813,10 +7812,40 @@ public class PayrollService {
 									        			double noOfCalenderDays = ((Double)attendanceMap.get("noOfCalenderDays")).doubleValue();
 									        			calenderDays = new BigDecimal(noOfCalenderDays);
 									        		}
+									        		BigDecimal netPayableDays = BigDecimal.ZERO;
+									        		BigDecimal finalPayableDays = payableDays;
+									        		//checking employment days here
+									        		Timestamp employmentThruDate = null;
+									        		List employmentList = FastList.newInstance();
+									        		employmentList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, emplId));
+									        		employmentList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+									        		EntityCondition empCondition = EntityCondition.makeCondition(employmentList, EntityOperator.AND);  		
+													List<GenericValue> employments = delegator.findList("Employment", empCondition, null, UtilMisc.toList("-fromDate"), null, false);
+													GenericValue employment = EntityUtil.getFirst(employments);
+										            if(UtilValidate.isNotEmpty(employment)){
+										            	employmentThruDate = employment.getTimestamp("thruDate");
+										            	if(UtilValidate.isNotEmpty(employmentThruDate)){
+										            		Timestamp thruDateMonthStart = UtilDateTime.getMonthStart(employmentThruDate);
+											        		if(thruDateMonthStart.compareTo(timePeriodStart)== 0){
+											        			double intervalDays = UtilDateTime.getIntervalInDays(thruDateMonthStart, employmentThruDate)+1;
+											        			BigDecimal intDays = new BigDecimal(intervalDays);
+											        			if(UtilValidate.isNotEmpty(intDays) && ((intDays).compareTo(BigDecimal.ZERO) != 0)){
+											        				netPayableDays = intDays;
+											        			}
+											        		}
+										            	}
+										        	}
+										            if(UtilValidate.isNotEmpty(netPayableDays) && ((netPayableDays).compareTo(BigDecimal.ZERO) != 0)){
+										            	if((netPayableDays).compareTo(payableDays) < 0){
+										            		finalPayableDays = netPayableDays;
+										            	}
+										            }else{
+										            	finalPayableDays = payableDays;
+										            }
 									        		BigDecimal netDays = new BigDecimal(1);
-									        		 if(UtilValidate.isNotEmpty(calenderDays) && ((calenderDays).compareTo(BigDecimal.ZERO) != 0)){
-									        			 netDays =  (payableDays.divide(calenderDays,4,BigDecimal.ROUND_UP));
-									        		 }
+									        		if(UtilValidate.isNotEmpty(calenderDays) && ((calenderDays).compareTo(BigDecimal.ZERO) != 0)){
+									        			netDays =  (finalPayableDays.divide(calenderDays,4,BigDecimal.ROUND_UP));
+									        		}
 									        		if(UtilValidate.isNotEmpty(netDays) && ((netDays).compareTo(BigDecimal.ZERO) != 0)){
 									        			announcedBonusNet = announcedBonusMonth.multiply(netDays);
 									        			announcedBonusNet = announcedBonusNet.setScale(2, BigDecimal.ROUND_HALF_UP);
