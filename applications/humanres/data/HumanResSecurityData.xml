@@ -258,5 +258,8 @@ under the License.
     <SecurityGroupPermission groupId="HR_EMPL_PROFILE_VIEW" permissionId="HUMANRES_EMPLOYEE"/>
     <SecurityGroupPermission groupId="HR_EMPL_PROFILE_VIEW" permissionId="HUMANRES_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPL_PROFILE_VIEW"/> 
-      
+    
+    <!-- HR Application tabs permission -->
+     <SecurityGroup description="HR Application tabs permission" groupId="HR_APPLICATION_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_APPLICATION_ADMIN"/>
 </entity-engine-xml>
