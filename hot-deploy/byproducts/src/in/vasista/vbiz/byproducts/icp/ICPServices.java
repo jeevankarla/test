@@ -726,12 +726,15 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
     			}
     			orderHeader.store();
     			
-    			
     			String invoiceId = "";
     			result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", eachOrderId,"eventDate", effectiveDate,"userLogin", userLogin, "purposeTypeId", salesChannelEnumId));
     	        if (ServiceUtil.isError(result)) {
     	        	Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
-    	        	request.setAttribute("_ERROR_MESSAGE_", "There was an error while creating the invoice for order: "+eachOrderId);
+    	        	String errorMessageResult=result.toString();
+    	        	request.setAttribute("_ERROR_MESSAGE_", "There was an error while creating the invoice for order: "+eachOrderId+" And "+ServiceUtil.getErrorMessage(result));
+    	        	if(errorMessageResult.contains("INV_UN_AVAILABLE") ){
+    	        		request.setAttribute("_ERROR_MESSAGE_", "Inventory Not Available To Issue For OrderId:"+eachOrderId+" Maintain Inventory !");
+    	        	}
     	        	TransactionUtil.rollback();
     	        	return "error";
     	        }
