@@ -899,7 +899,29 @@ under the License.
             <field-map field-name="partyIdTo" from-field="parameters.partyIdTo"/>
             <field-map field-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
         </entity-and>  
-   		<if-empty field="partyRels">
+        <!-- Create the PartyRole -->
+         <entity-and entity-name="PartyRole" list="toPartyRole">
+        	<field-map field-name="partyId" from-field="parameters.partyIdTo"/>
+        	<field-map field-name="roleTypeId" from-field="parameters.roleTypeIdTo"/>
+	    </entity-and>  
+	    <if-empty field="toPartyRole">
+	        <set field="createPartyRoleInMap.partyId" from-field="parameters.partyIdTo"/>
+	        <set field="createPartyRoleInMap.roleTypeId" from-field="parameters.roleTypeIdTo"/>
+	        <set field="createPartyRoleInMap.userLogin" from-field="userLogin"/>
+	        <call-service service-name="createPartyRole" in-map-name="createPartyRoleInMap"/>
+        </if-empty>
+  
+   		<entity-and entity-name="PartyRole" list="fromPartyRole">
+        	<field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
+        	<field-map field-name="roleTypeId" from-field="parameters.roleTypeIdFrom"/>
+        </entity-and>  
+        <if-empty field="fromPartyRole">
+	        <set field="createPartyRoleInMap.partyId" from-field="parameters.partyIdFrom"/>
+	        <set field="createPartyRoleInMap.roleTypeId" from-field="parameters.roleTypeIdFrom"/>
+	        <set field="createPartyRoleInMap.userLogin" from-field="userLogin"/>
+	        <call-service service-name="createPartyRole" in-map-name="createPartyRoleInMap"/>
+	    </if-empty>
+	     <if-empty field="partyRels">
             <make-value value-field="newEntity" entity-name="PartyRelationship"/>
             <set-pk-fields map="parameters" value-field="newEntity"/>
             <set-nonpk-fields map="parameters" value-field="newEntity"/>
