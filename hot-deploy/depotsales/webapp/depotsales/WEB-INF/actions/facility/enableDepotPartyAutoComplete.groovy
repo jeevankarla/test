@@ -56,6 +56,7 @@ if(UtilValidate.isNotEmpty(parentRoleTypeId) && UtilValidate.isEmpty(parameters.
 		Map tempPartyDetailsMap = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
 		if(UtilValidate.isNotEmpty(tempPartyDetailsMap)){
 			tempPartyDetailsList = tempPartyDetailsMap.get("partyDetails");
+			partyDetailsList.addAll(tempPartyDetailsList);
 			tempPartyList = tempPartyDetailsMap.get("partyIds");
 			partyIdsList.addAll(tempPartyList);
 		}
