@@ -49,7 +49,10 @@ if(UtilValidate.isNotEmpty(custRequestItem)){
 	context.put("productQtyMap",productQtyMap);		
 }
 List EnquiryDetList=[];
-quoteItemList=delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),null, null,null,false);
+EnquiryDetList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId));
+EnquiryDetList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "QUO_REJECTED"));
+cond = EntityCondition.makeCondition(EnquiryDetList, EntityOperator.AND);
+quoteItemList=delegator.findList("QuoteAndItemAndCustRequest", cond,null, null,null,false);
 partyIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "partyId", true);
 quoteIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "quoteId", true);
 productIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "productId", true);
