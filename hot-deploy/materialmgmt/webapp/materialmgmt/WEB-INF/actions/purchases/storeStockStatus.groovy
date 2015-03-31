@@ -49,6 +49,7 @@ prodMap=[:];
  
  exprList=[];
  exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
+ exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.NOT_EQUAL, "RAW_MTRL_SALE")); 
  exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
  condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 // productCatDetails = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
