@@ -78,6 +78,7 @@ totEmployeePFBonusMap = [:];
 if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 	bonusEmplIdsList.each{ employeeId->
 		totalBonus = 0;
+		totBonusAmount = 0;
 		monthWiseMap = [:];
 		finAccountCode = "";
 		employeePFBonusMap = [:];
@@ -326,6 +327,16 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 				monthWiseMap.put(customTimePeriodKey, monthlyDetailsMap);
 			}
 		}
+		List PayrollHeaderBonusCondList=FastList.newInstance();
+		PayrollHeaderBonusCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,bonusBillingId));
+		PayrollHeaderBonusCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,employeeId));
+		PayrollHeaderBonusCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS ,"PAYROL_BEN_BONUS_EX"));
+		EntityCondition PayrollHeaderBonusCond = EntityCondition.makeCondition(PayrollHeaderBonusCondList, EntityOperator.AND);
+		List<GenericValue> PayrollHeaderBonusList = delegator.findList("PayrollHeaderAndHeaderItem", PayrollHeaderBonusCond, null, null, null, false);
+		if(UtilValidate.isNotEmpty(PayrollHeaderBonusList)){
+			GenericValue PayrollHeaderBonusGen = EntityUtil.getFirst(PayrollHeaderBonusList);
+			totBonusAmount = PayrollHeaderBonusGen.get("amount");
+		}
 		if(UtilValidate.isNotEmpty(monthWiseMap)){
 			employeeWiseMap.put(employeeId, monthWiseMap);
 		}
@@ -336,7 +347,7 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 		}
 		totalBonusVal = new BigDecimal(totalBonus);
 		totalBonusVal = totalBonusVal.setScale(0, BigDecimal.ROUND_HALF_UP);
-		emplBonusMap.put(employeeId, totalBonusVal);
+		emplBonusMap.put(employeeId, totBonusAmount);
 	}
 }
 

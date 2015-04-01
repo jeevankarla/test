@@ -8639,10 +8639,9 @@ public class PayrollService {
                             Timestamp employmentThruDate = null;
 					    	List employmentList = FastList.newInstance();
                             employmentList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
-                            employmentList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
                             employmentList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
-                            EntityCondition empCondition = EntityCondition.makeCondition(employmentList, EntityOperator.AND);                  
-                            List<GenericValue> employments = delegator.findList("Employment", empCondition, null, null, null, false);
+			        		EntityCondition empCondition = EntityCondition.makeCondition(employmentList, EntityOperator.AND);  		
+							List<GenericValue> employments = delegator.findList("Employment", empCondition, null, UtilMisc.toList("-fromDate"), null, false);
                             GenericValue employment = EntityUtil.getFirst(employments);
                             if(UtilValidate.isNotEmpty(employment)){
                             	employmentThruDate = employment.getTimestamp("thruDate");

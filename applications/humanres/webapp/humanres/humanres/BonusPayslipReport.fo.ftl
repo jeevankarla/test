@@ -246,15 +246,9 @@
 			                            </fo:table-cell>
 			                            <#list employeeMonthWiseMap as employeeMonthWiseDetails>
 			                            	<fo:table-cell border-right-style = "solid">	
-				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt" font-weight="bold"><#if employeeMonthWiseDetails.getValue().get("totalNetPfAmount")?has_content>${employeeMonthWiseDetails.getValue().get("totalNetPfAmount")?if_exists?string("#0.00")}&#160;&#160;<#else>0.00&#160;&#160;</#if></fo:block>
+				                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt" font-weight="bold">&#160;&#160;</fo:block>
 				                            </fo:table-cell>
-				                            <#if employeeMonthWiseDetails.getValue().get("totalNetPfAmount")?has_content>
-				                            	<#assign totPFAmount = totPFAmount + employeeMonthWiseDetails.getValue().get("totalNetPfAmount")>
-				                            </#if>
 			                            </#list>
-			                            <fo:table-cell >	
-			                            	<fo:block text-align="right" keep-together="always" font-size="10pt" line-height = "20pt" font-weight="bold">${totPFAmount?if_exists?string("#0.00")}&#160;&#160;</fo:block>
-			                            </fo:table-cell>
 			                        </fo:table-row>
 			                    </fo:table-body>
 	                     	</fo:table>
@@ -278,7 +272,7 @@
 					                        </fo:table-row>
 					                        <fo:table-row >
 				                     			<fo:table-cell>	
-					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;LESS DEDUCTIONS&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; : ${totPFAmount?if_exists?string("#0.00")} </fo:block>
+					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;LESS DEDUCTIONS&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; :</fo:block>
 					                            </fo:table-cell>
 					                            <fo:table-cell>	
 					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;Signature : </fo:block>
@@ -286,7 +280,7 @@
 					                        </fo:table-row>
 					                        <fo:table-row >
 				                     			<fo:table-cell>	
-					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;NET BONUS PAYABLE&#160;&#160;&#160;&#160;&#160;&#160; : ${((emplBonusVal.getValue())-totPFAmount)?if_exists?string("#0.00")}</fo:block>
+					                            	<fo:block text-align="left" keep-together="always" font-size="10pt" line-height = "25pt">&#160;NET BONUS PAYABLE&#160;&#160;&#160;&#160;&#160;&#160; : ${emplBonusVal.getValue()?if_exists?string("#0.00")}</fo:block>
 					                            </fo:table-cell>
 					                        </fo:table-row>
 					                  	</#if>
