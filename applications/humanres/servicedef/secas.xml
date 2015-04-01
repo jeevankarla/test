@@ -11,6 +11,9 @@
      <eca service="createEmplLeave" event="invoke">
         <action service="leaveValidation" mode="sync"/>
      </eca>
+     <eca service="createEmplLeave" event="invoke">
+        <action service="checkAvailableLeaveDays" mode="sync"/>
+     </eca>
      <eca service="createEmplLeave" event="commit">
         <condition operator="is-not-empty" field-name="chDate" />
         <action service="updateGhSsAvailedDetails" mode="sync"/>
