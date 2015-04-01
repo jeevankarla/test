@@ -1118,7 +1118,8 @@ under the License.
         <field name="partyId" title="Party Id" ><display/></field>
         <field name="partyName" title="Party Name"><display/></field>
          <field name="invoicePendingAmount" title="Out Standinng Amount" ><display/></field>
-          <!--<field name="OB" title="Opening Balance" ><display/></field>
+         <field name="advancePaymentAmount" title="Unapplied Payment Amount" ><display/></field>
+         <!--<field name="OB" title="Opening Balance" ><display/></field>
          <field name="invTotal" title="Sale/Purchase" ><display/></field>
          <field name="paymentTotal" title="Payments"><display/></field>
         <field name="CB" title="Closing Balance"><display/></field> -->
