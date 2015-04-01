@@ -3677,6 +3677,11 @@ under the License.
         <response name="success" type="view" value="PartyFinancialHistoryWithDrCrPDF"/>
         <response name="error" type="view" value="PartyFinancialHistoryWithDrCrPDF"/>
     </request-map>
+    <request-map uri="PartyFinancialHistoryWithDrCr.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinancialHistoryWithDrCrCSV"/>
+        <response name="error" type="view" value="PartyFinancialHistoryWithDrCrCSV"/>
+    </request-map>
      <request-map uri="InterUnitPartyHistoryWithDrCr.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InterUnitPartyHistoryWithDrCr"/>
@@ -4298,6 +4303,7 @@ under the License.
    
    <view-map name="GenericPartyFinancialHistoryPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GenericPartyFinancialHistoryPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="PartyFinancialHistoryWithDrCrPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyFinancialHistoryWithDrCrPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="PartyFinancialHistoryWithDrCrCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyFinancialHistoryWithDrCrCSV" content-type="text/csv" encoding="none"/>
    <view-map name="InterUnitPartyHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitPartyHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
    <view-map name="InterUnitLedgerAndAcntHistoryWithDrCr" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithDrCr" content-type="application/pdf" encoding="none"/>
    <view-map name="InterUnitLedgerAndAcntHistoryWithCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithCSV" content-type="text/csv" encoding="none"/>

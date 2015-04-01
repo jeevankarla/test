@@ -324,8 +324,9 @@ function reportTypeChangeFunc() {
 			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
 			             <td width="15%"></td>
-			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
-			           </form>
+						 <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyFinancialHistoryWithDrCr', '<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>');" class="buttontext"/>
+					                    <input type="submit" value="CSV" onClick="javascript:appendParams('PartyFinancialHistoryWithDrCr', '<@ofbizUrl>PartyFinancialHistoryWithDrCr.csv</@ofbizUrl>');" class="buttontext"/>
+					     </td>			           </form>
 			        </tr>
 			        <#--
               	   <tr class="alternate-row">
