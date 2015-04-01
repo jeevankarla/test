@@ -210,7 +210,8 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 							}
 						}
 					}
-				}else if(UtilValidate.isNotEmpty(shipmentId)){
+				}
+				if(UtilValidate.isNotEmpty(shipmentId)){
 								mrrNumber = shipmentId;
 							    shipmentDetails = delegator.findOne("Shipment", [shipmentId : shipmentId], false);
 								if(UtilValidate.isNotEmpty(shipmentDetails)){
@@ -218,7 +219,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 									supInvNumber = shipmentDetails.supplierInvoiceId;
 									supInvDate = shipmentDetails.supplierInvoiceDate;
 									def sdf1 = new SimpleDateFormat("MM/dd/yy HH:mm");
-									supInvDateTime = UtilDateTime.getDayStart(supInvDateTime);
+									supInvDateTime = UtilDateTime.getDayStart(supInvDate);
 									if(UtilValidate.isNotEmpty(supInvDateTime)){
 										supInvDateTime = UtilDateTime.toDateString(supInvDateTime, "dd/MM/yyyy");
 									}
