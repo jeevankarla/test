@@ -289,6 +289,24 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ShiftWiseReport">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="Shift Wise Report"/>	
+        		 <set field="tabButtonItem" value="MilkReceiptReports"/> 
+        		 <set field="tabButtonItem3" value="ShiftWiseReport"/>
+        		 <set field="reportFrequencyFlag" value="ShiftWiseReport"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkreceiptReportsTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptReport.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
      <screen name="FindMilkReceiptsBilling">
         <section>
         	<actions>
