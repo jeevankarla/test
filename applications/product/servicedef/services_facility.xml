@@ -111,12 +111,12 @@ under the License.
         </auto-attributes>
         <override name="inventoryItemDetailSeqId" mode="OUT"/>
     </service>
-        <service name="populateLMSPeriodSalesSummary" engine="java" transaction-timeout="500"
+      <!--   <service name="populateLMSPeriodSalesSummary" engine="java" transaction-timeout="500"
         location="org.ofbiz.network.LMSSalesHistoryServices" invoke="populateLMSPeriodSalesSummary">
         <description>populate Period Sales Summary</description>
         <attribute name="fromDate" mode="IN" type="Date" optional="true"/>
         <attribute name="thruDate" mode="IN" type="Date" optional="true"/>                                                      
-    </service>
+    </service> -->
     <service name="updateInventoryItemFromDetail" default-entity-name="InventoryItemDetail" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItemFromDetail" auth="false">
         <description>
