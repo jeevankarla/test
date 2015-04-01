@@ -54,6 +54,10 @@ under the License.
                     <store-value value-field="orderHeader"/>
                     <log level="info" message="Issued inventory for orderId ${orderHeader.orderId}."/>
                 <else>
+                  <add-error>
+                   <fail-message message="======>Not issuing inventory for 'orderId:${orderHeader.orderId}', 'INV_UN_AVAILABLE'  available To ISSUE======!"/>
+                   </add-error>
+                   <check-errors/>
                     <log level="info" message="Not issuing inventory for orderId ${orderHeader.orderId}, no inventory information available."/>
                 </else>
                 </if-compare>
@@ -112,8 +116,28 @@ under the License.
             <set field="lookupFieldMap.productId" from-field="orderItem.productId"/>
             
             <set field="lookupFieldMap.facilityId" from-field="orderHeader.originFacilityId"/>
-            <find-by-and entity-name="InventoryItem" map="lookupFieldMap" list="inventoryItemList" order-by-list="orderByList"/>
-
+          <!--   <find-by-and entity-name="InventoryItem" map="lookupFieldMap" list="inventoryItemList" order-by-list="orderByList"/> -->
+          <entity-condition entity-name="InventoryItem" list="inventoryItemList">
+                        <condition-list combine="and">
+                            <condition-expr field-name="productId" from-field="orderItem.productId"/>
+                            <condition-expr field-name="facilityId" from-field="orderHeader.originFacilityId" />
+                            <condition-expr field-name="quantityOnHandTotal" operator="greater" value="0.0" />
+                            <condition-expr field-name="statusId" operator="not-equals" value="INV_NS_DEFECTIVE"/>
+                            <condition-expr field-name="statusId" operator="not-equals" value="INV_DEFECTIVE"/>
+                        </condition-list>
+                        <order-by   field-name="${orderByString}"/>
+            </entity-condition>
+             <set field="inventoryItemsSize" value="${groovy: return(inventoryItemList.size())}" type="Integer"/>
+             <!-- Logging for inventory size for sales issuance-->
+             <log level="always" message="====##########============>Inventory Available====Size:${inventoryItemsSize}"></log>
+             
+            <if-empty  field="inventoryItemList">
+                    <add-error>
+	                    <fail-message message="======>Not issuing inventory(SIZE:${inventoryItemsSize}) for 'orderId:${orderHeader.orderId}', 'INV_UN_AVAILABLE'  available For 'ProductId:${parameters.productId}======!"/>
+	                    </add-error>
+                     <check-errors error-code="error"/> 
+                     <log level="error"  message="=======>Not issuing inventory(SIZE:${inventoryItemsSize}) for 'orderId:${orderHeader.orderId}', 'INV_UN_AVAILABLE'  available For 'ProductId:${parameters.productId}=====!"/>
+            </if-empty>
             <set field="parameters.quantityNotIssued" from-field="orderItem.quantity"/>
            
             <set field="parameters.shipmentId" from-field="orderHeader.shipmentId"/>
@@ -124,7 +148,12 @@ under the License.
 
             <!-- if quantityNotIssued is not 0, then pull it from the last non-serialized inventory item found, in the quantityNotIssued field -->
             <if-compare field="parameters.quantityNotIssued" operator="not-equals" value="0" type="BigDecimal">
-            
+                     <!-- Throw error even partially issued for orderItem --> 
+                       <add-error>
+	                    <fail-message message="###== 'INV_UN_AVAILABLE' For 'ProductId:${parameters.productId} in 'orderId:${orderHeader.orderId}' ,Still Needs ${parameters.quantityNotIssued} Qty To Fulfill Order======!"/>
+	                    </add-error>
+                     <check-errors error-code="error"/> 
+                     <log level="error"  message="###== 'INV_UN_AVAILABLE' For 'ProductId:${parameters.productId} in 'orderId:${orderHeader.orderId}' ,Still Needs ${parameters.quantityNotIssued} Qty To Fulfill Order ======!"/>
                 <if-not-empty field="lastNonSerInventoryItem">
                     <!-- create ItemIssuance record -->
                     <set field="issuanceCreateMap.orderId" from-field="parameters.orderId"/>
