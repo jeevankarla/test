@@ -135,7 +135,7 @@ under the License.emplpunch
             location="in.vasista.vbiz.humanres.HumanresService" invoke="createHoliday">
         <description>creates a new Holiday</description>
         <attribute name="customTimePeriodId" type="String" mode="IN" optional="true"/>
-        <attribute name="organizationPartyId" mode="IN" type="String"></attribute>
+        <attribute name="orgPartyId" mode="IN" type="String"></attribute>
         <attribute name="holidayDate" mode="IN" type="String" optional="false"></attribute>
         <attribute name="description" type="String" mode="IN" optional="false"></attribute>
     </service>
@@ -909,6 +909,14 @@ under the License.emplpunch
     <service name="leaveValidation" engine="java"
           location="org.ofbiz.humanres.inout.PeriodValidation" invoke="leaveValidation" auth="true">
         <description>Checks to see any leaves between given fromDate and thruDate </description>
+        <attribute name="partyId" optional="false" type="String" mode="IN"/>
+        <attribute name="leaveTypeId" optional="true" type="String" mode="IN"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+    </service>
+    <service name="checkAvailableLeaveDays" engine="java"
+          location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="checkAvailableLeaveDays" auth="true">
+        <description>Checks available leaves between given fromDate and thruDate </description>
         <attribute name="partyId" optional="false" type="String" mode="IN"/>
         <attribute name="leaveTypeId" optional="true" type="String" mode="IN"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
