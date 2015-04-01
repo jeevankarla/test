@@ -10,8 +10,17 @@ jQuery(document).ready(function() {
     	var curentElName = focusables.eq(current).attr("name");
     	var prevEl = focusables.eq(current-1).length ? focusables.eq(current-1) : focusables.eq(0);
 		var prevElName = prevEl.attr("name");
-		
-		if(prevElName == "exitTime" ||prevElName == "entryTime" || prevElName == "testTime" || prevElName == "sendTime" || prevElName == "grossTime" || prevElName == "tareTime"){
+		if(curentElName == "sendTemp"){
+			var productId = $('#productId').val();
+			if(!productId){
+				alert('please enter valid product');
+				$('input[name='+curentElName+']').val('');
+				prevEl.val('');
+				prevEl.focus();
+				return false;
+			}
+		}
+		if(prevElName == "exitTime" ||prevElName == "entryTime" || prevElName == "testTime" || prevElName == "sendTime" || prevElName == "grossTime" || prevElName == "tareTime" || prevElName == "cipTime"){
     		var tempTime = prevEl.val();
     		if(tempTime.length==0){
 				alert('invalid Time formate. length should be 4');
@@ -40,7 +49,7 @@ jQuery(document).ready(function() {
     		}
 		}
 		// auto tab  for time tabs and those which need only number input
-    	if(curentElName == "recdMBRT" || curentElName == "exitTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells"){
+    	if(curentElName == "recdMBRT" || curentElName == "exitTime" || curentElName == "cipTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells"){
     		if(e.which == 110 || e.which == 190){
     			$(this).val( $(this).val().replace('.',''));
     		}
@@ -76,10 +85,10 @@ jQuery(document).ready(function() {
 		next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
     	
     	
-    	if (e.keyCode == 38 ) {    		
+    	if (e.keyCode == 38  && curentElName!="product") {    		
            prev.focus();
    		}
-   		if (e.keyCode == 9) {
+   		if (e.keyCode == 9 && curentElName!="product") {
    			next.focus();
    		}
     });
@@ -111,14 +120,19 @@ $(function() {
     	}else if(displayScreen == "VEHICLE_QC"){
     		if(!$("#milkReceiptEntry").validate({messages:{
        		   testDate:"" ,testTime:"" , milkTransferId:"" , tankerName:"",sendTemp:"",
-       		   sendTemp:"",recdTemp:"",sendAcid:"",recdAcid:"",sendCLR:"",recdCLR:"",
+       		   productId:"",sendTemp:"",recdTemp:"",sendAcid:"",recdAcid:"",sendCLR:"",recdCLR:"",
        		   sendFat:"",recdFat:"",sendSnf:"",recdSnf:"",sendCob:"",recdCob:"",
        		   sendNutriliser:"",recdFlavour:"",recdSedimentTest:"",recdPH:"",recdMBRT:""
        		   
        		   
        	   }}).form()) return;
     		action = "updateMilkTankerReceiptEntryQC";
-    	}else{
+    	}else if(displayScreen == "VEHICLE_CIP"){
+    		if(!$("#milkReceiptEntry").validate({messages:{
+        		   cipDate:"" ,cipTime:"" , milkTransferId:"" , tankerName:"",silo:""
+        	   }}).form()) return;
+     		action = "updateMilkTankerReceiptEntryCIP";
+     	}else{
     		if(!$("#milkReceiptEntry").validate({messages:{
         		   entryDate:"" ,entryTime:"" , tankerName:"",sendDate:"" ,sendTime:"" ,
         		   dcNo:"",partyId:"",sealCheck:""

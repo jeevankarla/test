@@ -91,6 +91,10 @@
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
+	if($('#displayScreen').val()=="VEHICLE_CIP"){
+		dispatchDateFormat = $('#cipDate').datepicker( "option", "dateFormat" );
+		$('#cipDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
+	}
 });
 var productJson = ${StringUtil.wrapString(productJson)}
 $(document).ready(function() {	
@@ -137,6 +141,9 @@ $(document).ready(function() {
  	}
  	if($('#displayScreen').val()=="VEHICLE_QC"){
  		makeDatePicker("testDate","fromDate");
+ 	}
+ 	if($('#displayScreen').val()=="VEHICLE_CIP"){
+ 		makeDatePicker("cipDate","fromDate");
  	}
  	
 	$('#ui-datepicker-div').css('clip', 'auto');
@@ -378,6 +385,9 @@ $( "#"+fromDateId ).datepicker({
       			<#if displayScreen == "VEHICLE_QC">
       				<#assign velhicleStatus = "QUALITY CONTROL DETAILS">
       			</#if>
+      			<#if displayScreen == "VEHICLE_CIP">
+      				<#assign velhicleStatus = "CIP AND SILO DETAILS">
+      			</#if>
 				<label>${velhicleStatus}</label>
 	  		</div>
     </div>
@@ -476,6 +486,23 @@ $( "#"+fromDateId ).datepicker({
 							    <tr>
 	        						<td align='left' ><span class='h3'>Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
 	        					</tr>
+	        				</#if>
+	        				<#if displayScreen == "VEHICLE_CIP">
+	        					<tr>
+	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
+	        						<td align='left' ><span class='h3'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' >CIP Time(HHMM)[24 hour format] </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+					        	</tr>
+							    <tr>
+	        						<td align='left' ><span class='h3'>UN-LOADED TO SILO</span></td><td> <select name="silo" required="required" id="silo" allow-empty="true">
+					        					<option value="">SELECT</option>
+					        					<option value="RM1">RM1</option>
+            									<option value="RM2">RM2</option>
+            									<option value="RM2">RM3</option>
+          												</select></td>
+	        					</tr>
 	        				</#if>	
 	        				<#if displayScreen == "VEHICLE_QC">
 	        					<tr>
@@ -485,6 +512,12 @@ $( "#"+fromDateId ).datepicker({
 	        					<tr>
 	        						<td align='left' >Testing Time(HHMM)[24 hour format] </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
 			        					</td>
+					        	</tr>
+					        	<tr>
+	        						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type</td><td>
+							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
+                         				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
+									</td>
 					        	</tr>
 	        					
 						        <tr>

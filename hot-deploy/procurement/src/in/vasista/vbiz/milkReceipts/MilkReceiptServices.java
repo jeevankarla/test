@@ -2505,7 +2505,7 @@ public class MilkReceiptServices {
 				if(UtilValidate.isNotEmpty(tareWeight) && UtilValidate.isNotEmpty(milkTransfer.get("dispatchWeight"))){
 					sendQty = ((BigDecimal)milkTransfer.get("dispatchWeight")).subtract(tareWeight);
 					if(sendQty.compareTo(BigDecimal.ZERO)<0){
-						Debug.logError("DispatchWeight is Wrong",module);
+						Debug.logError("Dispatch Weight is Wrong",module);
 						resultMap = ServiceUtil.returnError("DispatchWeight is Wrong");
 						return resultMap;
 					}
@@ -2632,9 +2632,67 @@ public class MilkReceiptServices {
 	 	        
 				milkTransfer.set("statusId", "MXF_RECD");
 	 			
+	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
+	 			String cipDateStr = (String) context.get("cipDate"); 
+	 	        String cipTime = (String) context.get("cipTime");
+	 	        String siloId = (String)context.get("silo");
+	 	        Timestamp cipDate = UtilDateTime.nowTimestamp();
+	 	        try{
+	 		 		if(UtilValidate.isNotEmpty(cipDateStr)){
+	 		 			if(UtilValidate.isNotEmpty(cipTime)){
+	 		 				cipDateStr = cipDateStr.concat(cipTime);
+	 		 			}
+	 		 			cipDate = new java.sql.Timestamp(sdf.parse(cipDateStr).getTime());
+	 		 		}
+	 	        	
+	 	        }catch(ParseException e){
+	 	        	Debug.logError(e, "Cannot parse date string: " + cipDateStr, module);
+	 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+		 			return resultMap;
+	 	        }
+	 	        updateVehStatusInMap.put("estimatedStartDate",cipDate);
+	 	        try{
+	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
+	 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+	 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+			 			return resultMap;
+	 	        	}
+	 	        }catch (GenericServiceException e) {
+					// TODO: handle exception
+	 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+		 			return resultMap;
+	 	        	
+				}catch(Exception e){
+					Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+		 			return resultMap;
+				}
+	 	        
+	 	     try{
+	 	    	 
+	 	         List<GenericValue> milkTransferItems = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);	
+	 	         if(UtilValidate.isNotEmpty(milkTransferItems)){
+	 	        	 for(GenericValue milkTransferItem : milkTransferItems){
+	 	        		 milkTransferItem.set("siloId", siloId);
+	 	        		 milkTransferItem.store();
+	 	        	 }
+	 	        	 
+	 	         }	
+	 	        	
+	 	       }catch(Exception e){
+					Debug.logError("Exception while updating the Silo Id :"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while updating the Silo Id :"+e.getMessage());
+		 			return resultMap;
+				}
+	 	        
+	 			
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_QC")){
+	 			
 	 			String testDateStr = (String) context.get("testDate"); 
 	 	        String testTime = (String) context.get("testTime");
+	 	        String productId = (String) context.get("productId");
 	 	        Timestamp testDate = UtilDateTime.nowTimestamp();
 	 	        try{
 	 		 		if(UtilValidate.isNotEmpty(testDateStr)){
@@ -2669,10 +2727,12 @@ public class MilkReceiptServices {
 		 			return resultMap;
 				}
 				
-				milkTransfer.set("fat",(BigDecimal)context.get("sendFat"));
+	 	        milkTransfer.set("productId",productId);
+	 	        milkTransfer.set("fat",(BigDecimal)context.get("sendFat"));
 				milkTransfer.set("snf",(BigDecimal)context.get("sendSnf"));
 				milkTransfer.set("receivedFat",(BigDecimal)context.get("recdFat"));
 				milkTransfer.set("receivedSnf",(BigDecimal)context.get("recdSnf"));
+				
 				
 				Map milkTransferItemResult = dispatcher.runSync("createTankerReceiptItem", context); 
 	 	        if(ServiceUtil.isError(milkTransferItemResult)){
@@ -2701,6 +2761,7 @@ public class MilkReceiptServices {
     	LocalDispatcher dispatcher = dctx.getDispatcher();
     	Map<String, Object> resultMap = ServiceUtil.returnSuccess("Vehicle Status Updated Successfully");
    	 	Delegator delegator = dctx.getDelegator();
+   	 	
    	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
    	 	
    	 	String vehicleId = (String) context.get("vehicleId");
@@ -2716,7 +2777,6 @@ public class MilkReceiptServices {
 	 			resultMap = ServiceUtil.returnError("Cannot update VehicleTrip Status . Reason : Previous status Not found");
 	 		}
 	 		String previousStatusId = (String)((GenericValue)EntityUtil.getFirst(previousStatusList)).get("statusId");
-	 		
 	 		// here we are getting 
 	 		List vehicleTripStatusConditionList = UtilMisc.toList(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
 	 		vehicleTripStatusConditionList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
@@ -2807,6 +2867,7 @@ public class MilkReceiptServices {
         String recdSedimentTest = (String)context.get("recdSedimentTest");
         String recdFlavour = (String)context.get("recdSedimentTest");
 		
+        String productId = (String) context.get("productId");
         try{
 	        GenericValue newTransferItem = delegator.makeValue("MilkTransferItem");
 	        newTransferItem.set("milkTransferId",milkTransferId);
@@ -2828,6 +2889,10 @@ public class MilkReceiptServices {
 	        
 	        newTransferItem.set("sendLR",sendCLR);
 	        newTransferItem.set("receivedLR",recdCLR);
+	        
+	        newTransferItem.set("sendProductId",productId);
+	        newTransferItem.set("receivedProductId",productId);
+	        
 	        
 	        newTransferItem.set("sendNutrilisers",sendNutriliser);
 	        newTransferItem.set("receivedSedimentTest",recdSedimentTest);

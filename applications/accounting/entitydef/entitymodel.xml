@@ -4968,6 +4968,7 @@
 		<field name="partyId" type="id-ne" />
 		<field name="rateTypeId" type="id-ne" />
 		<field name="periodTypeId" type="id" />
+		<field name="rateAmount" type="fixed-point" />
 		<field name="defaultRate" type="indicator" />
 		<field name="percentageUsed" type="floating-point">
 			<description>The percentage of the actual hours registered in timeEntries, used for the task and invoice actuals, if the field is null 100% will be used</description>
@@ -5225,6 +5226,7 @@
 		title="Fine Recovery">
 		 <field name="recoveryId" type="id-ne"></field>
 		<field name="facilityId" type="id"></field>
+		<field name="vehicleId" type="id"></field>
 		<field name="customTimePeriodId" type="id"></field>
 		<field name="incidentDate" type="date-time"></field>
 		<field name="recoveryTypeId" type="id"></field>
@@ -5241,6 +5243,10 @@
       	</relation>        
       	<relation type="one" fk-name="FR_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
+      	</relation>
+      	
+      	<relation type="one" fk-name="FR_VEHICLE" rel-entity-name="Vehicle">
+        	<key-map field-name="vehicleId"/>
       	</relation>
       	<relation type="one" fk-name="FR_RTP" rel-entity-name="Enumeration">
         	<key-map field-name="recoveryTypeId" rel-field-name="enumId"/>

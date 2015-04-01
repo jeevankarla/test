@@ -385,6 +385,9 @@
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<!-- product -->
+		
+		<attribute name="productId" mode="IN" type="String" optional="false"/>
 		<!-- Quality Control -->
 		<attribute name="testDate" mode="IN" type="String" optional="false"/>
 		<attribute name="testTime" mode="IN" type="String" optional="false"/>
@@ -423,11 +426,26 @@
 		<attribute name="tareTime" mode="IN" type="String" optional="false"/>
 		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
     </service>
+    <service name="updateMilkTankerReceiptEntryCIP" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="cipDate" mode="IN" type="String" optional="false"/>
+		<attribute name="cipTime" mode="IN" type="String" optional="false"/>
+		<attribute name="silo" mode="IN" type="String" optional="false"/>
+    </service>
+    
+    
+    
     <service name="updateMilkTankerReceiptEntryQC" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<!-- Product -->
+		<attribute name="productId" mode="IN" type="String" optional="false"/>
 		<!-- Quality Control -->
 		<attribute name="testDate" mode="IN" type="String" optional="false"/>
 		<attribute name="testTime" mode="IN" type="String" optional="false"/>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>MilkReceipts Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+	  
+    <service name="populateMRPeriodBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="populatePtcPeriodBilling">
+        <description>populate PTC Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="generatePtcTranporterMargin" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="generatePtcTranporterMargin">
+        <description>Generate PTC Transporter Margin.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="INOUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="cancelPtcTranporterMargin" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="cancelPtcTranporterMargin">
+        <description>Cancel PTC Transporter Margin Report.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    
+     <service name="cancelPtcTransporterMarginInvoice" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="cancelPtcTransporterMarginInvoice">
+        <description>Cancel PTC Transporter Margin Invoice.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <service name="updatePTCStatus" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="updatePTCStatus">
+        <description>Update Billing StatusId.</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
+    </service>
+        
+</services>
