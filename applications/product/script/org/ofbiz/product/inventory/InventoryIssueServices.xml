@@ -128,13 +128,15 @@ under the License.
                         <order-by   field-name="${orderByString}"/>
             </entity-condition>
              <set field="inventoryItemsSize" value="${groovy: return(inventoryItemList.size())}" type="Integer"/>
+             <!-- Logging for inventory size for sales issuance-->
              <log level="always" message="====##########============>Inventory Available====Size:${inventoryItemsSize}"></log>
+             
             <if-empty  field="inventoryItemList">
                     <add-error>
 	                    <fail-message message="======>Not issuing inventory(SIZE:${inventoryItemsSize}) for 'orderId:${orderHeader.orderId}', 'INV_UN_AVAILABLE'  available For 'ProductId:${parameters.productId}======!"/>
 	                    </add-error>
                      <check-errors error-code="error"/> 
-                     <log level="always"  message="=======>Not issuing inventory(SIZE:${inventoryItemsSize}) for 'orderId:${orderHeader.orderId}', 'INV_UN_AVAILABLE'  available For 'ProductId:${parameters.productId}=====!"/>
+                     <log level="error"  message="=======>Not issuing inventory(SIZE:${inventoryItemsSize}) for 'orderId:${orderHeader.orderId}', 'INV_UN_AVAILABLE'  available For 'ProductId:${parameters.productId}=====!"/>
             </if-empty>
             <set field="parameters.quantityNotIssued" from-field="orderItem.quantity"/>
            
@@ -151,7 +153,7 @@ under the License.
 	                    <fail-message message="###== 'INV_UN_AVAILABLE' For 'ProductId:${parameters.productId} in 'orderId:${orderHeader.orderId}' ,Still Needs ${parameters.quantityNotIssued} Qty To Fulfill Order======!"/>
 	                    </add-error>
                      <check-errors error-code="error"/> 
-                     <log level="always"  message="###== 'INV_UN_AVAILABLE' For 'ProductId:${parameters.productId} in 'orderId:${orderHeader.orderId}' ,Still Needs ${parameters.quantityNotIssued} Qty To Fulfill Order ======!"/>
+                     <log level="error"  message="###== 'INV_UN_AVAILABLE' For 'ProductId:${parameters.productId} in 'orderId:${orderHeader.orderId}' ,Still Needs ${parameters.quantityNotIssued} Qty To Fulfill Order ======!"/>
                 <if-not-empty field="lastNonSerInventoryItem">
                     <!-- create ItemIssuance record -->
                     <set field="issuanceCreateMap.orderId" from-field="parameters.orderId"/>
