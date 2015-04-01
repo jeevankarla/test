@@ -674,6 +674,13 @@ public class SalesHistoryServices {
   	        		Map<String, Object> zoneTotMap = new TreeMap<String, Object>();
   	        		List<String> zoneRoutes = FastList.newInstance();
   	        		zoneRoutes = ByProductNetworkServices.getZoneRoutes(delegator,zone);*/
+  		    	if(("AM".equals(shipment.toString())) || ("PM".equals(shipment.toString()))){
+  	  		    	routesList=(List<String>)ByProductNetworkServices.getRoutesByAMPM(dctx , UtilMisc.toMap("supplyType", shipment.toString())).get("routeIdsList");
+  	  		    	}
+  	  		    	//for Direct Sales Default we will get AM ROUTES
+  	  		    	if("DIRECT".equals(shipment.toString())){
+  	  	  		    	routesList=(List<String>)ByProductNetworkServices.getRoutesByAMPM(dctx , UtilMisc.toMap("supplyType", "AM")).get("routeIdsList");
+  	  	  		    }
   	        		for(String route : routesList){
   	        			Map<String, Object> routesTotMap = new TreeMap<String, Object>();
   	        			List<String> routeBooths = FastList.newInstance();
