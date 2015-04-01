@@ -108,9 +108,9 @@ if(UtilValidate.isNotEmpty(deptIds)){
          conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
-		 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 		 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-				                                         EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+				                                         EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 productCatDetails = delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false);
          productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);

@@ -29,12 +29,12 @@
     
     	<form name="ListRequests" type="list" extends="ListRequestList" list-name="listIt">
         <actions>
-        
+        <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/ListRequestsPerformFind.groovy"/>
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="orderBy" value="-custRequestDate"/>
-<!--             <field-map field-name="inputFields.fromPartyId" value="${partyId}"/> -->
+            <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
