@@ -126,7 +126,7 @@
 	        		<if-has-permission permission="MM"  action="_SALE_VIEW"/>
 	        	       		
 	        </condition>   
-      	 	<link target="FGSProductSaleMm">    
+      	 	<link target="FindFGSShipmentMm">    
          	</link>
         </menu-item> 
                <menu-item name="InterUnitStkTrMm" title="Inter Unit Transfer"> 
@@ -135,7 +135,7 @@
         		<if-has-permission permission="MM"  action="_INTR_UNIT_VIEW"/>
         	       		
         </condition>  
-      	 <link target="InterUnitStkTrMm">    
+      	 <link target="FindStockTranferShipmentMm">    
          </link>
         </menu-item>
 	        <menu-item name="newReports" title="Reports">
