@@ -40,6 +40,9 @@
             <link target="MilkReceiptsTankerEntry">
 			</link>
       	</menu-item>
+      	<menu-item name="MilkReceiptReports" title="Reports" >
+            <link target="ShiftWiseReport"></link>
+      	</menu-item>
       	<!-- <menu-item name="FindMilkReceiptEntry" title="Find Milk Receipts" >
             <link target="FindMilkReceiptsTankerEntry">
 			</link>
@@ -94,6 +97,11 @@
 			<link target="MilkReceiptFacility"></link>
 		</menu-item> -->
 	</menu>
+	<menu name="MilkreceiptReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+		<menu-item name="ShiftWiseReport" title="Shift Wise">
+			<link target="ShiftWiseReport"></link>
+		</menu-item>
+     </menu>
 	<menu name="MilkreceiptReportTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml"
 		selected-menuitem-context-field-name="tabButtonItem3">

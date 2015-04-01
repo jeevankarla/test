@@ -79,6 +79,33 @@ function appendParams(formName, action) {
 			jQuery(formId).submit();
 	}
 </script>
+<#if reportFrequencyFlag =="ShiftWiseReport">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>SHIFT WISE REPORT</h3>
+    </div>
+    <div class="screenlet-body">
+        <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+        <tr class="alternate-row">
+      		<form id="ShiftWiseReportTxt" name="ShiftWiseReportTxt" method="post" action="<@ofbizUrl>ShiftWiseReport.txt</@ofbizUrl>">
+      			<td>Shift Wise Report</td>
+      			<td >
+					Select Shift <select name="shiftType">
+					                    <option value="all" selected></option>
+			                            <option value="1">1st Shift</option>
+			                            <option value="2">2nd Shift</option>
+			                            <option value="3">3rd Shift</option>
+		                   		</select>
+					Shift Date <input  type="text" size="15pt" id="MkrsThruDate" name="shiftDate" required />
+					
+      				<input type="submit" value="Download" class="buttontext"/> (12x12 Size)
+          		</td>
+          	</form>  	   
+         </tr>   
+		</table>
+    </div>
+    </div>
+</#if>
 <#if reportFrequencyFlag =="UnitMilkReceiptReports">
 <div class="screenlet">
     <div class="screenlet-title-bar">
