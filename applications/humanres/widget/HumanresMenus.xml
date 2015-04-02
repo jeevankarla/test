@@ -109,7 +109,7 @@
         	<condition>
             	<if-has-permission permission="HR"  action="_ANALYTICS_VIEW"/>
             </condition>
-            <link target="analytics"/>
+            <link target="employeesAnalytics"/>
         </menu-item> 
         <menu-item name="newReports" title="Reports">
              <condition >
@@ -254,9 +254,12 @@
     </menu>	 	
 	<menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="employeesTenureChart" title="Employees Analytics"> 
-        	<link target="analytics"/>
+        <menu-item name="employeesAnalysisChart" title="Employees Analysis"> 
+        	<link target="employeesAnalytics"/>
         </menu-item> 
+        <menu-item name="employeesTenureChart" title="Upcoming Retirements"> 
+        	<link target="retirementAnalytics"/>
+        </menu-item>         
         <menu-item name="salaryAnalysisChart" title="Salary Analysis"> 
         	<link target="salaryAnalysisChart"/>
         </menu-item>               
