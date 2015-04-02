@@ -5864,6 +5864,8 @@ public class ByProductServices {
 	        String facilityId = (String) context.get("facilityId");
 	        String productId = (String) context.get("productId");
 	        String rateTypeId = (String) context.get("rateTypeId");
+	        String uomId = (String) context.get("uomId");
+	        BigDecimal kilometers = (BigDecimal) context.get("kilometers");  
 	        BigDecimal rateAmount = (BigDecimal) context.get("rateAmount");
 	        String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
 	        Timestamp fromDate = (Timestamp) context.get("fromDate");
@@ -5906,6 +5908,8 @@ public class ByProductServices {
 					       	tempfromDate = activeRate.getTimestamp("fromDate");
 					    	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
 					    		activeRate.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+					    		activeRate.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					       		activeRate.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 					       		activeRate.store();
 						    }
 					       	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
@@ -5923,7 +5927,12 @@ public class ByProductServices {
 	     	        newEntity.set("rateTypeId", rateTypeId);
 	     	        newEntity.set("supplyTypeEnumId", supplyTypeEnumId);
 	     	        newEntity.set("rateCurrencyUomId", rateCurrencyUomId);
-	     	        newEntity.set("rateAmount", rateAmount);
+	     	        newEntity.set("uomId", uomId);
+		     	     if(UtilValidate.isNotEmpty(kilometers)){
+		     	        newEntity.set("rateAmount", kilometers);
+		     	     }else{
+		     	    	newEntity.set("rateAmount", rateAmount);
+		     	     }
 	     	        newEntity.set("fromDate", fromDate);
 	     	        newEntity.set("thruDate", thruDate);
 	     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
@@ -6651,4 +6660,67 @@ public class ByProductServices {
 		            	finalResult.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 		                return finalResult;
 		    }
+		 public static Map<String, Object> createOrUpdateDiselAmount(DispatchContext ctx,Map<String, Object> context) {
+		        Map<String, Object> resultMap = FastMap.newInstance();
+		        Map<String, Object> result = FastMap.newInstance();
+		        Map<String, Object> input = FastMap.newInstance();
+		        Delegator delegator = ctx.getDelegator();
+		        LocalDispatcher dispatcher = ctx.getDispatcher();
+		        Locale locale = (Locale) context.get("locale");
+		        String facilityId = (String) context.get("facilityId");
+		        String productId = (String) context.get("productId");
+		        String rateTypeId = (String) context.get("rateTypeId");
+		        String facilityTypeId = (String) context.get("facilityTypeId");
+		        String uomId = (String) context.get("uomId");
+		        BigDecimal kilometers = (BigDecimal) context.get("kilometers");
+		        BigDecimal rateAmount = (BigDecimal) context.get("rateAmount");
+		        String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
+		        Timestamp fromDate = (Timestamp) context.get("fromDate");
+		        Timestamp thruDate = (Timestamp) context.get("thruDate");
+		        String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");
+		        List<GenericValue> facilityRateList = FastList.newInstance();
+		        List<GenericValue> activeFacilityRate = FastList.newInstance();
+		        List<GenericValue> futureFacilityRate = FastList.newInstance();
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        Timestamp tempfromDate=null;
+		        boolean isNewFacility = true;
+			    try {
+			        if(fromDate==null){
+			        	fromDate= UtilDateTime.nowTimestamp();
+			        }
+			        if(UtilValidate.isNotEmpty(thruDate)){
+			        	thruDate=UtilDateTime.getDayEnd(thruDate);
+			        }
+			        fromDate=UtilDateTime.getDayStart(fromDate);
+			       
+			       
+			        if(UtilValidate.isNotEmpty(uomId) && uomId.equals("LEN_km") || rateTypeId.equals("FACILITY_SIZE") ){
+						input = UtilMisc.toMap("userLogin", userLogin, "fromDate",fromDate,"facilityId", facilityId,"thruDate",thruDate,
+									 "rateTypeId", "FACILITY_SIZE","productId","_NA_","kilometers",kilometers,"supplyTypeEnumId","_NA_", "rateCurrencyUomId","LEN_km","uomId","LEN_km");
+						resultMap =dispatcher.runSync("createOrUpdateFacilityRate",input);
+				        if (ServiceUtil.isError(resultMap)) {
+							  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+					          return resultMap;
+					    }
+			        }  
+			        if(!rateTypeId.equals("FACILITY_SIZE") ){
+				        input.clear();
+				    	input = UtilMisc.toMap("userLogin", userLogin, "fromDate",fromDate,"thruDate",thruDate,"facilityId", facilityId,
+								 "rateTypeId", "TRANSPORTER_MRGN","productId","_NA_","rateAmount",rateAmount,"supplyTypeEnumId","_NA_","rateCurrencyUomId","INR","uomId","LEN_km");
+					    resultMap =dispatcher.runSync("createOrUpdateFacilityRate",input);
+			   
+				        if (ServiceUtil.isError(resultMap)) {
+						  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+				          return resultMap;
+				         }	 
+			        }
+						
+					result = ServiceUtil.returnSuccess("FacilityRate Amount is successfully updated");
+				
+		    }catch (Exception e) {
+		    	Debug.logError(e, module);
+				return ServiceUtil.returnError("Error while updating FacilityRate" + e);
+		    }
+		        return result;
+		 }
 }

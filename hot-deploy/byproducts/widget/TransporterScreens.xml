@@ -421,6 +421,64 @@
             </widgets>
         </section>
     </screen>
-    
-    
+     <screen name="EditDieselAmount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Diesel Amount"/>
+                <set field="tabButtonItem" value="TransporterMargins"/>
+ 				<set field="tabButtonItem2" value="EditDieselAmount" />       
+                <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+                <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/DiselAmount.groovy"/>
+            </actions>            
+            <widgets>
+				 <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                      <include-menu name="TransporterMarginsTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>                                                        					   
+                        <section>
+                        	<widgets>
+	                        	<container>
+		                        	<container style="button-bar">
+		                        		<link target="NewDieselAmount" text="Create New Diesel Amount" style="buttontext"></link>
+		                        	</container>
+		                        	<container>
+			                        	<screenlet title="Search Options">
+			                        		<include-form location="component://byproducts/widget/TransporterForms.xml" name="FindDiselAmount"/>
+				                        </screenlet>
+				                        <screenlet title="Search Result">
+			                        		<include-form location="component://byproducts/widget/TransporterForms.xml" name="ListDiselAmount"/>
+				                        </screenlet>
+		                        	</container>
+		                        </container>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+     <screen name="NewDieselAmount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit RateAmount Variables"/>
+                <set field="tabButtonItem" value="TransporterMargins"/>
+ 				<set field="tabButtonItem2" value="EditDieselAmount" /> 
+ 				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/rateType.js" global="true"/>                                          
+            </actions>            
+            <widgets>
+				 <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu name="TransporterMarginsTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                        <section>
+                        	<widgets>
+	                        	<screenlet title="Create Diesel Amount">				
+									<include-form name="CreateDieselHike" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
  </screens>
