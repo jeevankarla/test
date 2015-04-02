@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!--LMSPriodSalesSummary-->
+    <EnumerationType description="LMS Sales Period Type" enumTypeId="LMSSALES_PERIODTYP" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Dayily Sales" enumCode="SALES_DAY" enumId="SALES_DAY" sequenceId="01" enumTypeId="LMSSALES_PERIODTYP"/>
+    <Enumeration description="Monthly Sales" enumCode="SALES_MONTH" enumId="SALES_MONTH" sequenceId="02" enumTypeId="LMSSALES_PERIODTYP"/>
+    <ShipmentType  description="Direct Shipment" hasTable="N"  shipmentTypeId="DIRECT"/>
