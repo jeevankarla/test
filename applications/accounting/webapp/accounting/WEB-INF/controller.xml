@@ -2073,6 +2073,14 @@ under the License.
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="GroupPaymentCSV"/>    	
     </request-map>
+    <request-map uri="BankGuaranteeReceived.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="BankGuaranteeReceivedCSV"/>    	
+    </request-map>
+    <request-map uri="BankGuaranteeRefund.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="BankGuaranteeReceivedCSV"/>    	
+    </request-map>
     <request-map uri="FindDepositAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepositAccount"/>
@@ -4181,6 +4189,7 @@ under the License.
   	<view-map name="DepositAccountCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#DepositAccountCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="BankContraEntryCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankContraEntryCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="IncomingAdvancesReceivedCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#IncomingAdvancesReceivedCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="BankGuaranteeReceivedCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankGuaranteeReceivedCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="TreasurerPaymentsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TreasurerPaymentsCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="GroupPaymentCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GroupPaymentCSV" content-type="text/csv" encoding="none"/>
     <!-- Assignment Mappings -->
