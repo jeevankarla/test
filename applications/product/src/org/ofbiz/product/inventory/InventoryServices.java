@@ -340,7 +340,58 @@ public class InventoryServices {
 
         return ServiceUtil.returnSuccess();
     }
+    
+    public static Map<String, Object> checkClosurePeriodTransaction(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String inventoryItemDetailSeqId = (String) context.get("inventoryItemDetailSeqId");
+        GenericValue inventoryItemDetail = null;
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = dctx.getDispatcher();
 
+        try {
+        	Timestamp effectiveDate = UtilDateTime.nowTimestamp();
+        	List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("inventoryItemDetailSeqId", EntityOperator.EQUALS, inventoryItemDetailSeqId), UtilMisc.toSet("effectiveDate"), null, null, false);
+            if(UtilValidate.isNotEmpty(inventoryItemDetails)){
+            	inventoryItemDetail = EntityUtil.getFirst(inventoryItemDetails);
+            	effectiveDate = inventoryItemDetail.getTimestamp("effectiveDate");
+            }
+            
+            Map finYearContext = FastMap.newInstance();
+    		finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("INVTRY_PERIOD_CLOSE"));
+    		finYearContext.put("organizationPartyId", "Company");
+    		finYearContext.put("userLogin", userLogin);
+    		finYearContext.put("findDate", effectiveDate);
+    		finYearContext.put("excludeNoOrganizationPeriods", "Y");
+    		List customTimePeriodList = FastList.newInstance();
+    		Map resultCtx = FastMap.newInstance();
+    		try{
+    			resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+    			if(ServiceUtil.isError(resultCtx)){
+    				Debug.logError("Problem in fetching financial year ", module);
+    				return ServiceUtil.returnError("Problem in fetching financial year ");
+    			}
+    		}catch(GenericServiceException e){
+    			Debug.logError(e, module);
+    			return ServiceUtil.returnError(e.getMessage());
+    		}
+    		
+    		customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+    		if(UtilValidate.isNotEmpty(customTimePeriodList)){
+    			GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+    			if(UtilValidate.isNotEmpty(customTimePeriod) && (customTimePeriod.getString("isClosed")).equals("Y")){
+    				Debug.logError("Period closure for the transaction date is complete", module);
+    				return ServiceUtil.returnError("Period closure for the transaction date is complete");
+    			}
+    		}
+        	
+        } catch (Exception e) {
+        	return ServiceUtil.returnError("Error in getting closure period for period type");
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+    
     public static Map<String, Object> cancelInventoryTransfer(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String inventoryTransferId = (String) context.get("inventoryTransferId");

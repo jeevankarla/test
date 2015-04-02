@@ -112,7 +112,12 @@ under the License.
         <attribute name="productVariantId" type="String" mode="INOUT" optional="false"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
-
+    <service name="checkClosurePeriodTransaction" engine="java"
+            location="org.ofbiz.product.inventory.InventoryServices" invoke="checkClosurePeriodTransaction">
+        <description>Check Closure Period Transaction</description>
+        <attribute name="inventoryItemDetailSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+	
     <service name="quickCreateVirtualWithVariants" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="quickCreateVirtualWithVariants">
         <description>
