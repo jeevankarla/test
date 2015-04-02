@@ -160,7 +160,6 @@ public class EmplLeaveService {
 							}
 						}
 				  }
-				   
 				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && (leaveTypeIdCtx.equals("CL") || leaveTypeIdCtx.equals("CLP"))){
 						  
 						 // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
@@ -180,9 +179,8 @@ public class EmplLeaveService {
 								}
 							}
 					  }
-				  
 				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && leaveTypeIdCtx.equals("CML")){
-					   closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+					   closingBalance = closingBalance.divide(new BigDecimal(2), 0, BigDecimal.ROUND_DOWN);
 					   leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
 				   }else if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && leaveTypeIdCtx.equals("CLP")){
 					   leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
