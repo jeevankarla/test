@@ -213,6 +213,27 @@
             </widgets>
         </section>
     </screen>
+    <screen name="YearReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>
+               <set field="tabButtonItem2" value="YearReports"/>          
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="screenFlag" value="YearReports"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                            <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReportsSubTabBar"/> 
+   							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 	<screen name="DeliveryNoteCumGatePassReportTXT">
 		<section>
 			<actions>
@@ -838,6 +859,31 @@
 				<set field="reportTypeFlag" value="salesReport"/>
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/productReturnsReport.groovy" />
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/RouteQuantityAbstract.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/CategoryWiseSalesReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets> 
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CategoryWiseSalesYearReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" value="salesReport"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/productReturnsReport.groovy" />
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/RouteQuantityAbstractNew.groovy" />
 			</actions>
 			<widgets>
 				<section>

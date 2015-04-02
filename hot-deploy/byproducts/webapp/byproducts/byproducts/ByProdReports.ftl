@@ -251,6 +251,30 @@ function reportTypeChangeFunc() {
 </div>
 </div>
 </#if>
+<#if screenFlag?exists && screenFlag.equals("YearReports") && security.hasEntityPermission("BYPRODUCTS", "_YEARREPOR", session)>
+<div class="screenlet">
+        
+    		<div class="screenlet-title-bar">
+      			<h3>Export</h3>
+    		</div>
+    		<div class="screenlet-body">
+    			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+     
+      	<tr class="alternate-row">
+			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesYearReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Yearly CategoryWise Sales Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/></td>
+	  			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+			</form>
+		</tr>
+    </table>
+    </div>
+</div>
+</div>
+</#if>
 
 <#if screenFlag?exists && screenFlag.equals("DailyReports")  && (security.hasEntityPermission("BYPRODUCTS", "_DAILREPOR", session) || security.hasEntityPermission("ACCOUNTING", "_CASHIER", session))>
 <div class="full">
