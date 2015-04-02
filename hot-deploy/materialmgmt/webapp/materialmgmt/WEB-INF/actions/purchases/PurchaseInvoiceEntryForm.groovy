@@ -209,7 +209,7 @@ if(shipments){
 			}
 			
 			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_PCK_FWD")){
-				packFwdAmt = adjUnitAmtMap.get("COGS_DISC");
+				packFwdAmt = adjUnitAmtMap.get("COGS_PCK_FWD");
 				addAmt = addAmt+packFwdAmt;
 			}
 			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_INSURANCE")){
