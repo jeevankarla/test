@@ -69,8 +69,8 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 			}
 		}
 	}	
-		// checking for PO
-		if(UtilValidate.isEmpty(subDivDeptFlag)){
+		// filter OUT depratments if this flag 
+		if(UtilValidate.isEmpty(parameters.changeFlag)){
 			// sub division here
 			inputMap = [:];
 			inputMap.put("userLogin", userLogin);
