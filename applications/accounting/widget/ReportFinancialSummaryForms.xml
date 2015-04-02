@@ -1202,7 +1202,20 @@ under the License.
         <field name="postedCrAmount" title="postedCrAmount"><display/></field> 
         <field name="unPostedCrAmount" title="unPostedCrAmount"><display/></field> 
     </form>
-    
+    <form name="BankGuaranteeReceivedCSV" type="list" list-name="payments"   default-entity-name="FinAccountTrans">
+    	 <actions>
+        </actions>
+    	<field name="paymentId" title = "Payment Id"><display/></field>
+        <field name="paymentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+        <field name="paymentTypeId"><display-entity entity-name="PaymentType" also-hidden="false" description="${description}"></display-entity></field>
+    	<field name="paymentMethodTypeId"><display-entity entity-name="PaymentMethodType" also-hidden="false" description="${description}"></display-entity></field>
+    	<field name="statusId"  title="Status"><display-entity also-hidden="false" entity-name="StatusItem" description="${description}"/></field>
+    	<field name="partyIdFrom"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdFrom, false);}[${partyIdFrom}]"/> </field>
+    	<field name="partyIdTo"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdTo, false);}[${partyIdTo}]"/></field>
+    	<field name="effectiveDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(effectiveDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+    	<field name="amount"><display/></field>
+    	<field name="amountToApply" title="Amt to Apply"><display description="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator, paymentId);}"/></field>
+    </form>	
     
     
 </forms>

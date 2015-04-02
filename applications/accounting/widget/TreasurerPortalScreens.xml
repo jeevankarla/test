@@ -3710,6 +3710,18 @@
                                         <include-form name="FindBankGuaranteeReceived" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    	<container>
+                                    		<link target="BankGuaranteeReceived.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+                                    		</link>
+                                    	</container>
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
@@ -3803,6 +3815,18 @@
                                         <include-form name="FindBankGuaranteeRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    <container>
+                                    		<link target="BankGuaranteeRefund.csv" text="Export As CSV" style="buttontext">
+                                    			<parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+                                    			<parameter param-name="statusId" from-field="parameters.statusId"/>
+                                    			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                                    			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+                                    			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="amount" from-field="parameters.amount"/>
+                                    			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
+                                    			<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+                                    		</link>
+                                    	</container>
                                     	<platform-specific>
                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
