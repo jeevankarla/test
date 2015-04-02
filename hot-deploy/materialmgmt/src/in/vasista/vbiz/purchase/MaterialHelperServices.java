@@ -2032,7 +2032,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					totalValue = totalValue.add((unitCost).multiply(quantity));
 					totalQty = totalQty.add(quantity);
 				}
-				totalUnitPrice = totalUnitPrice.divide(new BigDecimal((itemIssuances.size())));
+				totalUnitPrice = totalUnitPrice.divide(new BigDecimal(itemIssuances.size()),purchaseTaxFinalDecimals,purchaseTaxRounding);
 			}
 			result.put("totalUnitPrice",totalUnitPrice);
 			result.put("totalQty",totalQty);
