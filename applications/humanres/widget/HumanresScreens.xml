@@ -557,6 +557,42 @@
         </section>
     </screen> 	
     	
+	 <screen name="EmployeesAnalysisChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="employeesAnalysisChart" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="employeesAnalysisChartInternal" type="String"/>
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnalyticsTabBar"/>                                                        					   
+                        <platform-specific> 
+                            <html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenure.ftl"/></html>
+                        </platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="EmployeesAnalysisChartInternal">
+        <section>
+            <actions>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeesTenure.groovy"/>  
+            </actions>            
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://humanres/webapp/humanres/humanres/employeesAnalysisInternal.ftl"/></html>
+                </platform-specific>   
+            </widgets>
+        </section>
+    </screen>  
+    
 	 <screen name="EmployeesTenureChart">
         <section>
             <actions>
@@ -591,7 +627,7 @@
                 </platform-specific>   
             </widgets>
         </section>
-    </screen>  
+    </screen>  	 
     
 	 <screen name="SalaryAnalysisChart">
         <section>

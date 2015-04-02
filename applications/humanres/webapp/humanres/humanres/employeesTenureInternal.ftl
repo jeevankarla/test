@@ -29,45 +29,6 @@
 
 $(document).ready(function() {
 
-  var data =${StringUtil.wrapString(deptPieDataJSON!'[]')};
-  
-	$.plot($("#chart"), data, 
-	{
-		series: {
-			pie: { 
-				show: true,
-                radius: 1,
-                label: {
-                    show: true,
-                    radius: 2/3,
-                    formatter: function(label, series){
-                        return '<div style="font-size:9pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
-                    },
-                    threshold: 0.1
-                    
-                }				
-			}
-		},
-		grid: {
-				hoverable: true 
-		},
-		tooltip: true,
-		tooltipOpts: {
-			content: "%s %p.2%  (%y)", // show percentages, rounding to 2 decimal places
-			shifts: {
-				x: 20,
-				y: 0
-			},
-			defaultTheme: false
-		},
-		legend: {
-			position: "ne",
-			show: true,
-			margin: [-220, 20]
-		}
-	});
-
-
 	var deptableData = ${StringUtil.wrapString(deptEmployeesJSON!'[]')};
 	$('#departmentEmployeesTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable1"><tfoot><tr><td></td><td></td></tr></tfoot></table>' );
 
@@ -121,27 +82,12 @@ $(document).ready(function() {
 		}
 	} );	
 	
-	datatable2.fnSort( [ [5,'asc'] ] );	 
-	 
-	 	
+	datatable2.fnSort( [ [5,'asc'] ] );	 	 	
 } );
 
 </script>
 		
-<div class="container"></div>
-<div class="lefthalf">
-<div class="screenlet">
-	<div class="screenlet-title-bar">
-      	<h3>Employees Department Analysis</h3>	
-     </div>
-    <div class="screenlet-body">
-       	<div id="chart" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-    	<div id="departmentEmployeesTable"/>
-    </div>
-</div>    
-</div>
-<div class="righthalf">
+
 <div class="screenlet">
 	<div class="screenlet-title-bar">
       	<h3>Upcoming Retirements</h3>	
@@ -150,5 +96,3 @@ $(document).ready(function() {
     	<div id="upcomingRetireesTable"/>
     </div>
 </div>    
-</div>
-</div>

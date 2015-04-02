@@ -1331,10 +1331,18 @@ under the License.
     </request-map>
     
     
-    <request-map uri="analytics">
+    <request-map uri="employeesAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeesAnalysisChart"/>
+    </request-map>
+    <request-map uri="employeesAnalysisChartInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeesAnalysisChartInternal"/>
+    </request-map>    
+    <request-map uri="retirementAnalytics">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeesTenureChart"/>
-    </request-map>
+    </request-map>    
     <request-map uri="employeesTenureChartInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeesTenureChartInternal"/>
@@ -2682,6 +2690,9 @@ under the License.
 	<view-map name="paySlip" type="screen" page="component://humanres/widget/EmployeeScreens.xml#paySlip"/>
 	<view-map name="cashEncashmentReport" type="screen" page="component://humanres/widget/EmployeeScreens.xml#cashEncashmentReport"/>
 	<!-- Analytics -->
+	<view-map name="EmployeesAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesAnalysisChart"/>
+	<view-map name="EmployeesAnalysisChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesAnalysisChartInternal"/>
+	
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>
 	<view-map name="SalaryAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChart"/>

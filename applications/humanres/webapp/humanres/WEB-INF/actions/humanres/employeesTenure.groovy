@@ -59,6 +59,7 @@ company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 //Debug.logError("employeeList="+employeeList,"");
 departmentMap = [:];
+positionMap = [:];
 upcomingRetirements = [];
 thruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 365);
 
@@ -71,6 +72,12 @@ employeeList.each {employee ->
 	else {
 		departmentMap[employee.department] = 1;
 	}
+	if (positionMap.containsKey(employee.position)) {
+		positionMap[employee.position] += 1;
+	}
+	else {
+		positionMap[employee.position] = 1;
+	}	
 	if (employee.birthDate) {
 		int day =  UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale);
 		int month = UtilDateTime.getMonth(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 1;
@@ -111,12 +118,31 @@ departmentMap.each { dept ->
 	deptPie.put("data", dept.getValue());
 	deptPieDataJSON.add(deptPie);
 }
+
+JSONArray positionPieDataJSON = new JSONArray();
+JSONArray positionEmployeesJSON = new JSONArray();
+positionMap.each { position ->
+	JSONArray positionJSON = new JSONArray();
+	positionJSON.add(position.getKey());
+	positionJSON.add(position.getValue());
+	positionEmployeesJSON.add(positionJSON);
+	
+	JSONObject positionPie = new JSONObject();
+	positionPie.put("label", position.getKey());
+	positionPie.put("data", position.getValue());
+	positionPieDataJSON.add(positionPie);
+}
 //Debug.logError("departmentMap="+departmentMap,"");
+//Debug.logError("positionMap="+positionMap,"");
 //Debug.logError("deptEmployeesJSON="+deptEmployeesJSON,"");
 //Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
-Debug.logError("employeesJSON="+employeesJSON,"");
+Debug.logError("positionEmployeesJSON="+positionEmployeesJSON,"");
+Debug.logError("positionPieDataJSON="+positionPieDataJSON,"");
+//Debug.logError("employeesJSON="+employeesJSON,"");
 context.deptEmployeesJSON = deptEmployeesJSON;
 context.deptPieDataJSON = deptPieDataJSON;
+context.positionEmployeesJSON = positionEmployeesJSON;
+context.positionPieDataJSON = positionPieDataJSON;
 context.employeesJSON = employeesJSON;
 
 
