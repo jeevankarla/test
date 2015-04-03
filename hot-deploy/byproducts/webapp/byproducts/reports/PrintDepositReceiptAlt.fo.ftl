@@ -90,13 +90,13 @@ under the License.
         						   	        	<fo:table-body>
 						        					<fo:table-row>
 						        						<fo:table-cell>
-						        								<fo:block text-align="left" font-size="13pt" white-space-collapse="false" keep-together = "always" font-weight="bold"><#if finAccountTransTypeId == "WITHDRAWAL">Paid<#else>Received</#if> with thanks </fo:block>
+						        								<fo:block text-align="left" font-size="13pt" white-space-collapse="false" keep-together = "always" font-weight="bold"></fo:block>
 				        						</fo:table-cell> 
 						        					</fo:table-row>	
 						        					<fo:table-row>
 						        						<#if partyName?has_content>
                 											<fo:table-cell>
-                            									<fo:block  text-align="left"  font-size="13pt" font-weight = "bold"><#if finAccountTransTypeId == "WITHDRAWAL">To : <#else>From : </#if>${partyName?if_exists}</fo:block>  
+                            									<fo:block  text-align="left"  font-size="13pt" font-weight = "bold"><#if finAccountTransTypeId == "WITHDRAWAL"> Paid To : <#else>Received From : </#if>${partyName?if_exists}</fo:block>  
                        										</fo:table-cell>
                        									<#else>
                        										<fo:table-cell>
@@ -104,18 +104,31 @@ under the License.
                        										</fo:table-cell>
                        									</#if>
 						        					</fo:table-row>	
+						        					<#if finAccountTransTypeId == "WITHDRAWAL">
 						        					 <fo:table-row>
+															<fo:table-cell>
+                            									<fo:block  keep-together="always" text-align="left" font-size="13pt" font-weight = "bold">Payment Number:${newFinAccountTransId?if_exists}&#160;&#160;&#160;</fo:block>  
+                       										</fo:table-cell>
+													</fo:table-row>
+						        					<fo:table-row>
+						        					
+						        							<fo:table-cell>
+                            									<fo:block  keep-together="always" text-align="left" font-size="13pt" font-weight = "bold">Payment Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
+                       										</fo:table-cell>
+						        					</fo:table-row>	
+						        					<#else>
+                                                    <fo:table-row>
 															<fo:table-cell>
                             									<fo:block  keep-together="always" text-align="left" font-size="13pt" font-weight = "bold">Receipt Number:${newFinAccountTransId?if_exists}&#160;&#160;&#160;</fo:block>  
                        										</fo:table-cell>
-														 </fo:table-row>
+													</fo:table-row>
 						        					<fo:table-row>
 						        					
 						        							<fo:table-cell>
                             									<fo:block  keep-together="always" text-align="left" font-size="13pt" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
                        										</fo:table-cell>
-						        						
-						        					</fo:table-row>	
+						        					</fo:table-row>
+                                                    </#if>
 						        					<fo:table-row>
 				                            <fo:table-cell>
 				                            	 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -140,7 +153,11 @@ under the License.
 						        							  		  </fo:table-cell>
         						   									 <fo:table-cell border-style="solid">
 						        											<fo:block text-align="left" font-size="13pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;ReceiptId</fo:block>
+                                                                            <#if finAccountTransTypeId == "WITHDRAWAL">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PaymentId</fo:block>
+						        											<#else>
+                                                                             <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;ReceiptId</fo:block>
+                                                                            </#if>    
 						        							  		  </fo:table-cell>
 						        							  		  <fo:table-cell border-style="solid">
 						        											<fo:block text-align="left" font-size="13pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
@@ -174,6 +191,7 @@ under the License.
         						   									 <fo:table-body>
         						   									 <fo:table-row>
         						   									  <fo:table-cell border-style="solid">
+        						   									        <fo:block text-align="center" font-size="13pt" white-space-collapse="false" keep-together="always">${finAccountName?if_exists}/${year}-${year+1}/</fo:block>
 						        											<fo:block text-align="center" font-size="13pt" white-space-collapse="false" keep-together="always">${finAccountTransId?if_exists}</fo:block>
 						        							  		  </fo:table-cell>
         						   									 <fo:table-cell border-style="solid">
