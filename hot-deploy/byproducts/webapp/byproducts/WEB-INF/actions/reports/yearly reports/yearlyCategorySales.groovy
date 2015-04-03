@@ -1,3 +1,4 @@
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -28,7 +29,7 @@ thruEffectiveDate = null;
 
 dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-Debug.log("reportTypeFlag==================="+reportTypeFlag);
+Debug.log("reportTypeFlag====11111111111==============="+reportTypeFlag);
 
 
 // for sales Report
