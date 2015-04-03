@@ -755,6 +755,18 @@
         		<parameter param-name="tabButtonItem" value="reports"/>    	
             </link>
         </menu-item>
+          <menu-item name="YearReports" title="Yearly Reports">
+             <condition>
+				<or>
+					<if-has-permission permission="BYPRODUCTS"  action="_ADMIN"/>
+					<if-has-permission permission="BYPRODUCTS"  action="_YEARREPOR"/>
+				</or>
+            </condition>
+            <link target="YearReports">
+        		<parameter param-name="tabButtonItem2" value="YearReports"/>
+        		<parameter param-name="tabButtonItem" value="reports"/>    	
+            </link>
+        </menu-item> 
         <menu-item name="MiscReports" title="Misc Reports">
              <condition>
 				<or>

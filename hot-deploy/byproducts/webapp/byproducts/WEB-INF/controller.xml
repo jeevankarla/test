@@ -656,6 +656,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="MiscReports"/>
     </request-map>
+     <request-map uri="YearReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="YearReports"/>
+    </request-map>
     <request-map uri="truckSheetReport.txt">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="TruckSheetTXT"/>
@@ -1548,6 +1552,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CategoryWiseSalesReport"/>
     </request-map>
+     <request-map uri="CategoryWiseSalesYearReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CategoryWiseSalesYearReport"/>
+    </request-map>
      <request-map uri="FieldOfficerWiseSalesReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="FieldOfficerWiseSalesReport"/>
@@ -1702,6 +1710,7 @@
     <view-map name="RetailerDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerDetailReportCSV" content-type="text/csv"/>
     <view-map name="SalesReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportPDF" content-type="application/pdf"/>
     <view-map name="CategoryWiseSalesReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CategoryWiseSalesReport" content-type="application/pdf"/>
+    <view-map name="CategoryWiseSalesYearReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CategoryWiseSalesYearReport" content-type="application/pdf"/>
     <view-map name="FieldOfficerWiseSalesReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#FieldOfficerWiseSalesReport" content-type="application/pdf"/>
     <view-map name="CratesAndCansReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CratesAndCansReport" content-type="application/pdf"/>
     <view-map name="CratesAndCansDayWiseReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CratesAndCansDayWiseReport" content-type="application/pdf"/>
@@ -1743,6 +1752,7 @@
 	<view-map name="DailyReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyReports"/>
 	<view-map name="MonthlyReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyReports"/>
 	<view-map name="MiscReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#MiscReports"/>
+	<view-map name="YearReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#YearReports"/>
 	
 	<view-map name="TruckSheetTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetTXT" content-type="text/plain"/>
 	<view-map name="IndentExportOracleTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentExportOracleTXT" content-type="text/plain"/>

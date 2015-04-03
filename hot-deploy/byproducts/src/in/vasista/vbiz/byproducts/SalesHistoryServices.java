@@ -1249,7 +1249,7 @@ public class SalesHistoryServices {
 					conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 				}
 			
-				
+				conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY")));
 				conditionList.add(EntityCondition.makeCondition("salesDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
 				conditionList.add(EntityCondition.makeCondition("salesDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
 				if (includeReturnOrders) {
