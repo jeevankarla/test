@@ -974,7 +974,19 @@ under the License.
             <remove-value value-field="quoteWorkEffort"/>
         </if-not-empty>
     </simple-method>
-    <simple-method method-name="createQuoteTerm" short-description="Create a QuoteTerm">  
+   <simple-method method-name="createQuoteTerm" short-description="Create a QuoteTerm">
+    <entity-condition entity-name="QuoteTerm" list="quoteTermList">
+     <condition-list combine="and">
+	<condition-expr field-name="quoteId" from-field="parameters.quoteId"/>
+	<condition-expr field-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+	  <condition-list combine="or">
+	   <condition-expr field-name="termTypeId" value="VAT_PUR"/>
+	   <condition-expr field-name="termTypeId" value="CST_PUR"/>
+      </condition-list>
+    </condition-list>
+    <order-by field-name="quoteItemSeqId"/>     
+    </entity-condition> 
+   <if-empty field="quoteTermList">
    <if>
      <condition>
         <and>
@@ -1001,6 +1013,13 @@ under the License.
         	<check-errors/>      
        </else>
    </if> 
+    <else>
+    <add-error>
+   	<fail-message message="you can't add cst and vat for one product."/>
+   </add-error>
+   <check-errors/> 
+   </else>
+    </if-empty>
     </simple-method>
     <simple-method method-name="updateQuoteTerm" short-description="Update a QuoteTerm">
         <make-value value-field="newEntity" entity-name="QuoteTerm"/>
