@@ -65,6 +65,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
+                        supplierName = partyNameObj[value];
+                        if( (supplierName).length < 1 ) {
+ 					    	$('#supplierName').css('background', 'yellow'); 
+ 					       	setTimeout(function () {
+ 					           	$('#supplierName').css('background', 'white').focus(); 
+ 					       	}, 800);
+ 					    	return false;
+				    	}
 					    //populate SlickGrid starts here
 						 if(supplierId){
 						    gridShowCall();
