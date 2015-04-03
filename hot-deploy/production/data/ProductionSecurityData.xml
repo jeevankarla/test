@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the Production Component." permissionId="PRODUCTION_VIEW"/>
+    <SecurityPermission description="Create operations in the Production Component." permissionId="PRODUCTION_CREATE"/>
+    <SecurityPermission description="Update operations in the Production Component." permissionId="PRODUCTION_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Production Component." permissionId="PRODUCTION_DELETE"/>
+    <SecurityPermission description="ALL operations in the Production Component." permissionId="PRODUCTION_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRODUCTION_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PRODUCTION_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PRODUCTION_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PRODUCTION_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PRODUCTION_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PRODUCTION_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="PRODUCTION_ADMIN"/>
+</entity-engine-xml>
