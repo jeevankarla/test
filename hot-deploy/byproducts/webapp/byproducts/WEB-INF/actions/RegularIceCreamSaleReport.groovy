@@ -155,7 +155,7 @@ vatMap=[:];
 									totalMap["bedRevenue"]=bedRevenue;
 									totalMap["vatRevenue"]=vatRevenue;
 									totalMap["cstRevenue"]=cstRevenue;
-									totalMap["totalRevenue"]=totalRevenue;
+									totalMap["totalRevenue"]=basicRevenue+cstRevenue+vatRevenue+bedRevenue;
 									invAdjMap[invoiceId]=totalRevenue+vatAdj+ppd;
 									vatMap[invoiceId]=vatAdj+vatRevenue;
 									tempVariantMap =FastMap.newInstance();
@@ -230,7 +230,7 @@ vatMap=[:];
 															   tempProdMap["cstRevenue"] = 0;
 															}
 															if(totalRevenue>0){
-															 tempProdMap["totalRevenue"] = totalRevenue;
+															 tempProdMap["totalRevenue"] = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
 															}else{
 															 tempProdMap["totalRevenue"] = 0;
 															}
@@ -254,7 +254,7 @@ vatMap=[:];
 															productMap["bedRevenue"] += productValue.getValue().get("bedRevenue");
 															productMap["vatRevenue"] += productValue.getValue().get("vatRevenue");
 															productMap["cstRevenue"] += productValue.getValue().get("cstRevenue");
-															productMap["totalRevenue"] += productValue.getValue().get("totalRevenue");
+															productMap["totalRevenue"] =productMap["basicRevenue"]+productMap["bedRevenue"]+productMap["vatRevenue"]+productMap["cstRevenue"] ;
 															temp=FastMap.newInstance();
 															temp.putAll(productMap);
 															tempVariantMap[virtualProductId] = temp;
