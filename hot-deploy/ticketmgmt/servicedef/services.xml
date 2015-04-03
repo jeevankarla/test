@@ -54,13 +54,13 @@
         <attribute name="custRequestId" mode="IN" type="String" optional="false"/>
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
     </service>
-    <service name="createCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
+    <!-- <service name="createCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
             location="component://ticketmgmt/script/TicketMgmtServices.xml" invoke="createCustRequestParty" auth="true">
         <description>Create a CustRequestParty record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="fromDate" mode="IN" type="Timestamp" optional="true"/>
-    </service>
+    </service> -->
     <service name="getTicketMgmtComplaintTypes" engine="java" location="in.vasista.vbiz.ticketmgmt.TicketMgmtServices" invoke="getTicketMgmtComplaintTypes" auth="true">
         <attribute name="complaintsList" mode="INOUT" type="List" optional="true"/>
     </service>
