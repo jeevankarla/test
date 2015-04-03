@@ -2441,6 +2441,29 @@ under the License.
         <key-map field-name="productId"/>
       </relation>
     </entity>
+    <entity entity-name="InventoryPeriodSummary"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Summary Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="customTimePeriodId" type="id-ne"></field>
+      <field name="issuedQty" type="fixed-point"></field>
+      <field name="receivedQty" type="fixed-point"></field>
+      <field name="closingBalanceQty" type="fixed-point"></field>
+      <field name="closingCost" type="fixed-point"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="productId"/>
+      <prim-key field="customTimePeriodId"/>
+      <relation type="one" fk-name="INV_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="INV_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="INV_CTP" rel-entity-name="CustomTimePeriod">
+         <key-map field-name="customTimePeriodId"/>
+      </relation>
+    </entity>
     <entity entity-name="InventoryTransfer"
             package-name="org.ofbiz.product.inventory"
             title="Inventory Transfer Entity">

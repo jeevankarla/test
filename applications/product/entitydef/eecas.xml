@@ -66,6 +66,9 @@ under the License.
     <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">
         <action service="updateInventoryItemFromDetail" mode="sync"/>
     </eca>
+    <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">
+        <action service="checkClosurePeriodTransaction" mode="sync"/>
+    </eca>
 <!--    <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">-->
 <!--        <condition field-name="availableToPromiseDiff" operator="not-equals" value="0" type="BigDecimal"/>-->
 <!--        <action service="setLastInventoryCount" mode="sync"/>-->
