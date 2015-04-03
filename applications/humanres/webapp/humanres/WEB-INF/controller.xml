@@ -268,12 +268,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPartyResume"/>
     </request-map>
-    <request-map uri="createPartyResume">
+    <request-map uri="createPartyResumeAndContent">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createPartyResume"/>
-        <response name="success" type="view" value="EditPartyResume"/>
+        <event type="service" invoke="createPartyResumeAndContent"/>
+        <response name="success" type="view" value="FindPartyResumes"/>
     </request-map>
-    
     <request-map uri="updatePartyResume">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyResume"/>
@@ -434,7 +433,7 @@ under the License.
         <event type="service" invoke="deleteEmployment"/>
         <response name="success" type="view" value="EditEmployment"/>
     </request-map>
-    <!--<request-map uri="FindEmploymentApps">
+    <request-map uri="FindEmploymentApps">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindEmploymentApps"/>
     </request-map>
@@ -457,7 +456,7 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmploymentApp"/>
         <response name="success" type="view" value="FindEmploymentApps"/>
-    </request-map> -->
+    </request-map>
     <request-map uri="AddPayHistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AddPayHistory"/>
@@ -1335,10 +1334,18 @@ under the License.
     </request-map>
     
     
-    <request-map uri="analytics">
+    <request-map uri="employeesAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeesAnalysisChart"/>
+    </request-map>
+    <request-map uri="employeesAnalysisChartInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeesAnalysisChartInternal"/>
+    </request-map>    
+    <request-map uri="retirementAnalytics">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeesTenureChart"/>
-    </request-map>
+    </request-map>    
     <request-map uri="employeesTenureChartInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeesTenureChartInternal"/>
@@ -2692,6 +2699,9 @@ under the License.
 	<view-map name="paySlip" type="screen" page="component://humanres/widget/EmployeeScreens.xml#paySlip"/>
 	<view-map name="cashEncashmentReport" type="screen" page="component://humanres/widget/EmployeeScreens.xml#cashEncashmentReport"/>
 	<!-- Analytics -->
+	<view-map name="EmployeesAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesAnalysisChart"/>
+	<view-map name="EmployeesAnalysisChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesAnalysisChartInternal"/>
+	
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>
 	<view-map name="SalaryAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChart"/>

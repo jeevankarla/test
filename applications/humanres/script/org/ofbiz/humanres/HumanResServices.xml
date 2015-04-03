@@ -50,8 +50,13 @@
 
     <simple-method method-name="createPartyResume" short-description="Create Resume for Party">
         <make-value entity-name="PartyResume" value-field="newEntity"/>
+        <if-empty field="parameters.resumeId">
+        	<sequenced-id sequence-name="PartyResume" field="newEntity.resumeId"/>
+        </if-empty>
+        <if-not-empty field="parameters.resumeId">
+        	<set field="newEntity.resumeId" from-field="parameters.resumeId"/>
+        </if-not-empty>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="PartyResume" field="newEntity.resumeId"/>
         <field-to-result field="resumeId" result-name="newEntity.resumeId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
