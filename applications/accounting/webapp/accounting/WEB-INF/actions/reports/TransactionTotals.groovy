@@ -137,7 +137,6 @@ if (allPostedTransactionTotals) {
 	//124200
 	// lets populate zero value gl for current month and which has trans in previous months
 	List currentPostedGls = EntityUtil.getFieldListFromEntityList(allPostedTransactionTotals,"glAccountId", true);
-	List prevPostedGls = EntityUtil.getFieldListFromEntityList(allPostedOpeningTransactionTotals,"glAccountId", true);
 	List zerosPostedBalances = EntityUtil.filterByCondition(allPostedOpeningTransactionTotals, EntityCondition.makeCondition("glAccountId",EntityOperator.NOT_IN,currentPostedGls )); 
 	
 	zerosPostedBalances.each { zerosPostedBalance ->
