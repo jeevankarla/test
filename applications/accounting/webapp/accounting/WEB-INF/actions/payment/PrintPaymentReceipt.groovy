@@ -53,6 +53,8 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 import org.ofbiz.party.party.PartyHelper;
 
 //${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()}
+int year=UtilDateTime.getYear(UtilDateTime.nowTimestamp(),timeZone,locale);
+context.year=year;
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
 	finAccountFinalTransList = [];
