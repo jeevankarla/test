@@ -263,7 +263,6 @@ under the License.
         <store-value value-field="custRequestItem"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
     </simple-method>
-
     <simple-method method-name="createCustRequestParty" short-description="Create Customer RequestParty">
         <call-simple-method method-name="checkStatusCustRequest"/>        
         <set from-field="parameters.partyId" field="lookupPKMap.partyId"/>
@@ -278,9 +277,8 @@ under the License.
                  <order-by field-name="partyId"/>
            </entity-condition>
            <set field="partySize" value="${groovy: return(partyList.size())}" type="Integer"/>
-                      <log level="always" message="partyList===========${partyList}"></log>                         
            <if-empty field="partyList"> 
-              <log level="always" message="====##########============>Invalid Supplier====Size:${partySize}"></log>
+              <log level="error" message="====##########============>Invalid Supplier====Size:${partySize}"></log>
               <add-error>
                   <fail-message message="Selected Supplier is Invalid .Please select Valid Supplier."/>
               </add-error>

@@ -110,7 +110,6 @@ under the License.
     <service name="createCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
             location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestParty" auth="true">
         <description>Create a CustRequestParty record</description>
-         <attribute name="statusId" type="String" mode="IN" optional="true"/>         
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="fromDate" mode="IN" type="Timestamp" optional="true"/>

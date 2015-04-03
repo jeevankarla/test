@@ -56,8 +56,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
                 	if(currentIndex == 0 && newIndex == 1){
-                		var supplierId = $("#supplierId").val();
-                		
+                		var supplierId = $("#supplierId").val();             		
                 	    if( (supplierId).length < 1 ) {
 					    	$('#supplierId').css('background', 'yellow'); 
 					       	setTimeout(function () {
