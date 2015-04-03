@@ -770,6 +770,8 @@
         <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="kilometers" type="BigDecimal" mode="IN" optional="true"/>
     </service>
     <service name="getFacilityFinAccountInfo" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getFacilityFinAccountInfo" auth="true">
@@ -901,5 +903,19 @@
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+     <service name="createOrUpdateDiselAmount" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateDiselAmount">
+        <description>create Disel Amount</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="supplyTypeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="kilometers" type="BigDecimal" mode="IN" optional="true"/>
     </service>
 </services>

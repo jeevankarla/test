@@ -1624,6 +1624,27 @@
     </request-map>
     
     
+    <request-map uri="createOrUpdateDiselAmount">
+        <security https="true" auth="true"/>
+       <event type="service"  invoke="createOrUpdateDiselAmount"/>
+       <response name="success" type="view" value="EditDieselAmount"/>
+        <response name="failed" type="view" value="EditDieselAmount"/>
+        <response name="error" type="view" value="EditDieselAmount"/>
+    </request-map>
+     <request-map uri="EditDieselAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditDieselAmount"/>
+    </request-map>
+    <request-map uri="FindDiselAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditDieselAmount"/>
+        <response name="error" type="view" value="EditDieselAmount"/>
+    </request-map>
+     <request-map uri="NewDieselAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewDieselAmount"/>
+    </request-map>
+  
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -1867,5 +1888,6 @@
  <view-map name="InvoiceAndPaymentProcess" type="screen" page="component://byproducts/widget/InvoiceAndPaymentScreens.xml#ArInvoicesSearch"/>
  <view-map name="ArPaymentsSearch" type="screen" page="component://byproducts/widget/InvoiceAndPaymentScreens.xml#ArPaymentsSearch"/>
  <view-map name="ChannelWiseProductWiseSalesPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ChannelWiseProductWiseSalesPDF" content-type="application/pdf"/>
-	 
+ <view-map name="EditDieselAmount" type="screen" page="component://byproducts/widget/TransporterScreens.xml#EditDieselAmount"/>
+ <view-map name="NewDieselAmount" type="screen" page="component://byproducts/widget/TransporterScreens.xml#NewDieselAmount"/>		 
 </site-conf>
