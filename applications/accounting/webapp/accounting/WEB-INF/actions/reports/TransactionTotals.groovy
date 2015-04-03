@@ -27,6 +27,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 import org.ofbiz.accounting.util.UtilAccounting;
 
+import groovy.xml.Entity;
 import javolution.util.FastList;
 
 import java.sql.Date;
@@ -76,6 +77,7 @@ andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LES
 andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
 //Debug.log("andCond======"+andCond);
 List allPostedOpeningTransactionTotals = delegator.findList("AcctgTransEntrySums", andCond, null, UtilMisc.toList("glAccountId"), null, false);
+
 
 //Debug.log("allPostedOpeningTransactionTotals======"+allPostedOpeningTransactionTotals);
 
@@ -132,7 +134,28 @@ if (allPostedTransactionTotals) {
         UtilMisc.addToBigDecimalInMap(accountMap, postedTransactionTotal.debitCreditFlag, postedTransactionTotal.amount);
         postedTransactionTotalsMap.put(postedTransactionTotal.glAccountId, accountMap);
     }
-    postedTotals = postedTransactionTotalsMap.values().asList();
+	//124200
+	// lets populate zero value gl for current month and which has trans in previous months
+	List currentPostedGls = EntityUtil.getFieldListFromEntityList(allPostedTransactionTotals,"glAccountId", true);
+	List prevPostedGls = EntityUtil.getFieldListFromEntityList(allPostedOpeningTransactionTotals,"glAccountId", true);
+	List zerosPostedBalances = EntityUtil.filterByCondition(allPostedOpeningTransactionTotals, EntityCondition.makeCondition("glAccountId",EntityOperator.NOT_IN,currentPostedGls )); 
+	
+	zerosPostedBalances.each { zerosPostedBalance ->
+		Map accountMap = (Map)postedTransactionTotalsMap.get(zerosPostedBalance.glAccountId);
+		if (!accountMap) {
+			accountMap = UtilMisc.makeMapWritable(zerosPostedBalance);
+			accountMap.put("openingD", BigDecimal.ZERO);
+			accountMap.put("openingC", BigDecimal.ZERO);
+			accountMap.put("D", BigDecimal.ZERO);
+			accountMap.put("C", BigDecimal.ZERO);
+			accountMap.put("balance", BigDecimal.ZERO);
+		}
+		UtilMisc.addToBigDecimalInMap(accountMap, "opening" + zerosPostedBalance.debitCreditFlag, zerosPostedBalance.amount);
+		postedTransactionTotalsMap.put(zerosPostedBalance.glAccountId, accountMap);
+		
+	}	
+	
+	 postedTotals = postedTransactionTotalsMap.values().asList();
 }
 // Posted grand total for Debits
 andExprs = FastList.newInstance();
