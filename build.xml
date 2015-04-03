@@ -989,7 +989,6 @@ under the License.
         	<arg value="--exclude=vasistautils/client"/>  
         	<arg value="--exclude=vasistautils/datamigration"/> 
         	<arg value="--exclude=vasistautils/tallybackup"/>    
-        	<arg value="--exclude=config"/>    
         	<arg value="--exclude=docs"/>    				    		    		
         	<arg value="-cvz"/>
         	<arg value="--file=../kmf.tar.gz"/>
