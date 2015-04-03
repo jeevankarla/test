@@ -118,6 +118,32 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	}
+	//one year restriction
+	function makeDatePicker3(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		date = $(this).datepicker('getDate');
+		y = date.getFullYear(),
+		m = date.getMonth();
+		d = date.getDate();
+		    var maxDate = new Date(y+1, m, d);
+		
+		$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+		//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+		}
+		});
+		$( "#"+thruDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function( selectedDate ) {
+		//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+		}
+		});
+	}	
 // for Vat Invoice Sequence and Invoice sale reports
 
 function reportTypeChangeFunc() {
@@ -187,7 +213,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker("AvgFDRFDate","AvgFDRTDate");
 		makeDatePicker("GPFHFromDate","GPFHThruDate");
 		makeDatePicker("IOFromDateId","IOThruDateId");
-		makeDatePicker("conversionFDateId","conversionTDateId");
+		makeDatePicker3("conversionFDateId","conversionTDateId");
 		makeDatePicker("taxEnclosuerFDate","taxEnclosuerTDate");
 		makeDatePicker("PurchaseSalesFromDate","PurchaseSalesThruDate");
 		makeDatePicker("cwsFDate","cwsTDate");

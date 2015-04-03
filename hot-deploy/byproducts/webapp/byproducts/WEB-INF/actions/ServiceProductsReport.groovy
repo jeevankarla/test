@@ -45,11 +45,11 @@ dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
 context.thruDate = dayEnd;
 totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
-if(totalDays > 32){
+/*if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
-}
+}*/
 categoryType=parameters.categoryType;
 exprList=[];
 //exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "CONVERSION_CHARGES"));
