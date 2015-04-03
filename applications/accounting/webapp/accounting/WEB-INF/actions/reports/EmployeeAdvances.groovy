@@ -92,10 +92,10 @@ finAccountList.each{finAccountTypeId->
 	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate));
 	if(UtilValidate.isNotEmpty(finAccTransMap)){
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("withDrawal"))){
-			openBalanceDebit=finAccTransMap.get("withDrawal");
+			openBalanceCredit=finAccTransMap.get("withDrawal");
 		}
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("deposit"))){
-			openBalanceCredit=finAccTransMap.get("deposit");
+			openBalanceDebit=finAccTransMap.get("deposit");
 		}
 	}
 	tempMap.openBalanceDebit=openBalanceDebit;
@@ -122,15 +122,16 @@ finAccountList.each{finAccountTypeId->
 			newTempMap=[:];
 			newTempMap.transactionDate=finAccntTrans.transactionDate;
 			if(UtilValidate.isNotEmpty(finAccntTrans.finAccountTransTypeId) && finAccntTrans.finAccountTransTypeId=="WITHDRAWAL"){
-				currentDebit+=finAccntTrans.get("amount");
-				debit=finAccntTrans.get("amount");
-			}
-			newTempMap.debit=debit;
-			if(UtilValidate.isNotEmpty(finAccntTrans.finAccountTransTypeId) && finAccntTrans.finAccountTransTypeId=="DEPOSIT"){
 				currentCredit+=finAccntTrans.get("amount");
 				credit=finAccntTrans.get("amount");
 			}
+			
+			if(UtilValidate.isNotEmpty(finAccntTrans.finAccountTransTypeId) && finAccntTrans.finAccountTransTypeId=="DEPOSIT"){
+				currentDebit+=finAccntTrans.get("amount");
+				debit=finAccntTrans.get("amount");
+			}
 			newTempMap.credit=credit;
+			newTempMap.debit=debit;
 			newList.add(newTempMap);
 			
 			//adding DetaildTo CSV
@@ -150,6 +151,14 @@ finAccountList.each{finAccountTypeId->
 			}
 			}
 	}
+	
+	closingCredit=openBalanceCredit+currentCredit;
+	closingDebit=openBalanceDebit+currentDebit;
+	tempMap.closingCredit=closingCredit;
+	tempMap.closingDebit=closingDebit;
+	balance=closingDebit-closingCredit;
+	tempMap.balance=balance;
+	
 	detailTempMap.list=DaywiseMap;
 	detailTempList.add(detailTempMap);
 	//EmployeeAdvDetails.add(detailTempList);
@@ -162,15 +171,14 @@ finAccountList.each{finAccountTypeId->
 	finAccntTotMap["credit"]=currentCredit;
 	finAccntDetailedCsv.addAll(finAccntTotMap);
 	
-	balance=((openBalanceDebit+currentDebit)-(openBalanceCredit+currentCredit));
+	/*balance=((openBalanceDebit+currentDebit)-(openBalanceCredit+currentCredit));*/
 	if(balance>0){
-		closingCredit=balance;
+		tempMap.finalClosing=balance+"(Dr)";
+	}else if(balance<0){
+		tempMap.finalClosing=-(balance)+"(Cr)";
 	}else{
-		closingDebit=-(balance);
+	  tempMap.finalClosing=0;
 	}
-	tempMap.closingCredit=closingCredit;
-	tempMap.closingDebit=closingDebit;
-	
 	finAccntClosingMap=[:]
 	finAccntClosingMap["Name"]="ClosingBal-"+finAccountTypeId.ownerPartyId;
 	finAccntClosingMap["closingDebit"]=closingDebit;
