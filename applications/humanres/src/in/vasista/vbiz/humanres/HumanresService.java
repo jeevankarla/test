@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Set;
+import java.nio.ByteBuffer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -1517,5 +1518,74 @@ public class HumanresService {
 	        
 	        return result;
 	        
+	    }
+	    public static Map<String, Object> createPartyResumeAndContent(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String resumeId = (String) context.get("resumeId");
+	    	String contentId = null;
+	    	String partyId = (String) context.get("partyId");
+	    	String resumeText = (String) context.get("resumeText");
+	    	String dataResourceTypeId = "IMAGE_OBJECT";
+	    	String contentTypeId = "SR_DOCUMENT";
+	    	ByteBuffer uploadedFile = (ByteBuffer) context.get("uploadedFile");
+	    	ByteBuffer fileBytes = (ByteBuffer) context.get("uploadedFile");
+	    	
+	    	String dataResourceId = null;
+	    	Timestamp resumeDate = (Timestamp) context.get("resumeDate");
+	    	if(UtilValidate.isEmpty(resumeDate)){
+	    		resumeDate = UtilDateTime.nowTimestamp();
+	    	}
+	    	Timestamp resumeDateStart = UtilDateTime.getDayStart(resumeDate);
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			try {
+				  Map inputMap = FastMap.newInstance();
+				  inputMap.put("partyContentTypeId", "INTERNAL");
+				  inputMap.put("dataResourceTypeId", dataResourceTypeId);
+				  inputMap.put("contentTypeId", contentTypeId);
+				  inputMap.put("statusId", "CTNT_AVAILABLE");
+				  inputMap.put("dataCategoryId", "SR_DOCUMENT");
+				  inputMap.put("isPublic", "N");
+				  inputMap.put("partyId", partyId);
+				  inputMap.put("_uploadedFile_fileName", resumeText);
+				  inputMap.put("_uploadedFile_contentType", contentTypeId);
+				  inputMap.put("uploadedFile", fileBytes);
+				  inputMap.put("userLogin", userLogin);
+				  try{
+					  Map contentCtx = dispatcher.runSync("uploadPartyContentFile", inputMap);
+			  		  if(ServiceUtil.isError(contentCtx)){
+			  			  Debug.logError("Error while creating Party Content", module);
+			  			  return ServiceUtil.returnError("Error while creating Party Content");
+			  		  }
+			  		  contentId = (String) contentCtx.get("contentId");
+				  }catch (Exception e) {
+		    		 Debug.logError(e, module);
+		             return ServiceUtil.returnError("Error while creating Party Resume" + e);
+				  } 
+		  		  if(UtilValidate.isNotEmpty(contentId)){
+		  			  inputMap.clear();
+		  			  inputMap.put("userLogin", userLogin);
+					  inputMap.put("resumeId", resumeId);
+					  inputMap.put("contentId", contentId);
+					  inputMap.put("partyId", partyId);
+					  inputMap.put("resumeText", resumeText);
+					  inputMap.put("resumeDate", resumeDate);
+					  try {
+						  Map resultCtx = dispatcher.runSync("createPartyResume", inputMap);
+				  		  if(ServiceUtil.isError(resultCtx)){
+				  			  Debug.logError("Error while creating Party Resume", module);
+				  			  return ServiceUtil.returnError("Error while creating Party Resume");
+				  		  }
+					  }catch (Exception e) {
+			    		 Debug.logError(e, module);
+			             return ServiceUtil.returnError("Error while creating Party Resume" + e);
+					  } 
+		  		  }
+	        }catch(Exception e){
+				Debug.logError("Error while creating Party Resume"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("Party Resume created sucessfully...!");
+	        return result;
 	    }
 }

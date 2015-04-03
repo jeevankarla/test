@@ -57,7 +57,17 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-
+    
+    <service name="createPartyResumeAndContent" engine="java" default-entity-name="PartyResume"
+             location="in.vasista.vbiz.humanres.HumanresService" invoke="createPartyResumeAndContent" auth="true">
+        <description>Create Resume for a Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="uploadedFile" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
+        <attribute name="dataResourceId" mode="OUT" type="String" optional="true"></attribute>
+    </service>
+    
     <service name="updatePartyResume" engine="simple" default-entity-name="PartyResume"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartyResume" auth="true">
         <description>Update a Resume of Party</description>

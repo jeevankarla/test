@@ -45,6 +45,13 @@ under the License.
                 <parameter param-name="resumeId"/>
             </hyperlink>
         </field>
+        <field name="contentId" title="Resume Doc">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
                <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
@@ -58,16 +65,17 @@ under the License.
             </hyperlink>
        </field>
     </form>
-    <form name="EditPartyResume" type="single" target="createPartyResume" title="" default-map-name="partyResume"
+    <form name="EditPartyResume" type="upload" target="createPartyResumeAndContent" title="" default-map-name="partyResume"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="partyResume != null" target="updatePartyResume"/>
         <field name="resumeId" use-when="partyResume!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="resumeId" use-when="partyResume==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="contentId"><lookup target-form-name="LookupContent"/></field>
+        <!-- <field name="contentId"><lookup target-form-name="LookupContent"/></field> -->
         <field name="partyId" use-when="partyResume!=null&amp;&amp;partyId!=null" title="${uiLabelMap.FormFieldTitle_partyId}"><hidden/></field>
         <field name="partyId" use-when="partyResume==null&amp;&amp;partyId==null" title="${uiLabelMap.FormFieldTitle_partyId}"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="resumeDate"><date-time/></field>
         <field name="resumeText"><text/></field>
+        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}*"><file/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="resumeId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
