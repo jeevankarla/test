@@ -48,10 +48,10 @@
                  <set field="subDivDeptFlag" value="PurchaseOrder"/> 
                   <set field="parameters.changeFlag" value="PurchaseOrder"/> 
 				 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
+				 <set field="parameters.partyStatusId" value="PARTY_ENABLED"/> 				 
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
-                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
-                 
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>                
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

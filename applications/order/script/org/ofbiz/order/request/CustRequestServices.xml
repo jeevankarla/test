@@ -263,12 +263,28 @@ under the License.
         <store-value value-field="custRequestItem"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
     </simple-method>
-
     <simple-method method-name="createCustRequestParty" short-description="Create Customer RequestParty">
         <call-simple-method method-name="checkStatusCustRequest"/>        
         <set from-field="parameters.partyId" field="lookupPKMap.partyId"/>
         <set from-field="parameters.roleTypeId" field="lookupPKMap.roleTypeId"/>
         <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="partyRole"/>
+        <if-not-empty field="parameters.partyId">                
+           <entity-condition   entity-name="Party"  list="partyList" >
+	              <condition-list  combine="and">
+		                <condition-expr field-name="partyId"  operator="equals"  value="${parameters.partyId}"/>
+		                <condition-expr field-name="statusId"  operator="not-equals"  value="PARTY_DISABLED"/>
+	              </condition-list>
+                 <order-by field-name="partyId"/>
+           </entity-condition>
+           <set field="partySize" value="${groovy: return(partyList.size())}" type="Integer"/>
+           <if-empty field="partyList"> 
+              <log level="error" message="====##########============>Invalid Supplier====Size:${partySize}"></log>
+              <add-error>
+                  <fail-message message="Selected Supplier is Invalid .Please select Valid Supplier."/>
+              </add-error>
+              <check-errors></check-errors>                
+           </if-empty>                 
+        </if-not-empty>   
         <if-empty field="partyRole.partyId">
             <make-value value-field="partyRole" entity-name="PartyRole"/>
             <set-pk-fields map="lookupPKMap" value-field="partyRole"/>
