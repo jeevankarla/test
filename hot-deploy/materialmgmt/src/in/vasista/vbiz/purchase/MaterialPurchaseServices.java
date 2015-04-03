@@ -2652,7 +2652,7 @@ public class MaterialPurchaseServices {
 		for (GenericValue orderItem : orderItems) {
 			//if(UtilValidate.isNotEmpty(orderItem)){
 				String productId=orderItem.getString("productId");
-				BigDecimal unitCost=orderItem.getBigDecimal("unitPrice");
+				BigDecimal unitCost=orderItem.getBigDecimal("unitListPrice");
 				String orderItemSeqId=orderItem.getString("orderItemSeqId");
 				//update shipmentReceiptItem
 				List<GenericValue> filterShipmentReceiptList = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
