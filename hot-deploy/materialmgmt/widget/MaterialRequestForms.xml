@@ -348,7 +348,7 @@
         <field name="statusId" sort-field="true" title="Status">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-        <field name="lastModifiedDate" sort-field="true"><display/></field>
+        <field name="lastModifiedDate" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastModifiedDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
         <field name="createdByUserLogin" sort-field="true"><display/></field>
         
         <field use-when="&quot;ENQ_ORDERED&quot;.equals(&quot;${statusId}&quot;)&amp;&amp;!(&quot;ENQ_COMPLETED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_COMPLETED_ENQ&quot;, session)))}" name="Completed" widget-style="buttontext">

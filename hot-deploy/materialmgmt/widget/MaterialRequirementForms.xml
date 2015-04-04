@@ -193,8 +193,8 @@
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}[${dec}]"/>
         </field>
         <field name="statusId"><hidden/></field>
-        <field name="supplyDate" title="Last Supply Date"><display description="${supplyDetails.supplyDate}"/></field>
-        <field name="requirementStartDate" title="Requirement Date"><display/></field>
+        <field name="supplyDate" title="Last Supply Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(supplyDetails.supplyDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="requirementStartDate" title="Requirement Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(requirementStartDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
         <field name="partyId" title="Last Supplier"><display-entity entity-name="PartyNameView" description="${LastName} ${firstName} ${middleName} ${groupName} - [${partyId}]"  key-field-name="partyId" /></field>
         <field name="supplyQty" title="Last Supply Qty"><display description="${supplyDetails.supplyQty}"/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text size="10"/></field>
