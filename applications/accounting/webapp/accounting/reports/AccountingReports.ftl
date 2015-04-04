@@ -627,7 +627,7 @@ function reportTypeChangeFunc() {
           		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
-      	<tr> 
+      	<#--<tr> 
       		<form id="InvoiceSummaryReport" name="InvoiceSummaryReport" method="post" action="<@ofbizUrl>InvoiceSummaryReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="10%">Invoice Summary Report</td>
 			  	<td width="25%">Internal Org
@@ -689,7 +689,7 @@ function reportTypeChangeFunc() {
           		   		</#list>
 				 	</select>
 			  	</td>-->
-			  	<td width="25%">Gl Account Class
+			  	<#--<td width="25%">Gl Account Class
 			  	  	<select name='glAccountClassId' id ="glAccountClassId">	
 					 	<option value=""></option>								
 						<#list glAccountClassList as glclass> 	
@@ -707,7 +707,7 @@ function reportTypeChangeFunc() {
                 </td>
           		
       		</form>
-      	</tr>
+      	</tr>-->
       	<tr class="alternate-row">
       	   <form id="InvoiceItemTypes" name="InvoiceItemTypes" method="post" action="<@ofbizUrl>invoiceItemTypes.pdf</@ofbizUrl>" target="_blank">        
              <td width="30%">Invoice Item Type</td>
