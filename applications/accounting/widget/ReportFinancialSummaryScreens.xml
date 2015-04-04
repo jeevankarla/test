@@ -4615,4 +4615,24 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="AdvancesReportCSV">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AdvancesReport.groovy"/>
+			</actions>
+			<widgets>
+				 <include-form name="AdvancesReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+            </widgets>
+		</section>
+	</screen>
+	<screen name="SubLedgerReportCSV">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AdvancesReport.groovy"/>
+			</actions>
+			<widgets>
+				 <include-form name="SubLedgerReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+            </widgets>
+		</section>
+	</screen>
 </screens>

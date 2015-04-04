@@ -3726,8 +3726,14 @@ under the License.
     <request-map uri="AdvancesReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="AdvancesReport"></response>    
     </request-map>
+     <request-map uri="AdvancesReport.csv"><security https="true" auth="true"/>
+		<response name="success" type="view" value="AdvancesReportCSV"></response>    
+    </request-map>
     <request-map uri="SubLedgerReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="SubLedgerReport"></response>    
+    </request-map>
+    <request-map uri="SubLedgerReport.csv"><security https="true" auth="true"/>
+		<response name="success" type="view" value="SubLedgerReportCSV"></response>    
     </request-map>
     <request-map uri="getAccountCode">
        <security https="true" auth="true"/>
@@ -4318,7 +4324,8 @@ under the License.
    <view-map name="InterUnitLedgerAndAcntHistoryWithCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InterUnitLedgerAndAcntHistoryWithCSV" content-type="text/csv" encoding="none"/>
    <view-map name="PartyLedgerAbstaracFintHistoryCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyLedgerAbstaracFintHistoryCSV" content-type="text/csv" encoding="none"/>
    <view-map name="PartySubLedgerByPurposeTypeCSV"    type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartySubLedgerByPurposeTypeCSV" content-type="text/csv" encoding="none"/>
-   
+   <view-map name="AdvancesReportCSV"    type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#AdvancesReportCSV" content-type="text/csv" encoding="none"/>
+   <view-map name="SubLedgerReportCSV"    type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#SubLedgerReportCSV" content-type="text/csv" encoding="none"/>
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
    
    <view-map name="AdvancesReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvancesReport" content-type="application/pdf" encoding="none"/>

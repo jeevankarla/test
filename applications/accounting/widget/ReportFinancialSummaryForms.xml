@@ -1217,6 +1217,28 @@ under the License.
     	<field name="amount"><display/></field>
     	<field name="amountToApply" title="Amt to Apply"><display description="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator, paymentId);}"/></field>
     </form>	
-    
-    
+    <form name="AdvancesReportCSV" list-name="AdvancesCsvList" type="list">
+    	<field name="partyId"><display></display></field>
+    	<field name="name"><display></display></field>
+    	<field name="openingDebit"><display></display></field>
+    	<field name="openingCredit"><display></display></field>
+    	<field name="duringPeriodDebit"><display></display></field>
+    	<field name="duringPeriodCredit"><display></display></field>
+    	<field name="closingDebit"><display></display></field>
+    	<field name="closingCredit"><display></display></field>
+    </form>
+    <form name="SubLedgerReportCSV" list-name="subledgerCsvList" type="list">
+    	<field name="date"><display></display></field>
+    	<field name="parytId"><display></display></field>
+    	<field name="name"><display></display></field>
+    	<field name="particulars"><display></display></field>
+    	<field name="openingDebit"><display></display></field>
+    	<field name="openingCredit"><display></display></field>
+    	<field name="invoiceId"><display></display></field>
+    	<field name="paymentId"><display></display></field>
+    	<field name="paymentMethodId" title="Payment Method"><display></display></field>
+    	<field name="finAccountTransId"><display></display></field>
+    	<field name="debit"><display></display></field>
+    	<field name="credit"><display></display></field>
+    </form>
 </forms>
