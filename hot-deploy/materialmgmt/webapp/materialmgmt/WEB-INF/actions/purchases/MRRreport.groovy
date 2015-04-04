@@ -202,12 +202,34 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	//DC QTY
 	grnDetailsMap["deliveryChallanQty"]=grnData.deliveryChallanQty;
 	
+	// unitPrice for without orderId reports
+	if(UtilValidate.isEmpty(orderId)){
+		inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+		unitPrice = inventoryItem.unitCost;
+		grnDetailsMap["unitPrice"]= unitPrice;
+	}
+	
+	if(UtilValidate.isNotEmpty(orderId)){
+		List conditionlist=[];
+		conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
+		conditionlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, grnData.orderItemSeqId));
+		conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+		conditionMain=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+	    def orderBy = UtilMisc.toList("-changeDatetime");
+	    OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain , null ,orderBy, null, false );
+		OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
+		if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
+			unitPrice = OrderItemChangeDetails.unitPrice;
+			grnDetailsMap["unitPrice"]= OrderItemChangeDetails.unitPrice;
+			grnDetailsMap["quantity"]=OrderItemChangeDetails.quantity;
+		}
+			
+	if(UtilValidate.isEmpty(OrderItemChangeDetails)){
 	inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 	unitPrice = inventoryItem.unitCost;
 	grnDetailsMap["unitPrice"]= unitPrice;
 	    
 	// OrderItems Details
-	if(UtilValidate.isNotEmpty(orderId)){
 	List condlist=[];
 	condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
 	condlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, grnData.orderItemSeqId));
@@ -218,7 +240,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	quantity=orderDetails.quantity;
 	grnDetailsMap["quantity"]=quantity;
 	}
-	
+	}
 	// Received and Accepted Quantity
 	List cList=[];
 	cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
