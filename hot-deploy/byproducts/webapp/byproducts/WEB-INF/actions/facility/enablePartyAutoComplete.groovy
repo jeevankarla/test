@@ -93,8 +93,6 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 		partyJSON.add(newPartyObj);
 	}
 }
-context.partyNameObj = partyNameObj;
-context.partyJSON = partyJSON;
 //supplier json for supplier lookup.
 JSONArray supplierJSON = new JSONArray();
 
@@ -107,6 +105,9 @@ if(supplierList){
 		partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
 		newObj.put("label",partyName+"["+supplier.partyId+"]");
 		supplierJSON.add(newObj);
+		partyNameObj.put(supplier.partyId,partyName);
 	}
 }
 context.supplierJSON=supplierJSON;
+context.partyNameObj = partyNameObj;
+context.partyJSON = partyJSON;

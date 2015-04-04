@@ -56,7 +56,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
                 	if(currentIndex == 0 && newIndex == 1){
-                		var supplierId = $("#supplierId").val();             		
+                		var supplierId = $("#supplierId").val();  
                 	    if( (supplierId).length < 1 ) {
 					    	$('#supplierId').css('background', 'yellow'); 
 					       	setTimeout(function () {
@@ -64,7 +64,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-                        supplierName = partyNameObj[value];
+                        supplierName = partyNameObj[supplierId];
                         if( (supplierName).length < 1 ) {
  					    	$('#supplierName').css('background', 'yellow'); 
  					       	setTimeout(function () {
@@ -186,7 +186,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	
 	var supplierName;
 	function dispSuppName(selection){
-	   value = $("#supplierId").val();
+	   var value = $("#supplierId").val();
 	   supplierName = partyNameObj[value];
 	   $("#supplierName").html("<h4>"+supplierName+"</h4>");
 	}    

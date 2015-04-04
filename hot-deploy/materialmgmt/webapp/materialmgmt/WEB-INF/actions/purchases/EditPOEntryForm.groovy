@@ -5,6 +5,11 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
+import java.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.UtilMisc;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
@@ -77,11 +82,18 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR")));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
-	orderRole = EntityUtil.getFirst(orderRoles);
-	if(orderRole){
-		partyName = PartyHelper.getPartyName(delegator, orderRole.partyId, false);
-		orderInfoDetail.putAt("supplierId", orderRole.partyId);
+	//orderRole = EntityUtil.getFirst(orderRoles);
+	if(orderRoles){
+		roleCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SUPPLIER_AGENT")],EntityOperator.AND);
+		orderRole=EntityUtil.filterByCondition(orderRoles,roleCondition);
+		supplierRole = EntityUtil.getFirst(orderRole);
+		partyName = PartyHelper.getPartyName(delegator, supplierRole.partyId, false);
+		orderInfoDetail.putAt("supplierId", supplierRole.partyId);
 		orderInfoDetail.putAt("supplierName", partyName);
+		vendorCond=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"BILL_FROM_VENDOR")],EntityOperator.AND);
+		vendOrderRole=EntityUtil.filterByCondition(orderRoles,vendorCond);
+		vendorRole=EntityUtil.getFirst(vendOrderRole);
+		orderInfoDetail.putAt("billToPartyId", vendorRole.partyId);
 	}
 	/*condList=[];
 	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
