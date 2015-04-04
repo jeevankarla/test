@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
         <fo:region-body margin-top="0.2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -41,8 +41,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.get("finAccountTypeId")}, true)>
                     <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.get("finAccountTypeId"),"organizationPartyId":"Company"}, true)>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                                                                               Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                        MOTHER DAIRY, YALAHANKA KMF UNIT : GKVK POST.BANGALORE-560 065                         Page No:<fo:page-number/></fo:block>
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                MOTHER DAIRY, YALAHANKA KMF UNIT : GKVK POST.BANGALORE-560 065                         Page No:<fo:page-number/></fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">SUBLEDGER REPORT FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -81,7 +81,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                </fo:block> 	
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;         SL CODE : ${finAccntId.get("partyId")?if_exists}     ${finAccntId.get("Name")?if_exists?upper_case}                 </fo:block>
-               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                                                    OPENING BALANCE:       ${finAccntId.get("openBalanceDebit")?if_exists?string("##0.00")}          ${finAccntId.get("openBalanceCredit")?if_exists?string("##0.00")} </fo:block>
+               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                          OPENING BALANCE:     ${finAccntId.get("openBalanceDebit")?if_exists?string("##0.00")}      ${finAccntId.get("openBalanceCredit")?if_exists?string("##0.00")} </fo:block>
                 <#assign DaywiseMap=finAccntId.get("list")>
                 <#assign Daywise=DaywiseMap.entrySet()>
                 <#assign totalDebit=0>
@@ -128,8 +128,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                     <fo:table>
 				    <fo:table-column column-width="12%"/>
 			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="30%"/>
-			        <fo:table-column column-width="5%"/>
+			        <fo:table-column column-width="25%"/>
+			        <fo:table-column column-width="17%"/>
 			        <fo:table-column column-width="11%"/>
                     <fo:table-body>
                     	<fo:table-row>
@@ -143,7 +143,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">TOTAL :</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${totalDebit?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${totalDebit?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${totalCredit?string("##0.00")}</fo:block>  
@@ -158,11 +158,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
 			<#assign grandCredit=grandCredit+totalCredit>
             <#assign balance=grandDebit-grandCredit>
             <#if balance gt 0> 
-			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                                                    CLOSING BALANCE:       ${balance?string("##0.00")}            ${(0*balance)?string("##0.00")}</fo:block>
+			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                        CLOSING BALANCE:      ${balance?string("##0.00")}            ${(0*balance)?string("##0.00")}</fo:block>
 			 <#elseif balance lt 0>
-             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                                                    CLOSING BALANCE:       ${(0*balance)?string("##0.00")}         ${((-1)*(balance))?string("##0.00")} </fo:block>
+             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                         CLOSING BALANCE:     ${(0*balance)?string("##0.00")}         ${((-1)*(balance))?string("##0.00")} </fo:block>
              <#else>
-              <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                                                       CLOSING BALANCE:       ${(balance)?string("##0.00")}          ${(balance)?string("##0.00")} </fo:block>
+              <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                        CLOSING BALANCE:     ${(balance)?string("##0.00")}          ${(balance)?string("##0.00")} </fo:block>
              </#if> 
              <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			 </fo:flow>
