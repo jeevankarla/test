@@ -207,6 +207,7 @@ under the License.
                 	<condition-list combine="or">
                         <condition-expr field-name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
                         <condition-expr field-name="paymentMethodTypeId" operator="equals" value="FUND_TRANSFER"/>
+                        <condition-expr field-name="paymentMethodTypeId" operator="equals" value="CREDITNOTE_TRNSF"/>
                     </condition-list>
                     <order-by field-name="description"/>
                 </entity-condition>

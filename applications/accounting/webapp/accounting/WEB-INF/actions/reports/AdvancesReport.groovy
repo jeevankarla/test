@@ -28,6 +28,7 @@
 	import java.sql.Timestamp;
 	import org.ofbiz.base.util.UtilMisc;
 	import org.ofbiz.accounting.payment.PaymentWorker;
+	import org.ofbiz.party.party.PartyHelper;
 	
 	userLogin= context.userLogin;
 	
@@ -61,10 +62,10 @@
 	
 	paymentGlAccountTypeMap = delegator.findList("PaymentGlAccountTypeMap", EntityCondition.makeCondition([paymentTypeId : paymentTypeId]), null, null, null, false);
 	glList = EntityUtil.getFieldListFromEntityList(paymentGlAccountTypeMap, "glAccountId", true);
-	
+	if(UtilValidate.isNotEmpty(glList)){
 	GlAccount = delegator.findOne("GlAccount", [glAccountId : glList.get(0)], false);
 	context.GlAccount = GlAccount;
-	
+	}
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("PMNT_SENT", "PMNT_CONFIRMED")));
 	if(UtilValidate.isNotEmpty(partyId)){
@@ -276,5 +277,142 @@
 	context.invoiceDetailsMap = invoiceDetailsMap;
 	context.paymentDetailsMap = paymentDetailsMap;
 	
-	
-	
+	// Advaces Csv
+	AdvancesCsvList=[];
+	for(Map.Entry entryParty : partyPaymentsMap.entrySet()){
+		partyId = entryParty.getKey();
+		paymentDetails = entryParty.getValue();
+		tempMap=[:];
+		tempMap.partyId=partyId;
+		tempMap.name = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
+		openingBalance=paymentDetails.get("openingBalance");
+		duringPeriod = paymentDetails.get("duringPeriod");
+		closingBalance = paymentDetails.get("closingBalance");
+		openingDebit=openingBalance.get("debit");
+		openingCredit=openingBalance.get("credit");
+		duringPeriodDebit=duringPeriod.get("debit");
+		duringPeriodCredit=duringPeriod.get("credit");
+		closingDebit=closingBalance.get("debit");
+		closingCredit=closingBalance.get("credit");
+		tempMap.openingDebit=openingDebit;
+		tempMap.openingCredit=openingCredit;
+		tempMap.duringPeriodDebit=duringPeriodDebit;
+		tempMap.duringPeriodCredit=duringPeriodCredit;
+		tempMap.closingDebit=closingDebit;
+		tempMap.closingCredit=closingCredit;
+		AdvancesCsvList.add(tempMap);
+	}
+context.AdvancesCsvList=AdvancesCsvList;	
+
+//Subledger Csv
+subledgerCsvList=[];
+for(Map.Entry entryParty :partyPaymentDetailsMap.entrySet()){
+	partyId = entryParty.getKey();
+	paymentDetailsList=entryParty.getValue();
+	name=org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
+	partyOpeningBalance=partyPaymentsMap.get(partyId);
+	openingDebit=partyOpeningBalance.get("openingBalance").get("debit");
+	openingCredit=partyOpeningBalance.get("openingBalance").get("credit");
+	paymentDetailsList.each{paymentDetail->
+		if(UtilValidate.isNotEmpty(paymentDetail.paymentId)){
+			tempMap=[:];
+			paymentId=paymentDetail.paymentId;
+			paymentInfo=(paymentDetailsMap.get(paymentId)).get(0);
+			paymentDate=UtilDateTime.toDateString(paymentInfo.get("paymentDate"), "dd-MM-yyyy");
+			particulars="";
+			paymentRefNum="";
+			paymentMethodId="";
+			invoiceId="";
+			finAccountTransId="";
+			debit=0;
+			credit=0;
+			if(UtilValidate.isNotEmpty(paymentInfo.get("paymentRefNum"))){
+				paymentRefNum=paymentInfo.get("paymentRefNum");
+			}
+			if(UtilValidate.isNotEmpty(paymentInfo.get("comments"))){
+				particulars=paymentInfo.get("comments")+" "+paymentRefNum;
+			}else{
+			  if(UtilValidate.isNotEmpty(paymentInfo.get("paymentMethodTypeId"))){
+				  paymentMothedType=delegator.findOne("PaymentMethodType",[paymentMethodTypeId:paymentInfo.get("paymentMethodTypeId")],false);
+				  particulars=paymentMothedType.description+" "+paymentRefNum;
+			  }else{
+			      particulars=paymentRefNum;
+			  }
+			}
+			if(UtilValidate.isNotEmpty(paymentInfo.get("paymentMethodId"))){
+				paymentMethod = delegator.findOne("PaymentMethod",[paymentMethodId:paymentInfo.get("paymentMethodId")],false);
+				paymentMethodId=paymentMethod.description;
+			}
+			if(UtilValidate.isNotEmpty(paymentInfo.get("finAccountTransId"))){
+				finAccountTransId=finTransSeqMap.get(paymentInfo.get("finAccountTransId"));
+			}
+			if((paymentInfo.get("paymentTypeId")).indexOf("PAYOUT") != -1){
+				debit=paymentInfo.get("amount");
+			}else{
+			   credit=paymentInfo.get("amount");
+			}
+			tempMap.date=paymentDate;
+			tempMap.parytId=partyId;
+			tempMap.name=name;
+			tempMap.openingDebit=openingDebit;
+			tempMap.openingCredit=openingCredit;
+			tempMap.particulars=particulars;
+			tempMap.invoiceId=invoiceId;
+			tempMap.paymentId=paymentId;
+			tempMap.paymentMethodId=paymentMethodId;
+			tempMap.finAccountTransId=finAccountTransId;
+			tempMap.debit=debit;
+			tempMap.credit=credit;
+			subledgerCsvList.add(tempMap);
+		}
+		if(UtilValidate.isNotEmpty(paymentDetail.invoiceId)){
+			invoicesList=invoiceDetailsMap.get(paymentDetail.invoiceId);
+			invoicesList.each{invoice->
+				tempMap=[:];
+				particulars="";
+				quantity=1;
+				debit=0;
+				credit=0;
+				paymentId="";
+				paymentMethodId="";
+				finAccountTransId="";
+				invoiceId=invoice.invoiceId;
+				invoiceDate=UtilDateTime.toDateString(invoice.invoiceDate, "dd-MM-yyyy");
+				if(UtilValidate.isNotEmpty(invoice.invoiceTypeId)){
+					invoiceType=delegator.findOne("InvoiceType",[invoiceTypeId:invoice.invoiceTypeId],false);
+					particulars=invoiceType.description;
+				}else{
+				particulars=invoice.description;
+				}
+				if(UtilValidate.isNotEmpty(invoice.quantity)){
+					quantity=invoice.quantity;
+				}
+				credit=credit+(invoice.amount*quantity);
+				tempMap.date=invoiceDate;
+				tempMap.parytId=partyId;
+				tempMap.name=name;
+				tempMap.particulars=particulars;
+				tempMap.openingDebit=openingDebit;
+				tempMap.openingCredit=openingCredit;
+				tempMap.invoiceId=invoiceId;
+				tempMap.paymentId=paymentId;
+				tempMap.paymentMethodId=paymentMethodId;
+				tempMap.finAccountTransId=finAccountTransId;
+				tempMap.debit=debit;
+				tempMap.credit=credit;
+				subledgerCsvList.add(tempMap);
+			}
+		}
+	}
+}
+
+context.subledgerCsvList=subledgerCsvList;
+
+
+
+
+
+
+
+
+

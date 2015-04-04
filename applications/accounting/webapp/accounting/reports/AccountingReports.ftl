@@ -537,7 +537,12 @@ function reportTypeChangeFunc() {
 			  	<td width="25%">
       		  		&#160;
 			  	</td>
-          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+			  	<td width="20%">
+					<table>
+					<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
+					</table>   
+			 	</td>
       		</form>
       	</tr>
       	<tr> 
@@ -557,7 +562,12 @@ function reportTypeChangeFunc() {
       		  	<td width="25%">
       		  		<@htmlTemplate.lookupField value='' formName="subLedgerReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			  	</td>
-          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+          		<td width="20%">
+					<table>
+					<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
+					</table>   
+			 	</td>
       		</form>
       	</tr>
 	</table>
