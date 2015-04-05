@@ -30,7 +30,6 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
- <#if dayFinAccountTransList?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
@@ -375,14 +374,5 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                </fo:block> 		
 			 </fo:flow>
 			 </fo:page-sequence>	
-			  <#else>
-    	<fo:page-sequence master-reference="main">
-		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-			<fo:block font-size="14pt">
-	            	${uiLabelMap.NoOrdersFound}.
-	       		 </fo:block>
-		</fo:flow>
-	</fo:page-sequence>	
-    </#if>  
 </fo:root>
 </#escape>

@@ -255,6 +255,7 @@ under the License.
      location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="populateFinAccountBalancesFromTrans">
         <description>Populate finAccount Transaction Balances</description>
         <attribute name="finAccountId" type="String"  mode="IN" optional="true"/>
+        <attribute name="transactionDate" type="Timestamp"  mode="IN" optional="true"/>
     </service>
     <service name="updateFinAccountBalancesFromTransId" engine="java"
      location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="updateFinAccountBalancesFromTransId">

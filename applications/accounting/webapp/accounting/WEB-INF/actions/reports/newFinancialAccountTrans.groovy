@@ -119,8 +119,9 @@ if (organizationPartyId) {
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
 	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(dayBegin)));
-	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(dayEnd)));
+	conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(dayEnd)));
+	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(dayBegin)));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	customTimePeriodList = delegator.findList("CustomTimePeriod", condition, null, null, null, true);
 	if(UtilValidate.isNotEmpty(customTimePeriodList)){
@@ -151,7 +152,7 @@ if (organizationPartyId) {
 	financialAcctgTransList = [];
 	glAcctgTrialBalanceList = [];
 	paymentInvType = [:];
-    if (currentTimePeriod && (UtilValidate.isNotEmpty(glAccountId))){
+    if (UtilValidate.isNotEmpty(glAccountId)){
         context.currentTimePeriod = currentTimePeriod;
         customTimePeriodStartDate = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
         customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
@@ -193,7 +194,6 @@ if (organizationPartyId) {
 		closingBalance = openingBalance;
 		totOpeningBalance = openingBalance;
 		totYearOpeningBalance = openingBalance;
-	
 		
 		prevDateStr = null;
 		prevDateStamp = null;

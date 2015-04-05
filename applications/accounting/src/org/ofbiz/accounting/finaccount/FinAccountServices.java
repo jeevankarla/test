@@ -825,16 +825,36 @@ public class FinAccountServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String finAccountId = (String) context.get("finAccountId");
+        Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        Timestamp transactionDateStart = UtilDateTime.getDayStart(transactionDate);
+        if(UtilValidate.isEmpty(transactionDate)){
+        	transactionDateStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+        }
+        Timestamp previousDay = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(transactionDateStart, -1));
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List conditionList = FastList.newInstance();
         EntityListIterator eli = null;        
+        BigDecimal adjustmentAmount = BigDecimal.ZERO;
         try{
+        	GenericValue finAccount = null;
+        	if(UtilValidate.isNotEmpty(finAccountId)){
+        		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+        	}
+        	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, previousDay));
+        	conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "ADJUSTMENT"));
+        	EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	List finAccountList = delegator.findList("FinAccountTrans", cond, null, null, null, false);
+        	if(UtilValidate.isNotEmpty(finAccountList)){
+        		finAccount = EntityUtil.getFirst(finAccountList);
+        		adjustmentAmount = (BigDecimal) finAccount.get("amount");
+        	}
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, transactionDateStart));
         	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "FINACT_TRNS_CANCELED"));
         	if(UtilValidate.isNotEmpty(finAccountId)){
         		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
         	}
         	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-        	
             eli = delegator.find("FinAccountTrans", condition, null, null, UtilMisc.toList("finAccountId"), null);
             
             GenericValue trans;
@@ -883,6 +903,10 @@ public class FinAccountServices {
 				Map balances = (Map) tempEntry.getValue();
 				BigDecimal actBalance = (BigDecimal)balances.get("actualBalance");
 				BigDecimal avlBalance = (BigDecimal)balances.get("availableBalance");
+				if(UtilValidate.isNotEmpty(adjustmentAmount) && adjustmentAmount.compareTo(BigDecimal.ZERO) != 0){
+					actBalance = actBalance.add(adjustmentAmount);
+					avlBalance = avlBalance.add(adjustmentAmount);
+				}
 				GenericValue finAcctValue = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", accId), false);
 				finAcctValue.set("actualBalance",actBalance);
 				finAcctValue.set("availableBalance",avlBalance);
