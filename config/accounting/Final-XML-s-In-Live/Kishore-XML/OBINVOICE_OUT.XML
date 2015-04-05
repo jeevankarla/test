@@ -1,0 +1,9 @@
+<InvoiceType description="Opening Balance Invoice" hasTable="N" invoiceTypeId="OBINVOICE_OUT" parentTypeId="PURCHASE_INVOICE" paymentTypeId="DISBURSEMENT"/>
+
+<InvoiceItemType description="Raw Material Opening Balance" invoiceItemTypeId="INV_RAW_MTRL_ITEM"/>
+
+
+
+
+
+
