@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+
+    <PaymentType description="Advance Received From Deepfreezer" hasTable="N" parentTypeId="ADVANCES_PAYIN" paymentTypeId="ADVFRMDEEP_PAYIN"/>
+
+    <Payment paymentId="ADVNC_DEEP_01" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="NANJ" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="1500" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_02" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="KAMDH" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="3000" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_03" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="PD" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="3646" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_04" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="B71204" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="1500" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_05" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="B70504" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="1500" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_06" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="VIJAYA" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="640" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_07" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="S1574" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="6555" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_08" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="S454" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="3000" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_09" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="B52403" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="710" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_10" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="SBE" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="11400" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+    <Payment paymentId="ADVNC_DEEP_11" paymentTypeId="ADVFRMDEEP_PAYIN" partyIdFrom="Company" partyIdTo="B80902" statusId="PMNT_RECEIVED" paymentDate="2014-09-30 00:00:00" amount="4260" currencyUomId="INR" isEnableAcctg="N" paymentMethodTypeId="VBIZ_PAYIN"/>
+</entity-engine-xml>
+
