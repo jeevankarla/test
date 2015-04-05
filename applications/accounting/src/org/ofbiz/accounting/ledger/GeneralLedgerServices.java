@@ -467,12 +467,12 @@ public class GeneralLedgerServices {
 		List invoiceTypeList = FastList.newInstance();
 		Map accountMap = FastMap.newInstance();
 		BigDecimal invoiceTotal = BigDecimal.ZERO;
-		BigDecimal invoiceReadyTotal = BigDecimal.ZERO;
+		//BigDecimal invoiceReadyTotal = BigDecimal.ZERO;
 		BigDecimal invoiceCancelTotal = BigDecimal.ZERO;
 		BigDecimal paymentAppTotal = BigDecimal.ZERO;
 		
 		Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
-		Timestamp dayEnd = UtilDateTime.getDayStart(thruDate);
+		Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
 		
 		try {
 			/*GenericValue glaccount = delegator.findOne("Glaccount",UtilMisc.toMap("glaccountId", glaccountId), false);
@@ -517,7 +517,7 @@ public class GeneralLedgerServices {
 			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(invoicesListItr,"invoiceId", false));
 			invoiceIds = new ArrayList(invoiceIdSet);
 			// First compute the total invoice  amount.
-			invoiceReadyTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
+			invoiceTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
 			
 		}
 		try {
@@ -539,7 +539,7 @@ public class GeneralLedgerServices {
 		
 		try {
 			invoicesListItr = delegator.find("InvoiceAndStatus", paramCond,null, null, null, null);
-			Debug.log("invoicesList==================="+invoicesListItr.getCompleteList());
+			//Debug.log("invoicesList==================="+invoicesListItr.getCompleteList());
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
@@ -549,6 +549,7 @@ public class GeneralLedgerServices {
 			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(invoicesListItr,"invoiceId", false));
 			invoiceIds = new ArrayList(invoiceIdSet);
 			// First compute the total invoice  amount.
+			Debug.log("invoiceIds==================="+invoiceIds);
 			invoiceCancelTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
 			
 		}
@@ -582,12 +583,8 @@ public class GeneralLedgerServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
-		
-		Debug.log("invoiceReadyTotal========="+invoiceReadyTotal);
-		Debug.log("invoiceCancelTotal========="+invoiceCancelTotal);
-		
-		invoiceTotal = invoiceReadyTotal.add(invoiceCancelTotal);
-	    BigDecimal endingBalance = invoiceTotal.subtract(invoiceCancelTotal.add(paymentAppTotal));
+
+		BigDecimal endingBalance = invoiceTotal.subtract(invoiceCancelTotal.add(paymentAppTotal));
 	    BigDecimal debitAmount = invoiceTotal;
 	    BigDecimal creditAmount = invoiceCancelTotal.add(paymentAppTotal);
 	    
@@ -599,7 +596,7 @@ public class GeneralLedgerServices {
 	    accountMap.put("invoiceCancelTotal", invoiceCancelTotal);
 	    accountMap.put("paymentAppTotal", paymentAppTotal);
 		
-	    Debug.log("accountMap========="+accountMap);
+	    //Debug.log("accountMap========="+accountMap);
 		return accountMap;
 	}
 
