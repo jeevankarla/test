@@ -770,7 +770,7 @@ function reportTypeChangeFunc() {
 		</tr>
 		<tr class="alternate-row">
       	   <form id="FinAccountTransDetails" name="FinAccountTransDetails" method="post" action="<@ofbizUrl>FinAccountTransDetails.csv</@ofbizUrl>" target="_blank">        
-             <td width="30%">Loan Recovery FinAccountTrans Details</td>
+             <td width="30%">Other Units Loan Recovery FinAccountTrans Details</td>
 			  	<td width="25%">
                <#--  FinAccount Type
 			  	  	<select name='finAccountTypeId' id ="finAccountTypeId">	
