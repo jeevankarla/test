@@ -111,26 +111,29 @@ if(UtilValidate.isNotEmpty(loanRecoveryList)){
 		recoveryList=EntityUtil.filterByCondition(finAccountTransList,EntityCondition.makeCondition("finAccountTransId",EntityOperator.EQUALS,eachRecovery.finAccountTransId));
 		recovery=EntityUtil.getFirst(recoveryList);
 		tempMap.finAccountTransId=recovery.finAccountTransId;
-		tempMap.finAccountTransTypeId=recovery.finAccountTransTypeId;
+		//tempMap.finAccountTransTypeId=recovery.finAccountTransTypeId;
 		tempMap.finAccountId=recovery.finAccountId;
 		tempMap.transactionDate=UtilDateTime.toDateString(recovery.transactionDate,"dd-MM-yyyy");
-		tempMap.entryDate=UtilDateTime.toDateString(recovery.entryDate,"dd-MM-yyyy");
+		//tempMap.entryDate=UtilDateTime.toDateString(recovery.entryDate,"dd-MM-yyyy");
 		tempMap.amount=recovery.amount;
 		tempMap.contraRefNum=recovery.contraRefNum;
-		tempMap.performedByPartyId=recovery.performedByPartyId;
+		performedBy = PartyHelper.getPartyName(delegator, recovery.performedByPartyId, false);
+		tempMap.performedByPartyId=performedBy+"["+recovery.performedByPartyId+"]";
 		tempMap.statusId=recovery.statusId;
 		tempMap.comments=recovery.comments;
 		tempMap.loanId=eachRecovery.loanId;
 		tempMap.loanFinAccountId=eachRecovery.loanFinAccountId;
-		tempMap.partyId=eachRecovery.partyId;
-		tempMap.loanTypeId=eachRecovery.loanTypeId;
+		partyName = PartyHelper.getPartyName(delegator, eachRecovery.partyId, false);
+		tempMap.partyId=partyName+"["+eachRecovery.partyId+"]";
+		//tempMap.loanTypeId=eachRecovery.loanTypeId;
 		tempMap.description=eachRecovery.description;
 		tempMap.recoveryDate=UtilDateTime.toDateString(eachRecovery.recoveryDate,"dd-MM-yyyy");
 		tempMap.sequenceNum=eachRecovery.sequenceNum;
 		tempMap.principalInstNum=eachRecovery.principalInstNum;
 		tempMap.principalAmount=eachRecovery.principalAmount;
 		tempMap.closingBalance=eachRecovery.closingBalance;
-		tempMap.deducteePartyId=eachRecovery.deducteePartyId;
+		deducteeName=PartyHelper.getPartyName(delegator, eachRecovery.deducteePartyId, false);
+		tempMap.deducteePartyId=deducteeName+"["+eachRecovery.deducteePartyId+"]";
 		finalList.add(tempMap);
 	}
 }
