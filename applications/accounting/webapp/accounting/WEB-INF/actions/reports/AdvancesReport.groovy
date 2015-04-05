@@ -157,11 +157,16 @@
 		openingBalance = amountPaid.subtract(amountApplied);
 		
 		obMap = [:];
-		obMap.put("debit", openingBalance);
-		obMap.put("credit", BigDecimal.ZERO);
-		tempMap = [:];
-		tempMap.putAll(obMap);
-		advDetailsMap.put("openingBalance", tempMap);
+		obMap.put("debit", 0);
+		obMap.put("credit", 0);
+		if(openingBalance>0){
+			obMap.put("debit", openingBalance);
+		}else{
+			obMap.put("credit", openingBalance);
+		}
+		
+		
+		
 		
 		// Calculate During period credit and debit
 		
@@ -193,6 +198,12 @@
 		totalDebit = openingBalance.add(duringAmountPaid);
 		totalCredit = duringAmountApplied;
 		
+     	obMap.put("totalDebit", totalDebit);
+		obMap.put("totalCredit", totalCredit);
+		
+		tempMap = [:];
+		tempMap.putAll(obMap);
+		advDetailsMap.put("openingBalance", tempMap);
 		closingBalance = totalDebit.subtract(totalCredit);
 		if(closingBalance > 0){
 			cbMap = [:];

@@ -104,8 +104,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 							
 							<#assign paymentDetailsList = partyPayments.getValue()>
 							
-							<#assign creditTotal = partyOpeningBalance.get("openingBalance").get("debit")>
-							<#assign debitTotal = partyOpeningBalance.get("openingBalance").get("credit")>
+							
+							<#assign totalDebit = partyOpeningBalance.get("openingBalance").get("totalDebit")>
+							<#assign totalCredit = partyOpeningBalance.get("openingBalance").get("totalCredit")>
 							
 								<fo:table-row border-style="solid">
 									<fo:table-cell>
@@ -225,7 +226,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                       			
 			                       			
 		                                    <#if (paymentGenericValue.get("paymentTypeId")).indexOf("PAYOUT") != -1>
-			                                      <#assign debitTotal = debitTotal + paymentGenericValue.get("amount")>
+			                                     
 			                                      <fo:table-cell border-style="solid">
 				                            		 <fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
 			                                      	 	${paymentGenericValue.get("amount")?if_exists?string("#0.00")}
@@ -237,7 +238,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                                      	 </fo:block>
 			                                      </fo:table-cell>	
 			                                      <#else>
-			                                      <#assign creditTotal = creditTotal + paymentGenericValue.get("amount")>
+			                                      
 			                                      <fo:table-cell border-style="solid">
 				                            		 <fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
 			                                      	 	0.00
@@ -333,12 +334,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false" font-weight="bold"> 
-                                             ${debitTotal?string("#0.00")}
+                                             ${totalDebit?string("#0.00")}
                                       	</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false" font-weight="bold"> 
-                                             ${creditTotal?string("#0.00")}
+                                             ${totalCredit?string("#0.00")}
                                       	</fo:block>  
 	                       			</fo:table-cell>
 								</fo:table-row>	
