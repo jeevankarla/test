@@ -3800,7 +3800,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinAccountTransDetailsCSV"/>
     </request-map>
-    
+    <request-map uri="GlLedgerReconciliation.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlLedgerReconciliationCSV"/>
+    </request-map>
      <!--================= Bank Guarantee ==================== -->
 	
 	<request-map uri="BankGuaranteeReceipt">
@@ -4203,7 +4206,7 @@ under the License.
   	<view-map name="TreasurerPaymentsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TreasurerPaymentsCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="GroupPaymentCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GroupPaymentCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="FinAccountTransDetailsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountTransDetailsCSV" content-type="text/csv" encoding="none"/>
-  	
+  	<view-map name="GlLedgerReconciliationCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlLedgerReconciliationCSV" content-type="text/csv" encoding="none"/>
     <!-- Assignment Mappings -->
     <view-map name="EditPartyFixedAssetAssignments" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditPartyFixedAssetAssignments"/>
 

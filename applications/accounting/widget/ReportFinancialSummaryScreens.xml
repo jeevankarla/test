@@ -4645,4 +4645,14 @@
             </widgets>
 		</section>
 	</screen>
+	<screen name="GlLedgerReconciliationCSV">
+		<section>
+			<actions>
+                
+			</actions>
+			<widgets>
+				 <include-form name="GlLedgerReconciliationCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+            </widgets>
+		</section>
+	</screen>
 </screens>

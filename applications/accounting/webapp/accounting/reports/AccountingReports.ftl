@@ -221,8 +221,8 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("invFromDate","invThruDate");
 	    makeDatePicker4("invTmpSummFromDate","invTmpSummThruDate");
 	    makeDatePicker4("finSummFromDate","finSummThruDate");
-	    
-		$('#ui-datepicker-div').css('clip', 'auto');		
+	    makeDatePicker4("GlLedgerFromDate","GlLedgerThruDate");
+	    $('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
 	$(document).ready(function(){
@@ -317,6 +317,33 @@ function reportTypeChangeFunc() {
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
               </tr>
+        <#--      <tr class="alternate-row">
+			      	   <form id="GlLedgerReconciliation" name="GlLedgerReconciliation" method="post" action="<@ofbizUrl>GlLedgerReconciliation.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="15%" nowrap>GL Ledger Reconciliation </td>
+			             <td width="10%">From<input  type="text" size="15pt" id="GlLedgerFromDate" readonly  name="fromDate"/></td>
+			      		 <td width="10%">To<input  type="text" size="15pt" id="GlLedgerThruDate" readonly  name="thruDate"/></td>
+			             <td width="20%">Channel Type:<div>
+					              <select name="purposeTypeId">
+					                <option value="">-All-</option>
+					                <#list purposeTypeIdsList as purposeType>
+					                   <option value="${purposeType.enumId}">${purposeType.description?if_exists}</option>
+					                 </#list>
+					              </select>
+					         </div>
+					      </td>
+			             <td width="20%">Invoice Type :
+			                <div>
+				              <select name="invoiceType">
+				                <option value="SalesInvoice">Sales Invoice</option>
+				                <option value="PurchaseInvoice">Purchase Invoice</option>
+				              </select>
+					       </div>
+			             </td>
+						 <td width="10%">
+					                    <input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReconciliation', '<@ofbizUrl>GlLedgerReconciliation.csv</@ofbizUrl>');" class="buttontext"/>
+					     </td>			           
+                       </form>
+			        </tr> -->
                <tr class="alternate-row">
 			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>

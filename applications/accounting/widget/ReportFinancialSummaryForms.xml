@@ -1264,4 +1264,10 @@ under the License.
     	<field name="closingBalance"><display></display></field>
     	<field name="deducteePartyId"><display></display></field>
     </form>
+    <form name="GlLedgerReconciliationCSV" type="list" list-name="">
+    	<field name="purposeType"><display></display></field>
+    	<field name="totalDebits"><display></display></field>
+    	<field name="totalCredits"><display></display></field>
+    	<field name="endingBalance"><display></display></field>
+    </form>
 </forms>
