@@ -252,4 +252,14 @@
         <field name="taxAmount" title="Tax Amount"><display/></field>
         <field name="netAmount" title="Net Amount"><display/></field>
     </form>
+    <form name="IceCreamDueParticularsCSV" type="list" list-name="partyLedgerList" view-size="99999">
+      <field name="partyCode"><display></display></field>
+      <field name="partyName" title="Name"><display></display></field>
+      <field name="obDebit" title="Opening Debit"><display></display></field>
+      <field name="obCredit" title="Opening Credit"><display></display></field>
+      <field name="saleDebit" title="During Period Debit"><display/></field>
+      <field name="saleCredit" title="During Period Credit"><display></display></field>
+      <field name="cbDebit" title="Closing Debit"><display></display></field>
+      <field name="cbCredit" title="Closing Credit"><display></display></field>
+    </form>
 </forms>
