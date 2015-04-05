@@ -115,7 +115,12 @@ partyIdsList.each{eachParty ->
 		saleAmount = 0;
 		
 		if(UtilValidate.isNotEmpty(partyInvoiceTotals)){
-			saleAmount=partyInvoiceTotals.get(eachParty).get("totalRevenue");
+			basicRevenue=partyInvoiceTotals.get(eachParty).get("basicRevenue")
+			vatRevenue=partyInvoiceTotals.get(eachParty).get("vatRevenue")
+			bedRevenue=partyInvoiceTotals.get(eachParty).get("bedRevenue")
+			cstRevenue=partyInvoiceTotals.get(eachParty).get("cstRevenue")
+			//saleAmount=partyInvoiceTotals.get(eachParty).get("totalRevenue");
+			saleAmount=basicRevenue+vatRevenue+bedRevenue+cstRevenue;
 			if(UtilValidate.isNotEmpty(partyTaxMap) && partyTaxMap.containsKey(eachParty)){
 				if(partyTaxMap.get(eachParty).containsKey("PPD_PROMO_ADJ") ){
 							 ppd=partyTaxMap.get(eachParty).get("PPD_PROMO_ADJ");

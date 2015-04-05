@@ -67,7 +67,18 @@ partyDayWiseDetailCsvMap=[:];
 if(UtilValidate.isNotEmpty(context.partyDayWiseDetailMap)){
 	partyDayWiseDetailCsvMap=context.partyDayWiseDetailMap;
 }
-
+tempMap=[:];
+tempMap.put("paymentId","OpeningBalance");
+if(UtilValidate.isNotEmpty(context.partyOBMap)){
+	partyOBMap=context.partyOBMap;
+tempMap.put("debitValue",partyOBMap.get("debitValue"));
+tempMap.put("creditValue",partyOBMap.get("creditValue"));
+}
+else{
+	tempMap.put("debitValue",0);
+	tempMap.put("creditValue",0);
+	}
+partyLedgerDayWiseCsvList.addAll(tempMap);
 partyDayWiseDetailCsvMap.each{ eachDayPartyLedger->
 
 	invList = eachDayPartyLedger.getValue().get("invoiceList");
@@ -83,4 +94,29 @@ partyDayWiseDetailCsvMap.each{ eachDayPartyLedger->
 	}
 }
 Debug.log("===partyLedgerDayWiseCsvList==IN==CSVVVVV======"+partyLedgerDayWiseCsvList);
+temptranstotsMap=[:];
+temptranstotsMap.put("paymentId","TransactionTotals");
+if(UtilValidate.isNotEmpty(context.partyTrTotalMap)){
+	partyTrTotalMap=context.partyTrTotalMap;
+temptranstotsMap.put("debitValue",partyTrTotalMap.get("debitValue"));
+temptranstotsMap.put("creditValue",partyTrTotalMap.get("creditValue"));
+}
+else{
+	temptranstotsMap.put("debitValue",0);
+	temptranstotsMap.put("creditValue",0);
+	}
+partyLedgerDayWiseCsvList.addAll(temptranstotsMap);
+
+tempcloseBalMap=[:];
+tempcloseBalMap.put("paymentId","ClosingBalance");
+if(UtilValidate.isNotEmpty(context.partyCBMap)){
+	partyCBMap=context.partyCBMap;
+tempcloseBalMap.put("debitValue",partyCBMap.get("debitValue"));
+tempcloseBalMap.put("creditValue",partyCBMap.get("creditValue"));
+}
+else{
+	tempcloseBalMap.put("debitValue",0);
+	tempcloseBalMap.put("creditValue",0);
+	}
+partyLedgerDayWiseCsvList.addAll(tempcloseBalMap);
 context.partyLedgerDayWiseCsvList=partyLedgerDayWiseCsvList;
