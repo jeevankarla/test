@@ -33,6 +33,7 @@ import java.util.TimeZone;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -452,5 +453,154 @@ public class GeneralLedgerServices {
         }
         return result;
     }
+    
+	public static Map getLedgerAmountByInvoiceAndPayments(DispatchContext dctx,Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		//String glaccountId = (String) context.get("glaccountId");
+		String invoiceTypeId = (String) context.get("invoiceTypeId");
+		String purposeTypeId = (String) context.get("purposeTypeId");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		List exprListForParameters = FastList.newInstance();
+		List invoiceTypeList = FastList.newInstance();
+		Map accountMap = FastMap.newInstance();
+		BigDecimal invoiceTotal = BigDecimal.ZERO;
+		BigDecimal invoiceReadyTotal = BigDecimal.ZERO;
+		BigDecimal invoiceCancelTotal = BigDecimal.ZERO;
+		BigDecimal paymentAppTotal = BigDecimal.ZERO;
+		
+		Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
+		Timestamp dayEnd = UtilDateTime.getDayStart(thruDate);
+		
+		try {
+			/*GenericValue glaccount = delegator.findOne("Glaccount",UtilMisc.toMap("glaccountId", glaccountId), false);
+			if (UtilValidate.isEmpty(glaccount)) {
+				Debug.logInfo(glaccount+ "'is not a valid glaccountId:"+glaccountId, "");
+				return ServiceUtil.returnError(glaccount+ "'is not a valid glaccountId:"+glaccountId);
+			}*/
+			GenericValue invoiceType = delegator.findOne("InvoiceType",UtilMisc.toMap("invoiceTypeId", invoiceTypeId), false);
+			if (UtilValidate.isEmpty(invoiceType)) {
+				Debug.logError(invoiceType+ "'is not a valid invoiceTypeId:"+invoiceTypeId, "");
+				return ServiceUtil.returnError(invoiceType+ "'is not a valid invoiceTypeId:"+invoiceTypeId);
+			}
+			invoiceTypeList.add(invoiceType);
+			invoiceTypeList.addAll(delegator.findList("InvoiceType", EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,invoiceTypeId),null, null, null, false));
+		
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		EntityListIterator invoicesListItr = null;
+		List invoiceTypeIds = EntityUtil.getFieldListFromEntityList(invoiceTypeList, "invoiceTypeId", true);
+		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+		exprListForParameters.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.IN, invoiceTypeIds));
+		
+		exprListForParameters.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
+		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_READY"));
+		if(UtilValidate.isNotEmpty(purposeTypeId)){
+			exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("purposeTypeId", EntityOperator.NOT_EQUAL, null),EntityOperator.AND, EntityCondition.makeCondition("purposeTypeId",	EntityOperator.EQUALS, purposeTypeId)));
+		}
+		
+		EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+		
+		try {
+			invoicesListItr = delegator.find("InvoiceAndStatus", paramCond,null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		List invoiceIds =  new ArrayList();
+		if (!UtilValidate.isEmpty(invoicesListItr)) {
+			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(invoicesListItr,"invoiceId", false));
+			invoiceIds = new ArrayList(invoiceIdSet);
+			// First compute the total invoice  amount.
+			invoiceReadyTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
+			
+		}
+		try {
+			invoicesListItr.close();
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		invoicesListItr = null;
+		//cancel invoices amount
+		exprListForParameters.clear();
+		exprListForParameters.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds));
+		//exprListForParameters.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
+		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_CANCELLED"));
+		if(UtilValidate.isNotEmpty(purposeTypeId)){
+			exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("purposeTypeId", EntityOperator.NOT_EQUAL, null),EntityOperator.AND, EntityCondition.makeCondition("purposeTypeId",	EntityOperator.EQUALS, purposeTypeId)));
+		}
+		paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+		
+		try {
+			invoicesListItr = delegator.find("InvoiceAndStatus", paramCond,null, null, null, null);
+			Debug.log("invoicesList==================="+invoicesListItr.getCompleteList());
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		if (!UtilValidate.isEmpty(invoicesListItr)) {
+			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(invoicesListItr,"invoiceId", false));
+			invoiceIds = new ArrayList(invoiceIdSet);
+			// First compute the total invoice  amount.
+			invoiceCancelTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
+			
+		}
+		try {
+			invoicesListItr.close();
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		List exprList = FastList.newInstance();
+		List<GenericValue> pendingPaymentsList = FastList.newInstance();
+		EntityListIterator paymentAppListItr = null;
+		exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("pmPaymentDate",EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)),
+				EntityOperator.OR,EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd))));
+		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			paymentAppListItr = delegator.find("InvoiceAndApplAndPayment", cond, null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		GenericValue paymentApp = null;
+		while( paymentAppListItr != null && (paymentApp = paymentAppListItr.next()) != null) {
+			BigDecimal amountApplied = paymentApp.getBigDecimal("amountApplied");
+			paymentAppTotal = paymentAppTotal.add(amountApplied);
+		}
+		try {
+			paymentAppListItr.close();
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		Debug.log("invoiceReadyTotal========="+invoiceReadyTotal);
+		Debug.log("invoiceCancelTotal========="+invoiceCancelTotal);
+		
+		invoiceTotal = invoiceReadyTotal.add(invoiceCancelTotal);
+	    BigDecimal endingBalance = invoiceTotal.subtract(invoiceCancelTotal.add(paymentAppTotal));
+	    BigDecimal debitAmount = invoiceTotal;
+	    BigDecimal creditAmount = invoiceCancelTotal.add(paymentAppTotal);
+	    
+	    accountMap.put("debitAmount", debitAmount);
+	    accountMap.put("creditAmount", creditAmount);
+	    accountMap.put("endingBalance", endingBalance);
+	    
+	    accountMap.put("invoiceTotal", invoiceTotal);
+	    accountMap.put("invoiceCancelTotal", invoiceCancelTotal);
+	    accountMap.put("paymentAppTotal", paymentAppTotal);
+		
+	    Debug.log("accountMap========="+accountMap);
+		return accountMap;
+	}
 
 }

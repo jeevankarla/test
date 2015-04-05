@@ -78,6 +78,24 @@ public class InvoiceWorker {
 
     /**
      * Return the total amount of the invoice (including tax) using the the invoiceId as input.
+     * @param delegator
+     * @param invoiceId
+     * @return
+     */
+    public static BigDecimal getInvoiceTotal(Delegator delegator, List<String> invoiceList) {
+    	BigDecimal invoiceTotal = BigDecimal.ZERO;
+    	if(UtilValidate.isEmpty(invoiceList))
+    		return invoiceTotal;
+    	for(int i=0;i<invoiceList.size();i++){
+    		String invoiceId = (String)invoiceList.get(i);
+    		
+    		invoiceTotal = invoiceTotal.add(getInvoiceTotal(delegator, invoiceId));
+    	}
+    	Debug.log("invoiceTotal========"+invoiceTotal);
+        return invoiceTotal;
+    }
+    /**
+     * Return the total amount of the invoice (including tax) using the the invoiceId as input.
      * with the ability to specify if the actual currency is required.
      * @param delegator
      * @param invoiceId
