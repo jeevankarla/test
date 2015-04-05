@@ -4635,4 +4635,14 @@
             </widgets>
 		</section>
 	</screen>
+	<screen name="FinAccountTransDetailsCSV">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinAccountTransDetails.groovy"/>
+			</actions>
+			<widgets>
+				 <include-form name="FinAccountTransDetailsCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+            </widgets>
+		</section>
+	</screen>
 </screens>

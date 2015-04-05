@@ -213,6 +213,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker3("IULFromDateCrDr","IULThruDateCrDr");
 	    makeDatePicker3("IULAcntFromDateCrDr","IULAcntThruDateCrDr");
 		makeDatePicker4("OtherAdvSehFromDate","OtherAdvSehThruDate");
+		makeDatePicker4("TransFromDate","TransThruDate");
 		makeDatePicker4("PLAFinFromDate","PLAFinThruDate");
 		makeDatePicker4("ASLFinFromDate","PLAFinThruDate");
 		makeDatePicker4("invFromDate","invThruDate");
@@ -767,7 +768,25 @@ function reportTypeChangeFunc() {
             <td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
            </form>
 		</tr>
-		
+		<tr class="alternate-row">
+      	   <form id="FinAccountTransDetails" name="FinAccountTransDetails" method="post" action="<@ofbizUrl>FinAccountTransDetails.csv</@ofbizUrl>" target="_blank">        
+             <td width="30%">Loan Recovery FinAccountTrans Details</td>
+			  	<td width="25%">
+               <#--  FinAccount Type
+			  	  	<select name='finAccountTypeId' id ="finAccountTypeId">	
+					 	<option value=""></option>								
+						<#list FinAccountTypesList as finAccountType> 	
+							<option value='${finAccountType.finAccountTypeId}'>${finAccountType.description?if_exists}</option>
+          		   		</#list>
+				 	</select> -->
+			  	</td>
+			<td width="20%">From<input  type="text" size="18pt" id="TransFromDate"   name="fromDate"/></td>
+			<td width="20%">To<input  type="text" size="18pt" id="TransThruDate"   name="thruDate"/></td>
+            <td width="20%"></td>		  	
+			<td width="20%"></td>
+            <td width="10%"><input  type="submit" value="CSV" onClick="javascript:appendParams('FinAccountTransDetails', '<@ofbizUrl>FinAccountTransDetails.csv</@ofbizUrl>');" class="buttontext"/></td>
+           </form>
+		</tr>
 	</table>
    </div>
    
