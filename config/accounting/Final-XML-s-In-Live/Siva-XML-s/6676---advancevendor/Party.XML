@@ -1,0 +1,16 @@
+
+
+
+
+<Party partyId="V4700" partyTypeId="PARTY_GROUP" externalId=""/>
+                   					       	    	            
+<PartyGroup partyId="V4700" groupName="EXPORT INSPECTION AGENCY"/>
+                   					       	    	            
+<PartyStatus statusId="PARTY_ENABLED" partyId="V4700" statusDate="2015-01-01 00:00:00"/>
+
+
+<Party partyId="V10451" partyTypeId="PARTY_GROUP" externalId=""/>
+                   					       	    	            
+<PartyGroup partyId="V10451" groupName="RICOH INDIA LTD"/>
+                   					       	    	            
+<PartyStatus statusId="PARTY_ENABLED" partyId="V10451" statusDate="2015-01-01 00:00:00"/>
