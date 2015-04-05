@@ -1241,4 +1241,27 @@ under the License.
     	<field name="debit"><display></display></field>
     	<field name="credit"><display></display></field>
     </form>
+    <form name="FinAccountTransDetailsCSV" list-name="finAccountTransList" type="list">
+    	<field name="finAccountTransId"><display></display></field>
+    	<!-- <field name="finAccountTransTypeId" title="finAccount Trans Type"><display></display></field> -->
+    	<field name="finAccountId"><display></display></field>
+    	<field name="transactionDate"><display></display></field>
+    	<!-- <field name="entryDate"><display></display></field> -->
+    	<field name="amount"><display></display></field>
+    	<field name="contraRefNum"><display></display></field>
+    	<field name="performedByPartyId" title="PerformedBy"><display></display></field>
+    	<field name="statusId"><display-entity entity-name="StatusItem" description="${description}" ></display-entity></field>
+    	<field name="comments"><display></display></field>
+    	<field name="loanId"><display></display></field>
+    	<field name="loanFinAccountId" title="Loan finAccountId"><display></display></field>
+    	<field name="partyId" title="Employee Id"><display></display></field>
+    	<!-- <field name="loanTypeId"><display></display></field> -->
+    	<field name="description" title="Loan Name"><display></display></field>
+    	<field name="recoveryDate"><display></display></field>
+    	<field name="sequenceNum"><display></display></field>
+    	<field name="principalInstNum" title="Principal Inst Num"><display></display></field>
+    	<field name="principalAmount"><display></display></field>
+    	<field name="closingBalance"><display></display></field>
+    	<field name="deducteePartyId"><display></display></field>
+    </form>
 </forms>
