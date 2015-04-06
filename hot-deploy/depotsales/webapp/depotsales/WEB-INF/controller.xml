@@ -6,6 +6,7 @@
          elements found in the common-controller.xml file. -->
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
 	<include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
+	<include location="component://product/webapp/catalog/WEB-INF/controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
 	<include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/> 
 	<include location="component://humanres/webapp/humanres/WEB-INF/controller.xml"/>
@@ -292,7 +293,37 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="CashierPaymentCheckListDepot"/>        
     </request-map>
-     
+    <request-map uri="searchProduct">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="searchProduct"/>
+        <response name="error" type="view" value="searchProduct"/>
+    </request-map>
+     <request-map uri="EditProductPricesDepot">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductPricesDepot"/>
+    </request-map>
+     <request-map uri="updateProductPriceDepot">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPrice"/>
+        <response name="success" type="request-redirect" value="EditProductPricesDepot"><redirect-parameter name="productId"/></response>
+        <response name="error" type="view" value="EditProductPricesDepot"/>
+    </request-map>
+    <request-map uri="createProductPriceDepot">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPrice"/>
+        <response name="success" type="request-redirect" value="EditProductPricesDepot"><redirect-parameter name="productId"/></response>
+        <response name="error" type="view" value="EditProductPricesDepot"/>
+    </request-map>
+     <request-map uri="ProductPriceHistoryDepot">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductPriceHistoryDepot"/>
+    </request-map>
+    <request-map uri="deleteProductPriceDepot">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPrice"/>
+        <response name="success" type="request-redirect" value="EditProductPricesDepot"><redirect-parameter name="productId"/></response>
+        <response name="error" type="view" value="EditProductPricesDepot"/>
+    </request-map>
      
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
@@ -324,6 +355,9 @@
     <view-map name="PartyFinancialHistoryWithDrCrDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PartyFinancialHistoryWithDrCrDepotPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="stockPositionReportDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockPositionReportDepotPDF" content-type="application/pdf"/>
     <view-map name="CashierPaymentCheckListDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#CashierPaymentCheckListDepot" content-type="application/pdf" encoding="none"/>
+    <view-map name="searchProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#searchProduct"/>
+    <view-map name="EditProductPricesDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProductPricesDepot"/>
+    <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>
     
     
     

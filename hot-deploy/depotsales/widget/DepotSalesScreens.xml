@@ -101,15 +101,15 @@
 <screen name="DepotSalesOrder">
         <section>
             <actions>
-               <set field="titleProperty" value="Depot Sales Indent"/>              
+               <set field="titleProperty" value="Depot Sales Entry"/>              
 			   <set field="tabButtonItem" value="DepotSalesOrder" />	
 			   <set field="tabButtonItem2" value="DepotSalesOrder"/>  
-			    <set field="changeFlag" value="DepotSales"/>  
+			   <set field="changeFlag" value="DepotSales"/>  
                <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                <set field="orderStatus" from-field="parameters.orderStatus"/> 
                <set field="orderId" from-field="parameters.orderId"/>
                <set field="supplyDate" from-field="parameters.supplyDate"/>
-                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
@@ -1070,12 +1070,6 @@
         </section>
     </screen> 
     
-      
-
-
-
-
-
  <screen name="FindPaymentNonRoute">
         <section>
             <actions>
@@ -1301,4 +1295,89 @@
             </widgets>
         </section>
     </screen>
+    <screen name="searchProduct">
+    <section>
+    	<actions>
+    		<set field="titleProperty" value="Search Product"/>              
+			<set field="tabButtonItem" value="searchProduct" />
+			<set field="entityName" value="Product"/>
+			<set field="parameters.mainDecoratorLocation" value="${parameters.mainDecoratorLocation}"/>
+            <entity-condition entity-name="Uom" list="uomList" >
+             <condition-list combine="and">
+                        <condition-expr field-name="uomTypeId"  operator="not-equals"  value="CURRENCY_MEASURE"  />
+                    </condition-list>
+                    <order-by field-name="description"/>
+             </entity-condition> 
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/materialUpdateUomIds.groovy"/>
+    	</actions>
+    	<widgets>
+    		 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	<decorator-section name="body">
+            	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/editMaterialDetails.ftl"/></html></platform-specific>
+            	
+            	<screenlet title="Search-Options">
+            		<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="findMaterial"/>
+            	</screenlet>
+            	<screenlet title="Search-Results">
+            		<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="listMaterial"/>
+            	</screenlet>
+            	</decorator-section>
+            </decorator-screen>
+    	</widgets>
+    </section>
+    </screen>
+    
+    <screen name="EditProductPricesDepot">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductPrices"/>
+                <set field="tabButtonItem" value="searchProduct"/>
+                <set field="labelTitleProperty" value="ProductPrices"/>
+                <set field="targetRequest" value="updateProductPriceDepot"/>
+                <set field="targetRequest2" value="createProductPriceDepot"/>
+                <set field="targetRequestHistory" value="ProductPriceHistoryDepot"/>
+                <set field="targetRequestDelete" value="deleteProductPriceDepot"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-screen name="EditProductPrices" location="component://product/widget/catalog/ProductInnerScreens.xml"/>                 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ProductPriceHistoryDepot">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProductPricesHistory"/>
+                <set field="tabButtonItem" value="searchProduct"/>
+                <set field="labelTitleProperty" value="PageTitleProductPricesHistory"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-field="product"/>
+                <entity-and entity-name="ProductPriceChange" list="productPricesChanges">
+                    <field-map field-name="productId" from-field="productId"/>
+                    <field-map field-name="productPriceTypeId" from-field="parameters.productPriceTypeId"/>
+                    <field-map field-name="fromDate" from-field="parameters.fromDate"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <link target="EditProductPrices" text="${uiLabelMap.CommonBack}" style="buttontext">
+                            <parameter param-name="productId"/>
+                        </link>
+                        <screenlet title="${uiLabelMap.PageTitleProductPricesHistory}">
+                            <include-form name="ListProductPriceHistory" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

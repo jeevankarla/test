@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+		<form name="UpdateProductPrice" type="list" target="${targetRequest}" title="" list-name="productPrices"
+	        odd-row-style="alternate-row" separate-columns="true" default-table-style="basic-table">
+	        <auto-fields-service service-name="updateProductPrice" map-name="productPrice"/>
+	        <field name="customPriceCalcService"><ignored/></field>    
+	        <field name="taxPercentage" ><ignored/></field>    
+	        <field name="taxAuthPartyId"><ignored/></field>    
+	        <field name="taxAuthGeoId"><ignored/></field>    
+	        <field name="taxInPrice" ><ignored/></field>   
+	        <field name="termUomId" ><ignored/></field>    
+	         
+	        <field name="productId"><hidden/></field>
+	        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}"><display-entity entity-name="ProductPriceType"/></field>
+	        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}"><display-entity entity-name="ProductPricePurpose"/></field>
+	        <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" ><display-entity entity-name="Uom" key-field-name="uomId" description="${uomId}"/></field>
+	<!--        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}"><display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}"/></field>-->
+	        <field name="productStoreGroupId" ><hidden value="_NA_"/> </field>
+	        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date"/></field>
+			<field name="price"><text size="15"/></field>
+	
+			<field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
+	            <display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}" also-hidden="false"/>
+	        </field>
+	
+	        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+	
+	        <field name="viewHistoryLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+	            <hyperlink target="${targetRequestHistory}" description="${uiLabelMap.ProductHistory}" also-hidden="false">
+	                <parameter param-name="productId"/>
+	                <parameter param-name="productPriceTypeId"/>
+	                <parameter param-name="fromDate"/>
+	            </hyperlink>
+	        </field>
+	
+	        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+	            <hyperlink target="${targetRequestDelete}" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+	                <parameter param-name="productId"/><parameter param-name="productPriceTypeId"/><parameter param-name="productPricePurposeId"/>
+	                <parameter param-name="currencyUomId"/><parameter param-name="productStoreGroupId"/><parameter param-name="fromDate"/>
+	            </hyperlink>
+	        </field>
+	    </form>        
+	    
+ <form name="AddProductPrice" type="single" target="${targetRequest2}" title=""
+       		 header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createProductPrice"/>
+        <field name="customPriceCalcService"><ignored/></field>
+        <field name="taxAuthCombinedId"><ignored/></field>  
+        <field name="taxAuthPartyId"><ignored/></field>                  
+        <field name="taxAuthGeoId"><ignored/></field>          
+        <field name="taxAuthCombinedId"><ignored/></field>  
+        <field name="taxInPrice" ><ignored/></field> 
+        <field name="taxPercentage" ><ignored/></field> 
+        <field name="termUomId" ><ignored/></field>    
+                      
+        <field name="productId"><hidden/></field>
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}">
+            <drop-down allow-empty="false" no-current-selected-key="DEFAULT_PRICE">
+                <entity-options entity-name="ProductPriceType" description="${description}">
+                    <entity-constraint name="parentTypeId" operator="not-equals" value="TAX"/>  
+                    <entity-constraint name="productPriceTypeId" operator="not-equals" value="TAX"/>                                                  
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}">
+            <drop-down allow-empty="false" no-current-selected-key="PURCHASE">
+                <entity-options entity-name="ProductPricePurpose" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field name="price"><text size="15"/></field>        
+        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreGroupId" ><hidden value="_NA_"/> </field>        
+      <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+
+</forms>
