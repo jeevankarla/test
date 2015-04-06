@@ -63,7 +63,7 @@ paymentIdsList=[];
 		}
 	   exprList.clear();
 		exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
-		exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+		exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED","PMNT_NOT_PAID")));
 		if (!UtilValidate.isEmpty(paymentMethodTypeId)) {
 			exprList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, paymentMethodTypeId));
 		}
@@ -103,7 +103,7 @@ nonGrpPayCondList.add(EntityCondition.makeCondition("paymentTypeId", EntityOpera
 if (!UtilValidate.isEmpty(paymentMethodTypeId)) {
 	nonGrpPayCondList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, paymentMethodTypeId));
 }
-nonGrpPayCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+nonGrpPayCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED","PMNT_NOT_PAID")));
 EntityCondition nonPayCondition = EntityCondition.makeCondition(nonGrpPayCondList ,EntityOperator.AND);
 paymentList = delegator.findList("Payment", nonPayCondition	, null, null, null, false);
 nonGroupPaymentIdsList=EntityUtil.getFieldListFromEntityList(paymentList, "paymentId", true);
@@ -124,7 +124,7 @@ if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
 		payCondList =[];
 		payCondList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN,grpPaymentIdList));
 		payCondList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS,"SALES_PAYIN"));
-		payCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+		payCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED","PMNT_NOT_PAID")));
 		EntityCondition payCondition = EntityCondition.makeCondition(payCondList ,EntityOperator.AND);
 		paymentList = delegator.findList("Payment", payCondition, null, ["paymentId"], null, false);
 		amount = 0;
@@ -156,7 +156,7 @@ if(UtilValidate.isNotEmpty(nonGroupPaymentIdsList)){
 	conditionList.add(EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "ROUTE_MKTG"));
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 	conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS,"SALES_PAYIN"));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED","PMNT_NOT_PAID")));
 	EntityCondition nonGrpCondition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
 	nonGroupPaymentsList = delegator.findList("Payment", nonGrpCondition, null, ["paymentId"], null, false);
 	
