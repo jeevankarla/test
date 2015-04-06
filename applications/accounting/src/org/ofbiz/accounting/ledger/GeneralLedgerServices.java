@@ -599,6 +599,7 @@ public class GeneralLedgerServices {
 		exprList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds));
 		exprList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS, glAccountId));
 		exprList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS, "Y"));
+		exprListForParameters.add(EntityCondition.makeCondition("transactionDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
 		
 		cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		try {
@@ -671,7 +672,7 @@ public class GeneralLedgerServices {
 	    accountMap.put("invoiceCancelTotal", invoiceCancelTotal);
 	    accountMap.put("paymentAppTotal", paymentAppTotal);
 	    accountMap.put("paymentAppRevTotal", revMap);
-	    
+	    Debug.log("accountMap=============="+accountMap);
 	} catch (GenericEntityException e) {
 		Debug.logError(e, module);
 		return ServiceUtil.returnError(e.toString());
