@@ -51,6 +51,8 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
 import in.vasista.vbiz.byproducts.TransporterServices;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.service.GenericServiceException;
+import java.text.ParseException;
 
 //${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()}
 formDateTime=UtilDateTime.nowTimestamp();
@@ -77,8 +79,8 @@ try{
 customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
 if(UtilValidate.isNotEmpty(customTimePeriodList)){
 	GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
-	fromDate = customTimePeriod.get("fromDate");
-	thruDate = customTimePeriod.get("thruDate");
+	fromDate = (String)customTimePeriod.get("fromDate");
+	thruDate = (String)customTimePeriod.get("thruDate");
 	def sdf = new SimpleDateFormat("yyyy-MM-dd");
 	try {
 		if (fromDate) {
