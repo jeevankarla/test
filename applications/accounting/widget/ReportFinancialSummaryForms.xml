@@ -1264,10 +1264,10 @@ under the License.
     	<field name="closingBalance"><display></display></field>
     	<field name="deducteePartyId"><display></display></field>
     </form>
-    <form name="GlLedgerReconciliationCSV" type="list" list-name="">
-    	<field name="purposeType"><display></display></field>
-    	<field name="totalDebits"><display></display></field>
-    	<field name="totalCredits"><display></display></field>
-    	<field name="endingBalance"><display></display></field>
+    <form name="GlLedgerReconciliationCSV" type="list" list-name="glLedgerReconciliationList">
+    	<field name="purposeTypeId" use-when="purposeTypeId!=null" title="Purpose Type"><display></display></field>
+    	<field name="debitAmount" title="Total Debits"><display></display></field>
+    	<field name="creditAmount" title="Total Credits"><display></display></field>
+    	<field name="endingBalance" title="Ending Balance"><display></display></field>
     </form>
 </forms>

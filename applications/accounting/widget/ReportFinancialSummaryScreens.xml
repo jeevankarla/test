@@ -4648,7 +4648,7 @@
 	<screen name="GlLedgerReconciliationCSV">
 		<section>
 			<actions>
-                
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GlLedgerReconciliation.groovy"/>
 			</actions>
 			<widgets>
 				 <include-form name="GlLedgerReconciliationCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
