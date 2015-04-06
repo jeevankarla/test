@@ -317,7 +317,7 @@ function reportTypeChangeFunc() {
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
               </tr>
-        <#--      <tr class="alternate-row">
+             <tr class="alternate-row">
 			      	   <form id="GlLedgerReconciliation" name="GlLedgerReconciliation" method="post" action="<@ofbizUrl>GlLedgerReconciliation.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="15%" nowrap>GL Ledger Reconciliation </td>
 			             <td width="10%">From<input  type="text" size="15pt" id="GlLedgerFromDate" readonly  name="fromDate"/></td>
@@ -334,8 +334,8 @@ function reportTypeChangeFunc() {
 			             <td width="20%">Invoice Type :
 			                <div>
 				              <select name="invoiceType">
-				                <option value="SalesInvoice">Sales Invoice</option>
-				                <option value="PurchaseInvoice">Purchase Invoice</option>
+				                <option value="SALES_INVOICE">Sales Invoice</option>
+				                <option value="PURCHASE_INVOICE">Purchase Invoice</option>
 				              </select>
 					       </div>
 			             </td>
@@ -343,7 +343,7 @@ function reportTypeChangeFunc() {
 					                    <input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReconciliation', '<@ofbizUrl>GlLedgerReconciliation.csv</@ofbizUrl>');" class="buttontext"/>
 					     </td>			           
                        </form>
-			        </tr> -->
+			        </tr> 
                <tr class="alternate-row">
 			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
