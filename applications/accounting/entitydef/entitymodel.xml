@@ -1968,14 +1968,16 @@
 		title="Invoice and InvoiceStatus view">
 		<member-entity entity-alias="INV" entity-name="Invoice" />
 		<member-entity entity-alias="IVS" entity-name="InvoiceStatus" />
-		<alias-all entity-alias="INV" />
+		<alias-all entity-alias="INV">
+		    <exclude field="statusId"/>
+		</alias-all>
 		<alias-all entity-alias="IVS" />
-		<alias entity-alias="INV" name="invoiceStatusId" field="statusId"/>
-		<view-link entity-alias="INV" rel-entity-alias="IVS">
+		<alias name="invoiceStatusId" entity-alias="INV" field="statusId" />
+		<view-link entity-alias="IVS" rel-entity-alias="INV" rel-optional="true">
 			<key-map field-name="invoiceId" />
 		</view-link>
 		<relation type="many" rel-entity-name="InvoiceStatus">
-			<key-map field-name="invoiceId" />
+			<key-map field-name="invoiceId"/>
 		</relation>
 	</view-entity>
 	

@@ -463,6 +463,7 @@ public class GeneralLedgerServices {
 		String purposeTypeId = (String) context.get("purposeTypeId");
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		String glAccountTypeId ="ACCOUNTS_RECEIVABLE";
 		List exprListForParameters = FastList.newInstance();
 		List invoiceTypeList = FastList.newInstance();
 		Map accountMap = FastMap.newInstance();
@@ -470,7 +471,7 @@ public class GeneralLedgerServices {
 		//BigDecimal invoiceReadyTotal = BigDecimal.ZERO;
 		BigDecimal invoiceCancelTotal = BigDecimal.ZERO;
 		BigDecimal paymentAppTotal = BigDecimal.ZERO;
-		
+		String glAccountId = null;
 		Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
 		Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
 		
@@ -485,14 +486,18 @@ public class GeneralLedgerServices {
 				Debug.logError(invoiceType+ "'is not a valid invoiceTypeId:"+invoiceTypeId, "");
 				return ServiceUtil.returnError(invoiceType+ "'is not a valid invoiceTypeId:"+invoiceTypeId);
 			}
+			
+			if(invoiceTypeId.equals("PURCHASE_INVOICE")){
+				glAccountTypeId = "ACCOUNTS_PAYABLE";
+			}
+			
+			GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault",UtilMisc.toMap("glAccountTypeId", glAccountTypeId,"organizationPartyId","Company"), false);
+			glAccountId = glAccountTypeDefault.getString("glAccountId");
+			
 			invoiceTypeList.add(invoiceType);
 			invoiceTypeList.addAll(delegator.findList("InvoiceType", EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,invoiceTypeId),null, null, null, false));
 		
-		} catch (GenericEntityException e) {
-			// TODO: handle exception
-			Debug.logError(e, module);
-			return ServiceUtil.returnError(e.getMessage());
-		}
+		
 		EntityListIterator invoicesListItr = null;
 		List invoiceTypeIds = EntityUtil.getFieldListFromEntityList(invoiceTypeList, "invoiceTypeId", true);
 		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
@@ -549,7 +554,6 @@ public class GeneralLedgerServices {
 			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(invoicesListItr,"invoiceId", false));
 			invoiceIds = new ArrayList(invoiceIdSet);
 			// First compute the total invoice  amount.
-			Debug.log("invoiceIds==================="+invoiceIds);
 			invoiceCancelTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
 			
 		}
@@ -572,6 +576,9 @@ public class GeneralLedgerServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
+		Set paymentIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(paymentAppListItr,"paymentId", false));
+		List paymentsList = new ArrayList(paymentIdSet);
+		
 		GenericValue paymentApp = null;
 		while( paymentAppListItr != null && (paymentApp = paymentAppListItr.next()) != null) {
 			BigDecimal amountApplied = paymentApp.getBigDecimal("amountApplied");
@@ -583,10 +590,78 @@ public class GeneralLedgerServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
-
-		BigDecimal endingBalance = invoiceTotal.subtract(invoiceCancelTotal.add(paymentAppTotal));
+		//AcctgTransAndEntries
+		//lets get payment appl reversal entries
+		exprList.clear();
+		
+		EntityListIterator accntTransItr = null;
+		exprList.add(EntityCondition.makeCondition("paymentId",EntityOperator.NOT_EQUAL, null));
+		exprList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds));
+		exprList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS, glAccountId));
+		exprList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS, "Y"));
+		
+		cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			accntTransItr = delegator.find("AcctgTransAndEntries", cond, null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		Set acctgTransIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(accntTransItr,"acctgTransId", false));
+		List acctgTransIdList = new ArrayList(acctgTransIdSet);
+		accntTransItr.close();
+		
+		exprList.clear();
+		List attrNameList = UtilMisc.toList("PAYMENT_APPL_REVERTED_ACCTG_TRANS_ID","PAYMENT_APPL_PRE_REVERTED_ACCTG_TRANS_ID");
+		EntityListIterator accntTransAttrItr = null;
+		exprList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN, acctgTransIdList));
+		exprList.add(EntityCondition.makeCondition("attrName",EntityOperator.IN, attrNameList));
+		
+		cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			accntTransAttrItr = delegator.find("AcctgTransAttribute", cond, null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		Set acctgTransRevIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(accntTransAttrItr,"acctgTransId", false));
+		List acctgTransIdRevList = new ArrayList(acctgTransRevIdSet);
+		
+		accntTransAttrItr.close();
+		exprList.clear();
+		EntityListIterator accntTransRevItr = null;
+		//Debug.log("acctgTransIdRevList==========="+acctgTransIdRevList);
+		exprList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN, acctgTransIdRevList));
+		exprList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS, glAccountId));
+		exprList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS, "Y"));
+		cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		//Debug.log("cond rev==========="+cond);
+		try {
+			accntTransRevItr = delegator.find("AcctgTransAndEntries", cond, null, null, null, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		GenericValue accntTrans= null;
+		Map<String ,BigDecimal> revMap = FastMap.newInstance();
+		revMap.put("C", BigDecimal.ZERO);
+		revMap.put("D", BigDecimal.ZERO);
+		while( accntTransRevItr != null && (accntTrans = accntTransRevItr.next()) != null) {
+			String debitCreditFlag = accntTrans.getString("debitCreditFlag");
+			revMap.put(debitCreditFlag,(revMap.get(debitCreditFlag)).add(accntTrans.getBigDecimal("amount")));
+		}
+		
+	    
+		accntTransRevItr.close();
 	    BigDecimal debitAmount = invoiceTotal;
 	    BigDecimal creditAmount = invoiceCancelTotal.add(paymentAppTotal);
+	  //let add rev amounts
+	    debitAmount = debitAmount.add(revMap.get("D"));
+	    creditAmount = creditAmount.add(revMap.get("C"));
+	    
+	    BigDecimal endingBalance = debitAmount.subtract(creditAmount);
 	    
 	    accountMap.put("debitAmount", debitAmount);
 	    accountMap.put("creditAmount", creditAmount);
@@ -595,9 +670,14 @@ public class GeneralLedgerServices {
 	    accountMap.put("invoiceTotal", invoiceTotal);
 	    accountMap.put("invoiceCancelTotal", invoiceCancelTotal);
 	    accountMap.put("paymentAppTotal", paymentAppTotal);
-		
-	    //Debug.log("accountMap========="+accountMap);
-		return accountMap;
+	    accountMap.put("paymentAppRevTotal", revMap);
+	    
+	} catch (GenericEntityException e) {
+		Debug.logError(e, module);
+		return ServiceUtil.returnError(e.toString());
+	}	
+
+	    return accountMap;
 	}
 
 }
