@@ -265,11 +265,67 @@
      </form>   
      
      <form name="invoiceDetailList" type="list" list-name="invoiceDetailList"  odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
-    	<field name="invoiceId" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
+    	<field name="invoiceId" widget-style="buttontext"></field>
     	<field name="statusId" title="Status">
     		<display-entity entity-name="StatusItem" description="${description}" ></display-entity>
     	</field>
     	<field name="invoiceDate" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
           <field name="createdByUserLogin" title="Entry by"><display/></field>	  
+    </form>
+    
+    <form name="findMaterial" type="single" target="searchProduct">
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+        <field name="internalName" title="Internal Name"><text-find/> </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+   <form name="listMaterial" type="list" extends="MaterialsList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="inputFields.productTypeId" value="FINISHED_GOOD"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+    <form name="MaterialsList" type="list" use-row-submit="true" 
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+        	<entity-condition entity-name="SupplierProduct" list="list" >
+        		<condition-expr field-name="productId" operator="equals" value="${productId}"/>
+        	</entity-condition>
+        	<set  field="partyId" value="${list[0].partyId}"/>
+        	<entity-condition entity-name="ProductPrice" list="priceList" >
+        		<condition-expr field-name="productId" operator="equals" value="${productId}"/>
+        		<condition-expr field-name="productPriceTypeId" operator="equals" value="PM_RC_W_PRICE"/>
+        	</entity-condition>
+        	<set  field="price" value="${priceList[0].price}"/>
+        </row-actions>
+     <field name="internalName" title="Internal Name"><display/></field>
+	<field name="productId" title="Product">
+     	<display-entity entity-name="Product" description="${description} [${productId}]" ></display-entity>
+    </field>     
+    
+     <field name="longDescription" title="Specification"><display size="50"/></field>
+     <field name="quantityUomId" title="UOM" ><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field> 
+     <field name="primaryProductCategoryId" title="Material Category">
+     	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
+     </field>
+     <field name="updateMaterial" widget-style="buttontext" title="Update" use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_MATERIAL_UPDATE&quot;, session)))}"  >
+            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
+            </hyperlink>
+      </field> 
+     <field name="partyId" title="Supplier" >
+     	<hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}  [${partyId}]">
+                <parameter param-name="partyId" from-field="partyId"/>
+            </hyperlink>
+     </field>
+     <field name="price" title="Price">
+     	<hyperlink  target="EditProductPricesDepot" target-type="inter-app" target-window="_blank" description="[${productId}]"> <parameter param-name="productId"/></hyperlink>
+     </field>
     </form>
 </forms>

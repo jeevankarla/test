@@ -55,6 +55,15 @@
             <link target="FindFacilityGroup">
             </link>
         </menu-item> 
+        <menu-item name="stockPositionDepotSales" title="Stock Position">
+        	<condition>
+        		<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>
+        	</condition>
+            <link target="stockPositionDepotSales"/>
+        </menu-item>
         <menu-item name="analytics" title="Analytics">
         	<condition>
 				<or>
@@ -64,14 +73,9 @@
             </condition>       
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-        <menu-item name="stockPositionDepotSales" title="Stock Position">
-        	<condition>
-        		<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>
-        	</condition>
-            <link target="stockPositionDepotSales"/>
+        <menu-item name="searchProduct" title="Search Master">
+            <link target="searchProduct">
+            </link>
         </menu-item>
         <menu-item name="DepotSalesOrder" title="Sales Order">
             <link target="DepotSalesOrder">
