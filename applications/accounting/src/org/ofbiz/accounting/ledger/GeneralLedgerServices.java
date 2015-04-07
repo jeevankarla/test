@@ -590,7 +590,14 @@ public class GeneralLedgerServices {
 				EntityOperator.OR,EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd))));
 		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		
-		EntityCondition orCond = EntityCondition.makeCondition("paymentId",EntityOperator.IN, periodPaymentIdList);
+		
+		List orExprList = FastList.newInstance();
+		orExprList.add(EntityCondition.makeCondition("paymentId",EntityOperator.IN, periodPaymentIdList));
+		orExprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN, dayBegin));
+		
+		EntityCondition orCond = EntityCondition.makeCondition(orExprList,EntityOperator.AND);
+	    
+		//EntityCondition orCond = EntityCondition.makeCondition("paymentId",EntityOperator.IN, periodPaymentIdList);
 		
 		EntityCondition commonCond = EntityCondition.makeCondition(cond, EntityOperator.OR,orCond);
 		//Debug.log("commonCond appp============"+commonCond);
@@ -639,7 +646,7 @@ public class GeneralLedgerServices {
 		exprListForParameters.add(EntityCondition.makeCondition("transactionDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
 		cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		
-		List orExprList = FastList.newInstance();
+		orExprList = FastList.newInstance();
 		orExprList.add(EntityCondition.makeCondition("paymentId",EntityOperator.IN, periodPaymentIdList));
 		orExprList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.NOT_EQUAL, null));
 		
