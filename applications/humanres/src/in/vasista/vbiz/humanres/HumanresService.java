@@ -1508,7 +1508,7 @@ public class HumanresService {
 			        }
 			        result = ServiceUtil.returnSuccess("New Holiday has been successfully created");
 				}else{
-					result = ServiceUtil.returnSuccess("This date already selected as Holiday please select other date");
+					result = ServiceUtil.returnError("This date already selected as Holiday please select other date");
 				}
 			}catch (Exception e) {
 				/*Debug.logError(e, module);

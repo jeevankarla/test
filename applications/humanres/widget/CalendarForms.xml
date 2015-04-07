@@ -129,7 +129,7 @@ under the License.
         <field name="holidayDate" id-name="holidayDate" event="onclick" action="javascript:picker()"><text  size="12"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="HolidayResults" list-name="holidayList" type="list"
+    <form name="HolidayResults" list-name="holidayDetailsList" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
          <actions>
             <!-- <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -140,10 +140,8 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service> -->
         </actions>
-        
-        <field name="customTimePeriodId"><display></display></field>
-        <field name="organizationPartyId"><display></display></field>
-        <field name="holiDayDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(holiDayDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+        <field name="holiDayDate" title = "Holiday Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(holiDayDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+        <field name="weekDay"><display></display></field>
         <field name="description"><display></display></field>
     </form>
     <form name="NewHoliday" type="single" target="CreateHoliday"
