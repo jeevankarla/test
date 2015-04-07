@@ -459,9 +459,9 @@
         <menu-item name="FindInterUnitPurchase" title="Find InterUnit Purchase">
         <link target="FindInterUnitPurchase"/>
         </menu-item>
-         <!-- <menu-item name="InterUnitPurchaseOrderInit" title="New InterUnit PurchaseOrder">
+          <menu-item name="InterUnitPurchaseOrderInit" title="New InterUnit PurchaseOrder">
         	<link target="InterUnitPurchaseOrderInit"/>
-        </menu-item> -->
+        </menu-item> 
       </menu>
       
        <menu name="FindEnquiryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
