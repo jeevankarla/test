@@ -557,33 +557,69 @@ public class GeneralLedgerServices {
 			invoiceCancelTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceIds);
 			
 		}
+
+		invoicesListItr.close();
+		
+		
+		//payment for period
+		EntityListIterator paymentListItr = null;
+		exprListForParameters.clear();
+		exprListForParameters.add(EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
+		
+		paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+		
 		try {
-			invoicesListItr.close();
+			paymentListItr = delegator.find("Payment", paramCond ,null, null, null, null);
+			//Debug.log("invoicesList==================="+invoicesListItr.getCompleteList());
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
 		
+		List periodPaymentIdList = FastList.newInstance();
+		if (!UtilValidate.isEmpty(paymentListItr)) {
+			Set paymentIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(paymentListItr,"paymentId", false));
+			periodPaymentIdList = new ArrayList(paymentIdSet);
+		}
+		//here get payment application on that of current period invoices and payment OR current period payments applications
+		paymentListItr.close();
 		List exprList = FastList.newInstance();
 		List<GenericValue> pendingPaymentsList = FastList.newInstance();
 		EntityListIterator paymentAppListItr = null;
 		exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("pmPaymentDate",EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)),
 				EntityOperator.OR,EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd))));
 		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		
+		EntityCondition orCond = EntityCondition.makeCondition("paymentId",EntityOperator.IN, periodPaymentIdList);
+		
+		EntityCondition commonCond = EntityCondition.makeCondition(cond, EntityOperator.OR,orCond);
+		//Debug.log("commonCond appp============"+commonCond);
 		try {
-			paymentAppListItr = delegator.find("InvoiceAndApplAndPayment", cond, null, null, null, null);
+			paymentAppListItr = delegator.find("InvoiceAndApplAndPayment", commonCond, null, null, null, null);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
+		
 		Set paymentIdSet = new HashSet(EntityUtil.getFieldListFromEntityListIterator(paymentAppListItr,"paymentId", false));
 		List paymentsList = new ArrayList(paymentIdSet);
 		
-		GenericValue paymentApp = null;
-		while( paymentAppListItr != null && (paymentApp = paymentAppListItr.next()) != null) {
+		/*GenericValue paymentApp = null;
+		//Debug.log("paymentApp============"+paymentAppListItr.next());
+		while( UtilValidate.isNotEmpty(paymentAppListItr) && (paymentApp = paymentAppListItr.next()) != null) {
 			BigDecimal amountApplied = paymentApp.getBigDecimal("amountApplied");
 			paymentAppTotal = paymentAppTotal.add(amountApplied);
+			Debug.log("paymentAppTotal in loop============"+paymentAppTotal);
+			
+		}*/
+		List<GenericValue> paymentAppList = paymentAppListItr.getCompleteList();
+		for(GenericValue paymentApp : paymentAppList){
+			BigDecimal amountApplied = paymentApp.getBigDecimal("amountApplied");
+			paymentAppTotal = paymentAppTotal.add(amountApplied);
+			//Debug.log("paymentAppTotal in loop============"+paymentAppTotal);
+			
 		}
+		//Debug.log("paymentAppListItr appp size============"+paymentAppListItr.getCompleteList());
 		try {
 			paymentAppListItr.close();
 		} catch (GenericEntityException e) {
@@ -592,6 +628,7 @@ public class GeneralLedgerServices {
 		}
 		//AcctgTransAndEntries
 		//lets get payment appl reversal entries
+		//Debug.log("paymentAppTotal============"+paymentAppTotal);
 		exprList.clear();
 		
 		EntityListIterator accntTransItr = null;
@@ -600,10 +637,19 @@ public class GeneralLedgerServices {
 		exprList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS, glAccountId));
 		exprList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS, "Y"));
 		exprListForParameters.add(EntityCondition.makeCondition("transactionDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
-		
 		cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		
+		List orExprList = FastList.newInstance();
+		orExprList.add(EntityCondition.makeCondition("paymentId",EntityOperator.IN, periodPaymentIdList));
+		orExprList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.NOT_EQUAL, null));
+		
+	    orCond = EntityCondition.makeCondition(orExprList,EntityOperator.AND);
+		
+		commonCond = EntityCondition.makeCondition(cond, EntityOperator.OR,orCond);
+		Debug.log("commonCond rev============"+commonCond);
+		
 		try {
-			accntTransItr = delegator.find("AcctgTransAndEntries", cond, null, null, null, null);
+			accntTransItr = delegator.find("AcctgTransAndEntries", commonCond, null, null, null, null);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
