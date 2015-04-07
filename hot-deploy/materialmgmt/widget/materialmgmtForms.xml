@@ -354,7 +354,7 @@
         <field name="shipmentId"><display/></field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId"  description="${description}" /> </field>
         <field name="orderId"><display/></field>
-        <field name="datetimeReceived" title="Received Date"><display /></field>
+        <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
         <field name="quantityAccepted" title="Quantity"><display/></field>
         <field name="quantityRejected"><display/></field> 
     </form>
