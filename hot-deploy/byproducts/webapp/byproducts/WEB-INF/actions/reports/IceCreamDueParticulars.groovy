@@ -149,8 +149,8 @@ partyIdsList.each{eachParty ->
 			saleCr = partyDetail.get("saleCredit");
 			partyDetail.putAt("saleCredit", saleCr+creditNoteAmt);
 		}
-		
-		closingBalance=openingBalance+saleAmount-saleReceipt;
+		//closingBalance=openingBalance+saleAmount-saleReceipt;
+		closingBalance=openingBalance+partyDetail["saleDebit"]-partyDetail["saleCredit"];		
 		if(closingBalance>0){
 			partyDetail.put("cbCredit", 0);
 			partyDetail.put("cbDebit", closingBalance.abs());
