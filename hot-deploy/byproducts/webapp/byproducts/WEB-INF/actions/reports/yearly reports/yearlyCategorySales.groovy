@@ -29,7 +29,6 @@ thruEffectiveDate = null;
 
 dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-Debug.log("reportTypeFlag====11111111111==============="+reportTypeFlag);
 
 
 // for sales Report
@@ -63,95 +62,16 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
 	}
 }
-
-productNames = [:];
-allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",effectiveDate));
-
-allProductsList.each{ eachProd ->
-	productNames.put(eachProd.productId, eachProd.brandName);
-}
-context.productNames = productNames;
-
-lmsProductList=[];
-byProdList=[];
-lmsProdSeqList=[];
-byProdSeqList=[];
-
-lmsProductsList=ProductWorker.getProductsByCategory(delegator ,"LMS" ,effectiveDate);
-byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.makeCondition("productId",EntityOperator.NOT_IN , lmsProductsList.productId));
-
-lmsProductsIdsList=EntityUtil.getFieldListFromEntityList(lmsProductsList, "productId", false);
-byProductsIdsList=EntityUtil.getFieldListFromEntityList(byProductsList, "productId", false);
-
 context.putAt("dayBegin", dayBegin);
 context.putAt("dayEnd", dayEnd);
-
-shipmentIds = [];
-
-amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
-shipmentIds.addAll(amShipmentIds);
-pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
-shipmentIds.addAll(pmShipmentIds);
-	
-//getADHOC shipments
-List adhocShipments=ByProductNetworkServices.getShipmentIdsByType(delegator , dayBegin,dayEnd,"RM_DIRECT_SHIPMENT");
-//List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
-if(UtilValidate.isNotEmpty(adhocShipments)){
-	shipmentIds.addAll(adhocShipments);
-}
-amProductTotals=[:];
-pmProductTotals=[:];
-
-adhocBoothPaymentMap=[:];
-adhocPaidAmount=0;
-adhocSalePaidDetails = ByProductNetworkServices.getAdhocSalePayments( dctx , [estimatedShipDate: dayBegin]);
-if(UtilValidate.isNotEmpty(adhocSalePaidDetails)){
-	adhocBoothPaymentMap=adhocSalePaidDetails.get("adhocBoothPaidMap");
-	adhocPaidAmount=adhocSalePaidDetails.get("totalPaidAmount");
-}
-context.putAt("adhocBoothPaymentMap", adhocBoothPaymentMap);
-//boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
-adhocBoothTotalsMap=[:];
-if(UtilValidate.isNotEmpty(adhocShipments)){
-	adhocDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:adhocShipments, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-	if(UtilValidate.isNotEmpty(adhocDayTotals)){
-		adhocProductTotals=adhocDayTotals.get("productTotals");
-		adhocBoothTotalsMap=adhocDayTotals.get("boothTotals");
-		if(UtilValidate.isNotEmpty(adhocBoothTotalsMap)){
-			adhocTotalSaleMap=[:];
-			adhocTotalSaleMap["productTotals"]=adhocDayTotals.get("productTotals");
-			adhocTotalSaleMap["totalRevenue"]=adhocDayTotals.get("totalRevenue");
-			adhocTotalSaleMap["adhocPaidAmount"]=adhocPaidAmount;
-			adhocBoothTotalsMap.putAt("Total", adhocTotalSaleMap);
-		}
-	}
-}
-context.putAt("adhocBoothTotals", adhocBoothTotalsMap);
-
-if(UtilValidate.isNotEmpty(amShipmentIds)){
-	amDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-	//Debug.log("==amDayTotals==="+amDayTotals);
-	if(UtilValidate.isNotEmpty(amDayTotals)){
-		amProductTotals=amDayTotals.get("productTotals");
-	}
-}
-
-if(UtilValidate.isNotEmpty(pmShipmentIds)){
-	pmDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-	if(UtilValidate.isNotEmpty(pmDayTotals)){
-		pmProductTotals=pmDayTotals.get("productTotals");
-	}
-}
 totLmsQty=0;
 grandTotalRevenue=0;
-
-if(UtilValidate.isNotEmpty(shipmentIds)){
 	  dayTotals=[:];
 	  if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="salesReport") {
 		  boothsList=ByProductNetworkServices.getBoothList(delegator ,null);
-		  dayTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-		 }
-	 
+		  dayTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);	
+		 // Debug.log("dayTotals=============="+dayTotals);  
+		   }	 
 	  if(UtilValidate.isNotEmpty(dayTotals)){
 			//Debug.log("dayTotals====="+dayTotals.get("dayWiseTotals"));
 				countMap=[:];
@@ -171,12 +91,12 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 							   countMap.put(productId, count);
 							}
 						}
-					 }
-						
+					 }						
 					}//curnt Day caliculation
 				}
 		context.putAt("countMap", countMap);
 		prodTotals = dayTotals.get("productTotals");
+		//Debug.log("prodTotals=============="+prodTotals);
 		grandTotalRevenue=dayTotals.get("totalRevenue");
 		if(UtilValidate.isNotEmpty(prodTotals)){
 			// for sale report
@@ -294,246 +214,12 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						productCategoryMap.put(product.primaryProductCategoryId,tempCatMap);
 					}
 				}
-			}
-			/*milkReturnTotal = context.get("milkReturnQty");
-			curdReturnTotal = context.get("curdReturnQty");
-			if(UtilValidate.isNotEmpty(milkReturnTotal)){
-				milkAverageTotal = milkAverageTotal+(milkSaleTotal-milkReturnTotal);
-			}else{
-				milkAverageTotal = milkSaleTotal;
-			}
-			Debug.log("milkAverageTotal====="+milkAverageTotal);
-			/*if(UtilValidate.isNotEmpty(curdReturnTotal)){
-				curdAverageTotal = curdAverageTotal+(curdSaleTotal-curdReturnTotal);
-			}else{
-				curdAverageTotal = curdSaleTotal;
-			}*/
+			}			
 			milkAverageTotal = milkSaleTotal;
 			curdAverageTotal = curdSaleTotal;
 			context.putAt("productCategoryMap", productCategoryMap);
 			context.putAt("milkAverageTotal", milkAverageTotal);
-			context.putAt("curdAverageTotal", curdAverageTotal);
-			
-			Iterator mapIter = prodTotals.entrySet().iterator();
-			while (mapIter.hasNext()) {
-				Map.Entry entry = mapIter.next();
-				 productId=entry.getKey();
-				if(lmsProductsIdsList.contains(productId)){
-					lmsProductList.add(productId);
-					rtQty =entry.getValue().get("total");
-					totLmsQty=totLmsQty+rtQty;
-				}else{
-				byProdList.add(entry.getKey());
-				}
-				
-				/*conditionList=[];
-				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,entry.getKey()));
-				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				productCategoryList = delegator.findList("ProductCategoryAndMember",condition,null,null,null,false);
-				prodCategoryIds= EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
-				prodCategoryIds.each{ prodCategory->
-					if("LMS".equals(prodCategory)){
-						lmsProductList.add(entry.getKey());
-						rtQty =entry.getValue().get("total");
-						totLmsQty=totLmsQty+rtQty;
-					}
-					if("BYPROD".equals(prodCategory)){
-						byProdList.add(entry.getKey());
-					}
-				}*/
-				
-			}
+			context.putAt("curdAverageTotal", curdAverageTotal);						
 		}
 	}
-}
-
-lmsProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, lmsProductList) , null, ["sequenceNum"], null, false);
-lmsProdIdsList= EntityUtil.getFieldListFromEntityList(lmsProdSeqList, "productId", true);
-byProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, byProdList) , null, ["sequenceNum"], null, false);
-byProdIdsList= EntityUtil.getFieldListFromEntityList(byProdSeqList, "productId", true);
-
-context.put("lmsProductList", lmsProdIdsList);
-context.put("byProdList", byProdIdsList);
-
-routeWiseMap =[:];
-
-amRouteWiseMap=[:];
-pmRouteWiseMap=[:];
-amTotalAmount=0;
-amTotalQty=0;
-amTotalReceipts=0;
-
-pmTotalAmount=0;
-pmTotalQty=0;
-pmTotalReceipts=0;
-if(UtilValidate.isNotEmpty(routeIdsList)){
-	routeIdsList.each{ routeId ->
-		/*lmsProductList =[];
-		byProdList =[];*/
-		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
-		conList=[];
-		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,routeId));
-		cond = EntityCondition.makeCondition(conList,EntityOperator.AND);
-		facilityGroupMemberList = delegator.findList("FacilityGroupMember",cond,null,null,null,false);
-		totAmLmsQty=0;
-		totPmLmsQty=0;
-		facilityGroupMemberList.each{ facilityGroup->
-			if("AM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
-				conditionList=[];
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
-				conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
-				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , "AM_SHIPMENT"));
-				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
-				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				shipments = delegator.findList("Shipment", condition, null, ["routeId"], null, false);
-				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
-				
-				/*shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"AM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
-				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);*/
-				//if(UtilValidate.isNotEmpty(boothsList)){
-					if(UtilValidate.isNotEmpty(shipmentIds)){
-						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-						routeAmount=0;
-						routeTotQty=0;
-						if(UtilValidate.isNotEmpty(amRouteTotals)){
-							routeProdTotals = amRouteTotals.get("productTotals");
-							routeAmount= amRouteTotals.get("totalRevenue");
-							//routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
-							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayBegin ,thruDate:dayEnd , facilityId:routeId]);
-							reciepts = 0;
-							if(UtilValidate.isNotEmpty(routePaidDetails)){
-								reciepts = routePaidDetails.get("invoicesTotalAmount");
-							}
-							//populating route wise am lms product totals
-							
-							Iterator mapRouteIter = routeProdTotals.entrySet().iterator();
-							while (mapRouteIter.hasNext()) {
-								Map.Entry entry = mapRouteIter.next();
-								conditionList=[];
-								conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,entry.getKey()));
-								condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-								productCategoryList = delegator.findList("ProductCategoryAndMember",condition,null,null,null,false);
-								prodCategoryIds= EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
-								prodCategoryIds.each{ prodCategory->
-									if("LMS".equals(prodCategory)){
-										rtQty =entry.getValue().get("total");
-										totAmLmsQty=totAmLmsQty+rtQty;
-									}
-								}
-							}
-							
-							amTotalAmount=amTotalAmount+routeAmount;
-							amTotalQty=amTotalQty+totAmLmsQty;
-							amTotalReceipts=amTotalReceipts+reciepts;
-							if(routeAmount !=0){
-								Map routeDetailsMap=FastMap.newInstance();
-								routeDetailsMap.put("routeWiseTotals", routeProdTotals);
-								routeDetailsMap.put("routeTotQty", totAmLmsQty);
-								routeDetailsMap.put("routeAmount", routeAmount);
-								routeDetailsMap.put("reciepts", reciepts);
-								if(UtilValidate.isNotEmpty(routeDetailsMap)){
-									amRouteWiseMap.put(routeId, routeDetailsMap);
-								}
-							}
-						}
-					}
-				//}
-				
-			}
-			if("PM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
-				conditionList=[];
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
-				conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
-				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , "PM_SHIPMENT"));
-				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
-				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				shipments = delegator.findList("Shipment", condition, null, ["routeId"], null, false);
-				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
-				
-				/*shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"PM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
-				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);*/
-					if(UtilValidate.isNotEmpty(shipmentIds)){
-						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-						routeAmount=0;
-						routeTotQty=0;
-						if(UtilValidate.isNotEmpty(pmRouteTotals)){
-							routeProdTotals = pmRouteTotals.get("productTotals");
-							
-							routeAmount= pmRouteTotals.get("totalRevenue");
-							routeTotQty= pmRouteTotals.get("totalQuantity");
-							//routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
-							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayBegin ,thruDate:dayEnd , facilityId:routeId]);
-							reciepts = 0;
-							if(UtilValidate.isNotEmpty(routePaidDetails.get("invoicesTotalAmount"))){
-								reciepts = routePaidDetails.get("invoicesTotalAmount");
-							}
-							
-							//populating route wise pm lms product totals
-							Iterator mapRouteIter = routeProdTotals.entrySet().iterator();
-							while (mapRouteIter.hasNext()) {
-								Map.Entry entry = mapRouteIter.next();
-								conditionList=[];
-								conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,entry.getKey()));
-								condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-								productCategoryList = delegator.findList("ProductCategoryAndMember",condition,null,null,null,false);
-								prodCategoryIds= EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
-								prodCategoryIds.each{ prodCategory->
-									if("LMS".equals(prodCategory)){
-										rtQty =entry.getValue().get("total");
-										totPmLmsQty=totPmLmsQty+rtQty;
-									}
-								}
-							}
-						
-							pmTotalAmount=pmTotalAmount+routeAmount;
-							pmTotalQty=pmTotalQty+totPmLmsQty;
-							pmTotalReceipts=pmTotalReceipts+reciepts;
-							if(routeAmount !=0){
-								Map routeDetailsMap=FastMap.newInstance();
-								routeDetailsMap.put("routeWiseTotals", routeProdTotals);
-								routeDetailsMap.put("routeTotQty", totPmLmsQty);
-								routeDetailsMap.put("routeAmount", routeAmount);
-								routeDetailsMap.put("reciepts", reciepts);
-								if(UtilValidate.isNotEmpty(routeDetailsMap)){
-									pmRouteWiseMap.put(routeId, routeDetailsMap);
-								}
-							}
-						}
-					}
-				//}
-				
-			}
-		}
-	}
-}
-SortedMap finalRouteWiseMap = new TreeMap();
-if(UtilValidate.isNotEmpty(amProductTotals)){
-	tempMap=[:];
-	tempMap.put("routeWiseTotals", amProductTotals);
-	tempMap.put("routeTotQty", amTotalQty);
-	tempMap.put("routeAmount", amTotalAmount);
-	tempMap.put("reciepts", amTotalReceipts);
-	amRouteWiseMap.put("amGrandTotals", tempMap);
-}
-if(UtilValidate.isNotEmpty(pmProductTotals)){
-	tempPmMap=[:];
-	tempPmMap.put("routeWiseTotals", pmProductTotals);
-	tempPmMap.put("routeTotQty", pmTotalQty);
-	tempPmMap.put("routeAmount", pmTotalAmount);
-	tempPmMap.put("reciepts", pmTotalReceipts);
-	pmRouteWiseMap.put("pmGrandTotals", tempPmMap);
-}
-//grandTotal logic is here
-context.putAt("routeTotQty", amTotalQty+pmTotalQty);
-//context.putAt("routeAmount", amTotalAmount+pmTotalAmount);
-context.putAt("routeAmount",grandTotalRevenue);
-context.putAt("reciepts", amTotalReceipts+pmTotalReceipts+adhocPaidAmount);
-//grandTotal end here
-context.putAt("amRouteWiseMap", amRouteWiseMap);
-context.putAt("pmRouteWiseMap", pmRouteWiseMap);
-finalRouteWiseMap.putAll(amRouteWiseMap);
-finalRouteWiseMap.putAll(pmRouteWiseMap);
-context.put("routeWiseMap",finalRouteWiseMap);
 
