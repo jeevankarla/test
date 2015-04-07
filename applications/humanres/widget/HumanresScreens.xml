@@ -300,7 +300,7 @@
                        	</screenlet>
                  	</decorator-section>		                           	 
                  	<decorator-section name="search-results">
-                      	<screenlet title="Search-Results">
+                      	<screenlet title="Holiday Calender for HR Year ${yearStart}-${yearEnd} ${year}">
                            	<section>
                                	<widgets>
                                    	<include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>

@@ -34,6 +34,17 @@ if(UtilValidate.isNotEmpty(holidyDate)){
 	holidayDatestart = new java.sql.Timestamp(sdf.parse(dateStr).getTime());
 }
 
+
+weekMap=[:];
+weekMap["1"]="Sunday";
+weekMap["2"]="Monday";
+weekMap["3"]="Tuesday";
+weekMap["4"]="Wednesday";
+weekMap["5"]="Thursday";
+weekMap["6"]="Friday";
+weekMap["7"]="Saturday";
+holidayDetailsList = [];
+
 //holidayDatestart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(dateStr));
 //holidayDatestart = UtilDateTime.toTimestamp(dateStr);
 holidayDetails = [];
@@ -52,4 +63,40 @@ if(UtilValidate.isNotEmpty(customTimePeriodId)){
 	//holidayList = [];
 	holidayDetails = delegator.findList("HolidayCalendar", condition , null, null, null, false );
 }
-context.put("holidayList",holidayDetails);
+
+if(UtilValidate.isNotEmpty(holidayDetails)){
+	holidayDetails.each { holiday ->
+		holidayDetailsMap = [:];
+		holidayDetailsMap.put("customTimePeriodId", holiday.get("customTimePeriodId"));
+		holidayDetailsMap.put("organizationPartyId", holiday.get("organizationPartyId"));
+		holidayDetailsMap.put("holiDayDate", holiday.get("holiDayDate"));
+		holidayDetailsMap.put("description", holiday.get("description"));
+		holidayDate = holiday.get("holiDayDate");
+		String dayOfWeek = (UtilDateTime.getDayOfWeek(holidayDate, timeZone, locale)).toString();
+		String weekDay = weekMap[dayOfWeek];
+		if(UtilValidate.isNotEmpty(weekDay)){
+			holidayDetailsMap.put("weekDay", weekDay);
+		}
+		holidayDetailsList.addAll(holidayDetailsMap);
+	}
+}
+
+context.put("holidayDetailsList",holidayDetailsList);
+
+String yearStart ="";
+String yearEnd ="";
+String year ="";
+
+GenericValue customTimePeriodDetails = delegator.findOne("CustomTimePeriod", [customTimePeriodId : customTimePeriodId], false);
+if(UtilValidate.isNotEmpty(customTimePeriodDetails)){
+	timePeriodStart=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("fromDate"));
+	timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("thruDate"));
+	yearStart = UtilDateTime.toDateString(timePeriodStart,"MMM");
+	yearEnd = UtilDateTime.toDateString(timePeriodEnd,"MMM");
+	year = UtilDateTime.toDateString(timePeriodEnd,"yyyy");
+}
+
+context.put("yearStart",yearStart);
+context.put("yearEnd",yearEnd);
+context.put("year",year);
+
