@@ -690,16 +690,16 @@
        	            			<widgets>
        	            				<container style="lefthalf" >
        		            				<platform-specific>
-       	                    				<html><html-template location="component://depotsales/webapp/depotsales/depotsales/PurchaseOrderInfoDepot.ftl"/></html>
+       	                    				<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl"/></html>
        	                				</platform-specific>
        	                				<platform-specific>
-       	                            			<html><html-template location="component://depotsales/webapp/depotsales/depotsales/POItemsDepot.ftl"/></html>
+       	                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl"/></html>
        	                        		</platform-specific>
        	                        		<platform-specific>
-       	                            		<html><html-template location="component://depotsales/webapp/depotsales/depotsales/POtermsDepot.ftl"/></html>
+       	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
        	                        		</platform-specific>
        	                        		<platform-specific>
-       	                            		<html><html-template location="component://depotsales/webapp/depotsales/depotsales/POSuspendDepot.ftl"/></html>
+       	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POSuspend.ftl"/></html>
        	                        		</platform-specific>
        	                        		<screenlet title="Order Amendments">
        	                        			<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="orderAmendments"/>
@@ -711,23 +711,23 @@
                        				</container>
                        				<container style="righthalf" >
        	                        		<platform-specific>
-                           					<html><html-template location="component://depotsales/webapp/depotsales/depotsales/POContactInfoDepot.ftl"/></html>
+                           					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
                        					</platform-specific>
        	                        		<screenlet title="Receipts For Order">
        					                 	<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/> -->
        					                 	<include-screen name="listMaterialShipmentReceipt"/>
        					                </screenlet>
        					                <platform-specific>
-                           					<html><html-template location="component://depotsales/webapp/depotsales/depotsales/POpaymentInfoDepot.ftl"/></html>
+                           					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
                        					</platform-specific>
                        					 <screenlet title="Invoices For Order">
-       					                 	<include-form location="component://depotsales/widget/DepotSalesForms.xml" name="invoiceDetailList"/>
+       					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="invoiceDetailList"/>
        					                </screenlet>
        					                <screenlet title="Content">
        					                <include-screen name="POcontent"/>
        					                </screenlet>
        					                <platform-specific>
-                                   			<html><html-template location="component://depotsales/webapp/depotsales/depotsales/PONotesDepot.ftl"/></html>
+                                   			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl"/></html>
                                			</platform-specific>
                                			 <screenlet title="Supply Products Till Date">
                                         	<include-screen name="supplyProductsTillDate"/>                              			 
