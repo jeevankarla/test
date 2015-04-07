@@ -535,6 +535,7 @@ public class GeneralLedgerServices {
 		//cancel invoices amount
 		exprListForParameters.clear();
 		exprListForParameters.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds));
+		exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isEnableAcctg",EntityOperator.EQUALS, "Y"),EntityOperator.OR,EntityCondition.makeCondition("isEnableAcctg",EntityOperator.EQUALS, null)));
 		//exprListForParameters.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(dayBegin,dayEnd)));
 		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_CANCELLED"));
 		if(UtilValidate.isNotEmpty(purposeTypeId)){
