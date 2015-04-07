@@ -54,7 +54,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-
+import org.ofbiz.accounting.period.PeriodServices;
 import java.util.Map.Entry;
 
 public class MaterialHelperServices{
@@ -238,6 +238,230 @@ public class MaterialHelperServices{
 			return ServiceUtil.returnError(e.toString());
 		}
 		result.put("taxComponents", taxComponents);
+		return result;
+	}
+	
+	public static Map<String, Object> populateInventoryPeriodSummary(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String customTimePeriodId = (String) context.get("customTimePeriodId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+			if(UtilValidate.isEmpty(customTimePeriod)){
+				Debug.logError("No Period defined with id: "+customTimePeriod, module);
+				return ServiceUtil.returnError("No Period defined with id: "+customTimePeriod);
+			}
+			if(!((customTimePeriod.getString("periodTypeId")).equals("INVTRY_PERIOD_CLOSE"))){
+				Debug.logError("Period is not of type inventory period closure", module);
+				return ServiceUtil.returnError("Period is not of type inventory period closure :"+customTimePeriod);
+			}
+			if((customTimePeriod.getString("isClosed")).equals("Y")){
+				Debug.logError("Period is already closed ", module);
+				return ServiceUtil.returnError("Period is already closed ");
+			}
+			
+			Map lastClosedCtx = FastMap.newInstance();
+            lastClosedCtx.put("organizationPartyId", "Company");
+            lastClosedCtx.put("periodTypeId", customTimePeriod.getString("periodTypeId"));
+            lastClosedCtx.put("findDate", customTimePeriod.getDate("fromDate"));
+            lastClosedCtx.put("onlyFiscalPeriods", Boolean.FALSE);
+            
+            Map lastClosedPeriodResult = PeriodServices.findLastClosedDate(ctx, lastClosedCtx);
+            GenericValue lastClosedPeriod = (GenericValue)lastClosedPeriodResult.get("lastClosedTimePeriod");
+            String lastClosedPeriodId = "";
+            if(UtilValidate.isNotEmpty(lastClosedPeriod)){
+            	lastClosedPeriodId = lastClosedPeriod.getString("customTimePeriodId");
+            	if(UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(lastClosedPeriod.getDate("thruDate")), UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"))) != 1){
+            		Debug.logError("Previous inventory closure period not closed", module);
+    				return ServiceUtil.returnError("Previous inventory closure period not closed");
+        		}
+            }
+            
+            
+            Timestamp transFromDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+            Timestamp transThruDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+            Map resultCtx = getStoreIssuesAndReceiptsForPeriod(ctx, UtilMisc.toMap("userLogin", userLogin, "fromDate", transFromDate, "thruDate", transThruDate, "previousTimePeriodId", lastClosedPeriodId));
+            
+            if(ServiceUtil.isError(resultCtx)){
+            	String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+  		  		Debug.logError(errMsg , module);
+  		  		return ServiceUtil.returnError(errMsg);
+            }
+            
+            Map receiptIssueMap = (Map)resultCtx.get("receiptIssueMap");
+            Debug.log("receiptIssueMap #####################"+receiptIssueMap);
+            
+            Iterator invIter = receiptIssueMap.entrySet().iterator();
+			while (invIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) invIter.next();
+				Map eachStore = (Map) tempEntry.getValue();
+				String storeId = (String) tempEntry.getKey();
+				Iterator eachStoreIter = eachStore.entrySet().iterator();
+				while (eachStoreIter.hasNext()) {
+					Map.Entry tempItemEntry = (Entry) eachStoreIter.next();
+					Map eachStoreItem = (Map) tempItemEntry.getValue();
+					String productId = (String) tempItemEntry.getKey();
+					
+					GenericValue newEntity = delegator.makeValue("InventoryPeriodSummary");
+					newEntity.set("facilityId", storeId);
+					newEntity.set("customTimePeriodId", customTimePeriodId);
+					newEntity.set("productId", productId);
+					newEntity.set("issuedQty", (BigDecimal)eachStoreItem.get("issueQty"));
+					newEntity.set("receivedQty", (BigDecimal)eachStoreItem.get("receiptQty"));
+					newEntity.set("closingBalanceQty", (BigDecimal)eachStoreItem.get("closingBalanceQty"));
+					newEntity.set("closingCost", (BigDecimal)eachStoreItem.get("closingCost"));
+					delegator.createOrStore(newEntity);
+				}
+			}
+            
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> getStoreIssuesAndReceiptsForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		String previousCustomTimePeriodId = (String) context.get("previousTimePeriodId");
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		Map receiptIssueRegisterMap = FastMap.newInstance();
+		try{
+			
+			Map productInventoryBalance = FastMap.newInstance();
+			if(UtilValidate.isNotEmpty(previousCustomTimePeriodId)){
+				List<GenericValue> inventorySummary = delegator.findList("InventoryPeriodSummary", EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, previousCustomTimePeriodId), null, null, null, false);
+				List<String> stores = EntityUtil.getFieldListFromEntityList(inventorySummary, "facilityId", true);
+				for(String eachStore : stores){
+					List<GenericValue> storeProducts = EntityUtil.filterByCondition(inventorySummary, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachStore));
+					Map productBalanceMap = FastMap.newInstance();
+					for(GenericValue storeProduct : storeProducts){
+						Map tempMap = FastMap.newInstance();
+						tempMap.put("productId", storeProduct.getString("productId"));
+						tempMap.put("closingBalanceQty", storeProduct.getBigDecimal("closingBalanceQty"));
+						tempMap.put("closingCost", storeProduct.getBigDecimal("closingCost"));
+						productBalanceMap.put(storeProduct.getString("productId"), tempMap);
+					}
+					productInventoryBalance.put(eachStore, productBalanceMap);
+				}
+			}
+			
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			EntityListIterator invItemDetailItr = delegator.find("InventoryItemAndDetail", condition, null, null, null,null);
+		    
+			GenericValue itemDetail =null; 
+			while( invItemDetailItr != null && (itemDetail = invItemDetailItr.next()) != null) {
+		        String facilityId = itemDetail.getString("facilityId");
+		        String productId = itemDetail.getString("productId");
+		        BigDecimal qty = itemDetail.getBigDecimal("quantityOnHandDiff");
+		        BigDecimal unitCost = itemDetail.getBigDecimal("unitCost");
+		        BigDecimal transAmt = qty.multiply(unitCost);
+		        if(UtilValidate.isNotEmpty(receiptIssueRegisterMap.get(facilityId))){
+		        	Map storeProductMap = (Map)receiptIssueRegisterMap.get(facilityId);
+		           	if(UtilValidate.isNotEmpty(storeProductMap.get(productId))){
+			           	Map prodMap = (Map)storeProductMap.get(productId);
+			           	boolean isReceipt = Boolean.FALSE;
+			           	if(qty.compareTo(BigDecimal.ZERO)>0){
+			           		isReceipt = Boolean.TRUE;
+			        	}
+			           	if(isReceipt){
+			           		BigDecimal extReceiptQty = (BigDecimal)prodMap.get("receiptQty");
+			           		BigDecimal totalQty = extReceiptQty.add(qty);
+			           		prodMap.put("receiptQty", totalQty);
+			           		
+			           	}
+			           	else{
+			           		BigDecimal extIssueQty = (BigDecimal)prodMap.get("issueQty");
+			           		BigDecimal totalQty = extIssueQty.add(qty);
+			           		prodMap.put("issueQty", extIssueQty.add(qty));
+			           	}
+			           	BigDecimal extUnitAmt = (BigDecimal)prodMap.get("closingCost");
+		           		prodMap.put("closingCost", transAmt.add(extUnitAmt));
+		           		
+			        	storeProductMap.put(productId, prodMap);
+			        	receiptIssueRegisterMap.put(facilityId, storeProductMap);
+		           		
+			        }
+			        else{
+			        	Map tempMap = FastMap.newInstance();
+			        	if(qty.compareTo(BigDecimal.ZERO)>0){
+			        		tempMap.put("receiptQty", qty);
+			        		tempMap.put("issueQty", BigDecimal.ZERO);
+			        	}
+			        	else{
+			        		tempMap.put("receiptQty", BigDecimal.ZERO);
+			        		tempMap.put("issueQty", qty);
+			        	}
+			        	tempMap.put("closingCost", transAmt);
+			        	storeProductMap.put(productId, tempMap);
+			        	receiptIssueRegisterMap.put(facilityId, storeProductMap);
+			            	
+			        }
+		        }
+		        else{
+		        	Map tempMap = FastMap.newInstance();
+		        	Map productMap = FastMap.newInstance();
+		        	if(qty.compareTo(BigDecimal.ZERO)>0){
+		        		tempMap.put("receiptQty", qty);
+		        		tempMap.put("issueQty", BigDecimal.ZERO);
+		        	}
+		        	else{
+		        		tempMap.put("receiptQty", BigDecimal.ZERO);
+		        		tempMap.put("issueQty", qty);
+		        	}
+		        	tempMap.put("closingCost", transAmt);
+		        	productMap.put(productId, tempMap);
+		        	receiptIssueRegisterMap.put(facilityId, productMap);
+		        }
+			}
+			invItemDetailItr.close();
+			Map finalReceiptIssueMap = FastMap.newInstance();
+			Iterator invIter = receiptIssueRegisterMap.entrySet().iterator();
+			while (invIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) invIter.next();
+				Map eachStore = (Map) tempEntry.getValue();
+				String storeId = (String) tempEntry.getKey();
+				Map storeProductBalance = (Map)productInventoryBalance.get(storeId);
+				Iterator eachStoreIter = eachStore.entrySet().iterator();
+				Map prodQtyTrans = FastMap.newInstance();
+				while (eachStoreIter.hasNext()) {
+					Map.Entry tempItemEntry = (Entry) eachStoreIter.next();
+					Map eachStoreItem = (Map) tempItemEntry.getValue();
+					String productId = (String) tempItemEntry.getKey();
+					BigDecimal prevCBQty = BigDecimal.ZERO;
+					BigDecimal prevCBCost = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(storeProductBalance) && UtilValidate.isNotEmpty(storeProductBalance.get(productId))){
+						Map prodCBMap = (Map) storeProductBalance.get(productId);
+						prevCBQty = (BigDecimal)prodCBMap.get("closingBalanceQty");
+						prevCBCost = (BigDecimal)prodCBMap.get("closingCost");
+					}
+					
+					BigDecimal receipt = (BigDecimal) eachStoreItem.get("receiptQty");
+					BigDecimal issues = ((BigDecimal) eachStoreItem.get("issueQty")).negate();
+					BigDecimal closingBalance = (receipt.subtract(issues)).add(prevCBQty);
+					BigDecimal closingCost = ((BigDecimal) eachStoreItem.get("closingCost")).add(prevCBCost);
+					eachStoreItem.put("closingBalanceQty", closingBalance);
+					eachStoreItem.put("closingCost", closingCost);
+					prodQtyTrans.put(productId, eachStoreItem);
+				}
+				finalReceiptIssueMap.put(storeId, prodQtyTrans);
+			}
+			result.put("receiptIssueMap", finalReceiptIssueMap);
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
 		return result;
 	}
 	
