@@ -52,7 +52,7 @@ under the License.
                                 <entity-one entity-name="Product" value-field="product"/>
                             </actions>
                             <widgets>
-                           	    <section>
+                                <section>
                                     <condition>
                                         <or>
                                             <not><if-empty field="product"/></not>
@@ -63,7 +63,7 @@ under the License.
                                         <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <image src="${product.smallImageUrl}" height="40" width="40" url-mode="content" alt="${product.internalName}"/>
-                                        <!-- <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}:${product.description} (${product.internalName}) [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label> -->
+                                        <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}:${product.description} (${product.internalName}) [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                     <fail-widgets>
                                         <section>
@@ -180,10 +180,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProductPrices"/>
                 <set field="tabButtonItem" value="EditProductPrices"/>
                 <set field="labelTitleProperty" value="ProductPrices"/>
-                <set field="targetRequest" value="updateProductPrice"/>
-                <set field="targetRequest2" value="createProductPrice"/>
-                <set field="targetRequestHistory" value="ProductPriceHistory"/>
-				<set field="targetRequestDelete" value="deleteProductPrice"/>
 
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
@@ -215,9 +211,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                     <include-screen name="EditProductPrices"  location="component://product/widget/catalog/ProductInnerScreens.xml"/>
-                    
-                        <!-- <screenlet title="${uiLabelMap.PageTitleEditProductPrices}">
+                        <screenlet title="${uiLabelMap.PageTitleEditProductPrices}">
                             <include-form name="UpdateProductPrice" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditProductTaxes}">
@@ -233,7 +227,7 @@ under the License.
 	                        <screenlet title="${uiLabelMap.PageTitleAddProductTaxes}">
 	                            <include-form name="AddProductTax" location="component://product/widget/catalog/ProductForms.xml"/>
 	                        </screenlet>
-                        </container>          -->               
+                        </container>                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
