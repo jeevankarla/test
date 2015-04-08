@@ -32,14 +32,15 @@ under the License.
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>
         <condition field-name="oldStatusId" operator="not-equals" value="PMNT_RECEIVED"/>
         <action service="checkPaymentInvoices" mode="sync"/>
+        <action service="createPaymentSequence" mode="sync"/>
      </eca>
-     
      
      <!-- update invoices to PAID when payment is SENT (e.g., vendor payments) -->
      <eca service="setPaymentStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_SENT"/>
         <condition field-name="oldStatusId" operator="not-equals" value="PMNT_SENT"/>
         <action service="checkPaymentInvoices" mode="sync"/>
+        <action service="createPaymentSequence" mode="sync"/>
      </eca>
 
      <!-- Create finAccountTrans record for payment. -->
@@ -77,4 +78,6 @@ under the License.
          <condition field-name="statusId" operator="equals" value="FINACT_TRNS_CANCELED"/>
          <action service="setFinAccountTransStatus" mode="sync"/>
      </eca>
+     
+     
 </service-eca>

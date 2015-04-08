@@ -25,6 +25,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
+        <field name="paymentSequenceId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
         <field name="comments"><text-find ignore-case="true"/></field>
         <field name="paymentMethodTypeId">
@@ -59,12 +60,28 @@ under the License.
     </form>
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PaymentAndType"/>
+                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
 <!--        <row-actions>-->
 <!--            <set field="amountToApply" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>-->
 <!--        </row-actions>-->
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
+                <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
+            </hyperlink>
+        </field>
+        <field name="paymentSequenceId" title="Payment Seq" widget-style="buttontext">
+            <hyperlink description="${paymentSequenceId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+                <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
             </hyperlink>
         </field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>
@@ -994,7 +1011,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-     <form name="FindPaymentDepotSales" type="single" target="FindPaymentDepotSales" extends="FindNonRoutePayments" extends-resource="component://accounting/widget/PaymentForms.xml">
+    <form name="FindPaymentDepotSales" type="single" target="FindPaymentDepotSales" extends="FindNonRoutePayments" extends-resource="component://accounting/widget/PaymentForms.xml">
         <field name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentTypeId" position="1">
             <drop-down allow-empty="true">

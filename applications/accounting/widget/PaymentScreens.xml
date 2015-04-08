@@ -48,7 +48,7 @@ under the License.
                             <widgets>
                                 <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                 <container style="leftclear">
-                                    <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                                    <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}] [${payment.paymentSequenceId}] ${${extraFunctionName}}"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>

@@ -52,6 +52,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
@@ -952,5 +953,342 @@ public class PaymentWorker {
         result.put("hideSearch","N");
         return result; 
     }
+    public static Map<String, Object> createPaymentSequence(DispatchContext dctx, Map<String, Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String finAccountId = (String) context.get("finAccountId");
+		if(UtilValidate.isEmpty(finAccountId)){
+			finAccountId = "_NA_";
+		}
+		
+		Map resultMap = ServiceUtil.returnSuccess("service Done successfully");
+        try {
+        	if (PaymentWorker.isPaymentSequenceEnabled(delegator)) {
+        		
+        		String paymentId =  (String)context.get("paymentId");
+        		GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+                
+        		String paymentTypeId =  (String)payment.get("paymentTypeId");
+                Timestamp paymentDate =  (Timestamp)payment.get("paymentDate");
+                String parentTypeId = getPaymentTypeParent(delegator, paymentTypeId);
+                
+                String customTimePeriodId = "_NA_";
+                //String paymentMethodId = "_NA_";
+                String paymentMethodTypeId = "_NA_";
+        		
+        		Map<String, Object> serviceResultMap = null;
+				try{
+					serviceResultMap = dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId","FISCAL_YEAR", "fromDate", paymentDate, "thruDate",paymentDate, "userLogin", userLogin));
+				}catch (Exception e) {
+	 				Debug.logError(e, "Error getting Custom Time Period ");
+	 				return ServiceUtil.returnError("Error getting Custom Time Period ");
+	 			}
+				if (ServiceUtil.isError(serviceResultMap)) {
+					Debug.logError("Error getting Custom Time Period", module);
+					return ServiceUtil.returnError("Error getting Custom Time Period");
+				}
+	            customTimePeriodId = (String) serviceResultMap.get("customTimePeriodId");
+	            
+	            if (parentTypeId.equals("RECEIPT")) {
+	            	paymentMethodTypeId = (String)payment.get("paymentMethodTypeId");
+	            	finAccountId = "_NA_";
+	            }
+	            
+	            GenericValue paymentSequence = delegator.makeValue("PaymentSequence");
+	            paymentSequence.put("finYearId", customTimePeriodId);
+	            paymentSequence.put("PaymentParentType", parentTypeId);
+	            //paymentSequence.put("paymentMethodId", paymentMethodId);
+	            paymentSequence.put("finAccountId", finAccountId);
+	            paymentSequence.put("paymentMethodTypeId", paymentMethodTypeId);
+	            paymentSequence.put("paymentId", paymentId);
+	            try {
+	            	delegator.setNextSubSeqId(paymentSequence, "sequenceId", 0, 1);
+	                delegator.create(paymentSequence);
+	            } catch (GenericEntityException e) {
+	                Debug.logError(e, module);
+	                return ServiceUtil.returnError(e.getMessage());
+	            }
+	            
+	            String paymentSequenceId = PaymentWorker.getPaymentSequence(delegator, paymentId);
+	            Debug.log("paymentSequenceId ----------------------------------------"+paymentSequenceId);
+	            payment.set("paymentSequenceId", paymentSequenceId);
+	            payment.store();
+	            resultMap.put("paymentId", paymentId);
+        	}
+	        
+        }catch (Exception e) {
+	        Debug.logError(e, e.toString(), module);
+	        return ServiceUtil.returnError(e.toString());
+	    }
+    	return resultMap;
+	} 
+	
     
+    public static String getPaymentTypeParent(Delegator delegator, String paymentTypeId){
+        
+        String parentTypeId =  null;
+        GenericValue paymentType = null;
+    	try {
+    		paymentType = delegator.findOne("PaymentType", UtilMisc.toMap("paymentTypeId", paymentTypeId), false);
+		} catch (GenericEntityException e) {
+			ServiceUtil.returnError(e.getMessage());
+		}
+    	if(UtilValidate.isEmpty(paymentType)){
+    		return paymentTypeId;
+    	}
+    	if( (UtilValidate.isNotEmpty(paymentType.getString("parentTypeId"))) && (!((paymentType.getString("parentTypeId")).equals(paymentTypeId)) ) ){
+    		parentTypeId = getPaymentTypeParent(delegator, paymentType.getString("parentTypeId"));
+    	}
+    	else{
+    		parentTypeId = paymentTypeId;
+    	}
+    	return parentTypeId;
+	}
+	public static boolean isPaymentSequenceEnabled(Delegator delegator) throws GenericEntityException {
+		GenericValue isPaymentSequenceEnabled = delegator.findByPrimaryKeyCache("TenantConfiguration",
+				UtilMisc.toMap("propertyTypeEnumId", "PAYMENT_SEQUENCE", "propertyName", "generatePaymentSequence"));
+		if (isPaymentSequenceEnabled != null) {
+			return isPaymentSequenceEnabled.getBoolean("propertyValue").booleanValue();
+		}
+        return false;
+    } 
+	
+	public static Map<String, Object> populateOldPaymentSequence(DispatchContext dctx, Map<String, Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        
+		List existingPmntSeqIds = FastList.newInstance();
+		try {
+			List<GenericValue> paymentSequences = delegator.findList("PaymentSequence", null, UtilMisc.toSet("paymentId"), null, null, false);
+			existingPmntSeqIds = EntityUtil.getFieldListFromEntityList(paymentSequences, "paymentId", true); 
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+        
+        EntityListIterator paymentIter = null;
+        List exprListForParameters = FastList.newInstance();
+		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("PMNT_RECEIVED", "PMNT_SENT")));
+		if(UtilValidate.isNotEmpty(existingPmntSeqIds)){
+			exprListForParameters.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN, existingPmntSeqIds));
+		}
+		if(UtilValidate.isNotEmpty(fromDate)){
+			exprListForParameters.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		}
+		if(UtilValidate.isNotEmpty(thruDate)){
+			exprListForParameters.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN, thruDate));
+		}
+		EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+        try {
+        	paymentIter = delegator.find("Payment", paramCond, null, null, UtilMisc.toList("paymentDate"), null);
+			GenericValue payment = null;
+			while( paymentIter != null && (payment = paymentIter.next()) != null) {
+				String paymentId = payment.getString("paymentId");
+				Debug.log("paymentId ==========="+paymentId);
+				
+				String finAccountId = null;
+				List<GenericValue> finAccountTrans = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(EntityOperator.AND, "paymentId", paymentId),null, null, null, false);
+        		if(UtilValidate.isNotEmpty(finAccountTrans)){
+        			finAccountId = (EntityUtil.getFirst(finAccountTrans)).getString("finAccountId");
+            	}
+				Map<String, Object> createPaymentSeqContext = FastMap.newInstance();
+				createPaymentSeqContext.put("paymentId", paymentId);
+				createPaymentSeqContext.put("finAccountId", finAccountId);
+				createPaymentSeqContext.put("userLogin", userLogin);
+                
+				Map<String, Object> serviceResultMap = null;
+				try{
+					serviceResultMap = dispatcher.runSync("createPaymentSequence", createPaymentSeqContext);
+				}catch (Exception e) {
+	 				Debug.logError(e, "Error while creating payment sequence ");
+	 				return ServiceUtil.returnError("Error while creating payment sequence ");
+	 			}
+				if (ServiceUtil.isError(serviceResultMap)) {
+					Debug.logError("Error while creating payment sequence ", module);
+					return ServiceUtil.returnError("Error while creating payment sequence ");
+				}
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+        
+        if (paymentIter != null) {
+            try {
+            	paymentIter.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        return result;
+    }
+	public static String getPaymentSequence(Delegator delegator, String paymentId){
+        
+        List<GenericValue> paymentSeqList = null;
+    	try {
+    		paymentSeqList = delegator.findList("PaymentSequence", EntityCondition.makeCondition(EntityOperator.AND, "paymentId", paymentId),null, null, null, false);
+		} catch (GenericEntityException e) {
+			ServiceUtil.returnError(e.getMessage());
+		}
+    	if(UtilValidate.isEmpty(paymentSeqList)){
+    		return paymentId;
+    	}
+    	String paymentPerfix = "";
+    	
+    	String paymentMethodTypeId = (EntityUtil.getFirst(paymentSeqList)).getString("paymentMethodTypeId");
+    	String finAccountId = (EntityUtil.getFirst(paymentSeqList)).getString("finAccountId");
+    	String finYearId = (EntityUtil.getFirst(paymentSeqList)).getString("finYearId");
+    	String PaymentParentType = (EntityUtil.getFirst(paymentSeqList)).getString("PaymentParentType");
+    	
+    	String paymentMethodId = null;
+    	try {
+    		GenericValue payment=delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
+    		if(UtilValidate.isNotEmpty(payment)){
+    			paymentMethodId = payment.getString("paymentMethodId");
+        	}
+        }
+        catch (Exception e) {
+        	Debug.logError("Touble getting parentPaymentId", module);
+		}
+    	
+    	try {
+    		GenericValue customTimePeriod=delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId",finYearId) , false);
+    		if(UtilValidate.isNotEmpty(customTimePeriod)){
+    			String finYearPrefix = customTimePeriod.getString("periodName");
+    			paymentPerfix = paymentPerfix + finYearPrefix;
+        	}
+        }
+        catch (Exception e) {
+        	Debug.logError("Touble getting parentPaymentId", module);
+		}
+    	
+    	if (PaymentParentType.equals("RECEIPT")) {
+    		try {
+        		GenericValue paymentMethodType=delegator.findOne("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId",paymentMethodTypeId) , false);
+        		if(UtilValidate.isNotEmpty(paymentMethodType.get("pmntMethodTypePrefix"))){
+        			String paymentMethodTypePrefix = paymentMethodType.getString("pmntMethodTypePrefix");
+        			paymentPerfix = paymentMethodTypePrefix + "/" + paymentPerfix;
+            	}
+            }
+            catch (Exception e) {
+            	Debug.logError("Touble getting parentPaymentId", module);
+    		}
+        }
+    	else{
+    		
+    		GenericValue paymentMethod = null;
+        	try {
+        		paymentMethod=delegator.findOne("PaymentMethod",UtilMisc.toMap("paymentMethodId",paymentMethodId) , false);
+        		if(UtilValidate.isNotEmpty(paymentMethod.get("pmntMethodPrefix"))){
+        			String paymentMethodPrefix = paymentMethod.getString("pmntMethodPrefix");
+        			paymentPerfix = paymentMethodPrefix + "/" + paymentPerfix;
+            	}
+            }
+            catch (Exception e) {
+            	Debug.logError("Touble getting PaymentMethod", module);
+    		}
+    		
+    		
+    		try {
+        		if(!finAccountId.equals("_NA_")){
+    				GenericValue finAccount =delegator.findOne("FinAccount",UtilMisc.toMap("finAccountId",finAccountId) , false);
+            		if(UtilValidate.isNotEmpty(finAccount.get("finAccPrefix"))){
+            			String finAccountPrefix = finAccount.getString("finAccPrefix");
+            			paymentPerfix = paymentPerfix+"/"+finAccountPrefix;
+                	}
+    			}
+        	} catch (GenericEntityException e) {
+    			ServiceUtil.returnError(e.getMessage());
+    		}
+    	}
+    	
+    	
+    	/*if(!paymentMethodId.equals("_NA_")){
+    		GenericValue paymentMethod = null;
+        	try {
+        		paymentMethod=delegator.findOne("PaymentMethod",UtilMisc.toMap("paymentMethodId",paymentMethodId) , false);
+        		if(UtilValidate.isNotEmpty(paymentMethod.get("pmntMethodPrefix"))){
+        			String paymentMethodPrefix = paymentMethod.getString("pmntMethodPrefix");
+        			paymentPerfix = paymentMethodPrefix + "/" + paymentPerfix;
+            	}
+            }
+            catch (Exception e) {
+            	Debug.logError("Touble getting PaymentMethod", module);
+    		}
+    	}
+    	else{
+    		if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+            	try {
+            		GenericValue paymentMethodType=delegator.findOne("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId",paymentMethodTypeId) , false);
+            		if(UtilValidate.isNotEmpty(paymentMethodType.get("pmntMethodTypePrefix"))){
+            			String paymentMethodTypePrefix = paymentMethodType.getString("pmntMethodTypePrefix");
+            			paymentPerfix = paymentMethodTypePrefix + "/" + paymentPerfix;
+                	}
+                }
+                catch (Exception e) {
+                	Debug.logError("Touble getting parentPaymentId", module);
+        		}
+        	}
+    	}*/
+    	
+    	/*if(!paymentMethodTypeId.equals("_NA_")){
+    		if((paymentMethodTypeId.equals("CHEQUE_PAYIN")) || (paymentMethodTypeId.equals("FUND_TRANSFER"))){
+    			paymentPerfix = " CHQ-FT" + "/" + paymentPerfix;
+    		}
+    		else{
+            	try {
+            		GenericValue paymentMethodType=delegator.findOne("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId",paymentMethodTypeId) , false);
+            		if(UtilValidate.isNotEmpty(paymentMethodType.get("pmntMethodTypePrefix"))){
+            			String paymentMethodTypePrefix = paymentMethodType.getString("pmntMethodTypePrefix");
+            			paymentPerfix = paymentMethodTypePrefix + "/" + paymentPerfix;
+                	}
+                }
+                catch (Exception e) {
+                	Debug.logError("Touble getting parentPaymentId", module);
+        		}
+    		}
+    	}*/
+    	
+    	/*if(!paymentMethodId.equals("_NA_")){
+    		
+    		if((paymentMethodId.equals("PAYMENTMETHOD4")) || (paymentMethodId.equals("PAYMENTMETHOD6"))){
+    			paymentPerfix = " CHQ-FT" + "/" + paymentPerfix;
+    		}
+    		else{
+    			GenericValue paymentMethod = null;
+            	try {
+            		paymentMethod=delegator.findOne("PaymentMethod",UtilMisc.toMap("paymentMethodId",paymentMethodId) , false);
+            		if(UtilValidate.isNotEmpty(paymentMethod.get("pmntMethodPrefix"))){
+            			String paymentMethodPrefix = paymentMethod.getString("pmntMethodPrefix");
+            			paymentPerfix = paymentMethodPrefix + "/" + paymentPerfix;
+                	}
+                }
+                catch (Exception e) {
+                	Debug.logError("Touble getting PaymentMethod", module);
+        		}
+    		}
+    	}*/
+    	
+    	/*if(!paymentMethodId.equals("PAYMENTMETHOD2")){
+        	try {
+        		if(!finAccountId.equals("_NA_")){
+    				GenericValue finAccount =delegator.findOne("FinAccount",UtilMisc.toMap("finAccountId",finAccountId) , false);
+            		if(UtilValidate.isNotEmpty(finAccount.get("finAccPrefix"))){
+            			String finAccountPrefix = finAccount.getString("finAccPrefix");
+            			paymentPerfix = paymentPerfix+"/"+finAccountPrefix;
+                	}
+    			}
+        	} catch (GenericEntityException e) {
+    			ServiceUtil.returnError(e.getMessage());
+    		}
+    	}*/
+    	
+    	String paymentSequence = paymentPerfix +"/"+ (EntityUtil.getFirst(paymentSeqList)).getString("sequenceId");
+    	return paymentSequence;
+	}
+	
 }

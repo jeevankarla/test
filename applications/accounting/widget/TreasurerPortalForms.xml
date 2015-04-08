@@ -75,7 +75,7 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
-      <field name="statement" title="Reconciliation Statement" widget-style="buttontext">
+		<field name="statement" title="Reconciliation Statement" widget-style="buttontext">
             <hyperlink target="recStatemetn.pdf" description="Statement" target-window="_BLANK"  also-hidden="false">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="glReconciliationId" value="_NA_" />
@@ -310,7 +310,7 @@ under the License.
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
-     <form name="FindBatchContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+    <form name="FindBatchContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	<field name="finAccountId" title="From Financial Account" >
@@ -363,7 +363,7 @@ under the License.
             </hyperlink>
         </field> 
     </form>
-     <form name="ListBatchContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
+    <form name="ListBatchContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
       default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
     	 <actions>
 			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListBatchContraEntries.groovy"/>	
@@ -1584,6 +1584,7 @@ under the License.
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
+        <field name="paymentSequenceId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
         <field name="comments"><text-find ignore-case="true"/></field>
         <!-- <field name="paymentMethodTypeId">
@@ -1640,6 +1641,13 @@ under the License.
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
+                <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
+            </hyperlink>
+        </field>
+        <field name="paymentSequenceId" title="Payment Seq" widget-style="buttontext">
+            <hyperlink description="${paymentSequenceId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+                <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
             </hyperlink>
         </field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>
@@ -1667,6 +1675,7 @@ under the License.
         <field name="printReceipt" widget-style="buttontext">
             <hyperlink target="printAdvAndDepositReceipt.pdf" description="Print Receipt" target-window="_BLANK">
                 <parameter param-name="paymentId"/>
+                <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
             </hyperlink>
         </field>
         <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHEQUE_PAYIN&quot;" name="Print Cheque" widget-style="buttontext" >
