@@ -141,7 +141,11 @@ under the License.
                     <fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block></fo:table-cell>
                     </#if>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+                    <#if emp.get("leaveTypeId")?has_content && (emp.get("leaveTypeId") == "EL" || emp.get("leaveTypeId") == "CML" || emp.get("leaveTypeId") == "HPL" || emp.get("leaveTypeId") == "CL")>
                     <fo:table-cell><fo:block text-align="right" keep-together="always">${emp.get("balance")?if_exists?string("##0.0")}</fo:block></fo:table-cell>
+					<#else>
+						<fo:table-cell><fo:block text-align="left" keep-together="always"></fo:block></fo:table-cell>
+					</#if>
 					</fo:table-row>
 					<fo:table-row>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
