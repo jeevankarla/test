@@ -95,10 +95,14 @@ public class MaterialPurchaseServices {
 	    String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
 	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    String remarks = (String) request.getParameter("remarks");
+	    String depotFlag = (String) request.getParameter("depotSalesFlag");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		String shipmentId ="";
+		String receiptId="";
+		GenericValue shipmentReceipt=null;
+		
 		if (UtilValidate.isEmpty(orderId) && UtilValidate.isEmpty(withoutPO)) {
 			Debug.logError("Cannot process receipts without orderId: "+ orderId, module);
 			return "error";
@@ -435,8 +439,8 @@ public class MaterialPurchaseServices {
 			  		return "error";
 	            }
 				
-				String receiptId = (String)receiveInventoryResult.get("receiptId");
-				GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+				receiptId = (String)receiveInventoryResult.get("receiptId");
+				shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
 				if(UtilValidate.isNotEmpty(shipmentReceipt)){
 					shipmentReceipt.set("shipmentId", shipmentId);
 					shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
@@ -487,8 +491,40 @@ public class MaterialPurchaseServices {
 				}
 			}
 			
+	if("Y".equals(depotFlag)){
+				
+			Map inputMap = FastMap.newInstance();
+			inputMap.put("statusIdTo","SR_QUALITYCHECK");
+			inputMap.put("receiptId",receiptId);
+			inputMap.put("partyId","DEPOT");
+			inputMap.put("userLogin",userLogin);
+			Map resultMap = dispatcher.runSync("sendReceiptQtyForQC",inputMap);
+		
+			if (ServiceUtil.isError(resultMap)) {
+				Debug.logWarning("There was an error while sending to QC: " + ServiceUtil.getErrorMessage(resultMap), module);
+				request.setAttribute("_ERROR_MESSAGE_", "There was an error sending to QC: " + ServiceUtil.getErrorMessage(resultMap));	
+				TransactionUtil.rollback();
+		  		return "error";
+            }
+			inputMap.clear();
+			resultMap.clear();
 			
+			inputMap.put("statusIdTo","SR_ACCEPTED");
+			inputMap.put("receiptId",receiptId);
+			inputMap.put("shipmentId",shipmentId);
+			inputMap.put("shipmentItemSeqId",shipmentReceipt.get("shipmentItemSeqId") );
+			inputMap.put("quantityAccepted",shipmentReceipt.get("quantityAccepted"));
+			inputMap.put("userLogin",userLogin);
+			resultMap = dispatcher.runSync("acceptReceiptQtyByQC", inputMap);
+			
+			if (ServiceUtil.isError(resultMap)) {
+				Debug.logWarning("There was an error while Accepting in QC: " + ServiceUtil.getErrorMessage(resultMap), module);
+				request.setAttribute("_ERROR_MESSAGE_", "There was an error Accepting in QC: " + ServiceUtil.getErrorMessage(resultMap));	
+				TransactionUtil.rollback();
+		  		return "error";
+            }
 		}
+	}
 		catch (GenericEntityException e) {
 			try {
 				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
@@ -512,6 +548,7 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  		}
 	  	}
+		
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}

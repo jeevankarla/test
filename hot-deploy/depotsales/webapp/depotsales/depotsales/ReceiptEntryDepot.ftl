@@ -267,7 +267,11 @@
 		          			
 				        </tr>
 				        <tr><td><br/></td></tr>
-	
+				        <tr>
+				         	 <td>
+		          				<input type="hidden" name="depotSalesFlag" id="depotSalesFlag" value="Y"/>  
+		          			</td>
+				        </tr>
 	    			</table>
 				</form>
 				<br/>
