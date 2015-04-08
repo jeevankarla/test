@@ -47,18 +47,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
                     <fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
               		<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-              		<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;                       OPENING BALANCE     DURING THER PERIOD    CLOSING BALANCE </fo:block>
+              		<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;                              OPENING BALANCE     DURING THER PERIOD       CLOSING BALANCE </fo:block>
             	<fo:block>
                     <fo:table>
 				    <fo:table-column column-width="8%"/>
 			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="12%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="11%"/>
 			        <fo:table-column column-width="8%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="5%"/>
+			        <fo:table-column column-width="13%"/>
+			        <fo:table-column column-width="13%"/>
+			        <fo:table-column column-width="13%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="13%"/>
                     <fo:table-body>
                     	<fo:table-row>
                 			<fo:table-cell>
@@ -68,25 +67,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                     			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">SL DESCRIPTION</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">DEBIT</fo:block>  
+                    			<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">DEBIT</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">CREDIT</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">DEBIT</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CREDIT</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">DEBIT</fo:block>  
+                    			<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">DEBIT</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CREDIT</fo:block>  
-                			</fo:table-cell>
-                			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">DEBIT</fo:block>  
-                			</fo:table-cell>
-                			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CREDIT</fo:block>  
-                			</fo:table-cell>
-                			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                     </fo:table-body>
@@ -106,19 +102,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
 				<#assign grandOpenBalCredit=grandOpenBalCredit+finAccntValue.get("openBalanceCredit")>
 				<#assign grandCurrentDebit=grandCurrentDebit+finAccntValue.get("currentDebit")>
 				<#assign grandCurrentCredit=grandCurrentCredit+finAccntValue.get("currentCredit")>
-                <#assign grandClosingDebit=grandClosingDebit+finAccntValue.get("closingDebit")>
-				<#assign grandClosingCredit=grandClosingCredit+finAccntValue.get("closingCredit")>
                <fo:block>
                     <fo:table>
 				    <fo:table-column column-width="8%"/>
 			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="5%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="9%"/>
-					<fo:table-column column-width="11%"/>
+			        <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
                     <fo:table-body>
                     	<fo:table-row>
                 			<fo:table-cell>
@@ -139,28 +132,31 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("currentCredit")?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                		<#--	<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("closingDebit")?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("closingCredit")?if_exists?string("##0.00")}</fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell> -->
                 			<#assign balance=0>
                 			<#if finAccntValue.get("balance")?has_content>
                               <#assign balance=finAccntValue.get("balance")>
-                              <#assign grandTotalBalance=grandTotalBalance+balance> 
                              </#if>
                              <#if balance gt 0> 
+                             <#assign grandClosingDebit=grandClosingDebit+balance> 
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${balance?if_exists?string("##0.00")}(Dr)</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${balance?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
-                			<#elseif balance lt 0>
-                             <fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*balance)?if_exists?string("##0.00")}(Cr)</fo:block>  
+                			 <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">0.00</fo:block>  
                 			</fo:table-cell>
-                            <#else>
+                			<#else>
+                           <#assign grandClosingCredit=grandClosingCredit+balance>
+                              <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">0.00</fo:block>  
+                			</fo:table-cell>  
                              <fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*balance)?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			</#if>
                 		</fo:table-row>
@@ -173,13 +169,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                     <fo:table>
 				    <fo:table-column column-width="8%"/>
 			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="5%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="9%"/>
-					<fo:table-column column-width="11%"/>
+			        <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+
                     <fo:table-body>
                     	<fo:table-row>
                 			<fo:table-cell>
@@ -200,25 +196,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grandCurrentCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                		 <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grandClosingDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grandClosingCredit?if_exists?string("##0.00")}</fo:block>  
-                			</fo:table-cell>
-                           <#if grandTotalBalance gt 0> 
-                			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grandTotalBalance?if_exists?string("##0.00")}(Dr)</fo:block>  
-                			</fo:table-cell>
-                			<#elseif grandTotalBalance lt 0>
-                             <fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*grandTotalBalance)?if_exists?string("##0.00")}(Cr)</fo:block>  
-                			</fo:table-cell>
-                            <#else>
-                             <fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grandTotalBalance?if_exists?string("##0.00")}</fo:block>  
-                			</fo:table-cell>
-                			</#if>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*grandClosingCredit)?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell> 
                 		</fo:table-row>
                     </fo:table-body>
                 </fo:table>

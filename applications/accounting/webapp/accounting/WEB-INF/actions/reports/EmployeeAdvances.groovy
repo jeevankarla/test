@@ -90,13 +90,21 @@ finAccountList.each{finAccountTypeId->
 	finAccntMap["partyId"]=finAccountTypeId.ownerPartyId;
 	
 	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate));
-	if(UtilValidate.isNotEmpty(finAccTransMap)){
+	/*if(UtilValidate.isNotEmpty(finAccTransMap)){
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("withDrawal"))){
 			openBalanceCredit=finAccTransMap.get("withDrawal");
 		}
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("deposit"))){
 			openBalanceDebit=finAccTransMap.get("deposit");
 		}
+	}*/
+	balance=finAccTransMap.get("openingBalance");
+	if(balance>0){
+		openBalanceDebit=balance;
+		openBalanceCredit=0;
+	}else{
+		openBalanceCredit=-(balance);
+		openBalanceDebit=0;
 	}
 	tempMap.openBalanceDebit=openBalanceDebit;
 	tempMap.openBalanceCredit=openBalanceCredit;
@@ -156,6 +164,7 @@ finAccountList.each{finAccountTypeId->
 	closingDebit=openBalanceDebit+currentDebit;
 	tempMap.closingCredit=closingCredit;
 	tempMap.closingDebit=closingDebit;
+	balance=0;
 	balance=closingDebit-closingCredit;
 	tempMap.balance=balance;
 	
