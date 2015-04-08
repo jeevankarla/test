@@ -1345,7 +1345,8 @@ public class SalesInvoiceServices {
 		Delegator delegator = ctx.getDelegator();
 	    List<String> partyIds = (List<String>) context.get("partyIds");
 		 boolean isPurchaseInvoice = Boolean.FALSE;
-			if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
+		String categoryType = (String) context.get("categoryType");
+		if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
 				isPurchaseInvoice = (Boolean)context.get("isPurchaseInvoice");
 		}
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
@@ -1379,6 +1380,12 @@ public class SalesInvoiceServices {
 				conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,"Company"));
 				if (UtilValidate.isNotEmpty(partyIds)) {
 					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
+				}
+				if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICE_CREAM_NANDINI")){
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
+				}
+				if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICP_AMUL_CHANNEL")){
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_AMUL_CHANNEL"));
 				}
 			}
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));

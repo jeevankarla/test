@@ -2120,6 +2120,7 @@ public class ByProductNetworkServices {
 		BigDecimal invoicesTotalAmount = BigDecimal.ZERO;
 		BigDecimal invoicesTotalDueAmount = BigDecimal.ZERO;
 		Timestamp dayBegin = UtilDateTime.getDayStart(saleDate);
+		String categoryType = (String) context.get("categoryType");
 		try {
 			GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", partyId), false);
 			if (UtilValidate.isEmpty(partyDetail)) {
@@ -2134,14 +2135,22 @@ public class ByProductNetworkServices {
 		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
 		exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId));
 		exprListForParameters.add(EntityCondition.makeCondition("parentInvoiceTypeId",EntityOperator.EQUALS, "SALES_INVOICE"));
+		if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICE_CREAM_NANDINI")){
+			exprListForParameters.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
+		}
+		if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICP_AMUL_CHANNEL")){
+			exprListForParameters.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_AMUL_CHANNEL"));
+		}
 		exprListForParameters.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN, dayBegin));
 		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, invoiceStatusList));
 		exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
 		EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+		Debug.log("paramCond==="+paramCond);
 		EntityFindOptions findOptions = new EntityFindOptions();
 		findOptions.setDistinct(true);
 		try {
 			partyInvoicesList = delegator.findList("InvoiceAndItemType", paramCond,UtilMisc.toSet("invoiceId"), null, findOptions, false);
+			Debug.log("partyInvoicesList==="+partyInvoicesList);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
