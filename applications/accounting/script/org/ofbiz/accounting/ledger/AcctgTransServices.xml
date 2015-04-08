@@ -568,7 +568,10 @@ under the License.
 
     <simple-method method-name="revertAcctgTransOnRemovePaymentApplications" short-description="Create Reverse Accounting Transaction and Entries on removing PaymentApplication records.">
         <entity-one entity-name="PaymentApplication" value-field="paymentApplication"/>
-        <entity-condition entity-name="AcctgTrans" list="paymentAcctgTransList">
+        <if-empty field="paymentApplication.invoiceId">
+           <return/>
+        </if-empty>
+       	<entity-condition entity-name="AcctgTrans" list="paymentAcctgTransList">
             <condition-list combine="and">
                 <condition-expr field-name="invoiceId" from-field="paymentApplication.invoiceId"/>
                 <condition-expr field-name="paymentId" from-field="paymentApplication.paymentId"/>
@@ -618,7 +621,7 @@ under the License.
 			<create-value value-field="acctgTransAttribute" />
 			<clear-field field="acctgTransAttribute" />			
             <clear-field field="copyAcctgTransCtx"/>
-        </iterate>        
+        </iterate>  
     </simple-method>
 
     <simple-method method-name="revertAcctgTransOnCancelInvoice" short-description="Reverting Accounting Transaction And Entries on Canceling an Invoice">
