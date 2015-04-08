@@ -2074,6 +2074,7 @@
 		<alias name="dueDate" entity-alias="INV" />
 		<alias name="partyId" entity-alias="INV" />
 		<alias name="shipmentId" entity-alias="INV" />
+		<alias name="purposeTypeId" entity-alias="INV" />
 		<alias name="parentInvoiceTypeId" entity-alias="INVTYP" field="parentTypeId"/>
 		<view-link entity-alias="INV" rel-entity-alias="INVTYP">
 			<key-map field-name="invoiceTypeId" />
