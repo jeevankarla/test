@@ -2674,7 +2674,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupVoucher"/>
     </request-map>
-     <request-map uri="printContraGroupVoucherAbstract.pdf">
+  	 <request-map uri="printContraGroupVoucherAbstract.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintContraGroupVoucherAbstract"/>
      </request-map>
@@ -2686,7 +2686,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupCheque"/>
     </request-map>
-     <request-map uri="printContraGroupCheque.pdf">
+    <request-map uri="printContraGroupCheque.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintContraGroupCheque"/>
     </request-map>
@@ -3774,16 +3774,12 @@ under the License.
   		<security https="true" auth="true"/>
         <response name="success" type="view" value="FinAccountSummaryPdf"/>
    </request-map>
-    
-   
-   
-   
-   
-   
-   
-   
-   
-   
+   <request-map uri="ArPaymentRegister.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="ArPaymentRegister"></response>    
+   </request-map>
+   <request-map uri="ApPaymentRegister.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="ApPaymentRegister"></response>    
+   </request-map> 
    
     <!-- end of request mappings -->
 
@@ -3978,7 +3974,6 @@ under the License.
     <view-map name="BatchBankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BatchBankContraEntry"/>
     <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
     <view-map name="CreateNewBatchContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewBatchContra"/>
-    
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
     <view-map name="FinAccountTransForReconsileNEWWW" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsileNNNN"/>
@@ -4205,7 +4200,7 @@ under the License.
   	<view-map name="BankGuaranteeReceivedCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankGuaranteeReceivedCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="TreasurerPaymentsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TreasurerPaymentsCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="GroupPaymentCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GroupPaymentCSV" content-type="text/csv" encoding="none"/>
-  	<view-map name="FinAccountTransDetailsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountTransDetailsCSV" content-type="text/csv" encoding="none"/>
+    <view-map name="FinAccountTransDetailsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountTransDetailsCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="GlLedgerReconciliationCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlLedgerReconciliationCSV" content-type="text/csv" encoding="none"/>
     <!-- Assignment Mappings -->
     <view-map name="EditPartyFixedAssetAssignments" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditPartyFixedAssetAssignments"/>
@@ -4343,7 +4338,7 @@ under the License.
    <view-map name="FindGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGroupPayment"/>
    <view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
    <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
-    <view-map name="PrintContraGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
+   <view-map name="PrintContraGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
    <view-map name="PrintContraGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="PrintPayGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
       <view-map name="PrintContraGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintContraGroupCheque" content-type="application/pdf" encoding="none"/> 
@@ -4359,6 +4354,9 @@ under the License.
    <view-map name="TempInvoiceSummaryReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TempInvoiceSummaryReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="TempInvoiceSummaryReportCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TempInvoiceSummaryReportCsv" content-type="text/csv" encoding="none"/>
    <view-map name="FinAccountSummaryPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountSummaryPdf" content-type="application/pdf" encoding="none"/>
+   
+   <view-map name="ArPaymentRegister" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#ArPaymentRegister" content-type="application/pdf" encoding="none"/>
+   <view-map name="ApPaymentRegister" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#ApPaymentRegister" content-type="application/pdf" encoding="none"/>
    
    
    <!-- end of view mappings -->

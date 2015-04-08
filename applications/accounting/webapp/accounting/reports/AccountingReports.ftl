@@ -206,6 +206,8 @@ function reportTypeChangeFunc() {
 	    makeDatePicker3("FinacialFromDate","FinacialThruDate");
 	    makeDatePicker3("advFromDate","advThruDate");
 	    makeDatePicker3("subLedgerFromDate","subLedgerThruDate");
+	    makeDatePicker("prFromDate","prThruDate");
+	    makeDatePicker("aprFromDate","aprThruDate");
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
@@ -317,8 +319,8 @@ function reportTypeChangeFunc() {
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
               </tr>
-             <tr class="alternate-row">
-			      	   <form id="GlLedgerReconciliation" name="GlLedgerReconciliation" method="post" action="<@ofbizUrl>GlLedgerReconciliation.pdf</@ofbizUrl>" target="_blank">        
+               <tr class="alternate-row">
+               		   <form id="GlLedgerReconciliation" name="GlLedgerReconciliation" method="post" action="<@ofbizUrl>GlLedgerReconciliation.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="15%" nowrap>GL Ledger Reconciliation </td>
 			             <td width="10%">From<input  type="text" size="15pt" id="GlLedgerFromDate" readonly  name="fromDate"/></td>
 			      		 <td width="10%">To<input  type="text" size="15pt" id="GlLedgerThruDate" readonly  name="thruDate"/></td>
@@ -601,6 +603,47 @@ function reportTypeChangeFunc() {
 	</table>
 </div>
 <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Payment Register</h3>
+    </div>
+    <div class="screenlet-body">
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
+      	<tr class="alternate-row"> 
+      		<form id="arPaymentRegister" name="arPaymentRegister" method="post" action="<@ofbizUrl>ArPaymentRegister.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">Ar Payment Register</td>
+			  	<td width="25%">Payment Method Type
+			  	  	<select name='paymentMethodTypeId' id ="paymentMethodTypeId">	
+					 	<option value=""></option>								
+						<#list paymentMethodTypes as paymentMethodType> 	
+							<option value='${paymentMethodType.paymentMethodTypeId}'>${paymentMethodType.description?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+				<td width="15%">From<input  type="text" size="18pt" id="prFromDate" readonly  name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="prThruDate" readonly  name="thruDate"/></td>
+          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+      		</form>
+      	</tr>
+      	<tr> 
+      		<form id="apPaymentRegister" name="apPaymentRegister" method="post" action="<@ofbizUrl>ApPaymentRegister.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">Ap Payment Register</td>
+			  	<td width="25%">Fin Account
+			  	  	<select name='finAccountId' id ="finAccountId">	
+					 	<option value=""></option>								
+						<#list finAccountList as finAccount> 	
+							<option value='${finAccount.finAccountId}'>${finAccount.finAccountName?if_exists}</option>
+          		   		</#list>
+				 	</select>
+			  	</td>
+				<td width="15%">From<input  type="text" size="18pt" id="aprFromDate" readonly  name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="aprThruDate" readonly  name="thruDate"/></td>
+          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+      		</form>
+      	</tr>
+	</table>
+</div>
+
+   <div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>General ledger History Report</h3>
     </div>

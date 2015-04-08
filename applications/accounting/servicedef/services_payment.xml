@@ -399,5 +399,18 @@ under the License.
           <attribute name="hideSearch" mode="OUT" type="String" optional="true"/> 
         
     </service>
-    
+    <service name="createPaymentSequence" engine="java" auth="true" invoke="createPaymentSequence" 
+        location="org.ofbiz.accounting.payment.PaymentWorker">
+        <description>Generate Invoice Sequence based on tenant configuration </description>
+        <auto-attributes mode="IN" entity-name="Payment" include="pk"></auto-attributes>
+        <auto-attributes mode="IN" entity-name="Payment" include="nonpk" optional="true"></auto-attributes>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+   	</service>
+    <service name="populateOldPaymentSequence" engine="java"
+     	location="org.ofbiz.accounting.payment.PaymentWorker" invoke="populateOldPaymentSequence" transaction-timeout="6000000">
+        <description>Populate finAccount Transaction Sequence</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>

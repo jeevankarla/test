@@ -427,6 +427,7 @@
 			<description>The customer or third party that owns the account.</description>
 		</field>
 		<field name="postToGlAccountId" type="id"></field>
+		<field name="finAccPrefix" type="id-ne" />
 		<field name="fromDate" type="date-time">
 			<description>Describes when account will be valid. If null, valid immediately.</description>
 		</field>
@@ -1963,8 +1964,7 @@
 			<key-map field-name="invoiceId" />
 		</relation>
 	</view-entity>
-	
-   <view-entity entity-name="InvoiceAndStatus" package-name="org.ofbiz.accounting.invoice"
+	<view-entity entity-name="InvoiceAndStatus" package-name="org.ofbiz.accounting.invoice"
 		title="Invoice and InvoiceStatus view">
 		<member-entity entity-alias="INV" entity-name="Invoice" />
 		<member-entity entity-alias="IVS" entity-name="InvoiceStatus" />
@@ -1980,7 +1980,6 @@
 			<key-map field-name="invoiceId"/>
 		</relation>
 	</view-entity>
-	
 	<view-entity entity-name="InvoiceAndAttribute" package-name="org.ofbiz.accounting.invoice">
 		<member-entity entity-alias="INV" entity-name="Invoice" />
 		<member-entity entity-alias="INA" entity-name="InvoiceAttribute" />
@@ -3300,6 +3299,7 @@
 		<field name="paymentLocation" type="id-ne"></field>		
 		<field name="amount" type="currency-amount"></field>
 		<field name="currencyUomId" type="id"></field>
+		<field name="paymentSequenceId" type="description"></field>
 		<field name="comments" type="comment"></field>
 		<field name="cancelComments" type="long-varchar"></field>
 		<field name="cancelDate" type="date-time"></field><!-- Cheque bounce date -->
@@ -3626,6 +3626,7 @@
 		<field name="glAccountId" type="id-ne"></field>
 		<field name="finAccountId" type="id-ne"></field>
 		<field name="description" type="description"></field>
+		<field name="pmntMethodPrefix" type="id-ne"></field>
 		<field name="fromDate" type="date-time"></field>
 		<field name="thruDate" type="date-time"></field>
 		<prim-key field="paymentMethodId" />
@@ -3773,6 +3774,7 @@
 		<field name="description" type="description"></field>
 		<field name="defaultGlAccountId" type="id"></field>
 		<field name="parentTypeId" type="id-ne"></field>
+		<field name="pmntMethodTypePrefix" type="id-ne"></field>
 		<prim-key field="paymentMethodTypeId" />
 		<relation type="one" fk-name="PAYMENT_MTP_DGLAC" title="Default"
 			rel-entity-name="GlAccount">
@@ -5361,6 +5363,38 @@
 			<key-map field-name="finAccountTransId" />
 		</relation>
 	</entity>
-	
+	<entity entity-name="PaymentSequence" package-name="org.ofbiz.accounting.payment"
+		title="Payment Sequence Entity">
+		<field name="finYearId" type="id-ne"></field>
+		<field name="PaymentParentType" type="id"></field> 
+		<!-- <field name="paymentMethodId" type="id"></field> --> 
+		<field name="paymentMethodTypeId" type="id-ne"></field>
+		<field name="finAccountId" type="id-ne"></field> 
+		<field name="sequenceId" type="id-ne"></field>
+		<field name="paymentId" type="id-ne"></field>
+		<prim-key field="finYearId" />
+		<prim-key field="PaymentParentType" />
+		<prim-key field="paymentMethodId" />
+		<prim-key field="finAccountId" />
+		<prim-key field="sequenceId" />
+		<relation type="one" fk-name="PMNTSEQ_FY" rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
+		</relation>
+		<relation type="one" fk-name="PMNTSEQ_INVTYP" rel-entity-name="PaymentType">
+			<key-map field-name="paymentTypeId" />
+		</relation>
+		<relation type="one" fk-name="PMNTSEQ_INV" rel-entity-name="Payment">
+			<key-map field-name="paymentId" />
+		</relation>
+		<!-- <relation type="one" fk-name="PMNTSEQ_PM" rel-entity-name="PaymentMethod">
+			<key-map field-name="paymentMethodId"/>
+		</relation>	 -->
+		<relation type="one" fk-name="PMNTSEQ_PMT" rel-entity-name="PaymentMethodType">
+			<key-map field-name="paymentMethodTypeId"/>
+		</relation>	
+		<relation type="one" fk-name="PMNTSEQ_FA" rel-entity-name="FinAccount">
+			<key-map field-name="finAccountId"/>
+		</relation>
+	</entity>
 	
 </entitymodel>
