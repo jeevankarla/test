@@ -154,8 +154,13 @@
     </request-map>
      <request-map uri="FindMilkReceipt">
     	<security auth="true" https="true"/>
-        <response name="success" type="view" value="FindMilkReceipt"/>
-        <response name="error" type="view" value="FindMilkReceipt"/>
+        <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
+        <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
+    </request-map>
+    <request-map uri="FindMilkReceiptsTankerEntry">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
+        <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
     </request-map>
     <request-map uri="updateSendMilkRecord">
 		<security auth="true" https="true" />
@@ -564,7 +569,7 @@
     
 
     <!--  View maps of kmf  -->
-    
+    <view-map name="FindMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerOutEntry"/>
     <view-map name="MilkReceiptsQCEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsQCEntry"/>

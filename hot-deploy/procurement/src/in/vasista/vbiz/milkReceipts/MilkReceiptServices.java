@@ -2305,7 +2305,7 @@ public class MilkReceiptServices {
 	 	String partyIdTo = (String) context.get("partyIdTo");
 	 	String sealCheck = (String) context.get("sealCheck");
 	 	
-	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyhhmm");
+	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
 	 	try{
 	 		//we need to check the transfer status of the give tanker
 	 		Map tankerInMap = FastMap.newInstance();
@@ -2397,7 +2397,7 @@ public class MilkReceiptServices {
    	 	String tankerNo = (String) context.get("tankerNo");
 	 	String statusId = (String) context.get("statusId");
 	 	String milkTransferId = (String) context.get("milkTransferId");
-	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyhhmm");
+	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
 	 	try{
 	 		GenericValue milkTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId", milkTransferId),false);
 	 		if(UtilValidate.isEmpty(milkTransfer)){

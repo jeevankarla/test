@@ -480,8 +480,8 @@
     </form>    
     <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="milkDetailslist"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
        <field name="milkTransferId" title="Record No"><display/></field>
-       <field name="facilityId" separate-column="true" title="FacilityId [mccCode]"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}[${mccCode}]"></display-entity></field>
-       <field name="facilityIdTo" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+       <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
+       <field name="partyIdTo" separate-column="true" title="To"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
        <field name="receiveDate" title="RecDate"><display type="date"/></field>
        <field name="productId" title="Milktype"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
        <field name="receivedQuantity" title="Recquantity(Kgs)"><display/></field>
@@ -492,19 +492,20 @@
        <field name="receivedKgSnf" title="RecKgSnf"><display/></field>
        <field name="containerId" title="Vehicle Number"><display/></field>
        <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-       <field   name="update"  title="Edit" title-style="buttontext" separate-column="true" widget-style="button">
+       <!-- <field   name="update"  title="Edit" title-style="buttontext" separate-column="true" widget-style="button">
           <hyperlink target="updateMilkRecord" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
             <parameter param-name="milkTransferId"/>
           </hyperlink>
-       </field> 
-       <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_RECD&quot;)"  name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
+       </field>  -->
+       <field  name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
             <hyperlink  description="delete" target-type="plain">
+            	<parameter param-name="hideSearch" value="N"/>
            </hyperlink>
         </field> 
        <sort-order>
 	        <sort-field name="milkTransferId"/>
-	        <sort-field name="facilityId"/>
-	        <sort-field name="facilityIdTo"/>
+	        <sort-field name="partyId"/>
+	        <sort-field name="partyIdTo"/>
 	        <sort-field name="productId"/>
 	        <sort-field name="receivedQuantity"/>
 	        <sort-field name="receivedQuantityLtrs"/>
