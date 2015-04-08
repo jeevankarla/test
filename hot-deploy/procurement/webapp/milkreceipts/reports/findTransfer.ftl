@@ -68,7 +68,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("findFromDate","thruDate");
 		makeDatePicker("findThruDate","thruDate");
 	
-		var mccCodeJson = ${StringUtil.wrapString(mccCodeJson)}
+		var mccCodeJson = ${StringUtil.wrapString(mccCodeJson)};
+		var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)};
 		$("input").keyup(function(e){
 		  		if(e.target.name == "mccCode" ){
 					var tempUnitJson = mccCodeJson[$('[name=mccCode]').val()];
@@ -86,10 +87,39 @@ function makeDatePicker(fromDateId ,thruDateId){
 		  				$('span#unitToolTip').html('Code not found');
 		  			}	  			
 		  		}
+		  		
+			  	if(e.target.name == "partyName"){
+		  			$('[name=partyName]').val(($('[name=partyName]').val()).toUpperCase());
+		  			populatePartyName();
+					var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
+		  			if(tempPartyJson){
+		  				$('span#partyToolTip').addClass("tooltip");
+		  				$('span#partyToolTip').removeClass("tooltipWarning");
+		  				var partyName = tempPartyJson["partyName"];
+		  				var partyId = tempPartyJson["partyId"];
+		  				if(!partyName){
+		  					partyName = partyId;
+		  				}
+		  				$('span#partyToolTip').html(partyName);
+		  				$('[name=partyId]').val(partyId);
+		  			}else{
+		  				$('[name=partyId]').val('');
+		  				$('span#partyToolTip').removeClass("tooltip");
+		  				$('span#partyToolTip').addClass("tooltipWarning");
+		  				$('span#partyToolTip').html('Code not found');
+		  			}
+		  		}
 		}); 
 		
 	});
-
+	
+function populatePartyName(){
+	var availableTags = ${StringUtil.wrapString(partyItemsJSON)!'[]'};
+				$("#partyId").autocomplete({					
+						source:  availableTags
+				});
+				
+}
 function deleteTransferEntry(thisValue,milkTransferId){	
 	var confirmationFlag=false;
 	if(confirm('Dou u want to delete this Record?')){	
@@ -144,10 +174,13 @@ function deleteTransferEntry(thisValue,milkTransferId){
 	        					<td><span class='h3'>Record No: </span></td><td><input  size="12" type="text" id="milkTrnsfId" name="milkTransferId"/></td>
 	        				</tr>
                          	<tr>
-                         		<td><span class='h3'>Mcc Code:</span></td><td>
-                         		<input type="hidden" size="6" id="facilityId" maxlength="6" name="facilityId"  autocomplete="off" value="" />
-                         		<input type="text" size="6" maxlength="6" name="mccCode" id="mccCode" autocomplete="off"/><span class="tooltip" id ="unitToolTip">none</span></td>
-                   			</tr>
+		                         		<td><span class='h3'>From Union: </span></td><td>
+		                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on"/><span class="tooltip" id ="partyToolTip">none</span></td>
+		                         		<input type="hidden" size="6" maxlength="6" name="partyId"/>
+		                         		
+		                         		<input type="hidden" size="6" maxlength="6" name="hideSearch" value="N"/>
+		                         		
+		                   			</tr>
         					<tr>	        	
 					        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type</td><td>
 						        	<select name="productId" class='h4' >

@@ -33,49 +33,55 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
 String fromDate = null;
 String thruDate = null;
-fromDate = parameters.fromDate;
-thruDate = parameters.thruDate;
-java.sql.Timestamp fromStartTime =null;
-java.sql.Timestamp thruEndTime =null;
-if(fromDate){
-	java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MMMM dd, yyyy");
-	java.util.Date fromParsedDate = dateFormat.parse(fromDate);	
-	java.sql.Timestamp fromTimestamp = new java.sql.Timestamp(fromParsedDate.getTime());
-	 fromStartTime =  UtilDateTime.getDayStart(fromTimestamp);	
-	if(thruDate){
-		java.util.Date thruParsedDate = dateFormat.parse(thruDate);
-		java.sql.Timestamp thruTimestamp = new java.sql.Timestamp(thruParsedDate.getTime());
-		 thruEndTime =  UtilDateTime.getDayEnd(thruTimestamp);
-		thruDateTimeStamp = (String)thruEndTime ;
+String hideSearch = parameters.hideSearch;
+List milkDetailslist = FastList.newInstance();
+if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
+	fromDate = parameters.fromDate;
+	thruDate = parameters.thruDate;
+	java.sql.Timestamp fromStartTime =null;
+	java.sql.Timestamp thruEndTime =null;
+	if(fromDate){
+		java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MMMM dd, yyyy");
+		java.util.Date fromParsedDate = dateFormat.parse(fromDate);	
+		java.sql.Timestamp fromTimestamp = new java.sql.Timestamp(fromParsedDate.getTime());
+		 fromStartTime =  UtilDateTime.getDayStart(fromTimestamp);	
+		if(thruDate){
+			java.util.Date thruParsedDate = dateFormat.parse(thruDate);
+			java.sql.Timestamp thruTimestamp = new java.sql.Timestamp(thruParsedDate.getTime());
+			 thruEndTime =  UtilDateTime.getDayEnd(thruTimestamp);
+			thruDateTimeStamp = (String)thruEndTime ;
+		}
+		
 	}
+	if(UtilValidate.isEmpty(fromStartTime)){
+		fromStartTime = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -15));
+	}
+	if(UtilValidate.isEmpty(thruEndTime)){
+		thruEndTime = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+	}
+	milkDetailslist=[];
+	List conditionList=FastList.newInstance();
+	if(UtilValidate.isNotEmpty(parameters.partyId)){
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyId));
+	}
+	if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
+		conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
+	}
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
+	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
+	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
+	if(UtilValidate.isNotEmpty(parameters.productId)){
+		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
+	}
+		/*conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromStartTime)]));
+		conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruEndTime));*/
+	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromStartTime));
+	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruEndTime));
 	
+	if(UtilValidate.isNotEmpty(parameters.createdByUserLogin)){
+		conditionList.add(EntityCondition.makeCondition("createdByUserLogin", EntityOperator.EQUALS ,parameters.createdByUserLogin));
+	}
+	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	milkDetailslist = delegator.findList("MilkTransfer",condition,null,UtilMisc.toList("-createdStamp"),null,false);
 }
-
-milkDetailslist=[];
-List conditionList=FastList.newInstance();
-if(UtilValidate.isNotEmpty(parameters.facilityId)){
-	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , parameters.facilityId));
-}
-if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
-	conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
-}
-conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.EQUALS , "MAIN_PLANT"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
-conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
-if(UtilValidate.isNotEmpty(parameters.productId)){
-	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
-}
-if(UtilValidate.isNotEmpty(fromStartTime)){	
-	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromStartTime)]));
-}
-if(UtilValidate.isNotEmpty(thruEndTime)){
-	conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruEndTime));
-}
-if(UtilValidate.isNotEmpty(parameters.createdByUserLogin)){
-	conditionList.add(EntityCondition.makeCondition("createdByUserLogin", EntityOperator.EQUALS ,parameters.createdByUserLogin));
-}
-EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-milkDetailslist = delegator.findList("MilkTransfer",condition,null,UtilMisc.toList("-createdStamp"),null,false);
-
 context.milkDetailslist=milkDetailslist;
-
