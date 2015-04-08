@@ -134,12 +134,14 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						employeeMap.put("leaveThru",UtilDateTime.toDateString(empLeaves.get("thruDate"), "dd-MM-yyyy"));
 
 						int interval=0;
+						BigDecimal intv = BigDecimal.ZERO;
 						interval=(UtilDateTime.getIntervalInDays(empLeaves.get("fromDate"), empLeaves.get("thruDate"))+1);
-						BigDecimal intv=new BigDecimal(interval);
+						if(UtilValidate.isNotEmpty(interval)){
+							intv=new BigDecimal(interval);
+						}
 						if(empLeaves.get("dayFractionId")=="FIRST_HALF" || empLeaves.get("dayFractionId")=="SECOND_HALF"){
-							intv=interval/2;
+							intv=new BigDecimal(interval)/2;
 							employeeMap.put("noOfDays",intv);
-							
 						}
 						employeeMap.put("noOfDays",intv);
 						employeeMap.put("leaveTypeId",empLeaves.get("leaveTypeId"));
@@ -163,10 +165,14 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 							if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
 								serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
 								Map leaveBalances = (Map)serviceResult.get("leaveBalances");
-								balance = (BigDecimal) leaveBalances.get(leaveTypeId);
+								if(UtilValidate.isNotEmpty(leaveBalances)){
+									balance = (BigDecimal) leaveBalances.get(leaveTypeId);
+								}
 							}
 						}
-						balance = balance-intv;
+						if(UtilValidate.isNotEmpty(intv) && intv != null){
+							balance = balance-intv;
+						}
 						emplLeaveBalance.putAt(empLeaves.get("leaveTypeId"), balance);
 						leaveBalanceMap.put(empLeaves.get("partyId"), emplLeaveBalance);
 						employeeMap.put("balance", balance);
