@@ -89,6 +89,11 @@ under the License.
     <SecurityGroupPermission groupId="MOB_EMPLOYEE_PLUS" permissionId="MOB_PUNCH_VIEW"/>           
     <SecurityGroupPermission groupId="MOB_EMPLOYEE_PLUS" permissionId="MOB_HR_DB_VIEW"/>      
     
+    <SecurityGroup description="Employee Payable Days Edit" groupId="EMP_PAYDAYS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PAYDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_PAYDAYS_EDIT" permissionId="EMP_PAYDAYS_EDIT"/>
+    
+    
     <SecurityGroup description="Employee LOP Edit" groupId="EMP_LOP_EDIT"/> 
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/>

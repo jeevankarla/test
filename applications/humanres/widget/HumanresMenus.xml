@@ -186,7 +186,7 @@
             </condition> 
         	<link target="DailyPunchEditTable"/>
         </menu-item>
-        <menu-item name="ArrearDays" title="Arrear Days">
+        <menu-item name="ArrearDays" title="Arrear Days/Payable Days">
             <condition>
                    <and>
                      <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>

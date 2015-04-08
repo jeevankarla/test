@@ -1055,7 +1055,7 @@
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>   
     </form>
-    <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="updateArrearDays" separate-columns="true" >
+    <!-- <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="updateArrearDays" separate-columns="true" >
     	<actions>
 		     <entity-one entity-name="EmployeeDetail" value-field="emplDetail">
 					<field-map field-name="partyId" from-field="parameters.partyId" />
@@ -1069,14 +1069,15 @@
             </hyperlink></field>
     	<field name="timePeriodId"><hidden/></field>
     	<field name="customTimePeriodId" title="Time Period"><display></display></field>
-    	<field name="noOfPayableDays"><display></display></field> 
+    	<field name="noOfPayableDays"><text ></text></field>
+    	<field name="noOfPayableDays" parameter-name="payableDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_PAYDAYS&quot;, &quot;_EDIT&quot;,session)))}"><text size="10"></text></field>
     	<field name="noOfArrearDays" title="Arrear Days"><text size="10"></text></field>
     	<field name="lossOfPayDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LOP_EDIT&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"></text></field>
     	<field name="lateMin" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LATEMIN_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Approve Late Min" ><text size="10"></text></field>
     	<field name="noOfAttendedSsDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_GHSS_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Availed SS Days" ><text size="10"></text></field>
     	<field name="noOfAttendedHoliDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_GHSS_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Availed GH Days" ><text size="10"></text></field>
-    	 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-    </form>
+    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form> -->
     <form name="ListPartyBenefitOrDeduction" type="list"
 		list-name="employDetailsList" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">

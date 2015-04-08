@@ -5536,107 +5536,107 @@ public class PayrollService {
 	      BigDecimal lossOfPayDays=(BigDecimal)context.get("lossOfPayDays");
 	      BigDecimal noOfAttendedSsDays=(BigDecimal)context.get("noOfAttendedSsDays");
 	      BigDecimal noOfAttendedHoliDays=(BigDecimal)context.get("noOfAttendedHoliDays");
+	      BigDecimal payableDays = (BigDecimal) context.get("payableDays");
 	      Map result = ServiceUtil.returnSuccess();
 	      BigDecimal lateMin=(BigDecimal)context.get("lateMin");
 	      lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);
 	      try{
-	      			List conditionLis=FastList.newInstance();
-	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
-	      			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED","GENERATION_FAIL")));
-	      			conditionLis.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
-	      			
-	      			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
-	      			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
-	      	if(UtilValidate.isEmpty(statusList)){
-	      		try {
-	      			List conditionList = FastList.newInstance();
-	      			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
-	      			conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS , customTimePeriodId));
-	      			EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
-	      			List<GenericValue> emplPayrollAttendanceDetailList = delegator.findList("PayrollAttendance", condition, null, null, null, false);
-	      				for (int i = 0; i < emplPayrollAttendanceDetailList.size(); ++i) {
-	      					GenericValue employPayrollDetails = emplPayrollAttendanceDetailList.get(i);
-	      					BigDecimal arrearDays=employPayrollDetails.getBigDecimal("noOfArrearDays");
-	      					BigDecimal noOfPayableDays= employPayrollDetails.getBigDecimal("noOfPayableDays");
-	      					if(UtilValidate.isEmpty(lossOfPayDays)){
-	      						lossOfPayDays = employPayrollDetails.getBigDecimal("lossOfPayDays");
-	      					}
-	      					
-	      					if(UtilValidate.isEmpty(arrearDays)){
-	      						employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
-	      						noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
-	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
-	      						employPayrollDetails.store();
-	      					}
-	      					else{
-	      						  if(UtilValidate.isNotEmpty(noOfArrearDays)){
-	      							noOfPayableDays=noOfPayableDays.subtract(arrearDays);
-	      							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
-	      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
-	      							employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
-	      							employPayrollDetails.store();
-	      						  }
-	      						    
-	      					}
-	      					if(UtilValidate.isNotEmpty(lossOfPayDays) && lossOfPayDays.compareTo(BigDecimal.ZERO)>=0){
-	      						BigDecimal empLopDays=employPayrollDetails.getBigDecimal("lossOfPayDays");
-	      						if(UtilValidate.isEmpty(empLopDays)){
-	      							empLopDays = BigDecimal.ZERO;
-	      						}
-	      						noOfPayableDays=noOfPayableDays.add(empLopDays);
-      							noOfPayableDays=noOfPayableDays.subtract(lossOfPayDays);
-      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
-      							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
-      							employPayrollDetails.store();
-	      					}
-	      					if(UtilValidate.isNotEmpty(noOfAttendedSsDays) && noOfAttendedSsDays.compareTo(BigDecimal.ZERO)>=0){
-      							employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
-      							employPayrollDetails.store();
-	      					}
-	      					if(UtilValidate.isNotEmpty(noOfAttendedHoliDays) && noOfAttendedHoliDays.compareTo(BigDecimal.ZERO)>=0){
-      							employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
-      							employPayrollDetails.store();
-	      					}
-	      					if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
-	      						BigDecimal empLateMin=employPayrollDetails.getBigDecimal("lateMin");
-	      						if(UtilValidate.isEmpty(empLateMin)){
-	      							empLateMin = BigDecimal.ZERO;
-	      						}
-	      						noOfPayableDays=noOfPayableDays.add(empLateMin);
-	      						noOfPayableDays=noOfPayableDays.subtract(lateMin);
-	      						lossOfPayDays = lossOfPayDays.subtract(empLateMin);
-	      						lossOfPayDays = lossOfPayDays.add(lateMin);
-	      						
-	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
-	      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
-	      						employPayrollDetails.set("lateMin",lateMin);
-	      						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	      						employPayrollDetails.store();
-	      					}
-	    	      	}
-	      		} catch (GenericEntityException e) {
-	      			Debug.logError(e, module);
-	      			return ServiceUtil.returnError(e.toString());
-	      		}
-	      		result = ServiceUtil.returnSuccess("Successfully Updated!!");
-	      		return result;
-	      		}
-			
+      			List conditionLis=FastList.newInstance();
+      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
+      			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED","GENERATION_FAIL")));
+      			conditionLis.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
+      			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
+      			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
+	      		if(UtilValidate.isEmpty(statusList)){
+		      		try {
+		      			GenericValue employPayrollDetails = delegator.findOne("PayrollAttendance",UtilMisc.toMap("partyId",partyId,"customTimePeriodId",customTimePeriodId),false);	
+		      			BigDecimal arrearDays = employPayrollDetails.getBigDecimal("noOfArrearDays");
+	  					BigDecimal noOfPayableDays= employPayrollDetails.getBigDecimal("noOfPayableDays");
+	  					if(UtilValidate.isNotEmpty(payableDays)){
+	  						noOfPayableDays = payableDays;
+	  						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	  						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	  						employPayrollDetails.store();
+	  					}
+	  					if(UtilValidate.isEmpty(lossOfPayDays)){
+	  						lossOfPayDays = employPayrollDetails.getBigDecimal("lossOfPayDays");
+	  					}
+	  					if(UtilValidate.isEmpty(arrearDays)){
+	  						employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
+	  						noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
+	  						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	  						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	  						employPayrollDetails.store();
+	  					}
+	  					else{
+	  						  if(UtilValidate.isNotEmpty(noOfArrearDays)){
+	  							noOfPayableDays=noOfPayableDays.subtract(arrearDays);
+	  							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
+	  							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	  							employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
+	  							employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	  							employPayrollDetails.store();
+	  						  }
+	  						    
+	  					}
+	  					if(UtilValidate.isNotEmpty(lossOfPayDays) && lossOfPayDays.compareTo(BigDecimal.ZERO)>=0){
+	  						BigDecimal empLopDays=employPayrollDetails.getBigDecimal("lossOfPayDays");
+	  						if(UtilValidate.isEmpty(empLopDays)){
+	  							empLopDays = BigDecimal.ZERO;
+	  						}
+	  						noOfPayableDays=noOfPayableDays.add(empLopDays);
+							noOfPayableDays=noOfPayableDays.subtract(lossOfPayDays);
+							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
+							employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							employPayrollDetails.store();
+	  					}
+	  					if(UtilValidate.isNotEmpty(noOfAttendedSsDays) && noOfAttendedSsDays.compareTo(BigDecimal.ZERO)>=0){
+							employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
+							employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							employPayrollDetails.store();
+	  					}
+	  					if(UtilValidate.isNotEmpty(noOfAttendedHoliDays) && noOfAttendedHoliDays.compareTo(BigDecimal.ZERO)>=0){
+							employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
+							employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							employPayrollDetails.store();
+	  					}
+	  					if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
+	  						BigDecimal empLateMin=employPayrollDetails.getBigDecimal("lateMin");
+	  						if(UtilValidate.isEmpty(empLateMin)){
+	  							empLateMin = BigDecimal.ZERO;
+	  						}
+	  						noOfPayableDays=noOfPayableDays.add(empLateMin);
+	  						noOfPayableDays=noOfPayableDays.subtract(lateMin);
+	  						lossOfPayDays = lossOfPayDays.subtract(empLateMin);
+	  						lossOfPayDays = lossOfPayDays.add(lateMin);
+	  						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	  						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
+	  						employPayrollDetails.set("lateMin",lateMin);
+	  						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	  						employPayrollDetails.store();
+	  					}
+		      		} catch (GenericEntityException e) {
+		      			Debug.logError(e, module);
+		      			return ServiceUtil.returnError(e.toString());
+		      		}
+		      		result = ServiceUtil.returnSuccess("Successfully Updated!!");
+		      		return result;
+		      	}
+	      	}catch (GenericEntityException e) {
+	      		Debug.logError(e, module);
+	      		return ServiceUtil.returnError(e.toString());
 	      	}
-	      	catch (GenericEntityException e) {
-	      			Debug.logError(e, module);
-	      			return ServiceUtil.returnError(e.toString());
-	      	}
-	      	GenericValue customTimePeriod;
-	      		try {
-	      			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
-	      		} catch (GenericEntityException e1) {
-	      			Debug.logError(e1,"Error While Finding Customtime Period");
-	      			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
-	      		}
-	      		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-	      		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-	      		return ServiceUtil.returnError("Already Payroll Generated For The TimePeriod"+UtilDateTime.toDateString(fromDateTime,"dd MMMMM, yyyy")+"-"+UtilDateTime.toDateString(thruDateTime,"dd MMMMM, yyyy"));
+      		GenericValue customTimePeriod;
+      		try {
+      			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+      		} catch (GenericEntityException e1) {
+      			Debug.logError(e1,"Error While Finding Customtime Period");
+      			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+      		}
+      		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+      		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+      		return ServiceUtil.returnError("Already Payroll Generated For The TimePeriod"+UtilDateTime.toDateString(fromDateTime,"dd MMMMM, yyyy")+"-"+UtilDateTime.toDateString(thruDateTime,"dd MMMMM, yyyy"));
 	  }
 	 
 	 
