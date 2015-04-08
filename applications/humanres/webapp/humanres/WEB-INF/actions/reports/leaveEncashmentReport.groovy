@@ -20,8 +20,10 @@ dctx = dispatcher.getDispatchContext();
 orderDate=UtilDateTime.nowTimestamp();
 context.orderDate=orderDate;
 timePeriodId=parameters.customTimePeriodId;
+employeeId=parameters.employeeId;
 fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+
 condList=[];
 condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
 condList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS,"HR_LEAVEENCASH"));
@@ -32,9 +34,9 @@ if(dateList){
 	fromDate=UtilDateTime.toTimestamp(dates.get("fromDate"));
 	thruDate=UtilDateTime.toTimestamp(dates.get("thruDate"));
 }
+
 context.fromlerDate=UtilDateTime.toDateString(fromDate,"dd-MMM-yy");
 context.thrulerDate=UtilDateTime.toDateString(thruDate,"dd-MMM-yy");
-
 periodBillingId="";
 basicSalDate=UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 conList=[];
@@ -58,9 +60,14 @@ employementIds=[];
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.IN,periodBillingIds));
 conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,"Company"));
+ if(UtilValidate.isNotEmpty(employeeId))
+ {
+   conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,employeeId));
+ }
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 payrollHeaderList=delegator.findList("PayrollHeader",condition,null,null,null,false);
 employementIds = EntityUtil.getFieldListFromEntityList(payrollHeaderList, "partyIdFrom", true);
+
 /*emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
@@ -70,10 +77,14 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 */finalList=[];
+emplbalList=[];
+emplResult=[:];
+
 if(UtilValidate.isNotEmpty(payrollHeaderList)){
 	payrollHeaderList.each{payrolHead->
-		//if(employementIds.contains(employment.partyId)){
-			employee=[:];
+	     //if(employementIds.contains(employment.partyId)){
+	        employee=[:];
+			employee["partyId"]="";
 			//name
 			partyName=PartyHelper.getPartyName(delegator, payrolHead.partyIdFrom, false);
 			/*if(employment.lastName!=null){
@@ -92,11 +103,13 @@ if(UtilValidate.isNotEmpty(payrollHeaderList)){
 					employeePosition = emplPositionAndFulfillment.getString("emplPositionId");
 				}
 			}
+			
 			//Leave Balance
-			billingId=payrolHead.periodBillingId;
-			String leaveTypeId="EL";
-			int balance=0;
 			int appDays=15;
+			String leaveTypeId="EL";
+			billingId=payrolHead.periodBillingId;
+			int balance=0;
+			emplbalList.add(payrolHead.partyIdFrom)
 			inputMap = [:];
 			inputMap.put("balanceDate", UtilDateTime.toSqlDate(periodBillingMap.get(billingId)));
 			inputMap.put("employeeId", payrolHead.partyIdFrom);
@@ -104,23 +117,29 @@ if(UtilValidate.isNotEmpty(payrollHeaderList)){
 			Map EmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
 			if(UtilValidate.isNotEmpty(EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId))){
 				balance=EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId);
-			}	
-			employee.put("balance", balance);
-			employee.put("name", partyName)
+			}
+			
+		     for (each in emplbalList) {
+				int i=Collections.frequency(emplbalList,each)
+				if(i>1){
+					balance=balance-appDays;
+				}
+				break;
+			}
+            employee.put("balance", balance);
+			employee.put("name", partyName);
 			employee.put("partyId",payrolHead.partyIdFrom);
 			employee.put("position", employeePosition);
-			employee.put("appDate", UtilDateTime.toDateString(periodBillingMap.get(billingId),"dd-MMM-yy"));
 			employee.put("appDays", appDays);
 			employee.put("leaveTypeId", leaveTypeId);
+			employee.put("appDate", UtilDateTime.toDateString(periodBillingMap.get(billingId),"dd-MMM-yy"));
 			
 			finalList.add(employee);
-		
-	}
+	   }
 }
 if(UtilValidate.isEmpty(finalList)){
 	Debug.logError("No Leaves Found.","");
 	context.errorMessage = "No Leaves Found.......!";
 	return;
 }
-
 context.finalList=finalList;
