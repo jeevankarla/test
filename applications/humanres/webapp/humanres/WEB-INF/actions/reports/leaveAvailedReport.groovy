@@ -147,38 +147,23 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						//balance 
 						balance=0;
 						emplLeaveBalance=[:];
+						Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
 						if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
 							emplLeaveBalance=leaveBalanceMap.get(empLeaves.get("partyId"));
 						}
-						
 						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
 								balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
 						}else{
-							leaveBalanceCondList = [];
-							leaveBalanceCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, empLeaves.get("partyId")));
-							leaveBalanceCondList.add(EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS,empLeaves.get("leaveTypeId")));
-							cond=EntityCondition.makeCondition(leaveBalanceCondList,EntityOperator.AND);
-							leaveBalances = delegator.findList("EmplLeaveBalanceStatus", cond ,null,null, null, false );
-							if(UtilValidate.isNotEmpty(leaveBalances)){
-								leaveBalance = leaveBalances.get(leaveBalances.size() - 1);
-								if (UtilValidate.isNotEmpty(leaveBalance.openingBalance)) {
-									balance = balance + (leaveBalance.openingBalance);
-								}
-								if (UtilValidate.isNotEmpty(leaveBalance.allotedDays)) {
-									balance = balance + (leaveBalance.allotedDays);
-								}
-								if (UtilValidate.isNotEmpty(leaveBalance.availedDays)) {
-									balance = balance - (leaveBalance.availedDays);
-								}
-								if (UtilValidate.isNotEmpty(leaveBalance.adjustedDays)) {
-									balance = balance + (leaveBalance.adjustedDays);
-								}
-								if (UtilValidate.isNotEmpty(leaveBalance.encashedDays)) {
-									balance = balance - (leaveBalance.encashedDays);
-								}
-								if (UtilValidate.isNotEmpty(leaveBalance.lapsedDays)) {
-									balance = balance - (leaveBalance.lapsedDays);
-								}
+							Map getEmplLeaveBalMap = [:];
+							getEmplLeaveBalMap.put("userLogin",userLogin);
+							getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
+							getEmplLeaveBalMap.put("employeeId",empLeaves.get("partyId"));
+							getEmplLeaveBalMap.put("flag","creditLeaves");
+							getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+							if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
+								serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
+								Map leaveBalances = (Map)serviceResult.get("leaveBalances");
+								balance = (BigDecimal) leaveBalances.get(leaveTypeId);
 							}
 						}
 						balance = balance-intv;

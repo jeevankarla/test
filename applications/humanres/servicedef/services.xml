@@ -1651,6 +1651,7 @@ under the License.emplpunch
        <attribute name="leaveBalanceDate" mode="OUT" type="java.sql.Date"/>
        <attribute name="leaveBalanceDateStr" mode="OUT" type="String"/>
        <attribute name="createleaveFlag" mode="IN" type="String" optional="true"/>
+       <attribute name="flag" mode="IN" type="String" optional="true"/>
    </service>
    <service name="getLeaveTypeValidRules" engine="java" auth="true" invoke="getLeaveTypeValidRules" 
         location="in.vasista.vbiz.humanres.EmplLeaveService">
