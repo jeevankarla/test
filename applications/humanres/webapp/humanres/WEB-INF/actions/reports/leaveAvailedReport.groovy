@@ -94,9 +94,6 @@ def populateChildren(org, employeeList) {
 			details=EntityUtil.getFirst(orgDetails);
 			orgName=details.get("groupName");
 		}
-		
-		
-		
 		employeesMap.put(employment.partyId, employment.firstName + " " + lastName);
 	}
 }
@@ -104,7 +101,6 @@ context.orgName=orgName;
 
 
 finalMap=[:];
-
 if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
 			employeesList=[];
@@ -112,14 +108,14 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 			if(UtilValidate.isNotEmpty(parameters.employeeId)){
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.employeeId));
 			}else{
-			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
 			}
 			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
-			//conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate));
+			conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 			conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 			conditionList.add(EntityCondition.makeCondition("leaveStatus",EntityOperator.EQUALS,"LEAVE_APPROVED"));
 			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			empLeavesList = delegator.findList("EmplLeave", condition ,null,null, null, false );
+			empLeavesList = delegator.findList("EmplLeave", condition ,null,UtilMisc.toList("fromDate"), null, false );
 			if(UtilValidate.isNotEmpty(empLeavesList)){
 				emplLeaveBalance=[:];
 				leaveBalanceMap=[:];
@@ -181,6 +177,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						}
 					}
 				}
+				employeesList = UtilMisc.sortMaps(employeesList, UtilMisc.toList("leaveFrom"));
 				if(UtilValidate.isNotEmpty(employeesList)){
 					finalMap.put(leaveTypeId, employeesList);
 				}
