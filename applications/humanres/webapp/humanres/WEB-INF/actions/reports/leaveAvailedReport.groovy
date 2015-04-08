@@ -149,7 +149,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						//balance 
 						balance=0;
 						emplLeaveBalance=[:];
-						Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+						Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(empLeaves.get("fromDate"), -1));
 						if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
 							emplLeaveBalance=leaveBalanceMap.get(empLeaves.get("partyId"));
 						}
