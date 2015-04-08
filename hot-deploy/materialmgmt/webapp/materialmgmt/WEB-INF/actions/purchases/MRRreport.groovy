@@ -202,13 +202,14 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	//DC QTY
 	grnDetailsMap["deliveryChallanQty"]=grnData.deliveryChallanQty;
 	
-	// unitPrice for without orderId reports
-	if(UtilValidate.isEmpty(orderId)){
+	// unitPrice 
+	if(UtilValidate.isNotEmpty(inventoryItemId)){
 		inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 		unitPrice = inventoryItem.unitCost;
+		if(UtilValidate.isNotEmpty(unitPrice)){
 		grnDetailsMap["unitPrice"]= unitPrice;
+		}
 	}
-	
 	if(UtilValidate.isNotEmpty(orderId)){
 		List conditionlist=[];
 		conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
@@ -219,16 +220,10 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	    OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain , null ,orderBy, null, false );
 		OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
 		if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
-			unitPrice = OrderItemChangeDetails.unitPrice;
-			grnDetailsMap["unitPrice"]= OrderItemChangeDetails.unitPrice;
 			grnDetailsMap["quantity"]=OrderItemChangeDetails.quantity;
 		}
 			
 	if(UtilValidate.isEmpty(OrderItemChangeDetails)){
-	inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
-	unitPrice = inventoryItem.unitCost;
-	grnDetailsMap["unitPrice"]= unitPrice;
-	    
 	// OrderItems Details
 	List condlist=[];
 	condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
