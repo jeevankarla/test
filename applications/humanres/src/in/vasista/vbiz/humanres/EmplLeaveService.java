@@ -153,6 +153,9 @@ public class EmplLeaveService {
 						if(flag == "creditLeaves"){
 							leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
 						}
+						if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
+				        	leaveCtx.put("createleaveFlag", "Y");
+				        }
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
 						if(!ServiceUtil.isError(leaveResult)){
 							//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
@@ -172,6 +175,9 @@ public class EmplLeaveService {
 							if(flag == "creditLeaves"){
 								leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
 							}
+							if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
+					        	leaveCtx.put("createleaveFlag", "Y");
+					        }
 							Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
 							if(!ServiceUtil.isError(leaveResult)){
 								//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
