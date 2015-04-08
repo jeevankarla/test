@@ -279,6 +279,11 @@ public class MaterialHelperServices{
         		}
             }
             
+            List<GenericValue> inventoryPeriodSummary = delegator.findList("InventoryPeriodSummary", EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId), null, null, null, false);
+           
+            if(UtilValidate.isNotEmpty(inventoryPeriodSummary)){
+            	delegator.removeAll(inventoryPeriodSummary);
+            }
             
             Timestamp transFromDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
             Timestamp transThruDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -291,7 +296,6 @@ public class MaterialHelperServices{
             }
             
             Map receiptIssueMap = (Map)resultCtx.get("receiptIssueMap");
-            Debug.log("receiptIssueMap #####################"+receiptIssueMap);
             
             Iterator invIter = receiptIssueMap.entrySet().iterator();
 			while (invIter.hasNext()) {
@@ -312,7 +316,7 @@ public class MaterialHelperServices{
 					newEntity.set("receivedQty", (BigDecimal)eachStoreItem.get("receiptQty"));
 					newEntity.set("closingBalanceQty", (BigDecimal)eachStoreItem.get("closingBalanceQty"));
 					newEntity.set("closingCost", (BigDecimal)eachStoreItem.get("closingCost"));
-					delegator.createOrStore(newEntity);
+					newEntity.create();
 				}
 			}
             
