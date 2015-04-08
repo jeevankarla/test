@@ -356,4 +356,8 @@
     <SecurityGroupPermission groupId="PartyFinHistory_ARAP" permissionId="PartyFinHistory_ARAP"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PartyFinHistory_ARAP"/>
 	
+	<SecurityPermission description="Byproducts Year Reports" permissionId="BYPRODUCTS_YEARREPORT"/>
+    <SecurityGroup description="Viewing the  Purchase Analysis Summary Report!" groupId="BYPRODUCTS_YEARREPOR"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_YEARREPOR"  permissionId="BYPRODUCTS_YEARREPOR"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BYPRODUCTS_YEARREPOR"/>
 </entity-engine-xml>
