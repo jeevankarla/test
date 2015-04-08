@@ -154,9 +154,13 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
 								balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
 						}else{
-							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),customTimePeriodId:customTimePeriodId,leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
-							if(UtilValidate.isNotEmpty(leaveBalances) && (leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL")){
-								leaveBalance = leaveBalances.get(0);
+							leaveBalanceCondList = [];
+							leaveBalanceCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, empLeaves.get("partyId")));
+							leaveBalanceCondList.add(EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS,empLeaves.get("leaveTypeId")));
+							cond=EntityCondition.makeCondition(leaveBalanceCondList,EntityOperator.AND);
+							leaveBalances = delegator.findList("EmplLeaveBalanceStatus", cond ,null,null, null, false );
+							if(UtilValidate.isNotEmpty(leaveBalances)){
+								leaveBalance = leaveBalances.get(leaveBalances.size() - 1);
 								if (UtilValidate.isNotEmpty(leaveBalance.openingBalance)) {
 									balance = balance + (leaveBalance.openingBalance);
 								}

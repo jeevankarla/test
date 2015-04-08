@@ -195,7 +195,8 @@ under the License.emplpunch
     	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
 		<auto-attributes mode="IN" include="pk" optional="false"/>
 		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>    
+        <auto-attributes mode="IN" include="nonpk" optional="true"/> 
+        <attribute name="payableDays" mode="IN" type="BigDecimal" optional="true"/>   
     </service>
 
     <service name="deletePartySkill" engine="simple" default-entity-name="PartySkill"
@@ -1649,6 +1650,7 @@ under the License.emplpunch
        <attribute name="leaveBalances" mode="OUT" type="java.util.Map"/>
        <attribute name="leaveBalanceDate" mode="OUT" type="java.sql.Date"/>
        <attribute name="leaveBalanceDateStr" mode="OUT" type="String"/>
+       <attribute name="createleaveFlag" mode="IN" type="String" optional="true"/>
    </service>
    <service name="getLeaveTypeValidRules" engine="java" auth="true" invoke="getLeaveTypeValidRules" 
         location="in.vasista.vbiz.humanres.EmplLeaveService">

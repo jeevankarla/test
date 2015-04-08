@@ -59,7 +59,6 @@ public class EmplLeaveService {
         Map<String, Object> result = FastMap.newInstance();
         String employeeId = (String) context.get("employeeId");
         Date balanceDate = (Date)context.get("balanceDate");
-        
         String flag = (String) context.get("flag");
         if(UtilValidate.isEmpty(balanceDate)){
         	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
@@ -129,6 +128,9 @@ public class EmplLeaveService {
 						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId", leaveTypeId);
+						if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
+				        	leaveCtx.put("createleaveFlag", "Y");
+				        }
 						if(flag == "creditLeaves"){
 							leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
 						}
@@ -222,11 +224,14 @@ public class EmplLeaveService {
 					if(UtilValidate.isNotEmpty(leaveTypeId)){
 						conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
 					}
-					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_APPROVED"));
+					if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
+						conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.IN, UtilMisc.toList("LEAVE_APPROVED","LEAVE_CREATED")));
+					}else{
+						conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_APPROVED"));
+					}
 					if(UtilValidate.isNotEmpty(timePeriodEnd)){
 						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 					}
-					
 					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
@@ -1016,6 +1021,7 @@ public class EmplLeaveService {
 	    			getEmplLeaveBalMap.put("userLogin",userLogin);
 	    			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
 	    			getEmplLeaveBalMap.put("employeeId",partyId);
+	    			getEmplLeaveBalMap.put("createleaveFlag","Y");
 	    			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
 	    			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
 	    				try{
