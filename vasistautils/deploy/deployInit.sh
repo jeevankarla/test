@@ -1,4 +1,17 @@
 #!/bin/bash
+
+#		
+#  This script can be used to setup a staging area for deploying a new version		
+#  of vbiz/milkosoft.  It first fetches the latest master code from Github using ssh. 
+#  Next a fresh build is run and the tar ball is created.  The tarball is then expanded
+#  and the necessary dir structure is created while overriding any production-specific		
+#  files.  Doing this in a separate staging area ensures that running this script will 		
+#  not impact the existing live instance.		
+#		
+#  This resulting dir (vbiz-new) in the staging dir can then replace the current version.  		
+#  A separate script (deploy.sh) does the actual deployment.		
+#
+
 START=`date +%s`
 
 DEPLOY_DIR=/root/deploy
