@@ -175,7 +175,6 @@
 		$("#receiptDate").val(effectiveDate);
 		
 		var hideQCflow = $("#hideQCflow").val();
-		alert(hideQCflow);
 		var flag = jQuery("<input>").attr("type", "hidden").attr("name", "hideQCflow").val(hideQCflow);
 			
 		jQuery(formId).append(jQuery(effDate));
