@@ -1337,6 +1337,7 @@
                 <set field="targetRequest2" value="createProductPriceDepot"/>
                 <set field="targetRequestHistory" value="ProductPriceHistoryDepot"/>
                 <set field="targetRequestDelete" value="deleteProductPriceDepot"/>
+                <set field="targetRequestUpdateTax" value="updateProductPriceDepot"/>
             </actions>
             <widgets>
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
