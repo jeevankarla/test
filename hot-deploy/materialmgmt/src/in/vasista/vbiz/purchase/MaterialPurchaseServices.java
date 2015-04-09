@@ -95,7 +95,7 @@ public class MaterialPurchaseServices {
 	    String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
 	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    String remarks = (String) request.getParameter("remarks");
-	    String depotFlag = (String) request.getParameter("depotSalesFlag");
+	    String hideQCflag = (String) request.getParameter("depotSalesFlag");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -491,7 +491,7 @@ public class MaterialPurchaseServices {
 				}
 			}
 			
-	if("Y".equals(depotFlag)){
+	if(UtilValidate.isNotEmpty(hideQCflag)&&("Y".equals(hideQCflag))){
 				
 			Map inputMap = FastMap.newInstance();
 			inputMap.put("statusIdTo","SR_QUALITYCHECK");
