@@ -2120,6 +2120,7 @@ public class ByProductNetworkServices {
 		BigDecimal invoicesTotalAmount = BigDecimal.ZERO;
 		BigDecimal invoicesTotalDueAmount = BigDecimal.ZERO;
 		Timestamp dayBegin = UtilDateTime.getDayStart(saleDate);
+		String purposeTypeId = (String) context.get("purposeTypeId");
 		try {
 			GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", partyId), false);
 			if (UtilValidate.isEmpty(partyDetail)) {
@@ -2134,6 +2135,9 @@ public class ByProductNetworkServices {
 		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
 		exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId));
 		exprListForParameters.add(EntityCondition.makeCondition("parentInvoiceTypeId",EntityOperator.EQUALS, "SALES_INVOICE"));
+		if(UtilValidate.isNotEmpty(purposeTypeId)){
+			exprListForParameters.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, purposeTypeId));
+		}
 		exprListForParameters.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN, dayBegin));
 		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, invoiceStatusList));
 		exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));

@@ -62,9 +62,11 @@ roleTypeId = "";
 
 if(categoryType && categoryType == "NANDINI"){
 	roleTypeId = "IC_WHOLESALE";
+	catType="ICP_NANDINI_CHANNEL"
 }
 else if(categoryType && categoryType == "AMUL"){
 	roleTypeId = "EXCLUSIVE_CUSTOMER";
+	catType="ICP_AMUL_CHANNEL";
 }
 result = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: roleTypeId]);
 
@@ -96,9 +98,9 @@ creditNotes.each{ eachNote ->
 partyIdsList.each{eachParty ->
 	partyDetail = [:];
 	partyReceipts = ByProductNetworkServices.getPartyPaymentDetails(dctx, UtilMisc.toMap("fromDate",dayBegin,"thruDate" ,dayEnd,"partyIdsList", [eachParty])).get("partyPaidMap");
-	partyInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:[eachParty], isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
-	openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:eachParty])).get("openingBalance");
-	partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:[eachParty],fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
+	partyInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:catType,partyIds:[eachParty], isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
+	openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [purposeTypeId:catType,userLogin: userLogin, saleDate: dayBegin, partyId:eachParty])).get("openingBalance");
+	partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [purposeTypeId:catType,partyIds:[eachParty],fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
 	if(openingBalance!=0 || partyInvoiceTotals || partyReceipts){
 		
 		partyName = EntityUtil.filterByCondition(partyNameDetails, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachParty));
