@@ -267,7 +267,11 @@
 		          			
 				        </tr>
 				        <tr><td><br/></td></tr>
-	
+				        <tr>
+				         	 <td>
+		          				<input type="hidden" name="hideQCflow" id="hideQCflow" value="Y"/>  
+		          			</td>
+				        </tr>
 	    			</table>
 				</form>
 				<br/>

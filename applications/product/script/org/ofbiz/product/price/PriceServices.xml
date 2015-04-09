@@ -24,14 +24,13 @@ under the License.
     <simple-method method-name="createProductPrice" short-description="Create an ProductPrice">
         <set field="callingMethodName" value="createProductPrice"/>
         <set field="checkAction" value="CREATE"/>
+        
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="component://product/script/org/ofbiz/product/product/ProductServices.xml"/>
         <check-permission permission="CATALOG_PRICE_MAINT">
             <fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/>
         </check-permission>
         <check-errors/>
-        
         <call-simple-method method-name="inlineHandlePriceWithTaxIncuded"/>
-
         <make-value value-field="newEntity" entity-name="ProductPrice"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -58,14 +57,15 @@ under the License.
             <fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/>
         </check-permission>
         <check-errors/>
-
         <call-simple-method method-name="inlineHandlePriceWithTaxIncuded"/>
-        
         <entity-one entity-name="ProductPrice" value-field="lookedUpValue"/>
-
         <!-- grab the old price value before setting nonpk parameter fields -->
-        <field-to-result field="lookedUpValue.price" result-name="oldPrice"/>
-
+        <if-not-empty field="lookedUpValue.price">
+        	<field-to-result field="lookedUpValue.price" result-name="oldPrice"/>
+        	<else>
+        		<field-to-result field="lookedUpValue.taxPercentage" result-name="oldPrice"/>
+        	</else>
+		</if-not-empty>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
 
         <now-timestamp field="nowTimestamp"/>
@@ -101,7 +101,6 @@ under the License.
             <set field="parameters.taxAuthPartyId" 
                 value="${groovy:taxAuthCombinedId.substring(taxAuthCombinedId.indexOf('::')+2)}"/>
         </if-not-empty>
-        
         <!-- handle price with tax included related fields (priceWithTax, taxAmount, taxPercentage, taxAuthPartyId, taxAuthGeoId) -->
         <if>
             <condition>
@@ -135,7 +134,6 @@ under the License.
                     </add-error>
                     <check-errors/>
                 </if-empty>
-                
                 <!-- in short the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100)) -->
                 <calculate field="parameters.taxAmount" type="BigDecimal" decimal-scale="3" rounding-mode="HalfUp">
                     <calcop operator="subtract">

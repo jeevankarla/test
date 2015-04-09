@@ -77,10 +77,9 @@
             <link target="searchProduct">
             </link>
         </menu-item>
-        <menu-item name="DepotSalesOrder" title="Sales Order">
-            <link target="DepotSalesOrder">
-            </link>
-        </menu-item>
+        <menu-item name="FindGRNReceipts" title="Receipts">
+	        	<link target="FindGRNReceiptsDepot"/>
+	     </menu-item>
         <menu-item name="NonRouteCustomPayments" title="AR Payments"> 
     		<!-- <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -95,15 +94,16 @@
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
-        <menu-item name="FindGRNReceipts" title="Receipts">
-	        	<link target="FindGRNReceiptsDepot"/>
-	     </menu-item>
-	     <menu-item name="MaterialForQCApproval" title="QC Approval">
-	     <!--    <condition>
+	     <menu-item name="DepotSalesOrder" title="Sales Order">
+            <link target="DepotSalesOrder">
+            </link>
+        </menu-item>
+	     <!-- <menu-item name="MaterialForQCApproval" title="QC Approval">
+	        <condition>
 	        	<if-has-permission permission="MM" action="_QC_VIEW"/>
-	        </condition> -->
+	        </condition>
 	        	<link target="MaterialForQCApproval"/>
-	     </menu-item>
+	     </menu-item> -->
 	    <menu-item name="DepotSalesReports" title="Reports">
 	      	<link target="DepotSalesReports"/>
 	    </menu-item>
