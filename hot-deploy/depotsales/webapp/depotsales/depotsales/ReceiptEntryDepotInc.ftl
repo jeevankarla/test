@@ -174,9 +174,9 @@
 		var effDate = jQuery("<input>").attr("type", "hidden").attr("name", "receiptDate").val(effectiveDate);
 		$("#receiptDate").val(effectiveDate);
 		
-		var depotSalesFlag = $("#depotSalesFlag").val();
-		alert(depotSalesFlag);
-		var flag = jQuery("<input>").attr("type", "hidden").attr("name", "depotSalesFlag").val(depotSalesFlag);
+		var hideQCflow = $("#hideQCflow").val();
+		alert(hideQCflow);
+		var flag = jQuery("<input>").attr("type", "hidden").attr("name", "hideQCflow").val(hideQCflow);
 			
 		jQuery(formId).append(jQuery(effDate));
 		jQuery(formId).append(jQuery(suppInvoice));

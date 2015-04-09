@@ -269,7 +269,7 @@
 				        <tr><td><br/></td></tr>
 				        <tr>
 				         	 <td>
-		          				<input type="hidden" name="depotSalesFlag" id="depotSalesFlag" value="Y"/>  
+		          				<input type="hidden" name="hideQCflow" id="hideQCflow" value="Y"/>  
 		          			</td>
 				        </tr>
 	    			</table>
