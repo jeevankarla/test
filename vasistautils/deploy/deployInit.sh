@@ -1,19 +1,23 @@
 #!/bin/bash
 
+#		
+#  This script can be used to setup a staging area for deploying a new version		
+#  of vbiz/milkosoft.  It first fetches the latest master code from Github using ssh. 
+#  Next a fresh build is run and the tar ball is created.  The tarball is then expanded
+#  and the necessary dir structure is created while overriding any production-specific		
+#  files.  Doing this in a separate staging area ensures that running this script will 		
+#  not impact the existing live instance.		
+#		
+#  This resulting dir (vbiz-new) in the staging dir can then replace the current version.  		
+#  A separate script (deploy.sh) does the actual deployment.		
 #
-#  This script can be used to setup a staging area for deploying a new version
-#  of vbiz/milkosoft.  It expands the named tarball containing the latest version 
-#  and creates the necessary dir structure while overriding any production-specific
-#  files.  Doing this in a separate staging area ensures that running this script will 
-#  not impact the existing live instance.
-#
-#  This resulting dir (vbiz-new) in the staging dir can then replace the current version.  
-#  A separate script (deploy.sh) does the actual deployment.
-#
+
+START=`date +%s`
 
 DEPLOY_DIR=/root/deploy
 DEPLOY_STAGING_DIR=/root/deploy/staging
 DEPLOY_CUSTOMFILES_DIR=/root/deploy/customfiles
+GITHUB_DIR=/root/deploy/github/mdkmf
 
 TARBALL_NAME=kmf
 TODAY=$(date +%Y%m%d)
@@ -28,27 +32,56 @@ function error_exit
 
 clear
 
-echo "Begin deployment initialization"
+echo "*****Begin deployment initialization*****"
 
+# First cleanup old tarball if it exists
+cd ${DEPLOY_DIR}
+if [ -f ${TARBALL_NAME}.tar.gz ];
+then
+	rm ${TARBALL_NAME}.tar.gz;
+fi
+if [ -d staging/vbiz-new ];
+then
+	rm -rf staging/vbiz-new;
+fi 
+
+# Fetch codebase from github
+cd ${GITHUB_DIR}
+git fetch origin
+git reset --hard origin/master
+END=`date +%s`
+ELAPSED=$(( $END - $START ))
+echo "-->Code fetch completed ($ELAPSED seconds)"
+./ant refresh  >/dev/null 2>&1
+END=`date +%s`
+ELAPSED=$(( $END - $START ))
+echo "-->Build completed ($ELAPSED seconds)"
+./ant kmf-tar >/dev/null 2>&1
+END=`date +%s`
+ELAPSED=$(( $END - $START ))
+echo "-->tarball created ($ELAPSED seconds)"
+
+
+# setup the deployment staging area
 cd ${DEPLOY_DIR}
 
-if mv ${TARBALL_NAME}.tar.gz ${TARBALL_NAME}_$TODAY.tar.gz; 
+if mv ${GITHUB_DIR}/../${TARBALL_NAME}.tar.gz ${TARBALL_NAME}.tar.gz; 
 then
 	if mkdir ${DEPLOY_STAGING_DIR}/vbiz-new
 	then 
-		mv ${TARBALL_NAME}_$TODAY.tar.gz ${DEPLOY_STAGING_DIR}/vbiz-new;
+		mv ${TARBALL_NAME}.tar.gz ${DEPLOY_STAGING_DIR}/vbiz-new;
 	else
-		echo "mkdir ${DEPLOY_STAGING_DIR}/vbiz-new failed. Aborting.."
+		echo "mkdir ${DEPLOY_STAGING_DIR}/vbiz-new failed. Aborting.."; exit 1;
 	fi
 else
-	echo "${TARBALL_NAME}.tar.gz does not exist. Aborting.."
+	echo "${TARBALL_NAME}.tar.gz does not exist. Aborting.."; exit 1;
 fi	
 
 cd ${DEPLOY_STAGING_DIR}/vbiz-new/
 
-tar -zxvf ${TARBALL_NAME}_$TODAY.tar.gz
+tar -zxvf ${TARBALL_NAME}.tar.gz >/dev/null 2>&1
 
-mv ${TARBALL_NAME}_$TODAY.tar.gz ../..
+mv ${TARBALL_NAME}.tar.gz ../..
 
 cd ../..
 
@@ -67,5 +100,6 @@ cp customfiles/framework/entity/config/entityengine.xml ${DEPLOY_STAGING_DIR}/vb
 cp customfiles/tools/bin/pdftotext ${DEPLOY_STAGING_DIR}/vbiz-new/tools/bin/pdftotext
 
 chown -R vbiz ${DEPLOY_STAGING_DIR}/vbiz-new
-
-echo "Completed deployment initialization!"
+END=`date +%s`
+ELAPSED=$(( $END - $START ))
+echo "*****End deployment initialization! ($ELAPSED seconds)*****"
