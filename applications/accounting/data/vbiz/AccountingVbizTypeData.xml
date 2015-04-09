@@ -733,4 +733,20 @@
    <PaymentType  description="Loan Recovery Payment" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="LOANRECOVERY_PAYOUT"/>
    <PaymentGlAccountTypeMap glAccountTypeId="ACC_PAY_UN" organizationPartyId="Company" paymentTypeId="LOANRECOVERY_PAYOUT"/>
    
+ <!--  <GlAccountType description="ICP Amul Accounts Receivables" glAccountTypeId="ICPAMUL_RECEIVABLE" hasTable="N" parentTypeId="ACCOUNTS_RECEIVABLE"/>
+   <GlAccountType description="ICP Nandini Accounts Receivables" glAccountTypeId="ICPNANDI_RECEIVABLE" hasTable="N" parentTypeId="ACCOUNTS_RECEIVABLE"/>
+   
+   <GlAccount accountCode="121001" accountName="ICP Amul Accounts Receivables " description="ICP Amul Accounts Receivables" 
+   		glAccountClassId="CURRENT_ASSET" glAccountId="121001" glAccountTypeId="ICPAMUL_RECEIVABLE" glResourceTypeId="MONEY" parentGlAccountId="121000"/>
+   <GlAccount accountCode="121002" accountName="ICP Nandini Accounts Receivables " description="ICP Nandini Accounts Receivables" glAccountClassId="CURRENT_ASSET"
+   		 glAccountId="121002" glAccountTypeId="ICPAMUL_RECEIVABLE" glResourceTypeId="MONEY" parentGlAccountId="121000"/>
+   <GlAccountTypeDefault glAccountId="121001" glAccountTypeId="ICPAMUL_RECEIVABLE" organizationPartyId="Company"/>
+   <GlAccountTypeDefault glAccountId="121002" glAccountTypeId="ICPNANDI_RECEIVABLE" organizationPartyId="Company"/>
+   
+   <GlAccountOrganization fromDate="2013-09-30 00:00:00.0" glAccountId="121001" organizationPartyId="Company" postedBalance="0.00" roleTypeId="INTERNAL_ORGANIZATIO"/>
+   <GlAccountOrganization fromDate="2013-09-30 00:00:00.0" glAccountId="121002" organizationPartyId="Company" postedBalance="0.00" roleTypeId="INTERNAL_ORGANIZATIO"/>
+   <InvoicePurposeTypeGlAccountDefault invoiceTypeId="SALES_INVOICE" invoicePurposeTypeId="ICP_AMUL_CHANNEL" glAccountId="121001" glAccountTypeId="ICPAMUL_RECEIVABLE"/>
+   <InvoicePurposeTypeGlAccountDefault invoiceTypeId="SALES_INVOICE" invoicePurposeTypeId="ICP_NANDINI_CHANNEL" glAccountId="121002" glAccountTypeId="ICPNANDI_RECEIVABLE"/> -->
+   
+   
 </entity-engine-xml>

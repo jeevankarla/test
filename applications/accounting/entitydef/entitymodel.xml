@@ -1443,12 +1443,33 @@
 			rel-entity-name="Shipment">
 			<key-map field-name="shipmentId" />
 		</relation>
+		<relation type="one" fk-name="INVOICE_PURPOSE"
+			rel-entity-name="Enumeration">
+			<key-map field-name="purposeTypeId" rel-field-name="enumId"/>
+		</relation>
 		<index name="INV_DUE_DATE">
         	<index-field name="dueDate"/>
       </index>
       <index name="INV_PAID_DATE">
         	<index-field name="paidDate"/>
       </index>				
+	</entity>
+    <entity entity-name="InvoicePurposeTypeGlAccountDefault" package-name="org.ofbiz.accounting.invoice"
+		title="Invoice PurposeType GlDefault Entity">
+		<field name="invoiceTypeId" type="id-ne"></field>
+		<field name="invoicePurposeTypeId" type="id-ne"></field>
+		<field name="glAccountTypeId" type="id-ne"></field>
+		<prim-key field="invoicePurposeTypeId" />
+		<prim-key field="invoiceTypeId" />
+		<relation type="one" fk-name="INVPUR_TYPEDEF" rel-entity-name="Enumeration">
+			<key-map field-name="purposeTypeId" rel-field-name="enumId"/>
+		</relation>
+		<relation type="one" fk-name="INVPUR_INVTYPE" rel-entity-name="InvoiceType">
+			<key-map field-name="invoiceTypeId"/>
+		</relation>
+		<relation type="one" fk-name="INVPUR_TYPEDEF" rel-entity-name="GlAccountType">
+			<key-map field-name="glAccountTypeId"/>
+		</relation>
 	</entity>
 	<entity entity-name="BillOfSaleInvoiceSequence" package-name="org.ofbiz.accounting.invoice"
 		title="BillOfSale Sequence Entity">

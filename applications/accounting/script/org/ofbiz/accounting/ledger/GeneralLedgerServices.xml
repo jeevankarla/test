@@ -2215,6 +2215,14 @@ under the License.
             <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
             <set field="debitEntry.debitCreditFlag" value="D"/>
             <set field="debitEntry.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
+            <!-- here override glAccountType based on invoice purposeType -->
+            <if-not-empty field="invoice.purposeTypeId">
+            	<call-simple-method method-name="getGlTypeByPurposeType"/>
+            	<if-not-empty field="invoicePurposeTypeGlAccountDefault.glAccountTypeId">
+            	    <set field="debitEntry.glAccountTypeId" from-field="invoicePurposeTypeGlAccountDefault.glAccountTypeId"/>
+            	</if-not-empty>
+            </if-not-empty>
+           
             <set field="debitEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
             <call-class-method method-name="getInvoiceTaxTotal" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
                     ret-field="invoiceTaxTotal">
@@ -2442,6 +2450,9 @@ under the License.
         <call-class-method class-name="org.ofbiz.accounting.util.UtilAccounting" method-name="isReceipt" ret-field="isReceipt">
             <field field="payment" type="org.ofbiz.entity.GenericValue"/>
         </call-class-method>
+        <entity-one value-field="invoice" entity-name="Invoice">
+           		 <field-map field-name="invoiceId" from-field="paymentApplication.invoiceId"/>
+        </entity-one>
         <if-compare field="isReceipt" operator="equals" type="Boolean" value="true">
             <!-- if the payment Credited account is already "accounts receivable" then don't do nothing -->
             <entity-one entity-name="PaymentGlAccountTypeMap" value-field="paymentGlAccountTypeMap">
@@ -2451,6 +2462,14 @@ under the License.
             <if-compare field="paymentGlAccountTypeMap.glAccountTypeId" operator="equals" value="ACCOUNTS_RECEIVABLE">
                 <return/>
             </if-compare>
+            <if-not-empty field="invoice.purposeTypeId">
+            	<call-simple-method method-name="getGlTypeByPurposeType"/>
+            	<if-not-empty field="invoicePurposeTypeGlAccountDefault.glAccountTypeId">
+            	    <if-compare field="paymentGlAccountTypeMap.glAccountTypeId" operator="equals" value="${invoicePurposeTypeGlAccountDefault.glAccountTypeId}">
+                		<return/>
+            		</if-compare>
+            	</if-not-empty>
+            </if-not-empty>
             <!--Debit -->
             <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
             <set field="debitEntry.debitCreditFlag" value="D"/>
@@ -2473,6 +2492,9 @@ under the License.
             <set field="creditEntry.origAmount" from-field="paymentApplication.amountApplied"/>
             <set field="creditEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
             <set field="creditEntry.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
+           	<if-not-empty field="invoicePurposeTypeGlAccountDefault.glAccountTypeId">
+           	    <set field="creditEntry.glAccountTypeId" from-field="invoicePurposeTypeGlAccountDefault.glAccountTypeId"/>
+           	</if-not-empty>
         <else>
             <!-- if the payment Debited account is already "accounts payable" then don't do nothing -->
             <entity-one entity-name="PaymentGlAccountTypeMap" value-field="paymentGlAccountTypeMap">
@@ -2856,5 +2878,18 @@ under the License.
             </else>
             </if-empty>
         </if-compare-field>
+    </simple-method>
+    
+    <simple-method method-name="getGlTypeByPurposeType" short-description="get GlAccountType By PurposeType">
+        <!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
+        <if-empty field="invoice.purposeTypeId">
+           <return/>
+        </if-empty>
+         <get-related-one value-field="invoice" relation-name="InvoiceType" to-value-field="invoiceType"/>
+        <entity-one entity-name="InvoicePurposeTypeGlAccountDefault" value-field="invoicePurposeTypeGlAccountDefault">
+           <field-map field-name="invoiceTypeId" from-field="invoiceType.parentTypeId"/>
+           <field-map field-name="invoicePurposeTypeId" from-field="invoice.purposeTypeId"/>
+        </entity-one>
+        <log level="always" message="InvoicePurposeTypeGlAccountDefault============${invoicePurposeTypeGlAccountDefault}"></log>
     </simple-method>
 </simple-methods>
