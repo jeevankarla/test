@@ -818,7 +818,7 @@ public class SalesInvoiceServices {
 			if(UtilValidate.isNotEmpty(IcpStocktrnsflag) && IcpStocktrnsflag.equals("N")){
 				conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.NOT_EQUAL, "ICP_TRANS_CHANNEL"));
 			}
-			if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICE_CREAM_NANDINI")){
+			if(UtilValidate.isNotEmpty(categoryType) && (categoryType.equals("ICE_CREAM_NANDINI")|| categoryType.equals("ICP_NANDINI_CHANNEL"))){
 				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
 			}
 			if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICP_AMUL_CHANNEL")){
@@ -1345,7 +1345,7 @@ public class SalesInvoiceServices {
 		Delegator delegator = ctx.getDelegator();
 	    List<String> partyIds = (List<String>) context.get("partyIds");
 		 boolean isPurchaseInvoice = Boolean.FALSE;
-		String categoryType = (String) context.get("categoryType");
+		String purposeTypeId = (String) context.get("purposeTypeId");
 		if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
 				isPurchaseInvoice = (Boolean)context.get("isPurchaseInvoice");
 		}
@@ -1381,11 +1381,8 @@ public class SalesInvoiceServices {
 				if (UtilValidate.isNotEmpty(partyIds)) {
 					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
 				}
-				if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICE_CREAM_NANDINI")){
-					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
-				}
-				if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICP_AMUL_CHANNEL")){
-					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_AMUL_CHANNEL"));
+				if(UtilValidate.isNotEmpty(purposeTypeId)){
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, purposeTypeId));
 				}
 			}
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
