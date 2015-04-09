@@ -2164,6 +2164,9 @@ public class ByProductNetworkServices {
 				exprList.add(EntityCondition.makeCondition("invoiceId",	EntityOperator.EQUALS, invoiceId));
 				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate",EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
 				exprList.add(EntityCondition.makeCondition("pmPaymentDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+				if(UtilValidate.isNotEmpty(purposeTypeId)){
+					exprList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, purposeTypeId));
+				}
 				EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 				try {
 					pendingInvoiceList = delegator.findList("InvoiceAndApplAndPayment", cond, null, null, null,	false);
@@ -2194,6 +2197,9 @@ public class ByProductNetworkServices {
 		exprList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId));
 		exprList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 		exprList.add(EntityCondition.makeCondition("pmPaymentDate",EntityOperator.LESS_THAN, dayBegin));
+		if(UtilValidate.isNotEmpty(purposeTypeId)){
+			exprList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, purposeTypeId));
+		}
 		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		try {
 			pendingPaymentsList = delegator.findList("InvoiceAndApplAndPayment", cond, null, null, null, false);
