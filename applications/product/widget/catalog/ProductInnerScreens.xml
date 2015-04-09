@@ -69,7 +69,7 @@ under the License.
                             <include-form name="UpdateProductPrice" location="component://product/widget/catalog/ProductInnerForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditProductTaxes}">
-                            <include-form name="UpdateProductTax" location="component://product/widget/catalog/ProductForms.xml"/>
+                            <include-form name="UpdateProductTax" location="component://product/widget/catalog/ProductInnerForms.xml"/>
                         </screenlet>     
                         <container style="lefthalf">                 
 	                        <screenlet title="${uiLabelMap.PageTitleAddProductPrices}">

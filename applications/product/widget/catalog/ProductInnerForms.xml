@@ -104,6 +104,44 @@ under the License.
       <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+	<form name="UpdateProductTax" type="list" target="${targetRequestUpdateTax}" title="" list-name="productTaxes"
+        odd-row-style="alternate-row" separate-columns="true" default-table-style="basic-table">
+        <auto-fields-service service-name="updateProductPrice" map-name="productPrice"/>
+        <field name="customPriceCalcService"><ignored/></field>  
+        <field name="termUomId"><ignored/></field>    
+        <field name="taxAuthPartyId"><ignored/></field>    
+        <field name="taxAuthGeoId"><ignored/></field>    
+        <field name="taxInPrice" ><ignored/></field>  
+        <field name="currencyUomId" ><hidden/></field>                 
+        <field name="price"><hidden value="0"/></field>
+        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}"><hidden/></field>
+      
+        <field name="productId"><hidden/></field>
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductTaxType}"><display-entity entity-name="ProductPriceType"/></field>
+<!--        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}"><display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}"/></field>-->
+        <field name="productStoreGroupId" ><hidden value="_NA_"/> </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display type="date"/></field>
+		<field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
+            <display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}" also-hidden="false"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+
+        <field name="viewHistoryLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="ProductPriceHistory" description="${uiLabelMap.ProductHistory}" also-hidden="false">
+                <parameter param-name="productId"/>
+                <parameter param-name="productPriceTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="deleteProductPrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="productId"/><parameter param-name="productPriceTypeId"/><parameter param-name="productPricePurposeId"/>
+                <parameter param-name="currencyUomId"/><parameter param-name="productStoreGroupId"/><parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
 
 
 </forms>
