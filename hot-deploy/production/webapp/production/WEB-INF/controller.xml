@@ -23,6 +23,17 @@
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
     
+    <request-map uri="powderPlant">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="powderShiftStart"/>
+    </request-map>
+    <request-map uri="powderShiftStart">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="powderShiftStart"/>
+    </request-map>
+    
+    
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#main"/>
+    <view-map name="powderShiftStart" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
 </site-conf>

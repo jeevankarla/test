@@ -2,5 +2,34 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MainAppBar" title="${uiLabelMap.ProductionApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+        <menu-item name="powderPlant" title="Powder Plant"><link target="powderPlant"/></menu-item>
     </menu>
+    
+    <menu name="ProductionTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem1">
+		<menu-item name="PowderPlant" title="PowderPlant">
+			<link target="powderPlant"></link>
+		</menu-item>		
+	</menu>
+   
+   
+    <menu name="PowderPlantTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="PowderShiftStart" title="Shift Start ">
+			<link target="powderShiftStart"></link>
+		</menu-item>
+		<!-- <menu-item name="PowderSMPproduction" title="SMP Production">
+			<link target="SMPproduction"></link>
+		</menu-item>		
+		<menu-item name="PowderPackingLog" title="Packing Log">
+			<link target="powderPackLog"></link>
+		</menu-item>	
+		<menu-item name="PowderIssueToStroe" title="Issue to Store">
+			<link target="powderIssueToStore"></link>
+		</menu-item>
+		<menu-item name="PowderSweepPowderPacking" title="Sweep Powder Packing">
+			<link target="sweepPowderPacking"></link>
+		</menu-item>				
+		<menu-item name="PowderShiftEnd" title="Shift End">
+			<link target="powderShiftEnd"></link>
+		</menu-item> -->
+	</menu>
 </menus>

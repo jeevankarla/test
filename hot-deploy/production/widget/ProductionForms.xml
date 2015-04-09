@@ -2,5 +2,36 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-
+	<!-- PowderPlant forms -->
+	<form name="PowderShiftStartDetails" type="single">
+		<field name="shift" title="Shift" position="1"><display/></field>
+		<field name="todayDate" title="Date" position="1"><display/></field>
+		<field name="currentTime" title="Time" position="1"><display/></field>
+		<field name="instructions" title="Instructions" position="1"><textarea read-only="true"/></field>
+		
+	</form>
+	<form name="PowderShiftStart" type="list" list-name="shiftSiloDetailsList" paginate="false" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<row-actions>
+		
+			<entity-one value-field="Product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<set field="productCode" value="${Product.brandName}" />
+			<set field="productName" value="${Product.productName}" />
+		
+		</row-actions>
+	
+		<field name="siloId" title="SILO"><display-entity entity-name="Facility" description="${description}" size="25" key-field-name="facilityId"/></field>
+		<field name="productCode" title="Product Code"><display size="10"/></field>
+		<field name="productName" title="Product Name"><display size="15"/></field>
+		
+		<field name="quantityKgs" title="OB"><display size="15" default-value="0"/></field>
+		<field name="moisture" title="Moisture"><display size="15"/></field>
+		<field name="fat"><display size="15"/></field>
+		<field name="snf"><display size="15"/></field>
+		<field name="acidity" title="Acidity"><display size="15"/></field>
+		<field name="temparature" title="Temparature" > <display size="15"/></field>
+		<field name="BD" title="BD" > <display  size="15"/></field>
+		
+     </form>
 </forms>
