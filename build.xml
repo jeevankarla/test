@@ -24,9 +24,9 @@ under the License.
     <import file="macros.xml"/>
     <property name="site.dir" value="../site"/>
     <property name="memory.initial.param" value="-Xms128M"/>
-    <property name="memory.max.param" value="-Xmx512M"/>
+    <property name="memory.max.param" value="-Xmx1024M"/>
     <property name="pos.memory.max.param" value="-Xmx512M"/>
-    <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=512m"/>
+    <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024m"/>
 
     <available file="applications/build.xml" property="applications.present"/>
    <available file="specialpurpose/build.xml" property="specialpurpose.present"/>
