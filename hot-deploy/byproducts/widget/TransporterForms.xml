@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
         
- <form name="ListTransporterReports" list-name="listTransporterReports" title="" type="list" paginate-target="Commissions"
+ <form name="ListTransporterReports" list-name="listTransporterReports" title="" type="list" paginate-target="TransporterMargins"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="periodBillingId"><hidden/></field>       
         <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
