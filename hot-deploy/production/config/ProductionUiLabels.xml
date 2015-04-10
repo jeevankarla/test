@@ -5,7 +5,7 @@
         <value xml:lang="zh">Production应用程序</value>
     </property>
     <property key="ProductionCompanyName">
-        <value xml:lang="en">OFBiz: Production</value>
+        <value xml:lang="en">vbiz: Production</value>
     </property>
     <property key="ProductionCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>

@@ -15,5 +15,30 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="PowderPlant">
+        <section>
+            <actions>
+                <set field="tabButtonItem1" value="PowderPlant"/>
+                <set field="tabButtonItem2" value="PowderShiftStart"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/PowderShiftStart.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	
+                    	<include-menu name="PowderPlantTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                    	
+                    	
+                    	<screenlet title="Shift Start">
+                    		<include-form name="PowderShiftStartDetails" location="component://production/widget/ProductionForms.xml"/>
+                    		<include-form name="PowderShiftStart" location="component://production/widget/ProductionForms.xml"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>

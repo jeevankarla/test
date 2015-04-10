@@ -34,6 +34,7 @@
                                 <if-has-permission permission="PRODUCTION" action="_VIEW"/>
                             </condition>
                             <widgets>
+                            	<include-menu name="ProductionTabBar" location="component://production/widget/ProductionMenus.xml"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 
+   <ProductFacility facilityId="POWDERSILO1" minimumStock="0.000000" productId="221"/> 
+    
+   <FacilityType facilityTypeId="SILO"  hasTable="N" description="SILO"/>
+   	
+   	<EnumerationType description="SILO Facility Category Type" enumTypeId="SILO_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+    <Enumeration description="POWDER SILO" enumCode="POWDER" enumId="POWDER" sequenceId="01" enumTypeId="SILO_CAT_TYPE"/>
+    <Enumeration description="RAWMILK SILO" enumCode="RAWMILK" enumId="RAWMILK" sequenceId="02" enumTypeId="SILO_CAT_TYPE"/>
+	
+	
+   	<Facility categoryTypeEnum="RAWMILK" facilityId="RM1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="RAW MILK SILO1" facilitySizeUomId="VLIQ_L" size="100000" sequenceNum="1" facilityCode="RM1" description="RAW MILK SILO 1"/>
+   	<Facility categoryTypeEnum="RAWMILK" facilityId="RM2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="RAW MILK SILO2" facilitySizeUomId="VLIQ_L" size="100000" sequenceNum="2" facilityCode="RM2" description="RAW MILK SILO 2"/>
+    <Facility categoryTypeEnum="RAWMILK" facilityId="RM3" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="RAW MILK SILO3" facilitySizeUomId="VLIQ_L" size="100000" sequenceNum="3" facilityCode="RM3" description="RAW MILK SILO 3"/>
+    
+    <Facility categoryTypeEnum="POWDER" facilityId="PM1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER MILK SILO1" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="4" facilityCode="PM1" description="POWDER MILK SILO 1"/>
+   	<Facility categoryTypeEnum="POWDER" facilityId="PM2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER MILK SILO2" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="5" facilityCode="PM2" description="POWDER MILK SILO 2"/>
+    <Facility categoryTypeEnum="POWDER" facilityId="PM3" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER MILK SILO3" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="6" facilityCode="PM3" description="POWDER MILK SILO 3"/>
+    
+    <Facility categoryTypeEnum="POWDER" facilityId="SM1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SKIM MILK SILO1" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="7" facilityCode="SM1" description="SKIM MILK SILO 1"/>
+   	<Facility categoryTypeEnum="POWDER" facilityId="SM2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SKIM MILK SILO2" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="8" facilityCode="SM2" description="SKIM MILK SILO 2"/>
+    <Facility categoryTypeEnum="POWDER" facilityId="SM3" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SKIM MILK SILO3" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="9" facilityCode="SM3" description="SKIM MILK SILO 3"/>
+    
+    
+     <Facility categoryTypeEnum="POWDER" facilityId="POWDERSILO1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER SILO1" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="10" facilityCode="PS1" description="POWDER SILO 1"/>
+     <Facility categoryTypeEnum="POWDER" facilityId="POWDERSILO2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER SILO2" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="11" facilityCode="PS2" description="POWDER SILO 2"/>
+     
+     <Facility categoryTypeEnum="POWDER" facilityId="SWEEPSILO" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SWEEPSILO" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="12" facilityCode="SS" description="SWEEP SILO"/>
+     
+     <Facility categoryTypeEnum="POWDER" facilityId="SMPFGS" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SMPFGS" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="13" facilityCode="SMPFGS" description="SMPFGS"/>
+ 
+
 </entity-engine-xml>

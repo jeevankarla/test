@@ -4,5 +4,12 @@
     <description>Production Services</description>
     <vendor></vendor>
     <version>1.0</version>
+    
+    <service name="getSiloInventoryOpeningBalance" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="getSiloInventoryOpeningBalance">
+    	<attribute name="facilityId" mode="IN" type="String" optional="false"/>
+    	<attribute name="effectiveDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+    	<attribute name="productId" mode="IN" type="String" optional="true"/>
+    	<attribute name="openingBalance" mode="OUT" type="Map"  optional="true"/>
+    </service>
 
 </services>
