@@ -89,11 +89,18 @@
 	
 	paymentRegisterList = [];
 	
+	BigDecimal totalAmount = BigDecimal.ZERO;
+	BigDecimal totalAmountApplied = BigDecimal.ZERO;
+	BigDecimal totalAmountOpen = BigDecimal.ZERO;
+	
 	for(i=0; i<requiredPayments.size(); i++){
 		paymentId = (requiredPayments.get(i)).get("paymentId");
 		String paymentSequenceId = (requiredPayments.get(i)).get("paymentSequenceId");
 		amount = (requiredPayments.get(i)).get("amount");
 		paymentNotApplied = PaymentWorker.getPaymentNotApplied(requiredPayments.get(i), true);
+		
+		totalAmount = totalAmount.add(amount);
+		totalAmountOpen = totalAmountOpen.add(paymentNotApplied);
 		
 		paymentApplicationDetailsMap = [:];
 		if(UtilValidate.isNotEmpty(paymentSequenceId)){
@@ -107,9 +114,20 @@
 		paymentApplicationDetailsMap.put("amountOpen", paymentNotApplied);
 		
 		paymentApplication = EntityUtil.filterByAnd(paymentApplicationList, [paymentId : paymentId]);
+		if(UtilValidate.isEmpty(paymentApplication)){
+			paymentApplicationDetailsMap.put("invoiceItemTypeId", "");
+			
+			tempPmntMap = [:];
+			tempPmntMap.putAll(paymentApplicationDetailsMap);
+			
+			paymentRegisterList.add(tempPmntMap);
+			paymentApplicationDetailsMap.clear();
+		}
+		
 		for(j=0; j<paymentApplication.size(); j++){
 			
 			eachApplication = paymentApplication.get(j);
+			totalAmountApplied = totalAmountApplied.add(eachApplication.getBigDecimal("amountApplied"));
 			paymentApplicationDetailsMap.put("amountApplied", eachApplication.get("amountApplied"));
 			paymentApplicationDetailsMap.put("invoiceId", eachApplication.get("invoiceId"));
 			invoiceItems = EntityUtil.filterByAnd(paymentInvApplicationList, [invoiceId : eachApplication.get("invoiceId")]);
@@ -129,6 +147,19 @@
 			}
 		}
 	}
+	
+	totalsMap = [:];
+	totalsMap.put("paymentId", "Total");
+	totalsMap.put("amount", totalAmount);
+	totalsMap.put("amountOpen", totalAmountOpen);
+	totalsMap.put("amountApplied", totalAmountApplied);
+	totalsMap.put("invoiceItemTypeId", "");
+	
+	tempPmntMap = [:];
+	tempPmntMap.putAll(totalsMap);
+	
+	paymentRegisterList.add(tempPmntMap);
+	
 	context.paymentRegisterList = paymentRegisterList;
 	
 	
