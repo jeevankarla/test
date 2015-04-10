@@ -23,6 +23,7 @@
                 		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_TRSPT_MRGN"/>
                 		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
                 	</condition-list>
+                	<order-by field-name="-lastModifiedDate"/>
                 </entity-condition>  				
 			</actions>
 			<widgets>
