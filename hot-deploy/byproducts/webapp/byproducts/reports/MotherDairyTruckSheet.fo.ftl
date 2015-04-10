@@ -55,8 +55,8 @@ under the License.
 				                   <fo:table-cell>
 				                         <fo:block  text-indent="15pt" font-size="11pt">ROUTE NUMBER:&#160;&#160;${facilityDetails.get("facilityId")}</fo:block>
 				                         <fo:block  text-indent="15pt">VEH NUMBER:&#160;${routesMap.getValue().get("vehicleId")?if_exists}</fo:block>
-				                         <fo:block  text-indent="15pt">CONTRACTOR ID:&#160;${facilityDetails.get("ownerPartyId")}</fo:block>
-				                          <fo:block  text-indent="15pt">CONTRACTOR NAME:${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityDetails.get("ownerPartyId"), false)}</fo:block>
+				                         <fo:block  text-indent="15pt">CONTRACTOR ID:&#160;${routesMap.getValue().get("partyId")?if_exists}</fo:block>
+				                          <fo:block  text-indent="15pt">CONTRACTOR NAME:${routesMap.getValue().get("contractorName")?if_exists}</fo:block>
 				                     </fo:table-cell>
 				                      <fo:table-cell>
 				                         <fo:block>SHIFT/TRIP:<#if parameters.shipmentTypeId="AM_SHIPMENT">MORNING<#elseif  parameters.shipmentTypeId="PM_SHIPMENT">EVENING</#if></fo:block>

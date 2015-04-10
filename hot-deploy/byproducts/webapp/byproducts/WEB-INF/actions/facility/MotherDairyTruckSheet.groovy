@@ -362,6 +362,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					
 					if(UtilValidate.isNotEmpty(vehicleRole)){
 						vehicleId=vehicleRole.getString("vehicleId");
+						partyId=vehicleRole.getString("partyId");
+						contractorName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 					}
 					tempRtEmpExcess = 0
 					if(rtEmpExcess>0){
@@ -382,6 +384,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					boothDetailsMap.put("routeVatAmount", routeTotals.get("totalVatRevenue"));
 					boothDetailsMap.put("contractorName", contractorName);
 					boothDetailsMap.put("vehicleId", vehicleId);
+					boothDetailsMap.put("partyId", partyId);
 					boothDetailsMap.put("rtCrates", rtCrates);
 					boothDetailsMap.put("rtExcessPkts", rtExcessPkts);
 					boothDetailsMap.put("rtCans", rtCans);
