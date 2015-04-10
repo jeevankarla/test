@@ -33,6 +33,7 @@ under the License.
           <td>Late Min</td>
           <td>Attended SS Days</td>
           <td>Attended Holidays</td>
+          <td>Remarks</td>
           <td>Update</td>
         </tr>
       </thead>
@@ -74,6 +75,18 @@ under the License.
               	 <td><input type="display" readOnly size="10" id = "ssDays" name="ssDays" value="${eachArrearDay.noOfAttendedSsDays?if_exists}" /></td>
               	 <td><input type="display" readOnly size="10" id = "holidays" name="holidays" value="${eachArrearDay.noOfAttendedHoliDays?if_exists}" /></td>
               </#if>
+              <td><select name="remarks"  id="remarks" value = "${eachArrearDay.remarks}">
+              			<#if eachArrearDay.enumId?has_content>
+              				<option value = '${eachArrearDay.enumId}'>${eachArrearDay.remarks}</option>
+              			</#if>
+              			<option value = ''></option>
+      					<#if remarksList?has_content>
+      						<#list remarksList as remark>
+	                			<option value='${remark.enumId}'>${remark.description?if_exists}</option>
+                			</#list> 
+                		</#if>
+					</select>
+          		</td>
 			  <td><input type="submit" name="submit" id="submit" value="Update" style="buttontext"/></td>
             </tr>
             <#-- toggle the row color -->
@@ -83,6 +96,6 @@ under the License.
     </table>
   </form>
 <#else>
-  <h3>No Days Found...</h3>
+  <h3>No Attendance Days Found...</h3>
 </#if>
         

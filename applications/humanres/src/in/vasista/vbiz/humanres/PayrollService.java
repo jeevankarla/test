@@ -5536,7 +5536,16 @@ public class PayrollService {
 	      BigDecimal lossOfPayDays=(BigDecimal)context.get("lossOfPayDays");
 	      BigDecimal noOfAttendedSsDays=(BigDecimal)context.get("noOfAttendedSsDays");
 	      BigDecimal noOfAttendedHoliDays=(BigDecimal)context.get("noOfAttendedHoliDays");
+	      String remarks = (String) context.get("remarks");
 	      BigDecimal payableDays = (BigDecimal) context.get("payableDays");
+	      if(UtilValidate.isNotEmpty(payableDays)){
+	    	  Timestamp fromDate = UtilDateTime.nowTimestamp();
+		      Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+		      Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(fromDateStart)));
+		      if (ServiceUtil.isError(customTimePeriodIdMap)) {
+		    	  return customTimePeriodIdMap;
+		      }
+	      }
 	      Map result = ServiceUtil.returnSuccess();
 	      BigDecimal lateMin=(BigDecimal)context.get("lateMin");
 	      lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);
@@ -5553,10 +5562,16 @@ public class PayrollService {
 		      			BigDecimal arrearDays = employPayrollDetails.getBigDecimal("noOfArrearDays");
 	  					BigDecimal noOfPayableDays= employPayrollDetails.getBigDecimal("noOfPayableDays");
 	  					if(UtilValidate.isNotEmpty(payableDays)){
-	  						noOfPayableDays = payableDays;
-	  						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
-	  						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	  						employPayrollDetails.store();
+	  						if(payableDays.compareTo(noOfPayableDays) != 0){
+	  							noOfPayableDays = payableDays;
+	  							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+		  						if(UtilValidate.isNotEmpty(remarks)){
+		  							employPayrollDetails.set("remarks", remarks);
+		  						}
+		  						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		  						employPayrollDetails.store();
+	  						}
+	  						
 	  					}
 	  					if(UtilValidate.isEmpty(lossOfPayDays)){
 	  						lossOfPayDays = employPayrollDetails.getBigDecimal("lossOfPayDays");
