@@ -77,6 +77,7 @@ stopShipList =[];
 if(UtilValidate.isNotEmpty(boothInActiveList)){
 	stopShipList.addAll(EntityUtil.getFieldListFromEntityList(boothInActiveList, "facilityId", true));
 }
+indentTrendList = [];
 boothsResultMap = [:];
 routeMap = [:];
 tripMap = [:];
@@ -270,12 +271,69 @@ if(hideSearch == "N") {
 	boothFinalTotalsMap["tripId"] = "";
 	boothFinalTotalsMap["id"] = "Total";
 	boothFinalList.add(boothFinalTotalsMap);
+	
+	//Indent Trend CSV
+	
+	// 12-2, 2-4, 4-6
+	//  quotaSubProdList
+	if(subscriptionTypeId == "AM"){
+		trendDate = dayBegin;
+		condList = [];
+		prodList.each{ eachProd ->
+			prodTempMap = [:];
+			prodDesc = EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
+			brandName = "";
+			if(prodDesc){
+				brandName = (EntityUtil.getFirst(prodDesc)).getString("brandName");
+			}
+			prodTempMap.put("productId", brandName);
+			int hours = 12;
+			int intervalHrs = 1;
+			trendDateStr = UtilDateTime.toDateString(trendDate, "yyyy-MM-dd");
+			SimpleDateFormat trendDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			startDateStr =  trendDateStr+' 12:00:00';
+			tempMap = [:];
+			for(int intervalCount=0;intervalCount<3;intervalCount++){
+				trendFromDateStr = '';
+				if(intervalCount == 0){
+					trendFromDateStr = startDateStr;
+				}
+				else{
+					trendFromDateStr = trendDateStr+' '+hours+':00:00';
+				}
+				tempHrs = hours+intervalHrs;
+				trendThruDateStr = trendDateStr+' '+tempHrs+':59:59';
+				trendFromDate = null;
+				trendThruDate = null;
+				try {
+					trendFromDate = UtilDateTime.toTimestamp(trendDateFormatter.parse(trendFromDateStr));
+					trendThruDate = UtilDateTime.toTimestamp(trendDateFormatter.parse(trendThruDateStr));
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + parameters.supplyDate, "");
+				}
+				
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
+				condList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.LESS_THAN_EQUAL_TO, trendThruDate));
+				condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				prodQuoteListing = EntityUtil.filterByCondition(quotaSubProdList, condExpr);
+				totalQty = 0;
+				prodQuoteListing.each{ eachItem ->
+					totalQty = totalQty+eachItem.quantity;
+				}
+				tempMap.put('Trend'+intervalCount, totalQty);
+				hours = hours+2;
+			}
+			prodTempMap.putAll(tempMap);
+			indentTrendList.add(prodTempMap);
+		}
+	}
 }
 context.boothsResultMap = boothsResultMap;
 context.BoothRouteWiseMap = BoothRouteWiseMap;
 context.indentCount = boothsResultMap.size() - 1;
 context.newIndentCount = boothFinalList.size() - 1;
-
+context.indentTrendList = indentTrendList;
 JSONArray dataJSONList= new JSONArray();
 Iterator mapIter = boothsResultMap.entrySet().iterator();
 while (mapIter.hasNext()) {

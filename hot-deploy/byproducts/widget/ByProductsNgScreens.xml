@@ -1033,6 +1033,21 @@
                     <decorator-section name="body">  							  	
 						<screenlet title="Indent History">
 							<include-form name="FindQuotaListing" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								<section>   
+   									 <condition>
+   										<not><if-empty field="indentTrendList" /></not>
+   									</condition> 
+   									<widgets>              							                                   
+     									<link text="Indent Trend CSV" style="buttontext" target="indentTrendForProductionPlan.xls" >
+     										<parameter param-name="supplyDate" from-field="parameters.supplyDate"/>
+											<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+											<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+											<parameter param-name="productId" from-field="parameters.productId"/>
+											<parameter param-name="routeId" from-field="parameters.routeId"/>
+											<parameter param-name="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+     									</link>
+									</widgets>
+								</section>
 								<platform-specific>
 	                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/byProdQuotaList.ftl"/></html>
 	                            </platform-specific>

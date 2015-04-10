@@ -118,6 +118,14 @@
         <field name="issuingAuthority" title="BankName"><display/></field>  
         <field name="amount" title="AMOUNT"><display/></field>        
      </form>
+     <form name="IndentTrendForProductionPlanXLS" type="list" list-name="indentTrendList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="productId" title="Product Code"><display/></field>
+    	<field name="Trend0" title="Before 2:00 PM"><display/></field>
+    	<field name="Trend1" title="2:00 PM - 3:59 PM"><display/></field>
+    	<field name="Trend2" title="4:00 PM - 6:00 PM"><display/></field> 	
+     </form>
+     
       <form name="RMMaterialBalanceCSV" type="list" list-name="materialBalanceList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
     	<field name="serialNo" title="SL.No"><display/></field> 	
