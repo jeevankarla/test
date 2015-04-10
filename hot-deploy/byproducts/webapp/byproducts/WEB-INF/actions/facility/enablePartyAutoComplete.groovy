@@ -101,11 +101,19 @@ supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
 if(supplierList){
 	supplierList.each{ supplier ->
 		JSONObject newObj = new JSONObject();
-		newObj.put("value",supplier.partyId);
-		partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
-		newObj.put("label",partyName+"["+supplier.partyId+"]");
-		supplierJSON.add(newObj);
-		partyNameObj.put(supplier.partyId,partyName);
+		conditionList =[];
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , supplier.partyId));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		partyList = delegator.findList("Party", condition, null, null, null, false);
+		partyDetails = EntityUtil.getFirst(partyList);
+		if(UtilValidate.isNotEmpty(partyDetails)){
+			newObj.put("value",partyDetails.partyId);
+			partyName=PartyHelper.getPartyName(delegator, partyDetails.partyId, false);
+			newObj.put("label",partyName+"["+partyDetails.partyId+"]");
+			supplierJSON.add(newObj);
+			partyNameObj.put(partyDetails.partyId,partyName);
+		}		
 	}
 }
 context.supplierJSON=supplierJSON;
