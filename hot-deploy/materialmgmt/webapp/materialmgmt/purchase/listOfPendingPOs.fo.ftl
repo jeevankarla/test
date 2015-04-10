@@ -57,9 +57,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="13pt">
 					               
 				                     <fo:table-column column-width="30pt"/>					               
-					                <fo:table-column column-width="150pt"/>               
+					                <fo:table-column column-width="100pt"/>               
 						            <fo:table-column column-width="70pt"/>
-						            <fo:table-column column-width="100pt"/>
+						            <fo:table-column column-width="150pt"/>
 			      			        <fo:table-column column-width="70pt"/> 
                                     <fo:table-column column-width="70pt"/>               
 					                <fo:table-column column-width="70pt"/>               
@@ -84,9 +84,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
             	<fo:block>
                  <fo:table text-align="center" >
                  		            <fo:table-column column-width="30pt"/>                 
-                                   <fo:table-column column-width="150pt"/>               
+                                   <fo:table-column column-width="100pt"/>               
 						            <fo:table-column column-width="70pt"/>
-						            <fo:table-column column-width="100pt"/>
+						            <fo:table-column column-width="150pt"/>
 			      			        <fo:table-column column-width="70pt"/> 
                                     <fo:table-column column-width="70pt"/>               
 					               	 <fo:table-column column-width="70pt"/>
@@ -96,36 +96,33 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                     <fo:table-body text-align="center">
                      <#assign sNo=1>
 	                    
-	                    <#list pendingPOsList  as orderListItem>
+	                <#list pendingPOsList  as orderListItem>
 	                    
-	                  
-					
                   	 <fo:table-row >
-                  	    <fo:table-cell  border-style="solid" ><fo:block text-align="center"   font-size="12pt" >${sNo?if_exists} </fo:block></fo:table-cell>                   	 
-                	   <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("description")?if_exists}</fo:block></fo:table-cell>     
-              	   <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("productId")?if_exists}</fo:block></fo:table-cell>     
-              	   <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("partyName")?if_exists}</fo:block></fo:table-cell>     
-              	   <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("orderId")?if_exists}</fo:block></fo:table-cell>     
+                  	   <fo:table-cell  border-style="solid" ><fo:block text-align="center"   font-size="12pt" >${sNo?if_exists} </fo:block></fo:table-cell>                   	 
+                	   <fo:table-cell   border-style="solid"><fo:block text-align="left"  font-size="12pt" >${orderListItem.get("description")?if_exists}</fo:block></fo:table-cell>     
+              	       <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("productId")?if_exists}</fo:block></fo:table-cell>     
+              	       <fo:table-cell   border-style="solid"><fo:block text-align="left"  font-size="12pt" >${orderListItem.get("partyName")?if_exists}</fo:block></fo:table-cell>     
+              	       <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("orderId")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  border-style="solid" ><fo:block text-align="center"   font-size="12pt" >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderListItem.get("createdDate"), "dd-MMM-yy")} </fo:block></fo:table-cell>   
   				       <fo:table-cell  border-style="solid" ><fo:block text-align="center"   font-size="12pt" >${orderListItem.get("quantity")?if_exists} </fo:block></fo:table-cell>     
                        <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("qtyAccepted")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${orderListItem.get("balancePOqty")?if_exists}</fo:block></fo:table-cell>     
                      </fo:table-row>
-                       				    	<#assign sNo=sNo+1>
-
+                   	<#assign sNo=sNo+1>
                      </#list>
-                       </fo:table-body>
-			                		</fo:table>
-			        	  </fo:block>	
-                  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  for MOTHER DAIRY   &#160;&#160;</fo:block>
-                               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  Manager        &#160;&#160;</fo:block>
-                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;  </fo:block>
-                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                                                                                 </fo:block>
-                         
+                    </fo:table-body>
+                   	</fo:table>
+			      </fo:block>	
+               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+               <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  for MOTHER DAIRY   &#160;&#160;</fo:block>
+               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  Manager        &#160;&#160;</fo:block>
+               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;  </fo:block>
+               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                                                                                 </fo:block>
+         
 			 </fo:flow>
 			 </fo:page-sequence>
 			 <#else>

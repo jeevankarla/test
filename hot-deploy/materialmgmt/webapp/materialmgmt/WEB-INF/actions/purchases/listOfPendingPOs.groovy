@@ -79,12 +79,10 @@ orderItemList.each{orderItem->
 //		unit=uomDesc.abbreviation;	
 //		pendingPOsMap["unit"]=unit;
 //	}
-	
 	pendingPOsMap=[:];
 	if(UtilValidate.isNotEmpty(orderId)){
 		
 	partyIdDetails = EntityUtil.filterByCondition(vendorDetails, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	
 	partyIdDetails = EntityUtil.getFirst(partyIdDetails);
 	if(UtilValidate.isNotEmpty(partyIdDetails)){
 		partyId=partyIdDetails.partyId;
@@ -92,40 +90,41 @@ orderItemList.each{orderItem->
 		pendingPOsMap["partyName"]=partyName;
 	}
 	condionList =[];
-	condionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_QUALITYCHECK"]));
+	condionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_ACCEPTED","SR_QUALITYCHECK"]));
 	condionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	condionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 	condionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	EntityCondition condition = EntityCondition.makeCondition(condionList,EntityOperator.AND);	
 	shipmentReceiptList = delegator.findList("ShipmentReceipt", condition, null,null, null, false);	
-	qtyAccepted=0;
+	qtyAccepted=0;balancePOqty=0;
 	if(UtilValidate.isNotEmpty(shipmentReceiptList)){
 		shipmentReceiptList.each{shipmentReceipt->
-			qtyAccepted=qtyAccepted+shipmentReceipt.quantityAccepted;			
+		qtyAccepted=qtyAccepted+shipmentReceipt.quantityAccepted;			
 		}
 		balancePOqty=quantity-qtyAccepted
         pendingPOsMap["orderId"]=orderId;
 		pendingPOsMap["createdDate"]=orderDate;
 		pendingPOsMap["description"]=productName;
-		pendingPOsMap["productId"]=productId;
+		pendingPOsMap["productId"]=internalName;
 		pendingPOsMap["quantity"]=quantity;
 		pendingPOsMap["qtyAccepted"]=qtyAccepted;
 		pendingPOsMap["balancePOqty"]=balancePOqty;
 	}
 	if(UtilValidate.isEmpty(shipmentReceiptList)){
-		pendingPOsMap=[:];
+		balancePOqty=quantity;
 		pendingPOsMap["orderId"]=orderId;
 		pendingPOsMap["createdDate"]=orderDate;
 		pendingPOsMap["description"]=productName;
-		pendingPOsMap["productId"]=productId;
+		pendingPOsMap["productId"]=internalName;
 		pendingPOsMap["quantity"]=quantity;
 		pendingPOsMap["qtyAccepted"]=0;
 		pendingPOsMap["balancePOqty"]=quantity;
-	}		
+	}
+	if(balancePOqty!=0){
 	pendingPOsList.addAll(pendingPOsMap);
- }}
+	 }
+    }
+   }
  }
 context.pendingPOsList=pendingPOsList;
-
-
 
