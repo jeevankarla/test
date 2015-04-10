@@ -266,15 +266,15 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		quoteDateAttr = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"QUOTE_DATE"],false);
 		if(quoteDateAttr){
 			quoteDate=quoteDateAttr.get("attrValue");
-			def sdf = new SimpleDateFormat("dd/MM/yyyy");
+		  /*def sdf = new SimpleDateFormat("dd/MM/yyyy");
 			quoteDateTimestamp= null
 			try {
 				quoteDateTimestamp = new java.sql.Timestamp(sdf.parse(quoteDate).getTime());
 			} catch (ParseException e) {
 				Debug.logError(e, "Cannot parse date string: "+quoteDate, "");
-			}
+			}*/
 			
-			allDetailsMap.put("qutationDate",quoteDateTimestamp);
+			allDetailsMap.put("qutationDate",quoteDate);
 		}
 		
 	}
