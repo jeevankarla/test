@@ -274,7 +274,7 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 				Debug.logError(e, "Cannot parse date string: "+quoteDate, "");
 			}*/
 			
-			allDetailsMap.put("qutationDate",quoteDate);
+			allDetailsMap.put("qutationDateAttr",quoteDate);
 		}
 		
 	}
