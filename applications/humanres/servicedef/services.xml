@@ -196,7 +196,8 @@ under the License.emplpunch
 		<auto-attributes mode="IN" include="pk" optional="false"/>
 		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
         <auto-attributes mode="IN" include="nonpk" optional="true"/> 
-        <attribute name="payableDays" mode="IN" type="BigDecimal" optional="true"/>   
+        <attribute name="payableDays" mode="IN" type="BigDecimal" optional="true"/> 
+        <attribute name="remarks" mode="IN" type="String" optional="true"/>
     </service>
 
     <service name="deletePartySkill" engine="simple" default-entity-name="PartySkill"

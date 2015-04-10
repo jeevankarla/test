@@ -191,6 +191,11 @@
 				<set field="tabButtonItem" value="Attendance" />
  				<set field="tabButtonItem2" value="ArrearDays" />                                           				
 				<set field="titleProperty" value="Arrear Days-Payable Days" />
+				<entity-condition list="remarksList" entity-name="Enumeration">
+				<condition-list>
+					<condition-expr field-name="enumTypeId" operator="equals" value="HR_PAYDAYS_REMARKS"/>
+				</condition-list>
+				</entity-condition>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ArrearDays.groovy"/>
 			</actions>
 			<widgets>
@@ -275,7 +280,6 @@
                    	<container style="button-bar">
                      	<link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Holiday"/>
                    	</container>                           
-	            	<decorator-section name="search-options">
 	            		<screenlet title="Search-Options">
                            	<section>
                                	<widgets>
@@ -293,7 +297,6 @@
                            	</section>
                        	</screenlet>
                       </decorator-section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -1046,7 +1049,7 @@
 	 <screen name="Form16InputScreen">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="titleProperty" value="Form16 Input Screen"/>
                 <set field="headerItem" value="Form16InputScreen"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="Form16InputScreen" />
@@ -1060,8 +1063,7 @@
                     	<screenlet title="Employee Details">
                         	<include-form name="updateForm16Details" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet> 
-                        <screenlet title="">
-                        	<decorator-section name="search-results">
+                        <screenlet title="search-results">
                                <section>
                                		 <widgets>
 		                                 <platform-specific>
@@ -1069,9 +1071,7 @@
 		                                 </platform-specific>
 		                             </widgets>
                                </section>
-                            </decorator-section>
                         </screenlet>
-                       
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1080,7 +1080,7 @@
     <screen name="MonthlyTDSRemittance">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="titleProperty" value="Monthly TDS Remittance"/>
                 <set field="headerItem" value="MonthlyTDSRemittance"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="MonthlyTDSRemittance"/>
@@ -1105,7 +1105,7 @@
     <screen name="QuarterlyTDSStatement">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="titleProperty" value="Quarterly TDS Statement"/>
                 <set field="headerItem" value="QuarterlyTDSStatement"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="QuarterlyTDSStatement"/>
@@ -1131,7 +1131,7 @@
     <screen name="TaxRates">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="titleProperty" value="Tax Rates"/>
                 <set field="headerItem" value="TaxRates"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="TaxRates"/>
@@ -1144,8 +1144,7 @@
                     	<screenlet title="Employee Details">
                         	<include-form name="updateTaxRatesDetails" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet> 
-                        <screenlet title="">
-                        	<decorator-section name="search-results">
+                        <screenlet title="search-results">
                                <section>
                                		 <widgets>
 		                                 <platform-specific>
@@ -1153,9 +1152,7 @@
 		                                 </platform-specific>
 		                             </widgets>
                                </section>
-                            </decorator-section>
                         </screenlet> 
-                    	
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1165,7 +1162,7 @@
     <screen name="OtherInputs">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="titleProperty" value="Others"/>
                 <set field="headerItem" value="Others"/>
 				<set field="tabButtonItem" value="AnnualIT" />
 				<set field="tabButtonItem2" value="Others"/>

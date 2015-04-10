@@ -80,10 +80,15 @@ timePeriodId=parameters.customTimePeriodId;
 				EditArrearDaysMap.put("lateMin",lateMin);
 				EditArrearDays.add(EditArrearDaysMap);
 				EditArrearDaysMap.put("timePeriodId", timePeriodId);
+				enumeration = delegator.findOne("Enumeration",[enumId:payrollAttendance.get("remarks")],false);
+				if(UtilValidate.isNotEmpty(enumeration)){
+					EditArrearDaysMap.put("enumId", payrollAttendance.get("remarks"));
+					EditArrearDaysMap.put("remarks", enumeration.get("description"));
+				}
 			}
 			}
 			context.put("EditArrearDays",EditArrearDays);
 			
 		}
-	
+		
 

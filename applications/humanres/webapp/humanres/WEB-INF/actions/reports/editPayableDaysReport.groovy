@@ -35,6 +35,7 @@ attendanceDetails = delegator.findList("PayrollAttendance", condition , null, Ut
 if(UtilValidate.isNotEmpty(attendanceDetails)){
 	attendanceDetails.each { employee ->
 		empPartyId=employee.get("partyId");
+		remarks = employee.get("remarks");
 		appendedPartyId = empPartyId + "::" + parameters.customTimePeriodId;
 		List consolidateList=[];
 		consolidateList.add(EntityCondition.makeCondition("pkCombinedValueText", EntityOperator.EQUALS, appendedPartyId));
@@ -48,15 +49,19 @@ if(UtilValidate.isNotEmpty(attendanceDetails)){
 			consolidatedDetailsList.each { consolidatedDetails ->
 				consolidatedMap=[:];
 				if(UtilValidate.isNotEmpty(consolidatedDetails.get("newValueText"))){
-					consolidatedMap.put("oldValueText",consolidatedDetails.get("oldValueText"));
-					consolidatedMap.put("newValueText",consolidatedDetails.get("newValueText"));
+					consolidatedMap.put("oldValueText",new BigDecimal(consolidatedDetails.get("oldValueText")));
+					consolidatedMap.put("newValueText",new BigDecimal(consolidatedDetails.get("newValueText")));
 					consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
 					consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
+					enumeration = delegator.findOne("Enumeration",[enumId:remarks],false);
+					if(UtilValidate.isNotEmpty(enumeration)){
+						consolidatedMap.put("remarks", enumeration.get("description"));
+					}
 					consolidatedFinalList.addAll(consolidatedMap);
 				}
 			}
 		}
-		consolidatedFinalList = UtilMisc.sortMaps(consolidatedFinalList, UtilMisc.toList("empPartyId"));
+		consolidatedFinalList = UtilMisc.sortMaps(consolidatedFinalList, UtilMisc.toList("changedDate"));
 		if(UtilValidate.isNotEmpty(consolidatedFinalList)){
 			consolidatedFinalMap.put(empPartyId,consolidatedFinalList);
 		}

@@ -588,25 +588,6 @@ function setOrgPartyId() {
 							</form>
 					 	</tr>
 					</#if> 
-					<#if (reportDetailsMap.get("editPayableDaysReport.pdf") == "Y")> 
-						<tr class="alternate-row">
-							<form id="editPayableDaysReport" name="editPayableDaysReport" mothed="post" action="<@ofbizUrl>editPayableDaysReport.pdf</@ofbizUrl>" target="_blank">
-								<table class="basic-table" cellspacing="5">
-									<tr class="alternate-row">
-										<td width="12%"><span class='h3'>Edited Payable Days Report</span></td>
-										<td width="24%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" class='h4'>
-											<#list timePeriodList as timePeriod>    
-												<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
-											</#list>      
-										</select>
-										</td>	
-										<td width="12%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
-									</tr>
-								</table>
-							</form>
-					 	</tr>
-					</#if>		
 				</table>
 			</div>
 		</div>
@@ -1111,6 +1092,25 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
+					<#if (reportDetailsMap.get("editPayableDaysReport.pdf") == "Y")> 
+						<tr class="alternate-row">
+							<form id="editPayableDaysReport" name="editPayableDaysReport" mothed="post" action="<@ofbizUrl>editPayableDaysReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="12%"><span class='h3'>Edited Payable Days Report</span></td>
+										<td width="24%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" class='h4'>
+											<#list timePeriodList as timePeriod>    
+												<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
+											</#list>      
+										</select>
+										</td>	
+										<td width="12%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									</tr>
+								</table>
+							</form>
+					 	</tr>
+					</#if>		
 			   	</table>
 			</div>
 		</div>
