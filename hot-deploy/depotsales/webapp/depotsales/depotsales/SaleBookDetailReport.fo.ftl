@@ -46,11 +46,11 @@ under the License.
 	        		<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportSubHeaderLable"}, true)>
         			<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
         			<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>				
-                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"><#if categoryType?has_content><#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if><#else>PURCHASE</#if> SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
+                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"><#if categoryType?has_content><#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if><#else><!--PURCHASE--></#if> SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Invoice 					Party           	Description        Quantity        Ex-factory    ED          VAT(Rs)    		C.S.T(Rs)      Total(Rs)</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number  Seq.Number 		Name                               <#if categoryType?has_content><#if categoryType=="UNITS">(Ltrs/Kgs)<#else> (In Ltrs)</#if></#if>       Value(Rs)     Value(Rs)                               Value</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Invoice 					Party           	Description                  Quantity        Ex-factory  <!-- ED -->  VAT(Rs)    		C.S.T(Rs)      Total(Rs)</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number  Seq.Number 		Name                               <#if categoryType?has_content><#if categoryType=="UNITS">(Ltrs/Kgs)<#else> (In Ltrs)</#if></#if>           Value(Rs)         Value(Rs)                               Value</fo:block>
 	        		<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -126,12 +126,12 @@ under the License.
 							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${shippingDetails.get(invoiceDetails.getKey()).get("partyName")?if_exists}<#if categoryType?has_content && categoryType=="ICE_CREAM_AMUL">[${shippingDetails.get(invoiceDetails.getKey()).get("partyId")?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
+							            	<fo:block  text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
-								            		<fo:table-column column-width="80pt"/> 		
+								            		<fo:table-column column-width="160pt"/> 		
 								            		<fo:table-column column-width="110pt"/> 	
-								            		<fo:table-column column-width="140pt"/> 
-								            		<fo:table-column column-width="100pt"/> 
+								            		<fo:table-column column-width="120pt"/> 
+								            		<!--<fo:table-column column-width="75pt"/> -->
 								            		<fo:table-column column-width="75pt"/> 
 								            		<fo:table-column column-width="90pt"/> 
 								            		<fo:table-column column-width="115pt"/> 
@@ -169,9 +169,11 @@ under the License.
 								                       		<fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("basicRevenue")?string("#0.00")}</fo:block>  
 								                       		</fo:table-cell>
+								                       		<!--
 								                       		<fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("bedRevenue")?string("#0.00")}</fo:block>  
 								                       		</fo:table-cell>
+								                       		-->
 								                       		<fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("vatRevenue")?string("#0.00")}</fo:block>  
 								                       		</fo:table-cell>
@@ -206,12 +208,12 @@ under the License.
 									<fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
-								            		<fo:table-column column-width="80pt"/> 		
+								            		<fo:table-column column-width="160pt"/> 		
 								            		<fo:table-column column-width="110pt"/> 	
-								            		<fo:table-column column-width="140pt"/> 
-								            		<fo:table-column column-width="100pt"/> 
+								            		<fo:table-column column-width="120pt"/> 
 								            		<fo:table-column column-width="75pt"/> 
 								            		<fo:table-column column-width="90pt"/> 
+								            		<!--<fo:table-column column-width="75pt"/>-->
 								            		<fo:table-column column-width="115pt"/> 
 					                                <fo:table-body>
 					                               <#assign invTotals=invoiceDtls.get("invTotals").entrySet()>
@@ -389,13 +391,13 @@ under the License.
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
-								            		<fo:table-column column-width="80pt"/> 		
-								            		<fo:table-column column-width="110pt"/> 	
-								            		<fo:table-column column-width="140pt"/> 
-								            		<fo:table-column column-width="100pt"/> 
+								            		<fo:table-column column-width="160pt"/> 		
+								            		<fo:table-column column-width="95pt"/> 	
+								            		<fo:table-column column-width="135pt"/> 
 								            		<fo:table-column column-width="75pt"/> 
 								            		<fo:table-column column-width="90pt"/> 
-								            		<fo:table-column column-width="115pt"/> 
+								            		<fo:table-column column-width="120pt"/> 
+								            		
 					                                <fo:table-body>
 													<fo:table-row>
 					                                 <fo:table-cell>
@@ -407,9 +409,7 @@ under the License.
 														<fo:table-cell>
 							                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalBasicRev?string("#0.00")}</fo:block>  
 							                       		</fo:table-cell>
-							                       		<fo:table-cell>
-							                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalBedRev?string("#0.00")}</fo:block>  
-							                       		</fo:table-cell>
+							                       		
 							                       		<fo:table-cell>
 							                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalVatRev?string("#0.00")}</fo:block>  
 							                       		</fo:table-cell>
