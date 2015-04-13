@@ -220,6 +220,15 @@
 		<field name="acNo" title="Account Number"><display/></field>
 		<field name="netAmt" title="Net Amount"><display/></field>
 	</form>	
+	<form name="LoanDisbursedBankReportCsv" type="list" list-name="finalList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions></actions>
+		<field name="bankName" title="Bank Name"><display/></field>
+		<field name="emplId" title="Employee Id"><display/></field>
+		<field name="name" title="Employee Name"><display/></field>
+		<field name="acNo" title="Account Number"><display/></field>
+		<field name="netAmt" title="Net Amount"><display/></field>
+	</form>	
 	<form name="EcsBankDetailsCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<field name="txnType" title="Txn Type"><display/></field>

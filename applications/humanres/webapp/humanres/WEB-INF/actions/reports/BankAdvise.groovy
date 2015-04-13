@@ -72,6 +72,7 @@ depInvoiceList.each{ invoice ->
 }
 
 context.employeeBankList=employeeBankList;		*/
+reportTypeFlag = parameters.reportTypeFlag;
 List conditionList =[];
 if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 	parameters.partyIdFrom=parameters.partyIdFrom;
@@ -112,6 +113,7 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
+			//Debug.log("partyIds============="+partyIds);
 			if(UtilValidate.isNotEmpty(partyIds)){
 				emplPartyIds=[];
 				List finAccConList=FastList.newInstance();
@@ -140,15 +142,24 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 					tempfinAccountList.each{ finAcc->
 						gbCode = finAcc.get("gbCode");
 						ownerPartyId= finAcc.get("ownerPartyId");
-						if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode) &&(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(ownerPartyId)) && (bankAdvPayrollMap.get(ownerPartyId).get("netAmt") !=0))){
-							canraBankPartyIds.add(ownerPartyId);
+						//Debug.log("ownerPartyId============="+ownerPartyId);
+						if(reportTypeFlag.equals("disbursedLoanBankReport")){
+							if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode)){
+    							canraBankPartyIds.add(ownerPartyId);
+    						}else{
+    							emplPartyIds.add(ownerPartyId);
+							}
 						}else{
-							// Adding whose employee NetAmount is not equal to zero
-							if(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(ownerPartyId)) && (bankAdvPayrollMap.get(ownerPartyId).get("netAmt") !=0)){
-								emplPartyIds.add(ownerPartyId);
-							}							
+							if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode) &&(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(ownerPartyId)) && (bankAdvPayrollMap.get(ownerPartyId).get("netAmt") !=0))){
+								canraBankPartyIds.add(ownerPartyId);
+							}else{
+								// Adding whose employee NetAmount is not equal to zero
+								if(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(ownerPartyId)) && (bankAdvPayrollMap.get(ownerPartyId).get("netAmt") !=0)){
+									//Debug.log("netAmt=========="+ownerPartyId+"======"+bankAdvPayrollMap.get(ownerPartyId).get("netAmt"));
+									emplPartyIds.add(ownerPartyId);
+								}
+							}
 						}
-						
 					}
 					if(UtilValidate.isNotEmpty(canraBankPartyIds)){
 						if(UtilValidate.isNotEmpty(CanaraBankMap)){

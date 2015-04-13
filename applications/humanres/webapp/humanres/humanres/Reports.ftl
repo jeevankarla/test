@@ -1518,7 +1518,32 @@ function setOrgPartyId() {
 								</td>
 							</form>
 						</tr>
-					</#if>		
+					</#if>
+					<#if (reportDetailsMap.get("disbursedLoanBankReportPdf.pdf") == "Y")> 
+						<tr class="alternate-row">
+							<form id="disbursedLoanBankReport" name="disbursedLoanBankReport" mothed="post" action="<@ofbizUrl>disbursedLoanBankReportPdf.pdf</@ofbizUrl>" target="_blank">
+								<td width="25%" class='h3'>Disbursed loans Bank Advise Report<input  type="hidden"  value="disbursedLoanBankReport"   name="reportTypeFlag"/></td>
+								<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+								<td width="10%"></td>
+								<td width="20%" class = 'h3'>Period Id
+									<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+										<#list customTimePeriodList as customTimePeriod>
+										 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+					      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+					      					<#else>
+					      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+					                  		</option>
+					      				</#if>									 
+										</#list>
+									</select>
+								</td>
+								<td width="10%"></td>
+								<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('disbursedLoanBankReport', '<@ofbizUrl>disbursedLoanBankReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('disbursedLoanBankReport', '<@ofbizUrl>disbursedLoanBankReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
+								</td>
+							</form>
+						</tr>
+					</#if>			
 				</table>
 			</div>
 		</div>
