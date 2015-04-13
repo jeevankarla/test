@@ -29,6 +29,8 @@
      <Facility categoryTypeEnum="POWDER" facilityId="SWEEPSILO" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SWEEPSILO" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="12" facilityCode="SS" description="SWEEP SILO"/>
      
      <Facility categoryTypeEnum="POWDER" facilityId="SMPFGS" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SMPFGS" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="13" facilityCode="SMPFGS" description="SMPFGS"/>
- 
-
+      <EnumerationType  enumTypeId="PROD_SHIFT" />
+       <Enumeration  description="First Shift" enumId="FIRST_SHIFT" enumTypeId="PROD_SHIFT" />
+       <Enumeration  description="Second Shift" enumId="SECOND_SHIFT" enumTypeId="PROD_SHIFT" />
+       <Enumeration  description="Third Shift" enumId="THIRD_SHIFT" enumTypeId="PROD_SHIFT" />
 </entity-engine-xml>

@@ -31,9 +31,10 @@
 	    <security https="true" auth="true"/>
 	    <response name="success" type="view" value="powderShiftStart"/>
     </request-map>
-    
+    <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#main"/>
     <view-map name="powderShiftStart" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
+    <view-map name="prePacking" type="screen" page="component://production/widget/ProductionScreens.xml#prePacking"></view-map>
 </site-conf>
