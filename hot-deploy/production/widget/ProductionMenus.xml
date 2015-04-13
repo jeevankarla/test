@@ -8,7 +8,10 @@
     <menu name="ProductionTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem1">
 		<menu-item name="PowderPlant" title="PowderPlant">
 			<link target="powderPlant"></link>
-		</menu-item>		
+		</menu-item>	
+		<menu-item name="prePack" title="Pre Packing">
+       		<link target="prePacking" ></link>
+      	</menu-item>	
 	</menu>
    
    
@@ -32,4 +35,9 @@
 			<link target="powderShiftEnd"></link>
 		</menu-item> -->
 	</menu>
+	<menu name="PrePackingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="prePack" title="Pre Packing">
+       		<link target="prePacking" ></link>
+      	</menu-item>
+	</menu>	
 </menus>
