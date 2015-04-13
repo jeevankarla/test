@@ -59,7 +59,7 @@ under the License.
         	<#assign lastModifiedByUserLogin = accountingTransEntries.lastModifiedByUserLogin?if_exists>
         	
         	
-           <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
+           <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="12pt" font-family="Courier,monospace">					
 		    	<fo:static-content flow-name="xsl-region-before">
 		    	    
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
@@ -67,7 +67,7 @@ under the License.
                     <fo:block text-align="right" linefeed-treatment="preserve"></fo:block>
                     <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#if reportTypeFlag?has_content && reportTypeFlag == "contraCheque">CONTRA VOUCHER<#else>JOURNAL VOUCHER</#if></fo:block>
                     <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
-              		<fo:block>-------------------------------------------------------------------------------</fo:block>
+              		<fo:block>---------------------------------------------------------------------------------------------</fo:block>
             		<fo:block><fo:table>
                     <fo:table-column column-width="50%"/>
                     <fo:table-column column-width="70%"/>
@@ -138,7 +138,7 @@ under the License.
                        		</#if>
                        			<#if description?has_content>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left">Description:${description?if_exists}</fo:block>  
+                            		<fo:block  text-align="left" wrap-option="wrap" >Description:${description?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -382,9 +382,9 @@ under the License.
                      </fo:table-body>
                       </fo:table>
             		</fo:block>
-            		<fo:block>-------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
-            		<fo:block>-------------------------------------------------------------------------------</fo:block>
+            		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
+            		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
@@ -393,7 +393,7 @@ under the License.
                     <fo:table-column column-width="200pt"/>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/> 
+                    <fo:table-column column-width="170pt"/> 
                     <fo:table-body>
 							<#if accountingTransEntryList?has_content>
 							<#assign crTotal = 0>
@@ -440,7 +440,7 @@ under the License.
 		  					</#list>
 		  					<fo:table-row>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false">-----------------------------------------------------------------------------</fo:block>  
+                            		<fo:block  text-align="left"  white-space-collapse="false">---------------------------------------------------------------------------------------------</fo:block>  
                        			</fo:table-cell>
                 				
             				</fo:table-row>
