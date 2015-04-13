@@ -147,12 +147,30 @@
 		condList = [];
 		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, oldPmntIdsList));
 		condList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, fromDate));
+		//condList.add(EntityCondition.makeCondition("createdStamp",EntityOperator.LESS_THAN, fromDate));
 		condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		oldPmntAppList = EntityUtil.filterByCondition(paymentApplicationList, condExpr);
 		
 		amountApplied = BigDecimal.ZERO;
 		for(j=0; j<oldPmntAppList.size(); j++){
-			amountApplied = amountApplied.add((oldPmntAppList.get(j)).getBigDecimal("amountApplied"));
+			
+			if(UtilValidate.isNotEmpty((oldPmntAppList.get(j).get("invoiceId")))){
+				invId = (oldPmntAppList.get(j)).get("invoiceId");
+				invoiceDetails = (invoiceDetailsMap.get(invId)).get(0);
+				invDate = invoiceDetails.get("invoiceDate");
+				if(invDate.compareTo(fromDate)<0){
+					amountApplied = amountApplied.add((oldPmntAppList.get(j)).getBigDecimal("amountApplied"));
+				}
+			}
+			if(UtilValidate.isNotEmpty( (oldPmntAppList.get(j)).get("toPaymentId") )   )	{
+				toPmntId = (oldPmntAppList.get(j)).get("toPaymentId");
+				pmntDetails = (paymentDetailsMap.get(toPmntId)).get(0);
+				pmntDate = pmntDetails.get("paymentDate");
+				if(pmntDate.compareTo(fromDate)<0){
+					amountApplied = amountApplied.add((oldPmntAppList.get(j)).getBigDecimal("amountApplied"));
+				}
+			}
+			
 		}
 		openingBalance = amountPaid.subtract(amountApplied);
 		
@@ -178,14 +196,42 @@
 		
 		condList = [];
 		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, partyPmntIdsList));
-		condList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		//condList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		//condList.add(EntityCondition.makeCondition("createdStamp",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		//condList.add(EntityCondition.makeCondition("createdStamp",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 		condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		durationPmntApps = EntityUtil.filterByCondition(paymentApplicationList, condExpr1);
 		
 		duringAmountApplied = BigDecimal.ZERO;
-		for(j=0; j<durationPmntApps.size(); j++){
+		/*for(j=0; j<durationPmntApps.size(); j++){
 			duringAmountApplied = duringAmountApplied.add((durationPmntApps.get(j)).getBigDecimal("amountApplied"));
+		}*/
+		
+		for(j=0; j<durationPmntApps.size(); j++){
+			
+			if(UtilValidate.isNotEmpty((durationPmntApps.get(j).get("invoiceId")))){
+				invId = (durationPmntApps.get(j)).get("invoiceId");
+				invoiceDetails = (invoiceDetailsMap.get(invId)).get(0);
+				invDate = invoiceDetails.get("invoiceDate");
+				if( (invDate.compareTo(fromDate)>0) && (invDate.compareTo(thruDate)<0) ){
+					duringAmountApplied = duringAmountApplied.add((durationPmntApps.get(j)).getBigDecimal("amountApplied"));
+				}
+			}
+			if(UtilValidate.isNotEmpty((durationPmntApps.get(j)).get("toPaymentId"))){
+				toPmntId = (durationPmntApps.get(j)).get("toPaymentId");
+				pmntDetails = (paymentDetailsMap.get(toPmntId)).get(0);
+				pmntDate = pmntDetails.get("paymentDate");
+				if( (pmntDate.compareTo(fromDate)>0) && (pmntDate.compareTo(thruDate)<0) ){
+					duringAmountApplied = duringAmountApplied.add((durationPmntApps.get(j)).getBigDecimal("amountApplied"));
+				}
+			}
+			
 		}
+		
+		
+		
+		
+		
 		
 		dpMap = [:];
 		dpMap.put("debit", duringAmountPaid);

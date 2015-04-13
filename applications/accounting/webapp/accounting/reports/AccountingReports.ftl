@@ -147,7 +147,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			changeMonth: true,
 			changeYear: true,
 			onSelect: function(selectedDate) {
-			$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: null}).datepicker('setDate', date);
+				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate}).datepicker('setDate', selectedDate);
 			}
 		});
 	$( "#"+thruDateId ).datepicker({
