@@ -1624,5 +1624,50 @@
 		</field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
+    <form name="CreateTimePeriod" type="single" title="" target="createHRTimePeriod"
+            header-row-style="header-row" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="periodTypeId" event="onchange" action="javascript:dateFormatType();">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PeriodType" description="${description}" >
+						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH" operator="in"></entity-constraint>
+                    <entity-order-by field-name="description"/>
+                </entity-options >
+            </drop-down>
+        </field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field> 
+        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>  
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
+    <form name="TimePeriodResults" list-name="timePeriodList" type="list"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+         <actions>
+            <!-- <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="HolidayCalendar"/>
+                <field-map field-name="entityName" value="CourseDepartment"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> -->
+        </actions>
+        <field name="periodTypeId" title = "Period Type Id"><display></display></field>
+        <field name="fromDate"><display></display></field>
+        <field name="thruDate"><display></display></field>
+    </form>
+    <form name="findCustomTimePeriod" type="single" title="" target="findCustomTimePeriod"
+            header-row-style="header-row" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="periodTypeId" event="onchange" action="javascript:dateFormatType();">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PeriodType" description="${description}" >
+						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH" operator="in"></entity-constraint>
+                    <entity-order-by field-name="description"/>
+                </entity-options >
+            </drop-down>
+        </field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field> 
+        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>  
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+    </form>
 </forms>
         

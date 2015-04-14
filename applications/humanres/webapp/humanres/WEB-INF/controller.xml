@@ -1916,6 +1916,24 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="CreateNewEmployee"></response>
     </request-map>
+    <request-map uri="createTimePeriod">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="createTimePeriod"></response>
+    </request-map>
+    <request-map uri="CreateNewTimePeriod">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewTimePeriod"></response>
+    </request-map>
+    <request-map uri="findCustomTimePeriod">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createTimePeriod"/>
+    </request-map>
+    <request-map uri="createHRTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createHRTimePeriod"/>
+        <response name="success" type="view" value="createTimePeriod"/>
+        <response name="error" type="view" value="createTimePeriod"/>
+    </request-map>
      <request-map uri="EmployeeAttendanceInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAttendanceInternal"/>
@@ -2554,6 +2572,8 @@ under the License.
     
     <view-map name="findMasters" type="screen" page="component://humanres/widget/HumanresScreens.xml#findMasters"></view-map>
     <view-map name="CreateNewEmployee" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewEmployee"></view-map>
+    <view-map name="createTimePeriod" type="screen" page="component://humanres/widget/HumanresScreens.xml#createTimePeriod"></view-map>
+	<view-map name="CreateNewTimePeriod" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewTimePeriod"></view-map>
 
  <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
