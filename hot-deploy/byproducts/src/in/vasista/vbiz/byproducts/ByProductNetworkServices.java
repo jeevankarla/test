@@ -11068,7 +11068,7 @@ public class ByProductNetworkServices {
         			//shipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(salesDate, "yyyy-MM-dd HH:mm:ss"),subscriptionType);
         			shipmentIds=getShipmentIdsSupplyType(delegator, salesDate,salesDate,subscriptionType);
         	}
-        	Debug.log("salesDate===INRETURNS==" + salesDate + "shipmentIds=" + shipmentIds+"===SUBSCRIPTION==="+subscriptionType, module);	
+        	//Debug.log("salesDate===INRETURNS==" + salesDate + "shipmentIds=" + shipmentIds+"===SUBSCRIPTION==="+subscriptionType, module);	
         	List returnConditionList = FastList.newInstance();
 			returnConditionList.add(EntityCondition.makeCondition("shipmentId",	EntityOperator.IN, shipmentIds));
 			if (isByParty) {
