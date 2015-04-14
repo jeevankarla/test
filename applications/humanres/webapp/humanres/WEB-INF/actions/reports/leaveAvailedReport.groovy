@@ -177,7 +177,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						}
 					}
 				}
-				employeesList = UtilMisc.sortMaps(employeesList, UtilMisc.toList("leaveFrom"));
+				employeesList = UtilMisc.sortMaps(employeesList, UtilMisc.toList("fromDate"));
 				if(UtilValidate.isNotEmpty(employeesList)){
 					finalMap.put(leaveTypeId, employeesList);
 				}
