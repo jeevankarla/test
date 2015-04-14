@@ -23,6 +23,7 @@ leaveTypeId = parameters.leaveTypeId;
 context.put("leaveTypeId",leaveTypeId);
 closingBalance = 0;
 openingBalance = 0;
+ob = 0; 
 allotedDays = 0;
 availedDays = 0;
 adjustedDays = 0;
