@@ -1783,6 +1783,17 @@ under the License.
         <response name="success" type="view" value="creditLeavesELHPLCL"/>
         <response name="error" type="view" value="creditLeavesELHPLCL"/>
     </request-map>
+    <request-map uri="FindEmplLeaveBalance">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindEmplLeaveBalance"/>
+        <response name="error" type="view" value="FindEmplLeaveBalance"/>
+    </request-map>
+    <request-map uri="updateEmployeeLeaveBalance">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateEmployeeLeaveBalance"/>
+    	<response name="success" type="view" value="FindEmplLeaveBalance"/>
+    	<response name="error" type="view" value="FindEmplLeaveBalance"/>
+    </request-map>
     <request-map uri="populateELCLAndHPLBalanceCredit">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="populateELCLAndHPLBalanceCredit"/>
@@ -2506,7 +2517,7 @@ under the License.
     <view-map name="EditShiftDay" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditShiftDay"/>
     <view-map name="CreditLeaves" type="screen" page="component://humanres/widget/EmploymentScreens.xml#CreditLeaves"/>
     <view-map name="creditLeavesELHPLCL" type="screen" page="component://humanres/widget/EmploymentScreens.xml#creditLeavesELHPLCL"/>
-    
+    <view-map name="FindEmplLeaveBalance" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindEmplLeaveBalance"/>
     
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>

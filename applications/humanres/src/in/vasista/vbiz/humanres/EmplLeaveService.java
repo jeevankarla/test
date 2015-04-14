@@ -1003,6 +1003,80 @@ public class EmplLeaveService {
     	}
 	    return result;
     }
+    public static Map<String, Object> updateEmployeeLeaveBalance(DispatchContext dctx, Map context) {
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    String customTimePeriodId = (String) context.get("customTimePeriodId");
+	    String partyId = (String) context.get("partyId");
+	    String leaveTypeId = (String) context.get("leaveTypeId");
+	    
+	    Map<String, Object> result = ServiceUtil.returnSuccess(" "+ leaveTypeId + " leave balance updated sucessfully..!");
+	    
+	    BigDecimal openingBalance = (BigDecimal) context.get("openingBalance");
+	    BigDecimal allotedDays = (BigDecimal) context.get("allotedDays");
+	    BigDecimal availedDays = (BigDecimal) context.get("availedDays");
+	    BigDecimal adjustedDays = (BigDecimal) context.get("adjustedDays");
+	    BigDecimal encashedDays = (BigDecimal) context.get("encashedDays");
+	    BigDecimal lapsedDays = (BigDecimal) context.get("lapsedDays");
+	    
+	    Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();	
+    	try{
+    		if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL")){
+		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
+		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
+					emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
+					emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
+					emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
+					emplLeaveBalanceStatus.set("partyId",partyId);
+					if (UtilValidate.isNotEmpty(openingBalance)) {
+						emplLeaveBalanceStatus.set("openingBalance",openingBalance);
+					}
+					if (UtilValidate.isNotEmpty(allotedDays)) {
+						emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+					}
+					if (UtilValidate.isNotEmpty(availedDays)) {
+						emplLeaveBalanceStatus.set("availedDays",availedDays);
+					}
+					if (UtilValidate.isNotEmpty(adjustedDays)) {
+						emplLeaveBalanceStatus.set("adjustedDays",adjustedDays);
+					}
+					if (UtilValidate.isNotEmpty(encashedDays)) {
+						emplLeaveBalanceStatus.set("encashedDays",encashedDays);
+					}
+					if (UtilValidate.isNotEmpty(lapsedDays)) {
+						emplLeaveBalanceStatus.set("lapsedDays",lapsedDays);
+					}
+					emplLeaveBalanceStatus.create();
+				}else{
+					if (UtilValidate.isNotEmpty(openingBalance)) {
+						emplLeaveBalanceStatus.set("openingBalance",openingBalance);
+					}
+					if (UtilValidate.isNotEmpty(allotedDays)) {
+						emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+					}
+					if (UtilValidate.isNotEmpty(availedDays)) {
+						emplLeaveBalanceStatus.set("availedDays",availedDays);
+					}
+					if (UtilValidate.isNotEmpty(adjustedDays)) {
+						emplLeaveBalanceStatus.set("adjustedDays",adjustedDays);
+					}
+					if (UtilValidate.isNotEmpty(encashedDays)) {
+						emplLeaveBalanceStatus.set("encashedDays",encashedDays);
+					}
+					if (UtilValidate.isNotEmpty(lapsedDays)) {
+						emplLeaveBalanceStatus.set("lapsedDays",lapsedDays);
+					}
+					emplLeaveBalanceStatus.store();
+				}
+			}
+    	}catch(Exception e){
+			Debug.logError("Error while getting balance days"+e.getMessage(), module);	
+		}
+	    return result;
+    }
     public static Map<String, Object> checkAvailableLeaveDays(DispatchContext dctx, Map context) {
     	Map<String, Object> result = ServiceUtil.returnSuccess();
     	String leaveTypeId = (String) context.get("leaveTypeId");
