@@ -117,7 +117,7 @@ Debug.logInfo("result:" + result, module);
  
 		Map result = FastMap.newInstance();  		
     	Map priceResult = ByProductReportServices.getByProductPricesForFacility(dctx, 
-    			UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId, "productCategoryId", "INDENT"));
+    			UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId, "productCategoryId", "MOBILE_INDENT"));
 		 if(!ServiceUtil.isError(priceResult)){
 			 result.put("productsPrice", (Map)priceResult.get("productsPrice"));
 		 }  
