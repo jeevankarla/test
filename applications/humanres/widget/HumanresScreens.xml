@@ -287,16 +287,14 @@
                                	</widgets>
                            	</section>
                        	</screenlet>
-                 	</decorator-section>		                           	 
-                 	<decorator-section name="search-results">
-                      	<screenlet title="Holiday Calender for HR Year ${yearStart}-${yearEnd} ${year}">
+                       	<screenlet title="Holiday Calender for HR Year ${yearStart}-${yearEnd} ${year}">
                            	<section>
                                	<widgets>
                                    	<include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>
                                	</widgets>
                            	</section>
                        	</screenlet>
-                      </decorator-section>
+                 	</decorator-section>		                           	 
                 </decorator-screen>
             </widgets>
         </section>
@@ -869,6 +867,7 @@
 						<container>
 							<container style="button-bar">
                         		<link target="NewEmployeeDetails" text="Create New Employee" style="buttontext"></link>
+                        		<link target="createTimePeriod" text="Create HR Time Period" style="buttontext"></link>
                         	</container>
 						</container>
 					</decorator-section>
@@ -897,7 +896,71 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	 </screen>  
+	 </screen> 
+	 <screen name="createTimePeriod">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="findMasters" />
+				<set field="tabButtonItem" value="Masters" />
+				<set field="titleProperty" value="New Employee" />
+				<set field="organizationPartyId" value="Company" />
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/findCustomTimePeriod.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<decorator-section name="search-options">
+						<container style="button-bar">
+	                     	<link target="CreateNewTimePeriod" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Time Period"/>
+	                   	</container> 
+			            		<screenlet title="Search-Options">
+		                           	<section>
+		                               	<widgets>
+		                                   	<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="findCustomTimePeriod"/>
+		                               	</widgets>
+		                           	</section>
+		                       	</screenlet>
+		                 	</decorator-section>		                           	 
+		                 	<decorator-section name="search-results">
+		                      	<screenlet title="search-results">
+		                           	<section>
+		                               	<widgets>
+		                                   	<include-form name="TimePeriodResults" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+		                               	</widgets>
+		                           	</section>
+		                       	</screenlet>
+		                      </decorator-section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	 </screen>
+	 <screen name="CreateNewTimePeriod">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="tabButtonItem" value="Masters" />
+                <set field="tabButtonItem2" value="createTimePeriod" />
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/setDateFormat.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<screenlet title="Create New Time Period">
+                            	<section>
+                                	<widgets>
+                                    	<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="CreateTimePeriod"/>
+                                	</widgets>
+                            	</section>
+                        	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+   	</screen> 
     <screen name="loan">
 	 	<section>
 			<actions>

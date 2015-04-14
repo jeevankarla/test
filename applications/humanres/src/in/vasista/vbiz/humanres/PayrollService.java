@@ -8737,4 +8737,62 @@ public class PayrollService {
 		result.put("periodBillingId", periodBillingId);
 		return result;
 	}
+  	
+  	public static Map<String, Object> createTimePeriod(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String periodTypeId = (String) context.get("periodTypeId");
+    	String organizationPartyId = (String) context.get("organizationPartyId");
+    	Date fromDate = (java.sql.Date) context.get("fromDate");
+    	Date thruDate = (java.sql.Date) context.get("thruDate");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+    	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	
+    	Timestamp fromDateStart = null;
+		Timestamp fromDateEnd = null;
+    	
+    	fromDateStart = new java.sql.Timestamp(((Date) fromDate).getTime());
+    	fromDateEnd = new java.sql.Timestamp(((Date) thruDate).getTime());
+    	
+    	String startDate = UtilDateTime.toDateString(fromDateStart, "dd");
+    	String endDate = UtilDateTime.toDateString(fromDateEnd, "dd");
+    	try {
+	    	if(periodTypeId.equals("ATTENDANCE_MONTH")){
+		    	if(!startDate.equals("15")){
+		    		return ServiceUtil.returnError("Please select fromDate from 15th.");
+		    	}
+	    		if(!endDate.equals("14")){
+	        		return ServiceUtil.returnError("Please select thruDate to 14th.");
+	        	}
+	    	}
+	    	if(UtilValidate.isNotEmpty(periodTypeId)){
+    			Map getTimePeriodMap = FastMap.newInstance();
+    			getTimePeriodMap.put("userLogin",userLogin);
+    			getTimePeriodMap.put("periodTypeId",periodTypeId);
+    			getTimePeriodMap.put("organizationPartyId",organizationPartyId);
+    			getTimePeriodMap.put("fromDate",fromDate);
+    			getTimePeriodMap.put("thruDate",thruDate);
+    			if(UtilValidate.isNotEmpty(getTimePeriodMap)){
+    				try{
+    					serviceResult = dispatcher.runSync("createCustomTimePeriod", getTimePeriodMap);
+    		            if (ServiceUtil.isError(serviceResult)){
+    		            	return ServiceUtil.returnError("Time period already exidts");
+    		            }else{
+    		            	result = ServiceUtil.returnSuccess("Time Period Successfully created");
+    		            }
+    				}catch(Exception e){
+    					Debug.logError("Error while creating Time period"+e.getMessage(), module);
+    				}
+    			}
+	    	}
+	    	
+    	}catch(Exception e){
+			Debug.logError("Error while getting Time period Details"+e.getMessage(), module);
+		}
+    	
+		return result;
+  	}
 }//end of class
