@@ -926,9 +926,9 @@ public class SalesInvoiceServices {
 				 bedCessRevenue = bedcessAmount;
 				 bedSecCessRevenue = bedseccessAmount;
 				 cstRevenue = cstAmount;
-				 revenue=revenue.add(vatRevenue); revenue=revenue.add(bedRevenue); revenue=revenue.add(bedCessRevenue);
-				 revenue=revenue.add(bedSecCessRevenue); revenue=revenue.add(cstRevenue);
 				}
+			    revenue=revenue.add(vatRevenue); revenue=revenue.add(bedRevenue); revenue=revenue.add(bedCessRevenue);
+			    revenue=revenue.add(bedSecCessRevenue); revenue=revenue.add(cstRevenue);
 			 //Debug.log("==AFTTER=CHECK==>revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
 			totalRevenue = totalRevenue.add(revenue);
 		    totalPacket = totalPacket.add(packetQuantity);
