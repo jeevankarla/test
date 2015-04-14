@@ -41,6 +41,7 @@ if(UtilValidate.isNotEmpty(attendanceDetails)){
 		consolidateList.add(EntityCondition.makeCondition("pkCombinedValueText", EntityOperator.EQUALS, appendedPartyId));
 		consolidateList.add(EntityCondition.makeCondition("changedEntityName", EntityOperator.EQUALS, "PayrollAttendance"));
 		consolidateList.add(EntityCondition.makeCondition("changedFieldName", EntityOperator.EQUALS, "noOfPayableDays"));
+		consolidateList.add(EntityCondition.makeCondition("oldValueText", EntityOperator.NOT_EQUAL, ""));
 		consolidateCondition=EntityCondition.makeCondition(consolidateList,EntityOperator.AND);
 		def orderBy1 = UtilMisc.toList("auditHistorySeqId");
 		consolidatedDetailsList = delegator.findList("EntityAuditLog", consolidateCondition , null, orderBy1, null, false);

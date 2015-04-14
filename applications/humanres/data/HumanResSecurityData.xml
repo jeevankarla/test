@@ -50,6 +50,11 @@ under the License.
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="CREDIT_ELHPLCL_TAB_VIEW"/>
     <SecurityGroupPermission groupId="CREDIT_LEAVES_TAB" permissionId="CREDIT_ELHPLCL_TAB_VIEW"/>
     
+    <SecurityPermission description="View Permission for updating leave balacnce of EL HPL CL" permissionId="HR_EMPLEAVBAL_UPDATE"/>
+    <SecurityGroup description="View Permission for updating leave balacnce of EL HPL CL" groupId="HR_EMPLEAVBAL_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLEAVBAL_UPDATE"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLEAVBAL_UPDATE"/>
+    <SecurityGroupPermission groupId="HR_EMPLEAVBAL_UPDATE" permissionId="HR_EMPLEAVBAL_UPDATE"/>
     
     
     <SecurityPermission description="View Permission for Loan Recovery Tab." permissionId="LOAN_RECOVERY_TAB_VIEW"/>

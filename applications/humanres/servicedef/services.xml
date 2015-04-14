@@ -1698,7 +1698,19 @@ under the License.emplpunch
        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
        <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
    </service>
-   
+   <service name="updateEmployeeLeaveBalance" engine="java" auth="true" invoke="updateEmployeeLeaveBalance" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+       <attribute name="partyId" mode="IN" type="String" optional="false"/>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="openingBalance" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="allotedDays" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="availedDays" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="adjustedDays" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="encashedDays" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="lapsedDays" mode="IN" type="BigDecimal" optional="true"/>
+   </service>
    <service name="getGeneralHoliDayOrSSWorkedDays" engine="java" auth="true" invoke="getGeneralHoliDayOrSSWorkedDays" 
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>populateEmplPunch from </description>

@@ -1783,6 +1783,17 @@ under the License.
         <response name="success" type="view" value="creditLeavesELHPLCL"/>
         <response name="error" type="view" value="creditLeavesELHPLCL"/>
     </request-map>
+    <request-map uri="FindEmplLeaveBalance">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindEmplLeaveBalance"/>
+        <response name="error" type="view" value="FindEmplLeaveBalance"/>
+    </request-map>
+    <request-map uri="updateEmployeeLeaveBalance">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateEmployeeLeaveBalance"/>
+    	<response name="success" type="view" value="FindEmplLeaveBalance"/>
+    	<response name="error" type="view" value="FindEmplLeaveBalance"/>
+    </request-map>
     <request-map uri="populateELCLAndHPLBalanceCredit">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="populateELCLAndHPLBalanceCredit"/>
@@ -2149,7 +2160,8 @@ under the License.
     <request-map uri="newLoanTypeReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="NewLoanTypeReport"></response>    
     </request-map>
-	
+	<request-map uri="disbursedLoanBankReportCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="disbursedLoanBankReportCsv"></response></request-map>
+    <request-map uri="disbursedLoanBankReportPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="disbursedLoanBankReportPdf"></response></request-map> 
 	
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
@@ -2505,7 +2517,7 @@ under the License.
     <view-map name="EditShiftDay" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditShiftDay"/>
     <view-map name="CreditLeaves" type="screen" page="component://humanres/widget/EmploymentScreens.xml#CreditLeaves"/>
     <view-map name="creditLeavesELHPLCL" type="screen" page="component://humanres/widget/EmploymentScreens.xml#creditLeavesELHPLCL"/>
-    
+    <view-map name="FindEmplLeaveBalance" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindEmplLeaveBalance"/>
     
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>
@@ -2578,6 +2590,8 @@ under the License.
 	<view-map name="GratuitySupportReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GratuitySupportReportPdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="EDLISReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReportCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="EDLISReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReportPdf" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="disbursedLoanBankReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#disbursedLoanBankReportCsv" content-type="text/csv" encoding="none"/>
+	<view-map name="disbursedLoanBankReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#disbursedLoanBankReportPdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="MonthlyLICReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyLICReport" content-type="application/pdf" encoding="none"/>
  
  	<view-map name="PartyProfile" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfile"/>

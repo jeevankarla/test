@@ -678,6 +678,34 @@
             </widgets>
         </section>
     </screen>
+    <screen name="FindEmplLeaveBalance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Leave Balance Update"/>
+				<set field="headerItem" value="Leave"/>
+                <set field="tabButtonItem" value="EmployeeLeave"/>
+                <set field="tabButtonItem2" value="FindEmplLeaveBalance" />
+                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/emplLeaveBalances.groovy"/>
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplLeaveTabBar"/> 
+                    	<container>
+							<screenlet title="Find Employee Leave Balance">
+								<include-form name="EmplLeaveBalance" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+							</screenlet>
+							<screenlet title="Update Employee Leave Balance">
+		                        <platform-specific>
+		                       		<html><html-template location="component://humanres/webapp/humanres/humanres/emplLeaveBalances.ftl"></html-template></html>
+		                   		</platform-specific>
+                   		 </screenlet> 
+						</container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="listLeaves">
       <section>
 			<actions>
