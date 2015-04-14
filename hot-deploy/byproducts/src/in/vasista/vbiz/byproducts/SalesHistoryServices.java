@@ -494,6 +494,13 @@ public class SalesHistoryServices {
     										boothProductSubscriptionTypeId = "_NA_";
     										facQuantity = productsBoothSalesMap.get("total");
     										facRevenue = productsBoothSalesMap.get("totalRevenue");
+    										//negate them because return values reduced from main values directly
+    										BigDecimal tempFacQuantity = (BigDecimal)productsBoothSalesMap.get("total");
+					    					BigDecimal tempFacRevenue = (BigDecimal)productsBoothSalesMap.get("totalRevenue");
+					    					
+    										facQuantity=(BigDecimal)tempFacQuantity.negate();
+    										facRevenue=(BigDecimal)tempFacRevenue.negate();
+    										
 	    										if((facRevenue != BigDecimal.ZERO) && (facQuantity != BigDecimal.ZERO)){
 	    											//populating route wise map 
 	        						    	  		if(routesTotReturnMap.get(route) != null){
@@ -857,7 +864,7 @@ public class SalesHistoryServices {
       		   lmsSalesSummaryDetailList.clear();
       		Debug.logImportant("Monthly Data Completed For AM & PM", "");
       		
-      		List conditionsClearList = FastList.newInstance();
+      		/*List conditionsClearList = FastList.newInstance();
       		conditionsClearList.add(EntityCondition.makeCondition("salesDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
       		conditionsClearList.add(EntityCondition.makeCondition("salesDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
       		conditionsClearList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_DAY"));
@@ -867,7 +874,7 @@ public class SalesHistoryServices {
       		
       		//clearing All dayWise Data for current month
               delegator.removeAll(lmsSalesSummaryList);
-              delegator.removeAll(lmsSalesBoothDayWiseDataList);
+              delegator.removeAll(lmsSalesBoothDayWiseDataList);*/
       		
       	} catch (GenericEntityException e) {
       		Debug.logError(e, module);
@@ -932,6 +939,8 @@ public class SalesHistoryServices {
 							BigDecimal Revenue = (BigDecimal)productsSalesMap.get("totalRevenue");
 							if(!UtilValidate.isEmpty(isReturn)){
 							isReturn=(String)productsSalesMap.get("isReturn");
+							Quantity=Quantity.negate();
+							Revenue=Revenue.negate();
 							}
 							GenericValue periodSalesSummaryDetail = delegator.makeValue("LMSPeriodSalesSummaryDetail");
 		        			periodSalesSummaryDetail.put("salesDate", salesDate);
@@ -1244,9 +1253,11 @@ public class SalesHistoryServices {
 					conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
 				}
 				
-				conditionList.add(EntityCondition.makeCondition("periodTypeId",  EntityOperator.EQUALS, "SALES_DAY"));
+				
 				if (!UtilValidate.isEmpty(periodTypeId)) {
 					conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
+				}else{
+					conditionList.add(EntityCondition.makeCondition("periodTypeId",  EntityOperator.EQUALS, "SALES_DAY"));
 				}
 			
 				conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY")));
