@@ -49,10 +49,18 @@ if(UtilValidate.isNotEmpty(attendanceDetails)){
 			consolidatedDetailsList.each { consolidatedDetails ->
 				consolidatedMap=[:];
 				if(UtilValidate.isNotEmpty(consolidatedDetails.get("newValueText"))){
-					consolidatedMap.put("oldValueText",new BigDecimal(consolidatedDetails.get("oldValueText")));
-					consolidatedMap.put("newValueText",new BigDecimal(consolidatedDetails.get("newValueText")));
-					consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
-					consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
+					if(UtilValidate.isNotEmpty(consolidatedDetails.get("oldValueText"))){
+						consolidatedMap.put("oldValueText",new BigDecimal(consolidatedDetails.get("oldValueText")));
+					}
+					if(UtilValidate.isNotEmpty(consolidatedDetails.get("newValueText"))){
+						consolidatedMap.put("newValueText",new BigDecimal(consolidatedDetails.get("newValueText")));
+					}
+					if(UtilValidate.isNotEmpty(consolidatedDetails.get("changedDate"))){
+						consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
+					}
+					if(UtilValidate.isNotEmpty(consolidatedDetails.get("changedByInfo"))){
+						consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
+					}
 					enumeration = delegator.findOne("Enumeration",[enumId:remarks],false);
 					if(UtilValidate.isNotEmpty(enumeration)){
 						consolidatedMap.put("remarks", enumeration.get("description"));
