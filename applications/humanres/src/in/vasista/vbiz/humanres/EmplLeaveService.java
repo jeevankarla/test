@@ -1073,7 +1073,7 @@ public class EmplLeaveService {
 				}
 			}
     	}catch(Exception e){
-			Debug.logError("Error while getting balance days"+e.getMessage(), module);
+			Debug.logError("Error while getting balance days"+e.getMessage(), module);	
 		}
 	    return result;
     }
