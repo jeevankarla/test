@@ -9,13 +9,17 @@
         		 
         		 <set field="tabButtonItem" value="MRTransporterMargins"/>
         		 <set field="tabButtonItem2" value="MRTransporters"/>
-        		 
+        		 <script location="component:///procurement/webapp/milkreceipts/WEB-INF/actions/facility/Transporters.groovy"/>
         	</actions>
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     	<include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
-                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    	 <platform-specific>
+                    	 	<html>
+                    	 		<html-template location="component://procurement/webapp/milkreceipts/transporter/Transporter.ftl"/>
+                    	 	</html>
+                    	 </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
