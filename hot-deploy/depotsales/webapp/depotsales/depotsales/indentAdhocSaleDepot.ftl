@@ -20,11 +20,13 @@ $(document).ready(function(){
 		$("#prodCatId").val(productCategorySelectIds);
 		$("#prodCatId").multiselect("refresh");
 		*/
-		
+
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			minDate: new Date(),
+			maxDate: 14,
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
@@ -149,7 +151,7 @@ $(document).ready(function(){
 <div class="screenlet">
 	<div class="screenlet-title-bar">
          <div class="grid-header" style="width:100%">
-			<label>Indent Entry </label>
+			<label>Depot Sales Entry </label>
 		</div>
 		<!-- 
          <#if orderStatus?exists && orderStatus?has_content>
@@ -186,7 +188,7 @@ $(document).ready(function(){
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
 		        </#if>
            	</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.SupplyDate}:</div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Indent Date:</div></td>
           <td>&nbsp;</td>
           <#if effectiveDate?exists && effectiveDate?has_content>  
 	  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  

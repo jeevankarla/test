@@ -36,6 +36,7 @@
 		$( "#suppInvoiceDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
+			maxDate: "#startDateFrom",
 			onSelect: function( selectedDate ) {
 				$( "#deliveryChallanDate" ).datepicker("option", "minDate", selectedDate);
 			}
