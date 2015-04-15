@@ -16,13 +16,13 @@ dctx = dispatcher.getDispatchContext();
 String Date = parameters.lbDate;
 employeeId = parameters.partyIdTo;
 fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());	
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
-	if (parameters.mclFromDate) {
+	if (parameters.lbDate) {
 		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.lbDate).getTime()));
 	}
-	if (parameters.mclThruDate) {
+	if (parameters.lbDate) {
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.lbDate).getTime()));
 	}
 } catch (ParseException e) {
@@ -33,7 +33,6 @@ try {
 context.Date=Date;
 context.fromDate=UtilDateTime.toDateString(fromDate, "MMM dd, yyyy");
 context.thruDate=UtilDateTime.toDateString(thruDate, "MMM dd, yyyy");
-
 employeeList = [];
 
 employmentsList = [];
@@ -70,6 +69,7 @@ employmentsList.each { employeeId ->
 		inputMap.put("balanceDate", UtilDateTime.toSqlDate(thruDate));
 		inputMap.put("employeeId", employeeId);
 		inputMap.put("leaveTypeId", leaveType);
+		inputMap.put("flag","creditLeaves");
 		Map cLEmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
 		if(UtilValidate.isNotEmpty(cLEmplLeaveBalanceMap.get("leaveBalances").get(leaveType))){
 			cLBalance=cLEmplLeaveBalanceMap.get("leaveBalances").get(leaveType);
@@ -82,6 +82,7 @@ employmentsList.each { employeeId ->
 		inputMap.put("balanceDate", UtilDateTime.toSqlDate(thruDate));
 		inputMap.put("employeeId", employeeId);
 		inputMap.put("leaveTypeId", leaveType);
+		inputMap.put("flag","creditLeaves");
 		Map eLEmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
 		if(UtilValidate.isNotEmpty(eLEmplLeaveBalanceMap.get("leaveBalances").get(leaveType))){
 			eLBalance=eLEmplLeaveBalanceMap.get("leaveBalances").get(leaveType);
@@ -94,6 +95,7 @@ employmentsList.each { employeeId ->
 		inputMap.put("balanceDate", UtilDateTime.toSqlDate(thruDate));
 		inputMap.put("employeeId", employeeId);
 		inputMap.put("leaveTypeId", leaveType);
+		inputMap.put("flag","creditLeaves");
 		Map hPLEmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
 		if(UtilValidate.isNotEmpty(hPLEmplLeaveBalanceMap.get("leaveBalances").get(leaveType))){
 			hPLBalance=hPLEmplLeaveBalanceMap.get("leaveBalances").get(leaveType);
