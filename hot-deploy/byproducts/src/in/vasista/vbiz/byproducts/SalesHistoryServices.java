@@ -1227,7 +1227,7 @@ public class SalesHistoryServices {
 					value.put(productAttrItem.getString("attrName"),productAttrItem.getString("attrValue"));
 				}
 
-				productSubscriptionTypeList = delegator.findList("Enumeration",	EntityCondition.makeCondition("enumTypeId",	EntityOperator.EQUALS, "SUB_PROD_TYPE"), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"),null, false);
+				productSubscriptionTypeList = delegator.findList("Enumeration",	EntityCondition.makeCondition("enumId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY","_NA_")), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"),null, false);
 
 				// lets populate sales date shipmentId Map
 				int intervalDays = (UtilDateTime.getIntervalInDays(fromDate,thruDate)) + 1;
@@ -1260,7 +1260,7 @@ public class SalesHistoryServices {
 					conditionList.add(EntityCondition.makeCondition("periodTypeId",  EntityOperator.EQUALS, "SALES_DAY"));
 				}
 			
-				conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY")));
+				conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY","_NA_")));
 				conditionList.add(EntityCondition.makeCondition("salesDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
 				conditionList.add(EntityCondition.makeCondition("salesDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
 				if (includeReturnOrders) {
@@ -1273,7 +1273,7 @@ public class SalesHistoryServices {
 				if (!UtilValidate.isEmpty(fromDate)) {
 					orderItemsIter = delegator.find("LMSPeriodSalesSummaryDetail", condition,	null, null, null, null);
 				}
-				Debug.log("condition====IN==orderItemsIter=" + orderItemsIter+"===conditionList=="+conditionList);
+				//Debug.log("condition====IN==orderItemsIter=" + orderItemsIter+"===conditionList=="+conditionList);
 			} catch (GenericEntityException e) {
 				Debug.logError(e, module);
 			}
@@ -1315,6 +1315,7 @@ public class SalesHistoryServices {
 				if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("totalRevenue"))){
 					revenue = orderItem.getBigDecimal("totalRevenue");
 				}
+			   // Debug.log("===return=Revenue###"+revenue+"===and Qty=####"+quantity+"====productId=="+productId+"==isReturn=="+orderItem.getString("isReturn"));
 				totalRevenue = totalRevenue.add(revenue);
 				totalPacket = totalPacket.add(packetQuantity);
 				totalQuantity = totalQuantity.add(quantity);
