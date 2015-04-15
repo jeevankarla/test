@@ -146,12 +146,12 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						balance=0;
 						emplLeaveBalance=[:];
 						Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(empLeaves.get("fromDate"), -1));
-						if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
+						/*if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
 							emplLeaveBalance=leaveBalanceMap.get(empLeaves.get("partyId"));
 						}
 						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
 								balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
-						}else{
+						}else{*/
 							Map getEmplLeaveBalMap = [:];
 							getEmplLeaveBalMap.put("userLogin",userLogin);
 							getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
@@ -165,7 +165,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 									balance = (BigDecimal) leaveBalances.get(leaveTypeId);
 								}
 							}
-						}
+						//}
 						if(UtilValidate.isNotEmpty(intv) && intv != null){
 							balance = balance-intv;
 						}
