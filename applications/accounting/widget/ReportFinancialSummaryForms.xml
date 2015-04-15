@@ -1264,6 +1264,17 @@ under the License.
     	<field name="closingBalance"><display></display></field>
     	<field name="deducteePartyId"><display></display></field>
     </form>
+    <form name="ArApInvoiceApplicationCSV" list-name="invoiceApplicationDetailList" type="list">
+    	<field name="invoiceId"><display/></field>
+    	<field name="invoiceDate"><display/></field>
+    	<field name="partyId"><display/></field>
+    	<field name="paidDate"><display/></field>
+    	<field name="invoiceAmount"><display/></field>
+    	<field name="paymentId"><display/></field>
+    	<field name="paymentAmount"><display /></field>
+    	<field name="applicationAmount"><display /></field>
+    </form>
+    
     <form name="GlLedgerReconciliationCSV" type="list" list-name="glLedgerReconciliationList">
     	<field name="purposeTypeId" use-when="purposeTypeId!=null" title="Purpose Type"><display></display></field>
     	<field name="debitAmount" title="Total Debits"><display></display></field>
