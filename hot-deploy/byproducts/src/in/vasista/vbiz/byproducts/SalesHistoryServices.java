@@ -1310,6 +1310,15 @@ public class SalesHistoryServices {
 				BigDecimal price = orderItem.getBigDecimal("unitListPrice");
 				BigDecimal revenue = price.multiply(quantity);*/
 				BigDecimal quantity = orderItem.getBigDecimal("totalQuantity");
+				GenericValue product;
+				try{
+					product = delegator.findOne("Product",true, UtilMisc.toMap("productId",productId));
+					if(UtilValidate.isNotEmpty(product.getBigDecimal("quantityIncluded"))){
+					quantity = quantity.multiply(product.getBigDecimal("quantityIncluded"));
+					} 
+				}catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				}
 				BigDecimal packetQuantity = orderItem.getBigDecimal("totalQuantity");
 				BigDecimal price = BigDecimal.ONE;//orderItem.getBigDecimal("unitPrice");
 				BigDecimal revenue = price.multiply(quantity);
