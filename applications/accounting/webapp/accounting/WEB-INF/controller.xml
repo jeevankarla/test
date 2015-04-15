@@ -3796,6 +3796,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinAccountTransDetailsCSV"/>
     </request-map>
+    <request-map uri="ArApInvoiceApplication.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ArApInvoiceApplicationCSV"/>
+    </request-map>
     <request-map uri="GlLedgerReconciliation.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlLedgerReconciliationCSV"/>
@@ -3974,6 +3978,7 @@ under the License.
     <view-map name="BatchBankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BatchBankContraEntry"/>
     <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
     <view-map name="CreateNewBatchContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewBatchContra"/>
+    
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
     <view-map name="FinAccountTransForReconsileNEWWW" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsileNNNN"/>
@@ -4200,7 +4205,8 @@ under the License.
   	<view-map name="BankGuaranteeReceivedCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankGuaranteeReceivedCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="TreasurerPaymentsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TreasurerPaymentsCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="GroupPaymentCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GroupPaymentCSV" content-type="text/csv" encoding="none"/>
-    <view-map name="FinAccountTransDetailsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountTransDetailsCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="FinAccountTransDetailsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountTransDetailsCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="ArApInvoiceApplicationCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ArApInvoiceApplicationCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="GlLedgerReconciliationCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlLedgerReconciliationCSV" content-type="text/csv" encoding="none"/>
     <!-- Assignment Mappings -->
     <view-map name="EditPartyFixedAssetAssignments" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditPartyFixedAssetAssignments"/>

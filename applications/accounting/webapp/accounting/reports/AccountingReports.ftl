@@ -224,6 +224,8 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("invTmpSummFromDate","invTmpSummThruDate");
 	    makeDatePicker4("finSummFromDate","finSummThruDate");
 	    makeDatePicker4("GlLedgerFromDate","GlLedgerThruDate");
+	    makeDatePicker4("invAppFromDate","invAppFromDate");
+	    makeDatePicker4("invAppThruDate","invAppThruDate");
 	    $('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -859,5 +861,40 @@ function reportTypeChangeFunc() {
 		</tr>
 	</table>
    </div>
-   
+   <#if security.hasEntityPermission("ACCOUNTING", "_ADMIN", session)>
+  <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Test Reports</h3>
+    </div>
+    <div class="screenlet-body">
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
+      	<tr class="alternate-row"> 
+      		<form id="invoiceAppReport" name="invoiceAppReport" method="post" action="<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">AR/AP Invoice Application Details</td>
+			  	<td width="25%">Purpose Type
+			  	  	<select name='purposeTypeId' id ="purposeTypeId">	
+						<#list purposeTypeIdsList as purposeType>
+					        <option value="${purposeType.enumId}">${purposeType.description?if_exists}</option>
+					    </#list>
+						<#-- <option value='INTUNIT_TR_CHANNEL'>Inter Unit Sale</option>
+						<option value='INTER_PRCHSE_CHANNEL'>Inter Unit Purchase</option> -->
+				 	</select>
+			  	</td>
+			  	
+				<td width="15%">From<input  type="text" size="18pt" id="invAppFromDate" readonly  name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="invAppThruDate" readonly  name="thruDate"/></td>
+          		<td width="5%">&#160;</td>
+			  	<td width="25%">
+      		  		&#160;
+			  	</td>
+			  	<td width="20%">
+					<table>
+					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
+					</table>   
+			 	</td>
+      		</form>
+      	</tr>
+	</table>
+	</div>
+	</#if>
 </div>
