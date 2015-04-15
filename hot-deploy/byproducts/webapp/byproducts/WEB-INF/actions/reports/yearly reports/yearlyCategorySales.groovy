@@ -58,6 +58,12 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
 			}
 		}
+		if(effectiveDateStr){
+			context.put("effectiveDateStr",effectiveDateStr);
+		}
+		if(thruEffectiveDate){
+			context.put("thruEffectiveDateStr",thruEffectiveDateStr);
+		}
 		dayBegin = UtilDateTime.getDayStart(effectiveDate);
 		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
 	}
