@@ -34,35 +34,35 @@ dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 // for sales Report
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="salesReport"){
-		effectiveDateStr = parameters.fromDate;
-		thruEffectiveDateStr = parameters.thruDate;
-		if (UtilValidate.isEmpty(effectiveDateStr)) {
+		fromDate = parameters.fromDate;
+		thruDate = parameters.thruDate;
+		if (UtilValidate.isEmpty(fromDate)) {
 			effectiveDate = UtilDateTime.nowTimestamp();
 		}
 		else{
 			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 			try {
-				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+				effectiveDate = new java.sql.Timestamp(sdf.parse(fromDate+" 00:00:00").getTime());
 			} catch (ParseException e) {
 				Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
 			}
 		}
-		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
+		if (UtilValidate.isEmpty(thruDate)) {
 			thruEffectiveDate = effectiveDate;
 		}
 		else{
 			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 			try {
-				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
+				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruDate+" 00:00:00").getTime());
 			}catch (ParseException e) {
 				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
 			}
 		}
-		if(effectiveDateStr){
-			context.put("effectiveDateStr",effectiveDateStr);
+		if(fromDate){
+			context.put("fromDate",fromDate);
 		}
-		if(thruEffectiveDate){
-			context.put("thruEffectiveDateStr",thruEffectiveDateStr);
+		if(thruDate){
+			context.put("thruDate",thruDate);
 		}
 		dayBegin = UtilDateTime.getDayStart(effectiveDate);
 		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
