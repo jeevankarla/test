@@ -626,7 +626,8 @@ public class SalesHistoryServices {
   			conditionsList.add(EntityCondition.makeCondition("salesDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
   			conditionsList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_DAY"));
           	EntityCondition condition = EntityCondition.makeCondition(conditionsList,EntityOperator.AND);
-  			productSubscriptionTypeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "SUB_PROD_TYPE"), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"), null, false);
+          	productSubscriptionTypeList = delegator.findList("Enumeration",	EntityCondition.makeCondition("enumId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY","_NA_")), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"),null, false);
+  			//productSubscriptionTypeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "SUB_PROD_TYPE"), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"), null, false);
   			productList  = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
       		lmsSalesSummaryList = delegator.findList("LMSPeriodSalesSummary", condition, null,null, null, false);
       		lmsSalesSummaryDetailList = delegator.findList("LMSPeriodSalesSummaryDetail", condition, null,null, null, false);
