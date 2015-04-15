@@ -1061,7 +1061,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentDate" position="1" title="${uiLabelMap.paymentDate}"><date-time type="timestamp" ></date-time></field>
+        <field name="paymentDate" id-name="paymentDateReceipt" position="1" title="${uiLabelMap.paymentDate}"><text/></field>
          <field use-when="&quot;${paymentMethodTypeId}&quot;.equals(&quot;FUND_TRANSFER&quot;)" name="finAccountId" title="Fin Account" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">

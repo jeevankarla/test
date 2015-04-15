@@ -1287,6 +1287,7 @@
             <widgets>
                 	<section>
                   	<widgets>
+                  	<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/DateRestriction.ftl"/></html></platform-specific>
                   		 <screenlet title="New  Receipt">
 		               <include-form name="NewDepotSalesReceipt" location="component://accounting/widget/PaymentForms.xml"/>
 		                 </screenlet>
