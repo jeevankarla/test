@@ -99,7 +99,6 @@ def populateChildren(org, employeeList) {
 }
 context.orgName=orgName;
 
-
 finalMap=[:];
 if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
@@ -146,18 +145,18 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						balance=0;
 						emplLeaveBalance=[:];
 						Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(empLeaves.get("fromDate"), -1));
-						/*if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
+						if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
 							emplLeaveBalance=leaveBalanceMap.get(empLeaves.get("partyId"));
 						}
 						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
 								balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
-						}else{*/
+						}else{
 							Map getEmplLeaveBalMap = [:];
 							getEmplLeaveBalMap.put("userLogin",userLogin);
 							getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
 							getEmplLeaveBalMap.put("employeeId",empLeaves.get("partyId"));
 							getEmplLeaveBalMap.put("flag","creditLeaves");
-							getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+							getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(fromDate.getTime()));
 							if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
 								serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
 								Map leaveBalances = (Map)serviceResult.get("leaveBalances");
@@ -165,7 +164,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 									balance = (BigDecimal) leaveBalances.get(leaveTypeId);
 								}
 							}
-						//}
+						}
 						if(UtilValidate.isNotEmpty(intv) && intv != null){
 							balance = balance-intv;
 						}
