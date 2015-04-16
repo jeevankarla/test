@@ -324,7 +324,66 @@
         <response name="success" type="request-redirect" value="EditProductPricesDepot"><redirect-parameter name="productId"/></response>
         <response name="error" type="view" value="EditProductPricesDepot"/>
     </request-map>
-     
+    <request-map uri="FindPO">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindPO"/>
+       <response name="error" type="view" value="FindPO"/>
+   </request-map>
+    <request-map uri="CreatePO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreatePO"/>
+    </request-map>
+     <request-map uri="CreateMPO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateMPO"/>
+    </request-map>
+     <request-map uri="CreateMaterialPO">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPOEvent" global-transaction="true"/>
+         <response name="success"  type="request-redirect-noparam" value="FindPO"></response>
+        <response name="error" type="view" value="CreateMPO"/>
+    </request-map>
+    <request-map uri="LetterOfIndentReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="LetterOfIndentReport"/>        
+    </request-map>
+     <request-map uri="PurchaseOrderView.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseOrderViewPDF"/>
+    </request-map>
+     <request-map uri="arcOrder.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="ArcOrderPDF"/>
+    </request-map>
+     <request-map uri="editMaterialPO">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditMaterialPO"/>
+    </request-map>
+     <request-map uri="getMaterialPOValue">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="getMaterialPOValue" global-transaction="true"/>
+       <response name="success" type="request" value="json"/>
+     </request-map>
+     <request-map uri="ApproveOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ChangeOrderStatus"/>
+        <response name="success" type="view" value="FindPO"/>
+        <response name="error" type="view" value="FindPO"/>
+    </request-map>
+    <request-map uri="CancelOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPOStatus"/>
+        <response name="success" type="view" value="FindPO"/>
+        <response name="error" type="view" value="FindPO"/>
+    </request-map>
+    
+    <request-map uri="raiseGRN">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="POMaterialReceipts"/>
+       <response name="error" type="view" value="POMaterialReceipts"/>
+     </request-map>
+    
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
     <view-map name="FacilityTree" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FacilityTree"/>
@@ -362,9 +421,16 @@
     
     
     <view-map name="FindPaymentDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPaymentNonRoute"/>
-     <view-map name="NonRouteFindChequeReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteFindChequeReturns"/>
-     <view-map name="NewDepotSalesReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewDepotSalesReceipt"/>
+    <view-map name="NonRouteFindChequeReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteFindChequeReturns"/>
+    <view-map name="NewDepotSalesReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewDepotSalesReceipt"/>
     
-    
+    <view-map name="FindPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPO"/>
+    <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
+    <view-map name="CreateMPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateMPO"/>
+    <view-map name="LetterOfIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#LetterOfIndentReport" content-type="application/pdf" encoding="none"/>    
+    <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
+    <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
+    <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
+   
     
 </site-conf>
