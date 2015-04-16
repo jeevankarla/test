@@ -165,8 +165,12 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 								}
 							}
 						}
-						if(UtilValidate.isNotEmpty(intv) && intv != null){
-							balance = balance-intv;
+						if(fromDate.compareTo(empLeaves.get("fromDate")) > 0){
+								balance = balance;
+						}else{
+							if(UtilValidate.isNotEmpty(intv) && intv != null){
+								balance = balance-intv;
+							}
 						}
 						emplLeaveBalance.putAt(empLeaves.get("leaveTypeId"), balance);
 						leaveBalanceMap.put(empLeaves.get("partyId"), emplLeaveBalance);
