@@ -5401,4 +5401,131 @@ public class InvoiceServices {
         result.put("paymentsList", paymentsList);
      return result;
 	}
+	public static Map<String, Object> autoPaymentApplicationByPaymentType(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        BigDecimal paymentAmount = (BigDecimal) context.get("amount");
+        Locale locale = (Locale) context.get("locale");     
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String parentTypeId = (String) context.get("parentTypeId");
+        String paymentTypeId = (String) context.get("paymentTypeId");
+        String roleTypeId = (String) context.get("roleTypeId");
+        String paymentId = (String) context.get("paymentId");
+        
+        List paymentTypesList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(paymentTypeId)){
+        	paymentTypesList = UtilMisc.toList(paymentTypeId);
+        }
+        if(UtilValidate.isNotEmpty(roleTypeId)){
+        	try{
+        		List<GenericValue> paymentTypeRoleType = delegator.findList("PaymentTypeRoleType", EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId), null, null, null, false);
+            	paymentTypesList = EntityUtil.getFieldListFromEntityList(paymentTypeRoleType, "paymentTypeId", true);
+        	}catch (GenericEntityException e) {
+	        	Debug.logError(e, e.toString(), module);
+		        return ServiceUtil.returnError(e.toString());
+	        }
+        }
+        
+        List condList = FastList.newInstance();
+    	if(UtilValidate.isNotEmpty(paymentTypesList)){
+    		condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.IN, paymentTypesList));
+    	}
+    	if(UtilValidate.isNotEmpty(paymentId)){
+    		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));  
+    	}
+    	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+    	EntityCondition pmntCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        List<GenericValue> paymentsList = null;
+        try {
+        	paymentsList = delegator.findList("Payment", pmntCond, null, null, null, false);
+        } catch (GenericEntityException e) {
+        	Debug.logError(e, e.toString(), module);
+	        return ServiceUtil.returnError(e.toString());
+        }
+        List partyIdsList = FastList.newInstance();
+        if(parentTypeId == "RECEIPT"){
+        	partyIdsList =  EntityUtil.getFieldListFromEntityList(paymentsList, "partyIdFrom", true);  
+        }
+        else{
+        	partyIdsList =  EntityUtil.getFieldListFromEntityList(paymentsList, "partyIdTo", true);  
+        }
+        for(int ptyCount=0; ptyCount<partyIdsList.size(); ptyCount++){
+        	String partyId = (String) partyIdsList.get(ptyCount);
+        	// Get Party Related Payments
+        	List<GenericValue> partyPayments = null;
+        	if(parentTypeId == "RECEIPT"){
+        		partyPayments = EntityUtil.filterByCondition(paymentsList, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
+            }
+            else{
+            	partyPayments = EntityUtil.filterByCondition(paymentsList, EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));  
+            }
+        	
+        	// Get Party Related Invoices
+        	List conditionList = FastList.newInstance();
+        	if(parentTypeId == "RECEIPT"){
+        		conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));  
+        	}
+            else{
+            	conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
+            }
+        	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_READY"));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            List invoices = null;
+            try{
+            	List invoiceIdList = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId"), null, null, false);
+            	invoices = EntityUtil.getFieldListFromEntityList(invoiceIdList,"invoiceId",true);
+            }catch(GenericEntityException e){
+            	e.printStackTrace();
+            }
+            for (GenericValue payment : partyPayments) {
+	            BigDecimal notApplied = PaymentWorker.getPaymentNotApplied(payment);
+	            if (notApplied.signum() > 0) {
+	            	BigDecimal amountAppliedRunningTotal = notApplied;
+	            	for( int i=0; i< invoices.size(); i++){
+	                	String invoiceId = (String)invoices.get(i);
+	                	Map invoicePaymentInfoMap =FastMap.newInstance();
+	        			BigDecimal outstandingAmount =BigDecimal.ZERO;
+	        			invoicePaymentInfoMap.put("invoiceId", invoiceId);
+	        			invoicePaymentInfoMap.put("userLogin",userLogin);
+	        			try{
+	        				Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
+	        				if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+	        		            	Debug.logError(getInvoicePaymentInfoListResult.toString(), module);    			
+	        		                return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
+	        		        }
+	        				Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+	        				outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");					
+	        			}catch (GenericServiceException e) {
+	        				// TODO: handle exception
+	        				 Debug.logError(e, e.toString(), module);
+	        		         return ServiceUtil.returnError(e.toString());
+	        			}
+	        			Map<String, Object> appl = FastMap.newInstance();
+		                appl.put("paymentId", payment.get("paymentId"));
+		                appl.put("amountApplied", amountAppliedRunningTotal);
+		                appl.put("invoiceId", invoiceId);
+		                appl.put("userLogin", userLogin);
+		                try {
+			                Map<String, Object> createPayApplResult = dispatcher.runSync("createPaymentApplication", appl);
+			                if (ServiceUtil.isError(createPayApplResult)) {
+			                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceFromOrder",locale), null, null, createPayApplResult);
+			                }
+		                } catch (GenericServiceException e) {
+		                	// TODO: handle exception
+	        				 Debug.logError(e, e.toString(), module);
+	        		         return ServiceUtil.returnError(e.toString());
+	                    }
+		                amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
+	                 	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
+	                 		break;
+	                 	}
+	                } 
+	            }
+	        }
+        }
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess("Payments Has Been Successfully Applied");        
+        return result;
+	}
 }
