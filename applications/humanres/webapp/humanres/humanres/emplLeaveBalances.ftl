@@ -50,13 +50,37 @@ under the License.
               <td><input type="display" readOnly size="25" id = "ctpId" name="ctpId" value="${customTimePeriodId?if_exists}(${fromDate?if_exists}-${thruDate?if_exists})" /></td>
               <input type="hidden" size="20" id = "customTimePeriodId" name="customTimePeriodId" value="${customTimePeriodId?if_exists}" />
               <input type="hidden" size="20" id = "partyId" name="partyId" value="${partyId?if_exists}" />
-              <td><input type="display" size="10" id = "leaveTypeId" name="leaveTypeId" value="${leaveTypeId?if_exists}" /></td>
-              <td><input type="text" size="10" id = "openingBalance" name="openingBalance" value="${openingBalance?if_exists}" /></td>
-              <td><input type="text" size="10" id = "allotedDays" name="allotedDays" value="${allotedDays?if_exists}" /></td>
-              <td><input type="text" size="10" id = "availedDays" name="availedDays" value="${availedDays?if_exists}" /></td>
-              <td><input type="text" size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
-              <td><input type="text" size="10" id = "encashedDays" name="encashedDays" value="${encashedDays?if_exists}" /></td>
-              <td><input type="text" size="10" id = "lapsedDays" name="lapsedDays" value="${lapsedDays?if_exists}" /></td>
+              <td><input type="display" readOnly size="10" id = "leaveTypeId" name="leaveTypeId" value="${leaveTypeId?if_exists}" /></td>
+              <#if security.hasPermission("EMP_OB_EDIT", session)>
+              	  <td><input type="text" size="10" id = "openingBalance" name="openingBalance" value="${openingBalance?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "openingBalance" name="openingBalance" value="${openingBalance?if_exists}" /></td>
+              </#if>
+              <#if security.hasPermission("EMP_ALLOTEDDAYS_EDIT", session)>
+              	  <td><input type="text" size="10" id = "allotedDays" name="allotedDays" value="${allotedDays?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "allotedDays" name="allotedDays" value="${allotedDays?if_exists}" /></td>
+              </#if>
+              <#if security.hasPermission("EMP_AVAILEDDAYS_EDIT", session)>
+              	  <td><input type="text" size="10" id = "availedDays" name="availedDays" value="${availedDays?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "availedDays" name="availedDays" value="${availedDays?if_exists}" /></td>
+              </#if>
+              <#if security.hasPermission("EMP_ADJDAYS_EDIT", session)>
+              	  <td><input type="text" size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
+              </#if>
+              <#if security.hasPermission("EMP_ENCASHDAYS_EDIT", session)>
+              	  <td><input type="text" size="10" id = "encashedDays" name="encashedDays" value="${encashedDays?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "encashedDays" name="encashedDays" value="${encashedDays?if_exists}" /></td>
+              </#if>
+              <#if security.hasPermission("EMP_LAPSEDDAYS_EDIT", session)>
+              	  <td><input type="text" size="10" id = "lapsedDays" name="lapsedDays" value="${lapsedDays?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "lapsedDays" name="lapsedDays" value="${lapsedDays?if_exists}" /></td>
+              </#if>
               <td><input type="submit" name="submit" id="submit" value="Update" style="buttontext"/></td>
               </tr>
             <#assign alt_row = !alt_row>
@@ -64,6 +88,6 @@ under the License.
     </table>
   </form>
 <#else>
-  <h3>No Attendance Days Found...</h3>
+  <h3>No Leave Balance Found...</h3>
 </#if>
         
