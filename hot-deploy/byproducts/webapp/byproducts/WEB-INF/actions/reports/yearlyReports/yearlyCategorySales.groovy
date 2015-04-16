@@ -75,7 +75,7 @@ grandTotalRevenue=0;
 	  dayTotals=[:];
 	  if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="salesReport") {
 		  boothsList=ByProductNetworkServices.getBoothList(delegator ,null);
-		  dayTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);	
+		  dayTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true,"periodTypeId":"SALES_MONTH"]);	
 		 // Debug.log("dayTotals=============="+dayTotals);  
 		   }	 
 	  if(UtilValidate.isNotEmpty(dayTotals)){
