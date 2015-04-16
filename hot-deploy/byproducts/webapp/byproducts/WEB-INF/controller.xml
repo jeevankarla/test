@@ -520,6 +520,10 @@
    		<security https="true" auth="true"/>
         <response name="success" type="view" value="SalesReportPDF"/>
     </request-map>
+    <request-map uri="YearlySalesReport.pdf">
+   		<security https="true" auth="true"/>
+        <response name="success" type="view" value="YearlySalesReportPDF"/>
+    </request-map>
      <request-map uri="RetailerSalesComparison.txt">
    		<security https="true" auth="true"/>
         <response name="success" type="view" value="RetailerSalesComparisonTXT"/>
@@ -1719,6 +1723,8 @@
  	<view-map name="TruckSheetDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetDetailReportCSV" content-type="text/csv"/>
     <view-map name="RetailerDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerDetailReportCSV" content-type="text/csv"/>
     <view-map name="SalesReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportPDF" content-type="application/pdf"/>
+      <view-map name="YearlySalesReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#YearlySalesReportPDF" content-type="application/pdf"/>
+  
     <view-map name="CategoryWiseSalesReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CategoryWiseSalesReport" content-type="application/pdf"/>
     <view-map name="CategoryWiseSalesYearReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CategoryWiseSalesYearReport" content-type="application/pdf"/>
     <view-map name="FieldOfficerWiseSalesReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#FieldOfficerWiseSalesReport" content-type="application/pdf"/>

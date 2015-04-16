@@ -849,6 +849,31 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="YearlySalesReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" value="salesReport"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/yearlyReports/yearlyCategorySales.groovy" />
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/productReturnsReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/salesReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets> 
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="CategoryWiseSalesReport">
 		<section>
 			<actions>
