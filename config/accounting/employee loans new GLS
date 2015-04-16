@@ -1,0 +1,30 @@
+<GlAccount glAccountId="124201" glAccountTypeId="EMPLOYEE_ACCOUNT" glAccountClassId="CURRENT_ASSET" glResourceTypeId="MONEY" parentGlAccountId="124000" accountCode="124201" accountName="ADVANCES-FA" description="ADVANCES-FA" postedBalance="0.00"/>
+    
+    <GlAccount glAccountId="124202" glAccountTypeId="EMPLOYEE_ACCOUNT" glAccountClassId="CURRENT_ASSET" glResourceTypeId="MONEY" parentGlAccountId="124000" accountCode="124202" accountName="ADVANCES - MCA" description="ADVANCES - MCA" postedBalance="0.00"/>
+
+    <GlAccount glAccountId="124203" glAccountTypeId="EMPLOYEE_ACCOUNT" glAccountClassId="CURRENT_ASSET" glResourceTypeId="MONEY" parentGlAccountId="124000" accountCode="124203" accountName="ADVANCES - SOLAR WATER HEATER" description="ADVANCES - SOLAR WATER HEATER" postedBalance="0.00"/>
+
+    <GlAccount glAccountId="124204" glAccountTypeId="EMPLOYEE_ACCOUNT" glAccountClassId="CURRENT_ASSET" glResourceTypeId="MONEY" parentGlAccountId="124000" accountCode="124204" accountName="ADVANCES - COMPUTERS" description="ADVANCES - COMPUTERS" postedBalance="0.00"/>
+
+<GlAccountOrganization glAccountId="124201" organizationPartyId="Company"/>
+
+<GlAccountOrganization glAccountId="124202" organizationPartyId="Company"/>
+
+<GlAccountOrganization glAccountId="124203" organizationPartyId="Company"/>
+
+<GlAccountOrganization glAccountId="124204" organizationPartyId="Company"/>
+
+
+
+
+<InvoiceItemType defaultGlAccountId="124201" description="Festival Advance" hasTable="N" invoiceItemTypeId="PAYROL_DD_FEST"/>
+
+<InvoiceItemType defaultGlAccountId="124202" description="Cycle Advance" hasTable="N" invoiceItemTypeId="PAYROL_DD_CYC_ADV"/>
+
+<InvoiceItemType defaultGlAccountId="124202" description="Motor Car Advance" hasTable="N" invoiceItemTypeId="PAYROL_DD_MOTR_AD"/>
+
+<InvoiceItemType defaultGlAccountId="124202" description="Motor Cycle Advance" hasTable="N" invoiceItemTypeId="PAYROL_DD_MTR_ADV"/>
+
+<InvoiceItemType defaultGlAccountId="124203" description="Solar Advance" hasTable="N" invoiceItemTypeId="PAYROL_DD_SLR_ADV"/>
+
+<InvoiceItemType defaultGlAccountId="124204" description="Computer Advance" hasTable="N" invoiceItemTypeId="PAYROL_DD_COMPTR"/>
