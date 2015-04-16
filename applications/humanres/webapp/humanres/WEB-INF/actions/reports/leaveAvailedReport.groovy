@@ -99,7 +99,6 @@ def populateChildren(org, employeeList) {
 }
 context.orgName=orgName;
 
-
 finalMap=[:];
 if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
@@ -157,7 +156,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 							getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
 							getEmplLeaveBalMap.put("employeeId",empLeaves.get("partyId"));
 							getEmplLeaveBalMap.put("flag","creditLeaves");
-							getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+							getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(fromDate.getTime()));
 							if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
 								serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
 								Map leaveBalances = (Map)serviceResult.get("leaveBalances");
@@ -166,8 +165,12 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 								}
 							}
 						}
-						if(UtilValidate.isNotEmpty(intv) && intv != null){
-							balance = balance-intv;
+						if(fromDate.compareTo(empLeaves.get("fromDate")) > 0){
+								balance = balance;
+						}else{
+							if(UtilValidate.isNotEmpty(intv) && intv != null){
+								balance = balance-intv;
+							}
 						}
 						emplLeaveBalance.putAt(empLeaves.get("leaveTypeId"), balance);
 						leaveBalanceMap.put(empLeaves.get("partyId"), emplLeaveBalance);
