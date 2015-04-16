@@ -596,7 +596,7 @@ public class SalesHistoryServices {
 			Map<String, Object> result = ServiceUtil.returnSuccess();	
 			
 			List productSubscriptionTypeList = FastList.newInstance();
-			List<GenericValue> productList = FastList.newInstance();
+			List<String> productIdsList = FastList.newInstance();
 			List shipmentList= FastList.newInstance(); 
 			
 			shipmentList.add("AM");
@@ -628,11 +628,13 @@ public class SalesHistoryServices {
           	EntityCondition condition = EntityCondition.makeCondition(conditionsList,EntityOperator.AND);
           	productSubscriptionTypeList = delegator.findList("Enumeration",	EntityCondition.makeCondition("enumId", EntityOperator.IN, UtilMisc.toList("CASH","CREDIT","EMP_SUBSIDY","_NA_")), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"),null, false);
   			//productSubscriptionTypeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "SUB_PROD_TYPE"), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"), null, false);
-  			productList  = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+  			//productList  = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
       		lmsSalesSummaryList = delegator.findList("LMSPeriodSalesSummary", condition, null,null, null, false);
       		lmsSalesSummaryDetailList = delegator.findList("LMSPeriodSalesSummaryDetail", condition, null,null, null, false);
       		Debug.log("lmsSalesSummaryDetailList Size======> "+lmsSalesSummaryDetailList.size()+"===Bfr=Facility===", "");
       		lmsSalesSummaryBoothsList = EntityUtil.getFieldListFromEntityList(lmsSalesSummaryDetailList, "facilityId", true);
+      		
+      		productIdsList = EntityUtil.getFieldListFromEntityList(lmsSalesSummaryDetailList, "productId", true);
       		
       		Debug.logImportant("Populating Monthly Data From ======>"+lmsSalesSummaryBoothsList.size()+" Facilities", "");
       		//Debug.log("Populating Monthly Data From======> "+lmsSalesSummaryBoothsList.size()+" Facilities", "");
@@ -652,7 +654,7 @@ public class SalesHistoryServices {
   		            String productSubscriptionTypeId = type.getString("enumId");
   		            productSubscriptionTypeWise = EntityUtil.filterByAnd(shipmentWise, UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", productSubscriptionTypeId)));
   		            
-  		            Iterator<GenericValue> prodSubTypeIter = productList.iterator();
+  		            Iterator<String> prodSubTypeIter = productIdsList.iterator();
   			    	while(prodSubTypeIter.hasNext()) {
   			    		
   			    		List<BigDecimal> revenuForPeriod = FastList.newInstance();
@@ -660,15 +662,17 @@ public class SalesHistoryServices {
   			         	BigDecimal totQty = BigDecimal.ZERO;
   			        	BigDecimal totRevenu = BigDecimal.ZERO;
   			        	String isReturn="";
-  			        	
-  			            GenericValue prodType = prodSubTypeIter.next();
-  			            String productId = prodType.getString("productId");
+  			           // GenericValue prodType = prodSubTypeIter.next();
+  			           // String productId = prodType.getString("productId");
+  			            String productId=prodSubTypeIter.next();
+  			            
   			            productWise = EntityUtil.filterByAnd(productSubscriptionTypeWise, UtilMisc.toList(EntityCondition.makeCondition("productId", productId)));
   			            Iterator<GenericValue> prodTypeIter = productWise.iterator();
   				    	while(prodTypeIter.hasNext()) {
   				    		GenericValue Type = prodTypeIter.next();
   				    		revenuForPeriod.add(Type.getBigDecimal("totalRevenue"));
   				    		qtyForPeriod.add(Type.getBigDecimal("totalQuantity"));
+  				    		isReturn=Type.getString("isReturn");
   				    	}
   				    	totQty = SalesHistoryServices.sum(qtyForPeriod);
   				    	totRevenu = SalesHistoryServices.sum(revenuForPeriod);
@@ -681,7 +685,7 @@ public class SalesHistoryServices {
 								salesSummary.put("productSubscriptionTypeId", productSubscriptionTypeId);
 								salesSummary.put("productId", productId);
 								salesSummary.put("periodTypeId", "SALES_MONTH");
-								salesSummary.put("isReturn", prodType.getString("isReturn"));
+								salesSummary.put("isReturn",isReturn);
 								delegator.createOrStore(salesSummary);	
   				    	}
   			    	}
@@ -715,23 +719,25 @@ public class SalesHistoryServices {
   	    			            GenericValue type = shipTypeIterForDetail.next();
   	    			            String productSubscriptionTypeId = type.getString("enumId");
   	    			            productSubscriptionTypeWise = EntityUtil.filterByAnd(boothWise, UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", productSubscriptionTypeId)));
-  	    			            
-  	    			            Iterator<GenericValue> prodSubTypeIterForDetail = productList.iterator();
+  	    			          
+  	    			            Iterator<String> prodSubTypeIterForDetail = productIdsList.iterator();
   	    				    	while(prodSubTypeIterForDetail.hasNext()) {
-  	    				            GenericValue prodType = prodSubTypeIterForDetail.next();
-  	    				            String productId = prodType.getString("productId");
+  	    				           /* GenericValue prodType = prodSubTypeIterForDetail.next();
+  	    				            String productId = prodType.getString("productId");*/
+  	    				    		String productId=prodSubTypeIterForDetail.next();
   	    				            productWise = EntityUtil.filterByAnd(productSubscriptionTypeWise, UtilMisc.toList(EntityCondition.makeCondition("productId", productId)));
-  	    				            
+  	    				           
   	    				    		List<BigDecimal> revenuForPeriod = FastList.newInstance();
   	    				        	List<BigDecimal> qtyForPeriod = FastList.newInstance();
   	    				         	BigDecimal totQty = BigDecimal.ZERO;
   	    				        	BigDecimal totRevenu = BigDecimal.ZERO;
-  	    				        	
+  	    				        	String isReturn="";
   	    				            Iterator<GenericValue> prodTypeIterForDetail = productWise.iterator();
   	    					    	while(prodTypeIterForDetail.hasNext()) {
   	    					    		GenericValue Type = prodTypeIterForDetail.next();
   	    					    		revenuForPeriod.add(Type.getBigDecimal("totalRevenue"));
   	    					    		qtyForPeriod.add(Type.getBigDecimal("totalQuantity"));
+  	    					    		isReturn=Type.getString("isReturn");
   	    					    	}
   	    					    	totQty = SalesHistoryServices.sum(qtyForPeriod);
   	    					    	totRevenu = SalesHistoryServices.sum(revenuForPeriod);
@@ -750,12 +756,13 @@ public class SalesHistoryServices {
 	    						    					runningProductRevenue = runningProductRevenue.add(totRevenu);
 	    						    					routeProdMap.put("totalQty", runningTotalProductQty);
 	    						        				routeProdMap.put("totalRevenue", runningProductRevenue);
+	    						        				routeProdMap.put("isReturn",isReturn);
 	    						        				routeProdSubTypeMap.put(productId, routeProdMap);
 						    						}else{
 						    							Map<String, Object> routeProdMap = FastMap.newInstance();
 						    							routeProdMap.put("totalQty", totQty);
 	    						        				routeProdMap.put("totalRevenue", totRevenu);
-	    						        				routeProdMap.put("isReturn",prodType.getString("isReturn"));
+	    						        				routeProdMap.put("isReturn",isReturn);
 	    						        				routeProdSubTypeMap.put(productId, routeProdMap);
 						    						}	
   						    					routeDataMap.put(productSubscriptionTypeId,routeProdSubTypeMap);
@@ -764,7 +771,7 @@ public class SalesHistoryServices {
   						    					Map<String, Object> routeProdMap = FastMap.newInstance();
   						    					routeProdMap.put("totalQty", totQty);
   						    					routeProdMap.put("totalRevenue", totRevenu);
-  						    					routeProdMap.put("isReturn", prodType.getString("isReturn"));
+  						    					routeProdMap.put("isReturn", isReturn);
   						    					routeProdSubTypeMap.put(productId, routeProdMap);
   						    					routeDataMap.put(productSubscriptionTypeId, routeProdSubTypeMap);
   						    				}
@@ -775,7 +782,7 @@ public class SalesHistoryServices {
 						    					Map<String, Object> routeProdMap = FastMap.newInstance();
 						    					routeProdMap.put("totalQty", totQty);
 						    					routeProdMap.put("totalRevenue", totRevenu);
-						    					routeProdMap.put("isReturn", prodType.getString("isReturn"));
+						    					routeProdMap.put("isReturn", isReturn);
 						    					routeProdSubTypeMap.put(productId, routeProdMap);
 						    					routeDataMap.put(productSubscriptionTypeId, routeProdSubTypeMap);
 						    					routesTotMap.put(route, routeDataMap);
@@ -834,7 +841,7 @@ public class SalesHistoryServices {
       									salesSummaryDetail.put("productSubscriptionTypeId", productSubscriptionTypeId);
       									salesSummaryDetail.put("productId", productId);
       									salesSummaryDetail.put("periodTypeId", "SALES_MONTH");
-      									salesSummaryDetail.put("isReturn",prodType.getString("isReturn"));
+      									salesSummaryDetail.put("isReturn",isReturn);
       									delegator.createOrStore(salesSummaryDetail);
   						    	  	}	
   	    				    	}//prod
