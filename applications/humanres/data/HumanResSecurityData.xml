@@ -98,7 +98,6 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PAYDAYS_EDIT"/>
     <SecurityGroupPermission groupId="EMP_PAYDAYS_EDIT" permissionId="EMP_PAYDAYS_EDIT"/>
     
-    
     <SecurityGroup description="Employee LOP Edit" groupId="EMP_LOP_EDIT"/> 
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/>
@@ -121,6 +120,36 @@ under the License.
     <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_OOD_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
     
+    <!-- Permissions for leave balance days update -->
+    <SecurityGroup description="Employee Opening Balance Edit" groupId="EMP_OB_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_OB_EDIT"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="EMP_OB_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_OB_EDIT" permissionId="EMP_OB_EDIT"/>
+    
+    <SecurityGroup description="Employee alloted days Edit" groupId="EMP_ALLOTEDDAYS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_ALLOTEDDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="EMP_ALLOTEDDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_ALLOTEDDAYS_EDIT" permissionId="EMP_ALLOTEDDAYS_EDIT"/>
+    
+    <SecurityGroup description="Employee availed days Edit" groupId="EMP_AVAILEDDAYS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_AVAILEDDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="EMP_AVAILEDDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_AVAILEDDAYS_EDIT" permissionId="EMP_AVAILEDDAYS_EDIT"/>
+    
+    <SecurityGroup description="Employee adjusted days Edit" groupId="EMP_ADJDAYS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_ADJDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="EMP_ADJDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_ADJDAYS_EDIT" permissionId="EMP_ADJDAYS_EDIT"/>
+    
+    <SecurityGroup description="Employee encashed days Edit" groupId="EMP_ENCASHDAYS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_ENCASHDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="EMP_ENCASHDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_ENCASHDAYS_EDIT" permissionId="EMP_ENCASHDAYS_EDIT"/>
+    
+    <SecurityGroup description="Employee lapsed days Edit" groupId="EMP_LAPSEDDAYS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LAPSEDDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="EMP_LAPSEDDAYS_EDIT"/>
+    <SecurityGroupPermission groupId="EMP_LAPSEDDAYS_EDIT" permissionId="EMP_LAPSEDDAYS_EDIT"/>
     
     <SecurityPermission description="delete EmplPunch punch Permission." permissionId="EMP_PUNCH_EDIT_REMOVE"/>
     <SecurityGroup description="Employee PUNCH Edit" groupId="EMP_PUNCH_EDIT"></SecurityGroup>
