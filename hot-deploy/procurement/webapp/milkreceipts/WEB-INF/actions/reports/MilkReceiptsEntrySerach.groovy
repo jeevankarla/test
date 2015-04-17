@@ -68,7 +68,9 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 		conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
 	}
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
-	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
+	if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="APPROVE_RECEIPTS"){
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
+	}
 	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
 	if(UtilValidate.isNotEmpty(parameters.productId)){
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
@@ -85,3 +87,4 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	milkDetailslist = delegator.findList("MilkTransfer",condition,null,UtilMisc.toList("-createdStamp"),null,false);
 }
 context.milkDetailslist=milkDetailslist;
+

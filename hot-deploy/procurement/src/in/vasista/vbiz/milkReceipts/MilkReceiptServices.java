@@ -54,6 +54,7 @@ import javax.xml.transform.stream.StreamSource;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import javolution.util.FastSet;
+
 import java.util.Random;
 import java.util.Map.Entry;
 
@@ -76,7 +77,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapComparator;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -91,7 +91,6 @@ import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
-
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.image.ScaleImage;
@@ -114,9 +113,16 @@ import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
 
 
+
+
+
+
+
+
 import in.vasista.vbiz.procurement.PriceServices;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementReports;
+
 import org.ofbiz.party.party.PartyHelper;
 import org.xml.sax.SAXException;
 /**
@@ -2915,6 +2921,115 @@ public class MilkReceiptServices {
 		return resultMap;
 	}
 	
+	public static String ApproveReceipts(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+	  	
+	        String milkTransferId = "";
+			for (int i = 0; i < rowCount; i++) {
+				  
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				
+				if (paramMap.containsKey("milkTransferId" + thisSuffix)) {
+					milkTransferId = (String) paramMap.get("milkTransferId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing milkTransferId");
+				}
+				
+				try{
+					Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+					String shipmentId ="";
+					List <GenericValue> milkTransferAndItemList = delegator.findList("MilkTransferAndMilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
+					GenericValue milkTransfer = EntityUtil.getFirst(milkTransferAndItemList) ;
+					
+					if(UtilValidate.isNotEmpty(milkTransfer)){
+						String partyIdFrom = milkTransfer.getString("partyId");
+						String containerId = milkTransfer.getString("containerId");
+						String productId = milkTransfer.getString("receivedProductId");
+						BigDecimal quantity = milkTransfer.getBigDecimal("quantity");
+						String facilityId = milkTransfer.getString("siloId");
+					
+						GenericValue newEntity = delegator.makeValue("Shipment");
+				        newEntity.set("estimatedShipDate", nowTimeStamp);
+				        newEntity.set("shipmentTypeId", "MILK_RE_SHIPMENT");
+				        newEntity.set("statusId", "GENERATED");
+				        newEntity.put("vehicleId",containerId);
+				        newEntity.put("partyIdFrom",partyIdFrom);
+				        newEntity.put("primaryOrderId", milkTransferId);
+				        newEntity.set("createdDate", nowTimeStamp);
+				        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			            delegator.createSetNextSeqId(newEntity);            
+			            shipmentId = (String) newEntity.get("shipmentId");
+			            
+			            Map<String,Object> itemInMap = FastMap.newInstance();
+				        itemInMap.put("shipmentId",shipmentId);
+				        itemInMap.put("userLogin",userLogin);
+				        itemInMap.put("productId",productId);
+				        itemInMap.put("quantity",quantity);
+				        Map resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
+				        
+				        if (ServiceUtil.isError(resultMap)) {
+				        	Debug.logError("Problem creating shipment Item for milkTransfer :"+milkTransferId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Problem creating shipment Item for milkTransfer :"+milkTransferId);	
+							TransactionUtil.rollback();
+					  		return "error";
+				        }
+			            
+				        Map inventoryReceiptCtx = FastMap.newInstance();
+						inventoryReceiptCtx.put("userLogin", userLogin);
+						inventoryReceiptCtx.put("productId", productId);
+						inventoryReceiptCtx.put("datetimeReceived", nowTimeStamp);
+						inventoryReceiptCtx.put("quantityAccepted", quantity);
+						inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
+						inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+						inventoryReceiptCtx.put("ownerPartyId", "Company");
+						inventoryReceiptCtx.put("facilityId", facilityId);
+						inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
+						inventoryReceiptCtx.put("shipmentId", shipmentId);
+						Map<String, Object> receiveInventoryResult;
+						receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
+						
+						if (ServiceUtil.isError(receiveInventoryResult)) {
+							Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+							request.setAttribute("_ERROR_MESSAGE_", "There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult));	
+							TransactionUtil.rollback();
+					  		return "error";
+			            }
+			            
+						GenericValue milkTrans = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId",milkTransferId), false);
+						milkTrans.set("statusId", "MXF_APPROVED");
+						milkTrans.store();
+			            
+					}else{
+						Debug.logError("No Records Found To Process", module);
+						request.setAttribute("_ERROR_MESSAGE_", "No Records Found To Process");	  		  
+				  		 return "error";
+					}
+				}catch (Exception e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+					request.setAttribute("_ERROR_MESSAGE_", " Error while getting the MilkTransfer. ");
+		  			return "error";
+				}
+			}
+			
+	        request.setAttribute("_EVENT_MESSAGE_", "Milk Receipt Successfully Approved");
+			
+		return "success";
+    }
 	
 	
 }

@@ -497,7 +497,7 @@
             <parameter param-name="milkTransferId"/>
           </hyperlink>
        </field>  -->
-       <field  name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
+       <field  name="delete" use-when="statusId.equals(&quot;MXF_RECD&quot;)" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
             <hyperlink  description="delete" target-type="plain">
             	<parameter param-name="hideSearch" value="N"/>
            </hyperlink>
@@ -644,4 +644,5 @@
             <parameter param-name="amountTypeId"/>
           </hyperlink></field>
     </form> 
+    
 </forms>
