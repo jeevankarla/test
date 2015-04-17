@@ -671,8 +671,8 @@
         		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
             </hyperlink>
         </field>    
-        <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="Bank Advise CSV" widget-style="buttontext" >
-            <hyperlink target="EmployeeBankDetailsCsv.csv" description="CSV"  target-window="_BLANK">
+        <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="Bank Advise Excel" widget-style="buttontext" >
+            <hyperlink target="EmployeeBankDetailsCsv.xls" description="Excel"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyIdFrom" value="Company"/>

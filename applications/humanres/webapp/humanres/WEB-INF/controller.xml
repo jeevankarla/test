@@ -2065,7 +2065,7 @@ under the License.
 	  <request-map uri="MonthlyBankStatement.pdf"><security https="true" auth="true"/>
 	   <response name="success" type="view" value="MonthlyBankStatementpdf"></response>
 	   </request-map>
-    <request-map uri="EmployeeBankDetailsCsv.csv"><security https="true" auth="true"/>
+    <request-map uri="EmployeeBankDetailsCsv.xls"><security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeBankDetailsCsv"></response>
         </request-map>
     <request-map uri="EcsBankDetailsCsv.csv"><security https="true" auth="true"/>
