@@ -11,7 +11,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
-def sdf = new SimpleDateFormat("yyyy-MM-dd");
+def sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 periodTypeId = parameters.periodTypeId;
 customTimePeriodId = parameters.customTimePeriodId;
@@ -38,6 +38,6 @@ if(UtilValidate.isNotEmpty(periodTypeId)){
 		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(thruDate)));
 	}
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	customTimePeriodList = delegator.findList("CustomTimePeriod", condition, null, null, null, true);
+	customTimePeriodList = delegator.findList("CustomTimePeriod", condition, null, ["-thruDate"], null, true);
 }
 context.put("timePeriodList",customTimePeriodList);

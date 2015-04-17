@@ -8742,20 +8742,27 @@ public class PayrollService {
     	Map<String, Object> result = ServiceUtil.returnSuccess();
     	String periodTypeId = (String) context.get("periodTypeId");
     	String organizationPartyId = (String) context.get("organizationPartyId");
-    	Date fromDate = (java.sql.Date) context.get("fromDate");
-    	Date thruDate = (java.sql.Date) context.get("thruDate");
+    	String fromDate = (String) context.get("fromDate");
+    	String thruDate = (String) context.get("thruDate");
     	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = new Locale("en","IN");
 		TimeZone timeZone = TimeZone.getDefault();
     	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
     	Timestamp fromDateStart = null;
 		Timestamp fromDateEnd = null;
     	
-    	fromDateStart = new java.sql.Timestamp(((Date) fromDate).getTime());
-    	fromDateEnd = new java.sql.Timestamp(((Date) thruDate).getTime());
+    	//fromDateStart = new java.sql.Timestamp(((Date) fromDate).getTime());
+    	//fromDateEnd = new java.sql.Timestamp(((Date) thruDate).getTime());
+    	try {
+    		fromDateStart = UtilDateTime.toTimestamp(sdf.parse(fromDate));
+        	fromDateEnd = UtilDateTime.toTimestamp(sdf.parse(thruDate));
+		} catch (ParseException e) {
+		}
+    	java.sql.Date fromDatesql = new java.sql.Date(fromDateStart.getTime()); 
+    	java.sql.Date thruDatesql = new java.sql.Date(fromDateEnd.getTime()); 
     	
     	String startDate = UtilDateTime.toDateString(fromDateStart, "dd");
     	String endDate = UtilDateTime.toDateString(fromDateEnd, "dd");
@@ -8773,8 +8780,8 @@ public class PayrollService {
     			getTimePeriodMap.put("userLogin",userLogin);
     			getTimePeriodMap.put("periodTypeId",periodTypeId);
     			getTimePeriodMap.put("organizationPartyId",organizationPartyId);
-    			getTimePeriodMap.put("fromDate",fromDate);
-    			getTimePeriodMap.put("thruDate",thruDate);
+    			getTimePeriodMap.put("fromDate",fromDatesql);
+    			getTimePeriodMap.put("thruDate",thruDatesql);
     			if(UtilValidate.isNotEmpty(getTimePeriodMap)){
     				try{
     					serviceResult = dispatcher.runSync("createCustomTimePeriod", getTimePeriodMap);

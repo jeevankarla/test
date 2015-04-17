@@ -1635,8 +1635,8 @@
                 </entity-options >
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field> 
-        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>  
+        <field name="fromDate" id-name="fromDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
+        <field name="thruDate" id-name="thruDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="TimePeriodResults" list-name="timePeriodList" type="list"
@@ -1650,9 +1650,9 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service> -->
         </actions>
-        <field name="periodTypeId" title = "Period Type Id"><display></display></field>
-        <field name="fromDate"><display></display></field>
-        <field name="thruDate"><display></display></field>
+        <field name="periodTypeId" title = "Period Type Id"><display ></display></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
     </form>
     <form name="findCustomTimePeriod" type="single" title="" target="findCustomTimePeriod"
             header-row-style="header-row" default-table-style="basic-table">
