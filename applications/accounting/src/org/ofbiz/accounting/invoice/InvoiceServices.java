@@ -5581,7 +5581,7 @@ public class InvoiceServices {
         			Debug.log("paymentId======"+ paymentId);
         			List invoiceTypeIds = FastList.newInstance();
         			try {
-        				invoiceTypeIds = EntityUtil.getFieldListFromEntityList(delegator.findList("InvoiceType", EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentType), null, null, null, false), "partyId", true);
+        				invoiceTypeIds = EntityUtil.getFieldListFromEntityList(delegator.findList("InvoiceType", EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentType), null, null, null, false), "invoiceTypeId", true);
         			} catch (GenericEntityException e) {
         				Debug.logError(e, module);
         				return ServiceUtil.returnError(e.toString());
