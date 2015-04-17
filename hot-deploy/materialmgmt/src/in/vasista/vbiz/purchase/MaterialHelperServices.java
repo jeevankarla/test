@@ -240,7 +240,55 @@ public class MaterialHelperServices{
 		result.put("taxComponents", taxComponents);
 		return result;
 	}
-	
+public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Map<String, ? extends Object> context) {
+     
+	Map<String, Object> resultMap = FastMap.newInstance();
+	LocalDispatcher dispatcher = dctx.getDispatcher();
+//    Delegator delegator = dctx.getDelegator();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   
+    Date fromDate = (Date) context.get("fromDate");
+    Date thruDate = (Date) context.get("thruDate");
+
+	String organizationPartyId = (String)context.get("organizationPartyId");
+	String periodTypeId = (String)context.get("periodTypeId");
+	String isClosed = (String)context.get("isClosed");
+	Long periodNum = (Long)context.get("periodNum");
+	String periodName = (String)context.get("periodName");
+
+	Map<String,Object> inMap = FastMap.newInstance();
+	inMap.put("fromDate",fromDate);
+	inMap.put("thruDate",thruDate);
+	inMap.put("organizationPartyId",organizationPartyId);
+	inMap.put("periodTypeId",periodTypeId);
+	inMap.put("userLogin",userLogin);
+
+	inMap.put("isClosed",isClosed);
+	inMap.put("periodNum",periodNum);
+	inMap.put("periodName",periodName);
+	Map<String,Object> customTime = FastMap.newInstance();
+
+	try{
+		customTime = dispatcher.runSync("createCustomTimePeriodM",inMap);
+		if(ServiceUtil.isError(customTime)){
+		Debug.logError("Error while creating customTimePeriod ::"+ServiceUtil.getErrorMessage(customTime),module);
+		return ServiceUtil.returnError("Error While creating customTimePeriod ::");
+		}
+		
+		if((isClosed).equals("Y")){
+		Map resultCtx = populateInventoryPeriodSummary(dctx, UtilMisc.toMap("customTimePeriodId", customTime.get("customTimePeriodId"), "userLogin", userLogin));
+      	if(ServiceUtil.isError(resultCtx)){
+		String errMsg =  ServiceUtil.getErrorMessage(resultCtx);
+		return ServiceUtil.returnError(errMsg);
+			}
+		}
+	}catch(GenericServiceException e){
+		Debug.logError(e,module);
+		return ServiceUtil.returnError("Error While creating customTimePeriod");
+	}	
+	return customTime;
+}
+
 	public static Map<String, Object> populateInventoryPeriodSummary(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
