@@ -50,6 +50,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.product.ProductEvents;
@@ -5401,7 +5402,7 @@ public class InvoiceServices {
         result.put("paymentsList", paymentsList);
      return result;
 	}
-	public static Map<String, Object> autoPaymentApplicationByPaymentType(DispatchContext dctx, Map<String, Object> context) {
+	/*public static Map<String, Object> autoPaymentApplicationByPaymentType(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();              
         BigDecimal paymentAmount = (BigDecimal) context.get("amount");
@@ -5527,5 +5528,143 @@ public class InvoiceServices {
         
         Map<String, Object> result = ServiceUtil.returnSuccess("Payments Has Been Successfully Applied");        
         return result;
+	}*/
+	
+	public static Map<String, Object> autoPaymentApplicationByPaymentType(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        Locale locale = (Locale) context.get("locale");     
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String paymentTypeId = (String) context.get("paymentTypeId");
+        String roleTypeId = (String) context.get("roleTypeId");
+        //String paymentId = (String) context.get("paymentId");
+        
+        List paymentTypesList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(paymentTypeId)){
+        	paymentTypesList = UtilMisc.toList(paymentTypeId);
+        }
+        if(UtilValidate.isNotEmpty(roleTypeId)){
+        	try{
+        		List<GenericValue> paymentTypeRoleType = delegator.findList("PaymentTypeRoleType", EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId), null, null, null, false);
+            	paymentTypesList = EntityUtil.getFieldListFromEntityList(paymentTypeRoleType, "paymentTypeId", true);
+        	}catch (GenericEntityException e) {
+	        	Debug.logError(e, e.toString(), module);
+		        return ServiceUtil.returnError(e.toString());
+	        }
+        }
+        int i=0;
+        for(int pmntTypeCount=0; pmntTypeCount<paymentTypesList.size(); pmntTypeCount++){
+        	String paymentType = (String) paymentTypesList.get(pmntTypeCount);
+        	
+        	EntityListIterator paymentListItr = null;
+            List exprListForParameters = FastList.newInstance();
+        	exprListForParameters.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentType));  
+        	exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+        	EntityCondition pmntCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+    		try {
+    			paymentListItr = delegator.find("Payment", pmntCond ,null, null, null, null);
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    			return ServiceUtil.returnError(e.toString());
+    		}
+        	
+    		GenericValue paymentEntry;
+    		while(paymentListItr != null && (paymentEntry = paymentListItr.next()) != null) {
+    			BigDecimal notApplied = PaymentWorker.getPaymentNotApplied(paymentEntry);
+    			Debug.log("no of pmnts done======"+ i++);
+    			if (notApplied.signum() > 0) {
+    				BigDecimal amountAppliedRunningTotal = notApplied;
+    				String paymentId = paymentEntry.getString("paymentId");
+        			String partyIdFrom = paymentEntry.getString("partyIdFrom");
+        			String partyIdTo = paymentEntry.getString("partyIdTo");
+        			Debug.log("paymentId======"+ paymentId);
+        			List invoiceTypeIds = FastList.newInstance();
+        			try {
+        				invoiceTypeIds = EntityUtil.getFieldListFromEntityList(delegator.findList("InvoiceType", EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentType), null, null, null, false), "partyId", true);
+        			} catch (GenericEntityException e) {
+        				Debug.logError(e, module);
+        				return ServiceUtil.returnError(e.toString());
+        			}
+        			EntityListIterator invoicesListItr = null;
+        			exprListForParameters.clear();
+        			exprListForParameters.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.IN, invoiceTypeIds));
+        			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdTo)); 
+        			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom)); 
+        			exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_READY"));
+        			EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+        			try {
+        				invoicesListItr = delegator.find("Invoice", paramCond,null, null, null, null);
+        			} catch (GenericEntityException e) {
+        				Debug.logError(e, module);
+        				return ServiceUtil.returnError(e.toString());
+        			}
+    				
+        			GenericValue invoiceEntry;
+            		while(invoicesListItr != null && (invoiceEntry = invoicesListItr.next()) != null) {
+            			String invoiceId = (String)invoiceEntry.get("invoiceId");
+	                	Map invoicePaymentInfoMap =FastMap.newInstance();
+	        			BigDecimal outstandingAmount =BigDecimal.ZERO;
+	        			invoicePaymentInfoMap.put("invoiceId", invoiceId);
+	        			invoicePaymentInfoMap.put("userLogin",userLogin);
+	        			try{
+	        				Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
+	        				if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+	        		            	Debug.logError(getInvoicePaymentInfoListResult.toString(), module);    			
+	        		                return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
+	        		        }
+	        				Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+	        				outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");	
+	        			}catch (GenericServiceException e) {
+	        				// TODO: handle exception
+	        				 Debug.logError(e, e.toString(), module);
+	        		         return ServiceUtil.returnError(e.toString());
+	        			}
+	        			
+	        			Map<String, Object> appl = FastMap.newInstance();
+		                appl.put("paymentId", paymentId);
+		                appl.put("amountApplied", amountAppliedRunningTotal);
+		                appl.put("invoiceId", invoiceId);
+		                appl.put("userLogin", userLogin);
+		                try {
+			                Map<String, Object> createPayApplResult = dispatcher.runSync("createPaymentApplication", appl);
+			                if (ServiceUtil.isError(createPayApplResult)) {
+			                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceFromOrder",locale), null, null, createPayApplResult);
+			                }
+		                } catch (GenericServiceException e) {
+		                	// TODO: handle exception
+	        				 Debug.logError(e, e.toString(), module);
+	        		         return ServiceUtil.returnError(e.toString());
+	                    }
+		                amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
+	                 	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
+	                 		break;
+	                 	}
+            			
+            		}
+    				
+    			}
+    			
+   	     	}
+    		try {
+    			paymentListItr.close();
+    		} catch (GenericEntityException e) {
+    			Debug.logError(e, module);
+    			return ServiceUtil.returnError(e.toString());
+    		}
+    		
+        	
+        }
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess("Payments Has Been Successfully Applied");        
+        return result;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
