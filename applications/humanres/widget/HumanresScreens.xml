@@ -945,6 +945,7 @@
                 <set field="tabButtonItem2" value="createTimePeriod" />
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/humanres/images/setDateFormat.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="${parameters.mainDecoratorLocation}">

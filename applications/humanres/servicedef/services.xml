@@ -1934,8 +1934,8 @@ under the License.emplpunch
          <description>Create a CustomTimePeriod record</description>
          <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
          <attribute name="organizationPartyId" mode="IN" type="String" optional="true"/>
-         <attribute name="fromDate" mode="IN" type="Date" optional="false"/>
-         <attribute name="thruDate" mode="IN" type="Date" optional="false"/>
+         <attribute name="fromDate" mode="IN" type="String" optional="false"/>
+         <attribute name="thruDate" mode="IN" type="String" optional="false"/>
     </service>
     <service name="createCustomTimePeriod" engine="simple"
                 location="component://common/script/org/ofbiz/common/period/PeriodServices.xml" invoke="createCustomTimePeriod" auth="true">
