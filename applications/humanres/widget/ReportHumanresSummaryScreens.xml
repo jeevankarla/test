@@ -940,6 +940,7 @@
                 <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
                 <set field="reportType" from-field="parameters.reportType"></set>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ITAXQuarterlyStatement.groovy"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/annualForm24QStatement.groovy"/>
 			</actions>
 			<widgets>
          		<section>
@@ -977,6 +978,16 @@
 								</container>
 							</widgets>	
 						</section>	
+						<section>
+	                 	 	<condition>
+	                 	 		<if-compare operator="equals" value="form24Q" field="reportType"/>
+	                 	 	</condition>
+		                 	<widgets>
+								<container>
+									<include-form name="annualForm24QStatement" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>	
+						</section>
 					</widgets>
 					<fail-widgets>
                     			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
