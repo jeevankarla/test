@@ -590,7 +590,7 @@ public class SalesHistoryServices {
 	        return ServiceUtil.returnSuccess("update successfully done!");		
 		}
 	  
-	    public static Map<String, Object> populateLMSMonthlySalesSummary(DispatchContext dctx, Map context, String periodType,Timestamp periodStart,Timestamp periodEnd ) {
+	    public static Map<String, Object> populateLMSMonthlySalesSummaryOLD(DispatchContext dctx, Map context, String periodType,Timestamp periodStart,Timestamp periodEnd ) {
 			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			Map<String, Object> result = ServiceUtil.returnSuccess();	
@@ -788,49 +788,6 @@ public class SalesHistoryServices {
 						    					routesTotMap.put(route, routeDataMap);
 						    				}
   						    	  		
-  						    	  		
-  						    	  		//populating zone wise map 
-  						    	  	/*	if(zoneTotMap.get(zone) != null){
-						    					Map zoneDataMap = (Map)zoneTotMap.get(zone);
-  						    				if(zoneDataMap.get(productSubscriptionTypeId)!= null){
-  						    					Map zoneProdSubTypeMap = (Map)zoneDataMap.get(productSubscriptionTypeId);
-  						    					if(zoneProdSubTypeMap.get(productId)!= null){
-						    							Map zoneProdMap = (Map)zoneProdSubTypeMap.get(productId);
-						    							BigDecimal runningTotalProductQty = (BigDecimal)zoneProdMap.get("totalQty");
-	    						    					BigDecimal runningProductRevenue = (BigDecimal)zoneProdMap.get("totalRevenue");
-	    						    					runningTotalProductQty = runningTotalProductQty.add(totQty);
-	    						    					runningProductRevenue = runningProductRevenue.add(totRevenu);
-	    						    					zoneProdMap.put("totalQty", runningTotalProductQty);
-	    						    					zoneProdMap.put("totalRevenue", runningProductRevenue);
-	    						        				zoneProdSubTypeMap.put(productId, zoneProdMap);
-						    						}else{
-						    							Map<String, Object> zoneProdMap = FastMap.newInstance();
-						    							zoneProdMap.put("totalQty", totQty);
-						    							zoneProdMap.put("totalRevenue", totRevenu);
-	    						        				zoneProdSubTypeMap.put(productId, zoneProdMap);
-						    						}	
-  						    					zoneDataMap.put(productSubscriptionTypeId,zoneProdSubTypeMap);
-  						    				}else{
-  						    					Map<String, Object> zoneProdSubTypeMap = FastMap.newInstance();
-  						    					Map<String, Object> zoneProdMap = FastMap.newInstance();
-  						    					zoneProdMap.put("totalQty", totQty);
-  						    					zoneProdMap.put("totalRevenue", totRevenu);
-  						    					zoneProdSubTypeMap.put(productId, zoneProdMap);
-  						    					zoneDataMap.put(productSubscriptionTypeId, zoneProdSubTypeMap);
-  						    				}
-  						    				zoneTotMap.put(zone, zoneDataMap);
-						    				}else{
-						    					Map zoneDataMap = FastMap.newInstance();
-						    					Map<String, Object> zoneProdSubTypeMap = FastMap.newInstance();
-						    					Map<String, Object> zoneProdMap = FastMap.newInstance();
-						    					zoneProdMap.put("totalQty", totQty);
-						    					zoneProdMap.put("totalRevenue", totRevenu);
-						    					zoneProdSubTypeMap.put(productId, zoneProdMap);
-						    					zoneDataMap.put(productSubscriptionTypeId, zoneProdSubTypeMap);
-						    					zoneTotMap.put(zone, zoneDataMap);
-						    				}*/
-  						    	  		
-  						    	  		
   						    	  		//booth wise Monthly sale 
   						    	  		GenericValue salesSummaryDetail = delegator.makeValue("LMSPeriodSalesSummaryDetail");
       									salesSummaryDetail.put("salesDate", startDate);
@@ -945,11 +902,7 @@ public class SalesHistoryServices {
 							String productId = (String) entry.getKey();
 							BigDecimal Quantity = (BigDecimal)productsSalesMap.get("totalQty");
 							BigDecimal Revenue = (BigDecimal)productsSalesMap.get("totalRevenue");
-							if(!UtilValidate.isEmpty(isReturn)){
-							isReturn=(String)productsSalesMap.get("isReturn");
-							Quantity=Quantity.negate();
-							Revenue=Revenue.negate();
-							}
+							
 							GenericValue periodSalesSummaryDetail = delegator.makeValue("LMSPeriodSalesSummaryDetail");
 		        			periodSalesSummaryDetail.put("salesDate", salesDate);
 		        			periodSalesSummaryDetail.put("totalQuantity", Quantity);
@@ -1300,8 +1253,12 @@ public class SalesHistoryServices {
 			Map<String, Object> productTotals = new TreeMap<String, Object>();
 			Map<String, Object> supplyTypeTotals = new TreeMap<String, Object>();
 			Map<String, Object> dayWiseTotals = new TreeMap<String, Object>();
+			Map<String, Object> shipmentTypeTotals=new TreeMap<String,Object>();
 	        GenericValue orderItem;
 	    	while( orderItemsIter != null && (orderItem = orderItemsIter.next()) != null) {
+	    		
+	    		String shipmentTypeId=orderItem.getString("shipmentTypeId");
+	    		
 				String boothId = "";
 				if(isByParty){
 					boothId = orderItem.getString("facilityId");
@@ -1358,7 +1315,142 @@ public class SalesHistoryServices {
 				}
 				totalFat = totalFat.add(fat);
 				totalSnf = totalSnf.add(snf);
+				//Handle ShipmentType Totals Here
 				
+				
+				if (shipmentTypeTotals.get(shipmentTypeId) == null) {
+					// Handle supply type totals
+						Map<String, Object> productInnerMap = FastMap.newInstance();
+						productInnerMap.put("total", quantity);
+						productInnerMap.put("packetQuantity", packetQuantity);
+						productInnerMap.put("totalRevenue", revenue);
+						
+						Map<String, Object> productItemsMap = FastMap.newInstance();
+						productItemsMap.put("total", quantity);
+						productItemsMap.put("packetQuantity", packetQuantity);
+						productItemsMap.put("totalRevenue", revenue);
+						productItemsMap.put(productId, productInnerMap);
+						
+						Map<String, Object> boothSalesMap = FastMap.newInstance();
+						boothSalesMap.put("total", quantity);
+						boothSalesMap.put("packetQuantity", packetQuantity);
+						boothSalesMap.put("totalRevenue", revenue);
+						boothSalesMap.put(boothId, productItemsMap);
+						
+						
+						Map<String, Object> supplyTypeMap = FastMap.newInstance();
+						supplyTypeMap.put("total", quantity);
+						supplyTypeMap.put("packetQuantity", packetQuantity);
+						supplyTypeMap.put("totalRevenue", revenue);
+						supplyTypeMap.put(prodSubscriptionTypeId, boothSalesMap);
+						
+						shipmentTypeTotals.put(shipmentTypeId,supplyTypeMap);
+						
+				}else{
+					Map supplyTypeMap = (Map) shipmentTypeTotals.get(shipmentTypeId);
+					
+					BigDecimal runningTotal = (BigDecimal) supplyTypeMap.get("total");
+					runningTotal = runningTotal.add(quantity);
+					supplyTypeMap.put("total", runningTotal);
+					
+					BigDecimal runningPacketTotal = (BigDecimal) supplyTypeMap.get("packetQuantity");
+					runningPacketTotal = runningPacketTotal.add(packetQuantity);
+					supplyTypeMap.put("packetQuantity", runningPacketTotal);
+					
+					BigDecimal runningTotalRevenue = (BigDecimal) supplyTypeMap.get("totalRevenue");
+					runningTotalRevenue = runningTotalRevenue.add(revenue);
+					supplyTypeMap.put("totalRevenue", runningTotalRevenue);
+
+					// next handle type totals
+					Map boothSalesMap = (Map) supplyTypeMap.get(prodSubscriptionTypeId);
+					
+					if (UtilValidate.isEmpty(boothSalesMap)) {
+						Map<String, Object> productInnerMap = FastMap.newInstance();
+						productInnerMap.put("total", quantity);
+						productInnerMap.put("packetQuantity", packetQuantity);
+						productInnerMap.put("totalRevenue", revenue);
+						
+						Map<String, Object> productItemsMap = FastMap.newInstance();
+						productItemsMap.put("total", quantity);
+						productItemsMap.put("packetQuantity", packetQuantity);
+						productItemsMap.put("totalRevenue", revenue);
+						productItemsMap.put(productId, productInnerMap);
+						
+						Map<String, Object> boothSalesNewMap = FastMap.newInstance();
+						boothSalesNewMap.put("total", quantity);
+						boothSalesNewMap.put("packetQuantity", packetQuantity);
+						boothSalesNewMap.put("totalRevenue", revenue);
+						boothSalesNewMap.put(boothId, productItemsMap);
+						
+						supplyTypeMap.put(prodSubscriptionTypeId, boothSalesNewMap);
+					}else{
+						
+						BigDecimal runningBoothTotal = (BigDecimal) boothSalesMap.get("total");
+						runningBoothTotal = runningBoothTotal.add(quantity);
+						boothSalesMap.put("total", runningBoothTotal);
+						
+						BigDecimal runningBoothPacketTotal = (BigDecimal) boothSalesMap.get("packetQuantity");
+						runningBoothPacketTotal = runningBoothPacketTotal.add(packetQuantity);
+						boothSalesMap.put("packetQuantity", runningBoothPacketTotal);
+						
+						BigDecimal runningBoothTotalRevenue = (BigDecimal) boothSalesMap.get("totalRevenue");
+						runningBoothTotalRevenue = runningBoothTotalRevenue.add(revenue);
+						boothSalesMap.put("totalRevenue", runningBoothTotalRevenue);
+						
+						Map productItemsMap=(Map)boothSalesMap.get(boothId);
+						
+						if (productItemsMap== null) {
+							Map<String, Object> productInnerMap = FastMap.newInstance();
+							productInnerMap.put("total", quantity);
+							productInnerMap.put("packetQuantity", packetQuantity);
+							productInnerMap.put("totalRevenue", revenue);
+							
+							Map<String, Object> boothSalesInnerMap = FastMap.newInstance();
+							boothSalesInnerMap.put("total", quantity);
+							boothSalesInnerMap.put("packetQuantity", packetQuantity);
+							boothSalesInnerMap.put("totalRevenue", revenue);
+							boothSalesInnerMap.put(productId, productInnerMap);
+							
+							boothSalesMap.put(boothId,boothSalesInnerMap);
+						}else{
+							BigDecimal prodRunningTotal = (BigDecimal) productItemsMap.get("total");
+							prodRunningTotal = prodRunningTotal.add(quantity);
+							productItemsMap.put("total", prodRunningTotal);
+							
+							BigDecimal prodRunningPktTotal = (BigDecimal) productItemsMap.get("packetQuantity");
+							prodRunningPktTotal = prodRunningPktTotal.add(packetQuantity);
+							productItemsMap.put("packetQuantity", prodRunningPktTotal);
+							
+							BigDecimal prodRunningRevenue = (BigDecimal) productItemsMap.get("totalRevenue");
+							prodRunningRevenue = prodRunningRevenue.add(revenue);
+							productItemsMap.put("totalRevenue", prodRunningRevenue);
+							
+							Map productInnerMap=(Map)productItemsMap.get(productId);
+							if (productInnerMap== null) {
+								Map<String, Object> productNewInnerMap = FastMap.newInstance();
+								productNewInnerMap.put("total", quantity);
+								productNewInnerMap.put("packetQuantity", packetQuantity);
+								productNewInnerMap.put("totalRevenue", revenue);
+								productItemsMap.put(productId,productNewInnerMap);
+							}else{
+								BigDecimal tempRunningTotal = (BigDecimal) productInnerMap.get("total");
+								tempRunningTotal =tempRunningTotal.add(quantity);
+								productInnerMap.put("total", tempRunningTotal);
+								
+								BigDecimal tempRunningPacketTotal = (BigDecimal) productInnerMap.get("packetQuantity");
+								tempRunningPacketTotal =tempRunningPacketTotal.add(packetQuantity);
+								productInnerMap.put("packetQuantity", tempRunningPacketTotal);
+								
+								BigDecimal tempRunningRevenue = (BigDecimal) productInnerMap.get("totalRevenue");
+								tempRunningRevenue = tempRunningRevenue.add(revenue);
+								productInnerMap.put("totalRevenue", tempRunningRevenue);
+							}
+						}
+						
+					}
+				}
+					
+					
 				// Handle booth totals
 				if (boothTotals.get(boothId) == null) {
 					Map<String, Object> newMap = FastMap.newInstance();
@@ -1856,8 +1948,119 @@ public class SalesHistoryServices {
 			result.put("dayWiseTotals", dayWiseTotals);
 			result.put("productTotals", productTotals);
 			result.put("supplyTypeTotals", supplyTypeTotals);
+			result.put("shipmentTypeTotals", shipmentTypeTotals);
+			
 			return result;
 		}
 
-	    
+	    public static Map<String, Object> populateLMSMonthlySalesSummary(DispatchContext dctx, Map context, String periodType,Timestamp periodStart,Timestamp periodEnd ) {
+				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> result = ServiceUtil.returnSuccess();	
+				List productSubscriptionTypeList = FastList.newInstance();
+				List<String> productIdsList = FastList.newInstance();
+				List shipmentList= FastList.newInstance(); 
+				
+				shipmentList.add("AM");
+				shipmentList.add("PM");
+				shipmentList.add("DIRECT");
+				List<GenericValue> lmsSalesSummaryList = FastList.newInstance(); 
+				List<GenericValue> lmsSalesSummaryDetailList = FastList.newInstance();
+				List<GenericValue> lmsSalesSummaryBoothsList = FastList.newInstance();
+				List<GenericValue> lmsSalesBoothDayWiseDataList = FastList.newInstance();
+				Date startDate = new Date(periodStart.getTime());
+				Date endDate = new Date(periodEnd.getTime());
+				List<GenericValue> shipmentWise = FastList.newInstance();
+				
+		      	List<GenericValue> productSubscriptionTypeWise= FastList.newInstance();
+		      	List<GenericValue> productWise = FastList.newInstance();
+		      	List<GenericValue> boothWise = FastList.newInstance();
+		      	List<GenericValue> summaryBooths = FastList.newInstance();
+		      	List<GenericValue> facilitiesToClearList = FastList.newInstance();
+	      	
+	      	
+	      	Map productSupplyTypeMap= FastMap.newInstance();
+	      	Map productWiseMap = FastMap.newInstance();
+	      	Map facilityWiseMap = FastMap.newInstance();
+	      	
+	      	
+	      	Debug.log("Populating Monthly Data From======> "+startDate+" AND EndDate== "+endDate, "");
+	      	
+	      		Map salesSummeryTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), UtilMisc.toMap("fromDate",periodStart, "thruDate",periodEnd,"periodTypeId","SALES_DAY","includeReturnOrders",Boolean.TRUE));
+	      		if(UtilValidate.isNotEmpty(salesSummeryTotals) && UtilValidate.isNotEmpty(salesSummeryTotals.get("shipmentTypeTotals"))){
+	      			Map shipmentTypeTotals=(Map)salesSummeryTotals.get("shipmentTypeTotals");
+	      			for(Object shipment : shipmentList){
+	      			Debug.log("Populating Monthly Data For shipmentType==========>"+shipment.toString());
+	      			 Map  currentTypeTotals=(Map)shipmentTypeTotals.get(shipment.toString());
+	      			   //populating Each Type
+		      			if(UtilValidate.isNotEmpty(currentTypeTotals)){
+		      				Iterator currentTypeTotalsIter = currentTypeTotals.entrySet().iterator();
+		      				while(currentTypeTotalsIter.hasNext()) {
+		      					 Entry thisEntry= (Entry) currentTypeTotalsIter.next();
+		      					 String productSubscriptionTypeId=(String)thisEntry.getKey();
+		      					 if((!"total".equals(productSubscriptionTypeId)) && (!"packetQuantity".equals(productSubscriptionTypeId)) && (!"totalRevenue".equals(productSubscriptionTypeId))){
+		      						productSupplyTypeMap=(Map)thisEntry.getValue();
+		      						//Debug.log("Populating Monthly productSupplyTypeMap From======> "+productSupplyTypeMap+"==shipment="+shipment.toString());
+		      						Iterator typeMapIter = productSupplyTypeMap.entrySet().iterator();
+				      				while(typeMapIter.hasNext()) {
+				      					 Entry typeEntry= (Entry) typeMapIter.next();
+				      					 String facilityId=(String)typeEntry.getKey();
+				      					 if((!"total".equals(facilityId)) && (!"packetQuantity".equals(facilityId)) && (!"totalRevenue".equals(facilityId))){
+					      						facilityWiseMap=(Map)typeEntry.getValue();
+					      						//productWise
+					      						Iterator productWiseMapIter = facilityWiseMap.entrySet().iterator();
+							      				while(productWiseMapIter.hasNext()) {
+							      					 Entry productEntry= (Entry) productWiseMapIter.next();
+							      					 String productId=(String)productEntry.getKey();
+							      					// Debug.log("====productId==="+productId+"===facId=="+facilityId+"===productSubscriptionTypeId=="+productSubscriptionTypeId+"==shipmentTypeId="+shipment.toString());
+							      					if((!"total".equals(productId)) && (!"packetQuantity".equals(productId)) && (!"totalRevenue".equals(productId))){
+							      						productWiseMap=(Map)productEntry.getValue();
+							      						BigDecimal totalQty= (BigDecimal)productWiseMap.get("packetQuantity");
+							      						BigDecimal totalRevenue=(BigDecimal)productWiseMap.get("totalRevenue");
+							      						
+							      					   //facility wise Monthly sale 
+				  						    	  		GenericValue salesSummaryDetail = delegator.makeValue("LMSPeriodSalesSummaryDetail");
+				      									salesSummaryDetail.put("salesDate", startDate);
+				      									salesSummaryDetail.put("totalQuantity", totalQty);
+				      									salesSummaryDetail.put("totalRevenue", totalRevenue);  
+				      									salesSummaryDetail.put("shipmentTypeId", shipment.toString());
+				      									salesSummaryDetail.put("facilityId",facilityId);
+				      									salesSummaryDetail.put("productSubscriptionTypeId", productSubscriptionTypeId);
+				      									salesSummaryDetail.put("productId", productId);
+				      									salesSummaryDetail.put("periodTypeId", "SALES_MONTH");
+				      									if("_NA_".equals(productSubscriptionTypeId)){
+				      										salesSummaryDetail.put("isReturn","Y");
+				      									}
+                                                       
+                                                      try{
+			      									   delegator.createOrStore(salesSummaryDetail);
+								      					} catch (GenericEntityException e) {
+								      			      		Debug.logError(e, module);
+								      			      	}
+							      					 }
+							      				}
+				      					 }
+				      				}
+		      					 }//productSubscriptionTypeId ends
+		      				}
+		      			}
+	      			 
+	      			}
+	      		}
+	      		Debug.logImportant("Monthly Data Completed For AM & PM", "");
+	      		
+	      		/*List conditionsClearList = FastList.newInstance();
+	      		conditionsClearList.add(EntityCondition.makeCondition("salesDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
+	      		conditionsClearList.add(EntityCondition.makeCondition("salesDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
+	      		conditionsClearList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_DAY"));
+	      		conditionsClearList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,  UtilMisc.toList(summaryBooths)));
+	          	EntityCondition conditionClear = EntityCondition.makeCondition(conditionsClearList,EntityOperator.AND);
+	      		lmsSalesBoothDayWiseDataList = delegator.findList("LMSPeriodSalesSummaryDetail", conditionClear, null,null, null, false);
+	      		
+	      		//clearing All dayWise Data for current month
+	              delegator.removeAll(lmsSalesSummaryList);
+	              delegator.removeAll(lmsSalesBoothDayWiseDataList);*/
+		        	
+				return ServiceUtil.returnSuccess("update successfully done!");		
+			} 
 }
