@@ -279,7 +279,8 @@ if(hideSearch == "N") {
 	if(subscriptionTypeId == "AM"){
 		trendDate = dayBegin;
 		condList = [];
-		prodList.each{ eachProd ->
+		productList.each{ eachProdEntry ->
+			eachProd = eachProdEntry.productId;
 			prodTempMap = [:];
 			prodDesc = EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
 			brandName = "";

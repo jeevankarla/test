@@ -238,7 +238,7 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DuesFDRAvgReportCSV"/>
     </request-map>
-    <request-map uri="indentTrendForProductionPlan.xls">
+    <request-map uri="indentTrendForProductionPlan.csv">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="IndentTrendForProductionPlanXLS"/>
     </request-map>
