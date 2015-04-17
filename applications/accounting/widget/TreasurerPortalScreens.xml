@@ -882,6 +882,11 @@
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -921,6 +926,10 @@
                                     			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                                     			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     			<parameter param-name="amount" from-field="parameters.amount"/>
                                     			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
                                     			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
@@ -988,6 +997,11 @@
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -1027,6 +1041,10 @@
                                     			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                                     			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     			<parameter param-name="amount" from-field="parameters.amount"/>
                                     			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
                                     			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
@@ -1298,6 +1316,11 @@
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -1337,6 +1360,10 @@
                                     			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                                     			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     			<parameter param-name="amount" from-field="parameters.amount"/>
                                     			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
                                     			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
@@ -1420,6 +1447,11 @@
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -1428,6 +1460,7 @@
 	                <field-map field-name="viewSize" from-field="viewSize"/>
 	            </service>
 	            <set field="payments" from-field="result.listIt"/>
+	            
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -1459,6 +1492,10 @@
                                     			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                                     			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     			<parameter param-name="amount" from-field="parameters.amount"/>
                                     			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
                                     			<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
@@ -2998,6 +3035,19 @@
                 <!--
                  <set field="parameters.findPaymentMethodType" value="bankOrNonBankMethodType"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/> -->
+                 <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
+                 <service service-name="performFind" result-map="result" >
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PaymentAndType"/>
+                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <set field="listIt" from-field="result.listIt"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -3020,6 +3070,10 @@
                                     	 <parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     	 <parameter param-name="amount" from-field="parameters.amount"/>
                                     	 <parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    	 <parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                 			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                 			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                 			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     	</link>
                                     </container>
                                         <include-form name="ListTreasurerPayments"  location="component://accounting/widget/TreasurerPortalForms.xml"/>
@@ -3730,6 +3784,11 @@
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -3769,6 +3828,10 @@
                                     			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                                     			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     			<parameter param-name="amount" from-field="parameters.amount"/>
                                     			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
                                     			<parameter param-name="paymentId" from-field="parameters.paymentId"/>
@@ -3835,6 +3898,11 @@
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -3874,6 +3942,10 @@
                                     			<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                                     			<parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
                                     			<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+                                    			<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+                                    			<parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+                                    			<parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+                                    			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     			<parameter param-name="amount" from-field="parameters.amount"/>
                                     			<parameter param-name="paymentRefNum" from-field="parameters.paymentRefNum"/>
                                     			<parameter param-name="paymentId" from-field="parameters.paymentId"/>
