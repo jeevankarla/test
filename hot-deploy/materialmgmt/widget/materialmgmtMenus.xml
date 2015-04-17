@@ -156,8 +156,8 @@
         	<link target="PurchaseOrderInit"/>
         </menu-item>
       </menu>
-           <menu name="FGSSaleTabBarMm" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-         <!--<menu-item name="FGSProductSaleMm" title="Order Entry">
+      <menu name="FGSSaleTabBarMm" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         	<menu-item name="FGSProductSaleMm" title="Order Entry">
         	<link target="FGSProductSaleMm"/>
         </menu-item>
         <menu-item name="ProcessFGSOrdersMm" title="Process Orders">
@@ -165,13 +165,13 @@
         		<parameter param-name="salesChannelEnumId" value="FGS_PRODUCT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="FGS_SHIPMENT"/>
         	</link>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="FindFGSShipmentMm" title="Find Shipments">
         	<link target="FindFGSShipmentMm" />
         </menu-item>
       </menu>
        <menu name="InterUnitTrTabBarMm" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-         <!-- <menu-item name="InterUnitStkTrMm" title="Order Entry">
+         <menu-item name="InterUnitStkTrMm" title="Order Entry">
         	<link target="InterUnitStkTrMm"/>
         </menu-item>
         <menu-item name="ProcessInterUnitStkTrMm" title="Process InterUnit Stock Orders">
@@ -179,7 +179,7 @@
         		<parameter param-name="salesChannelEnumId" value="INTUNIT_TR_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/>
         	</link>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="FindStockTranferShipmentMm" title="Find Stock Transfer Shipments">
         	<link target="FindStockTranferShipmentMm" />
         </menu-item>
@@ -200,7 +200,7 @@
             </link>
         </menu-item>
         
-         <!-- <menu-item name="CustRequestEntry" title="${uiLabelMap.MaterialMangement_CustRequest} Entry">
+         <menu-item name="CustRequestEntry" title="${uiLabelMap.MaterialMangement_CustRequest} Entry">
          <condition>
          	<if-has-permission permission="MM" action="_INDENT_ENTRY"/>
          </condition>
@@ -211,7 +211,7 @@
         		<if-has-permission permission="MM" action="_DEPT_HEAD_APPROVE"/>
         	</condition>
         	<link target="ApproveRequestsByDeptHead"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="RequestsReceiptAcknowledgement" title="Material Receipt Acknowledgement">
         	<condition>
         		<if-has-permission permission="MM" action="_RECEIPT_AKNOWL"/>
@@ -232,12 +232,12 @@
                 <parameter param-name="returnId" from-field="return.returnId"/>
             </link>
         </menu-item>
-        <!-- <menu-item name="ReturnEntry" title="Return Entry">
+        <menu-item name="ReturnEntry" title="Return Entry">
         <condition>
          	<if-has-permission permission="MM" action="_INDENT_ENTRY"/>
          </condition>
         	<link target="ReturnEntry"/>
-        </menu-item> -->
+        </menu-item>
         
       </menu>
       
@@ -248,7 +248,7 @@
         <menu-item name="FindMaterialIssuanceNew" title="${uiLabelMap.MaterialMangement_FindMaterialIssuance}">
         	<link target="FindMaterialIssuanceNew" />
         </menu-item>
-        <!-- <menu-item name="StoreProductIssue" title="Issuance Request">
+        <menu-item name="StoreProductIssue" title="Issuance Request">
         <condition>
         	<if-has-permission permission="MM" action="_MATERIAL_ISSUE"/>
         </condition>
@@ -259,7 +259,7 @@
         	<if-has-permission permission="MM" action="_MATERIAL_ISSUE"/>
         </condition>
         	<link target="StoreReturnRequests"/>
-        </menu-item> -->
+        </menu-item>
       </menu>
       
       <menu name="QuoteTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -295,12 +295,12 @@
         <menu-item name="FindGRNReceipts" title="Find GRN Items">
         	<link target="FindGRNReceipts"/>
         </menu-item>
-        <!-- <menu-item name="POMaterialReceipts" title="GRN Entry">
+        <menu-item name="POMaterialReceipts" title="GRN Entry">
         <condition>
         	<if-has-permission permission="MM" action="_RAISE_GRN"/>
         </condition>
         	<link target="POMaterialReceipts"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="FindGRNShipments" title="Find GRN">
         <condition>
         	<or>

@@ -75,7 +75,7 @@
 				        	<td>
 						      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 				           	</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Receipt Date:</div></td>
+					        <#--<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Receipt Date:</div></td>
 					        <td>&nbsp;</td>
 					        <#if effectiveDate?exists && effectiveDate?has_content>  
 						  		<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
@@ -87,7 +87,7 @@
 					        	<td valign='middle'>          
 					            	<input class='h3' type="text" name="effectiveDate" id="effectiveDate" onmouseover="datetimepick()" value="${defaulteffectiveDate}"/>           		
 					            </td>
-					       	  </#if>
+					       	  </#if>-->
 					  	</tr>
 	    				<tr><td><br/></td></tr>
 		 				<tr>
