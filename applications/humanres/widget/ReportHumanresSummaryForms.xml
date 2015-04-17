@@ -664,7 +664,7 @@
           <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field use-when="statusId.equals(&quot;GENERATED&quot;)|| statusId.equals(&quot;APPROVED&quot;)" name="Bank Advice" widget-style="buttontext" >
-            <hyperlink target="EmployeeBankDetailsPdf.pdf" description="Bank Advice Report"  target-window="_BLANK">
+            <hyperlink target="EmployeeBankDetailsPdf.pdf" description="Bank Advice PDF"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyIdFrom" value="Company"/>
@@ -672,7 +672,7 @@
             </hyperlink>
         </field>    
         <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="Bank Advise Excel" widget-style="buttontext" >
-            <hyperlink target="EmployeeBankDetailsCsv.xls" description="Excel"  target-window="_BLANK">
+            <hyperlink target="EmployeeBankDetailsCsv.xls" description="Bank Advice Excel"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyIdFrom" value="Company"/>
