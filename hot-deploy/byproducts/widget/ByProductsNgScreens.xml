@@ -1038,7 +1038,7 @@
    										<not><if-empty field="indentTrendList" /></not>
    									</condition> 
    									<widgets>              							                                   
-     									<link text="Indent Trend CSV" style="buttontext" target="indentTrendForProductionPlan.xls" >
+     									<link text="Indent Trend CSV" style="buttontext" target="indentTrendForProductionPlan.csv" >
      										<parameter param-name="supplyDate" from-field="parameters.supplyDate"/>
 											<parameter param-name="facilityId" from-field="parameters.facilityId"/>
 											<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
