@@ -339,6 +339,7 @@ under the License.
         <field name="postedDate" position="2"><display/></field>
         <field name="debitCreditFlag" position="2"><display/></field>
         <field name="amount" position="2"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="transDescription"><display/></field>
     </form>
     <form name="ListFindAcctgTransEntriesByDate" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -422,6 +423,7 @@ under the License.
         <field name="postedDate"><display/></field>
         <field name="debitCreditFlag"><display/></field>
         <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="transDescription"><display/></field>
     </form>
     <form name="CreateAcctgTransAndEntries" type="single" target="quickCreateAcctgTransAndEntries" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -1253,6 +1255,7 @@ under the License.
         <field name="postedDate"><display/></field>
         <field name="debitCreditFlag"><display/></field>
         <field name="amount"><display/></field>
+        <field name="transDescription"><display/></field>
     </form>
 
     <form name="AcctgTransSearchResultsCsv" type="list" title="List Accounting Transactions" list-name="acctgTransList" paginate="false">
