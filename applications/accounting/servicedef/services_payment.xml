@@ -418,7 +418,5 @@ under the License.
         <description>Fetch Unapplied Payments and apply them to the invoices in FIFO basis</description>
         <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentId" type="String" mode="IN" optional="true"/>
-        <attribute name="parentTypeId" type="String" mode="IN" optional="false"/>
     </service>
 </services>
