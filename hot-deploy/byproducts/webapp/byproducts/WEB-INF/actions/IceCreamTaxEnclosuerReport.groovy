@@ -46,11 +46,11 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
-if(maxIntervalDays > 32){
+/*if(maxIntervalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
-}
+}*/
 
 partyIds=[];
 if(categoryType.equals("ICE_CREAM_NANDINI")){
