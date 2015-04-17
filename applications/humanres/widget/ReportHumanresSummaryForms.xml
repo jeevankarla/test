@@ -303,6 +303,38 @@
 		<field name="nilChallanIndicator" title="NIL Challan Indicator"><display/></field>
 		<field name="remarkes" title="Remarks"><display/></field>
 	</form>	
+	<form name="annualForm24QStatement" type="list" list-name="finalList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	    <field name="sNo" title="Salary Details  Record No (Serial Number of Employee)"><display /></field>
+		<field name="PANnumber" title="Permannent Account Number   (PAN) of the Employee [329]"><display/></field>
+		<field name="panRefNo" title="PAN Ref No."><display/></field>
+		<field name="employeeName" title="Name of the Employee [330]"><display/></field>
+		<field name="gender" title="Category of Employee [331] "><display/></field>
+		<field name="employmentStartDate" title="Date from Which Employeed with the current employer  (dd/mm/yyyy) [332]"><display/></field>
+		<field name="employmentEndDate" title="Date upto Which Employeed with the current employer  (dd/mm/yyyy) [332] "><display/></field>
+		<field name="totalEarnings" title="Taxbale amount on Which Tax Deducted By Current Employer       [333]"><display /></field>
+		<field name="ReportedTaxableAmount" title="Reported Taxable Amount by Previous Employer       [334]"><display /></field>
+		<field name="totalEarnings" title="Total Amount of Salary (333+ 334)   "><display/></field>
+		<field name="entertainAlw" title="Entertainment Allowance 16(ii)         [336]"><display/></field>
+		<field name="professionalTax" title="P Tax       16(iii)         [337]"><display/></field>
+		<field name="incomeChargable" title="Income chargeble under the head Salaries ( Column 335-(336+337) )          [338]"><display/></field>
+		<field name="interestHBA" title="Income (including loss from house property) under any head other than income under the head salaries offered for TDS [section 192 (2B)]   [339]     (-)"><display/></field>
+		<field name="grossTotIncome" title="Gross Total Income    (Total of Column      338 + 339)             [340]"><display/></field>
+		<field name="total9Aamount" title="Aggregate amount of deductions under sections 80C, 80CCC and 80CCD (Total to be limited to amount specified in section 80CCE)       [341]"><display/></field>
+		<field name="80CCGAmount" title="80CCG- Amount deductible under section 80CCG and the said amount should be greater than quals to 25,000       [341]"><display/></field>
+		<field name="total9Bamount" title="Amount Deductible under any other provision(s) of Chapter VI A [342]"><display/></field>
+		<field name="totalDedAmount" title="Gross Total of 'Amount deductible under provisions of chapter VI-A' under  associated ' Salary Details  - Chapter VIA Detail ' (341+342)     [343]"><display/></field>
+		<field name="totalIncome" title="Total Taxable Income           (Column 340 -  343)          [344]"><display/></field>
+		<field name="tax" title="Income Tax on Total Income      [345]"><display/></field>
+		<field name="rebate" title="Rebate"><display/></field>
+		<field name="educationalCessAmount" title="Education Cess         [346]"><display/></field>
+		<field name="incomeTaxRelief" title="Income Tax Relief u/s 89 when salary etc is paid in arrear or advance        [347]"><display/></field>
+		<field name="taxPay" title="Net Income Tax payable (345+346-347)          [348]"><display/></field>
+		<field name="totalTaxDeductedatSource" title="Total amount of tax deducted at source for the whole year  [349]"><display/></field>
+		<field name="ReportedAmountOfTax" title="Reported amount of tax deducted at source by previous employer(s)        [350] "><display/></field>
+		<field name="totalTaxDeductedatSource" title="Total amount of Tax Deducted for Whole year (Total of column 349 +350)     "><display/></field> 
+		<field name="taxDiff" title="Shortfall in tax deduction (+)/Excess tax deduction(-) [348-351]       [352]"><display/></field> 
+		<field name="TaxDeductedatHigherRate" title="Wheather Tax Deducted at higher rate due to non furnishing of PAN by deductee   [353]"><display/></field> 
+	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>
