@@ -1080,72 +1080,74 @@ public class MaterialQuoteServices {
 				}
 			}
 			for(Map eachTermItem : otherChargesTermDetail){
-				
-				String termId = (String)eachTermItem.get("otherTermId");
-				String applicableTo = (String)eachTermItem.get("applicableTo");
-				if(!applicableTo.equals("ALL")){
-					List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
-					if(UtilValidate.isNotEmpty(sequenceItems)){
-						GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
-						applicableTo = sequenceItem.getString("orderItemSeqId");
+				BigDecimal trmValue = (BigDecimal)eachTermItem.get("termValue");
+				if(trmValue.compareTo(BigDecimal.ZERO) !=0){		
+					String termId = (String)eachTermItem.get("otherTermId");
+					String applicableTo = (String)eachTermItem.get("applicableTo");
+					if(!applicableTo.equals("ALL")){
+						List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+						if(UtilValidate.isNotEmpty(sequenceItems)){
+							GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
+							applicableTo = sequenceItem.getString("orderItemSeqId");
+						}
 					}
-				}
-				else{
-					applicableTo = "_NA_";
-				}
-				
-				Map termCreateCtx = FastMap.newInstance();
-				termCreateCtx.put("userLogin", userLogin);
-				termCreateCtx.put("orderId", orderId);
-				termCreateCtx.put("orderItemSeqId", applicableTo);
-				termCreateCtx.put("termTypeId", (String)eachTermItem.get("termTypeId"));
-				termCreateCtx.put("termValue", (BigDecimal)eachTermItem.get("termValue"));
-				termCreateCtx.put("termDays", null);
-				if(UtilValidate.isNotEmpty(eachTermItem.get("termDays"))){
-					termCreateCtx.put("termDays", ((BigDecimal)eachTermItem.get("termDays")).longValue());
-				}
-				
-				termCreateCtx.put("uomId", (String)eachTermItem.get("uomId"));
-				termCreateCtx.put("description", (String)eachTermItem.get("description"));
-				
-				Map orderTermResult = dispatcher.runSync("createOrderTerm",termCreateCtx);
-				if (ServiceUtil.isError(orderTermResult)) {
-					String errMsg =  ServiceUtil.getErrorMessage(orderTermResult);
-					Debug.logError(errMsg, "While Creating Order Adjustment Term",module);
-					return ServiceUtil.returnError(" Error While Creating Order Adjustment Term !"+errMsg);
-				}
+					else{
+						applicableTo = "_NA_";
+					}
 					
+					Map termCreateCtx = FastMap.newInstance();
+					termCreateCtx.put("userLogin", userLogin);
+					termCreateCtx.put("orderId", orderId);
+					termCreateCtx.put("orderItemSeqId", applicableTo);
+					termCreateCtx.put("termTypeId", (String)eachTermItem.get("termTypeId"));
+					termCreateCtx.put("termValue", trmValue);
+					termCreateCtx.put("termDays", null);
+					if(UtilValidate.isNotEmpty(eachTermItem.get("termDays"))){
+						termCreateCtx.put("termDays", ((BigDecimal)eachTermItem.get("termDays")).longValue());
+					}
+					
+					termCreateCtx.put("uomId", (String)eachTermItem.get("uomId"));
+					termCreateCtx.put("description", (String)eachTermItem.get("description"));
+					
+					Map orderTermResult = dispatcher.runSync("createOrderTerm",termCreateCtx);
+					if (ServiceUtil.isError(orderTermResult)) {
+						String errMsg =  ServiceUtil.getErrorMessage(orderTermResult);
+						Debug.logError(errMsg, "While Creating Order Adjustment Term",module);
+						return ServiceUtil.returnError(" Error While Creating Order Adjustment Term !"+errMsg);
+					}
+				}	
 			}
 			for(Map eachAdj : orderAdjustmentDetail){
-				
-				String adjustmentTypeId = (String)eachAdj.get("adjustmentTypeId");
-				String applicableTo = (String)eachAdj.get("applicableTo");
-				if(!applicableTo.equals("_NA_")){
-					List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
-					if(UtilValidate.isNotEmpty(sequenceItems)){
-						GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
-						applicableTo = sequenceItem.getString("orderItemSeqId");
+					BigDecimal amount =(BigDecimal)eachAdj.get("amount");
+					if(amount.compareTo(BigDecimal.ZERO) != 0){
+						String adjustmentTypeId = (String)eachAdj.get("adjustmentTypeId");
+						String applicableTo = (String)eachAdj.get("applicableTo");
+						if(!applicableTo.equals("_NA_")){
+							List<GenericValue> sequenceItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, applicableTo));
+							if(UtilValidate.isNotEmpty(sequenceItems)){
+								GenericValue sequenceItem = EntityUtil.getFirst(sequenceItems);
+								applicableTo = sequenceItem.getString("orderItemSeqId");
+							}
+						}
+						Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);
+						adjustCtx.put("orderId", orderId);
+				    	adjustCtx.put("orderItemSeqId", applicableTo);
+				    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+			    		adjustCtx.put("amount", amount);
+			    		Map adjResultMap=FastMap.newInstance();
+				  	 	try{
+				  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+				  	 		if (ServiceUtil.isError(adjResultMap)) {
+				  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+				  	 			Debug.logError(errMsg , module);
+				  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+				  	 		}
+				  	 	}catch (Exception e) {
+				  	 		Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+					  		return adjResultMap;			  
+					  	}
 					}
 				}
-				BigDecimal amount =(BigDecimal)eachAdj.get("amount");
-				Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);
-				adjustCtx.put("orderId", orderId);
-		    	adjustCtx.put("orderItemSeqId", applicableTo);
-		    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
-	    		adjustCtx.put("amount", amount);
-	    		Map adjResultMap=FastMap.newInstance();
-		  	 	try{
-		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-		  	 		if (ServiceUtil.isError(adjResultMap)) {
-		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-		  	 			Debug.logError(errMsg , module);
-		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
-		  	 		}
-		  	 	}catch (Exception e) {
-		  	 		Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
-			  		return adjResultMap;			  
-			  	}
-			}
 			
 		}catch (Exception e) {
  			Debug.logError(e, "Error while creating order adjustment for orderId :"+orderId, module);

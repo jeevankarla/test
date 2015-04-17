@@ -69,9 +69,9 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-<!--        <row-actions>-->
-<!--            <set field="amountToApply" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>-->
-<!--        </row-actions>-->
+       <row-actions>
+           <set field="amountToApply" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
+       </row-actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
@@ -107,8 +107,9 @@ under the License.
         <field name="paymentDate"><display/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+          <field name="amountToApply" title="Amount To Apply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
         <field name="printReceipt" widget-style="buttontext">
-            <hyperlink target="printAdvAndDepositReceipt.pdf" description="Print Receipt" target-window="_BLANK">
+            <hyperlink target="printAdvAndDepositReceipt.pdf" description="PrintReceipt" target-window="_BLANK">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
@@ -117,7 +118,6 @@ under the License.
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-<!--        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>-->
     </form>
 
   <form name="ListPaymentsCsv" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
@@ -139,13 +139,17 @@ under the License.
         </field>
         <field name="facilityId" title="${uiLabelMap.RetailerId}"><display/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
+        <field name="paymentMethodTypeId" title="Payment Method"><display-entity entity-name="PaymentMethodType" description="${description}"></display-entity></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="comments"><display/></field>
          
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
-           <display></display>
+           <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}[${partyIdFrom}]">
+            </display-entity>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}"><display></display>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
+        <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}[${partyIdTo}]">
+            </display-entity>
         </field> 
         <field name="paymentDate"><display/></field>       
         <field name="instrumentDate"><display/></field>
@@ -153,6 +157,7 @@ under the License.
         <field name="issuingAuthority"><display/></field>
         <field name="issuingAuthorityBranch"><display/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" title="Amt to Apply"><display description="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator, paymentId);}"/></field>
     </form>
 
     <form name="NewPaymentOut" type="single" target="createPayment" default-map-name="payment"
