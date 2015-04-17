@@ -47,11 +47,11 @@ context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
-if(maxIntervalDays > 32){
+/*if(maxIntervalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
-}
+}*/
 
 boothList = ByProductNetworkServices.getAllBooths(delegator, null).get("boothsList");
 finYearContext = [:];
