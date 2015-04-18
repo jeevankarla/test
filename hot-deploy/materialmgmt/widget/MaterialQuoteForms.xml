@@ -448,7 +448,7 @@
         </field> 
     </form>
     <form name="ListQualifiedQuotesForPO" id="ListApprovedQuotesForPO" type="list"  list-name="quoteQualifiedList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ViewMaterialEnquiry">
         <row-actions>
         	<entity-condition entity-name="QuoteStatus" list="QuoteStatusList">
         		<condition-list combine="and">

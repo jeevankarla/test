@@ -304,10 +304,10 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 				Debug.logError("Period is not of type inventory period closure", module);
 				return ServiceUtil.returnError("Period is not of type inventory period closure :"+customTimePeriod);
 			}
-			if((customTimePeriod.getString("isClosed")).equals("Y")){
-				Debug.logError("Period is already closed ", module);
-				return ServiceUtil.returnError("Period is already closed ");
-			}
+			if(!((customTimePeriod.getString("isClosed")).equals("Y"))){
+				Debug.logError("Period is not closed ", module);
+				return ServiceUtil.returnError("Period is not closed ");
+				}
 			
 			Map lastClosedCtx = FastMap.newInstance();
             lastClosedCtx.put("organizationPartyId", "Company");
