@@ -220,6 +220,7 @@ under the License.
 					<field-map field-name="thruDate" value=" "/>
 				</entity-and>
 				<set field="disbursment"  from-field="finAccountList[0].finAccountId"/>
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
