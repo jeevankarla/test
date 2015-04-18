@@ -90,6 +90,33 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	}
+	//one year restriction
+	function makeDatePicker3(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		date = $(this).datepicker('getDate');
+		y = date.getFullYear(),
+		m = date.getMonth();
+		d = date.getDate();
+		    var maxDate = new Date(y+1, m, d);
+		
+		$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+		//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+		}
+		});
+		$( "#"+thruDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function( selectedDate ) {
+		//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+		}
+		});
+	}
+	
 // for Vat Invoice Sequence and Invoice sale reports
 
 function reportTypeChangeFunc() {
@@ -114,7 +141,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
 		makeDatePicker("purchaseTaxProdFDate","purchaseTaxProdTDate");
 		makeDatePicker("purchaseSumFDate","purchaseSumTDate");
-				makeDatePicker("purchaseSumFDateNew","purchaseSumTDateNew");
+	//	makeDatePicker("purchaseSumFDateNew","purchaseSumTDateNew");
+		makeDatePicker3("purchaseSumFDateNew","purchaseSumTDateNew");
 		makeDatePicker("cwsFDate","cwsTDate");
 		makeDatePicker("purchaseVatFDate","purchaseVatTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -248,7 +276,7 @@ function reportTypeChangeFunc() {
                                                        </form>
 		                </tr>
 		                	</#if>
-		                <#if (security.hasEntityPermission("MMPURCHSSMMRY", "_VIEW", session) )>
+		               <#if (security.hasEntityPermission("MMPURCHSSMMRY", "_VIEW", session) )>  
 		                 <tr class="alternate-row">
 		                <form id="purchaseSummeryReportNew" name="purchaseSummeryReportNew" method="post" action="<@ofbizUrl>purchaseAccountSummeryNew.pdf</@ofbizUrl>" target="_blank">        
                                                                <td width="30%">Purchase Analysis Report Summary New</td>
@@ -265,7 +293,7 @@ function reportTypeChangeFunc() {
 															<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseSummeryReportNew', '<@ofbizUrl>purchaseAccountSummeryNew.pdf</@ofbizUrl>');" class="buttontext"/>
 							   								 <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseSummeryReportNew', '<@ofbizUrl>purchaseAccountSummeryNew.csv</@ofbizUrl>');" class="buttontext"/></td>         			                                                       </form>
 		                </tr>
-		                </#if>
+		                </#if> 
 	  			       <#if (security.hasEntityPermission("MMPURCHASEVAT", "_VIEW", session) )>
 		                 <tr class="alternate-row">
 							<form id="purchaseVatReport" name="purchaseVatReport" method="post" action="<@ofbizUrl>purchaseVatReport.pdf</@ofbizUrl>" target="_blank">        
