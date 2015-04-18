@@ -184,6 +184,11 @@ if(reportType=="form24Q"){
 			supplyPayrollTotalEarnings = 0;
 			totalConveyanceTaxableAmount = 0;
 			
+			employeeName = "";
+			gender = "";
+			panNumberOfEmployee = "";
+			employmentStartDate = "";
+			employmentEndDate = "";
 			personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",employee), false);
 			if(UtilValidate.isNotEmpty(personDetails)){
 				firstName = personDetails.get("firstName");
@@ -196,14 +201,11 @@ if(reportType=="form24Q"){
 					}else{
 						gender = "W";
 					}
-					employeeDetailsMap.put("gender",gender);
-					employeeDetailsMap.put("employeeName",employeeName);
 				}
 			}
 			partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : employee, partyIdentificationTypeId : "PAN_NUMBER"], false);
 			if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
 				panNumberOfEmployee = partyIdentificationDetails.get("idValue");
-				employeeDetailsMap.put("PANnumber",panNumberOfEmployee);
 			}
 			List emplCondList=[];
 			emplCondList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
@@ -217,8 +219,6 @@ if(reportType=="form24Q"){
 				employmentEndDate= employementDetailsList.get("thruDate");
 				employmentStartDate = UtilDateTime.toDateString(employmentStartDate ,"dd-MM-yyyy");
 				employmentEndDate = UtilDateTime.toDateString(employmentEndDate ,"dd-MM-yyyy");
-				employeeDetailsMap.put("employmentStartDate",employmentStartDate);
-				employeeDetailsMap.put("employmentEndDate",employmentEndDate);
 			}
 			otherAlwDeductableAmount = 0;
 			licAmount = 0;
@@ -322,11 +322,15 @@ if(reportType=="form24Q"){
 							}
 							if(totalEarnings != 0){
 								totalEarnings = totalEarnings + supplyPayrollTotalEarnings;
-								employeeDetailsMap.put("totalEarnings",totalEarnings);
+								if(totalEarnings != 0){
+									employeeDetailsMap.put("totalEarnings",totalEarnings);
+								}
 							}
 							if(UtilValidate.isNotEmpty(professionalTax)){
 								professionalTax = professionalTax*(-1);
-								employeeDetailsMap.put("professionalTax",professionalTax);
+								if(professionalTax != 0){
+									employeeDetailsMap.put("professionalTax",professionalTax);
+								}
 							}
 							if(UtilValidate.isNotEmpty(lic)){
 								licAmount = licAmount - lic;
@@ -510,12 +514,18 @@ if(reportType=="form24Q"){
 				if(sec80CDedAmount > 150000){
 					sec80CDedAmount = 150000;
 				}
-				employeeDetailsMap.put("total9Aamount",sec80CDedAmount);
+				if(sec80CDedAmount != 0){
+					employeeDetailsMap.put("total9Aamount",sec80CDedAmount);
+				}
 			}
 			if(UtilValidate.isNotEmpty(totalDeductableAmount)){
-				employeeDetailsMap.put("total9Bamount",totalDeductableAmount);
+				if(totalDeductableAmount != 0){
+					employeeDetailsMap.put("total9Bamount",totalDeductableAmount);
+				}
 				totalDedAmount = totalDeductableAmount + sec80CDedAmount;
-				employeeDetailsMap.put("totalDedAmount",totalDedAmount);
+				if(totalDedAmount != 0){
+					employeeDetailsMap.put("totalDedAmount",totalDedAmount);
+				}
 			}
 			
 			if(UtilValidate.isNotEmpty(currMonthKeyList)){
@@ -600,7 +610,9 @@ if(reportType=="form24Q"){
 				if(interestHBA > 200000){
 					interestHBA = 200000;
 				}
-				employeeDetailsMap.put("interestHBA",interestHBA);
+				if(interestHBA != 0){
+					employeeDetailsMap.put("interestHBA",interestHBA);
+				}
 				grossTotIncome = incomeChargable - interestHBA;
 			}
 			
@@ -661,7 +673,9 @@ if(reportType=="form24Q"){
 			
 			BigDecimal taxOnIncome = new BigDecimal(tax);
 			taxOnIncome=taxOnIncome.setScale(0, BigDecimal.ROUND_HALF_UP);
-			employeeDetailsMap.put("tax",taxOnIncome);
+			if(taxOnIncome != 0){
+				employeeDetailsMap.put("tax",taxOnIncome);
+			}
 			
 			rebate = 0;
 			taxAfterRebate = 0;
@@ -679,14 +693,20 @@ if(reportType=="form24Q"){
 				taxAfterRebate = taxOnIncome - rebate;
 				taxAfterRebateValue = new BigDecimal(taxAfterRebate);
 				taxAfterRebateValue = taxAfterRebateValue.setScale(0, BigDecimal.ROUND_HALF_UP);
-				employeeDetailsMap.put("rebate",rebate);
-				employeeDetailsMap.put("taxAfterRebate",taxAfterRebateValue);
+				if(rebate != 0){
+					employeeDetailsMap.put("rebate",rebate);
+				}
+				if(taxAfterRebateValue != 0){
+					employeeDetailsMap.put("taxAfterRebate",taxAfterRebateValue);
+				}
 			}
 			if(UtilValidate.isNotEmpty(taxAfterRebateValue)){
 				educationalCessAmount = taxAfterRebateValue * (0.03);
 				BigDecimal educationalCessAmt = new BigDecimal(educationalCessAmount);
 				educationalCessAmt = educationalCessAmt.setScale(0, BigDecimal.ROUND_HALF_UP);
-				employeeDetailsMap.put("educationalCessAmount",educationalCessAmt);
+				if(educationalCessAmt != 0){
+					employeeDetailsMap.put("educationalCessAmount",educationalCessAmt);
+				}
 				taxPay = taxAfterRebateValue + educationalCessAmt;
 			}
 			
@@ -694,28 +714,52 @@ if(reportType=="form24Q"){
 				BigDecimal totalTaxDeductedatSource = new BigDecimal(totalTaxDeducted);
 				totalTaxDeductedatSource = totalTaxDeductedatSource.setScale(0, BigDecimal.ROUND_HALF_UP);
 				totalTaxDeductedatSource = totalTaxDeductedatSource * (-1);
-				employeeDetailsMap.put("totalTaxDeductedatSource",totalTaxDeductedatSource);
+				if(totalTaxDeductedatSource != 0){
+					employeeDetailsMap.put("totalTaxDeductedatSource",totalTaxDeductedatSource);
+				}
 				taxDiff = taxPay-totalTaxDeductedatSource;
-				employeeDetailsMap.put("taxDiff",taxDiff);
+				if(taxDiff != 0){
+					employeeDetailsMap.put("taxDiff",taxDiff);
+				}
 			}
 			
-			employeeDetailsMap.put("sNo",sNo);
-			employeeDetailsMap.put("employee",employee);
-			employeeDetailsMap.put("panRefNo","");
-			employeeDetailsMap.put("taxPay",taxPay);
-			employeeDetailsMap.put("entertainAlw",entertainAlw);
-			employeeDetailsMap.put("balance",balance);
-			employeeDetailsMap.put("incomeChargable",incChargable);
-			employeeDetailsMap.put("totalIncome",totInc);
-			employeeDetailsMap.put("grossTotIncome",grossTotInc);
-			employeeDetailsMap.put("ReportedTaxableAmount","");
-			employeeDetailsMap.put("80CCGAmount","");
-			employeeDetailsMap.put("incomeTaxRelief","");
-			employeeDetailsMap.put("ReportedAmountOfTax","");
-			employeeDetailsMap.put("TaxDeductedatHigherRate","");
-			sNo = sNo +1;
-			finalEmplMap.putAll(employeeDetailsMap);
-			finalList.add(finalEmplMap);
+			if(taxPay != 0){
+				employeeDetailsMap.put("taxPay",taxPay);
+			}
+			if(entertainAlw != 0){
+				employeeDetailsMap.put("entertainAlw",entertainAlw);
+			}
+			if(balance != 0){
+				employeeDetailsMap.put("balance",balance);
+			}
+			if(incChargable != 0){
+				employeeDetailsMap.put("incomeChargable",incChargable);
+			}
+			if(totInc != 0){
+				employeeDetailsMap.put("totalIncome",totInc);
+			}
+			if(grossTotInc != 0){
+				employeeDetailsMap.put("grossTotIncome",grossTotInc);
+			}
+			
+			if(UtilValidate.isNotEmpty(employeeDetailsMap)){
+				employeeDetailsMap.put("gender",gender);
+				employeeDetailsMap.put("employeeName",employeeName);
+				employeeDetailsMap.put("PANnumber",panNumberOfEmployee);
+				employeeDetailsMap.put("employmentStartDate",employmentStartDate);
+				employeeDetailsMap.put("employmentEndDate",employmentEndDate);
+				employeeDetailsMap.put("ReportedTaxableAmount","");
+				employeeDetailsMap.put("80CCGAmount","");
+				employeeDetailsMap.put("incomeTaxRelief","");
+				employeeDetailsMap.put("ReportedAmountOfTax","");
+				employeeDetailsMap.put("TaxDeductedatHigherRate","");
+				employeeDetailsMap.put("sNo",sNo);
+				employeeDetailsMap.put("employee",employee);
+				employeeDetailsMap.put("panRefNo","");
+				finalEmplMap.putAll(employeeDetailsMap);
+				finalList.add(finalEmplMap);
+				sNo = sNo +1;
+			}
 		}
 	}
 }
