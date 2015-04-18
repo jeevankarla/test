@@ -208,7 +208,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker("DUCRFromDateId","DUCRThruDateId");
 		makeDatePicker("DueFromDateId","DueThruDateId");
 		makeDatePicker("DueAbsFromDateId","DueAbsThruDateId");
-		makeDatePicker("iceDueFromDateId","iceDueThruDateId");
+	//	makeDatePicker("iceDueFromDateId","iceDueThruDateId");
+		makeDatePicker3("iceDueFromDateId","iceDueThruDateId");
 		makeDatePicker("catSalesFromDateId","catSalesThruDateId")
 		makeDatePicker("fwsFromDateId","fwsThruDateId");
 		makeDatePicker("cacFromDateId","cacThruDateId");
@@ -218,23 +219,31 @@ function reportTypeChangeFunc() {
 		makeDatePicker("fixedDepositDate","");
 		makeDatePicker("newOrTerminatefDate","newOrTerminatetDate");
 		makeDatePicker("vatInvoiceSeqNofDate","vatInvoiceSeqNotDate");
-		makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
-        makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
-	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
+	//	makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
+		makeDatePicker3("amulIceCreamfDate","amulIceCreamtDate");
+     //   makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
+     	makeDatePicker3("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
+	 //   makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
+	    makeDatePicker3("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("purchaseFromDate","purchaseThruDate");
 	    makeDatePicker("purchaseFDate","purchaseTDate");
 		makeDatePicker("analysisCodeFromDate","analysisCodeThruDate");
-		makeDatePicker2("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
+//		makeDatePicker2("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
 		makeDatePicker2("fdFromDate","");
 		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
 		makeDatePicker("AvgFDRFDate","AvgFDRTDate");
 		makeDatePicker("GPFHFromDate","GPFHThruDate");
 		makeDatePicker("IOFromDateId","IOThruDateId");
 		makeDatePicker3("conversionFDateId","conversionTDateId");
-		makeDatePicker("taxEnclosuerFDate","taxEnclosuerTDate");
+	//	makeDatePicker("taxEnclosuerFDate","taxEnclosuerTDate");
+		makeDatePicker3("taxEnclosuerFDate","taxEnclosuerTDate");
 		makeDatePicker("PurchaseSalesFromDate","PurchaseSalesThruDate");
-		makeDatePicker("cwsFDate","cwsTDate");
+	//	makeDatePicker("cwsFDate","cwsTDate");
+		makeDatePicker3("cwsFDate","cwsTDate");
+		makeDatePicker3("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
 		makeDatePicker4("PFHFromDateCrDr","PFHThruDateCrDr");
+		makeDatePicker2("catYearSalesFromDateId","catYearSalesThruDateId");
+		makeDatePicker2("yearlySaleFromDateId","yearlySaleThruDateId");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -307,8 +316,8 @@ function reportTypeChangeFunc() {
       	<tr class="alternate-row">
 			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesYearReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Yearly CategoryWise Sales Report</td>
-				<td width="15%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/></td>
-	  			<td width="15%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/></td>
+				<td width="15%">From<input  type="text" size="18pt" id="catYearSalesFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="catYearSalesThruDateId" readonly  name="thruDate"/></td>
 	  			<td width="15%"></td>
       			<td width="15%"></td>
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
@@ -317,8 +326,8 @@ function reportTypeChangeFunc() {
 			<tr class="alternate-row">
       		<form id="SalesReport" name="SalesReport" method="post" action="<@ofbizUrl>YearlySalesReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="30%">Yearly Sales Report</td>
-      			<td width="15%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="fromDate"/></td>
-      			<td width="15%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="thruDate"/></td>
+      			<td width="15%">From<input  type="text" size="18pt" id="yearlySaleFromDateId" readonly  name="fromDate"/></td>
+      			<td width="15%">Thru<input  type="text" size="18pt" id="yearlySaleThruDateId" readonly  name="thruDate"/></td>
       			<td width="15%"></td>
       			<td width="15%"></td>
 				<td width="15%"><input type="submit" value="Download" class="buttontext"/></td>       			
@@ -1317,8 +1326,8 @@ function reportTypeChangeFunc() {
 	                  <tr class="alternate-row">
 			      	   <form id="IcDealerOSDuesIntimation" name="IcDealerOSDuesIntimation" method="post" action="<@ofbizUrl>IcDealerOSDuesIntimation.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Icecream Dealers Outstanding Dues intimation Report</td>
-			             <td width="15%">From<input  type="text" size="18pt" id="IcDealerOSDuesFDate" readonly  class="FDate" name="fromDate"/></td>
-			      		 <td width="15%">Thru<input  type="text" size="18pt" id="IcDealerOSDuesTDate" readonly  class="TDate" name="thruDate"/></td>
+			             <td width="15%">From<input  type="text" size="18pt" id="IcDealerOSDuesFDate" readonly  class="fromDate" name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="18pt" id="IcDealerOSDuesTDate" readonly  class="thruDate" name="thruDate"/></td>
 			      		 <td width="15%">By
 			      			  <select name="categoryType" id= "categoryType">
 				      			<option value="All">All</option>

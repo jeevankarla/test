@@ -61,37 +61,44 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 // for sales Report
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="salesReport"){
-		effectiveDateStr = parameters.fromDate;
-		thruEffectiveDateStr = parameters.thruDate;
-		if (UtilValidate.isEmpty(effectiveDateStr)) {
-			effectiveDate = UtilDateTime.nowTimestamp();
-		}
-		else{
-			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		fromDateTime = null;
+		thruDateTime = null;
+		fromDate = parameters.fromDate;
+		Debug.log("fromDate22=="+fromDate);
+		thruDate = parameters.thruDate;
+		def sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		Debug.log("thruDate22=="+thruDate);
+		if (UtilValidate.isNotEmpty(fromDate)) {
+			fdate="01-"+fromDate+" 00:00:00";
 			try {
-				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+				fromDateTime = new java.sql.Timestamp(sdf.parse(fdate).getTime());
 			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+				Debug.logError(e, "Cannot parse date string: ", "");
 			}
 		}
-		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
-			thruEffectiveDate = effectiveDate;
-		}
-		else{
-			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		if (UtilValidate.isNotEmpty(thruDate)) {
+			tdate="01-"+thruDate+" 00:00:00";
 			try {
-				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
-			}catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
+				thruDateTime = new java.sql.Timestamp(sdf.parse(tdate).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: ", "");
 			}
 		}
-		dayBegin = UtilDateTime.getDayStart(effectiveDate);
-		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+		fromDateTime = UtilDateTime.getMonthStart(fromDateTime);
+		thruDateTime = UtilDateTime.getMonthEnd(thruDateTime,TimeZone.getDefault(),Locale.getDefault());;
+		dayBegin = UtilDateTime.getDayStart(fromDateTime);
+		Debug.log("dayBegin222=="+dayBegin);
+		dayEnd = UtilDateTime.getDayEnd(thruDateTime);
+		Debug.log("dayEnd22=="+dayEnd);
+		context.putAt("dayBegin", dayBegin);
+		context.putAt("dayEnd", dayEnd);
+		effectiveDate = fromDateTime;
+		thruEffectiveDate = thruDateTime;
 	}
 }
 totalDays=UtilDateTime.getIntervalInDays(dayBegin,dayEnd);
 context.put("totalDays", totalDays+1);
-context.put("effectiveDateStr",effectiveDateStr);
+context.put("effectiveDateStr",effectiveDate);
 if(thruEffectiveDate){
 	context.put("thruEffectiveDateStr",thruEffectiveDateStr);
 }
