@@ -34,38 +34,38 @@ dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 // for sales Report
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="salesReport"){
+		fromDateTime = null;
+		thruDateTime = null;
 		fromDate = parameters.fromDate;
+		Debug.log("fromDate11=="+fromDate);
 		thruDate = parameters.thruDate;
-		if (UtilValidate.isEmpty(fromDate)) {
-			effectiveDate = UtilDateTime.nowTimestamp();
-		}
-		else{
-			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		Debug.log("thruDate11=="+thruDate);
+		def sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		if (UtilValidate.isNotEmpty(fromDate)) {
+			fdate="01-"+fromDate+" 00:00:00";
 			try {
-				effectiveDate = new java.sql.Timestamp(sdf.parse(fromDate+" 00:00:00").getTime());
+				fromDateTime = new java.sql.Timestamp(sdf.parse(fdate).getTime());
 			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+				Debug.logError(e, "Cannot parse date string: ", "");
 			}
 		}
-		if (UtilValidate.isEmpty(thruDate)) {
-			thruEffectiveDate = effectiveDate;
-		}
-		else{
-			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		if (UtilValidate.isNotEmpty(thruDate)) {
+		    tdate="01-"+thruDate+" 00:00:00";
 			try {
-				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruDate+" 00:00:00").getTime());
-			}catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
+				thruDateTime = new java.sql.Timestamp(sdf.parse(tdate).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: ", "");
 			}
 		}
-		if(fromDate){
-			context.put("fromDate",fromDate);
-		}
-		if(thruDate){
-			context.put("thruDate",thruDate);
-		}
-		dayBegin = UtilDateTime.getDayStart(effectiveDate);
-		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+		fromDateTime = UtilDateTime.getMonthStart(fromDateTime);
+		thruDateTime = UtilDateTime.getMonthEnd(thruDateTime,TimeZone.getDefault(),Locale.getDefault());;
+		dayBegin = UtilDateTime.getDayStart(fromDateTime);
+		Debug.log("dayBegin11=="+dayBegin);
+		dayEnd = UtilDateTime.getDayEnd(thruDateTime);
+		Debug.log("dayEnd11=="+dayEnd);
+		context.fromDate = fromDateTime;
+		context.thruDate = thruDateTime;
+
 	}
 }
 context.putAt("dayBegin", dayBegin);
