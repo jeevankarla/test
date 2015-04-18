@@ -1180,7 +1180,7 @@ public class HumanresService {
 	      Timestamp dateTime=null;
 	      Map result = ServiceUtil.returnSuccess();
 	      if(UtilValidate.isNotEmpty(date)){
-	    	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    	  SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 	    	  try{
 	    		  dateTime=new java.sql.Timestamp(sdf.parse(date+" 00:00:00").getTime());
 	    		  thruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(dateTime), -1);

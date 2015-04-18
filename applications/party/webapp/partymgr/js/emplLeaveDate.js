@@ -25,4 +25,12 @@ function picker(){
 			jQuery("#holidayDate").datepicker('setDate', selectedDate);
 		}
 	});
+	jQuery("#date").datepicker({
+		dateFormat:'dd-mm-yy',
+		changeMonth: true,
+		numberOfMonths: 1,
+		onSelect: function(selectedDate) {
+			jQuery("#date").datepicker('setDate', selectedDate);
+		}
+	});
 }
