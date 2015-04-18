@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+   
+   <Product productId="R111" productTypeId="RAW_MATERIAL" internalName="Buffalo Milk" productName="Buffalo Milk" brandName="BM WM" description="Buffalo Milk" longDescription="Buffalo Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
+   
+   
+   <FixedAsset fixedAssetId="BOILER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Boiler" uomId="INR"/>
+   
+    <WorkEffort  currentStatusId="ROU_ACTIVE" description="TM Preparation" revisionNumber="1" workEffortId="WF105" workEffortName="TM Preparation" workEffortTypeId="ROUTING"/>
+    
+    <WorkEffort workEffortId="WF100" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pre-Heating 35&#176;-40&#176;C" description="Pre-Heating 35&#176;-40&#176;C" estimatedSetupMillis="120000.0" fixedAssetId="BOILER" revisionNumber="2"/>
+    <WorkEffort workEffortId="WF101" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Seperation" description="Seperation" estimatedSetupMillis="60000.0" fixedAssetId="Cream_Seperator" revisionNumber="2"/>
+    <WorkEffort workEffortId="WF102" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Standardization" description="Standardization" estimatedSetupMillis="180000.0" fixedAssetId="Water_Mixer" revisionNumber="2" />
+    <WorkEffort workEffortId="WF103" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pasturization @ 72&#176;C" description="Pasturization @ 72&#176;C" estimatedSetupMillis="60000.0" fixedAssetId="Boiler" revisionNumber="2"/>
+    <WorkEffort workEffortId="WF104" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Cooing @ 5&#176;C" description="Cooling @ 5&#176;C" estimatedSetupMillis="150000.0" fixedAssetId="Cooler" revisionNumber="3"/>
+    
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF100" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2013-07-16 13:32:49.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF101" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="2" fromDate="2013-07-16 13:32:20.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF102" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="3" fromDate="2013-07-16 13:32:30.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF103" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="4" fromDate="2013-07-16 13:32:59.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF104" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="5" fromDate="2013-07-16 13:33:06.0"/>
+     
+    <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="476" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF105"/>   
+    <WorkEffortGoodStandard fromDate="2013-07-16 13:36:09.0" productId="476" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF105"/>
+    
+    <WorkEffortGoodStandard workEffortId="WF100" productId="R111" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2013-07-16 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+    
+    <ProductAssoc fromDate="2012-07-23 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="R111" quantity="0.750000" routingWorkEffortId="WF100" sequenceNum="1"/>
+    
+</entity-engine-xml>
