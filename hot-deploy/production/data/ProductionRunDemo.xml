@@ -2,6 +2,7 @@
 <entity-engine-xml>
    
    <Product productId="R111" productTypeId="RAW_MATERIAL" internalName="Buffalo Milk" productName="Buffalo Milk" brandName="BM WM" description="Buffalo Milk" longDescription="Buffalo Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
+   <Product productId="RCREAM" productTypeId="RAW_MATERIAL" internalName="Cream" productName="Cream" brandName="Cream" description="Cream" longDescription="Cream" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
    
    
    <FixedAsset fixedAssetId="BOILER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Boiler" uomId="INR"/>
@@ -24,7 +25,9 @@
     <WorkEffortGoodStandard fromDate="2013-07-16 13:36:09.0" productId="476" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF105"/>
     
     <WorkEffortGoodStandard workEffortId="WF100" productId="R111" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2013-07-16 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+    <WorkEffortGoodStandard workEffortId="WF100" productId="RCREAM" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2013-07-16 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="0.0"/>
     
     <ProductAssoc fromDate="2012-07-23 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="R111" quantity="0.750000" routingWorkEffortId="WF100" sequenceNum="1"/>
+    <ProductAssoc fromDate="2012-07-23 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="RCREAM" quantity="0.0000" routingWorkEffortId="WF100" sequenceNum="2"/>
     
 </entity-engine-xml>
