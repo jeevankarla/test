@@ -1084,6 +1084,22 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="newReports"/>
     </request-map>
+    <request-map uri="TimePeriodsMM">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TimePeriodsMM"/>
+    </request-map>
+     <request-map uri="createCustTimePeriodMM">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustTimePeriodMM"/>
+        <response name="success" type="view" value="TimePeriodsMM"/>
+        <response name="error" type="view" value="TimePeriodsMM"/>
+    </request-map>
+     <request-map uri="closeFinancialTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="closeFinancialTimePeriod"/>
+        <response name="success" type="view" value="TimePeriodsMM"/>
+        <response name="error" type="view" value="TimePeriodsMM"/>
+    </request-map>
     <request-map uri="StoreIssueReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="StoreIssueReport"/>        
@@ -1385,6 +1401,7 @@
      <view-map name="FindStockTranferShipmentMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindStockTranferShipmentMm"/>
     
     <view-map name="newReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#newReports"/>
+    <view-map name="TimePeriodsMM" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#TimePeriodsMM"/>
     <view-map name="StoreIssueReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueReport" content-type="application/pdf" encoding="none"/>
     <view-map name="StoreIssueAbstractReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueAbstractReport" content-type="application/pdf" encoding="none"/>
     <view-map name="StoreReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReport" content-type="application/pdf" encoding="none"/>

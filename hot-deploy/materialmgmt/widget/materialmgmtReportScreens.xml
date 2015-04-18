@@ -417,6 +417,65 @@
      			</widgets>
      		</section>
     </screen> 
+ <screen name="TimePeriodsMM">
+		<section>
+			<actions>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="titleProperty" value="AccountingTimePeriod" />
+				<set field="labelTitleProperty" value="${uiLabelMap.AccountingTimePeriod}" />
+				<set field="tabButtonItem" value="TimePeriodsMM" />
+				<set field="organizationPartyId" value="Company" />
+           <!-- <set field="organizationPartyId" from-field="parameters.organizationPartyId" /> -->
+				<entity-condition entity-name="CustomTimePeriod"
+					list="openTimePeriods">
+					<condition-list>
+						<condition-expr field-name="organizationPartyId"
+							operator="equals" from-field="organizationPartyId" />
+						<condition-expr field-name="isClosed" operator="equals"
+							value="N" />
+					<condition-expr field-name="periodTypeId" operator="equals" value="INVTRY_PERIOD_CLOSE" />
+					</condition-list>
+					<order-by field-name="thruDate" />
+				</entity-condition>
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ORGGLSETTINGS_EDIT" />
+				</service>
+				<set field="hasOrgGlSettingsEditPermission" from-field="permResult.hasPermission" />
+				<entity-condition entity-name="CustomTimePeriod"
+					list="closedTimePeriods">
+					<condition-list>
+						<condition-expr field-name="organizationPartyId"
+							operator="equals" from-field="organizationPartyId" />
+						<condition-expr field-name="isClosed" operator="equals"
+							value="Y" />
+				<condition-expr field-name="periodTypeId" operator="equals" value="INVTRY_PERIOD_CLOSE" />
+					</condition-list>
+					<order-by field-name="periodTypeId" />
+					<order-by field-name="periodNum" />
+					<order-by field-name="thruDate" />
+				</entity-condition>
+		
+			</actions>
+			<widgets>
+		<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    		<decorator-section name="body">
+			<screenlet title="${uiLabelMap.OpenTimePeriods}">
+			<include-form name="ListOpenTimePeriods" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+			</screenlet>
+			<screenlet title="${uiLabelMap.ClosedTimePeriods}">
+			<include-form name="ListClosedTimePeriods" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+			</screenlet>
+		       	<screenlet title="${uiLabelMap.CommonNew}">
+			      <include-form name="CreateTimePeriod" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>  
+    
 	<screen name="StoreIssueReport">
 		<section>
 			<actions>

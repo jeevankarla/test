@@ -638,4 +638,53 @@
         <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${groupName}"/></field>
         <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>
     </form>
+  
+    <form name="ListOpenTimePeriods" type="list" list-name="openTimePeriods"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+<!--   <auto-fields-entity entity-name="CustomTimePeriod" default-field-type="display"/> -->
+       <field name="organizationPartyId"><hidden/></field>
+       <field name="isClosed"><hidden/></field>
+       <field name="customTimePeriodId" title="Custom Time Period Id"><display/></field>
+       <field name="periodTypeId"><display-entity entity-name="PeriodType"/> </field>
+       <field name="periodNum" title="Period Num"><display/></field>
+       <field name="periodName" title="Period Name"><display/></field>
+       <field name="fromDate" title="From Date"><display/></field>
+       <field name="thruDate" title="Thru Date"><display/></field>
+       <field name="close" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasOrgGlSettingsEditPermission">
+            <hyperlink target="closeFinancialTimePeriod" description="${uiLabelMap.CommonClose}">
+                <parameter param-name="organizationPartyId"/><parameter param-name="customTimePeriodId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="ListClosedTimePeriods" type="list" list-name="closedTimePeriods"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+<!--         <auto-fields-entity entity-name="CustomTimePeriod" default-field-type="display"/> -->
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="isClosed"><hidden/></field>
+       <field name="customTimePeriodId" title="Custom Time Period Id"><display/></field>
+       <field name="periodTypeId"><display-entity entity-name="PeriodType"/> </field>
+       <field name="periodNum" title="Period Num"><display/></field>
+       <field name="periodName" title="Period Name"><display/></field>
+       <field name="fromDate" title="From Date"><display/></field>
+       <field name="thruDate" title="Thru Date"><display/></field>
+    </form>
+    <form name="CreateTimePeriod" type="single" title="" target="createCustTimePeriodMM"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createCustomTimePeriod"/>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="parentPeriodId"><hidden value="${parentPeriodId}"/></field>
+        <field name="isClosed">
+            <drop-down>
+                <option description="${uiLabelMap.CommonNo}" key="N"/>
+                <option description="${uiLabelMap.CommonYes}" key="Y"/>
+            </drop-down>
+        </field>
+        <field name="periodTypeId">
+          <drop-down>
+        		<option key="INVTRY_PERIOD_CLOSE" description="Inventory Period Closure"/>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
+    
 </forms>

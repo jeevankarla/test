@@ -314,5 +314,4 @@
         <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams"/>
         <set field="successMessage" value="Enquiry Email Scheduled ToSend :${parameters.sendTo}"/>
     </simple-method>
-    
 </simple-methods>   

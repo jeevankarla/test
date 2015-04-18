@@ -145,6 +145,11 @@
 	            <link target="newReports">
 	            </link>
 	        </menu-item>
+	        <menu-item name="TimePeriodsMM" title="TimePeriod">
+			<link target="TimePeriodsMM">
+<!-- 				<parameter param-name="organizationPartyId"  value="Company"/> -->
+			</link>
+		</menu-item>
         </menu>
         
         <!-- Sub Tab Menus -->
