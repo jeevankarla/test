@@ -157,6 +157,17 @@
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
         <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
     </request-map>
+    <request-map uri="MilkReceiptsToApprove">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="ApproveMilkReceipts"/>
+        <response name="error" type="view" value="ApproveMilkReceipts"/>
+    </request-map>
+    <request-map uri="ApproveReceipts">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="ApproveReceipts"/>        
+        <response name="success" type="view" value="ApproveMilkReceipts"/>
+        <response name="error" type="view" value="ApproveMilkReceipts"/>
+    </request-map>
     <request-map uri="FindMilkReceiptsTankerEntry">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
@@ -227,7 +238,10 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="MilkReceiptSummerySms" />
 	</request-map>
-
+    <request-map uri="ApproveMilkReceipts">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="ApproveMilkReceipts"/>
+    </request-map>
 
    <!-- Report Requests  -->
    <request-map uri="UnitMilkReceiptReports">
@@ -525,6 +539,7 @@
 	<view-map name="createNewSalesEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#createNewSalesEntry"/>
 	<view-map name="MilkReceiptsSalariesEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsSalariesEntry"/>
 	<view-map name="newSalaryEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#newSalaryEntry" />
+	<view-map name="ApproveMilkReceipts" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ApproveMilkReceipts" />
 	
 	<!-- Report View Mappings -->
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>

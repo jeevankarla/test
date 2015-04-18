@@ -727,7 +727,34 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="ApproveMilkReceipts">
+    	<section>
+    		<actions>
+    			<set field="titleProperty" value="APPROVE MILK RECEIPTS" />
+				<set field="tabButtonItem" value="FindMilkReceiptEntry" />
+				<set field="tabButtonItem2"  value="MilkReceiptsToApprove" />
+				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+				<set field="parameters.flag" value="APPROVE_RECEIPTS"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntrySerach.groovy"/>
+				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					<include-menu name="FindMilkReceiptsTankerTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<container style="full">
+							<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/findTransfer.ftl"></html-template></html></platform-specific>														
+							<screenlet title="Approve Milk Receipts">
+								<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/MilkReceiptsToApprove.ftl"></html-template></html></platform-specific>
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+    	</section>
+    </screen>
   </screens>
   
   
