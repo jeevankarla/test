@@ -87,6 +87,10 @@
         <response name="success" type="view" value="ProcessOrdersDepotSales"/>   
        <response name="failed" type="view" value="ProcessOrdersDepotSales"/>  
     </request-map>
+     <request-map uri="editDepotOrder">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditDepotOrder"/>
+    </request-map>
     
      <request-map uri="nonRouteGatePassDepot.pdf">
 	        <security https="true" auth="true"/>
@@ -431,6 +435,7 @@
     <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
+       <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
    
     
 </site-conf>

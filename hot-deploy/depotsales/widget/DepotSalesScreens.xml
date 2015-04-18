@@ -97,7 +97,50 @@
             </widgets>
         </section>
     </screen>       
-
+	<screen name="EditDepotOrder">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Depot Sales Entry"/>              
+<!-- 			   <set field="tabButtonItem" value="DepotSalesOrder" />	 -->
+<!-- 			   <set field="tabButtonItem2" value="DepotSalesOrder"/>   -->
+			   <set field="changeFlag" value="DepotSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				<!--  <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/> -->
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/editDeptSaleOrder.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body"> 
+<!--                        <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container>   -->
+                      <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
+                      <section>
+	                    	<condition>
+	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                        </condition>
+                      		<widgets >
+           						<include-screen name="DepotSaleInner"/>
+                      		</widgets>
+                       </section>
+                       <section> 
+		                      <condition>
+		                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+		                      </condition>
+		                      <widgets>
+		     						 <include-screen name="SalesInnerDepotScreen"/>
+		                	  </widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 <screen name="DepotSalesOrder">
         <section>
             <actions>
@@ -1411,9 +1454,6 @@
                             <section>
                             <widgets>
                                <link target="CreatePO" text="Create PO" style="buttontext"/>
-                               <link target="CreateMPO" text="Create Rate Contract PO" style="buttontext">
-									<parameter param-name="purchaseTypeFlag" value="contractPurchase"/>
-							   </link>
 							   </widgets>
 							   </section>
                                   	<screenlet title="search-options">

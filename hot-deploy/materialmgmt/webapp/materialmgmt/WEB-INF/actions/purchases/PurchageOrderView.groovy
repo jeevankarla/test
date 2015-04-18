@@ -100,7 +100,9 @@ if (orderHeader) {
 	  }
 	  if(UtilValidate.isNotEmpty(uomId)){
 		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+		  if(UtilValidate.isNotEmpty(unitDesciption)){
 	   amendedPOMap["unit"]=unitDesciption.get("abbreviation");
+		  }
 		}
 	   }
 	  amendedPOList.add(amendedPOMap);

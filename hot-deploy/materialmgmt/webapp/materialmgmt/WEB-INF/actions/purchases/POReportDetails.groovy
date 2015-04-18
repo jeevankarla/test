@@ -223,7 +223,9 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		uomId=product.get("quantityUomId");
 		if(UtilValidate.isNotEmpty(uomId)){
 			unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+			if(UtilValidate.isNotEmpty(unitDesciption)){
 		 orderDetailsMap["unit"]=unitDesciption.get("abbreviation");
+			}
 		}}
 		
 		orderDetailsMap["quantity"]=orderitems.quantity;
