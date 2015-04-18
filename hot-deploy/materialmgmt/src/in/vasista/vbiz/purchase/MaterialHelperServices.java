@@ -255,24 +255,23 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 	String isClosed = (String)context.get("isClosed");
 	Long periodNum = (Long)context.get("periodNum");
 	String periodName = (String)context.get("periodName");
-
 	Map<String,Object> inMap = FastMap.newInstance();
 	inMap.put("fromDate",fromDate);
 	inMap.put("thruDate",thruDate);
 	inMap.put("organizationPartyId",organizationPartyId);
 	inMap.put("periodTypeId",periodTypeId);
-	inMap.put("userLogin",userLogin);
-
 	inMap.put("isClosed",isClosed);
 	inMap.put("periodNum",periodNum);
 	inMap.put("periodName",periodName);
+	inMap.put("userLogin",userLogin);
+
 	Map<String,Object> customTime = FastMap.newInstance();
 
 	try{
-		customTime = dispatcher.runSync("createCustomTimePeriodM",inMap);
+		customTime = dispatcher.runSync("createCustomTimePeriod",inMap);
 		if(ServiceUtil.isError(customTime)){
 		Debug.logError("Error while creating customTimePeriod ::"+ServiceUtil.getErrorMessage(customTime),module);
-		return ServiceUtil.returnError("Error While creating customTimePeriod ::");
+		return ServiceUtil.returnError("This Time Period already Exist");
 		}
 		
 		if((isClosed).equals("Y")){

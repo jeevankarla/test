@@ -670,6 +670,7 @@
     </form>
     <form name="CreateTimePeriod" type="single" title="" target="createCustTimePeriodMM"
         header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createCustomTimePeriod"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="parentPeriodId"><hidden value="${parentPeriodId}"/></field>
         <field name="isClosed">
@@ -683,12 +684,7 @@
         		<option key="INVTRY_PERIOD_CLOSE" description="Inventory Period Closure"/>
         	</drop-down>
         </field>
-        <field name="periodNum" title="periodNum"><text/></field>
-       <field name="periodName" title="periodName"><text/></field>
-       <field name="fromDate" title="From Date"><date-time type="date"></date-time></field>
-       <field name="thruDate" title="Thru Date"><date-time type="date"></date-time></field>
-        
- <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     
 </forms>
