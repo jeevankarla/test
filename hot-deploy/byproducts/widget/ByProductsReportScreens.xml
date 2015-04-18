@@ -858,7 +858,7 @@
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<set field="reportTypeFlag" value="salesReport"/>
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/yearlyReports/yearlyCategorySales.groovy" />
-				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/productReturnsReport.groovy" />
+				<!-- <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/productReturnsReport.groovy" /> -->
 			</actions>
 			<widgets>
 				<section>
