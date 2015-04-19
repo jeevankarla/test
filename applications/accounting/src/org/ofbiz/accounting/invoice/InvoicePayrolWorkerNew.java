@@ -355,10 +355,11 @@ public class InvoicePayrolWorkerNew {
             	newPayappl.put("invoiceId", invoiceId);
             	newPayappl.put("paymentId", paymentResult.get("paymentId"));
             	newPayappl.put("amountApplied", amount);
-				paymentResult = dispatcher.runSync("createPaymentApplication",newPayappl);
-           	if (ServiceUtil.isError(paymentResult)) {
+            	
+            	Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+           	if (ServiceUtil.isError(paymentApplResult)) {
            		Debug.logError(paymentResult.toString(), module);
-                   return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult), null, null, paymentResult);
+                   return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentApplResult), null, null, paymentApplResult);
                }
            	// here update loan recover record and withdraw from loan finaccount
 				GenericValue loanRecovery = delegator.findOne("LoanRecovery", UtilMisc.toMap("loanId",loanAndRecoveryAndType.get("loanId"),"sequenceNum",loanAndRecoveryAndType.get("sequenceNum")), false);
