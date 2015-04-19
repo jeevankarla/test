@@ -245,12 +245,7 @@ under the License.
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
  		<entity-one entity-name="Payment" value-field="payment"/>
       	<set field="paymentToApply" type="BigDecimal" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment)}"/>
-    	<set field="tempAmountApplied" from-field="parameters.amountApplied" type="BigDecimal"/>
-    	<set field="tempAmountApplied" value="${groovy: return tempAmountApplied.setScale(2,BigDecimal.ROUND_DOWN)}" type="BigDecimal"/>
-    	<if-compare operator="equals" field="tempAmountApplied" value="0.00" type="BigDecimal">
-    		 <log level="always" message="payment application not creating  because amountApplied is ZERO"/>
-    		<return/>
-    	</if-compare>
+    	
     	<if-compare-field operator="greater" field="parameters.amountApplied" to-field="paymentToApply" type="BigDecimal">
     		<add-error><fail-property resource="AccountingUiLabels" property="AccountingPaymentApplicationAmountApply"/></add-error>
             <check-errors/>
@@ -275,18 +270,23 @@ under the License.
 
             <!-- get the amount that has not been applied yet for the invoice (outstanding amount) -->
             <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}" type="BigDecimal"/>
-
+             
             <!-- if the amount to apply goes over the outstanding amount, then use the notApplied amount and log a warning -->
             <if-compare-field field="paymentAppl.amountApplied" to-field="notApplied" operator="greater" type="BigDecimal">
                 <log level="warning" message="Create Payment Application: Amount to apply [${paymentAppl.amountApplied}] is greater than the outstanding amount [${notApplied}] of the invoice [${invoice.invoiceId}]. Creating Payment Application for outstanding amount [${notApplied}] instead."/>
                 <set field="paymentAppl.amountApplied" from-field="notApplied"/>
             </if-compare-field>
-
+            
             <if-not-empty field="invoice.billingAccountId">
                 <set field="paymentAppl.billingAccountId" from-field="invoice.billingAccountId"/>
             </if-not-empty>
         </if-not-empty>
-
+        <set field="tempAmountApplied" from-field="paymentAppl.amountApplied" type="BigDecimal"/>
+    	<set field="tempAmountApplied" value="${groovy: return tempAmountApplied.setScale(2,BigDecimal.ROUND_DOWN)}" type="BigDecimal"/>
+    	<if-compare operator="equals" field="tempAmountApplied" value="0.00" type="BigDecimal">
+    		 <log level="warning" message="payment application not creating  because amountApplied is ZERO"/>
+    		<return/>
+    	</if-compare>
         <sequenced-id sequence-name="PaymentApplication" field="paymentAppl.paymentApplicationId"/>
         <field-to-result field="paymentAppl.paymentApplicationId" result-name="paymentApplicationId"/>
 
