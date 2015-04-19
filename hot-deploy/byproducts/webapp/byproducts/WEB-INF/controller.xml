@@ -230,6 +230,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="dueParticularsPDF"/>
     </request-map>
+    <request-map uri="dueParticulars.csv">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="dueParticularsCSV"/>
+    </request-map>
     <request-map uri="duesDiffFDR.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="duesFDRReportPDF"/>
@@ -1703,7 +1707,7 @@
     <view-map name="duesFDRReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#duesFDRReportPDF" content-type="application/pdf"/>
 	<view-map name="DuesFDRAvgReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#DuesFDRAvgReportCSV" content-type="text/csv"/>
 	<view-map name="IndentTrendForProductionPlanXLS" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentTrendForProductionPlanXLS" content-type="text/csv"/>
-  
+  	<view-map name="dueParticularsCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#dueParticularsCSV" content-type="text/csv"/>
   
     <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintBoothPayments" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintBoothPayments"/>

@@ -73,7 +73,10 @@ import org.ofbiz.accounting.invoice.InvoiceServices;
 
 
 
+
+
 import in.vasista.vbiz.byproducts.ByProductServices;
+import in.vasista.vbiz.byproducts.SalesHistoryServices;
 
 public class ByProductNetworkServices {
 	public static final String module = ByProductNetworkServices.class.getName();
@@ -5840,6 +5843,10 @@ public class ByProductNetworkServices {
 		if (UtilValidate.isEmpty(thruDate)) {
 			Debug.logError("thruDate cannot be empty", module);
 			return ServiceUtil.returnError("thruDate cannot be empty");
+		}
+		int totalDays=UtilDateTime.getIntervalInDays(fromDate,thruDate);
+		if(totalDays>32){
+			return SalesHistoryServices.getSalesSummaryPeriodTotals(ctx,context);
 		}
 		String subscriptionType = (String) context.get("subscriptionType");
 		Boolean onlyVendorAndPTCBooths = (Boolean) context.get("onlyVendorAndPTCBooths");

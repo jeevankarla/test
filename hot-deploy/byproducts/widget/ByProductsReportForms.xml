@@ -270,4 +270,16 @@
       <field name="cbDebit" title="Closing Debit"><display></display></field>
       <field name="cbCredit" title="Closing Credit"><display></display></field>
     </form>
+    <form name="dueParticularsCSV" type="list" list-name="categoryCsvList" view-size="99999">
+      <field name="sno" title="SERIAL No"><display></display></field>
+      <field name="categoryName" title="CATEGORY NAME"><display></display></field>
+      <field name="facilityId" title="RETAILER CODE"><display></display></field>
+      <field name="facilityName" title="RETAILER NAME"><display></display></field>
+      <field name="openingDebit" title="OPENING DEBIT"><display></display></field>
+      <field name="openingCredit" title="OPENING CREDIT"><display/></field>
+      <field name="invoiceAmount" title="INVOICE AMOUNT"><display></display></field>
+      <field name="chequePenalityPaidAmount" title="CHQ-RTN PAYMENT"><display></display></field>
+      <field name="closingDebit" title="CLOSING DEBIT"><display></display></field>
+      <field name="closingCredit" title="CLOSING CREDIT"><display></display></field>
+    </form>
 </forms>
