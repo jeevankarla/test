@@ -5537,6 +5537,8 @@ public class InvoiceServices {
         
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String paymentTypeId = (String) context.get("paymentTypeId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
         //String roleTypeId = (String) context.get("roleTypeId");
         String invoiceParentTypeId = "";
         List paymentTypesList = FastList.newInstance();
@@ -5568,11 +5570,16 @@ public class InvoiceServices {
         
         	EntityListIterator paymentListItr = null;
             List exprListForParameters = FastList.newInstance();
-        	exprListForParameters.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));  
+            if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+            	exprListForParameters.add(EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN, UtilMisc.toList(UtilDateTime.getDayStart(fromDate),UtilDateTime.getDayEnd(thruDate)))); 
+            }
+        	exprListForParameters.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
+        	exprListForParameters.add(EntityCondition.makeCondition("isFullyApplied", EntityOperator.NOT_EQUAL, "Y")); 
         	exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_NOT_PAID","PMNT_VOID")));
         	EntityCondition pmntCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
-    		try {
-    			paymentListItr = delegator.find("Payment", pmntCond ,null, null, null, null);
+    		//Debug.log("pmntCond=========="+pmntCond);
+        	try {
+    			paymentListItr = delegator.find("Payment", pmntCond ,null, null, UtilMisc.toList("paymentDate"), null);
     		} catch (GenericEntityException e) {
     			Debug.logError(e, module);
     			return ServiceUtil.returnError(e.toString());
@@ -5604,7 +5611,7 @@ public class InvoiceServices {
         			//Debug.log("paramCond======"+paramCond);
         			
         			try {
-        				invoicesListItr = delegator.find("Invoice", paramCond,null, UtilMisc.toSet("invoiceId","partyIdFrom","partyId"), null, null);
+        				invoicesListItr = delegator.find("Invoice", paramCond,null, UtilMisc.toSet("invoiceId","partyIdFrom","partyId"), UtilMisc.toList("invoiceDate"), null);
         			} catch (GenericEntityException e) {
         				Debug.logError(e, module);
         				return ServiceUtil.returnError(e.toString());
@@ -5648,6 +5655,14 @@ public class InvoiceServices {
 	                    }
 		                amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
 	                 	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
+	                 		try {
+	                 			paymentEntry.set("isFullyApplied", "Y");
+		                 		delegator.store(paymentEntry);
+	                 		}catch (Exception e) {
+			                	// TODO: handle exception
+		        				 Debug.logError(e, e.toString(), module);
+		        		         return ServiceUtil.returnError(e.toString());
+		                    }
 	                 		break;
 	                 	}
             			
