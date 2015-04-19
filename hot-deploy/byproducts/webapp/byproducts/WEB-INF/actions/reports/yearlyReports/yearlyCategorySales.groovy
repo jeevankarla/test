@@ -75,14 +75,15 @@ grandTotalRevenue=0;
 	  dayTotals=[:];
 	  if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="salesReport") {
 		  boothsList=ByProductNetworkServices.getBoothList(delegator ,null);
-		  dayTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true,"periodTypeId":"SALES_MONTH"]);	
-		 // Debug.log("dayTotals=============="+dayTotals);  
+		  //dayTotals = SalesHistoryServices.getSalesSummaryPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true,"periodTypeId":"SALES_MONTH"]);	
+		    dayTotals = SalesHistoryServices.getSalesDayPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true,"periodTypeId":"SALES_DAY"]);
 		   }	 
 	  if(UtilValidate.isNotEmpty(dayTotals)){
 			//Debug.log("dayTotals====="+dayTotals.get("dayWiseTotals"));
 				countMap=[:];
 				if(UtilValidate.isNotEmpty(dayTotals.get("dayWiseTotals"))){
 					curntDaySalesMap=dayTotals.get("dayWiseTotals").entrySet();
+					//curntDaySalesMap1=dayperiodTotals.get("dayWiseTotals").entrySet();
 					curntDaySalesMap.each{daySalesMap->
 					if(UtilValidate.isNotEmpty(daySalesMap.getValue())){
 						productTotList=daySalesMap.getValue().get("productTotals");
