@@ -80,6 +80,9 @@
         <menu-item name="FindGRNReceipts" title="Receipts">
 	        	<link target="FindGRNReceiptsDepot"/>
 	     </menu-item>
+	      <menu-item name="FindPO" title="Purchase Order">
+	        	<link target="FindPO"/>
+	        </menu-item>
         <menu-item name="NonRouteCustomPayments" title="AR Payments"> 
     		<!-- <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -119,6 +122,7 @@
             </condition>  
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
+        
        <!--  <menu-item name="salesRevenueTrend" title="Sales Trend">
         	<condition>
 				<or>
@@ -157,7 +161,20 @@
             </link>
         </menu-item>     -->   
     </menu>
-      
+       <menu name="FindPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindPO" title="Find Purchase Order">
+        	<link target="FindPO"/>
+        </menu-item>
+        
+        <menu-item name="POoverView" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu>
       <menu name="DepotSalesIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 

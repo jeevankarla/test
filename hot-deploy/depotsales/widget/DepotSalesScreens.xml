@@ -97,7 +97,50 @@
             </widgets>
         </section>
     </screen>       
-
+	<screen name="EditDepotOrder">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Depot Sales Entry"/>              
+<!-- 			   <set field="tabButtonItem" value="DepotSalesOrder" />	 -->
+<!-- 			   <set field="tabButtonItem2" value="DepotSalesOrder"/>   -->
+			   <set field="changeFlag" value="DepotSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				<!--  <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/> -->
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/editDeptSaleOrder.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body"> 
+<!--                        <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container>   -->
+                      <include-menu name="DepotSalesIndentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
+                      <section>
+	                    	<condition>
+	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                        </condition>
+                      		<widgets >
+           						<include-screen name="DepotSaleInner"/>
+                      		</widgets>
+                       </section>
+                       <section> 
+		                      <condition>
+		                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+		                      </condition>
+		                      <widgets>
+		     						 <include-screen name="SalesInnerDepotScreen"/>
+		                	  </widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 <screen name="DepotSalesOrder">
         <section>
             <actions>
@@ -1381,5 +1424,144 @@
             </widgets>
         </section>
     </screen>
-    
+      <screen name="FindPO">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindPO" />	
+			    <set field="tabButtonItem2" value="FindPO"/>
+			    <service service-name="performFind" result-map="result" result-map-list="listIt">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles"/>
+	                <field-map field-name="orderBy" value="-orderDate" />
+                </service>
+               <set field="targetRequest" value="FindPO"/>
+               <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>
+               <set field="partyId" from-field="parameters.partyId"/>
+               <set field="roleTypeId" value="BILL_FROM_VENDOR"/>
+               <set field="parameters.roleTypeId" from-field="roleTypeId"/>
+               <set field="parameters.noConditionFind"  value="N"></set> 
+               <set field="parameters.salesChannelEnumId"  value="MATERIAL_PUR_CHANNEL"></set> 
+               
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="FindPOSubTabBar"/>                                                        
+                        <section>
+                            <widgets>
+                            <section>
+                            <widgets>
+                               <link target="CreatePO" text="Create PO" style="buttontext"/>
+							   </widgets>
+							   </section>
+                                  	<screenlet title="search-options">
+                          				<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                          			</screenlet>
+                   					<screenlet title="Search-results">
+                       					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                   					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="CreatePO">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindPO" />	
+               <set field="targetRequest" value="FindPO"/>
+                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+                 <set field="parameters.roleTypeId" value="SUPPLIER"/>
+                 <set field="changeFlag" value="PurchaseOrder"/>
+                 <set field="subDivDeptFlag" value="PurchaseOrder"/> 
+                  <set field="parameters.changeFlag" value="PurchaseOrder"/> 
+				 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
+				 <set field="parameters.partyStatusId" value="PARTY_ENABLED"/> 				 
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>   
+                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/purchaseOrderDetailsEntryDepot.groovy"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                               <label style="h1">New PO</label>
+                               <platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/CreatePO.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+     <screen name="EditMaterialPO">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindMaterialPO" />	
+               <set field="targetRequest" value="FindMaterialPO"/>
+               <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="changeFlag" value="PurchaseOrder"/>
+               <set field="parameters.POId" from-field="orderId"/> 
+               <set field="parameters.changeFlag" value="PurchaseOrder"/> 
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditPOEntryForm.groovy"/>
+               <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                               <label style="h1">Order Id : "${orderId}"</label>
+                               
+                               <platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/CreatePO.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="CreateMPO">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindPO" />	
+               <set field="targetRequest" value="FindPO"/>
+                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+                 <set field="parameters.roleTypeId" value="SUPPLIER"/>
+                 <set field="changeFlag" value="PurchaseOrder"/>
+                 <set field="subDivDeptFlag" value="PurchaseOrder"/> 
+                  <set field="parameters.changeFlag" value="PurchaseOrder"/> 
+				 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
+				 <set field="parameters.partyStatusId" value="PARTY_ENABLED"/> 				 
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>                
+            </actions>
+            <widgets>
+                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                               <label style="h1">New PO</label>
+                               <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/CreateMPO.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
 </screens>
