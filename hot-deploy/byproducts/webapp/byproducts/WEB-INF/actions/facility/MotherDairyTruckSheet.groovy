@@ -359,7 +359,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					 //getting vehicle role for vehcileId
 					String vehicleId="";
 					vehicleRole=ByProductNetworkServices.getVehicleRole(dispatcher.getDispatchContext(),[facilityId:routeId,supplyDate:estimatedDeliveryDateTime]).get("vehicleRole");
-					
+					partyId ="";
 					if(UtilValidate.isNotEmpty(vehicleRole)){
 						vehicleId=vehicleRole.getString("vehicleId");
 						partyId=vehicleRole.getString("partyId");
