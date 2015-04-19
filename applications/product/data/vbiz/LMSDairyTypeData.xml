@@ -12,6 +12,7 @@
    
 	<PeriodType description="Margin Month" periodTypeId="MARGIN_MONTH" periodLength="1" uomId="TF_mon"/>
 	<PeriodType description="Card Month" periodTypeId="CARD_MONTH" periodLength="1" uomId="TF_mon"/>
+	<PeriodType description="Rate Hour" periodTypeId="RATE_HOUR" periodLength="1" uomId="TF_hr"/>
 	
 	<SubscriptionType description="LMS Subscription" hasTable="N"  subscriptionTypeId="LMS"/> 
 	<SubscriptionType description="AM" hasTable="N" parentTypeId="LMS" subscriptionTypeId="AM"/>    

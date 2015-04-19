@@ -3,6 +3,10 @@
 	<RoleType description="Employee subsidy Role" hasTable="N" parentTypeId="" roleTypeId="EMPSUBISDY_ROLE"/>	
 	<PaymentMethodType paymentMethodTypeId="AXISHTOH_PAYIN" description="Axis Bank Host-Host"></PaymentMethodType>
 	<PaymentMethodTypeGlAccount  glAccountId="112000" organizationPartyId="Company" paymentMethodTypeId="AXISHTOH_PAYIN"/>
+	
+	<PaymentMethodType description="Axis bank CDM Payment" parentTypeId="MONEY" paymentMethodTypeId="AXIS_CDM_PAYIN"/>
+	<PaymentMethodTypeGlAccount  glAccountId="112000" organizationPartyId="Company" paymentMethodTypeId="AXIS_CDM_PAYIN"/>
+	
 	<PeriodType description="Fortnightly Bill" periodLength="2" periodTypeId="INST_FORTNIGHT_BILL" uomId="TF_wk"/>
     <PeriodType description="Monthly Bill" periodLength="1" periodTypeId="INST_MONTH_BILL" uomId="TF_mon"/> 
     <PeriodType description="Quarterly Bill" periodLength="3" periodTypeId="INST_QUARTER_BILL" uomId="TF_mon"/> 
