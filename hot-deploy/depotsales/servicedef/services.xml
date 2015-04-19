@@ -5,4 +5,11 @@
     <vendor></vendor>
     <version>1.0</version>
 
+   <service name="approveDepotOrder" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="approveDepotOrder">
+        <description>Approve Depot Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>
