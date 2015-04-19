@@ -284,7 +284,7 @@ under the License.
         <set field="tempAmountApplied" from-field="paymentAppl.amountApplied" type="BigDecimal"/>
     	<set field="tempAmountApplied" value="${groovy: return tempAmountApplied.setScale(2,BigDecimal.ROUND_DOWN)}" type="BigDecimal"/>
     	<if-compare operator="equals" field="tempAmountApplied" value="0.00" type="BigDecimal">
-    		 <log level="always" message="payment application not creating  because amountApplied is ZERO"/>
+    		 <log level="warning" message="payment application not creating  because amountApplied is ZERO"/>
     		<return/>
     	</if-compare>
         <sequenced-id sequence-name="PaymentApplication" field="paymentAppl.paymentApplicationId"/>
