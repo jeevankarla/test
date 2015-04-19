@@ -204,6 +204,107 @@ if(parloursOnly == "Y"){
 }else{
 	context.categorysList = categorysList;
 }
-
-
-
+categoryCsvList=[];
+if(UtilValidate.isNotEmpty(parameters.csvFlag) && parameters.csvFlag=="dueParticularsCSV"){
+	sno=1;
+	grandOpeningDebit=0;
+	grandOpeningCredit=0;
+	grandInvAmt=0;
+	grandChqAmnt=0;
+	grandClosingDebit=0;
+	grandClosingCredit=0;
+	finalMap=[:];
+	categorysList.each{category->
+		catTempMap=[:];
+		categoryDetails=delegator.findOne("Enumeration",[enumId:category],false);
+		catTempMap.categoryName=categoryDetails.description;
+		invTot=0;
+		catDrOB=0;
+		catCrOB=0;
+		returnCatAmount=0;
+		cashTot=0;
+		chqTot=0;
+		chqRetnTot=0;
+		challanTot=0;
+		totalCatPaidAmnt=0;
+		netBalTot=0;
+		chequePPaidAmountCat=0;
+		eatot=0;
+		satot=0;
+		batot=0;
+		duesData=categoryTotalMap.get(category);
+		if(UtilValidate.isNotEmpty(duesData)){
+			duesData.each{data->
+				tempMap=[:];
+				tempMap.sno=sno;
+				/*categoryDetails=delegator.findOne("Enumeration",[enumId:category],false);
+				tempMap.categoryName=categoryDetails.description;*/
+				facilityId=data.get("facilityId");
+				tempMap.facilityId=facilityId;
+				facilityDetails=delegator.findOne("Facility",[facilityId:facilityId],false);
+				tempMap.facilityName=facilityDetails.facilityName;
+				invoiceAmount=data.get("invoiceAmount");
+				tempMap.invoiceAmount=invoiceAmount;
+				invTot=invTot+invoiceAmount;
+				returnAmount=data.get("returnAmount");
+				chequeRetnAmount=data.get("chequeRetnAmount");
+				chequePenalityPaidAmount=data.get("chequePenalityPaidAmount");
+				tempMap.chequePenalityPaidAmount=chequePenalityPaidAmount;
+				chequePPaidAmountCat=chequePPaidAmountCat+chequePenalityPaidAmount;
+				totalPaid=data.get("totalPaid");
+				tempMap.totalPaid=totalPaid;
+				totalCatPaidAmnt=totalCatPaidAmnt+totalPaid;
+				netAmount=data.get("netAmount");
+				closingDebit=0;
+				closingCredit=0;
+				if(netAmount>=0){
+					closingDebit=netAmount;
+				}else{
+					closingCredit=-(netAmount);
+				}
+				tempMap.closingDebit=closingDebit;
+				tempMap.closingCredit=closingCredit;
+				eatot=eatot+closingCredit;
+				satot=satot+closingDebit;
+				openingBalance=data.get("openingBalance");
+				openingDebit=0;
+				openingCredit=0;
+				if(openingBalance>=0){
+					openingDebit=openingBalance;
+				}else{
+					openingCredit=-(openingBalance);
+				}
+				tempMap.openingDebit=openingDebit;
+				tempMap.openingCredit=openingCredit;
+				catDrOB=catDrOB+openingDebit;
+				catCrOB=catCrOB+openingCredit;
+				categoryCsvList.add(tempMap);
+				sno+=1;
+			}
+			catTempMap.facilityId="TOTAL :";
+			catTempMap.openingDebit=catDrOB;
+			grandOpeningDebit=grandOpeningDebit+catDrOB;
+			catTempMap.openingCredit=catCrOB;
+			grandOpeningCredit=grandOpeningCredit+catCrOB;
+			catTempMap.invoiceAmount=invTot;
+			grandInvAmt=grandInvAmt+invTot;
+			catTempMap.chequePenalityPaidAmount=chequePPaidAmountCat;
+			grandChqAmnt=grandChqAmnt+chequePPaidAmountCat;
+			catTempMap.closingDebit=satot;
+			grandClosingDebit=grandClosingDebit+satot;
+			catTempMap.closingCredit=eatot;
+			grandClosingCredit=grandClosingCredit+eatot;
+			categoryCsvList.add(catTempMap);
+		}
+	}
+	finalMap.facilityId="GRAND TOTAL :";
+	finalMap.openingDebit=grandOpeningDebit;
+	finalMap.openingCredit=grandOpeningCredit
+	finalMap.invoiceAmount=grandInvAmt;
+	finalMap.chequePenalityPaidAmount=grandChqAmnt;
+	finalMap.closingDebit=grandClosingDebit;
+	finalMap.closingCredit=grandClosingCredit;
+	categoryCsvList.add(finalMap);
+}
+//Debug.log("categoryCsvList========================="+categoryCsvList);
+context.categoryCsvList=categoryCsvList;

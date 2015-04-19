@@ -199,7 +199,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker("chequeFromDateId","chequeThruDateId");
 		//makeDatePicker("materialFromDateId","materialThruDateId");
 		makeDatePicker("FDRDateId","");
-		makeDatePicker("vatFromDateId","vatThruDateId");
+	//	makeDatePicker("vatFromDateId","vatThruDateId");
+		makeDatePicker3("vatFromDateId","vatThruDateId");
 		makeDatePicker("subsidyFromDateId","subsidyThruDateId");
 		makeDatePicker("effFromDate","effThruDate");
 		makeDatePicker("smsNotify","");
@@ -1060,7 +1061,7 @@ function reportTypeChangeFunc() {
       							<input  type="hidden"  value="DuesAbstractReport"   name="reportTypeFlag"/></td>
 							<td width="15%">From<input  type="text" size="18pt" id="DueAbsFromDateId" readonly  name="fromDate"/></td>
 			      			<td width="15%">Thru<input  type="text" size="18pt" id="DueAbsThruDateId" readonly  name="thruDate"/></td>
-			      			<td width="15%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
+			      			<td width="10%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
 								<option value="">All Types</option>
 		                		<#list categoryTypeList as categoryType>    
 		                  	    	<option value='${categoryType.enumId}'>
@@ -1069,8 +1070,8 @@ function reportTypeChangeFunc() {
 		                		</#list>            
 								</select>
 			      			</td>
-	      					<td width="15%"></td>  
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+							<td align="right" width="1%"><input type="submit" value="PDF" onClick="javascript:appendParams('DuesAbstractReport', '<@ofbizUrl>dueParticulars.pdf</@ofbizUrl>');" class="buttontext"/></td>
+							<td width="5%"><input type="submit" value="CSV" onClick="javascript:appendParams('DuesAbstractReport', '<@ofbizUrl>dueParticulars.csv</@ofbizUrl>');" class="buttontext"/></td>
       					</form>
       				</tr>
 					</#if>
