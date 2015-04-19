@@ -223,6 +223,7 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="screenFlag" value="YearReports"/>
+                <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/yearlyReports/yearlyCategoryDateRestriction.groovy" />
             </actions>
             <widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
