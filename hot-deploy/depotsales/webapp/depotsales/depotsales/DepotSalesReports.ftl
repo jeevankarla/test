@@ -30,6 +30,7 @@ $(document).ready(function(){
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
+	    makeDatePicker("stockFromDate","stockThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker("stockDate");
 	    makeDatePicker("CASHFromDateId","");
@@ -101,6 +102,16 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="15%">
   			    <input  type="hidden"  name="routeId" value="All"/>
   			</td>
+  			<td width="15%"></td>
+  			<td width="15%"></td>
+			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+		</form>	
+      </tr>
+      <tr class="alternate-row">
+    	<form id="stockStatement" name="stockStatement" method="post"  target="_blank" action="<@ofbizUrl>StockStatementReport.pdf</@ofbizUrl>">	
+  			<td width="30%" nowrap>Stock Statement Report</td>
+  			<td width="15%">From<input  type="text" size="18pt" id="stockFromDate" readonly  name="stockFromDate"/></td>
+  			<td width="15%">Thru<input  type="text" size="18pt" id="stockThruDate" readonly  name="stockThruDate"/></td>
   			<td width="15%"></td>
   			<td width="15%"></td>
 			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
