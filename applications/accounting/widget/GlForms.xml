@@ -272,7 +272,7 @@ under the License.
                     <condition-expr field-name="shipmentId" operator="equals" from-field="parameters.shipmentId" ignore-if-empty="true"/>
                     <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruDate" ignore-if-empty="true"/>
                 </condition-list>
                 <order-by field-name="glAccountId"/>
                 <order-by field-name="-transactionDate"/>
