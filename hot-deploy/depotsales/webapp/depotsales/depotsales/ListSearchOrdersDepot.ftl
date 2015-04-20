@@ -84,14 +84,20 @@ under the License.
         jQuery(formId).submit();
     }
     
-    function approveDepotOrder(orderId, salesChannel,partyId){
+    function approveIceCreamOrder(orderId, salesChannel){
 		var formId = "#" + "orderApproveForm";
 		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
-		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 		jQuery(formId).append(jQuery(param1));
 		jQuery(formId).append(jQuery(param2));
-		jQuery(formId).append(jQuery(param3));
+        jQuery(formId).submit();
+    }
+ function editIceCreamOrder(orderId, salesChannel){
+		var formId = "#" + "orderEditForm"
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
+		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
+		jQuery(formId).append(jQuery(param1));
+		jQuery(formId).append(jQuery(param2));
         jQuery(formId).submit();
     }
     function cancelIceCreamOrder(orderId, salesChannel){
@@ -107,7 +113,14 @@ under the License.
 </script>
 <#include "viewOrderDetailsDepot.ftl"/>
 
-
+<form name="orderEditForm" id="orderEditForm" method="post" 
+	
+	<#if screenFlag?exists && screenFlag=="depotSales">
+		action="editDepotOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="editIUSTransferOrder"
+	</#if>>
+</form>
 <form name="orderCancelForm" id="orderCancelForm" method="post" 
 	
 	<#if screenFlag?exists && screenFlag=="depotSales">
@@ -171,7 +184,7 @@ under the License.
           <td>Edit Batch</td>
           <td>Approve</td>
           <td>DC Report</td>
-           <td>Party Balance</td>
+          <td>Edit</td>
           <td>Cancel</td>
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>
           
@@ -188,22 +201,15 @@ under the License.
               	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
               	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
               	<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>
-              	<#assign partyOb=0>
-              	<#if eachOrder.partyId?exists>
-              	<#assign partyOb=partyOBMap.get(eachOrder.partyId)>
-              	</#if>
-              	<#if eachOrder.get('statusId') == "ORDER_CREATED" && partyOb &gt; 0 >
-              		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
+              	<#if eachOrder.get('statusId') == "ORDER_CREATED">
+              		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               		<td></td>
-              	<#elseif eachOrder.get('statusId') == "ORDER_CREATED" && partyOb == 0 >
-              		<td colspan="2"><font color="red">Unavailable Balance</font> </td>
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>
-              	
-              	<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>
+              	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
