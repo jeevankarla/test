@@ -2106,7 +2106,7 @@ public class SalesHistoryServices {
 				BigDecimal price = orderItem.getBigDecimal("unitListPrice");
 				BigDecimal revenue = price.multiply(quantity);*/
 				BigDecimal quantity = orderItem.getBigDecimal("totalQuantity");
-				
+				BigDecimal packetQuantity = orderItem.getBigDecimal("totalQuantity");
 				GenericValue product;
 				try{
 					product = delegator.findOne("Product",true, UtilMisc.toMap("productId",productId));
@@ -2116,7 +2116,7 @@ public class SalesHistoryServices {
 				}catch (GenericEntityException e) {
 				Debug.logError(e, module);
 				}
-				BigDecimal packetQuantity = orderItem.getBigDecimal("totalQuantity");
+				
 				BigDecimal price = BigDecimal.ONE;//orderItem.getBigDecimal("unitPrice");
 				BigDecimal revenue = price.multiply(quantity);
 				if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("totalRevenue"))){
@@ -2125,6 +2125,7 @@ public class SalesHistoryServices {
 				if("_NA_".equals(orderItem.getString("productSubscriptionTypeId"))){
 					 quantity = quantity.negate();
 					 revenue=revenue.negate();
+					 packetQuantity=packetQuantity.negate();
 				}
 					
 			   // Debug.log("===return=Revenue###"+revenue+"===and Qty=####"+quantity+"====productId=="+productId+"==isReturn=="+orderItem.getString("isReturn"));
