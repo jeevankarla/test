@@ -102,6 +102,13 @@ function appendParams(formName, action) {
           		</td>
           	</form>  	   
          </tr>   
+         <tr class="alternate-row"> 
+				<form id="MilkIncommingReport" name="MilkIncommingReport" mothed="post" action="<@ofbizUrl>MilkIncommingReport.pdf</@ofbizUrl>" target="_blank">
+				   <td>Milk Incomming Report</td>
+                    <td>dc No<input type="dcNo" id="dcNo"name="dcNo">
+				             <input type="submit" value="Download" class="buttontext"></td>
+			 </form>
+		  </tr>
 		</table>
     </div>
     </div>
@@ -128,31 +135,6 @@ function appendParams(formName, action) {
        </div>
     </div>
 </#if>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3>MILK INCOMMINNG </h3>
-    </div>
-    <div class="screenlet-body">
-        <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
-          <tr class="alternate-row"> 
-				<form id="MilkIncommingReport" name="MilkIncommingReport" mothed="post" action="<@ofbizUrl>MilkIncommingReport.pdf</@ofbizUrl>" target="_blank">
-				   <table class="basic-table" cellspacing="5">
-					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Milk Incomming Report</span></td>
-                     <#--> <td width="25%">
-						 <span class='h3'>
-						    Date <input  type="text" size="18pt" id="milkIncomeDate"   name="milkIncomeDate"/>
-						 </span>
-						 </td>	-->	
-				    <td width="30%"><span class='h3'>dc No<input type="dcNo" id="dcNo"name="dcNo"></span></td>
-					<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-		 		    </tr>
-				 </table>
-			 </form>
-		  </tr>  
-		</table>
-    </div>
-    </div>
 <#if reportFrequencyFlag =="ShedMilkReceiptReports">
 <div class="screenlet">
     <div class="screenlet-title-bar">
