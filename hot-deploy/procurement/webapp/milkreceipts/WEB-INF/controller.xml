@@ -497,6 +497,10 @@
        <response name="success" type="view" value="GenerateMRTransporterMarginReport"/>   
        <response name="failed" type="view" value="GenerateMRTransporterMarginReport"/>    
     </request-map>
+    <request-map uri="MilkIncommingReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MilkIncommingReportPDF"/>
+    </request-map> 
     
     
     <request-map uri="createMRTransporterMarginReport">
@@ -598,6 +602,7 @@
     <view-map name="mrTransporters" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporters"/>
     <view-map name="mrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporterBilling"/>
     <view-map name="GenerateMRTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRTransporterMarginReport"/>
+    <view-map name="MilkIncommingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkIncommingReportPDF" content-type="application/pdf"/>
     
     
 </site-conf>
