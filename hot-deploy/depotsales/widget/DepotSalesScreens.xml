@@ -287,7 +287,8 @@
                <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
                <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
                <set field="screenFlag" value="depotSales"/>
-               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+             <!--   <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" /> -->
+              <script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/getDepotSalesOrder.groovy" />
             </actions>
             <widgets>
               <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
