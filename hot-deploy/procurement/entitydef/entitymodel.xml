@@ -664,6 +664,7 @@
 	    <member-entity entity-alias="MT" entity-name="MilkTransfer"/>
 	    <member-entity entity-alias="MTI" entity-name="MilkTransferItem"/>	
 		<alias-all entity-alias="MTI" />    
+		<alias name="dcNo" entity-alias="MT"/>
 		<alias name="statusId" entity-alias="MT"/>
 		<alias name="facilityId" entity-alias="MT"/>
 		<alias name="facilityIdTo" entity-alias="MT"/>
@@ -671,6 +672,10 @@
 		<alias name="partyIdTo" entity-alias="MT"/>
 		<alias name="receiveDate" entity-alias="MT"/>
 		<alias name="containerId" entity-alias="MT"/>
+		<alias name="grossWeight" entity-alias="MT"/>
+		<alias name="tareWeight" entity-alias="MT"/>
+		<alias name="sendDate" entity-alias="MT"/>
+		
       	<view-link entity-alias="MTI" rel-entity-alias="MT">
         	<key-map field-name="milkTransferId"/>
       	</view-link>

@@ -102,6 +102,13 @@ function appendParams(formName, action) {
           		</td>
           	</form>  	   
          </tr>   
+         <tr class="alternate-row"> 
+				<form id="MilkIncommingReport" name="MilkIncommingReport" mothed="post" action="<@ofbizUrl>MilkIncommingReport.pdf</@ofbizUrl>" target="_blank">
+				   <td>Milk Incomming Report</td>
+                    <td>dc No<input type="dcNo" id="dcNo"name="dcNo">
+				             <input type="submit" value="Download" class="buttontext"></td>
+			 </form>
+		  </tr>
 		</table>
     </div>
     </div>
@@ -128,7 +135,6 @@ function appendParams(formName, action) {
        </div>
     </div>
 </#if>
-
 <#if reportFrequencyFlag =="ShedMilkReceiptReports">
 <div class="screenlet">
     <div class="screenlet-title-bar">
