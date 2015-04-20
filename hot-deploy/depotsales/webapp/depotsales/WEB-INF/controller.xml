@@ -337,20 +337,12 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CreatePO"/>
     </request-map>
-     <request-map uri="CreateMPO">
-     <security https="true" auth="true"/>
-    	<response name="success" type="view" value="CreateMPO"/>
-    </request-map>
      <request-map uri="CreateMaterialPO">
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
         <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPOEvent" global-transaction="true"/>
          <response name="success"  type="request-redirect-noparam" value="FindPO"></response>
-        <response name="error" type="view" value="CreateMPO"/>
-    </request-map>
-    <request-map uri="LetterOfIndentReport.pdf">
-        <security https="true" auth="true"/>                        
-        <response name="success" type="view" value="LetterOfIndentReport"/>        
+        <response name="error" type="view" value="CreatePO"/>
     </request-map>
      <request-map uri="PurchaseOrderView.pdf">
         <security https="true" auth="true"/>
@@ -430,8 +422,6 @@
     
     <view-map name="FindPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPO"/>
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
-    <view-map name="CreateMPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateMPO"/>
-    <view-map name="LetterOfIndentReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#LetterOfIndentReport" content-type="application/pdf" encoding="none"/>    
     <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
