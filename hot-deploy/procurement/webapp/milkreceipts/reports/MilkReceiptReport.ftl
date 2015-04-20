@@ -130,7 +130,7 @@ function appendParams(formName, action) {
 </#if>
 <div class="screenlet">
     <div class="screenlet-title-bar">
-      <h3>MILK INCOMMINNG</h3>
+      <h3>MILK INCOMMINNG </h3>
     </div>
     <div class="screenlet-body">
         <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">

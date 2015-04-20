@@ -42,56 +42,54 @@ import org.ofbiz.party.party.PartyHelper;
 milkIncomeDate = parameters.milkIncomeDate;
 dcNo = parameters.dcNo;
 context.dcNo=dcNo;
-//milkReceivedList = delegator.findList("MilkTransfer",EntityCondition.makeCondition("dcNO", EntityOperator.EQUALS , shipmentData.receiptId)  , null, null, null, false );
+partyId=null;
+milkTransferMap=[:];
 
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("dcNo", EntityOperator.EQUALS, dcNo));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"MXF_RECD"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-Debug.log("condition============================="+condition);
 
-MilkTransferList = delegator.findList("MilkTransfer", condition, null,null, null, false);
-Debug.log("MilkTransferList============================="+MilkTransferList);
+MilkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
+if(UtilValidate.isNotEmpty(MilkTransferList)){
 MilkTransferList=EntityUtil.getFirst(MilkTransferList);
-
 containerId=MilkTransferList.containerId;
 sendDate=MilkTransferList.sendDate;
 receiveDate=MilkTransferList.receiveDate;
-sendQtyKgs=MilkTransferList.sQtyKgs;
+sendTime=MilkTransferList.sendTime;
+ackTime=MilkTransferList.ackTime;
+
+sendQtyKgs=MilkTransferList.quantity;
 receivedQuantity=MilkTransferList.receivedQuantity;
 grossWeight	=MilkTransferList.grossWeight;
 tareWeight	=MilkTransferList.tareWeight;
 milkTransferId	=MilkTransferList.milkTransferId;
 partyId	=MilkTransferList.partyId;
-milkType=MilkTransferList.milkType;
+receivedProductId=MilkTransferList.receivedProductId;
+sendProductId=MilkTransferList.sendProductId;
+receivedProductId=MilkTransferList.receivedProductId;
+sendTemparature=MilkTransferList.sendTemparature;
+receivedTemparature=MilkTransferList.receivedTemparature;
+sendAcidity	=MilkTransferList.sendAcidity;
+receivedAcidity=MilkTransferList.receivedAcidity;
+sendLR=MilkTransferList.sendLR;
+receivedLR=MilkTransferList.receivedLR;
+fat=MilkTransferList.fat;
+receivedFat=MilkTransferList.receivedFat;
+snf	=MilkTransferList.snf;
+receivedSnf	=MilkTransferList.receivedSnf;
 
-MilkTransferItemList = delegator.findList("MilkTransferItem",EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , milkTransferId)  , null, null, null, false );
-MilkTransferItemList=EntityUtil.getFirst(MilkTransferItemList);
-Debug.log("MilkTransferItemList============================="+MilkTransferItemList);
-
-sendProductId=MilkTransferItemList.sendProductId;
-receivedProductId=MilkTransferItemList.receivedProductId;
-sendTemparature=MilkTransferItemList.sendTemparature;
-receivedTemparature=MilkTransferItemList.receivedTemparature;
-sendAcidity	=MilkTransferItemList.sendAcidity;
-receivedAcidity=MilkTransferItemList.receivedAcidity;
-sendLR=MilkTransferItemList.sendLR;
-receivedLR=MilkTransferItemList.receivedLR;
-fat=MilkTransferItemList.fat;
-receivedFat=MilkTransferItemList.receivedFat;
-snf	=MilkTransferItemList.snf;
-receivedSnf	=MilkTransferItemList.receivedSnf;
-milkTransferMap=[:];
 milkTransferMap.put("containerId", containerId);
 milkTransferMap.put("sendDate", sendDate);
 milkTransferMap.put("receiveDate", receiveDate);
+milkTransferMap.put("sendTime", sendTime);
+milkTransferMap.put("ackTime", ackTime);
 milkTransferMap.put("sendQtyKgs", sendQtyKgs);
 milkTransferMap.put("receivedQuantity", receivedQuantity);
 milkTransferMap.put("grossWeight", grossWeight);
 milkTransferMap.put("tareWeight", tareWeight);
 milkTransferMap.put("milkTransferId", milkTransferId);
-milkTransferMap.put("milkType", milkType);
-
+milkTransferMap.put("receivedProductId", receivedProductId);
 milkTransferMap.put("sendProductId", sendProductId);
 milkTransferMap.put("receivedProductId", receivedProductId);
 milkTransferMap.put("sendTemparature", sendTemparature);
@@ -104,7 +102,7 @@ milkTransferMap.put("fat", fat);
 milkTransferMap.put("snf", snf);
 milkTransferMap.put("receivedFat", receivedFat);
 milkTransferMap.put("receivedSnf", receivedSnf);
-
+  }
 partyDetailsMap=[:]
 if(UtilValidate.isNotEmpty(partyId)){
 	

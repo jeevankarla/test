@@ -65,7 +65,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">TANKER NO :     ${milkTransferMap.get("containerId")?if_exists} </fo:block>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">DISPATCH DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("sendDate"), "dd MMM yyyy")}                                   DISPATCH TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("sendDate"), "HH:mm")}</fo:block>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">RECEIVED DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("receiveDate"), "dd MMM yyyy")}                                   RECEIVED TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("receiveDate"), "HH:mm")}     </fo:block>
-              <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">DRIVER NAME :   ${milkTransferMap.get("receivedQuantity")?if_exists}</fo:block>
+              <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">DRIVER NAME :        </fo:block>
      	  
      	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
       	    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------ ------ ------ ------ ------ ------ --------</fo:block>
@@ -84,7 +84,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
            	<fo:table-body>
              <fo:table-row>
               <fo:table-cell ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="12pt" >DISPATCH</fo:block></fo:table-cell>       		
-             <fo:table-cell  ><fo:block text-align="center"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("milkType")?if_exists}</fo:block></fo:table-cell>       		
+             <fo:table-cell  ><fo:block text-align="center"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("sendProductId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("sendQtyKgs")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("sendTemparature")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("sendAcidity")?if_exists}</fo:block></fo:table-cell>       		
@@ -94,7 +94,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
              </fo:table-row>
             <fo:table-row>
               <fo:table-cell ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="12pt" >ACKNOWLEDGED</fo:block></fo:table-cell>       		
-             <fo:table-cell  ><fo:block text-align="center"  font-weight="bold" keep-together="always" font-size="12pt"></fo:block></fo:table-cell>       		
+             <fo:table-cell  ><fo:block text-align="center"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("receivedProductId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("receivedQuantity")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("receivedTemparature")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${milkTransferMap.get("receivedAcidity")?if_exists}</fo:block></fo:table-cell>       		

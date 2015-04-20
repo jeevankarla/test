@@ -476,6 +476,7 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
+	
 	<screen name="MilkIncommingReportPDF">
 		<section>
 			<actions>
@@ -494,5 +495,4 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
-	
 </screens>
