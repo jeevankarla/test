@@ -35,15 +35,19 @@
 	jQuery(formId).attr("action", action);	
 	jQuery(formId).submit();
     }
-
-function makeSlaesDatePicker(fromDateId ,thruDateId){
-	var fromSaleDate='${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromSaleDate?if_exists, "yyyy, M, d")}';
-	var thruSaleDate='${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruSaleDate?if_exists, "yyyy, M, d")}';
+// for specific date restriction
+function makeDatePicker5(fromDateId ,thruDateId){
+var fromSaleDate="";
+var thruSaleDate="";
+<#if fromSaleDate?exists && thruSaleDate?exists> 
+	fromSaleDate='${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromSaleDate?if_exists, "yyyy, M, d")?if_exists}';
+    thruSaleDate='${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruSaleDate?if_exists, "yyyy, M, d")?if_exists}';
+</#if>
 		var minDate = new Date(fromSaleDate);
 		var maxDate = new Date(thruSaleDate);
 			
 	$( "#"+fromDateId ).datepicker({
-			dateFormat:'M-yy',
+			dateFormat:'MM d, yy',
 			changeMonth: true,
 			minDate:minDate,
 			maxDate:maxDate,
@@ -55,7 +59,7 @@ function makeSlaesDatePicker(fromDateId ,thruDateId){
 			}
 		});
 	$( "#"+thruDateId ).datepicker({
-			dateFormat:'M-yy',
+			dateFormat:'MM d, yy',
 			changeMonth: true,
 			
 			onSelect: function( selectedDate ) {
@@ -272,8 +276,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker4("PFHFromDateCrDr","PFHThruDateCrDr");
 		//makeDatePicker2("catYearSalesFromDateId","catYearSalesThruDateId");
 		//makeDatePicker2("yearlySaleFromDateId","yearlySaleThruDateId");
-		makeSlaesDatePicker("catYearSalesFromDateId","catYearSalesThruDateId");
-		makeSlaesDatePicker("yearlySaleFromDateId","yearlySaleThruDateId");
+		makeDatePicker5("catYearSalesFromDateId","catYearSalesThruDateId");
+		makeDatePicker5("yearlySaleFromDateId","yearlySaleThruDateId");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});

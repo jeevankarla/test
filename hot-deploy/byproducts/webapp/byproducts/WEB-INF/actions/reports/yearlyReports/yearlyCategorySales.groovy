@@ -40,31 +40,29 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 		Debug.log("fromDate11=="+fromDate);
 		thruDate = parameters.thruDate;
 		Debug.log("thruDate11=="+thruDate);
-		def sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 		if (UtilValidate.isNotEmpty(fromDate)) {
-			fdate="01-"+fromDate+" 00:00:00";
 			try {
-				fromDateTime = new java.sql.Timestamp(sdf.parse(fdate).getTime());
+				fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate+" 00:00:00").getTime());
 			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: ", "");
+				Debug.logError(e, "Cannot parse date string: " + fromDateTime, "");
 			}
 		}
-		if (UtilValidate.isNotEmpty(thruDate)) {
-		    tdate="01-"+thruDate+" 00:00:00";
+			if (UtilValidate.isNotEmpty(thruDate)) {
 			try {
-				thruDateTime = new java.sql.Timestamp(sdf.parse(tdate).getTime());
-			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: ", "");
+				thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate+" 00:00:00").getTime());
+			}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
 			}
 		}
-		fromDateTime = UtilDateTime.getMonthStart(fromDateTime);
-		thruDateTime = UtilDateTime.getMonthEnd(thruDateTime,TimeZone.getDefault(),Locale.getDefault());;
+		//fromDateTime = UtilDateTime.getMonthStart(fromDateTime);
+		//thruDateTime = UtilDateTime.getMonthEnd(thruDateTime,TimeZone.getDefault(),Locale.getDefault());;
 		dayBegin = UtilDateTime.getDayStart(fromDateTime);
 		Debug.log("dayBegin11=="+dayBegin);
 		dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 		Debug.log("dayEnd11=="+dayEnd);
-		context.fromDate = fromDateTime;
-		context.thruDate = thruDateTime;
+		context.fromDate = fromDate;
+		context.thruDate = thruDate;
 
 	}
 }
