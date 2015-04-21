@@ -5541,6 +5541,8 @@ public class InvoiceServices {
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
         //String roleTypeId = (String) context.get("roleTypeId");
+        List appliedInvoiceIdList = FastList.newInstance();
+        List appliedPaymentIdList = FastList.newInstance();
         String invoiceParentTypeId = "";
         List paymentTypesList = FastList.newInstance();
         if(UtilValidate.isNotEmpty(paymentTypeId)){
@@ -5579,17 +5581,18 @@ public class InvoiceServices {
             			EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS,partyId))); 
             }
         	exprListForParameters.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
-        	exprListForParameters.add(EntityCondition.makeCondition("isFullyApplied", EntityOperator.NOT_EQUAL, "Y")); 
+        	exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isFullyApplied", EntityOperator.NOT_EQUAL, "Y"),EntityOperator.OR,
+        			EntityCondition.makeCondition("isFullyApplied", EntityOperator.EQUALS, null))); 
         	exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_NOT_PAID","PMNT_VOID")));
         	EntityCondition pmntCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
-    		//Debug.log("pmntCond=========="+pmntCond);
+    		Debug.log("pmntCond=========="+pmntCond);
         	try {
     			paymentListItr = delegator.find("Payment", pmntCond ,null, null, UtilMisc.toList("paymentDate"), null);
     		} catch (GenericEntityException e) {
     			Debug.logError(e, module);
     			return ServiceUtil.returnError(e.toString());
     		}
-        	
+        	 Debug.log("Completed Payment's :======"+0);
     		GenericValue paymentEntry;
     		while(paymentListItr != null && (paymentEntry = paymentListItr.next()) != null) {
     			BigDecimal notApplied = PaymentWorker.getPaymentNotApplied(paymentEntry);
@@ -5598,7 +5601,7 @@ public class InvoiceServices {
     			 if(i%20 ==0){
     				 Debug.log("Completed Payment's :======"+i);
     			 }
-    			
+    			 appliedPaymentIdList.add(paymentEntry.getString("paymentId"));
     			if (notApplied.signum() > 0) {
     				BigDecimal amountAppliedRunningTotal = notApplied;
     				String paymentId = paymentEntry.getString("paymentId");
@@ -5629,6 +5632,7 @@ public class InvoiceServices {
 	        			BigDecimal outstandingAmount =BigDecimal.ZERO;
 	        			invoicePaymentInfoMap.put("invoiceId", invoiceId);
 	        			invoicePaymentInfoMap.put("userLogin",userLogin);
+	        			appliedInvoiceIdList.add(invoiceId);
 	        			try{
 	        				Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
 	        				if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
@@ -5689,7 +5693,9 @@ public class InvoiceServices {
     			return ServiceUtil.returnError(e.toString());
     		}
         
-        Map<String, Object> result = ServiceUtil.returnSuccess("Payments Has Been Successfully Applied");        
+        Map<String, Object> result = ServiceUtil.returnSuccess("Payments Has Been Successfully Applied"); 
+        result.put("appliedInvoiceIdList", appliedInvoiceIdList);
+        result.put("appliedPaymentIdList", appliedPaymentIdList);
         return result;
 	}
 	
