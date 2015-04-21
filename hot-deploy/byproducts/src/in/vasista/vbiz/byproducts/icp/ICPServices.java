@@ -1076,7 +1076,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 							"Problems parsing quantity string: " + quantityStr);
 					return "error";
 				}
-
+				
 				productQtyMap.put("productId", productId);
 				productQtyMap.put("quantity", quantity);
 				productQtyMap.put("batchNo", batchNo);
@@ -1093,8 +1093,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				productQtyMap.put("cstPercent", cstPercent);
 				productQtyMap.put("tcsPercent", tcsPercent);
 				productQtyMap.put("serviceTaxPercent", serviceTaxPercent);
-
-				indentProductList.add(productQtyMap);
+				
+				if(quantity.compareTo(BigDecimal.ZERO)>0){
+					indentProductList.add(productQtyMap);
+				}
 
 			}//end of productQty check
 		}//end row count for loop
