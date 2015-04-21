@@ -26,15 +26,14 @@ findOpts.setMaxRows(1);
 findOpts.setFetchSize(1);
 
 orderBy = UtilMisc.toList("salesDate");
-periodSalesDateIterator = delegator.find("LMSPeriodSalesSummaryDetail", EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_MONTH"), null, null, orderBy, findOpts);
+periodSalesDateIterator = delegator.find("LMSPeriodSalesSummary", EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_DAY"), null, null, orderBy, findOpts);
 
 saleDateList=EntityUtil.getFieldListFromEntityListIterator(periodSalesDateIterator, "salesDate", true);
 fromSaleDate=saleDateList.getFirst();
  orderBydate = UtilMisc.toList("-salesDate");
-periodSalesIterator = delegator.find("LMSPeriodSalesSummaryDetail", EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_MONTH"), null, null, orderBydate, findOpts);
+periodSalesIterator = delegator.find("LMSPeriodSalesSummary", EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "SALES_DAY"), null, null, orderBydate, findOpts);
 
 thrusaleDateList=EntityUtil.getFieldListFromEntityListIterator(periodSalesIterator, "salesDate", true);
 thruSaleDate=thrusaleDateList.getFirst();
-
 context.fromSaleDate=fromSaleDate;
 context.thruSaleDate=thruSaleDate;
