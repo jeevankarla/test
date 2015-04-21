@@ -1136,7 +1136,7 @@ reportType:byAccount -->
 							operator="greater-equals" from-field="parameters.fromDate"
 							ignore-if-empty="true" />
 						<condition-expr field-name="transactionDate"
-							operator="less" from-field="parameters.thruDate" ignore-if-empty="true" />
+							operator="less-equals" from-field="parameters.thruDate" ignore-if-empty="true" />
 					</condition-list>
 					<order-by field-name="-transactionDate" />
 				</entity-condition>
