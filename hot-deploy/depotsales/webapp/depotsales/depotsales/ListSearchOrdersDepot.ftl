@@ -102,12 +102,14 @@ under the License.
 		jQuery(formId).append(jQuery(param3));
         jQuery(formId).submit();
     }
- function editIceCreamOrder(orderId, salesChannel){
+ function editDepotOrder(orderId, salesChannel,partyId){
 		var formId = "#" + "orderEditForm"
 		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		var param2 = jQuery("<input>").attr("type", "hidden").attr("name", "salesChannelEnumId").val(salesChannel);
+		var param3 = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 		jQuery(formId).append(jQuery(param1));
 		jQuery(formId).append(jQuery(param2));
+		jQuery(formId).append(jQuery(param3));
         jQuery(formId).submit();
     }
     
@@ -227,7 +229,7 @@ under the License.
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
               		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}&screenFlag=${screenFlag?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>
-              	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
+              	<td><input type="button" name="editOrder" id="editOrder" value="Edit Order" onclick="javascript: editDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
         		<td><input type="hidden" name="partyOBAmount"  value="${partyOb}" />${partyOb?string("#0.00")}</td>
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->

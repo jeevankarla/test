@@ -42,7 +42,7 @@
      
       <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+     	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processDepotSaleEvent" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="DepotSalesOrder">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
@@ -379,6 +379,10 @@
        <response name="success" type="view" value="POMaterialReceipts"/>
        <response name="error" type="view" value="POMaterialReceipts"/>
      </request-map>
+     <request-map uri="StockStatementReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="StockStatementReportPDF"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
@@ -413,6 +417,7 @@
     <view-map name="searchProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#searchProduct"/>
     <view-map name="EditProductPricesDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProductPricesDepot"/>
     <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>
+    <view-map name="StockStatementReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#StockStatementReportPDF" content-type="application/pdf" encoding="none"/>
     
     
     

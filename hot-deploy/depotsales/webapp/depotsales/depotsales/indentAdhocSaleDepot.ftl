@@ -54,7 +54,11 @@ $(document).ready(function(){
 		
 		
 		var productStoreObjOnload=$('#productStoreIdFrom');
-		showStoreCatalog(productStoreObjOnload);
+		//alert("====productStoreObjOnload===="+productStoreObjOnload.val());
+			if (productStoreObjOnload != null && productStoreObjOnload.val() != undefined ){
+			showStoreCatalog(productStoreObjOnload);
+			}
+		
 		
 	});
 	
@@ -179,7 +183,11 @@ $(document).ready(function(){
         	<td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
 		      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 		      	<input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
-		           	 
+			      <#if changeFlag?exists && changeFlag=="EditDepotSales">
+					 <input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>  
+					 <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="DEPOT_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="DEPOT_CHANNEL"/>
+				  </#if>
 		        <#if changeFlag?exists && changeFlag=='DepotSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="DEPOT_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="DEPOT_CHANNEL"/>
@@ -207,19 +215,15 @@ $(document).ready(function(){
           <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if><font color="red">*</font></div></td>
           <td>&nbsp;</td>
-        <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
-			<#if booth?exists && booth?has_content>  
-	  	  		<input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
+          
+        <#if changeFlag?exists && changeFlag=='EditDepotSales'>
+			<#if partyId?exists && partyId?has_content>  
+	  	  		<input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>  
           		<td valign='middle'>
             		<div class='tabletext h3'>
-               			${booth.facilityId.toUpperCase()} [ ${booth.facilityName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+               			${partyId} [ ${partyName?if_exists} ] ${partyAddress?if_exists}  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
             		</div>
           		</td>       
-       		<#else>               
-          		<td valign='middle'>
-          			<input type="text" name="boothId" id="boothId" />
-          			 <span class="tooltip">Input party code and press Enter</span>
-          		</td>
           	</#if>
     	<#else>
 		 	<#if party?exists && party?has_content>  
@@ -238,7 +242,7 @@ $(document).ready(function(){
         </#if>
         </tr>
         <tr><td><br/></td></tr>
-        <#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+        <#if changeFlag?exists && changeFlag != "EditDepotSales">
 	      	<tr>
 	      		<td>&nbsp;</td>
 	      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>PO Number:</div></td>
@@ -307,7 +311,7 @@ $(document).ready(function(){
 				</tr>
 		    	<tr><td><br/></td></tr>
     	</#if>
-        	<#if changeFlag?exists && changeFlag !='InterUnitTransferSale' && changeFlag !='ICPTransferSale'>
+        	<#if changeFlag?exists && changeFlag !='EditDepotSales' && changeFlag !='ICPTransferSale'>
         		<tr>
 	          		<td>&nbsp;</td>
 	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
@@ -330,6 +334,7 @@ $(document).ready(function(){
 		
 		<#-- Order Message Field Starts -->
 		<#if changeFlag?exists && !(changeFlag=='AdhocSaleNew')>
+		
         <tr><td><br/></td></tr>
         <#if parameters.orderMessage?exists && parameters.orderMessage?has_content>  
         <tr>
@@ -417,25 +422,16 @@ $(document).ready(function(){
 			<#assign formAction =''>			
 		    <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 		 		<#assign formAction='processAdhocSaleMm'>
-		 	<#elseif changeFlag?exists && changeFlag=='IcpSales'>
-		         <#assign formAction='processIcpSaleMm'>
-		    <#elseif changeFlag?exists && changeFlag=='IcpSalesAmul'>
-		         <#assign formAction='processIcpAmulSaleMm'>
-		    <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
-		         <#assign formAction='processIcpBellarySaleMm'>     
 		    <#elseif changeFlag?exists && changeFlag=='DepotSales'>
 		         <#assign formAction='processDepotSalesOrder'>
-		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
-		         <#assign formAction='processFGSProductSaleMm'>     
-		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
-		         <#assign formAction='processInterUnitStkTrSaleMm'> 
-		    <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
-		         <#assign formAction='processICPStkTrSaleMm'> 
+		    <#elseif changeFlag?exists && changeFlag=='EditDepotSales'>
+		         <#assign formAction='processDepotSalesOrder'>     
+		 	
 		 	<#else>
 				<#assign formAction='processIcpSaleMm'>		 					 	
 			</#if>				
 			
-	<#if booth?exists || party?exists>
+	<#if booth?exists || party?exists || partyId?exists >
  		    <div class="screenlet-title-bar">
 					<div class="grid-header" style="width:35%">
 						<label>Other Charges</label><span id="totalAmount"></span>
