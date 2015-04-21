@@ -5537,6 +5537,7 @@ public class InvoiceServices {
         
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String paymentTypeId = (String) context.get("paymentTypeId");
+        String partyId = (String) context.get("partyId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
         //String roleTypeId = (String) context.get("roleTypeId");
@@ -5572,6 +5573,10 @@ public class InvoiceServices {
             List exprListForParameters = FastList.newInstance();
             if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
             	exprListForParameters.add(EntityCondition.makeCondition("paymentDate", EntityOperator.BETWEEN, UtilMisc.toList(UtilDateTime.getDayStart(fromDate),UtilDateTime.getDayEnd(thruDate)))); 
+            }
+            if(UtilValidate.isNotEmpty(partyId)){
+            	exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,partyId),EntityOperator.OR,
+            			EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS,partyId))); 
             }
         	exprListForParameters.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
         	exprListForParameters.add(EntityCondition.makeCondition("isFullyApplied", EntityOperator.NOT_EQUAL, "Y")); 
