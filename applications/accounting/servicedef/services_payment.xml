@@ -420,6 +420,8 @@ under the License.
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="appliedInvoiceIdList" type="List" mode="OUT" optional="true"/>
+        <attribute name="appliedPaymentIdList" type="List" mode="OUT" optional="true"/>
        <!--  <attribute name="roleTypeId" type="String" mode="IN" optional="true"/> -->
     </service>
 </services>
