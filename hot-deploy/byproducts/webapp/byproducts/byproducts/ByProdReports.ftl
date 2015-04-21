@@ -36,6 +36,33 @@
 	jQuery(formId).submit();
     }
 
+function makeSlaesDatePicker(fromDateId ,thruDateId){
+	var fromSaleDate='${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromSaleDate?if_exists, "yyyy, M, d")}';
+	var thruSaleDate='${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruSaleDate?if_exists, "yyyy, M, d")}';
+		var minDate = new Date(fromSaleDate);
+		var maxDate = new Date(thruSaleDate);
+			
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'M-yy',
+			changeMonth: true,
+			minDate:minDate,
+			maxDate:maxDate,
+			onSelect: function(selectedDate) {
+			date = $(this).datepicker('getDate');
+			
+				$("#"+thruDateId).datepicker( "option", {minDate: minDate, maxDate: maxDate}).datepicker('setDate', maxDate);
+				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'M-yy',
+			changeMonth: true,
+			
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+}
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
@@ -242,8 +269,11 @@ function reportTypeChangeFunc() {
 		makeDatePicker3("cwsFDate","cwsTDate");
 		makeDatePicker3("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
 		makeDatePicker4("PFHFromDateCrDr","PFHThruDateCrDr");
-		makeDatePicker2("catYearSalesFromDateId","catYearSalesThruDateId");
-		makeDatePicker2("yearlySaleFromDateId","yearlySaleThruDateId");
+		//makeDatePicker2("catYearSalesFromDateId","catYearSalesThruDateId");
+		//makeDatePicker2("yearlySaleFromDateId","yearlySaleThruDateId");
+		makeSlaesDatePicker("catYearSalesFromDateId","catYearSalesThruDateId");
+		makeSlaesDatePicker("yearlySaleFromDateId","yearlySaleThruDateId");
+		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
