@@ -7044,7 +7044,465 @@ public class OrderServices {
 	       
 	       return termAmount;
 	   }
+   /** Service for editing a old order. Here we are assuming only orderItems and orderAdjustment only change for old orderId */
+   public static Map<String, Object> editOrder(DispatchContext ctx, Map<String, ? extends Object> context) {
+       Delegator delegator = ctx.getDelegator();
+       LocalDispatcher dispatcher = ctx.getDispatcher();
+       Security security = ctx.getSecurity();
+       List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+       Locale locale = (Locale) context.get("locale");
+       Map<String, Object> successResult = ServiceUtil.returnSuccess();
+
+       GenericValue userLogin = (GenericValue) context.get("userLogin");
+       // get the order type
+       String orderTypeId = (String) context.get("orderTypeId");
+       String partyId = (String) context.get("partyId");
+       String billFromVendorPartyId = (String) context.get("billFromVendorPartyId");
+       // check security permissions for order:
+       //  SALES ORDERS - if userLogin has ORDERMGR_SALES_CREATE or ORDERMGR_CREATE permission, or if it is same party as the partyId, or
+       //                 if it is an AGENT (sales rep) creating an order for his customer
+       //  PURCHASE ORDERS - if there is a PURCHASE_ORDER permission
+       Map<String, Object> resultSecurity = new HashMap<String, Object>();
+       boolean hasPermission = OrderServices.hasPermission(orderTypeId, partyId, userLogin, "CREATE", security);
+       // final check - will pass if userLogin's partyId = partyId for order or if userLogin has ORDERMGR_CREATE permission
+       // jacopoc: what is the meaning of this code block? FIXME
+       if (!hasPermission) {
+           partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, resultSecurity, "ORDERMGR", "_CREATE");
+           if (resultSecurity.size() > 0) {
+               return resultSecurity;
+           }
+       }
+
+       // get the product store for the order, but it is required only for sales orders
+       String productStoreId = (String) context.get("productStoreId");
+       GenericValue productStore = null;
+       if ((orderTypeId.equals("SALES_ORDER")) && (UtilValidate.isNotEmpty(productStoreId))) {
+           try {
+               productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+           } catch (GenericEntityException e) {
+               return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                       "OrderErrorCouldNotFindProductStoreWithID",UtilMisc.toMap("productStoreId",productStoreId),locale)  + e.toString());
+           }
+       }
+
+       // figure out if the order is immediately fulfilled based on product store settings
+       boolean isImmediatelyFulfilled = false;
+       if (productStore != null) {
+           isImmediatelyFulfilled = "Y".equals(productStore.getString("isImmediatelyFulfilled"));
+       }
+
+       successResult.put("orderTypeId", orderTypeId);
+
+       // lookup the order type entity
+       GenericValue orderType = null;
+       try {
+           orderType = delegator.findByPrimaryKeyCache("OrderType", UtilMisc.toMap("orderTypeId", orderTypeId));
+       } catch (GenericEntityException e) {
+           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                   "OrderErrorOrderTypeLookupFailed",locale) + e.toString());
+       }
+
+       // make sure we have a valid order type
+       if (orderType == null) {
+           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                   "OrderErrorInvalidOrderTypeWithID", UtilMisc.toMap("orderTypeId",orderTypeId), locale));
+       }
+
+       // check to make sure we have something to order
+       List<GenericValue> orderItems = UtilGenerics.checkList(context.get("orderItems"));
+       if (orderItems.size() < 1) {
+           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "items.none", locale));
+       }
+
+       // all this marketing pkg auto stuff is deprecated in favor of MARKETING_PKG_AUTO productTypeId and a BOM of MANUF_COMPONENT assocs
+       // these need to be retrieved now because they might be needed for exploding MARKETING_PKG_AUTO
+       List<GenericValue> orderAdjustments = UtilGenerics.checkList(context.get("orderAdjustments"));
+       List<GenericValue> orderItemShipGroupInfo = UtilGenerics.checkList(context.get("orderItemShipGroupInfo"));
+       List<GenericValue> orderItemPriceInfo = UtilGenerics.checkList(context.get("orderItemPriceInfos"));
+
+       // check inventory and other things for each item
+       List<String> errorMessages = FastList.newInstance();
+       Map<String, BigDecimal> normalizedItemQuantities = FastMap.newInstance();
+       Map<String, String> normalizedItemNames = FastMap.newInstance();
+       Map<String, GenericValue> itemValuesBySeqId = FastMap.newInstance();
+       Iterator<GenericValue> itemIter = orderItems.iterator();
+       Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
+       //
+       // need to run through the items combining any cases where multiple lines refer to the
+       // same product so the inventory check will work correctly
+       // also count quantities ordered while going through the loop
+       while (itemIter.hasNext()) {
+           GenericValue orderItem = itemIter.next();
+
+           // start by putting it in the itemValuesById Map
+           itemValuesBySeqId.put(orderItem.getString("orderItemSeqId"), orderItem);
+
+           String currentProductId = orderItem.getString("productId");
+           if (currentProductId != null) {
+               // only normalize items with a product associated (ignore non-product items)
+               if (normalizedItemQuantities.get(currentProductId) == null) {
+                   normalizedItemQuantities.put(currentProductId, orderItem.getBigDecimal("quantity"));
+                   normalizedItemNames.put(currentProductId, orderItem.getString("itemDescription"));
+               } else {
+                   BigDecimal currentQuantity = normalizedItemQuantities.get(currentProductId);
+                   normalizedItemQuantities.put(currentProductId, currentQuantity.add(orderItem.getBigDecimal("quantity")));
+               }
+
+              /* try {
+                   // count product ordered quantities
+                   // run this synchronously so it will run in the same transaction
+                   dispatcher.runSync("countProductQuantityOrdered", UtilMisc.<String, Object>toMap("productId", currentProductId, "quantity", orderItem.getBigDecimal("quantity"), "userLogin", userLogin));
+               } catch (GenericServiceException e1) {
+                   Debug.logError(e1, "Error calling countProductQuantityOrdered service", module);
+                   return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                           "OrderErrorCallingCountProductQuantityOrderedService",locale) + e1.toString());
+               }*/
+           }
+       }
+
+       if (!"PURCHASE_ORDER".equals(orderTypeId) && productStoreId == null) {
+           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                   "OrderErrorTheProductStoreIdCanOnlyBeNullForPurchaseOrders",locale));
+       }
+
+       Timestamp orderDate = (Timestamp) context.get("orderDate");
+       
+       Iterator<String> normalizedIter = normalizedItemQuantities.keySet().iterator();
+       while (normalizedIter.hasNext()) {
+           // lookup the product entity for each normalized item; error on products not found
+           String currentProductId = normalizedIter.next();
+           BigDecimal currentQuantity = normalizedItemQuantities.get(currentProductId);
+           String itemName = normalizedItemNames.get(currentProductId);
+           GenericValue product = null;
+
+           try {
+               product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", currentProductId));
+           } catch (GenericEntityException e) {
+               String errMsg = UtilProperties.getMessage(resource_error, "product.not_found", new Object[] { currentProductId }, locale);
+               Debug.logError(e, errMsg, module);
+               errorMessages.add(errMsg);
+               continue;
+           }
+
+           if (product == null) {
+               String errMsg = UtilProperties.getMessage(resource_error, "product.not_found", new Object[] { currentProductId }, locale);
+               Debug.logError(errMsg, module);
+               errorMessages.add(errMsg);
+               continue;
+           }
+
+           if ("SALES_ORDER".equals(orderTypeId)) {
+               // check to see if introductionDate hasn't passed yet
+               if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
+                   String excMsg = UtilProperties.getMessage(resource_error, "product.not_yet_for_sale",
+                           new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
+                   Debug.logWarning(excMsg, module);
+                   errorMessages.add(excMsg);
+                   continue;
+               }
+           }
+
+           if ("SALES_ORDER".equals(orderTypeId)) {
+               boolean salesDiscontinuationFlag = false;
+               // When past orders are imported, they should be imported even if sales discontinuation date is in the past but if the order date was before it
+               if (orderDate != null && product.get("salesDiscontinuationDate") != null) {
+                   salesDiscontinuationFlag = orderDate.after(product.getTimestamp("salesDiscontinuationDate")) && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"));
+               } else if (product.get("salesDiscontinuationDate") != null) {
+                   salesDiscontinuationFlag = nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"));    
+               }
+               // check to see if salesDiscontinuationDate has passed
+               if (salesDiscontinuationFlag) {
+                   String excMsg = UtilProperties.getMessage(resource_error, "product.no_longer_for_sale",
+                           new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
+                   Debug.logWarning(excMsg, module);
+                   errorMessages.add(excMsg);
+                   continue;
+               }
+           }
+
+       }
+
+       // the inital status for ALL order types
+       String initialStatus = "ORDER_CREATED";
+       successResult.put("statusId", initialStatus);
+
+       // create the order object
+       String orderId = (String) context.get("orderId");
+       String orgPartyId = null;
+       if (productStore != null) {
+           orgPartyId = productStore.getString("payToPartyId");
+       } else if (billFromVendorPartyId != null) {
+           orgPartyId = billFromVendorPartyId;
+       }
+
+       if (UtilValidate.isNotEmpty(orgPartyId)) {
+           Map<String, Object> getNextOrderIdContext = FastMap.newInstance();
+           getNextOrderIdContext.putAll(context);
+           getNextOrderIdContext.put("partyId", orgPartyId);
+           getNextOrderIdContext.put("userLogin", userLogin);
+
+           if ((orderTypeId.equals("SALES_ORDER")) || (productStoreId != null)) {
+               getNextOrderIdContext.put("productStoreId", productStoreId);
+           }
+           if (UtilValidate.isEmpty(orderId)) {
+               try {
+                   getNextOrderIdContext = ctx.makeValidContext("getNextOrderId", "IN", getNextOrderIdContext);
+                   Map<String, Object> getNextOrderIdResult = dispatcher.runSync("getNextOrderId", getNextOrderIdContext);
+                   if (ServiceUtil.isError(getNextOrderIdResult)) {
+                       String errMsg = UtilProperties.getMessage(resource_error, 
+                               "OrderErrorGettingNextOrderIdWhileCreatingOrder", locale);
+                       return ServiceUtil.returnError(errMsg, null, null, getNextOrderIdResult);
+                   }
+                   orderId = (String) getNextOrderIdResult.get("orderId");
+               } catch (GenericServiceException e) {
+                   String errMsg = UtilProperties.getMessage(resource_error, 
+                           "OrderCaughtGenericServiceExceptionWhileGettingOrderId", locale);
+                   Debug.logError(e, errMsg, module);
+                   return ServiceUtil.returnError(errMsg);
+               }
+           }
+       }
+
+       if (UtilValidate.isEmpty(orderId)) {
+           // for purchase orders or when other orderId generation fails, a product store id should not be required to make an order
+           orderId = delegator.getNextSeqId("OrderHeader");
+       }
+
+       String billingAccountId = (String) context.get("billingAccountId");
+       if (orderDate == null) {
+           orderDate = nowTimestamp;
+       }
+
+       Map<String, Object> orderHeaderMap = UtilMisc.<String, Object>toMap("orderId", orderId, "orderTypeId", orderTypeId,
+               "orderDate", orderDate, "entryDate", nowTimestamp,
+               "statusId", initialStatus, "billingAccountId", billingAccountId);
+       orderHeaderMap.put("orderName", context.get("orderName"));
+       orderHeaderMap.put("estimatedDeliveryDate", context.get("estimatedDeliveryDate"));
+       orderHeaderMap.put("isEnableAcctg", context.get("isEnableAcctg"));
+       if (isImmediatelyFulfilled) {
+           // also flag this order as needing inventory issuance so that when it is set to complete it will be issued immediately (needsInventoryIssuance = Y)
+           orderHeaderMap.put("needsInventoryIssuance", "Y");
+       }
+       GenericValue orderHeader = delegator.makeValue("OrderHeader", orderHeaderMap);
+       //if Already there get that order only
+      
+       if (UtilValidate.isNotEmpty(orderId)) {
+    	   try {
+    		   orderHeader= delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+   	       }catch (GenericEntityException e) {
+   	           Debug.logError(e, "Problem while finding order", module);
+   	           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+   	                   "OrderErrorCouldNotCreateOrderWriteError",locale) + e.getMessage() + ").");
+   	       }
+       
+       }
+     
+      
+       if (context.get("grandTotal") != null) {
+           orderHeader.set("grandTotal", context.get("grandTotal"));
+       }
+
+       if (UtilValidate.isNotEmpty(context.get("visitId"))) {
+           orderHeader.set("visitId", context.get("visitId"));
+       }
+
+       if (userLogin != null && userLogin.get("userLoginId") != null) {
+           orderHeader.set("createdBy", userLogin.getString("userLoginId"));
+       }
+       if(UtilValidate.isNotEmpty(context.get("orderName"))){
+       	orderHeader.set("orderName",context.get("orderName"));
+       }
+       // first try to create the OrderHeader; if this does not fail, continue.
+       try {
+           delegator.createOrStore(orderHeader);
+       } catch (GenericEntityException e) {
+           Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
+           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                   "OrderOrderCreationFailedPleaseNotifyCustomerService",locale));
+       }
+
+       // before processing orderItems process orderItemGroups so that they'll be in place for the foreign keys and what not
+       List<GenericValue> orderItemGroups = UtilGenerics.checkList(context.get("orderItemGroups"));
+       if (UtilValidate.isNotEmpty(orderItemGroups)) {
+           Iterator<GenericValue> orderItemGroupIter = orderItemGroups.iterator();
+           while (orderItemGroupIter.hasNext()) {
+               GenericValue orderItemGroup = orderItemGroupIter.next();
+               orderItemGroup.set("orderId", orderId);
+               toBeStored.add(orderItemGroup);
+           }
+       }
+
+       // set the order items
+       Iterator<GenericValue> oi = orderItems.iterator();
+       while (oi.hasNext()) {
+           GenericValue orderItem = oi.next();
+           orderItem.set("orderId", orderId);
+           toBeStored.add(orderItem);
+
+           // create the item status record
+          /* String itemStatusId = delegator.getNextSeqId("OrderStatus");
+           GenericValue itemStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", itemStatusId));
+           itemStatus.put("statusId", orderItem.get("statusId"));
+           itemStatus.put("orderId", orderId);
+           itemStatus.put("orderItemSeqId", orderItem.get("orderItemSeqId"));
+           itemStatus.put("statusDatetime", nowTimestamp);
+           itemStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
+           toBeStored.add(itemStatus);*/
+       }
+
+      /* // set the order attributes
+       List<GenericValue> orderAttributes = UtilGenerics.checkList(context.get("orderAttributes"));
+       if (UtilValidate.isNotEmpty(orderAttributes)) {
+           Iterator<GenericValue> oattr = orderAttributes.iterator();
+           while (oattr.hasNext()) {
+               GenericValue oatt = oattr.next();
+               oatt.set("orderId", orderId);
+               toBeStored.add(oatt);
+           }
+       }*/
+
+       // set the order item attributes
+      /* List<GenericValue> orderItemAttributes = UtilGenerics.checkList(context.get("orderItemAttributes"));
+       if (UtilValidate.isNotEmpty(orderItemAttributes)) {
+           Iterator<GenericValue> oiattr = orderItemAttributes.iterator();
+           while (oiattr.hasNext()) {
+               GenericValue oiatt = oiattr.next();
+               oiatt.set("orderId", orderId);
+               toBeStored.add(oiatt);
+           }
+       }*/
+      
+       //Here it is edit order always remove old adjustments
+	       try {
+		   	List<GenericValue> oldOrderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			//Debug.log("==oldOrderAdjustments===Before=Deletion========="+oldOrderAdjustments);
+		   	delegator.removeAll(oldOrderAdjustments);
+	       }catch (GenericEntityException e) {
+	           Debug.logError(e, "Problem with order storage or reservations", module);
+	           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+	                   "OrderErrorCouldNotCreateOrderWriteError",locale) + e.getMessage() + ").");
+	       }
 	
+       // set the orderId on all adjustments; this list will include order and
+       // item adjustments...
+       if (UtilValidate.isNotEmpty(orderAdjustments)) {
+           Iterator<GenericValue>iter = orderAdjustments.iterator();
+
+           while (iter.hasNext()) {
+               GenericValue orderAdjustment = iter.next();
+               try {
+                   orderAdjustment.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
+               } catch (IllegalArgumentException e) {
+                   return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                           "OrderErrorCouldNotGetNextSequenceIdForOrderAdjustmentCannotCreateOrder",locale));
+               }
+
+               orderAdjustment.set("orderId", orderId);
+               orderAdjustment.set("createdDate", UtilDateTime.nowTimestamp());
+               orderAdjustment.set("createdByUserLogin", userLogin.getString("userLoginId"));
+
+               if (UtilValidate.isEmpty(orderAdjustment.get("orderItemSeqId"))) {
+                   orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
+               }
+               if (UtilValidate.isEmpty(orderAdjustment.get("shipGroupSeqId"))) {
+                   orderAdjustment.set("shipGroupSeqId", DataModelConstants.SEQ_ID_NA);
+               }
+               toBeStored.add(orderAdjustment);
+           }
+       }
+
+       // set the order item ship groups
+       // commented when PurchaseOrder not created without shipment
+       List<String> dropShipGroupIds = FastList.newInstance(); // this list will contain the ids of all the ship groups for drop shipments (no reservations)
+       if (UtilValidate.isNotEmpty(orderItemShipGroupInfo)) {
+           Iterator<GenericValue> osiInfos = orderItemShipGroupInfo.iterator();
+           while (osiInfos.hasNext()) {
+               GenericValue valueObj = osiInfos.next();
+               valueObj.set("orderId", orderId);
+              /* if ("OrderItemShipGroup".equals(valueObj.getEntityName())) {
+                   // ship group
+                   if (valueObj.get("carrierRoleTypeId") == null) {
+                       valueObj.set("carrierRoleTypeId", "CARRIER");
+                   }
+                   if (!UtilValidate.isEmpty(valueObj.getString("supplierPartyId"))) {
+                       dropShipGroupIds.add(valueObj.getString("shipGroupSeqId"));
+                   }
+                    toBeStored.add(valueObj); // from out side of if we bring here
+               } else */
+               	if ("OrderAdjustment".equals(valueObj.getEntityName())) {
+                   // shipping / tax adjustment(s)
+                   if (UtilValidate.isEmpty(valueObj.get("orderItemSeqId"))) {
+                       valueObj.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
+                   }
+                   valueObj.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
+                   valueObj.set("createdDate", UtilDateTime.nowTimestamp());
+                   valueObj.set("createdByUserLogin", userLogin.getString("userLoginId"));
+                   toBeStored.add(valueObj);
+               }
+              
+           }
+       }
+    
+
+       // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity
+       if (UtilValidate.isNotEmpty(orderItemPriceInfo)) {
+           Iterator<GenericValue> oipii = orderItemPriceInfo.iterator();
+
+           while (oipii.hasNext()) {
+               GenericValue oipi = oipii.next();
+               try {
+                   oipi.set("orderItemPriceInfoId", delegator.getNextSeqId("OrderItemPriceInfo"));
+               } catch (IllegalArgumentException e) {
+                   return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                           "OrderErrorCouldNotGetNextSequenceIdForOrderItemPriceInfoCannotCreateOrder",locale));
+               }
+
+               oipi.set("orderId", orderId);
+               toBeStored.add(oipi);
+           }
+       }
+
+      
+
+       // store the orderProductPromoUseInfos
+       List<GenericValue> orderProductPromoUses = UtilGenerics.checkList(context.get("orderProductPromoUses"));
+       if (UtilValidate.isNotEmpty(orderProductPromoUses)) {
+           Iterator<GenericValue> orderProductPromoUseIter = orderProductPromoUses.iterator();
+           while (orderProductPromoUseIter.hasNext()) {
+               GenericValue productPromoUse = orderProductPromoUseIter.next();
+               productPromoUse.set("orderId", orderId);
+               toBeStored.add(productPromoUse);
+           }
+       }
+
+       // store the orderProductPromoCodes
+       Set<String> orderProductPromoCodes = UtilGenerics.checkSet(context.get("orderProductPromoCodes"));
+       if (UtilValidate.isNotEmpty(orderProductPromoCodes)) {
+           GenericValue orderProductPromoCode = delegator.makeValue("OrderProductPromoCode");
+           Iterator<String> orderProductPromoCodeIter = orderProductPromoCodes.iterator();
+           while (orderProductPromoCodeIter.hasNext()) {
+               orderProductPromoCode.clear();
+               orderProductPromoCode.set("orderId", orderId);
+               orderProductPromoCode.set("productPromoCodeId", orderProductPromoCodeIter.next());
+               toBeStored.add(orderProductPromoCode);
+           }
+       }
+
+       try {
+           // store line items, etc so that they will be there for the foreign key checks
+           delegator.storeAll(toBeStored);
+
+           successResult.put("orderId", orderId);
+       } catch (GenericEntityException e) {
+           Debug.logError(e, "Problem with order storage or reservations", module);
+           return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                   "OrderErrorCouldNotCreateOrderWriteError",locale) + e.getMessage() + ").");
+       }
+
+       return successResult;
+   }
+
 }
 
 

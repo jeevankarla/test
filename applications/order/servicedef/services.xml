@@ -153,6 +153,71 @@ under the License.
         <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>
         <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
     </service>
+     <service name="editOrder" engine="java" validate="true" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="editOrder">
+        <description>Edit order entities(same copied from  CreateOrder)</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="placingCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="billToCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipToCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="endUserCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="billFromVendorPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipFromVendorPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="supplierAgentPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderName" type="String" mode="IN" optional="true"/>
+        <attribute name="visitId" type="String" mode="IN" optional="true"/>
+        <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="transactionId" type="String" mode="IN" optional="true"/>
+        <attribute name="terminalId" type="String" mode="IN" optional="true"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="true"/>
+        <attribute name="autoOrderShoppingListId" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="externalId" type="String" mode="IN" optional="true"/>
+        <attribute name="internalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="distributorId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemGroups" type="List" mode="IN" optional="true"/>
+        <attribute name="orderItems" type="List" mode="IN" optional="false"/>
+        <attribute name="orderTerms" type="List" mode="IN" optional="true"/>
+        <!-- workeffort contains the rental start/enddate, nbr of persons. WorkEfforts is mandatory for ordertype = RENTAL_ORDER_ITEM-->
+        <attribute name="workEfforts" type="List" mode="IN" optional="true"/>
+        <attribute name="orderAdjustments" type="List" mode="IN" optional="false"/>
+        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="shippingAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="firstAttemptOrderId" type="String" mode="IN" optional="true"/>
+        <attribute name="currencyUom" type="String" mode="IN" optional="false"/>
+        <attribute name="grandTotal" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="taxAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="orderDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedDeliveryDate" type="Timestamp" mode="IN" optional="true"/>        
+        <attribute name="orderItemShipGroupInfo" type="List" mode="IN" optional="true"/>
+        <attribute name="orderItemAttributes" type="List" mode="IN" optional="true"/>
+        <attribute name="orderAttributes" type="List" mode="IN" optional="true"/>
+        <attribute name="orderPaymentInfo" type="List" mode="IN" optional="true"/>
+        <attribute name="orderContactMechs" type="List" mode="IN" optional="true"/>
+        <attribute name="orderItemContactMechs" type="List" mode="IN" optional="true"/>
+        <attribute name="orderItemPriceInfos" type="List" mode="IN" optional="true"/>
+        <attribute name="orderProductPromoUses" type="List" mode="IN" optional="true"/>
+        <attribute name="orderProductPromoCodes" type="Set" mode="IN" optional="true"/>
+        <attribute name="orderItemSurveyResponses" type="List" mode="IN" optional="true"/>
+        <attribute name="trackingCodeOrders" type="List" mode="IN" optional="true"/>
+        <attribute name="orderAdditionalPartyRoleMap" type="Map" mode="IN" optional="true"/>
+        <attribute name="orderItemAssociations" type="List" mode="IN" optional="true"/>
+        <attribute name="orderInternalNotes" type="List" mode="IN" optional="true"/>
+        <attribute name="orderNotes" type="List" mode="IN" optional="true"/>
+        <attribute name="supplierPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="originOrderId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+        <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
+    </service>
+    
 
     <service name="callProcessOrderPayments" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="callProcessOrderPayments" auth="false">
