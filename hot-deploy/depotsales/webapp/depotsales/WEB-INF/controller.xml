@@ -42,7 +42,7 @@
      
       <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+     	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processDepotSaleEvent" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="DepotSalesOrder">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>

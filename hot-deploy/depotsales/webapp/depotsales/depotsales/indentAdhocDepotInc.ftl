@@ -217,7 +217,7 @@
 			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
 			var disableAcctgFlag = jQuery("<input>").attr("type", "hidden").attr("name", "disableAcctgFlag").val(acctgFlag);
 			<#if orderId?exists>
-				var order = '${orderId}';
+				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
 				jQuery(formId).append(jQuery(extOrder));
 			</#if>
@@ -368,8 +368,12 @@
 				<#if changeFlag?exists && changeFlag != "ICPTransferSale">
 					{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
 				</#if>
-			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
+			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "InterUnitTransferSale"  || changeFlag == "EditDepotSales">
+		       <#if changeFlag?exists && changeFlag == "EditDepotSales">
+					{id:"prevQuantity", name:"Prev-Qty(Pkt)", field:"prevQuantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false , formatter: rateFormatter},
+				<#else>
+					{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
+				</#if>
 				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 				<#-->
 				<#if changeFlag?exists &&  changeFlag != "ICPTransferSale">
@@ -377,9 +381,15 @@
 				</#if> -->
 			</#if>
 			
+			
+			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false}
+			<#else>
+			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
+			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
+			</#if>
 		];
 		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title", focusable :false,
@@ -924,6 +934,7 @@
 	     // only setupGrid when BoothId exists
 	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=partyId]').val();
+	    // alert("====partyId==="+partyId);
 		 if(boothId || partyId){
 		 	setupGrid1();
 		 	setupGrid2();
