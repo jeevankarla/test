@@ -81,7 +81,7 @@
         	<hyperlink target="setQuoteStatus" description="Cancel" confirmation-message="Are you sure to Cancel Quote..?">
                  <parameter param-name="quoteId"/>
                  <parameter param-name="custRequestId"/>
-                <parameter param-name="statusId" value="QUO_REJECTED"/>
+                <parameter param-name="statusId" value="QUO_CANCELED"/>
                 <parameter param-name="flag" value="Y" />
             </hyperlink>
         </field>

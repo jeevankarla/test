@@ -50,7 +50,8 @@ if(UtilValidate.isNotEmpty(custRequestItem)){
 }
 List EnquiryDetList=[];
 EnquiryDetList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId));
-EnquiryDetList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "QUO_REJECTED"));
+/*EnquiryDetList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "QUO_REJECTED"));*/
+EnquiryDetList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "QUO_CANCELED"));
 cond = EntityCondition.makeCondition(EnquiryDetList, EntityOperator.AND);
 quoteItemList=delegator.findList("QuoteAndItemAndCustRequest", cond,null, null,null,false);
 partyIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "partyId", true);
@@ -58,6 +59,7 @@ quoteIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "quoteId", true)
 productIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "productId", true);
 productPriceMap = [:];
 poDateMap = [:];
+statusMap=[:];
 
 if(UtilValidate.isNotEmpty(productIds)){	
 	productIds.each{eachproductId->		
@@ -72,10 +74,10 @@ if(UtilValidate.isNotEmpty(productIds)){
 			OrderHeaderAndItemsList = EntityUtil.getFirst(OrderHeaderAndItemsList);
 			poDateMap[eachproductId]=UtilDateTime.toDateString(OrderHeaderAndItemsList.orderDate, "dd/MM/yyyy");
 		}*/
+		
 		if(UtilValidate.isNotEmpty(partyIds)){		
 			partyPriceMap = [:];
 		    partyIds.each{eachPartyId->	
-				
 				partyNameMap=[:];
 				partyNameMap["price"]=0;
 				partyNameMap["quantity"]=0;							
@@ -91,9 +93,14 @@ if(UtilValidate.isNotEmpty(productIds)){
 				    price=(prodList.get(0)).quoteUnitPrice;
 					quantity=(prodList.get(0)).quantity;	
 					amount=(prodList.get(0)).itemTotal;
+					itemStatus=(prodList.get(0)).qiStatusId;
 					priceMap.put("price",price);
 					priceMap.put("quantity",quantity);
 					priceMap.put("amount",amount);
+					priceMap.putAt("itemStatus", itemStatus);
+					if(UtilValidate.isEmpty(statusMap[eachPartyId])){
+					statusMap[eachPartyId]=prodList.get(0).statusId;
+					}
 				}	
 				partyPriceMap.put(eachPartyId, priceMap);
 			}		
@@ -102,6 +109,7 @@ if(UtilValidate.isNotEmpty(productIds)){
     }
 }	
 context.productPriceMap=productPriceMap;
+context.statusMap=statusMap;
 /*conditionList=[];
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,productIds));
 cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
