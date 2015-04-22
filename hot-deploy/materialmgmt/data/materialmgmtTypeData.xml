@@ -109,6 +109,9 @@
 	 <StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
 	 <StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
 	 
+	  <StatusItem  description="Canceled"  sequenceId="97" statusId="QUO_CANCELED" statusTypeId="QUOTE_STATUS"/>
+	 <StatusValidChange  statusId="QUO_CREATED" statusIdTo="QUO_CANCELED" transitionName="Quote Canceled."/>
+	 
 	 <EnumerationType  description="Order Attribute" enumTypeId="ORDER_ATTRIBUTE"/>
 	 <Enumeration description="Tender Date" enumId="TENDER_DATE" enumTypeId="ORDER_ATTRIBUTE"/>
 	 <Enumeration description="Tender Value" enumId="TENDER_VALUE" enumTypeId="ORDER_ATTRIBUTE"/>

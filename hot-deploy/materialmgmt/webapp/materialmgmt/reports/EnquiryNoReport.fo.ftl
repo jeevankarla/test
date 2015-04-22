@@ -65,6 +65,9 @@ under the License.
     										<fo:table-cell border-style="solid">
 						                      <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}</fo:block>
 											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.get("partyId")}]</fo:block>
+	                                        <fo:block text-align="left" font-weight="bold">-----------</fo:block>
+											<#assign status = delegator.findOne("StatusItem", {"statusId" : statusMap.get(partyNameList.get("partyId"))}, true)?if_exists/>
+											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${status.description?if_exists}]</fo:block>
 						                  	</fo:table-cell>
     									</#list>    	
 					             </fo:table-row> 
@@ -132,6 +135,9 @@ under the License.
 		  					        <fo:table-cell border-style="solid" >
 		  					            <fo:block text-align="center" font-size="11pt" >${pList.getValue().get("price")?if_exists} /</fo:block>
                                         <fo:block text-align="left" font-size="11pt" >${pList.getValue().get("amount")?if_exists}</fo:block>
+                                        <fo:block text-align="left" font-weight="bold">-----------</fo:block>
+											<#assign status = delegator.findOne("StatusItem", {"statusId" : pList.getValue().get("itemStatus")}, true)?if_exists/>
+                                        <fo:block text-align="left" font-size="11pt" >[${status.description?if_exists}]</fo:block> 
 		  					        </fo:table-cell> 
 		  					        <#else>
 		  					        <fo:table-cell border-style="solid" >
