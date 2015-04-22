@@ -473,13 +473,16 @@
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                 <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
                 <set field="supplyDate" from-field="parameters.supplyDate"/>
+                 <set field="parameters.roleTypeId" value="SUPPLIER"/>
                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 				<set field="defaulteffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd:MM:yyyy hh:mm&quot;);}" />
-			   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+			  <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/> -->
+			   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy"/>
+			   
 			   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/purchaseOrderDetailsEntryDepot.groovy"/>
             </actions>
             <widgets>
@@ -1476,7 +1479,8 @@
                   <set field="parameters.changeFlag" value="PurchaseOrder"/> 
 				 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
 				 <set field="parameters.partyStatusId" value="PARTY_ENABLED"/> 				 
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                  <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/> -->
+			   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
                  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>   
                  <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/purchaseOrderDetailsEntryDepot.groovy"/>
