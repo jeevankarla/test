@@ -202,4 +202,6 @@
     <ProductPriceType  description="Tax Collected At Source"  parentTypeId="TAX" productPriceTypeId="TCS_206C"/>
     
      <RoleType  description="Indent Dept Head Approver" hasTable="N" roleTypeId="INDENTDEPTAPPROVER"/>
+     
+     <TenantConfiguration propertyName="enableAdvancePaymentApp" propertyValue="Y" propertyTypeEnumId="PURCHASE_OR_STORES" description="Enable Advance payment application while purchase invoice generation"/>
 </entity-engine-xml>

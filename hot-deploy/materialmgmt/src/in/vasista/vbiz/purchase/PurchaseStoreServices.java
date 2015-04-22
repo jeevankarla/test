@@ -1027,7 +1027,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
         	Debug.log("result invoiceId  #################################"+result);
         	Boolean enableAdvancePaymentApp  = Boolean.FALSE;
         	try{        	 	
-        		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
+        		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enableAdvancePaymentApp"), true);
            		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
            			enableAdvancePaymentApp = Boolean.TRUE;
            		} 
@@ -1086,11 +1086,13 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			  		  List paymentIds = (List)paymentResult.get("paymentsList");
   	                  Debug.log("+++++++===paymentIds===AfterDEbitNote=="+paymentIds);
 		        }else{
-	     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));
-	     			if (ServiceUtil.isError(resultPaymentApp)) {						  
-	     				Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
-	     	            return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-	     		    }
+		        	if(enableAdvancePaymentApp){ //invoice application basing on flag
+		     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));
+		     			if (ServiceUtil.isError(resultPaymentApp)) {						  
+		     				Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
+		     	            return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
+		     		    }
+		        	}
 		        }
     		}//end of advance payment appl   
         }catch (Exception e) {
