@@ -37,20 +37,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">Route Marketing Channel</fo:block>
                     <fo:block text-align="center"  font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">        Sales  Report From :: ${fromDate?if_exists}  To:: ${thruDate?if_exists}</fo:block>
                      <fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-              		<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block  font-weight="bold" font-size="12pt">Product    			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;      DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty(L/K)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspAmt  		&#160;&#160;&#160;RtnQty   RtnQty(L/K)  &#160; &#160;RtnAmt  &#160;NetQty(L/K) &#160;&#160;&#160; &#160;&#160;&#160;NetAmt  </fo:block>
-            		<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            		<fo:block  font-weight="bold" font-size="12pt">Product    			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;       DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;   DspQty(L/K)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; DspAmt  		&#160;&#160;&#160; RtnQty    &#160;  RtnQty(L/K)  &#160; &#160; RtnAmt  &#160; NetQty(L/K) &#160;&#160;&#160; &#160;&#160;&#160;NetAmt  </fo:block>
+            		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="110pt"/>
                     <fo:table-column column-width="90pt"/>
-                    <fo:table-column column-width="145pt"/> 
-               	    <fo:table-column column-width="158pt"/>
+                    <fo:table-column column-width="160pt"/> 
+               	    <fo:table-column column-width="170pt"/>
             		<fo:table-column column-width="72pt"/> 		
-            		<fo:table-column column-width="72pt"/>
-            		<fo:table-column column-width="85pt"/>
+            		<fo:table-column column-width="92pt"/>
+            		<fo:table-column column-width="87pt"/>
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="110pt"/>
                     <fo:table-body>
@@ -186,11 +186,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 		                        	 <fo:table>
 					                   <fo:table-column column-width="110pt"/>
 					                    <fo:table-column column-width="90pt"/>
-					                    <fo:table-column column-width="145pt"/> 
-					               	    <fo:table-column column-width="158pt"/>
+					                    <fo:table-column column-width="160pt"/> 
+					               	    <fo:table-column column-width="170pt"/>
 					            		<fo:table-column column-width="72pt"/> 		
-					            		<fo:table-column column-width="72pt"/>
-					            		<fo:table-column column-width="85pt"/>
+					            		<fo:table-column column-width="92pt"/>
+					            		<fo:table-column column-width="87pt"/>
 					            		<fo:table-column column-width="90pt"/>
 					            		<fo:table-column column-width="110pt"/>
 										 <fo:table-body>
