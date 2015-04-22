@@ -57,9 +57,9 @@ under the License.
       	 <#assign payHeader = delegator.findOne("PayrollHeader", {"payrollHeaderId" : payRollHeader.getKey()}, true)>
       	 <#assign partyId = payHeader.partyIdFrom>
       	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>
-      	 <#if timePeriod?exists>
+      	 <#--<#if timePeriod?exists>
       	 		<#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
-      	 </#if>
+      	 </#if>-->  
       	 
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign doj = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(doj?if_exists,timePeriodStart) />
@@ -191,6 +191,7 @@ under the License.
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                         		<#--<fo:block font-weight="bold" text-align="center">Leave Details</fo:block>-->
+                        		<fo:block font-weight="bold" text-align="center">Loss of pay and late minutes</fo:block>
                     		</fo:table-cell>
                     	</fo:table-row>
                     </fo:table-header>
@@ -212,7 +213,6 @@ under the License.
                 			<fo:table-cell  border-style="solid">
                 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Total Days                </fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Loss of Pay Days             </fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrears   Days            </fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Net Paid Days          </fo:block>
                     		</fo:table-cell>
@@ -222,12 +222,15 @@ under the License.
                     		<#assign netPaidDays=0>
                     		<#assign arrearDays=0>
                     		<#assign noOfPayableDays=0>
-                    		<#if emplLeavesDetails?has_content>
+                    		<#assign lateMinStr = "">
+                    		<#if emplAttendanceDetailsMap?has_content>
+                    		<#assign emplLeavesDetails = emplAttendanceDetailsMap.get(partyId)>
                     			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
                     			<#assign lateMin=emplLeavesDetails.get("lateMin")?if_exists>
                     			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
                     			<#assign arrearDays=emplLeavesDetails.get("noOfArrearDays")?if_exists>
                     			<#assign noOfPayableDays=emplLeavesDetails.get("noOfPayableDays")?if_exists>
+                    			<#assign lateMinStr=emplLeavesDetails.get("lateMinStr")?if_exists>
                     		</#if> 
                     		<#assign lossOfpay=0>
                     		<#assign latemin=0>
@@ -237,15 +240,15 @@ under the License.
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${totalDays?if_exists}  days</#if></fo:block>
-                        		<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>
+                        		<#--<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>-->
                         		<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>
-                        		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${(netPaidDays?if_exists?string("#0.00"))}  days</#if></fo:block>                        		
+                        		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${(netPaidDays?if_exists)}  days</#if></fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                    				
                     				<#--<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt"  wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>-->
-                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMin?has_content>${(lateMin*480)?if_exists?string("#0.00")}<#else>0</#if></fo:block>
+                    				<fo:block text-indent="5pt" keep-together="always" white-space-collapse="false">Loss of Pay Days  : ${(lossOfpay-latemin)?if_exists}  days</fo:block>
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMinStr?has_content>${(lateMinStr)?if_exists}<#else>0 min</#if></fo:block>
                     			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
