@@ -219,10 +219,14 @@ under the License.
               	<#if eachOrder.partyId?exists>
               	<#assign partyOb=partyOBMap.get(eachOrder.partyId)>
               	</#if>
-              	<#if eachOrder.get('statusId') == "ORDER_CREATED" && partyOb &gt; 0 >
+              	<#assign orderTotal=0>
+              	<#if eachOrder.orderTotal?exists>
+              	<#assign orderTotal=eachOrder.orderTotal>
+              	</#if>
+              	<#if eachOrder.get('statusId') == "ORDER_CREATED" && partyOb &gt; 0  && (partyOb gte orderTotal) >
               		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               		<td></td>
-              	<#elseif eachOrder.get('statusId') == "ORDER_CREATED" && partyOb == 0 >
+              	<#elseif eachOrder.get('statusId') == "ORDER_CREATED" && (partyOb==0 || partyOb lte orderTotal ) >
               		<td colspan="2"><font color="red">Unavailable Balance</font> </td>
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
