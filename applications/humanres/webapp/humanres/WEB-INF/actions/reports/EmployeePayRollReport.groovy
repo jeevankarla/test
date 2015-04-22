@@ -132,6 +132,7 @@ Map payRollEmployeeMap=FastMap.newInstance();
 Map BankAdvicePayRollMap=FastMap.newInstance();
 Map InstallmentFinalMap=FastMap.newInstance();
 Map EmplSalaryDetailsMap=FastMap.newInstance();
+Map emplAttendanceDetailsMap = FastMap.newInstance();
 Timestamp basicSalDate=null;
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
@@ -336,9 +337,50 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			if(UtilValidate.isNotEmpty(salaryDetailsMap)){
 				EmplSalaryDetailsMap.put(partyId,salaryDetailsMap);
 			}*/
+			
+			//attendance here
+			if(UtilValidate.isNotEmpty(partyId)){
+				 emplAttendanceDetails = delegator.findOne("PayrollAttendance", [partyId : partyId , customTimePeriodId : timePeriod], false);
+				 if(UtilValidate.isNotEmpty(emplAttendanceDetails)){
+					 emplAttndDetailsMap = [:];
+					 lateMinNew = 0;
+					  lateMinStr = "";
+					  noOfCalenderDays = emplAttendanceDetails.get("noOfCalenderDays");
+					  lateMin = emplAttendanceDetails.get("lateMin");
+					  lossOfPayDays = emplAttendanceDetails.get("lossOfPayDays");
+					  noOfArrearDays = emplAttendanceDetails.get("noOfArrearDays");
+					  noOfPayableDays = emplAttendanceDetails.get("noOfPayableDays");
+					  
+					  if(UtilValidate.isNotEmpty(lateMin)){
+						  lateMinNew = lateMin.multiply(480).setScale(2,BigDecimal.ROUND_HALF_UP);
+					  }
+					  if(UtilValidate.isNotEmpty(lateMinNew) && lateMinNew <= 59){
+						  lateMinStr = lateMinNew + " min ";
+					  }else{
+					  	 String lateMinHr = (lateMinNew/60).setScale(2,BigDecimal.ROUND_HALF_UP);
+						 List<String> timeSplit = StringUtil.split(lateMinHr, ".");
+						 if(UtilValidate.isNotEmpty(timeSplit)){
+							  int hours = Integer.parseInt(timeSplit.get(0));
+							  int minutes = Integer.parseInt(timeSplit.get(1));
+							  int finalMin = minutes.multiply(0.6).setScale(0,BigDecimal.ROUND_HALF_UP);
+							  lateMinStr = hours + " hrs " + finalMin + " min ";
+						 }
+					  }					 
+					  emplAttndDetailsMap.putAt("noOfCalenderDays", noOfCalenderDays);
+					  emplAttndDetailsMap.putAt("lateMin", lateMin);
+					  emplAttndDetailsMap.putAt("lateMinStr", lateMinStr);
+					  emplAttndDetailsMap.putAt("lossOfPayDays", lossOfPayDays);
+					  emplAttndDetailsMap.putAt("noOfArrearDays", noOfArrearDays);
+					  emplAttndDetailsMap.putAt("noOfPayableDays", noOfPayableDays);
+					  if(UtilValidate.isNotEmpty(emplAttndDetailsMap)){
+						  emplAttendanceDetailsMap.putAt(partyId, emplAttndDetailsMap);
+					  }
+				 }
+			}
 		}
 	}
 }
+context.put("emplAttendanceDetailsMap",emplAttendanceDetailsMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 
 if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(parameters.sendSms) && (parameters.sendSms).equals("Y")){
