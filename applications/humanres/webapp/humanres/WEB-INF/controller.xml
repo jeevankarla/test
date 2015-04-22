@@ -2160,6 +2160,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="PFMonthlyStatement"/>        
     </request-map>
+    <request-map uri="PFform3A.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="PFform3A"/>        
+    </request-map>
     <request-map uri="ESIMonthlystatement.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="ESIMonthlystatement"/>        
@@ -2706,6 +2710,7 @@ under the License.
     <!-- <view-map name="EmployeePunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport" content-type="text/csv" encoding="none"/> -->
     <view-map name="ITEarningsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="PFMonthlyStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFMonthlyStatement" content-type="application/pdf" encoding="none"/>
+    <view-map name="PFform3A" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFform3A" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIMonthlystatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIMonthlystatement" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIFormSix" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIFormSix" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIFormSeven" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIFormSeven" content-type="application/pdf" encoding="none"/>
