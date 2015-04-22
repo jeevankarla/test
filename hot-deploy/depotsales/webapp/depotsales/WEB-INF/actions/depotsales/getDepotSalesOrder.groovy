@@ -60,6 +60,9 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
 	tempData.put("statusId", eachHeader.statusId);
+	 if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
+		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
+	  } 
 	orderList.add(tempData);
 }
 
