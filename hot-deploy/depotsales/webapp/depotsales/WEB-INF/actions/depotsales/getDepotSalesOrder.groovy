@@ -65,7 +65,6 @@ orderHeader.each{ eachHeader ->
 	  } 
 	 creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
 	 creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
-	 Debug.log("===creditPartyRole==="+creditPartyRole);
 	 if(creditPartyRole) {
 		 tempData.put("isCreditInstution", "Y");
 	 }else{
