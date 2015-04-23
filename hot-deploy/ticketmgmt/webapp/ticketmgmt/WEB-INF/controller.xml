@@ -32,12 +32,18 @@
     <request-map uri="createComplaint">
         <security https="true" auth="true"/>
         <event type="service" invoke="createComplaint"/>
-        <response name="success" type="view" value="ViewRequest"/>
-        <response name="success" type="view" value="editComplaint"/>
+        <response name="success" type="view" value="FindComplaint"/>
+        <response name="failure" type="view" value="FindComplaint"/>
     </request-map>
     <request-map uri="updateComplaint">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateComplaint"/>
+        <response name="success" type="view" value="ViewRequest"/>
+        <response name="success" type="view" value="editComplaint"/>
+    </request-map>
+    <request-map uri="updateTMSComplaint">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTMSComplaint"/>
         <response name="success" type="view" value="ViewRequest"/>
         <response name="success" type="view" value="editComplaint"/>
     </request-map>
@@ -46,17 +52,29 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="editComplaint"/>
     </request-map>
+     <request-map uri="createCustRequestParty">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestParty"/>
+        <response name="success" type="request-redirect" value="ViewRequest">
+        <redirect-parameter name="custRequestId"/>
+        </response>
+        <response name="error" type="view" value="ViewRequest"/>
+    </request-map>
     <request-map uri="deleteCustRequestParty">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteCustRequestParty"/>
-        <response name="success" type="request-redirect" value="requestroles"><redirect-parameter name="custRequestId"/></response>
-        <response name="error" type="view" value="RequestRoles"/>
+        <response name="success" type="request-redirect" value="ViewRequest"><redirect-parameter name="custRequestId"/></response>
+        <response name="error" type="view" value="ViewRequest"/>
     </request-map>
     <request-map uri="requestroles"><security https="true" auth="true"/><response name="success" type="view" value="RequestRoles"/></request-map>
     <request-map uri="LookupPartyNameByRole"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyNameByRole"/></request-map>
     <request-map uri="EditCustRequestContent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCustRequestContent"/>
+        <response name="success" type="view" value="ViewRequest"/>
+    </request-map>
+     <request-map uri="newComplaint"> 
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="newComplaint"/>
     </request-map>
 
     <request-map uri="createCustRequestContent">
@@ -65,16 +83,38 @@
         <response name="success" type="request-redirect" value="EditCustRequestContent"><redirect-parameter name="custRequestId"/></response>
         <response name="error" type="view" value="EditCustRequestContent"/>
     </request-map>
-    
-    
+    <request-map uri="deleteCustRequestContent">
+       <security https="true" auth="true"/>
+       <event path="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" type="simple"  invoke="deleteCustRequestContent"/>
+       <response name="success" type="request-redirect" value="EditCustRequestContent"><redirect-parameter name="custRequestId"/></response>
+       <response name="error" type="view" value="EditCustRequestContent"/>
+     </request-map>
+    <request-map uri="createCustEnquiryNote">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestNote"/>
+        <response name="success" type="request-redirect" value="ViewRequest">
+      	<redirect-parameter name="custRequestId"/>
+      	</response>
+        <response name="error" type="view" value="ViewRequest"/>
+    </request-map>
+    <request-map uri="updateComplaintStatus">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="updateComplaintStatus"/>
+        <response name="success" type="request-redirect" value="ViewRequest">
+      	<redirect-parameter name="custRequestId"/>
+      	</response>
+        <response name="error" type="view" value="ViewRequest"/>
+    </request-map>
+   
     <!-- View Mappings -->
     <view-map name="LookupPartyNameByRole" type="screen" page="component://ticketmgmt/widget/LookupTicketMgmtScreens.xml#LookupPartyNameByRole"/>
     <view-map name="main" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#Dashboard"/>
+    <view-map name="newComplaint" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#newComplaint"/>    
     <view-map name="Dashboard" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#Dashboard"/>    
     <view-map name="ViewRequest" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#ViewRequest"/>
     <view-map name="FindComplaint" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#FindComplaint"/>
     <view-map name="editComplaint" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#editComplaint"/>
     <view-map name="RequestRoles" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#RequestRoles"/>
-    <view-map name="EditCustRequestContent" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#EditCustRequestContent"/>
+<!--     <view-map name="ViewRequest" type="screen" page="component://ticketmgmt/widget/TicketMgmtScreens.xml#ViewRequest"/> -->
     
 </site-conf>

@@ -22,9 +22,9 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name="LookupPartyNameByRole">
         <section>
-            <condition>
+            <!-- <condition>
                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-            </condition>
+            </condition> -->
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PartyLookupPartyByName}"/>

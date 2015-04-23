@@ -12,4 +12,83 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TICKETMGMT_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TICKETMGMT_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="TICKETMGMT_ADMIN"/>
+    
+    <SecurityGroup description="Allow to Access for Admin" groupId="TMS_ADMIN"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TICKETMGMT_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TICKETMGMT_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TICKETMGMT_UPDATE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TICKETMGMT_DELETE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TICKETMGMT_ADMIN"/>   
+    
+    <SecurityGroup description="Allow to Access for Project Manager" groupId="TMS_PJCTMNGR"/>
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="TICKETMGMT_VIEW"/>
+    
+    <SecurityGroup description="Allow to Access for technical Engineer" groupId="TMS_TECHENGNEER"/>
+    <SecurityGroupPermission groupId="TMS_TECHENGNEER" permissionId="TICKETMGMT_VIEW"/>
+    
+    <SecurityGroup description="Allow to Access for ThirdPartyUser" groupId="TMS_THRDPRTYUSER"/>
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="TICKETMGMT_VIEW"/>
+    
+    <SecurityGroup description="Allow to Access for Management" groupId="TMS_MANAGEMENT"/>
+    <SecurityGroupPermission groupId="TMS_MANAGEMENT" permissionId="TICKETMGMT_VIEW"/>
+    
+    
+    <!-- Content ROLE security -->
+    <SecurityPermission description="Limited View operations in the Content Manager." permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityPermission description="Limited Create operations in the Content Manager." permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityPermission description="Limited Update operations in the Content Manager." permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityPermission description="Limited Delete operations in the Content Manager." permissionId="CONTENTMGR_ROLE_DELETE"/>
+    
+    <SecurityGroup groupId="CONTENT_USER" description="Content user group; all limited content permissions."/>
+    <SecurityGroupPermission groupId="CONTENT_USER" permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="CONTENT_USER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="CONTENT_USER" permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="CONTENT_USER" permissionId="CONTENTMGR_ROLE_DELETE"/>
+    
+    
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ROLE_DELETE"/>
+    
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="CONTENTMGR_ROLE_DELETE"/>
+    
+    
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="CONTENTMGR_ROLE_DELETE"/>
+    
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="CONTENTMGR_ROLE_DELETE"/>
+    
+    
+    
+    <SecurityPermission description="permission's for create complaint" permissionId="TM_COMP_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TM_COMP_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TM_COMP_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_TECHENGNEER" permissionId="TM_COMP_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="TM_COMP_CREATE"/>
+    
+    <SecurityPermission description="permission's for create complaint" permissionId="TM_COMP_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TM_COMP_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TM_COMP_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="TM_COMP_ROLE_CREATE"/>
+    
+    <SecurityGroupPermission groupId="TMS_TECHENGNEER" permissionId="TM_COMP_ROLE_CREATE"/>
+    
+    <SecurityPermission description="permission's for create complaint" permissionId="TM_COMP_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TM_COMP_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_ADMIN" permissionId="TM_COMP_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_PJCTMNGR" permissionId="TM_COMP_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_TECHENGNEER" permissionId="TM_COMP_VIEW"/>
+    <SecurityGroupPermission groupId="TMS_THRDPRTYUSER" permissionId="TM_COMP_VIEW"/>
+    
+    
+    
 </entity-engine-xml>

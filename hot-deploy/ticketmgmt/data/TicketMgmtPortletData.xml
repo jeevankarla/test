@@ -1,0 +1,17 @@
+    	
+<!--TICKET MANAGEMENT PORTAL -->
+<PortalPortlet portalPortletId="TCKTMGMTVIEW" portletName="Ticket Management Portal Screen" screenName="MyPortalTicketMgmtScreen"
+       screenLocation="component://ticketmgmt/widget/CommonScreens.xml" description="Ticket Management Portal Screen"/>
+<PortalPage portalPageId="MYPORTAL_TCKTMGMT" sequenceNum="0" portalPageName="Main" description="Ticket Mgmt Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_TCKTMGMT"/>
+<PortalPageColumn portalPageId="MYPORTAL_TCKTMGMT" columnSeqId="00001"/>
+<PortalPagePortlet portalPageId="MYPORTAL_TCKTMGMT" portalPortletId="TCKTMGMTVIEW" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+
+<SecurityPermission permissionId="MYPORTAL_TCKTMGMT" description="Use the ticket management component screens in myportal."/>
+<SecurityGroup description="Customer user of MYPORTAL, Limited access to ticket management view" groupId="MYPORTAL_TCKTMGMT"/>
+<SecurityGroupPermission groupId="MYPORTAL_TCKTMGMT" permissionId="MYPORTALBASE_ADMIN"/>
+<SecurityGroupPermission groupId="MYPORTAL_TCKTMGMT" permissionId="TICKETMGMT_VIEW"/> 
+<SecurityGroupPermission groupId="MYPORTAL_TCKTMGMT" permissionId="MYPORTAL_TCKTMGMT"/>  
+    	   
+    	  
+			
+		 

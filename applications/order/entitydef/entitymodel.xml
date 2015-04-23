@@ -1844,6 +1844,7 @@ under the License.
       <field name="custRequestTypeId" type="id"></field>
       <field name="custRequestCategoryId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="severity" type="id"></field>
       <field name="fromPartyId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="custRequestDate" type="date-time">
@@ -2135,6 +2136,7 @@ under the License.
             title="Customer Request Status Entity">
       <field name="custRequestStatusId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
+      <field name="partyId" type="id-ne"></field>
       <field name="custRequestId" type="id"></field>
       <field name="custRequestItemSeqId" type="id"></field>
       <field name="comments" type="description"></field>
@@ -2150,6 +2152,9 @@ under the License.
       <relation type="one-nofk" rel-entity-name="CustRequestItem">
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+	  <relation type="one" fk-name="CUST_REQ_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
       </relation>
     </entity>
     
