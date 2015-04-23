@@ -131,23 +131,42 @@ prodList = [];
 		Debug.logError(e, "Unable get the products" );
 		}
 		
+	productIds = EntityUtil.getFieldListFromEntityList(prodList, "productId", true);
+	Map result = (Map)MaterialHelperServices.getProductUOM(delegator, productIds);
+	uomLabelMap = result.get("uomLabel");
+	productUomMap = result.get("productUom");
 	
+		
 //	resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
 //	prodList = resultMap.get("productList");
 	JSONArray productItemsJSON = new JSONArray();
 	JSONObject productIdLabelJSON = new JSONObject();
 	JSONObject productLabelIdJSON=new JSONObject();
 	//context.productList = prodList;
+	JSONObject productUOMJSON = new JSONObject();
+	JSONObject uomLabelJSON=new JSONObject();
 	
 	prodList.each{eachItem ->
 		JSONObject newObj = new JSONObject();
 		newObj.put("value",eachItem.productId);
-		newObj.put("label",eachItem.internalName +" [ " +eachItem.description+"]");
+		newObj.put("label","[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName);
 		productItemsJSON.add(newObj);
-		productIdLabelJSON.put(eachItem.productId, eachItem.internalName+" [ "+eachItem.description +"]");
-		productLabelIdJSON.put(eachItem.internalName+" [ "+eachItem.description+"]", eachItem.productId);
+		productIdLabelJSON.put(eachItem.productId, "[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName);
+		productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName, eachItem.productId);
+		
+		if(productUomMap){
+			uomId = productUomMap.get(eachItem.productId);
+			if(uomId){
+				productUOMJSON.put(eachItem.productId, uomId);
+				uomLabelJSON.put(uomId, uomLabelMap.get(uomId));
+			}
+		}
 	}
 	
+	//Debug.log("====productUOMJSON=="+productUOMJSON+"====uomLabelJSON==="+uomLabelJSON);
+	
+	context.productUOMJSON = productUOMJSON;
+	context.uomLabelJSON = uomLabelJSON;
 	
 	context.productItemsJSON = productItemsJSON;
 	context.productIdLabelJSON = productIdLabelJSON;
