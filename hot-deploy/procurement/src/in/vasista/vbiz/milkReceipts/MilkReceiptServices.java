@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.rmi.server.ServerCloneException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,6 +112,8 @@ import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
+
+
 
 
 
@@ -2929,13 +2932,27 @@ public class MilkReceiptServices {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    String dateTimeReceivedStr = (String) request.getParameter("dateTimeReceived");
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "error";
 		}
-	  	
+	  	Timestamp dateTimeReceived = UtilDateTime.nowTimestamp();
+		DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy hh:mm");
+        DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(UtilValidate.isNotEmpty(dateTimeReceivedStr)){
+	        try {
+	        Date givenReceiptDate = (Date)givenFormatter.parse(dateTimeReceivedStr);
+	        dateTimeReceived = new java.sql.Timestamp(givenReceiptDate.getTime());
+	        }catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + dateTimeReceivedStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + dateTimeReceivedStr, module);
+		  	}
+        }
+		
 	        String milkTransferId = "";
 			for (int i = 0; i < rowCount; i++) {
 				  
@@ -2987,11 +3004,13 @@ public class MilkReceiptServices {
 							TransactionUtil.rollback();
 					  		return "error";
 				        }
-			            
+			            if(UtilValidate.isEmpty(dateTimeReceived)){
+			            	dateTimeReceived = nowTimeStamp;
+			            }
 				        Map inventoryReceiptCtx = FastMap.newInstance();
 						inventoryReceiptCtx.put("userLogin", userLogin);
 						inventoryReceiptCtx.put("productId", productId);
-						inventoryReceiptCtx.put("datetimeReceived", nowTimeStamp);
+						inventoryReceiptCtx.put("datetimeReceived", dateTimeReceived);
 						inventoryReceiptCtx.put("quantityAccepted", quantity);
 						inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
 						inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");

@@ -22,6 +22,7 @@
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,6 +38,7 @@ import net.fortuna.ical4j.util.Strings;
 import org.apache.tools.ant.filters.TokenFilter.ContainsString;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.service.DispatchContext;
@@ -56,6 +58,17 @@ import java.util.Locale;
 
 
 
+
+
+
+
+
+
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.network.LmsServices;
 import org.ofbiz.product.product.ProductEvents;
@@ -310,10 +323,10 @@ import org.ofbiz.product.product.ProductEvents;
 		        }catch(GenericEntityException e){
 					Debug.logError("Error while creating Transporter Recovery"+e.getMessage(), module);
 				}
-		        result = ServiceUtil.returnSuccess("Transporter amount Created Sucessfully");
-		        result.put("createdDate",UtilDateTime.nowTimestamp());
-		        result.put("incidentDate",incidentDate);
-		        return result;
+		      //  result = ServiceUtil.returnSuccess("Transporter amount Created Sucessfully");
+		       /* result.put("createdDate",UtilDateTime.nowTimestamp());
+		        result.put("incidentDate",incidentDate);*/
+		        return ServiceUtil.returnSuccess("Transporter amount Created Sucessfully");
 		    }// end of the service
 		    
 		 
@@ -1811,13 +1824,32 @@ import org.ofbiz.product.product.ProductEvents;
 		 	String vehicleId = (String) context.get("vehicleId");
 		 	String customTimePeriodId = (String) context.get("customTimePeriodId");
 		 	String recoveryTypeId = (String)context.get("recoveryTypeId");
-		 	Timestamp incidentDate = (Timestamp)context.get("incidentDate");
+		 	String dateOfIncident = (String) context.get("incidentDate");
+		 	//Timestamp incidentDate = (Timestamp)context.get("incidentDate");
 		 	BigDecimal amount = (BigDecimal)context.get("amount");
 		 	GenericValue userLogin = (GenericValue) context.get("userLogin");
 		 	String description=(String)context.get("description");
+		 	Locale locale = (Locale) context.get("locale");
 		 	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		 	LocalDispatcher dispatcher = dctx.getDispatcher();
 		 	List conditionList=FastList.newInstance();
+		 	if(amount.compareTo(BigDecimal.ZERO)<0){
+		 		amount=amount.multiply(new BigDecimal(-1));
+		 	}
+		 	Timestamp incidentDate = null;
+			//DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy");
+	        DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd");
+	        if(UtilValidate.isNotEmpty(dateOfIncident)){
+		        try {
+		        //Date givenReceiptDate = (Date) givenFormatter.parse(incidentDateStr);
+		        incidentDate = new java.sql.Timestamp(reqformatter.parse(dateOfIncident).getTime());
+		        }catch (ParseException e) {
+			  		Debug.logError(e, "Cannot parse date string: " + dateOfIncident, module);
+			  	} catch (NullPointerException e) {
+		  			Debug.logError(e, "Cannot parse date string: " + dateOfIncident, module);
+			  	}
+	        }
+	        incidentDate = UtilDateTime.getDayStart(incidentDate, TimeZone.getDefault(), locale); 
 		 	try {
 		        conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_PTC_TRSPT_MRGN"));
 		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
@@ -1835,21 +1867,38 @@ import org.ofbiz.product.product.ProductEvents;
 		 			 return ServiceUtil.returnError("recovery not found with the recovery Id ::"+recoveryId);
 		 			 
 		 		 }
-		    	 
-		 	 	 fineRecovery.set("vehicleId", vehicleId );
-		 		 fineRecovery.set("customTimePeriodId", customTimePeriodId);
-		 		 fineRecovery.set("incidentDate", incidentDate);
-		 		 fineRecovery.set("recoveryTypeId", recoveryTypeId); 
-		 		 fineRecovery.set("amount", amount);
-		 		 fineRecovery.set("description", description);
-		 		 fineRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-		    	 fineRecovery.store(); 
+		 		 if(!incidentDate.equals(fineRecovery.getTimestamp("incidentDate"))){
+		 			 conditionList.clear();
+		 			 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		 			 conditionList.add(EntityCondition.makeCondition("incidentDate", EntityOperator.EQUALS, incidentDate));
+		 			 conditionList.add(EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, recoveryTypeId));
+		 			 conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS, vehicleId));
+		 			 EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		 			 List<GenericValue> fineRecoveList= delegator.findList("FineRecovery", con, null, null, null, false);
+		 			 if(UtilValidate.isEmpty(fineRecoveList)){
+		 				fineRecovery.set("incidentDate", incidentDate);
+		 				fineRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		 				fineRecovery.store(); 
+		 			 }else{
+		 				 Debug.logError("This Adjustment already added for this Date.",module);
+		 				 return ServiceUtil.returnError("This Adjustment already added for this Date ");
+		 			 }
+		 		 }else{
+			 	 	 fineRecovery.set("vehicleId", vehicleId );
+			 		 fineRecovery.set("customTimePeriodId", customTimePeriodId);
+			 		 fineRecovery.set("incidentDate", incidentDate);
+			 		 fineRecovery.set("recoveryTypeId", recoveryTypeId); 
+			 		 fineRecovery.set("amount", amount);
+			 		 fineRecovery.set("description", description);
+			 		 fineRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			    	 fineRecovery.store(); 
+		 		 }
 		    	 
 		    }catch(GenericEntityException e){
 		 		Debug.logError("Error while creating Transporter Recovery"+e.getMessage(), module);
 		 		return ServiceUtil.returnError("Error while creating Transporter Recovery");
 		 	}
-		    result = ServiceUtil.returnSuccess("Transporter adjustment Created Sucessfully");
+		    result = ServiceUtil.returnSuccess("Transporter adjustment Updated Sucessfully");
 		    return result;
 		 }// end of the service  	    	 
 		 /**
@@ -1896,8 +1945,149 @@ import org.ofbiz.product.product.ProductEvents;
 		    result = ServiceUtil.returnSuccess("Transporter adjustment removed Sucessfully");
 		    return result;
 		 }// end of the service
-			
-			
+		
+		 public static String AddPTCAdjustment(HttpServletRequest request, HttpServletResponse response) {
+				Delegator delegator = (Delegator) request.getAttribute("delegator");
+				LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+				DispatchContext dctx =  dispatcher.getDispatchContext();
+				Locale locale = UtilHttp.getLocale(request);
+				Map<String, Object> result = ServiceUtil.returnSuccess();
+			    HttpSession session = request.getSession();
+			    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+			    String customTimePeriodId = (String) request.getParameter("customTimePeriodId");
+			    String incidentDateStr = (String) request.getParameter("incidentDate");
+			    String tankerNo = (String) request.getParameter("tankerNo");
+			    String tankerName = (String) request.getParameter("tankerName");
+			    String vehicleId = null;
+			    if(UtilValidate.isNotEmpty(tankerName)){
+			    	vehicleId = tankerName;
+			    }else{
+			    	vehicleId = tankerNo;
+			    }
+			    List adjustmentDetials = FastList.newInstance();
+				Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+				int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+				if (rowCount < 1) {
+					Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+					return "error";
+				}
+			  	Timestamp incidentDate = null;
+				//DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy");
+		        DateFormat reqformatter = new SimpleDateFormat("dd:MM:yyyy");
+		        if(UtilValidate.isNotEmpty(incidentDateStr)){
+			        try {
+			        //Date givenReceiptDate = (Date) givenFormatter.parse(incidentDateStr);
+			        incidentDate = new java.sql.Timestamp(reqformatter.parse(incidentDateStr).getTime());
+			        }catch (ParseException e) {
+				  		Debug.logError(e, "Cannot parse date string: " + incidentDateStr, module);
+				  	} catch (NullPointerException e) {
+			  			Debug.logError(e, "Cannot parse date string: " + incidentDateStr, module);
+				  	}
+		        }
+		        if(UtilValidate.isNotEmpty(incidentDate)){
+					incidentDate = UtilDateTime.getDayStart(incidentDate, TimeZone.getDefault(), locale); 
+					GenericValue customTimePeriod;
+					try {
+						customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+					} catch (GenericEntityException e1) {
+						Debug.logWarning("customTimeperiodId not found.", module);
+						request.setAttribute("_ERROR_MESSAGE_", "customTimeperiodId not found.");
+						return "success";
+					}
+					Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+					Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+					
+					Timestamp dateBegin = UtilDateTime.getDayStart(fromDateTime, TimeZone.getDefault(), locale);
+					Timestamp datehEnd = UtilDateTime.getDayEnd(thruDateTime, TimeZone.getDefault(), locale);
+					if(incidentDate.after(datehEnd) || incidentDate.before(dateBegin)){
+						Debug.logWarning(incidentDate+"This Date is Not in this TimePeriod.", module);
+						request.setAttribute("_ERROR_MESSAGE_", incidentDate+"This Date is Not in this TimePeriod.");
+						return "success";
+					}
+		        }
+			        String adjustmentTypeId = "";
+			        String amountStr = "";
+					for (int i = 0; i < rowCount; i++) {
+							BigDecimal amount = BigDecimal.ZERO; 
+							String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+							
+							if (paramMap.containsKey("adjustmentTypeId" + thisSuffix)) {
+								adjustmentTypeId = (String) paramMap.get("adjustmentTypeId" + thisSuffix);
+							}
+							else {
+								request.setAttribute("_ERROR_MESSAGE_", "Missing adjustmentTypeId");
+							}
+							
+							if (paramMap.containsKey("amount" + thisSuffix)) {
+								amountStr = (String) paramMap.get("amount" + thisSuffix);
+								if(UtilValidate.isNotEmpty(amountStr)){
+								amountStr = amountStr.replace(",", "");
+								amount = new BigDecimal(amountStr);
+								}
+							}
+							else {
+								request.setAttribute("_ERROR_MESSAGE_", "Missing amount");
+							}
+							if(!amount.equals(BigDecimal.ZERO)){	
+								Map<String ,Object> inputMap = FastMap.newInstance();
+								inputMap.put("customTimePeriodId",customTimePeriodId);
+								inputMap.put("vehicleId",vehicleId);
+								inputMap.put("amount",amount);
+								inputMap.put("recoveryTypeId",adjustmentTypeId);
+								inputMap.put("incidentDate",incidentDate);
+								
+								adjustmentDetials.add(inputMap);
+							}
+		 				}
+					if(UtilValidate.isEmpty(adjustmentDetials)){
+						Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+						request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
+						return "success";
+					}
+					Map processAdjustments = FastMap.newInstance();
+					processAdjustments.put("adjustmentDetials", adjustmentDetials);
+					processAdjustments.put("userLogin",userLogin);
+					
+					result = processAdjustments(dctx,processAdjustments);
+					if(ServiceUtil.isError(result)){
+						Debug.logError("Error while creating the Adjustments: " + ServiceUtil.getErrorMessage(result), module);
+						request.setAttribute("_ERROR_MESSAGE_", "Error while creating the Adjustments:" +ServiceUtil.getErrorMessage(result));
+						return "error";
+					}
+			        request.setAttribute("_EVENT_MESSAGE_", "Adjusments Successfully Added.");
+					
+				return "success";
+		    }	
+		 public static Map<String, Object> processAdjustments(DispatchContext dctx,Map<String, ? extends Object> context) { 
+			 	Map<String, Object> result = ServiceUtil.returnSuccess();
+			 	List<Map> adjustmentDetials = (List) context.get("adjustmentDetials");
+			 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+			 	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			 	LocalDispatcher dispatcher = dctx.getDispatcher();
+			 	for (Map<String, Object> adjustment : adjustmentDetials) {
+			 		try{
+						Map<String ,Object> inputMap = FastMap.newInstance();
+						inputMap.put("customTimePeriodId",(String) adjustment.get("customTimePeriodId"));
+						inputMap.put("vehicleId",(String) adjustment.get("vehicleId"));
+						inputMap.put("amount",(BigDecimal) adjustment.get("amount"));
+						inputMap.put("recoveryTypeId",(String) adjustment.get("recoveryTypeId"));
+						inputMap.put("incidentDate",(Timestamp) adjustment.get("incidentDate"));
+						inputMap.put("userLogin",userLogin);
+						
+						 Map resultMap = dispatcher.runSync("createPtcTransporterRecovery",inputMap);
+					        if (ServiceUtil.isError(resultMap)) {
+					        	Debug.logError("Problem creating TransporterRecovery for:"+(String) adjustment.get("vehicleId"), module);
+								TransactionUtil.rollback();
+						  		return ServiceUtil.returnError("Problem creating TransporterRecovery for:"+(String) adjustment.get("vehicleId"));
+					        }
+					}catch (Exception e) {
+						// TODO: handle exception
+						Debug.logError(e, module);
+			  			return ServiceUtil.returnError(e.toString());
+					}
+			 	}	
+			 	return result;
+		 }
 		    
 }
 

@@ -164,7 +164,7 @@
     </request-map>
     <request-map uri="ApproveReceipts">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="ApproveReceipts"/>        
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="ApproveReceipts" global-transaction="true"/>        
         <response name="success" type="view" value="ApproveMilkReceipts"/>
         <response name="error" type="view" value="ApproveMilkReceipts"/>
     </request-map>
@@ -528,6 +528,74 @@
        <response name="error" type="request-redirect-noparam" value="mrTransporterBilling"/>
     </request-map>
     
+    <request-map uri="PtcAdjustmentDeductions">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="PtcAdjustmentDeductions"/>   
+       <response name="failed" type="view" value="PtcAdjustmentDeductions"/>    
+    </request-map>
+    <request-map uri="PtcAdjustmentAdditions">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="PtcAdjustmentAdditions"/>   
+       <response name="failed" type="view" value="PtcAdjustmentAdditions"/>    
+    </request-map>
+    <request-map uri="FindPtcAdjustment">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="FindPtcAdjustment"/>   
+       <response name="failed" type="view" value="FindPtcAdjustment"/>    
+    </request-map>
+    <request-map uri="FindAdjustments">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="FindPtcAdjustment"/>   
+       <response name="failed" type="view" value="FindPtcAdjustment"/>    
+    </request-map>
+    <request-map uri="AddPtcDeduction">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="AddPTCAdjustment" global-transaction="true"/>
+        <response name="success" type="view" value="PtcAdjustmentDeductions"/>
+        <response name="error" type="view" value="PtcAdjustmentDeductions"/>
+    </request-map>
+    <request-map uri="AddPtcAddition">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="AddPTCAdjustment" global-transaction="true"/>
+        <response name="success" type="view" value="PtcAdjustmentAdditions"/>
+        <response name="error" type="view" value="PtcAdjustmentAdditions"/>
+    </request-map>
+    <request-map uri="deleteAddition">
+        <security https="true" auth="true"/>
+        <event  type="service"  invoke="DeleteAdjustment" />
+        <response name="success" type="view" value="PtcAdjustmentAdditions"/>
+        <response name="error" type="view" value="PtcAdjustmentAdditions"/>
+    </request-map>
+    <request-map uri="deleteDeduction">
+        <security https="true" auth="true"/>
+        <event  type="service"  invoke="DeleteAdjustment" />
+        <response name="success" type="view" value="PtcAdjustmentDeductions"/>
+        <response name="error" type="view" value="PtcAdjustmentDeductions"/>
+    </request-map>
+    <request-map uri="updateAddition">
+        <security https="true" auth="true"/>
+        <event  type="service"  invoke="updateAdjustment" />
+        <response name="success" type="view" value="PtcAdjustmentAdditions"/>
+        <response name="error" type="view" value="PtcAdjustmentAdditions"/>
+    </request-map>
+    <request-map uri="updateDeduction">
+        <security https="true" auth="true"/>
+        <event  type="service"  invoke="updateAdjustment" />
+        <response name="success" type="view" value="PtcAdjustmentDeductions"/>
+        <response name="error" type="view" value="PtcAdjustmentDeductions"/>
+    </request-map>
+    <request-map uri="updatePtcAdjustment">
+        <security https="true" auth="true"/>
+        <event  type="service"  invoke="updateAdjustment" />
+        <response name="success" type="view" value="FindPtcAdjustment"/>
+        <response name="error" type="view" value="FindPtcAdjustment"/>
+    </request-map>
+    <request-map uri="deletePtcAdjustment">
+        <security https="true" auth="true"/>
+        <event  type="service"  invoke="DeleteAdjustment" />
+        <response name="success" type="view" value="FindPtcAdjustment"/>
+        <response name="error" type="view" value="FindPtcAdjustment"/>
+    </request-map>
     <!-- View Mappings -->
 	    
     <view-map name="milkReceiptEntriesCsv" type="screencsv" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#milkReceiptEntriesCsv" content-type="text/csv"/>
@@ -544,7 +612,9 @@
 	<view-map name="MilkReceiptsSalariesEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsSalariesEntry"/>
 	<view-map name="newSalaryEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#newSalaryEntry" />
 	<view-map name="ApproveMilkReceipts" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ApproveMilkReceipts" />
-	
+	<view-map name="PtcAdjustmentDeductions" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PtcAdjustmentDeductions"/>
+	<view-map name="PtcAdjustmentAdditions" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PtcAdjustmentAdditions"/>
+	<view-map name="FindPtcAdjustment" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindPtcAdjustment"/>
 	<!-- Report View Mappings -->
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>
 	<view-map name="GenerateMlkRecptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#GenerateMlkRecptsBilling"/>
