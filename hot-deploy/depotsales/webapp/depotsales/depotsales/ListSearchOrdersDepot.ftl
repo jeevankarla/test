@@ -216,14 +216,19 @@ under the License.
               	<td><a class="buttontext" href="<@ofbizUrl>indentPrintReport.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Indent Report</td>
               	<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>
               	<#assign partyOb=0>
-              	<#if eachOrder.partyId?exists>
+              	<#if partyOBMap?exists && eachOrder.partyId?exists && partyOBMap.get(eachOrder.partyId)?exists>
               	<#assign partyOb=partyOBMap.get(eachOrder.partyId)>
               	</#if>
               	<#assign orderTotal=0>
               	<#if eachOrder.orderTotal?exists>
               	<#assign orderTotal=eachOrder.orderTotal>
               	</#if>
-              	<#if eachOrder.get('statusId') == "ORDER_CREATED" && partyOb &gt; 0  && (partyOb gte orderTotal) >
+              	<#assign isCreditInstution="N">
+              	<#if eachOrder.isCreditInstution?exists>
+              	<#assign isCreditInstution=eachOrder.isCreditInstution>
+              	</#if>
+              	
+              	<#if (eachOrder.get('statusId') == "ORDER_CREATED" && partyOb &gt; 0  && (partyOb gte orderTotal)) ||( isCreditInstution=="Y" && eachOrder.get('statusId') == "ORDER_CREATED" ) >
               		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveDepotOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}','${eachOrder.partyId?if_exists}');"/></td>
               		<td></td>
               	<#elseif eachOrder.get('statusId') == "ORDER_CREATED" && (partyOb==0 || partyOb lte orderTotal ) >

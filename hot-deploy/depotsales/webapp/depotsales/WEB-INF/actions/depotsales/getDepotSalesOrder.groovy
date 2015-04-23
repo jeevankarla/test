@@ -52,7 +52,7 @@ orderHeader.each{ eachHeader ->
 	if(orderParty){
 		partyId = orderParty.get(0).get("partyId");
 	}
-	partyIdsSet.add(partyId);
+	
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	tempData = [:];
 	tempData.put("partyId", partyId);
@@ -63,6 +63,15 @@ orderHeader.each{ eachHeader ->
 	 if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 	  } 
+	 creditPartRoleList=delegator.findByAnd("PartyRole", [partyId :partyId,roleTypeId :"CR_INST_CUSTOMER"]);
+	 creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
+	 Debug.log("===creditPartyRole==="+creditPartyRole);
+	 if(creditPartyRole) {
+		 tempData.put("isCreditInstution", "Y");
+	 }else{
+	      tempData.put("isCreditInstution", "N");
+		  partyIdsSet.add(partyId);
+	 }
 	orderList.add(tempData);
 }
 
@@ -81,6 +90,7 @@ partyIdsSet.each{partyId->
 		}else{
 		partyOBMap.put(partyId, BigDecimal.ZERO);
 		}
+		
 		
 }
 //Debug.log("===============partyOBMap="+partyOBMap+"==obDate=="+obDate);
