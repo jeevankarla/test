@@ -90,7 +90,7 @@ if(orderId){
 		}
 		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		
-		
+		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("maxReceivedQty",maxReceivedQty);

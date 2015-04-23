@@ -67,8 +67,8 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.min.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
-    
-    	
+	
+	var totalAmount2=0;
 	var dataView;
 	var dataView2;
 	var grid;
@@ -412,13 +412,53 @@
       		grid.updateRowCount();
       		grid.render();
     	});
+    	
+    	
+    	
         grid.onCellChange.subscribe(function(e,args) {
-			if (args.cell == 0 || args.cell == 1) {
-				var prod = data[args.row]["cProductId"];
-				grid.updateRow(args.row);
+			if (args.cell == 2 || args.cell == 3) {
+			 var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var price = 0;
+			  price = parseFloat(data[args.row]["unitPrice"]);
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				var roundedAmount;
+					roundedAmount = (qty*price);
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = roundedAmount;
+			    //grid.updateRow(args.row);
+				var totalAmount1 = 0;
+				for (i = 0; i < data.length; i++) {
+				if(isNaN(data[i]["amount"])){
+					data[i]["amount"] = 0;
+				}
+					totalAmount1 += data[i]["amount"];
+				}
+	    	  var charges=0;
+			if(data2.length>0){
+			for (i = 0; i < data2.length; i++) {
+            if (data2[i]["amount"]>0 ){
+				charges += data2[i]["amount"];
+				  }
+			  }
+			  
+	  	   totalAmount1=totalAmount1+charges;
+			  	   
+    	   }
+    	       grandTotal=Math.round(totalAmount1);
+    		jQuery("#totalAmount").html(grandTotal);
 			}
-			
 		}); 
+
+
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {
@@ -544,9 +584,31 @@
       		grid2.updateRowCount();
       		grid2.render();
     	});
-        grid2.onCellChange.subscribe(function(e,args) {
-			
-		}); 
+    	
+    	
+       grid2.onCellChange.subscribe(function(e,args) {
+        	if (args.cell == 0 || args.cell == 1) {
+        		var totalAmount2 =0;
+				for (i = 0; i < data2.length; i++) {
+					if(!isNaN(data2[i]["amount"]) && data2[i]["amount"]>0){
+						totalAmount2 += data2[i]["amount"];
+					}
+				}
+			  var amount=0;
+		  if(data.length>0){
+			for (i = 0; i < data.length; i++) {
+            	if (!isNaN(data[i]["amount"]) && data[i]["amount"]>0 ){
+					amount = amount+data[i]["amount"];
+				}
+			}
+ 	   totalAmount2=totalAmount2+amount;
+    	   }
+    	   grandTotal=Math.round(totalAmount2);
+        jQuery("#totalAmount").html(grandTotal);
+    	   	
+		}
+		 }); 
+
 		
 		grid2.onActiveCellChanged.subscribe(function(e,args) {
 			
