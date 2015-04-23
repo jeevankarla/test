@@ -499,7 +499,7 @@ public class MaterialPurchaseServices {
 			inputMap.put("partyId","DEPOT");
 			inputMap.put("userLogin",userLogin);
 			Map resultMap = dispatcher.runSync("sendReceiptQtyForQC",inputMap);
-		
+			
 			if (ServiceUtil.isError(resultMap)) {
 				Debug.logWarning("There was an error while sending to QC: " + ServiceUtil.getErrorMessage(resultMap), module);
 				request.setAttribute("_ERROR_MESSAGE_", "There was an error sending to QC: " + ServiceUtil.getErrorMessage(resultMap));	
@@ -530,22 +530,33 @@ public class MaterialPurchaseServices {
 				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
 	  		} catch (GenericEntityException e2) {
 	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		     	request.setAttribute("_ERROR_MESSAGE_", "Could not rollback transaction: " );
+				return "error";
 	  		}
 	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  		request.setAttribute("_ERROR_MESSAGE_", "An entity engine error occurred while fetching data: " );
+			return "error";
+
 	  	}
   	  	catch (GenericServiceException e) {
   	  		try {
   			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
   	  		} catch (GenericEntityException e2) {
   			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  		      request.setAttribute("_ERROR_MESSAGE_", "Could not rollback transaction: " );
+		      return "error";
   	  		}
   	  		Debug.logError("An entity engine error occurred while calling services", module);
+  	     	request.setAttribute("_ERROR_MESSAGE_", "An entity engine error occurred while calling services" );
+		    return "error";
   	  	}
 	  	finally {
 	  		try {
 	  			TransactionUtil.commit(beganTransaction);
 	  		} catch (GenericEntityException e) {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", "Could not commit transaction for entity engine error occurred while fetching data" );
+				return "error";
 	  		}
 	  	}
 		
