@@ -383,6 +383,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="StockStatementReportPDF"/>
     </request-map>
+     <request-map uri="IndentVsDispatch.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentVsDispatchPDF"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
@@ -418,6 +422,7 @@
     <view-map name="EditProductPricesDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProductPricesDepot"/>
     <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>
     <view-map name="StockStatementReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#StockStatementReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="IndentVsDispatchPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentVsDispatchPDF" content-type="application/pdf" encoding="none"/>
     
     
     
