@@ -55,6 +55,24 @@ function makeDatePicker(fromDateId ,thruDateId){
                 transitionEffect: "slideLeft",
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
+               	  var ordId=orderId.value; 
+               if (ordId == null || ordId == undefined || !ordId.length){
+                 	var value = $("#supplierId").val();
+	  				 var date = $("#orderDate").val();					
+	  				 jQuery.ajax({
+          					  url: 'getPartyprices',
+         				    async: false,
+           					 type: 'POST',
+           					 data: {partyId : value, effectiveDate: date } ,
+            			  success: function(result) {
+            							  priceTags = result["prodPriceMap"];
+           								    $("#totalPOAmount").html(dspMsg);
+           							 },
+           					 error: function (xhr, textStatus, thrownError){
+											alert("record not found :: Error code:-  "+xhr.status);
+									}
+       					 });
+       				}
                 	if(currentIndex == 0 && newIndex == 1){
                 		var supplierId = $("#supplierId").val(); 
                 	    if( (supplierId).length < 1 ) {
