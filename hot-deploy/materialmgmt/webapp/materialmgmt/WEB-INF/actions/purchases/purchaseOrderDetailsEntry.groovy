@@ -90,7 +90,7 @@ if(orderId){
 		}
 		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		
-			List condlist=[];
+			/*List condlist=[];
 			condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 			condlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 			condlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
@@ -99,10 +99,10 @@ if(orderId){
 			OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain , null ,orderBy, null, false );
 			OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
 			if(UtilValidate.isNotEmpty(OrderItemChangeDetails)){
-				newObj.put("unitPrice",OrderItemChangeDetails.unitPrice);
-			}else{
+				newObj.put("unitPrice",OrderItemChangeDetails.unitListPrice);
+			}else{*/
 		newObj.put("unitPrice",eachItem.unitListPrice);
-			}
+		// }
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("maxReceivedQty",maxReceivedQty);
