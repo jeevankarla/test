@@ -296,8 +296,10 @@
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
-		 			<label>Material Items Entry</label>
-				</div>
+		 			<label>Material Items Entry </label>	
+		 		  	<label> </label>
+		 	    	<label>  Total Amt: <span id="totalAmount"></span></label>
+				 </div>
 				<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  
 				<#assign formAction ='processReceiptItems'>			
