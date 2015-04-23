@@ -25,7 +25,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.5in" margin-bottom=".5in" margin-left=".3in" margin-right=".5in">
-        <fo:region-body margin-top="1.2in"/>
+        <fo:region-body margin-top="1.4in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -39,9 +39,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
     <#list boothsSaleList as boothSaleEntry>
 <fo:page-sequence master-reference="main" font-family="Courier,monospace"  force-page-count="no-force">					
 			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> <#assign lineNumber = 5> 
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                           UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
+			<fo:block text-align="center" keep-together="always"  white-space-collapse="false">                         UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 				<#assign facilityNumberInPage = 0>
-              	<fo:block text-align="left" white-space-collapse="false">&#160; Retailer Ledger Abstract Inclusive Of Products  From:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStart, "dd-MMMM-yyyy")} To :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd-MMMM-yyyy")} </fo:block>
+              	<fo:block text-align="center" white-space-collapse="false"> Retailer Ledger Abstract Inclusive Of Products  From:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStart, "dd-MMMM-yyyy")} To :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd-MMMM-yyyy")} </fo:block>
               	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	 <fo:block text-align="center" font-size="12pt">
             	 <fo:table  table-layout="fixed"   font-size="12pt">                
@@ -85,7 +86,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			<fo:block>	
             				 <fo:table  table-layout="fixed">                
 				                <fo:table-column column-width="70pt"/>
- 						  		<fo:table-column column-width="70pt"/>
+ 						  		<fo:table-column column-width="72pt"/>
  						  		<fo:table-column column-width="50pt"/>
  						   	    <fo:table-column column-width="70pt"/>
  						   	    <fo:table-column column-width="150pt"/>
@@ -96,13 +97,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 				                <fo:table-body>
 				                 <fo:table-row>
 			                        <fo:table-cell>
-			                          <fo:block text-align="left" text-indent="4pt" keep-together="always">DelarCode:</fo:block>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always">DealerCode:</fo:block>
+			                        </fo:table-cell>
+			                         <#assign dealerName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, boothSaleEntry.getKey(), false)>
+			                        <fo:table-cell>
+			                          <fo:block text-align="center"  white-space-collapse="false" >${boothSaleEntry.getKey()}</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right"  white-space-collapse="false" >${boothSaleEntry.getKey()}</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                          <fo:block text-align="right" white-space-collapse="false" >[${dealerName?if_exists}]</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
