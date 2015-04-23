@@ -1833,7 +1833,9 @@ import org.ofbiz.product.product.ProductEvents;
 		 	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		 	LocalDispatcher dispatcher = dctx.getDispatcher();
 		 	List conditionList=FastList.newInstance();
-		 	
+		 	if(amount.compareTo(BigDecimal.ZERO)<0){
+		 		amount=amount.multiply(new BigDecimal(-1));
+		 	}
 		 	Timestamp incidentDate = null;
 			//DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy");
 	        DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -1954,7 +1956,14 @@ import org.ofbiz.product.product.ProductEvents;
 			    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 			    String customTimePeriodId = (String) request.getParameter("customTimePeriodId");
 			    String incidentDateStr = (String) request.getParameter("incidentDate");
-			    String vehicleId = (String) request.getParameter("tankerNo");
+			    String tankerNo = (String) request.getParameter("tankerNo");
+			    String tankerName = (String) request.getParameter("tankerName");
+			    String vehicleId = null;
+			    if(UtilValidate.isNotEmpty(tankerName)){
+			    	vehicleId = tankerName;
+			    }else{
+			    	vehicleId = tankerNo;
+			    }
 			    List adjustmentDetials = FastList.newInstance();
 				Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 				int rowCount = UtilHttp.getMultiFormRowCount(paramMap);

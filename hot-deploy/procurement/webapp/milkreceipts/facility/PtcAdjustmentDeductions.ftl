@@ -68,12 +68,24 @@ function datetimepick(){
 			
 	$('#ui-datepicker-div').css('clip', 'auto');	
 	  }
-
+	
+      function numbersOnly(e){
+      	var event = e || window.event;
+        // alert(event.keyCode);
+         if( !(event.keyCode == 8 || event.keyCode == 9                               // backspace/Tab
+          || event.keyCode == 46                              // delete
+          || (event.keyCode >= 35 && event.keyCode <= 40)     // arrow keys/home/end
+          || (event.keyCode >= 48 && event.keyCode <= 57)     // numbers on keyboard
+          || (event.keyCode >= 96 && event.keyCode <= 105))   // number on keypad
+         ) {
+           event.preventDefault();     // Prevent character input
+    		}
+      }
 	$(document).ready(function() {	
 		//makeDatePicker("incidentDate",f);
 		//makeDatePicker("findThruDate","thruDate");
         datetimepick();
-
+        numbersOnly();
 		$('#ui-datepicker-div').css('clip', 'auto');
 
 		var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)};
@@ -298,7 +310,7 @@ function populateVehicleName(){
 				         			<div >${Adjustment.description?if_exists} </div><input name="adjustmentTypeId_o_${index}" value="${Adjustment.enumId}" type="hidden" size="10"/></input>
 				         		</td>
 				         		<td>:
-				         			<input type="text" size="10" maxlength="15" name="amount_o_${index}"/></input>
+				         			<input type="text" size="10" maxlength="15" name="amount_o_${index}" onkeydown="numbersOnly()"/></input>
 				         		</td>
          					</tr> 
                             <#assign index=index+1>
