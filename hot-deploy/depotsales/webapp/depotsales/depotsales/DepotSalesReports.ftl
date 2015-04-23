@@ -31,6 +31,7 @@ $(document).ready(function(){
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("stockFromDate","stockThruDate");
+	    makeDatePicker("ivdFromDate","ivdThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker("stockDate");
 	    makeDatePicker("CASHFromDateId","");
@@ -112,6 +113,16 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="30%" nowrap>Stock Statement Report</td>
   			<td width="15%">From<input  type="text" size="18pt" id="stockFromDate" readonly  name="stockFromDate"/></td>
   			<td width="15%">Thru<input  type="text" size="18pt" id="stockThruDate" readonly  name="stockThruDate"/></td>
+  			<td width="15%"></td>
+  			<td width="15%"></td>
+			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+		</form>	
+      </tr>
+      <tr class="alternate-row">
+    	<form id="indentVsDispatch" name="indentVsDispatch" method="post"  target="_blank" action="<@ofbizUrl>IndentVsDispatch.pdf</@ofbizUrl>">	
+  			<td width="30%" nowrap>Indent Vs Dispatch Report</td>
+  			<td width="15%">From<input  type="text" size="18pt" id="ivdFromDate" readonly  name="ivdFromDate"/></td>
+  			<td width="15%">Thru<input  type="text" size="18pt" id="ivdThruDate" readonly  name="ivdThruDate"/></td>
   			<td width="15%"></td>
   			<td width="15%"></td>
 			<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
