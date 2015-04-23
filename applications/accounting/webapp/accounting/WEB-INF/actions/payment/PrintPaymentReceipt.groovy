@@ -57,7 +57,7 @@ import java.text.ParseException;
 //${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()}
 formDateTime=UtilDateTime.nowTimestamp();
 thruDateTime=UtilDateTime.nowTimestamp();
-dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+/*dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 finYearContext = [:];
 finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
 finYearContext.put("organizationPartyId", "Company");
@@ -96,7 +96,7 @@ if(UtilValidate.isNotEmpty(customTimePeriodList)){
 	}
 	context.from=UtilDateTime.toDateString(fromDateTime,"yy");
 	context.thru=UtilDateTime.toDateString(thruDateTime,"yy");
-}
+}*/
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
 	finAccountFinalTransList = [];
@@ -176,6 +176,47 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 									finAccountTransTypeId = newfinAccountTransDetails.finAccountTransTypeId;
 									amount = newfinAccountTransDetails.amount;
 									paymentDate = newfinAccountTransDetails.transactionDate;
+									dayBegin = UtilDateTime.getDayStart(paymentDate);
+									finYearContext = [:];
+									finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+									finYearContext.put("organizationPartyId", "Company");
+									finYearContext.put("userLogin", userLogin);
+									finYearContext.put("findDate", dayBegin);
+									finYearContext.put("excludeNoOrganizationPeriods", "Y");
+									List customTimePeriodList = FastList.newInstance();
+									Map resultCtx = FastMap.newInstance();
+									try{
+										resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+										if(ServiceUtil.isError(resultCtx)){
+											Debug.logError("Problem in fetching financial year ", module);
+											return ServiceUtil.returnError("Problem in fetching financial year ");
+										}
+									}catch(GenericServiceException e){
+										Debug.logError(e, module);
+										return ServiceUtil.returnError(e.getMessage());
+									}
+									customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+									if(UtilValidate.isNotEmpty(customTimePeriodList)){
+										GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+										fromDate = (String)customTimePeriod.get("fromDate");
+										thruDate = (String)customTimePeriod.get("thruDate");
+										def sdf = new SimpleDateFormat("yyyy-MM-dd");
+										try {
+											if (fromDate) {
+												fromDateTime = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fromDate).getTime()));
+											}
+											if (thruDate) {
+												thruDateTime = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(thruDate).getTime()));
+											}
+										} catch (ParseException e) {
+											Debug.logError(e, "Cannot parse date string: " + e, "");
+											context.errorMessage = "Cannot parse date string: " + e;
+											return;
+										}
+										context.from=UtilDateTime.toDateString(fromDateTime,"yy");
+										context.thru=UtilDateTime.toDateString(thruDateTime,"yy");
+									}
+									
 									comments = newfinAccountTransDetails.comments;
 									contraRefNum = newfinAccountTransDetails.contraRefNum;
 									amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
