@@ -379,6 +379,11 @@
        <response name="success" type="view" value="POMaterialReceipts"/>
        <response name="error" type="view" value="POMaterialReceipts"/>
      </request-map>
+     <request-map uri="getPartyprices">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/"  invoke="purcahseOrderprice.groovy"/>
+       <response name="success" type="request" value="json"/>    
+    </request-map>
      <request-map uri="StockStatementReport.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="StockStatementReportPDF"/>

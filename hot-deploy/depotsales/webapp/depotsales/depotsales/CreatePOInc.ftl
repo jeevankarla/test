@@ -70,6 +70,7 @@
 	var data2 = ${StringUtil.wrapString(orderAdjustmentJSON)!'[]'};
 	var productUOMMap = ${StringUtil.wrapString(productUOMJSON)!'{}'};
 	var uomLabelMap = ${StringUtil.wrapString(uomLabelJSON)!'{}'};
+	var priceTags;
 	
 	var otherTermsLabelJSON = ${StringUtil.wrapString(otherTermsLabelJSON)!'{}'};
 	var otherTermsLabelIdJSON = ${StringUtil.wrapString(otherTermsLabelIdJSON)!'{}'};
@@ -652,6 +653,10 @@
 				var price = data[args.row]['unitPrice'];
 				if(isNaN(price)){
 					price = 0;
+					if(priceTags[prod]){
+					//price = 0;
+					price = parseFloat(priceTags[prod]);
+				  }
 				}
 				if(isNaN(qty)){
 					qty = 0;

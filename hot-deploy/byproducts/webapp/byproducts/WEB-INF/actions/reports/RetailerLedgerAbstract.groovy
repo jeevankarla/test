@@ -216,7 +216,7 @@ for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 	
 	
 	
-	if(UtilValidate.isNotEmpty(curntDaySalesMap)){
+	//if(UtilValidate.isNotEmpty(curntDaySalesMap)){
 		curntDaySalesMap["totalRevenue"]=dayTotalRevenue;
 		reciepts = BigDecimal.ZERO;
 		boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId, isByParty:Boolean.TRUE]);
@@ -239,7 +239,7 @@ for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 		curntDaySalesMap["OpeningBal"]=((new BigDecimal(obAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		curntDaySalesMap["ClosingBal"]=((new BigDecimal(obAmount+dayTotalRevenue-reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		allDaySaleMap[curntDay1]=curntDaySalesMap;
-	}
+	//}
 }
 	
 boothSalesMap[boothId]=allDaySaleMap;

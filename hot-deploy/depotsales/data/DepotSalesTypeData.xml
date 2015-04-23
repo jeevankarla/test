@@ -127,4 +127,5 @@
  <InvoiceItemType description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>
  <InvoiceItemTypeMap  invoiceItemMapKey="COGS_OTH_CHARGES" invoiceItemTypeId="COGS_OTH_CHARGES" invoiceTypeId="SALES_INVOICE"  />
     
+    <PartyClassificationGroup description="Depot Union Purchase Price" partyClassificationGroupId="UTP_PRICE" partyClassificationTypeId="PRICE_TYPE"/> 
 </entity-engine-xml>
