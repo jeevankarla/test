@@ -17,7 +17,7 @@
         <menu-item name="MRTransporterBilling" title="Transporter Billing">
         	<link target="mrTransporterBilling"/>
         </menu-item>  
-        <!-- <menu-item name="TransporterAdjustments" title="Transporter Adjustments">
+        <menu-item name="TransporterAdjustments" title="Transporter Adjustments">
          	<condition>
          		<or>
 					
@@ -25,7 +25,7 @@
          		</or>
          	</condition>
         	 <link target="PtcAdjustmentDeductions"/>
-         </menu-item> -->
+         </menu-item>
       </menu>
     <menu name="FindMilkReceiptsTankerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="SearchMilkReceiptsTankerEntry" title="Search Milk Receipts ">
@@ -178,6 +178,11 @@
 		</menu-item>
 	</menu>   -->
 	
-	
+	<menu name="TransporterAdjustmentsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+ 	<menu-item name="PtcAdjustmentDeductions" title="Deductions" > <link target="PtcAdjustmentDeductions"></link></menu-item>
+ 	<menu-item name="PtcAdjustmentAdditions" title="Additions" > <link target="PtcAdjustmentAdditions"></link></menu-item>
+ 	<menu-item name="FindPtcAdjustment" title="Find Adjustments" > <link target="FindPtcAdjustment"></link></menu-item>
+ 	</menu>	
+ 
      
 </menus>

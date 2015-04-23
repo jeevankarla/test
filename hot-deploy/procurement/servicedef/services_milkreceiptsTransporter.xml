@@ -37,5 +37,36 @@
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
         <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
     </service>
-        
+    <service name="createPtcTransporterRecovery" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="createPtcTransporterRecovery">
+        <description>Creating Transporter Recovery.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>  
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="incidentDate" mode="IN" type="Timestamp" optional="false"/>     
+        <attribute name="description" mode="IN" type="String" optional="true"/>            
+    </service>   
+    <service name="DeleteAdjustment" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="deletePtcTransporterAdjustment">
+        <description>Delete Transporter Recovery.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>  
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="incidentDate" mode="IN" type="Timestamp" optional="false"/>  
+        <attribute name="recoveryId" mode="IN" type="String" optional="false"/> 
+		<attribute name="description" mode="IN" type="String" optional="true"/>  
+		<attribute name="amount" mode="IN" type="BigDecimal" optional="true"/>   
+    </service> 
+    <service name="updateAdjustment" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="updatePtcTransporterAdjustment">
+        <description>Delete Transporter Recovery.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>  
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="incidentDate" mode="IN" type="String" optional="false"/>  
+        <attribute name="recoveryId" mode="IN" type="String" optional="false"/> 
+		<attribute name="description" mode="IN" type="String" optional="true"/>  
+		<attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>   
+    </service> 
 </services>
