@@ -191,7 +191,8 @@ under the License.
         						   									 <fo:table-body>
         						   									 <fo:table-row>
         						   									  <fo:table-cell border-style="solid">
-        						   									        <fo:block text-align="center" font-size="13pt" white-space-collapse="false" keep-together="always">${finAccountName?if_exists}/${from}-${thru}/</fo:block>
+        						   									        <fo:block text-align="center" font-size="13pt" white-space-collapse="false" keep-together="always">${finAccountName?if_exists}/</fo:block>
+        						   									        <fo:block text-align="center" font-size="13pt" white-space-collapse="false" keep-together="always">${from}-${thru}/</fo:block>
 						        											<fo:block text-align="center" font-size="13pt" white-space-collapse="false" keep-together="always">${finAccountTransId?if_exists}</fo:block>
 						        							  		  </fo:table-cell>
         						   									 <fo:table-cell border-style="solid">
