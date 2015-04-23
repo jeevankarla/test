@@ -77,6 +77,9 @@
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
+	var productUOMMap = ${StringUtil.wrapString(productUOMJSON)!'{}'};
+	var uomLabelMap = ${StringUtil.wrapString(uomLabelJSON)!'{}'};
+	
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
@@ -397,8 +400,15 @@
       		grid.render();
     	});
         grid.onCellChange.subscribe(function(e,args) {
-			if (args.cell == 0 || args.cell == 1) {
+			if (args.cell == 1 || args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
+				var uomId = productUOMMap[prod];
+				var uomLabel='';
+				var uomId = productUOMMap[prod];
+				if(uomId != 'undefined' || uomId != null ){
+				 uomLabel = uomLabelMap[uomId];
+				}
+				data[args.row]['uomDescription'] = uomLabel;
 				grid.updateRow(args.row);
 			}
 			
