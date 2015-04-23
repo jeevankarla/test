@@ -71,8 +71,8 @@ function datetimepick(){
 	
       function numbersOnly(e){
       	var event = e || window.event;
-        // alert(event.keyCode);
-         if( !(event.keyCode == 8 || event.keyCode == 9                               // backspace/Tab
+         //alert(event.keyCode);
+         if( !(event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 110 || event.keyCode == 190                             // backspace/Tab/"."
           || event.keyCode == 46                              // delete
           || (event.keyCode >= 35 && event.keyCode <= 40)     // arrow keys/home/end
           || (event.keyCode >= 48 && event.keyCode <= 57)     // numbers on keyboard
