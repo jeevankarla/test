@@ -30,10 +30,8 @@ under the License.
           <td>Leave Type</td>
           <td>Balance</td>
           <td>Alloted Days</td>
-          <td>Availed Days</td>
-          <td>Adjusted Days</td>
+          <td>Leaves credit</td>
           <td>Encashed Days</td>
-          <td>Lapsed Days</td>
           <td>Update</td>
         </tr>
       </thead>
@@ -61,28 +59,25 @@ under the License.
               <#else>
               	 <td><input type="display" readOnly size="10" id = "allotedDays" name="allotedDays" value="${allotedDays?if_exists}" /></td>
               </#if>
-              <#if security.hasPermission("EMP_AVAILEDDAYS_EDIT", session)>
+              <#--<#if security.hasPermission("EMP_AVAILEDDAYS_EDIT", session)>
               	  <td><input type="text" size="10" id = "availedDays" name="availedDays" value="${availedDays?if_exists}" /></td>
               <#else>
               	 <td><input type="display" readOnly size="10" id = "availedDays" name="availedDays" value="${availedDays?if_exists}" /></td>
-              </#if>
-              <#if security.hasPermission("EMP_ADJDAYS_EDIT", session)>
-              	  <td><input type="text" size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
-              <#else>
-              	 <td><input type="display" readOnly size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
-              </#if>
-              <#if security.hasPermission("EMP_ENCASHDAYS_EDIT", session)>
-              	  <td><input type="text" size="10" id = "encashedDays" name="encashedDays" value="${encashedDays?if_exists}" /></td>
-              <#else>
-              	 <td><input type="display" readOnly size="10" id = "encashedDays" name="encashedDays" value="${encashedDays?if_exists}" /></td>
               </#if>
               <#if security.hasPermission("EMP_LAPSEDDAYS_EDIT", session)>
               	  <td><input type="text" size="10" id = "lapsedDays" name="lapsedDays" value="${lapsedDays?if_exists}" /></td>
               <#else>
               	 <td><input type="display" readOnly size="10" id = "lapsedDays" name="lapsedDays" value="${lapsedDays?if_exists}" /></td>
               </#if>
+              </tr>-->
+              <#if security.hasPermission("EMP_ADJDAYS_EDIT", session)>
+              	  <td><input type="text" size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "adjustedDays" name="adjustedDays" value="${adjustedDays?if_exists}" /></td>
+              </#if>
+              <td><input type="display" readOnly size="10" id = "encashedDays" name="encashedDays" value="${encashedDays?if_exists}" /></td>
               <td><input type="submit" name="submit" id="submit" value="Update" style="buttontext"/></td>
-              </tr>
+            </tr>
             <#assign alt_row = !alt_row>
       </tbody>
     </table>
