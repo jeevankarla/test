@@ -479,10 +479,15 @@
      
      <!--  tanker Receipt Fields -->
      <field name="sendNutrilisers" type="indicator"></field><!-- P/N positive/Negative -->
+     <field name="receivedNutrilisers" type="indicator"></field><!-- P/N positive/Negative --> 
      <field name="receivedSedimentTest" type="indicator"></field><!-- P/N positive/Negative -->
+     <field name="sendSedimentTest" type="indicator"></field><!-- P/N positive/Negative -->    
+     <field name="sendPH" type="fixed-point"></field>
+     <field name="sendMBRT" type="fixed-point"></field>
      <field name="receivedPH" type="fixed-point"></field>
      <field name="receivedMBRT" type="fixed-point"></field>
      <field name="receivedFlavour" type="id"></field>
+     <field name="sendFlavour" type="id"></field> 
      
      <!--  <field name="sendHour" type="numeric"></field>
       <field name="receivedHour" type="numeric"></field> -->

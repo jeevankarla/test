@@ -24,6 +24,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("MilkReceiptsFromDate","thruDate");
 		makeDatePicker("MilkReceiptsThruDate","thruDate");
 		makeDatePicker("MkrsFromDate","thruDate");
+		makeDatePicker("shiftDate","shiftDate");
 		makeDatePicker("MkrsThruDate","thruDate");
 		makeDatePicker("MilkReceiptWeeklyAnalysisFromDate","thruDate");
 		makeDatePicker("MilkReceiptWeeklyAnalysisThruDate","thruDate");
@@ -109,6 +110,21 @@ function appendParams(formName, action) {
 				             <input type="submit" value="Download" class="buttontext"></td>
 			 </form>
 		  </tr>
+          <tr class="alternate-row"> 		
+			  <form id="MilkAnalysisReportTxt" name="MilkAnalysisReportTxt" mothed="post" action="<@ofbizUrl>MilkAnalysisReport.txt</@ofbizUrl>">
+			     <td>Milk Analysis Report</td>
+                  <td>
+                  Select Shift <select name="shiftType">
+					                    <option value="all" selected></option>
+			                            <option value="1">1st Shift</option>
+			                            <option value="2">2nd Shift</option>
+			                            <option value="3">3rd Shift</option>
+		                   		</select>
+				   Shift Date <input  type="text" size="15pt" id="shiftDate" name="shiftDate" required />				  			   
+				   <input type="submit" value="Download" class="buttontext"/>
+				 </td>
+			  </form>
+		  </tr>  	   
 		</table>
     </div>
     </div>

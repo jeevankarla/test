@@ -273,6 +273,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="ShiftWiseReportTxt"/>
     </request-map>
+    <request-map uri="MilkAnalysisReport.txt">
+	        <security auth="true" https="true"/>
+	        <response name="success" type="view" value="MilkAnalysisReportTxt"/>
+    </request-map>
     <request-map uri="DayWiseAbstract.txt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DayWiseAbstract"/>
@@ -621,6 +625,7 @@
     
     <view-map name="ShiftWiseReportTxt" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ShiftWiseReportTxt" content-type="text/plain"/>
     <view-map name="ShiftWiseReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ShiftWiseReport"/>
+    <view-map name="MilkAnalysisReportTxt" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkAnalysisReportTxt" content-type="text/plain"/>    
 	<view-map name="Reports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#Reports"/>	  
 	<view-map name="UnitMilkReceiptReports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#UnitMilkReceiptReports"/>
     <view-map name="ShedMilkReceiptReports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ShedMilkReceiptReports"/>
