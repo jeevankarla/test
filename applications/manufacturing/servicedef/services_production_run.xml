@@ -198,6 +198,7 @@ under the License.
         </description>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="failIfItemsAreNotAvailable" type="String" mode="IN" optional="true"/>
