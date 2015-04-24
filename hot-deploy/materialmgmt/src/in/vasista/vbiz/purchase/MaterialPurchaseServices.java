@@ -565,7 +565,7 @@ public class MaterialPurchaseServices {
 		String vehicleId = (String) request.getParameter("vehicleId");
 		String invoiceDateStr = (String) request.getParameter("invoiceDate");
 		String orderId = (String) request.getParameter("orderId");
-		String isEnableAcctg = (String) request.getParameter("isEnableAcctg");
+		String isDisableAcctg = (String) request.getParameter("isDisableAcctg");
 		String partyIdFrom = "";
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purposeTypeId = "MATERIAL_PUR_CHANNEL";
@@ -791,8 +791,8 @@ public class MaterialPurchaseServices {
 		processInvoiceContext.put("shipmentId", shipmentId);
 		processInvoiceContext.put("invoiceDate", invoiceDate);
 		processInvoiceContext.put("invoiceAdjChargesList", invoiceAdjChargesList);
-		if(UtilValidate.isNotEmpty(isEnableAcctg)){
-			processInvoiceContext.put("isEnableAcctg", isEnableAcctg);
+		if(UtilValidate.isNotEmpty(isDisableAcctg)){
+			processInvoiceContext.put("isDisableAcctg", isDisableAcctg);
 		}
 		result = createMaterialInvoice(dctx, processInvoiceContext);
 		if(ServiceUtil.isError(result)){
@@ -821,7 +821,7 @@ public class MaterialPurchaseServices {
 		  	String vehicleId = (String) context.get("vehicleId");
 		  	String partyIdFrom = (String) context.get("partyId");
 		  	String orderId = (String) context.get("orderId");
-		  	String isEnableAcctg = (String) context.get("isEnableAcctg");
+		  	String isDisableAcctg = (String) context.get("isDisableAcctg");
 		  	String shipmentId = (String) context.get("shipmentId");
 		  	Debug.log("#####context#########"+context);
 		  	boolean beganTransaction = false;
@@ -886,7 +886,7 @@ public class MaterialPurchaseServices {
 		        input.put("dueDate", invoiceDate); 	        
 		        input.put("partyId", partyId);
 		        input.put("purposeTypeId", purposeTypeId);
-		        if(UtilValidate.isNotEmpty(isEnableAcctg)){
+		        if(UtilValidate.isNotEmpty(isDisableAcctg) && (isDisableAcctg.equals("N"))){
 			        input.put("isEnableAcctg", "N");
 				}
 		        input.put("createdByUserLogin", userLogin.getString("userLoginId"));

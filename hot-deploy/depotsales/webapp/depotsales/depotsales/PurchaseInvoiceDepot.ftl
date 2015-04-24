@@ -141,7 +141,7 @@ $(document).ready(function(){
 		<input type="hidden" name="shipmentId" id="billToPartyId" value="${parameters.shipmentId?if_exists}"/>
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>
 		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>
-		<input type="hidden" name="isEnableAcctg" id="isEnableAcctg" value="N"/>
+		<input type="hidden" name="isDisableAcctg" id="isDisableAcctg" value="N"/>
 		<br>
 	</form>
 	</div>
