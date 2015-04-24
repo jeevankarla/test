@@ -165,37 +165,37 @@ under the License.
 							            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("openingBalance")}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="solid">
-							            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
+							            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("openingRate")}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="solid">
-							            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
+							            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("openingValue")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("receivedQty")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("receivedQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("rate")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("receivedRate")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("val")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("receivedVal")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("issuedQty")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("issuedQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("rate")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("issuedRate")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("val")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("issuedVal")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("closingBalance")}</fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("closingBalance")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("closingRate")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
+							            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${stockStatement.getValue().get("closingValue")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 							     </#list>
