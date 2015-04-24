@@ -4,10 +4,10 @@
      <form name="editComplaint" default-table-style="basic-table hover-bar" target="updateTMSComplaint" type="single" default-map-name="newCustRequest">
         <alt-target use-when="newCustRequest == null" target="createComplaint"/>
         <field name="custRequestItemSeqId"><hidden /></field>
-        <field name="custRequestId" use-when="custRequest != null" title="Complaint Number"><display/></field>
+        <field name="custRequestId" use-when="custRequest != null" title="Ticket Number"><display/></field>
         <field name="custRequestDate" id-name="custRequestDate" use-when="${groovy:((security.hasEntityPermission(&quot;TICKETMGMT&quot;, &quot;_ADMIN&quot;,session)))}" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:makeDatePicker()"><text  size="25"/></field>
         <field name="custRequestDate" id-name="custRequestDate" use-when="!${groovy:((security.hasEntityPermission(&quot;TICKETMGMT&quot;, &quot;_ADMIN&quot;,session)))}"><display></display></field>
-        <field name="custRequestTypeId" title="Nature Of Complaint">
+        <field name="custRequestTypeId" title="Nature Of Ticket">
             <drop-down>
                 <list-options key-name="custRequestTypeId" list-name="complaintTypeList" description="${description}"/>
             </drop-down>
@@ -46,16 +46,16 @@
         </field>
         <field name="subject" title=" Subject" ><text size="25" maxlength="25"/></field>
         <field name="remarks" title="Remarks" ><text size="25" maxlength="25"/></field>
-        <field name="sla" title=" SLA" ><text size="25" maxlength="10"/></field>
-        <field name="email" title="E-mail "  required-field="true" tooltip="required"  widget-style="required"><text size="25"/></field>
+<!--         <field name="sla" title=" SLA" ><text size="25" maxlength="10"/></field> -->
+<!--         <field name="email" title="E-mail "  required-field="true" tooltip="required"  widget-style="required"><text size="25"/></field> -->
         <field name="groupClient" title="Group Client" ><text size="25" maxlength="15"/></field>
         <field name="submit"><submit/></field>
     </form>
    <form name="FindComplaints" target="FindComplaint" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
         <!-- <auto-fields-entity entity-name="CustRequest" default-field-type="find"/> -->
-        <field name="custRequestId" title="Complaint Number"><text size="6"/></field>
-        <field name="custRequestTypeId_0"  title="Nature of Compliant" >
+        <field name="custRequestId" title="Ticket Number"><text size="6"/></field>
+        <field name="custRequestTypeId_0"  title="Nature of Ticket" >
             <drop-down allow-empty="true">
                
                  <list-options key-name="custRequestTypeId" list-name="complaintTypeList" description="${description}"/>
@@ -72,7 +72,7 @@
         
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct" /></field>
         <field name="custRequestDate" id-name="date" title="Date"><text size="15"/></field>
-        <field name="Description" title="Complaint" ><textarea cols="60" rows="1" /></field>
+        <field name="Description" title="Ticket" ><textarea cols="60" rows="1" /></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -102,22 +102,22 @@
     </form>
     <form name="ListComplaintList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <field name="custRequestId"  sort-field="true" title="Complaint Number" use-when="${groovy:((security.hasEntityPermission(&quot;TM_COMP&quot;, &quot;_VIEW&quot;,session)))}" widget-style="buttontext">
+        <field name="custRequestId"  sort-field="true" title="Ticket Number" use-when="${groovy:((security.hasEntityPermission(&quot;TM_COMP&quot;, &quot;_VIEW&quot;,session)))}" widget-style="buttontext">
             <hyperlink description="${custRequestId}" target="ViewRequest" target-window="_BLANK">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>
-        <field name="custRequestId"  sort-field="true" title="Complaint Number" use-when="!${groovy:((security.hasEntityPermission(&quot;TM_COMP&quot;, &quot;_VIEW&quot;,session)))}"><display></display>
+        <field name="custRequestId"  sort-field="true" title="Ticket Number" use-when="!${groovy:((security.hasEntityPermission(&quot;TM_COMP&quot;, &quot;_VIEW&quot;,session)))}"><display></display>
         </field>
         <field name="custRequestDate" title="Date" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd-MM-yyyy&quot;)}"/></field>
         <field name="statusId" sort-field="true">
             <display-entity also-hidden="false" entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="custRequestTypeId" title="Nature Of Complaint" sort-field="true"><display/></field>
+        <field name="custRequestTypeId" title="Nature Of Ticket" sort-field="true"><display/></field>
          <field name="productId" title="ProductId" sort-field="true">
           <display-entity also-hidden="false" entity-name="Product" key-field-name="productId" description="${description}"/>
          </field>
-        <field name="description" title="Complaint" sort-field="false"><display/></field>
+        <field name="description" title="Ticket" sort-field="false"><display/></field>
     </form>
     <form name="requestInfo" type="single" title="request information" header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -127,7 +127,7 @@
         	</entity-one>
         </actions>
         <field name="custRequestDate" title="Date"><display description="${custRequestDate}"/></field>
-        <field name="custRequestTypeId" title="Nature Of Complaint"><display description="${custRequestTypeId} "/></field>
+        <field name="custRequestTypeId" title="Nature Of Ticket"><display description="${custRequestTypeId} "/></field>
          <field name="categoryId"  title="Category" ><display description="${categoryId} "/></field>
         <field name="productCategoryId"  title="Sub-Category" ><display description="${productCategoryId} "/></field>
         <field name="productId" title="Product"><display description="${productId} [${productName}]"/></field>
@@ -137,7 +137,7 @@
         <field name="environment"  title="Environment" ><display description="${environment} "/></field>
         <field name="project"  title="project" ><display description="${project} "/></field>
         <field name="groupClient"  title="Group Client" ><display description="${groupClient} "/></field>
-        <field name="sla"  title="SLA" ><display description="${sla} "/></field>   
+<!--         <field name="sla"  title="SLA" ><display description="${sla} "/></field>    -->
     </form>
 	
     <form name="ListCustRequestContent" type="list" list-name="custRequestAndContents"

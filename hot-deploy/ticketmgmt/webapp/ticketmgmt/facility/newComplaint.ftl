@@ -300,19 +300,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 	          				<tr>
 					            <td class="label"><b>Subject</b></td></td>
 		          				<td>
-									<input class="h3" type="text" size="18" maxlength="20" name="subject" id="subject" />
+									<input class="h3" type="textfield" size="30" maxlength="150" name="subject" id="subject"  style="width: 400px; height: 20px"/>
 		          				</td>
 	          				</tr>  
                            <tr>
 					            <td class="label"><b>Remarks</b></td></td>
 		          				<td>
-									<input class="h3" type="text" size="18" maxlength="20" name="remarks" id="remarks" />
+									<input class="h3" type="textarea" size="30" maxlength="150"  name="remarks" id="remarks" style="width: 400px; height:35px"/>
 		          				</td>
 	          				</tr>    
 						  </table>
 						  </fieldset>
                         </section>
-                     <h3>Contact Details</h3>
+                 <#-->    <h3>Contact Details</h3>
 			          <section>
 					        <fieldset>
 					            <table cellpadding="2" cellspacing="1">
@@ -338,6 +338,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 							     </table>
 							 
 							</fieldset>
-                        </section>
+                        </section>    -->
                 </form>
 			

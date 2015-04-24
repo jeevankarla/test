@@ -72,7 +72,7 @@
     <screen name="FindComplaint">
         <section>
             <actions>
-                <set field="titleProperty" value="Complaints"/>
+                <set field="titleProperty" value="Tickets"/>
                 <set field="tabButtonItem" value="complaints"/>
                 <set field="headerItem" value="request"/>
                 <set field="entityName" value="CustRequestAndItemAndAttribute"/>
@@ -92,7 +92,7 @@
                     			</condition>
                     			<widgets>
                                 <container style="button-bar">
-                                    <link  target="newComplaint" text="Create Complaint" style="buttontext create" />
+                                    <link  target="newComplaint" text="Create Ticket" style="buttontext create" />
                                 </container>
                                 </widgets>
                                  </section>
@@ -112,7 +112,7 @@
      <screen name="newComplaint">
         <section>
             <actions>
-                <set field="titleProperty" value="Complaints"/>
+                <set field="titleProperty" value="Tickets"/>
                 <set field="tabButtonItem" value="complaints"/>
                 <set field="headerItem" value="request"/>
                 <set field="entityName" value="CustRequestAndItemAndAttribute"/>
@@ -126,7 +126,7 @@
 <!--                      <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml"> -->
 <!--                     <decorator-section name="menu-bar"> -->
                   <include-menu location="component://ticketmgmt/widget/TicketMgmtMenus.xml" name="TicketMgmtTabBar"/>
-                 <label style="h1">New Complaint</label>
+                 <label style="h1">New Ticket</label>
                 <platform-specific><html><html-template location="component://ticketmgmt/webapp/ticketmgmt/facility/newComplaint.ftl"/></html></platform-specific>                      
 <!--                             </decorator-section> -->
 <!--                         </decorator-screen> -->
@@ -143,7 +143,7 @@
                 <set field="headerItem" value="TicketMgmtMenu"/><!-- this highlights the selected menu-item with name "main" -->
                 <set field="tabButtonItem" value="complaints"/>
                 <set field="subTabButtonItem" value="editRequest"/>
-                <set field="title" value="Complaint Edit"/>
+                <set field="title" value="Ticket Edit"/>
                 <set field="layoutSettings.javaScripts[]" value="/ticketmgmt/images/date.js" global="true"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one value-field="custRequest" entity-name="CustRequest">
@@ -170,7 +170,7 @@
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="tabButtonItem" value="complaints"/>
                 <set field="subTabButtonItem" value="ViewRequest"/>
-                <set field="titleProperty" value="Complaint Overview"/>
+                <set field="titleProperty" value="Ticket Overview"/>
                 <set field="showRequestManagementLinks" value="Y"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
             </actions>
@@ -252,7 +252,7 @@
 		                  </screenlet>
                 </container>
                 <container style="righthalf">
-                    <screenlet title="Complaint Status List" navigation-form-name="ViewRequest">
+                    <screenlet title="Ticket Status List" navigation-form-name="ViewRequest">
                         <include-form name="ViewRequestStatus" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
                     </screenlet>
                     <platform-specific>
@@ -346,7 +346,7 @@
                 </entity-and>
             </actions>
             <widgets>
-     <screenlet title="Complaint Number : ${custRequest.custRequestId} ${uiLabelMap.CommonInformation}" navigation-menu-name="editRequest" id="editRequest">
+     <screenlet title="Ticket Number : ${custRequest.custRequestId} ${uiLabelMap.CommonInformation}" navigation-menu-name="editRequest" id="editRequest">
        <include-menu location="component://ticketmgmt/widget/TicketMgmtMenus.xml" name="editRequest"/>
        
          <include-form name="requestInfo" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
