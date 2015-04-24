@@ -2162,6 +2162,15 @@ under the License.
         <alias name="quantityOnHandDiff" entity-alias="IID"></alias>
         <alias name="availableToPromiseDiff" entity-alias="IID"></alias>
         <alias name="accountingQuantityDiff" entity-alias="IID"></alias>
+        <alias name="workEffortId" entity-alias="IID"></alias>
+        <alias name="returnId" entity-alias="IID"></alias>
+        <alias name="returnItemSeqId" entity-alias="IID"></alias>
+        <alias name="itemIssuanceId" entity-alias="IID"></alias>
+        <alias name="receiptId" entity-alias="IID"></alias>
+        <alias name="shipmentId" entity-alias="IID"></alias>
+        <alias name="shipmentItemSeqId" entity-alias="IID"></alias>
+        <alias name="custRequestId" entity-alias="IID"></alias>
+        <alias name="custRequestItemSeqId" entity-alias="IID"></alias>
         <view-link entity-alias="II" rel-entity-alias="IID">
             <key-map field-name="inventoryItemId"/>
         </view-link>
