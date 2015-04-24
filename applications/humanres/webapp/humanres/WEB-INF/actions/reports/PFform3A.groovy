@@ -103,6 +103,8 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 				monthTotWages = 0;
 				employerEpf = 0;
 				employerFpf = 0;
+				employeeEpf = 0;
+				employeeVpf = 0;
 				GenericValue customTimePeriodDetails = delegator.findOne("CustomTimePeriod", [customTimePeriodId : periodId], false);
 				if(UtilValidate.isNotEmpty(customTimePeriodDetails)){
 					monthFromDate=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("fromDate"));
@@ -270,10 +272,22 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 													}
 												}
 											}
+											
+											employeePFList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition(["payrollHeaderId" : headerId]), null, null, null, false);
+											if(UtilValidate.isNotEmpty(employeePFList)){
+												employeePFList.each{ employeepf ->
+													if(employeepf.get("payrollHeaderItemTypeId")=="PAYROL_DD_EMP_PR"){
+														employeeEpf = employeeEpf - employeepf.get("amount");
+													}
+													if(employeepf.get("payrollHeaderItemTypeId")=="PAYROL_DD_VLNT_PR"){
+														employeeVpf=employeeVpf - employeepf.get("amount");
+													}
+												}
+											}
 										}
 									}
 								}
-								workerShare = employerEpf + employerFpf;
+								workerShare = employeeEpf + employeeVpf;
 							}
 						}
 					}
