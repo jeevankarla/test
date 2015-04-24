@@ -113,6 +113,19 @@
             <link target="DepotSalesOrder">
             </link>
         </menu-item>
+       <!--  <menu-item name="StockVariance" title="Stock Variance">
+            <link target="StockVariance">
+            </link>
+        </menu-item> -->
+        <menu-item name="PhysicalInventory" title="GRN Returns">
+           <!--  <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>   -->        
+            <link target="FindFacilityPhysicalInventoryDepot">
+                <parameter param-name="facilityId" value="STORE"/>
+            </link>
+        </menu-item>
+        
 	     <!-- <menu-item name="MaterialForQCApproval" title="QC Approval">
 	        <condition>
 	        	<if-has-permission permission="MM" action="_QC_VIEW"/>
@@ -392,5 +405,31 @@
             <link target="FindDepotSalesChequeReturns"/>
           </menu-item> -->      
     </menu>  
-      
+       <menu name="InventoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <!-- <menu-item name="SearchInventory" title="Find Inventory Totals">
+            <link target="Receipts">
+            </link>
+        </menu-item> -->
+        <menu-item name="FindInventoryDetails" title="Find Inventory Details">
+        	<!-- <condition>
+                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
+        	</condition>  -->
+            <link target="FindInventoryDetails">
+            </link>
+        </menu-item>
+        <menu-item name="StockMoves" title="Stock Moves">
+        	<!-- <condition>
+                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
+        	</condition>  -->
+            <link target="ViewReceivedInventory">
+            </link>
+        </menu-item>
+        <menu-item name="StockVariance" title="Stock Variance">
+        	<!-- <condition>
+                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
+        	</condition>  -->
+            <link target="StockVariance">
+            </link>
+        </menu-item>
+    </menu>       
 </menus>
