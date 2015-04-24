@@ -410,6 +410,17 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyFinHistory"/>
     </request-map>
+    <request-map uri="createPhysicalVariances">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="createPhysicalInventoryAndVariance"/>
+        <response name="success" type="view" value="FindFacilityPhysicalInventoryDepot"/>
+        <response name="error" type="view" value="FindFacilityPhysicalInventoryDepot"/>
+    </request-map>
+
+    <request-map uri="FindFacilityPhysicalInventoryDepot">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFacilityPhysicalInventoryDepot"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
