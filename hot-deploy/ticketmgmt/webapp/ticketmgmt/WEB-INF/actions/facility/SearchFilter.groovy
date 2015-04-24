@@ -5,6 +5,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 
+
 dctx = dispatcher.getDispatchContext();
 parameters.custRequestTypeId = parameters.custRequestTypeId_0;
 if(UtilValidate.isEmpty(parameters.custRequestTypeId)&&UtilValidate.isNotEmpty(parameters.noConditionFind)){
@@ -18,5 +19,4 @@ if(UtilValidate.isEmpty(parameters.custRequestTypeId)&&UtilValidate.isNotEmpty(p
 	parameters.custRequestTypeId =  custRequestTypes;
 	/*parameters.custRequestTypeId = EntityUtil.getFieldListFromEntityList(custRequestTypeList, "custRequestTypeId", false);*/
 }
-
 

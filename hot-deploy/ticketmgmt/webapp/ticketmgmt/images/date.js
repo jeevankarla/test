@@ -14,4 +14,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
 	});
+	$("#custRequestDate").datepicker({
+		dateFormat:'yy-mm-dd',
+		changeMonth: true,
+		numberOfMonths: 1,
+		onSelect: function(selectedDate) {
+			$("#custRequestDate").datepicker('setDate', selectedDate);
+		}
+	});
 }

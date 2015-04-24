@@ -37,14 +37,25 @@ under the License.
         <set field="newEntity.lastModifiedDate" from-field="nowTimestamp" type="Timestamp"/>
         <set field="newEntity.createdByUserLogin" from-field="userLogin.userLoginId" type="String"/>
         <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId" type="String"/>
+        <if-not-empty field="parameters.severity">
+                <set field="newEntity.severity" from-field="parameters.severity"/>
+            </if-not-empty>
+            <if-not-empty field="parameters.description">
+                <set field="newEntity.description" from-field="parameters.description"/>
+            </if-not-empty>
         <field-to-result field="newEntity.custRequestId" result-name="custRequestId"/>
         <create-value value-field="newEntity"/>
         <if-not-empty field="parameters.statusId">
             <set field="setStat.statusId" from-field="parameters.statusId"/>
             <set field="setStat.custRequestId" from-field="newEntity.custRequestId"/>
+            <set field="setStat.changedByUserLogin" from-field="userLogin.userLoginId" type="String"/>
+            <set field="setStat.partyId" from-field="userLogin.userLoginId" type="String"/>
+            <if-not-empty field="parameters.description">
+            	<set field="setStat.comments" from-field="parameters.description"/>
+            </if-not-empty>
             <if-not-empty field="parameters.webSiteId">
                 <set field="setStat.webSiteId" from-field="parameters.webSiteId"/>
-            </if-not-empty>
+            </if-not-empty>         
             <call-service service-name="createCustRequestStatus" in-map-name="setStat"/>
         </if-not-empty>
     </simple-method>

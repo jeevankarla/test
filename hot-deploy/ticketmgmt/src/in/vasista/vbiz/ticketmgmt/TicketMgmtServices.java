@@ -55,8 +55,23 @@ public class TicketMgmtServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-		Timestamp custRequestDate = UtilDateTime.getDayStart((Timestamp)context.get("custRequestDate"));
-		String statusId = (String)context.get("statusId");
+        String dateStr = (String)context.get("custRequestDate");
+        Timestamp custRequestDate=null;
+        if (UtilValidate.isNotEmpty(dateStr)) {
+        	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.SSS");
+        	try {
+        		custRequestDate = new java.sql.Timestamp(sdf.parse(dateStr)
+        	.getTime());
+        	} catch (ParseException e) {
+        	Debug.logError(e, "Cannot parse date string: " + dateStr,
+        	module);
+        	// effectiveDate = UtilDateTime.nowTimestamp();
+        	} catch (NullPointerException e) {
+        	Debug.logError(e, "Cannot parse date string: " + dateStr,
+        	module);
+        	}
+        	}
+		String statusId = "OPEN_NEW";
 		String productId = (String)context.get("productId");
 		String salesChannelEnumId = (String)context.get("salesChannelEnumId");
 		String custRequestTypeId = (String)context.get("custRequestTypeId");
@@ -66,13 +81,28 @@ public class TicketMgmtServices {
 		String PPHONE = (String)context.get("PPHONE");
 		String PNAME = (String)context.get("PNAME");
 		String ACTION = (String)context.get("ACTION");
+		
+		String CATEGORY_ID = (String)context.get("categoryId");
+		String PRODUCT_CATEGORY_ID = (String)context.get("productCategoryId");
+		String severity = (String)context.get("severity");
+		String ENVIRONMENT = (String)context.get("environment");
+		String SUBJECT = (String)context.get("subject");
+		String PROJECT = (String)context.get("project");
+		String EMAIL = (String)context.get("emailAddress");
+		String GROUP_CLIENT = (String)context.get("groupClient");
+		String ASSET_MAPPING = (String)context.get("assetMapping");
+		String SLA = (String)context.get("SLA");
+		String REMARKS = (String)context.get("remarks");
+
+
 		Map<String,Object> inMap = FastMap.newInstance();
 		inMap.put("custRequestDate",custRequestDate);
 		inMap.put("statusId",statusId);
 		inMap.put("custRequestTypeId",custRequestTypeId);
-		inMap.put("description",description);
 		inMap.put("salesChannelEnumId",salesChannelEnumId);
+		inMap.put("severity",severity);
 		inMap.put("userLogin",userLogin);
+		inMap.put("description",description);
 		Map<String,Object> custRequest = FastMap.newInstance();
 		try{
 			custRequest = dispatcher.runSync("createNewComplaint",inMap);
@@ -90,17 +120,40 @@ public class TicketMgmtServices {
 			try{
 				GenericValue attr = delegator.makeValue("CustRequestAttribute");
 		        attr.set("custRequestId", custRequestId);
-		        attr.set("attrName", "PADDR");
-		        attr.set("attrValue", PADDR);
+		       
+		        attr.set("attrName","CATEGORY_ID");
+		        attr.set("attrValue",CATEGORY_ID);
 		        delegator.create(attr);
-		        attr.set("attrName","PPHONE");
-		        attr.set("attrValue",PPHONE);
+		        attr.set("attrName","PRODUCT_CATEGORY_ID");
+		        attr.set("attrValue",PRODUCT_CATEGORY_ID);
 		        delegator.create(attr);
-		        attr.set("attrName","ACTION");
-		        attr.set("attrValue",ACTION);
+		        
+		     
+		        
+		        attr.set("attrName","EMAIL");
+		        attr.set("attrValue",EMAIL);
 		        delegator.create(attr);
-		        attr.set("attrName","PNAME");
-		        attr.set("attrValue",PNAME);
+		        attr.set("attrName","ENVIRONMENT");
+		        attr.set("attrValue",ENVIRONMENT);
+		        delegator.create(attr);
+		        attr.set("attrName","SUBJECT");
+		        attr.set("attrValue",SUBJECT);
+		        delegator.create(attr);
+		        attr.set("attrName","PROJECT");
+		        attr.set("attrValue",PROJECT);
+		        delegator.create(attr);
+		        attr.set("attrName","GROUP_CLIENT");
+		        attr.set("attrValue",GROUP_CLIENT);
+		        delegator.create(attr);
+		    
+		        attr.set("attrName","ASSET_MAPPING");
+		        attr.set("attrValue",ASSET_MAPPING);
+		        delegator.create(attr);
+		        attr.set("attrName","SLA");
+		        attr.set("attrValue",SLA);
+		        delegator.create(attr);
+		        attr.set("attrName","REMARKS");
+		        attr.set("attrValue",REMARKS);
 		        delegator.create(attr);
 		        
 		        Map<String,Object> itemInMap = FastMap.newInstance();
@@ -109,11 +162,11 @@ public class TicketMgmtServices {
 		        itemInMap.put("userLogin",userLogin);
 		        itemInMap.put("productId",productId);
 		        resultMap = dispatcher.runSync("createCustRequestItem",itemInMap);
-					        if (ServiceUtil.isError(resultMap)) {
-					        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-					        	resultMap = ServiceUtil.returnError("ServiceError While creating Complaint Item ");
-					            return resultMap;
-					        }
+		        if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+		        	resultMap = ServiceUtil.returnError("ServiceError While creating Complaint Item ");
+		            return resultMap;
+		        }
 				}catch(GenericEntityException e){
 					Debug.logError("Error While creating Complaint Attributes=====>"+e,module);
 					resultMap = ServiceUtil.returnError("Error While creating Complaint Attributes");
@@ -123,11 +176,11 @@ public class TicketMgmtServices {
 					resultMap = ServiceUtil.returnError("Error While creating Complaint Item");
 					return resultMap;
 				}
-				resultMap = ServiceUtil.returnSuccess("complaint Successfully Registered with the complaint number===========>"+custRequestId);
+				resultMap = ServiceUtil.returnSuccess("Complaint successfully registered with the complaint number===========>"+custRequestId);
 				resultMap.put("custRequestId",custRequestId);
 				//Sending sms by seca rule and setting the attribute values for SMS
-				resultMap.put("contactNumberTo",PPHONE);
-				resultMap.put("text","Sending Sms For Testing");
+				//resultMap.put("contactNumberTo",PPHONE);
+				//resultMap.put("text","Sending Sms For Testing");
 			return resultMap;
 	}// End of the service
 	/**
@@ -227,6 +280,184 @@ public class TicketMgmtServices {
 		return resultMap;
 	}// End of the service
 	
+	public static Map<String,Object> updateTMSComplaint(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Map<String, Object> resultMap = FastMap.newInstance();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp custRequestDate = UtilDateTime.getDayStart((Timestamp)context.get("custRequestDate"));
+        String custRequestId = (String)context.get("custRequestId");
+		String custRequestTypeId = (String)context.get("custRequestTypeId");
+		String productId = (String)context.get("productId");
+		String severity = (String)context.get("severity");
+		String categoryId = (String)context.get("categoryId");
+		String productCategoryId = (String)context.get("productCategoryId");
+		String assetMapping = (String)context.get("assetMapping");
+		String environment = (String)context.get("environment");
+		String project = (String)context.get("project");
+		String subject = (String)context.get("subject");
+		String remarks = (String)context.get("remarks");
+		String sla = (String)context.get("sla");
+		String email = (String)context.get("email");
+		String groupClient = (String)context.get("groupClient");
+
+
+
+		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+		try{
+			GenericValue custRequest = delegator.findOne("CustRequest",UtilMisc.toMap("custRequestId",custRequestId),false);
+			if(UtilValidate.isNotEmpty(custRequest)){	
+				custRequest.set("custRequestDate",custRequestDate);
+				custRequest.set("severity",severity);
+				custRequest.set("custRequestTypeId",custRequestTypeId);
+				custRequest.set("lastModifiedDate",nowTimestamp);
+				custRequest.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+				custRequest.store();
+				List<GenericValue> attributes = FastList.newInstance();
+				List<GenericValue> custRequestAttributes = delegator.findList("CustRequestAttribute",EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,custRequestId),null,null,null,false);
+				for(GenericValue attribute : custRequestAttributes){
+					if("CATEGORY_ID".equals((String)attribute.get("attrName"))){
+						attribute.put("attrValue",categoryId);
+					}else if("PRODUCT_CATEGORY_ID".equals((String)attribute.get("attrName"))){
+						attribute.put("attrValue",productCategoryId);
+					}else if("ASSET_MAPPING".equals((String)attribute.get("attrName"))){
+						attribute.put("attrValue",assetMapping);
+					}else if("ENVIRONMENT".equals((String)attribute.get("attrName"))){
+						attribute.put("attrValue",environment);
+					}else if("PROJECT".equals((String)attribute.get("attrName"))){
+		                attribute.put("attrValue",project);
+		            }else if("SUBJECT".equals((String)attribute.get("attrName"))){
+		             	attribute.put("attrValue",subject);
+			        }else if("REMARKS".equals((String)attribute.get("attrName"))){
+			           	attribute.put("attrValue",remarks);
+			        }else if("SLA".equals((String)attribute.get("attrName"))){
+					    attribute.put("attrValue",sla);
+			        }else if("EMAIL".equals((String)attribute.get("attrName"))){
+					    attribute.put("attrValue",email);
+					}else if("GROUP_CLIENT".equals((String)attribute.get("attrName"))){
+					    attribute.put("attrValue",groupClient);
+					} 
+					attributes.add(attribute);
+				}
+				delegator.storeAll(attributes);
+				
+	  		    GenericValue custRequestItem = null;
+  	  		    String custRequestItemSeqId = "";
+				List<GenericValue>  custRequestItems = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,custRequestId),null,null,null,false);
+				if(UtilValidate.isNotEmpty(custRequestItems)){	
+			    custRequestItem = EntityUtil.getFirst(custRequestItems);
+			    custRequestItemSeqId = custRequestItem.getString("custRequestItemSeqId");
+				Map<String,Object> itemInMap = FastMap.newInstance();
+		        itemInMap.put("custRequestId",custRequestId);
+		        itemInMap.put("custRequestItemSeqId",custRequestItemSeqId);
+				itemInMap.put("productId",productId);
+				itemInMap.put("userLogin",userLogin);
+				if(UtilValidate.isNotEmpty(custRequestItem)){
+					resultMap = dispatcher.runSync("updateCustRequestItem", itemInMap);
+				}else{
+					resultMap = dispatcher.runSync("createCustRequestItem", itemInMap);
+				}
+			  }
+		         if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+		        	resultMap = ServiceUtil.returnError("Error:While Details updating for Complaint Number==>"+custRequestId);
+		            return resultMap;
+		        }
+				resultMap = ServiceUtil.returnSuccess("Complaint Details updated Successfully for Complaint Number==>"+custRequestId);
+			}
+		}catch (GenericEntityException e) {
+			Debug.logError("Error While updating Complaint===>"+e,module);
+			resultMap = ServiceUtil.returnError("Error while updating Complaint ==>"+custRequestId);
+		}catch (GenericServiceException e) {
+			// TODO: handle exception
+			Debug.logError("Error while updating Status of complaint"+e,module);
+		}
+		resultMap.put("custRequestId",custRequestId);
+		return resultMap;
+	}// End of the service
+	
+	public static Map<String,Object> updateComplaintStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Map<String, Object> resultMap = FastMap.newInstance();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp)context.get("fromDate");
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        if(UtilValidate.isEmpty(fromDate)){
+        	fromDate = nowTimestamp;
+        }
+        Timestamp thruDate = UtilDateTime.getDayEnd((Timestamp)context.get("thruDate"));
+        String custRequestId = (String)context.get("custRequestId");
+        String statusId = (String)context.get("statusId");
+        String comments = (String)context.get("comments");
+        String partyId = (String)context.get("partyId");
+		
+		try{
+			if(!statusId.equals("CLOSED")){
+				if(UtilValidate.isEmpty(partyId)){
+					Debug.logError("PartyId is missing",module);
+					return ServiceUtil.returnError("PartyId is missing!");
+				}
+			}
+			GenericValue custRequest = delegator.findOne("CustRequest",UtilMisc.toMap("custRequestId",custRequestId),false);
+			if(UtilValidate.isNotEmpty(custRequest)){	
+				String prevStatusId = (String)custRequest.get("statusId");
+				if(!statusId.equals(prevStatusId)){
+					Map<String, Object> statusInMap = FastMap.newInstance();
+					statusInMap.put("statusId",statusId);
+					statusInMap.put("custRequestId",custRequestId);
+					statusInMap.put("statusDatetime",fromDate);
+					statusInMap.put("comments",comments);
+					statusInMap.put("partyId",partyId);
+					statusInMap.put("changedByUserLogin",userLogin.getString("partyId"));
+					statusInMap.put("userLogin",userLogin);
+					resultMap =dispatcher.runSync("createCustRequestStatus",statusInMap);
+					if (ServiceUtil.isError(resultMap)) {
+			        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+			        	resultMap = ServiceUtil.returnError("ServiceError While creating Complaint ItemStaus ");
+			            return resultMap;
+			        }
+				}
+				custRequest.set("statusId",statusId);
+				custRequest.set("lastModifiedDate",nowTimestamp);
+				custRequest.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+				custRequest.store();
+				String roleTypeId = "REQ_TAKER";
+				if(UtilValidate.isNotEmpty(partyId)){
+			        GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+					if(UtilValidate.isEmpty(partyRole)){
+						Debug.logError("No party role found", module);
+						resultMap = ServiceUtil.returnError("Error While creating Complaint, No party role found!");
+				  		return resultMap;
+					}
+				}
+				Map inputCtx = FastMap.newInstance();
+				if(UtilValidate.isNotEmpty(partyId)){
+					inputCtx.put("partyId", partyId);
+				}else{
+					inputCtx.put("partyId", userLogin.getString("partyId"));
+				}
+				inputCtx.put("custRequestId", custRequestId);
+				inputCtx.put("roleTypeId",roleTypeId);
+				inputCtx.put("userLogin", userLogin);
+				Map resultCtx = dispatcher.runSync("createCustRequestParty", inputCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
+					return ServiceUtil.returnError("Error occuring while calling createCustRequestParty service:");
+				}
+				resultMap = ServiceUtil.returnSuccess("Complaint status changed successfully for Complaint Number==>"+custRequestId);
+			}
+		}catch (GenericEntityException e) {
+			Debug.logError("Error While updating Complaint===>"+e,module);
+			resultMap = ServiceUtil.returnError("Error while updating Complaint ==>"+custRequestId);
+		}catch (GenericServiceException e) {
+			// TODO: handle exception
+			Debug.logError("Error while updating Status of complaint"+e,module);
+		}
+		resultMap.put("custRequestId",custRequestId);
+		return resultMap;
+	}// End of the service
+	
 	/**
 	 * 
 	 * @param dctx
@@ -244,14 +475,19 @@ public class TicketMgmtServices {
         if(UtilValidate.isNotEmpty(context.get("complaintsList"))){ 
 			complaintsList = (List)context.get("complaintsList");
 			tempParentTypeIdList = EntityUtil.getFieldListFromEntityList(complaintsList, "custRequestTypeId", false);
-		}else{
+		}/*else{
 			tempParentTypeIdList.add(complaintType);
-		}
+		}*/
 			
 		Map<String, Object> result= FastMap.newInstance();
 		List<GenericValue> complaintTypes = null;
 		try{
-			complaintTypes = delegator.findList("CustRequestType",EntityCondition.makeCondition("parentTypeId",EntityOperator.IN,tempParentTypeIdList),null,null,null,false);
+			if(UtilValidate.isNotEmpty(tempParentTypeIdList)){
+				complaintTypes = delegator.findList("CustRequestType",EntityCondition.makeCondition("parentTypeId",EntityOperator.IN,tempParentTypeIdList),null,null,null,false);
+			}else{
+				complaintTypes = delegator.findList("CustRequestType",null,null,null,null,false);
+			}
+			
 		}catch (GenericEntityException e) {
 			// TODO: handle exception
 			Debug.logError("Error while getting  Complaint types ::"+e,module);
