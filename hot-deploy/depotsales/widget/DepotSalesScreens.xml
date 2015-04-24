@@ -1951,4 +1951,54 @@
             </widgets>        
         </section>
     </screen> 
+    <!-- <screen name="StockVariance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Stock Variance"/>
+                <set field="tabButtonItem" value="FindInventory"/>
+                <set field="tabButtonItem2" value="StockVariance"/>
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/PhysicalInventoryVariance.groovy"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="InventoryTabBar"/>
+                       <screenlet title="Stock Variance">
+                            <section>
+                                <widgets>
+                                    <include-form name="createVariance" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                    <include-form name="ViewInventoryAndVariance" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    <screen name="FindFacilityPhysicalInventoryDepot">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindFacilityPhysicalInventory"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="PhysicalInventory"/>
+                <set field="parameters.facilityId" from-field="parameters.facilityId"></set>
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/FindFacilityPhysicalInventory.groovy"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
+                            <include-form name="FindPhysicalInventoryDepot" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
+                            <include-form name="ListPhysicalInventoryDepot" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
 </screens>

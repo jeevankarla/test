@@ -463,4 +463,7 @@
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
     
+    <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
+    <view-map name="FindFacilityPhysicalInventoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindFacilityPhysicalInventoryDepot"/>
+    
 </site-conf>

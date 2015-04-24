@@ -498,4 +498,69 @@
 		</field>
 		<field name="billingAccountId"><hidden/></field>
 	</form>
+	 <!--  <form name="FindPhysicalInventoryDepot" type="single" target="FindFacilityPhysicalInventoryDepot" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="facilityId"><hidden/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <text/>
+        </field>
+         <field name="effectiveDate" title="Effective Date"><date-time/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}">
+            <text/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form> -->
+     <form name="FindPhysicalInventoryDepot" title="" type="single" target="FindFacilityPhysicalInventoryDepot" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
+        <field name="primaryOrderId" title="PO no"><text-find/></field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
+        <field name="facilityId" > <hidden value="${parameters.facilityId}"/></field>
+    <!--     <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
+           <field name="statusId"><hidden value="GENERATED"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ListPhysicalInventoryDepot" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+       
+        <field name="shipmentId" title="Shipment Id"><display/></field>
+        <field name="fromPartyId" title="From Party"><display/></field>
+        <field name="estimatedShipDate" title="Recvd.Date"><display/></field>
+        
+        <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display>
+            <!-- <hyperlink description="${inventoryItemId}" target="EditInventoryItem">
+                <parameter param-name="inventoryItemId"/>
+            </hyperlink> -->
+        </field>
+      <!--   <field name="productId" widget-style="buttontext">
+            <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
+                <parameter param-name="productId"/>
+            </hyperlink>
+        </field> -->
+        <field name="productId" widget-style="buttontext" title="Product Name"><display-entity entity-name="Product" description="${description}[${${productId}}]"></display-entity>
+        </field>
+       <!--  <field name="internalName"><display/></field> -->
+        <field name="availableToPromiseTotal" title="${uiLabelMap.ProductItemATP}"><display/></field>
+        <field name="quantityOnHandTotal" title="${uiLabelMap.ProductItemQOH}"><display/></field>
+        <field name="productATP" title="${uiLabelMap.ProductProductATP}"><display/></field>
+        <field name="productQOH" title="${uiLabelMap.ProductProductQOH}"><display/></field>
+        <field name="varianceReasonId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="VarianceReason" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
+        <field name="quantityOnHandVar" title="${uiLabelMap.ProductProductQOHVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
 </forms>
