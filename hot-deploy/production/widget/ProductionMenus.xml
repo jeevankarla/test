@@ -11,6 +11,12 @@
 		</menu-item>	
 		<menu-item name="prePack" title="Pre Packing">
        		<link target="prePacking" ></link>
+      	</menu-item>
+      	<menu-item name="productionRun" title="Production Run">
+       		<link target="FindNgProductionRun" ></link>
+      	</menu-item>
+      	<menu-item name="productionRunEntry" title="Production Run Entry">
+       		<link target="ProductionRunEntry" ></link>
       	</menu-item>	
 	</menu>
    

@@ -11,5 +11,8 @@
     	<attribute name="productId" mode="IN" type="String" optional="true"/>
     	<attribute name="openingBalance" mode="OUT" type="Map"  optional="true"/>
     </service>
-
+   <!--  <service name="issueRoutingTaskNeededMaterial" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="issueRoutingTaskNeededMaterial">
+    	<attribute name="workEffortId" mode="IN" type="String" optional="false"/>
+    	<attribute name="issueComponents" mode="IN" type="List" optional="false"/>
+    </service> -->
 </services>

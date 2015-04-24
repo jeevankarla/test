@@ -104,7 +104,12 @@ under the License.
             </if-compare>
             <field-to-list field="orderByString" list="orderByList"/>
             <set from-field="productId" field="lookupFieldMap.productId"/>
+            
             <set from-field="workEffort.facilityId" field="lookupFieldMap.facilityId"/>
+            <if-not-empty field="parameters.facilityId">
+            	<set from-field="parameters.facilityId" field="lookupFieldMap.facilityId"/>
+            </if-not-empty>
+
             <!-- if locationSeqId is passed, then only the inventory items in the location are considered -->
             <if-not-empty field="parameters.locationSeqId">
                 <set from-field="parameters.locationSeqId" field="lookupFieldMap.locationSeqId"/>

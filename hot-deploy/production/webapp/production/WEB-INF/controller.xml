@@ -5,7 +5,7 @@
          can be found in the following xml file. A component can override the
          elements found in the common-controller.xml file. -->
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
-
+	<include location="component://manufacturing/webapp/manufacturing/WEB-INF/controller.xml"/>
     <description>Production Component Site Configuration File</description>
 
     <!-- Events to run on every request before security (chains exempt) -->
@@ -31,10 +31,94 @@
 	    <security https="true" auth="true"/>
 	    <response name="success" type="view" value="powderShiftStart"/>
     </request-map>
+    <request-map uri="FindNgProductionRun">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="FindNgProductionRun"/>
+    </request-map>
+    <request-map uri="ProductionRunEntry">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="ProductionRunEntry"/>
+    </request-map>
+    
+    <request-map uri="CreateNgProductionRun">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNgProductionRun"/>
+    </request-map>
+    <request-map uri="createNgProductionRun">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://manufacturing/script/org/ofbiz/manufacturing/jobshopmgt/ProductionRunSimpleEvents.xml" invoke="createProductionRun"/>        
+        <response name="createProductionRunsForProductBom" type="request" value="createProductionRunsForProductBom"/>
+        <response name="createProductionRunSingle" type="request" value="createProductionRunSingle"/>
+    </request-map>
+    <request-map uri="createProductionRunsForProductBom">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductionRunsForProductBom"/>
+        <response name="success" type="view" value="EditNgProductionRun"/>
+        <response name="error" type="view" value="CreateNgProductionRun"/>
+    </request-map>
+    <request-map uri="createProductionRunSingle">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductionRun"/>
+        <response name="success" type="view" value="EditNgProductionRun"/>
+        <response name="error" type="view" value="CreateNgProductionRun"/>
+    </request-map>
+    <request-map uri="changeProdRunTaskStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeProductionRunTaskStatus"/>
+        <response name="success" type="view" value="ProductionRunNgDeclaration"/>
+        <response name="error" type="view" value="ProductionRunNgDeclaration"/>
+    </request-map>
+    <request-map uri="EditNgProductionRun">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditNgProductionRun"/>
+    </request-map>
+    <request-map uri="ShowNgProductionRun">
+        <security https="true" auth="true"/>
+        <!-- <event type="groovy" path="component://manufacturing/webapp/manufacturing/jobshopmgt/" invoke="ShowProductionRun.groovy"/>
+        <response name="docs_not_printed" type="view" value="EditNgProductionRun"/>
+         -->
+         <response name="success" type="view" value="ProductionRunEntry"/>
+        <response name="error" type="view" value="FindNgProductionRun"/>
+    </request-map>
+    <request-map uri="ProductionRunNgDeclaration">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductionRunNgDeclaration"/>
+    </request-map>
+    <request-map uri="processProductionRun">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductionRun"/>
+        <response name="success" type="request-redirect-noparam" value="ProductionRunEntry">
+        	<redirect-parameter name="productionRunId"/>
+        </response>
+        <response name="error" type="view" value="ProductionRunEntry"/>
+    </request-map>
+    
+    <request-map uri="getRoutingTaskNeededMaterial">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="getRoutingTaskNeededMaterial.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="issueRoutingTaskNeededMaterial">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="issueRoutingTaskNeededMaterial" global-transaction="true"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="changeRoutingTaskStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path=""  invoke="changeProductionRunTaskStatus" global-transaction="true"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#main"/>
     <view-map name="powderShiftStart" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
     <view-map name="prePacking" type="screen" page="component://production/widget/ProductionScreens.xml#prePacking"></view-map>
+    <view-map name="FindNgProductionRun" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#FindNgProductionRun"></view-map>
+    <view-map name="CreateNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#CreateNgProductionRun" type="screen"/>
+    <view-map name="EditNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#EditNgProductionRun" type="screen"/>
+    <view-map name="ProductionRunNgDeclaration" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunNgDeclaration" type="screen"/>
+    <view-map name="ProductionRunEntry" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunEntry"></view-map>
+    
 </site-conf>
