@@ -565,7 +565,7 @@ public class MaterialPurchaseServices {
 		String vehicleId = (String) request.getParameter("vehicleId");
 		String invoiceDateStr = (String) request.getParameter("invoiceDate");
 		String orderId = (String) request.getParameter("orderId");
-
+		String isEnableAcctg = (String) request.getParameter("isEnableAcctg");
 		String partyIdFrom = "";
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purposeTypeId = "MATERIAL_PUR_CHANNEL";
@@ -791,6 +791,9 @@ public class MaterialPurchaseServices {
 		processInvoiceContext.put("shipmentId", shipmentId);
 		processInvoiceContext.put("invoiceDate", invoiceDate);
 		processInvoiceContext.put("invoiceAdjChargesList", invoiceAdjChargesList);
+		if(UtilValidate.isNotEmpty(isEnableAcctg)){
+			processInvoiceContext.put("isEnableAcctg", isEnableAcctg);
+		}
 		result = createMaterialInvoice(dctx, processInvoiceContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(result), module);
@@ -818,6 +821,7 @@ public class MaterialPurchaseServices {
 		  	String vehicleId = (String) context.get("vehicleId");
 		  	String partyIdFrom = (String) context.get("partyId");
 		  	String orderId = (String) context.get("orderId");
+		  	String isEnableAcctg = (String) context.get("isEnableAcctg");
 		  	String shipmentId = (String) context.get("shipmentId");
 		  	Debug.log("#####context#########"+context);
 		  	boolean beganTransaction = false;
@@ -882,6 +886,9 @@ public class MaterialPurchaseServices {
 		        input.put("dueDate", invoiceDate); 	        
 		        input.put("partyId", partyId);
 		        input.put("purposeTypeId", purposeTypeId);
+		        if(UtilValidate.isNotEmpty(isEnableAcctg)){
+			        input.put("isEnableAcctg", "N");
+				}
 		        input.put("createdByUserLogin", userLogin.getString("userLoginId"));
 		        input.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
 		        result = dispatcher.runSync("createInvoice", input);

@@ -127,5 +127,11 @@
  <InvoiceItemType description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>
  <InvoiceItemTypeMap  invoiceItemMapKey="COGS_OTH_CHARGES" invoiceItemTypeId="COGS_OTH_CHARGES" invoiceTypeId="SALES_INVOICE"  />
     
-    <PartyClassificationGroup description="Depot Union Purchase Price" partyClassificationGroupId="UTP_PRICE" partyClassificationTypeId="PRICE_TYPE"/> 
+    <PartyClassificationGroup description="Depot Union Purchase Price" partyClassificationGroupId="UTP_PRICE" partyClassificationTypeId="PRICE_TYPE"/>
+    
+    <PaymentType paymentTypeId="DISBURSEMENT" hasTable="N" description="Disbursement" />
+	<PaymentType paymentTypeId="RECEIPT" hasTable="N" description="Receipt" />
+    <PaymentType paymentTypeId="OUTGOING_PAYMENT" parentTypeId="DISBURSEMENT" hasTable="N" description="Purchase- Payout" /> 
+    
+    <PaymentMethod  description="Fund Transfer" finAccountId="" fromDate="2011-07-12 00:00:00.0" glAccountId=""  partyId="Company" paymentMethodId="FUND_TRANSFER" paymentMethodTypeId="MONEY"/>
 </entity-engine-xml>

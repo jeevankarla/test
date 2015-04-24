@@ -436,4 +436,66 @@
             </hyperlink>
          </field>
     </form>
+     <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+       <!--  <field name="prefPaymentMethodTypeId" title="Voucher Type">
+			<drop-down allow-empty="true">
+			<option key="CASH" description="Cash Voucher" ></option>
+			<option key="BANK" description="Bank Voucher" ></option>
+			</drop-down>
+		</field> -->
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <field name="description"><text-find ignore-case="true"/></field>
+        <field name="invoiceTypeId"><display/></field>
+        <field name="subTabButtonValue"><hidden/></field>
+        <field name="actionSubTabButtonValue"><hidden/></field>
+        <!-- <field position="1" name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="InvoiceType"/>
+            </drop-down>
+        </field> -->
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>       
+        <!-- <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field> -->
+        <field name="invoiceDate"><date-find type="timestamp"/></field>
+        <field name="dueDate"><hidden/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+     <form name="FindApInvoices" type="single" target="ApInvoices" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_SENT" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+			<field name="billingAccountId">
+			<hidden />
+		</field>
+		<field name="billingAccountId"><hidden/></field>
+	</form>
 </forms>
