@@ -1979,7 +1979,7 @@
     <screen name="FindFacilityPhysicalInventoryDepot">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleFindFacilityPhysicalInventory"/>
+                <set field="titleProperty" value="Find Shipmet Inventory Items "/>
                 <set field="headerItem" value="facility"/>
                 <set field="tabButtonItem" value="PhysicalInventory"/>
                 <set field="parameters.facilityId" from-field="parameters.facilityId"></set>
@@ -1988,10 +1988,10 @@
             <widgets>
                   <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
+                        <screenlet title="Find Shipmet Inventory Items">
                             <include-form name="FindPhysicalInventoryDepot" location="component://depotsales/widget/DepotSalesForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
+                        <screenlet title="List Of Inventory Items">
                             <include-form name="ListPhysicalInventoryDepot" location="component://depotsales/widget/DepotSalesForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -45,7 +45,7 @@
             <link target="ViewFacilityGeoPoint">
             </link>
         </menu-item>  
-        <menu-item name="EditFacilityGroups" title="Facility Groups">
+       <!--  <menu-item name="EditFacilityGroups" title="Facility Groups">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITYGRP"  action="_ADMIN"/>
@@ -54,15 +54,10 @@
             </condition>
             <link target="FindFacilityGroup">
             </link>
-        </menu-item> 
-        <menu-item name="stockPositionDepotSales" title="Stock Position">
-        	<condition>
-        		<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>
-        	</condition>
-            <link target="stockPositionDepotSales"/>
+        </menu-item>  -->
+         <menu-item name="searchProduct" title="Product Price Master">
+            <link target="searchProduct">
+            </link>
         </menu-item>
         <menu-item name="analytics" title="Analytics">
         	<condition>
@@ -73,17 +68,35 @@
             </condition>       
         	<link target="ChannelWiseDepoSalesChart"/>
         </menu-item>
-        <menu-item name="searchProduct" title="Search Master">
-            <link target="searchProduct">
-            </link>
+       
+        <menu-item name="stockPositionDepotSales" title="Stock Position">
+        	<condition>
+        		<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>
+        	</condition>
+            <link target="stockPositionDepotSales"/>
         </menu-item>
-        <menu-item name="FindGRNReceipts" title="Receipts">
+        <menu-item name="FindPO" title="Purchase Order">
+	        	<link target="FindPO"/>
+	    </menu-item>
+        <menu-item name="FindGRNReceipts" title="Receipt of Goods">
 	        	<link target="FindGRNReceiptsDepot"/>
 	     </menu-item>
-	      <menu-item name="FindPO" title="Purchase Order">
-	        	<link target="FindPO"/>
-	        </menu-item>
-        <menu-item name="NonRouteCustomPayments" title="AR Payments"> 
+	     <menu-item name="PhysicalInventory" title="Stock Variance">
+           <!--  <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>   -->        
+            <link target="FindFacilityPhysicalInventoryDepot">
+                <parameter param-name="facilityId" value="STORE"/>
+            </link>
+        </menu-item>
+	     <menu-item name="DepotSalesOrder" title="Sales Order">
+            <link target="DepotSalesOrder">
+            </link>
+        </menu-item>
+        <menu-item name="NonRouteCustomPayments" title="Receipts"> 
     		<!-- <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
@@ -109,23 +122,11 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
-	     <menu-item name="DepotSalesOrder" title="Sales Order">
-            <link target="DepotSalesOrder">
-            </link>
-        </menu-item>
+	     
        <!--  <menu-item name="StockVariance" title="Stock Variance">
             <link target="StockVariance">
             </link>
         </menu-item> -->
-        <menu-item name="PhysicalInventory" title="GRN Returns">
-           <!--  <condition>
-                <if-compare field="enableInventory" operator="equals" value="true"/>
-            </condition>   -->        
-            <link target="FindFacilityPhysicalInventoryDepot">
-                <parameter param-name="facilityId" value="STORE"/>
-            </link>
-        </menu-item>
-        
 	     <!-- <menu-item name="MaterialForQCApproval" title="QC Approval">
 	        <condition>
 	        	<if-has-permission permission="MM" action="_QC_VIEW"/>

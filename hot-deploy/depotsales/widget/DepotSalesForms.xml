@@ -546,11 +546,12 @@
         </field> -->
         <field name="productId" widget-style="buttontext" title="Product Name"><display-entity entity-name="Product" description="${description}[${${productId}}]"></display-entity>
         </field>
-       <!--  <field name="internalName"><display/></field> -->
-        <field name="availableToPromiseTotal" title="${uiLabelMap.ProductItemATP}"><display/></field>
-        <field name="quantityOnHandTotal" title="${uiLabelMap.ProductItemQOH}"><display/></field>
-        <field name="productATP" title="${uiLabelMap.ProductProductATP}"><display/></field>
-        <field name="productQOH" title="${uiLabelMap.ProductProductQOH}"><display/></field>
+        <!--  <field name="internalName"><display/></field> -->
+        <!--   <field name="availableToPromiseTotal" title="${uiLabelMap.ProductItemATP}"><display/></field>
+        <field name="quantityOnHandTotal" title="${uiLabelMap.ProductItemQOH}"><display/></field> -->
+        <!--  <field name="productATP" title="${uiLabelMap.ProductProductATP}"><display/></field>
+        <field name="productQOH" title="${uiLabelMap.ProductProductQOH}"><display/></field> -->
+        <field name="quantityOnHandTotal" title="Quantity"><display/></field>
         <field name="varianceReasonId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="VarianceReason" description="${description}"/>
