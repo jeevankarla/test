@@ -52,6 +52,17 @@ if(UtilValidate.isNotEmpty(customTimePeriodId)){
 Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
 leaveBalancesList = [];
 if(UtilValidate.isNotEmpty(partyId)){
+	
+	emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus", [customTimePeriodId:customTimePeriodId,partyId:partyId,leaveTypeId:leaveTypeId], false);
+	if(UtilValidate.isNotEmpty(emplLeaveBalanceStatus)){
+		openingBalance = emplLeaveBalanceStatus.openingBalance;
+		allotedDays = emplLeaveBalanceStatus.allotedDays;
+		availedDays = emplLeaveBalanceStatus.availedDays;
+		adjustedDays = emplLeaveBalanceStatus.adjustedDays;
+		encashedDays = emplLeaveBalanceStatus.encashedDays;
+		lapsedDays = emplLeaveBalanceStatus.lapsedDays;
+	}
+	
 	Map getEmplLeaveBalMap = [:];
 	getEmplLeaveBalMap.put("userLogin",userLogin);
 	getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
@@ -62,18 +73,9 @@ if(UtilValidate.isNotEmpty(partyId)){
 		serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
 		Map leaveBalances = (Map)serviceResult.get("leaveBalances");
 		if(UtilValidate.isNotEmpty(leaveBalances)){
-			openingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
+			ob = (BigDecimal) leaveBalances.get(leaveTypeId);
 		}
 	} 
-	emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus", [customTimePeriodId:customTimePeriodId,partyId:partyId,leaveTypeId:leaveTypeId], false);
-	if(UtilValidate.isNotEmpty(emplLeaveBalanceStatus)){
-		ob = emplLeaveBalanceStatus.openingBalance;
-		allotedDays = emplLeaveBalanceStatus.allotedDays;
-		availedDays = emplLeaveBalanceStatus.availedDays;
-		adjustedDays = emplLeaveBalanceStatus.adjustedDays;
-		encashedDays = emplLeaveBalanceStatus.encashedDays;
-		lapsedDays = emplLeaveBalanceStatus.lapsedDays;
-	}
 	if(UtilValidate.isEmpty(openingBalance) || openingBalance == 0){
 		if(UtilValidate.isNotEmpty(ob)){
 			openingBalance = ob;
