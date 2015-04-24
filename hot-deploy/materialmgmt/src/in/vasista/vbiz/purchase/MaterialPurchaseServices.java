@@ -897,7 +897,7 @@ public class MaterialPurchaseServices {
 		        input.put("dueDate", invoiceDate); 	        
 		        input.put("partyId", partyId);
 		        input.put("purposeTypeId", purposeTypeId);
-		        if(UtilValidate.isNotEmpty(isDisableAcctg) && (isDisableAcctg.equals("N"))){
+		        if(UtilValidate.isNotEmpty(isDisableAcctg)){
 			        input.put("isEnableAcctg", "N");
 				}
 		        input.put("createdByUserLogin", userLogin.getString("userLoginId"));
