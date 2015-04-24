@@ -7,12 +7,12 @@
         <menu-item name="dashboard" title="Dashboard">
             <link target="dashboard"></link> 
         </menu-item>
-        <menu-item name="complaints" title="Complaints">
+        <menu-item name="complaints" title="Tickets">
             <link target="FindComplaint"></link> 
         </menu-item>
     </menu>
     <menu name="editRequest" title="Edit Complaint"  extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-          <menu-item name="ViewRequest" title="Complaint Update">
+          <menu-item name="ViewRequest" title="Ticket Update">
           <condition>
           <if-has-permission permission="TICKETMGMT" action="UPDATE"/>
           </condition>
@@ -22,7 +22,7 @@
         </menu-item>
         </menu>
     <menu name="ComplaintTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="ViewRequest" title="Complaint OverView">
+        <menu-item name="ViewRequest" title="Ticket OverView">
            <condition>
                 <not><if-empty field="custRequestId"/></not>
            </condition> 

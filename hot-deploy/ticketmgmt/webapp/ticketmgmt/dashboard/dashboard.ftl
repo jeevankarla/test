@@ -41,7 +41,7 @@ $(document).ready(function(){
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="dashboardDates" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
 			</tr>
 			<tr>
-				<td width="10%"><span class='h3'>Complaint Type: </span></td>
+				<td width="10%"><span class='h3'>Ticket Type: </span></td>
 				<td width="15%">
 					<select name="custRequestTypeId" id="custRequestTypeId" class='h3'>
 						<option value="All">All</option>
@@ -140,7 +140,7 @@ function setupGrid1() {
 		var dataView;
 
 		var columns = [
-			{id:"product", name:"Complaint Type", field:"name", width:100, minWidth:70, cssClass:"cell-title", sortable:false},	
+			{id:"product", name:"Ticket Type", field:"name", width:100, minWidth:70, cssClass:"cell-title", sortable:false},	
 			{id:"revenue", name:"Quantity", field:"revenue", width:100, minWidth:70, cssClass:"cell-title-right", sortable:false}	
 		];
 		
@@ -594,9 +594,9 @@ $(document).ready(function(){
 <div class="screenlet">
     <div class="screenlet-title-bar">
        <#if fromDate?has_content>
-      		<h3>Complaints Type-wise [${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate?if_exists, "MMM dd, yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "MMM dd, yyyy")}]</h3>
+      		<h3>Tickets Type-wise [${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate?if_exists, "MMM dd, yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "MMM dd, yyyy")}]</h3>
        	<#else>
-       		<h3>Complaints Type-wise upto ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateEnd?if_exists, "MMM dd, yyyy")}</h3>
+       		<h3>Tickets Type-wise upto ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateEnd?if_exists, "MMM dd, yyyy")}</h3>
       </#if> 
     </div>
     <div class="screenlet-body">
@@ -656,7 +656,7 @@ $(document).ready(function(){
 </div>
 <#else>
       <p align="center" style="font-size: large;">
-        <b>No Complaints Found!</b>
+        <b>No Tickets Found!</b>
       </p>  
 </#if> 		   		
 

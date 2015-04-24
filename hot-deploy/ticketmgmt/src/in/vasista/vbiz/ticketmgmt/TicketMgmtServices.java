@@ -75,7 +75,7 @@ public class TicketMgmtServices {
 		String productId = (String)context.get("productId");
 		String salesChannelEnumId = (String)context.get("salesChannelEnumId");
 		String custRequestTypeId = (String)context.get("custRequestTypeId");
-		//description is used to get the complaint
+		//description is used to get the Ticket
 		String description = (String) context.get("description");
 		String PADDR = (String) context.get("PADDR");
 		String PPHONE = (String)context.get("PPHONE");
@@ -107,12 +107,12 @@ public class TicketMgmtServices {
 		try{
 			custRequest = dispatcher.runSync("createNewComplaint",inMap);
 			if(ServiceUtil.isError(custRequest)){
-					Debug.logError("Error while creating Complaint ::"+ServiceUtil.getErrorMessage(custRequest),module);
-					return ServiceUtil.returnError("Error While creating Complaint ::");
+					Debug.logError("Error while creating Ticket ::"+ServiceUtil.getErrorMessage(custRequest),module);
+					return ServiceUtil.returnError("Error While creating Ticket ::");
 			}
 		}catch(GenericServiceException e){
-			Debug.logError("Error While creating Complaint=====>"+e,module);
-			resultMap = ServiceUtil.returnError("Error While creating Complaint");
+			Debug.logError("Error While creating Ticket=====>"+e,module);
+			resultMap = ServiceUtil.returnError("Error While creating Ticket");
 			return resultMap;
 		}
 		
@@ -164,19 +164,19 @@ public class TicketMgmtServices {
 		        resultMap = dispatcher.runSync("createCustRequestItem",itemInMap);
 		        if (ServiceUtil.isError(resultMap)) {
 		        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-		        	resultMap = ServiceUtil.returnError("ServiceError While creating Complaint Item ");
+		        	resultMap = ServiceUtil.returnError("ServiceError While creating Ticket Item ");
 		            return resultMap;
 		        }
 				}catch(GenericEntityException e){
-					Debug.logError("Error While creating Complaint Attributes=====>"+e,module);
-					resultMap = ServiceUtil.returnError("Error While creating Complaint Attributes");
+					Debug.logError("Error While creating Ticket Attributes=====>"+e,module);
+					resultMap = ServiceUtil.returnError("Error While creating Ticket Attributes");
 					return resultMap;
 				}catch(GenericServiceException e){
-					Debug.logError("Error While creating Complaint Item =====>"+e,module);
-					resultMap = ServiceUtil.returnError("Error While creating Complaint Item");
+					Debug.logError("Error While creating Ticket Item =====>"+e,module);
+					resultMap = ServiceUtil.returnError("Error While creating Ticket Item");
 					return resultMap;
 				}
-				resultMap = ServiceUtil.returnSuccess("Complaint successfully registered with the complaint number===========>"+custRequestId);
+				resultMap = ServiceUtil.returnSuccess("Ticket successfully registered with the Ticket number===========>"+custRequestId);
 				resultMap.put("custRequestId",custRequestId);
 				//Sending sms by seca rule and setting the attribute values for SMS
 				//resultMap.put("contactNumberTo",PPHONE);
@@ -198,7 +198,7 @@ public class TicketMgmtServices {
         String custRequestId = (String)context.get("custRequestId");
         String statusId = (String)context.get("statusId");
 		String custRequestTypeId = (String)context.get("custRequestTypeId");
-		//description is used to get the complaint
+		//description is used to get the Ticket
 		String description = (String) context.get("description");
 		String PADDR = (String) context.get("PADDR");
 		String PPHONE = (String)context.get("PPHONE");
@@ -223,7 +223,7 @@ public class TicketMgmtServices {
 					resultMap =dispatcher.runSync("createCustRequestStatus",statusInMap);
 					if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-			        	resultMap = ServiceUtil.returnError("ServiceError While creating Complaint ItemStaus ");
+			        	resultMap = ServiceUtil.returnError("ServiceError While creating Ticket ItemStaus ");
 			            return resultMap;
 			        }
 				}
@@ -264,17 +264,17 @@ public class TicketMgmtServices {
 				}
 		         if (ServiceUtil.isError(resultMap)) {
 		        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-		        	resultMap = ServiceUtil.returnError("Error:While Details updating for Complaint Number==>"+custRequestId);
+		        	resultMap = ServiceUtil.returnError("Error:While Details updating for Ticket Number==>"+custRequestId);
 		            return resultMap;
 		        }
-				resultMap = ServiceUtil.returnSuccess("Complaint Details updated Successfully for Complaint Number==>"+custRequestId);
+				resultMap = ServiceUtil.returnSuccess("Ticket Details updated Successfully for Ticket Number==>"+custRequestId);
 			}
 		}catch (GenericEntityException e) {
-			Debug.logError("Error While updating Complaint===>"+e,module);
-			resultMap = ServiceUtil.returnError("Error while updating Complaint ==>"+custRequestId);
+			Debug.logError("Error While updating Ticket===>"+e,module);
+			resultMap = ServiceUtil.returnError("Error while updating Ticket ==>"+custRequestId);
 		}catch (GenericServiceException e) {
 			// TODO: handle exception
-			Debug.logError("Error while updating Status of complaint"+e,module);
+			Debug.logError("Error while updating Status of Ticket"+e,module);
 		}
 		resultMap.put("custRequestId",custRequestId);
 		return resultMap;
@@ -360,17 +360,17 @@ public class TicketMgmtServices {
 			  }
 		         if (ServiceUtil.isError(resultMap)) {
 		        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-		        	resultMap = ServiceUtil.returnError("Error:While Details updating for Complaint Number==>"+custRequestId);
+		        	resultMap = ServiceUtil.returnError("Error:While Details updating for Ticket Number==>"+custRequestId);
 		            return resultMap;
 		        }
-				resultMap = ServiceUtil.returnSuccess("Complaint Details updated Successfully for Complaint Number==>"+custRequestId);
+				resultMap = ServiceUtil.returnSuccess("Ticket Details updated Successfully for Ticket Number==>"+custRequestId);
 			}
 		}catch (GenericEntityException e) {
-			Debug.logError("Error While updating Complaint===>"+e,module);
-			resultMap = ServiceUtil.returnError("Error while updating Complaint ==>"+custRequestId);
+			Debug.logError("Error While updating Ticket===>"+e,module);
+			resultMap = ServiceUtil.returnError("Error while updating Ticket ==>"+custRequestId);
 		}catch (GenericServiceException e) {
 			// TODO: handle exception
-			Debug.logError("Error while updating Status of complaint"+e,module);
+			Debug.logError("Error while updating Status of Ticket"+e,module);
 		}
 		resultMap.put("custRequestId",custRequestId);
 		return resultMap;
@@ -414,7 +414,7 @@ public class TicketMgmtServices {
 					resultMap =dispatcher.runSync("createCustRequestStatus",statusInMap);
 					if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-			        	resultMap = ServiceUtil.returnError("ServiceError While creating Complaint ItemStaus ");
+			        	resultMap = ServiceUtil.returnError("ServiceError While creating Ticket ItemStaus ");
 			            return resultMap;
 			        }
 				}
@@ -427,7 +427,7 @@ public class TicketMgmtServices {
 			        GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
 					if(UtilValidate.isEmpty(partyRole)){
 						Debug.logError("No party role found", module);
-						resultMap = ServiceUtil.returnError("Error While creating Complaint, No party role found!");
+						resultMap = ServiceUtil.returnError("Error While creating Ticket, No party role found!");
 				  		return resultMap;
 					}
 				}
@@ -445,14 +445,14 @@ public class TicketMgmtServices {
 					Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
 					return ServiceUtil.returnError("Error occuring while calling createCustRequestParty service:");
 				}
-				resultMap = ServiceUtil.returnSuccess("Complaint status changed successfully for Complaint Number==>"+custRequestId);
+				resultMap = ServiceUtil.returnSuccess("Ticket status changed successfully for Ticket Number==>"+custRequestId);
 			}
 		}catch (GenericEntityException e) {
-			Debug.logError("Error While updating Complaint===>"+e,module);
-			resultMap = ServiceUtil.returnError("Error while updating Complaint ==>"+custRequestId);
+			Debug.logError("Error While updating Ticket===>"+e,module);
+			resultMap = ServiceUtil.returnError("Error while updating Ticket ==>"+custRequestId);
 		}catch (GenericServiceException e) {
 			// TODO: handle exception
-			Debug.logError("Error while updating Status of complaint"+e,module);
+			Debug.logError("Error while updating Status of Ticket"+e,module);
 		}
 		resultMap.put("custRequestId",custRequestId);
 		return resultMap;
@@ -490,7 +490,7 @@ public class TicketMgmtServices {
 			
 		}catch (GenericEntityException e) {
 			// TODO: handle exception
-			Debug.logError("Error while getting  Complaint types ::"+e,module);
+			Debug.logError("Error while getting  Ticket types ::"+e,module);
 		}
 		if(UtilValidate.isNotEmpty(complaintTypes)){
 			complaintsList = complaintTypes;
