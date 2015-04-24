@@ -97,6 +97,18 @@
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
+       	 <menu-item name="accountPayable" title="Account Payable">
+		  <!--    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition> -->
+			<link target="ApInvoices">
+				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+				<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
 	     <menu-item name="DepotSalesOrder" title="Sales Order">
             <link target="DepotSalesOrder">
             </link>
@@ -231,7 +243,99 @@
         
         
       </menu>
-      
+      <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
+          <menu-item name="Manufacturing" title="Manufacturing">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="COGS_OUT" />
+             	<parameter param-name="subTabButtonValue" value="Manufacturing" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="Admin" title="Admin">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="ADMIN_OUT" />
+             	<parameter param-name="subTabButtonValue" value="Admin" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="SalesAndDistribution" title="Sales And Distribution">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="SALES_DIS_OUT" />
+             	<parameter param-name="subTabButtonValue" value="SalesAndDistribution" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="Statutory" title="Statutory">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="STATUTORY_OUT" />
+             	<parameter param-name="subTabButtonValue" value="Statutory" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="Finance" title="Finance">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="FINANCE_OUT" />
+             	<parameter param-name="subTabButtonValue" value="Finance" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+    </menu>
+      <menu name="APInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<actions>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/hideAcctgMenuItem.groovy"/>
+		</actions>
+		<menu-item name="find" title="${uiLabelMap.CommonFind}">
+			<link target="ApInvoices" >
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
+				<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
+		<menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
+			<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="APInvoiceOverview">
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
+				<parameter param-name="invoiceTypeId" from-field="invoiceTypeId" />
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="actionSubTabButtonValue" value="invoiceOverview" />
+			</link>
+		</menu-item>
+		<menu-item name="createInvoice" title="Create Invoice">
+			<condition>
+				<and>
+					<if-empty field="invoice.invoiceId"/>
+					<if-compare operator="equals" value="Y" field="showCreateButton" />
+				</and>
+			</condition>
+			<link target="CreateAPInvoice">
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="showCreateButton" value="Y" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
+				<parameter param-name="actionSubTabButtonValue" value="createInvoice" />
+			</link>
+		</menu-item>
+		<menu-item name="updateInvoice" title="Update Invoice">
+			<condition>
+				<and>
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<if-compare field="invoice.statusId" operator="equals"	value="INVOICE_IN_PROCESS" />
+				</and>
+			</condition>
+			<link target="CreateAPInvoice">
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
+				<parameter param-name="actionSubTabButtonValue" value="updateInvoice" />
+			</link>
+		</menu-item>
+	</menu>
       <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="CashPayment" selected-menuitem-context-field-name="subTabButtonItem">
            <menu-item name="CashPayment" title="Cash">
