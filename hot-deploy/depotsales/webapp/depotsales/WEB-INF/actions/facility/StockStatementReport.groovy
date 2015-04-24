@@ -19,6 +19,7 @@ import org.ofbiz.product.inventory.InventoryWorker;
 import org.ofbiz.product.inventory.InventoryServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
+rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
 
 fromDate = parameters.stockFromDate;
@@ -65,31 +66,46 @@ productCategoriesList.each{productCatg->
 			closingBalance=BigDecimal.ZERO;
 			receivedQty=BigDecimal.ZERO;
 			issuedQty=BigDecimal.ZERO;
-			currentRate=BigDecimal.ZERO;
-			rate=BigDecimal.ZERO;
-			val=BigDecimal.ZERO;
-			cnt=0;
+			
 			tempMap = [:];
 			tempMap["productName"]="";
 			tempMap["openingBalance"]="";
+			tempMap["openingRate"]=BigDecimal.ZERO;
+			tempMap["openingValue"]=BigDecimal.ZERO;
 			tempMap["closingBalance"]="";
+			tempMap["closingRate"]=BigDecimal.ZERO;
+			tempMap["closingValue"]=BigDecimal.ZERO;
 			tempMap["receivedQty"]="";
+			tempMap["receivedVal"]=BigDecimal.ZERO;
+			tempMap["receivedRate"]=BigDecimal.ZERO;
 			tempMap["issuedQty"]="";
-			tempMap["rate"]="";
-			tempMap["val"]="";
+			tempMap["issuedVal"]=BigDecimal.ZERO;
+			tempMap["issuedRate"]=BigDecimal.ZERO;
 			
 			
 			tempMap["productName"]=productEntry.productName;
-			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayStart,productId:productEntry.productId,ownerPartyId:"Company"]);
+			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayStart,productId:productEntry.productId,ownerPartyId:"Company",getInventoryWithUnitCost:"Y"]);
 			if(UtilValidate.isNotEmpty(inventoryItem)){
 				openingBalance=inventoryItem.inventoryCount;
+				openingValue=inventoryItem.inventoryCost;
 				tempMap["openingBalance"]=openingBalance;
+				if(openingBalance==0){
+					openingBalance=1;
+				}
+				tempMap["openingRate"]=(openingValue).divide(openingBalance , 2, rounding);
+				tempMap["openingValue"]=openingValue;
 			}
 			
-			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productEntry.productId,ownerPartyId:"Company"]);
+			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productEntry.productId,ownerPartyId:"Company",getInventoryWithUnitCost:"Y"]);
 			if(UtilValidate.isNotEmpty(inventoryItem)){
 				closingBalance=inventoryItem.inventoryCount;
+				closingValue=inventoryItem.inventoryCost;
 				tempMap["closingBalance"]=closingBalance;
+				if(closingBalance==0){
+					closingBalance=1;
+				}
+				tempMap["closingRate"]=(closingValue).divide(closingBalance , 2, rounding);
+				tempMap["closingValue"]=closingValue;
 			}
 			
 			conditionList = [];
@@ -101,22 +117,31 @@ productCategoriesList.each{productCatg->
 			conditionList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			ShipmentReceiptList = delegator.findList("ShipmentReceipt", condition, null, null, null, false);
-			
+			receivedVal=BigDecimal.ZERO;
+			receivedRate=BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(ShipmentReceiptList)){
 				ShipmentReceiptList.each{receipt->
 					if((UtilValidate.isNotEmpty(receipt.statusId)) && (receipt.statusId == "SR_RECEIVED" || receipt.statusId == "SR_ACCEPTED") && UtilValidate.isNotEmpty(receipt.quantityAccepted)){
 						receivedQty+=receipt.quantityAccepted;
+						inventoryItemEntry = delegator.findOne("InventoryItem",[inventoryItemId : receipt.inventoryItemId], false);
+						receivedVal+=(receipt.quantityAccepted)*(inventoryItemEntry.unitCost);
 					}
 				}
 			}
 			tempMap["receivedQty"]=receivedQty;
+			tempMap["receivedVal"]=receivedVal;
+			if(UtilValidate.isEmpty(receivedQty) || receivedQty==0){
+				receivedQty=1;
+			}
+			tempMap["receivedRate"] = (receivedVal).divide(receivedQty , 2, rounding);
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productEntry.productId));
 			conditionList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
 			conditionList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			ItemIssuanceList = delegator.findList("ItemIssuanceInventoryItemAndProduct", condition, null, null, null, false);
-			
+			issuedVal=BigDecimal.ZERO;
+			issuedRate=BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(ItemIssuanceList)){
 				ItemIssuanceList.each{item->
 					if((UtilValidate.isNotEmpty(item.quantity))){
@@ -125,22 +150,15 @@ productCategoriesList.each{productCatg->
 							issuedQty-=item.cancelQuantity;
 						}
 					}
-					if(currentRate!=item.unitCost){
-						cnt++;
-						currentRate=item.unitCost;
-					}
-					rate+=item.unitCost;
-					val+=currentRate*item.quantity;
+					issuedVal+=(issuedQty)*(item.unitCost);
 				}
-				if(cnt==0){
-					cnt=1;
+				tempMap["issuedQty"]=issuedQty;
+				if(UtilValidate.isEmpty(issuedQty) || issuedQty==0){
+					issuedQty=1;
 				}
-				rate/=cnt;
+				tempMap["issuedVal"]=issuedVal;
+				tempMap["issuedRate"]=(issuedVal).divide(issuedQty , 2, rounding);
 			}
-			tempMap["issuedQty"]=issuedQty;
-			tempMap["rate"]=rate;
-			tempMap["val"]=val;
-			
 			StockStatementMap.put(productEntry.productId,tempMap);
 		}
 		finalStockStatementMap.put(productCatg.productCategoryId,StockStatementMap);

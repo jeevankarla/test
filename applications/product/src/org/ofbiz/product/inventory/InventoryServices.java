@@ -1249,6 +1249,7 @@ public class InventoryServices {
         String facilityId = (String)context.get("facilityId");
         String productId = (String)context.get("productId");
         String ownerPartyId = (String) context.get("ownerPartyId");
+        String getInventoryWithUnitCost = (String) context.get("getInventoryWithUnitCost");
         Map<String, Object> result = FastMap.newInstance();
 
         GenericValue product = null;
@@ -1284,6 +1285,11 @@ public class InventoryServices {
         if(UtilValidate.isNotEmpty(ownerPartyId)){
         	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId));
         }
+//to validate unitCost for Stock Statement
+        if(("Y").equals(getInventoryWithUnitCost)){
+        	conditionList.add(EntityCondition.makeCondition("unitCost", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+        }
+       
         conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
         EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
         
