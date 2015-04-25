@@ -62,5 +62,27 @@
      	</widgets>
      </section>
     </screen>
+ <screen name="ProductionReports">
+     <section>
+     <actions>
+     <!-- 	<set field="headerItem" value="prePack"/>
+     	<set field="tabButtonItem1" value="prePack"/>
+     	<set field="tabButtonItem2" value="prePack"/>
+     	<set field="titleProperty" value="Pre Packing"/>
+     	<entity-condition list="shiftsList" entity-name="Enumeration">
+     	 <condition-expr field-name="enumTypeId" operator="equals" value="PROD_SHIFT"/>
+     	</entity-condition>
+      --></actions>
+     	<widgets>
+     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+     		 	<decorator-section name="body">
+     		 	<screenlet>
+     		 		  <platform-specific><html><html-template location="component://production/webapp/production/reports/productionReports.ftl"/></html></platform-specific>
+     		 	</screenlet>	  
+     		 	</decorator-section>
+     		 </decorator-screen>
+     	</widgets>
+     </section>
+    </screen>
 
 </screens>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+<screen name="MilkConversionReportPDF">
+   <section>
+     <actions>
+<!-- <script location="component://production/webapp/production/WEB-INF/actions/PowderShiftStart.groovy"/> -->
+     </actions>
+      <widgets>
+		 <section>
+			 <widgets>
+				 <platform-specific>
+					 <xsl-fo>
+					    <html-template location="component://production/webapp/production/reports/MilkConversionReport.fo.ftl" /> 
+					  </xsl-fo>
+				  </platform-specific>
+			  </widgets>
+		  </section>
+	   </widgets>
+	  </section>
+  </screen>
+</screens> 
