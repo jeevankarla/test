@@ -43,8 +43,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
               		<fo:block>
 	                 	<fo:table border-style="solid">
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="125pt"/>
-                    	<fo:table-column column-width="100pt"/>
+                    	<fo:table-column column-width="150pt"/>
+                    	<fo:table-column column-width="75pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>  
                	    	<fo:table-column column-width="150pt"/>
@@ -59,7 +59,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Payment Details</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.MethodType</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.MtdType</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Inst.No</fo:block>  
@@ -85,8 +85,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             	<fo:block>
                  	<fo:table border-style="solid">
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="125pt"/>
-                    	<fo:table-column column-width="100pt"/>
+                    	<fo:table-column column-width="150pt"/>
+                    	<fo:table-column column-width="75pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>  
                	    	<fo:table-column column-width="150pt"/>
@@ -195,7 +195,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </#if>	
                                 	<#if ((paymentMethodTypeDes)?has_content)>
                                 	<fo:table-cell>
-	                                    <fo:block font-size="13pt" text-align="left">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
+	                                    <fo:block font-size="13pt" text-align="center">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell >
