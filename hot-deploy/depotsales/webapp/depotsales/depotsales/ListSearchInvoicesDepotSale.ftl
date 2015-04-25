@@ -242,7 +242,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td><input class='h4' type='hidden' id='parentTypeId' name='parentTypeId' value='${parentTypeId?if_exists}'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>"+
-				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+
+				 		<#--"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+-->
+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>";
 			<#--if(voucherType != 'CASH'){
 				message += 	"<tr class='h3'><td align='left'class='h3' width='60%'>Financial Account:</td><td align='left' width='60%'><select name='finAccountId' id='finAccountId'  class='h4'>"+
@@ -333,7 +334,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
-      <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
+     <#--<select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
         <option value="<@ofbizUrl>PrintInvoices</@ofbizUrl>">${uiLabelMap.AccountingPrintInvoices}</option>
         <option value="massInvoicesToApprove">${uiLabelMap.AccountingInvoiceStatusToApproved}</option>
@@ -344,8 +345,10 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
         <option value="massInvoicesToCancel">${uiLabelMap.AccountingInvoiceStatusToCancelled}</option>
         <option value="bulkSms">${uiLabelMap.sendBulkSms}</option>
         <option value="bulkEmail">${uiLabelMap.sendBulkEmail}</option>
-      </select>
-      <input id="submitButton" type="button"  onclick="javascript:jQuery('#listInvoices').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
+      </select> -->
+
+      <#--<input id="submitButton" type="button"  onclick="javascript:jQuery('#listInvoices').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" />-->
+
       <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId}"/>
       <input type="hidden" name="partyIdFrom" value="${parameters.partyIdFrom?if_exists}"/>
       <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId?if_exists}"/>
@@ -375,7 +378,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <td>Payment</td> 
           <td>Voucher</td>
-          <td>Cheque</td> 
+         <#-- <td>Cheque</td>--> 
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
@@ -428,11 +431,11 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 	<td align="center"></td>
               </#if>
               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td>
-              <#if invoice.parentTypeId?has_content>
+            <#--<#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <#else>
                <td align="center"></td>
-               </#if>
+               </#if> -->
               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
             <#-- toggle the row color -->

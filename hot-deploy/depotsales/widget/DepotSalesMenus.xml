@@ -122,16 +122,16 @@
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
-       	  <menu-item name="depotpayments" title="payments">
+       	  <menu-item name="depotpayments" title="Purchase Invoice Payments">
 		  <!--    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
             	</or>            
             </condition> -->
 			<link target="finddepotPayments">
-				<!-- <parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
-				<parameter param-name="subTabButtonValue" value="Manufacturing" />
-				<parameter param-name="actionSubTabButtonValue" value="find" /> -->
+<!-- 				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" /> -->
+			<parameter param-name="subTabButtonValue" value="Find Payments" />
+<!-- 				<parameter param-name="actionSubTabButtonValue" value="find" /> -->
 			</link>
 		</menu-item>
 	     
@@ -213,6 +213,14 @@
         	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
         </menu-item>
       </menu>
+        <menu name="purchasePaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		
+		<menu-item name="find" title="Find Payments">
+			<link target="finddepotPayments" >
+				<parameter param-name="subTabButtonValue" from-field="tabButtonItem1" />
+			</link>
+		</menu-item>
+		</menu>
       <menu name="DepotSalesIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<actions> 
@@ -269,7 +277,7 @@
         
         
       </menu>
-      <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
+     <!--  <menu name="InvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
           <menu-item name="Manufacturing" title="Manufacturing">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="COGS_OUT" />
@@ -305,8 +313,8 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
-    </menu>
-      <menu name="APInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+    </menu> -->
+<!--       <menu name="APInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<actions>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/hideAcctgMenuItem.groovy"/>
 		</actions>
@@ -361,7 +369,7 @@
 				<parameter param-name="actionSubTabButtonValue" value="updateInvoice" />
 			</link>
 		</menu-item>
-	</menu>
+	</menu> -->
       <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="CashPayment" selected-menuitem-context-field-name="subTabButtonItem">
            <menu-item name="CashPayment" title="Cash">
