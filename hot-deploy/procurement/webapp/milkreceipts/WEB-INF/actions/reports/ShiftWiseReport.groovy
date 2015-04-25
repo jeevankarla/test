@@ -49,15 +49,23 @@ if(UtilValidate.isEmpty(shiftDate)){
 sdf = new SimpleDateFormat("MMMM dd, yyyy");
 shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
 shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
-shiftDateStart = UtilDateTime.getDayStart(shiftDate);
+nextDay = UtilDateTime.getNextDayStart(shiftDate);
+nextDateTime = UtilDateTime.toDateString(nextDay,"yyyy-MM-dd");
+sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+shiftDayTimeStart = shiftDateTime + " 05:00:00.000";
+shiftDateStart = new java.sql.Timestamp(sdf1.parse(shiftDayTimeStart).getTime());
+shiftDayTimeEnd = nextDateTime + " 04:59:59.000";
+shiftDateEnd = new java.sql.Timestamp(sdf1.parse(shiftDayTimeEnd).getTime());
+/*shiftDateStart = UtilDateTime.getDayStart(shiftDate);
 shiftDateEnd = UtilDateTime.getDayEnd(shiftDate);
-
+*/
 ShiftWiseMap = [:];
 ShiftWiseTimeMap = [:];
 shiftTime = null;
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO , shiftDateStart ));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO , shiftDateEnd ));
+conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 ShiftWiseList = delegator.findList("MilkTransfer",condition,null,null,null,false);
@@ -78,11 +86,11 @@ def setShiftDateTime(int i){
 		  }
 		  else if(i==3){
 			  shiftTimeStart = shiftDateTime + " 21:00:00.0";
-			  shiftTimeEnd = shiftDateTime + " 04:59:59.0";
+			  shiftTimeEnd = nextDateTime + " 04:59:59.0";
 			  shiftTime = "2100 TO 0500";
 		  }
 		  shiftDateTimeStart = new java.sql.Timestamp(sdf.parse(shiftTimeStart).getTime());
-		  shiftDateTimeEnd = new java.sql.Timestamp(sdf.parse(shiftTimeEnd).getTime());
+		  shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());
 		}
 	  }catch (ParseException e) {
 		  Debug.logError(e, "Cannot parse date string: " + e, "");
