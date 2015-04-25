@@ -66,6 +66,7 @@ under the License.
     <SecurityGroup description="View HrMasters Tab" groupId="HRMASTERS_TAB"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HRMASTERS_TAB_VIEW"/>
     <SecurityGroupPermission groupId="HRMASTERS_TAB" permissionId="HRMASTERS_TAB_VIEW"/>
+    <SecurityGroupPermission groupId="HRMASTERS_TAB" permissionId="PERIOD_MAINT"/>
     
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_CREATE"/>
