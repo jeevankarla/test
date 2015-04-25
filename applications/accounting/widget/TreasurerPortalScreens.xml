@@ -3365,6 +3365,9 @@
                		<condition-expr field-name="enumTypeId" operator="equals" value="ORDER_PRCHSE_CHANNEL"/>
                	</condition-list>
                </entity-condition>
+               <entity-condition list="partyClsfList" entity-name="PartyClassificationGroup">
+               	<condition-expr field-name="partyClassificationTypeId" operator="equals" value="ACCTG_TRANS_GP"/>
+               </entity-condition>
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetInternalOrganisations.groovy"/>
               </actions>
             <widgets>
@@ -3771,6 +3774,26 @@
 		</widgets>
   	</section>
   </screen> 
+  <screen name="PartyLedgerGroupReportPDF">
+  	<section>
+  	    <actions>
+	     <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+		<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+		<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+  		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
+  	</actions>
+  	<widgets>
+  		<platform-specific>
+            <xsl-fo>
+			<html-template
+				location="component://accounting/webapp/accounting/reports/PartyLedgerGroup.fo.ftl" />
+			</xsl-fo>
+        </platform-specific>
+  	</widgets>
+  	</section>
+  </screen>
   
   <!-- ==================================== Bank Guarantee  ===================================   -->
     <screen name="BankGuaranteeReceipt">

@@ -3804,6 +3804,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlLedgerReconciliationCSV"/>
     </request-map>
+    <request-map uri="PartyLedgerGroupReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyLedgerGroupReportPDF"/>
+    </request-map>
+    <request-map uri="PartyLedgerGroupReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyLedgerGroupReportCSV"/>
+    </request-map>
      <!--================= Bank Guarantee ==================== -->
 	
 	<request-map uri="BankGuaranteeReceipt">
@@ -4351,7 +4359,8 @@ under the License.
    
    <view-map name="EmployeeAdvancesAndSubScheduleReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvancesAndSubScheduleReport" content-type="application/pdf" encoding="none"/>
    <view-map name="EmployeeAdvancesAndSubScheduleReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#EmployeeAdvancesAndSubScheduleReportCSV" content-type="text/csv" encoding="none"/>
-   
+   <view-map name="PartyLedgerGroupReportPDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyLedgerGroupReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="PartyLedgerGroupReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyLedgerGroupReportCSV" content-type="text/csv" encoding="none"/>
     <!-- NEW REPORTS -->
    <view-map name="GlAccountMasterReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountMasterReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="InvoiceSummaryReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InvoiceSummaryReportPdf" content-type="application/pdf" encoding="none"/>

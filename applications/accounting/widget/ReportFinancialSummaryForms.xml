@@ -1271,4 +1271,19 @@ under the License.
     	<field name="creditAmount" title="Total Credits"><display></display></field>
     	<field name="endingBalance" title="Ending Balance"><display></display></field>
     </form>
+    <form name="PartyLedgerGroupReportCSV" type="list" list-name="partyLedgerCsv">
+    <field name="acctgTransId" title="Acctg TransId"><display></display></field>
+    <field name="acctgTransEntrySeqId" title="seq Id"><display></display></field>
+    <field name="transactionDate" title="Transaction Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate,&quot;dd-MM-yyyy&quot;)}"></display></field>
+    <field name="acctgTransTypeId" title="Transaction Type"><display-entity entity-name="AcctgTransType" description="${description}"></display-entity></field>
+    <field name="description" title="Acctg Trans Description"><display></display></field>
+    <field name="glAccountId" title="Gl AccountId"><display></display></field>
+    <field name="glAccDescription" title="Gl Account Description"><display></display></field>
+    <field name="invoiceId" title="Invoice Id"><display></display></field>
+    <field name="paymentId" title="Payment Id"><display></display></field>
+    <field name="isPosted" title="Is Posted"><display></display></field>
+    <field name="postedDate" title="Posted Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(postedDate,&quot;dd-MM-yyyy&quot;)}"></display></field>
+    <field name="debit" title="Debit"><display></display></field>
+    <field name="credit" title="Credit"><display></display></field>
+    </form>
 </forms>

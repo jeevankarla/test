@@ -197,11 +197,13 @@ finAccountList.each{finAccountTypeId->
 	tempList.add(tempMap);
 	if(UtilValidate.isEmpty(finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId])){
 		finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId]=tempList;
+		tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("Name"));
 		finAccountTypeIdList=tempList;
 	}else{
 		List existing = FastList.newInstance();
 		existing=finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId];
 		existing.add(tempMap);
+		existing=UtilMisc.sortMaps(existing, UtilMisc.toList("Name"));
 		finAccountTypeIdList=existing;
 		finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId]=existing;
 	}
