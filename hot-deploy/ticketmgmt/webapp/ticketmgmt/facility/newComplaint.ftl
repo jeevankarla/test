@@ -60,13 +60,13 @@ function makeDatePicker(fromDateId ,thruDateId){
                 		var assetMapping = $("#assetMapping").val();
                 		
                 	
-				    	if( (productCategoryId).length < 1 ) {
+				    	<#--if( (productCategoryId).length < 1 ) {
 					    	$('#productCategoryId').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					           	$('#productCategoryId').css('background', 'white').focus(); 
 					       	}, 800);
 					    	return false;
-				    	}
+				    	}-->
 				    	if( (custRequestTypeId).length < 1 ) {
 					    	$('#custRequestTypeId').css('background', 'yellow'); 
 					       	setTimeout(function () {
@@ -88,13 +88,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	if( (assetMapping).length < 1 ) {
+				    	<#--if( (assetMapping).length < 1 ) {
 					    	$('#assetMapping').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					           	$('#assetMapping').css('background', 'white').focus(); 
 					       	}, 800);
 					    	return false;
-				    	}
+				    	}-->
                 		return true;
                 	}
                 	
@@ -187,7 +187,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<form id="createComplaint"  action="<@ofbizUrl>createComplaint</@ofbizUrl>" name="createComplaint" method="post">
 	    <div id="wizard-2">
        
-            <h3>Technical Details</h3>
+            <h3>Ticket Type</h3>
             <section>
             	<fieldset>
 				    <table cellpadding="2" cellspacing="1">
@@ -242,7 +242,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						     </select>	 </td>
 		          				</tr>
 		          				
-                                  <tr>
+                                  <#--<tr>
 					           <td class="label"><b>Asset Mapping</b></td>
                              <td> <select name="assetMapping" id="assetMapping">
 						     <option value=""></option>  
@@ -255,11 +255,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 	          				<tr>
 		       					<td>&nbsp;</td>
 					        </tr>
-					        </tr>
+					        </tr>-->
 		                 </table>
                     </fieldset>  
                </section>
-                      <h3>Environment & Project</h3>
+                      <h3>Ticket Details</h3>
 			          <section>
 				          <fieldset>
 				            <table cellpadding="2" cellspacing="1">
