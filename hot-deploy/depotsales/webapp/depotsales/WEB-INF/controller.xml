@@ -191,9 +191,9 @@
      
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
-       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processPurchaseInvoice" global-transaction="true"/>
-       <response name="success" type="request-redirect-noparam" value="ApInvoices"/>
-       <response name="error" type="view" value="ApInvoices"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="PurchaseInvoice"/>
+       <response name="error" type="view" value="PurchaseInvoice"/>
      </request-map>
      
      <request-map uri="FindMaterialInvoices">
@@ -392,7 +392,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentVsDispatchPDF"/>
     </request-map>
-    <request-map uri="ApInvoices">
+    <request-map uri="PurchaseInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindApInvoices"/>
     </request-map>
@@ -421,6 +421,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityPhysicalInventoryDepot"/>
     </request-map>
+      <request-map uri="finddepotPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinddepotPayments"/>
+    </request-map>
+    
+	<request-map uri="FinddepotPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinddepotPayments"/>
+    </request-map>
+    
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#main"/>
@@ -471,10 +481,13 @@
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
    	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/>
+   	   	<view-map name="PurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/>
+   	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
     <view-map name="FindFacilityPhysicalInventoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindFacilityPhysicalInventoryDepot"/>
+    <view-map name="FinddepotPayments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FinddepotPayments"/>
     
 </site-conf>
