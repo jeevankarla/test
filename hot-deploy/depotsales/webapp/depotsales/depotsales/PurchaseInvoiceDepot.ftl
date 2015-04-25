@@ -172,7 +172,7 @@ $(document).ready(function(){
 			    		<h2>
 			    		<input type="submit" style="padding:.4em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 			    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipments</@ofbizUrl>');"/>
+			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipmentsDepot</@ofbizUrl>');"/>
 			    		</h2>   	
 			    	</div>     
 				</#if>  	

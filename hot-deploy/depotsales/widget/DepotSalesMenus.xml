@@ -96,6 +96,18 @@
             <link target="DepotSalesOrder">
             </link>
         </menu-item>
+         <menu-item name="purchaseinvoice" title="Purchase Invoices">
+		  <!--    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition> -->
+			<link target="PurchaseInvoice">
+				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+				<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
         <menu-item name="NonRouteCustomPayments" title="Receipts"> 
     		<!-- <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -110,16 +122,16 @@
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
-       	 <menu-item name="accountPayable" title="Account Payable">
+       	  <menu-item name="depotpayments" title="payments">
 		  <!--    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
             	</or>            
             </condition> -->
-			<link target="ApInvoices">
-				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+			<link target="finddepotPayments">
+				<!-- <parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
 				<parameter param-name="subTabButtonValue" value="Manufacturing" />
-				<parameter param-name="actionSubTabButtonValue" value="find" />
+				<parameter param-name="actionSubTabButtonValue" value="find" /> -->
 			</link>
 		</menu-item>
 	     
