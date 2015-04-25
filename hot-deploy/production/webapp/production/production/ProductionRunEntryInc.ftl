@@ -88,6 +88,7 @@
 	var taskEffortId;
 	var gridEditable;
 	var gridReturnEditable;
+	var gridDeclareEditable;
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
 			return {valid:false, msg:"This is a required field"};
@@ -108,8 +109,53 @@
 		setupGrid3();
 	}
 	
+	function prepareDeclareGrid(declareProdItem, workEffortId, displayBtn){
+		data2 = declareProdItem;
+		taskEffortId = workEffortId;
+		gridDeclareEditable = displayBtn;
+		setupGrid2();
+	}
+	
 	
 	var enableSubmit = true;
+	function processDeclareComponentEntry(){
+		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
+			return false;		
+		}
+		var dataJson = {};
+		var index = 0;		
+		for (var rowCount=0; rowCount < data2.length; ++rowCount)
+		{ 
+			var productId = data2[rowCount]["cDeclareProductId"];
+			var qty = parseFloat(data2[rowCount]["declareQuantity"]);
+	 		if (!isNaN(qty) && qty>0) {
+	 			dataJson['productId_o_'+index] = productId;
+	 			dataJson['quantity_o_'+index] = qty;
+				index += 1;
+   			}
+		}
+		dataJson['workEffortId'] = taskEffortId;
+		var action = "declareRoutingTaskMaterial";
+		$.ajax({
+			 type: "POST",
+             url: action,
+             data: dataJson,
+             dataType: 'json',
+			success:function(result){
+				if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					msg = result["_ERROR_MESSAGE_"];
+					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
+						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
+					}
+				}else{
+					$('#declareMaterialDiv').hide();
+				}					
+			},
+			error: function (xhr, textStatus, thrownError){
+				alert("record not found :: Error code:-  "+xhr.status);
+			}							
+		});
+	}
 	function processReturnComponentEntry(){
 		
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
@@ -427,10 +473,9 @@
 	
 	function setupGrid2() {
 		   var columns = [
-		   			{id:"declareProductId", name:"Product", field:"declareProductId", width:240, minWidth:240, cssClass:"cell-title", editor:FloatCellEditor, sortable:false, toolTip:""},
+		   			{id:"cDeclareProductName", name:"Product", field:"cDeclareProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor, sortable:false, toolTip:""},
 					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
 					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
-					
 			];
 		
 			var options = {

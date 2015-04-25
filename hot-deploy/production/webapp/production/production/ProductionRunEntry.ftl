@@ -243,7 +243,7 @@
 				<center><label>Production Run Declaration</label></center>
 			</div>
 		</div>
-		<div class="lefthalf">
+		<div class="lefthalf" id='declareTaskOutDiv'>
 			<div class="screenlet">
 				<div class="screenlet-title-bar">
 	         		<div class="grid-header" style="width:100%">
@@ -288,6 +288,34 @@
 			}
       }
 
+	  function finishTask(effortId){
+	  
+			var action = "changeRoutingTaskStatus";
+			var dataJson = {"workEffortId":effortId, "productionRunId": '${productionRun?if_exists}'};
+			$.ajax({
+				 type: "POST",
+	             url: action,
+	             data: dataJson,
+	             dataType: 'json',
+	             async: false,
+				success:function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+						msg = result["_ERROR_MESSAGE_"];
+						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
+							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
+						}
+					}else{
+						$("#completeTask").hide();
+						location.reload();
+					}					
+				},
+				error: function (xhr, textStatus, thrownError){
+					alert("record not found :: Error code:-  "+xhr.status);
+				}							
+			});
+				  
+	  }	
+      
       function addMaterial(effortId){
       		$('#declareTaskOutDiv').hide();
 	  		$('#addMaterialDiv').show();
@@ -300,10 +328,6 @@
 	             data: dataJson,
 	             dataType: 'json',
 	             async: false,
-	             
-	             
-	             
-	             
 				success:function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 						msg = result["_ERROR_MESSAGE_"];
@@ -329,12 +353,9 @@
       function declareTaskOut(effortId){
 	  		addMaterial(effortId);
 	  		$('#declareTaskOutDiv').show();
-	  		
-	  		setupGrid2();
   		
 	  		var action = "getRoutingTaskDeclarableMaterial";
 			var dataJson = {"workEffortId":effortId, "productionRunId": '${productionRunId?if_exists}'};
-			alert("#######"+JSON.stringify(dataJson));
 			$.ajax({
 				 type: "POST",
 	             url: action,
@@ -349,45 +370,28 @@
 						}
 					}else{
 						var returnProductJSON = result['returnProductItemsJSON'];
-						alert("####"+JSON.stringify(returnProductJSON));
-						var displayButton = result['displayButton'];
-						prepareReturnGrid(returnProductJSON, effortId, displayButton);
-					}					
-				},
-				error: function (xhr, textStatus, thrownError){
-					alert("record not found :: Error code:-  "+xhr.status);
-				}							
-			});
-				  		
-      }
-      function finishTask(effortId){
-      		$('#addMaterialDiv').show();
-	  		$('#declareTaskOutDiv').show();
-	  		
-	  		var action = "changeRoutingTaskStatus";
-			var dataJson = {"workEffortId":effortId, "productionRunId": '${productionRunId?if_exists}', "statusId": "PRUN_COMPLETED"};
-			$.ajax({
-				 type: "POST",
-	             url: action,
-	             data: dataJson,
-	             dataType: 'json',
-	             async: false,
-				success:function(result){
-					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-						msg = result["_ERROR_MESSAGE_"];
-						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
-							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
+						var returnBtn = result['returnDisplayButton'];
+						if(returnBtn && returnBtn == 'N'){
+							$("#returnMaterialSave").hide();
 						}
-					}else{
-						var newStatusId = result['newStatusId'];
-						var oldStatusId = result['oldStatusId'];
+						prepareReturnGrid(returnProductJSON, effortId, returnBtn);
+						var declareProductJSON = result['declareProductItemsJSON'];
+						var declareBtn = result['declareDisplayButton'];
+						if(declareBtn && declareBtn == 'N'){
+							$("#declareSave").hide();
+						}
+						prepareDeclareGrid(declareProductJSON, effortId, declareBtn);
+						
+						if(returnBtn == "N" && declareBtn=="N"){
+							$("#declareTask").hide();
+						}
+						
 					}					
 				},
 				error: function (xhr, textStatus, thrownError){
 					alert("record not found :: Error code:-  "+xhr.status);
 				}							
 			});
-	  		
       }
       
 </script>
