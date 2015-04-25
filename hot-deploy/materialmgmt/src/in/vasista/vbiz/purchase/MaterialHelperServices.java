@@ -909,6 +909,7 @@ public class MaterialHelperServices{
 	  		  		Debug.logError(errMsg , module);
 	  		  		return ServiceUtil.returnError(errMsg);
 	  		  	}
+				Debug.log("quoteId #################"+quoteId);
 			}
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
@@ -924,34 +925,11 @@ public class MaterialHelperServices{
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String)context.get("orderId");
-        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        try{																						
+        try{
         	
         	GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-        	List<GenericValue> extOrderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+        	List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
         	
-        	List condExprList = FastList.newInstance();
-        	condExprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-        	condExprList.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
-        	EntityCondition cond = EntityCondition.makeCondition(condExprList, EntityOperator.AND);
-        	List<GenericValue> orderItemChange = delegator.findList("OrderItemChange", cond, null, UtilMisc.toList("-effectiveDatetime"), null, false);
-        	List<GenericValue> orderItems = FastList.newInstance();									
-        	if(UtilValidate.isNotEmpty(orderItemChange)){
-        		
-        		for(GenericValue itemChange : orderItemChange){
-        			List<GenericValue>  extOrdItm= EntityUtil.filterByCondition(extOrderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, itemChange.getString("orderItemSeqId")));
-        			if(UtilValidate.isNotEmpty(extOrdItm)){
-        				GenericValue ordItm = EntityUtil.getFirst(extOrdItm);
-        				ordItm.set("quantity", itemChange.getBigDecimal("quantity"));
-        				ordItm.set("unitPrice", itemChange.getBigDecimal("unitPrice"));
-        				orderItems.add(ordItm);
-        				
-        			}
-        		}
-        	}
-        	else{
-        		orderItems.addAll(extOrderItems);
-        	}
         	List<GenericValue> otherTermTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), null, null, null, false);
         	List<String> otherTermTypeIds = EntityUtil.getFieldListFromEntityList(otherTermTypes, "termTypeId", true);
         	
@@ -966,6 +944,7 @@ public class MaterialHelperServices{
         	conditionList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.IN, otherTermTypeIds));
         	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
         	List<GenericValue> otherChargesOrderTerms = delegator.findList("OrderTerm", condition, null, null, null, false);
+        	
         	List<Map> otherCharges = FastList.newInstance();
         	List<Map> productQty = FastList.newInstance();
         	Map productItemRef = FastMap.newInstance();
@@ -1013,6 +992,7 @@ public class MaterialHelperServices{
         		productQty.add(tempMap);
         		productItemRef.put(eachItem.getString("productId"), tempMap);
         	}
+        	
 			for(GenericValue otherTerm : otherChargesOrderTerms){
 				
 				String applicableTo = "ALL";
@@ -1036,8 +1016,8 @@ public class MaterialHelperServices{
 			result.put("productQty", productQty);
         }
         catch(Exception e){
-        	Debug.logError("Error calculating order value for order : "+orderId, module);
-		    return ServiceUtil.returnError("Error calculating order value for order : "+orderId);
+        	Debug.logError("Error updating quote status", module);
+		    return ServiceUtil.returnError("Error updating quote status");
         }
         return result;
 	}

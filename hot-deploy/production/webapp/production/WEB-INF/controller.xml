@@ -98,23 +98,11 @@
         <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="getRoutingTaskNeededMaterial.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
-    <request-map uri="getRoutingTaskDeclarableMaterial">
-        <security https="true" auth="true"/>
-        <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="getRoutingTaskDeclareMaterial.groovy"/>
-        <response name="success" type="request" value="json"/>
-    </request-map>
-    
     <request-map uri="issueRoutingTaskNeededMaterial">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="issueRoutingTaskNeededMaterial" global-transaction="true"/>
         <response name="success" type="request" value="json"/>
     </request-map>
-    <request-map uri="returnUnusedMaterialOfRoutingTask">
-        <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="returnUnusedMaterialOfRoutingTask" global-transaction="true"/>
-        <response name="success" type="request" value="json"/>
-    </request-map>
-    
     <request-map uri="changeRoutingTaskStatus">
         <security https="true" auth="true"/>
         <event type="service" path=""  invoke="changeProductionRunTaskStatus" global-transaction="true"/>

@@ -66,6 +66,7 @@
 					<label>Receipt Header </label>
 				</div>
 		     </div>
+      
     		<div class="screenlet-body">
      
       			<form method="post" name="indententryinit" action="<@ofbizUrl>POMaterialReceipts</@ofbizUrl>" id="indententryinit">  
