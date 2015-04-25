@@ -39,6 +39,10 @@
 	    <security https="true" auth="true"/>
 	    <response name="success" type="view" value="ProductionRunEntry"/>
     </request-map>
+    <request-map uri="ProductionReports">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="ProductionReports"/>
+    </request-map>
     
     <request-map uri="CreateNgProductionRun">
         <security https="true" auth="true"/>
@@ -111,6 +115,12 @@
     
     <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
     
+    <!--Production Reports  -->
+    <request-map uri="MilkConversionReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="MilkConversionReportPDF"/>        
+    </request-map>
+    
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#main"/>
     <view-map name="powderShiftStart" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
@@ -120,5 +130,9 @@
     <view-map name="EditNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#EditNgProductionRun" type="screen"/>
     <view-map name="ProductionRunNgDeclaration" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunNgDeclaration" type="screen"/>
     <view-map name="ProductionRunEntry" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunEntry"></view-map>
+    <view-map name="ProductionReports" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionReports"></view-map>
+   
+    <!-- View Mappings for Production Reports-->
+    <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     
 </site-conf>
