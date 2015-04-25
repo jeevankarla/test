@@ -56,7 +56,6 @@ shiftDayTimeStart = shiftDateTime + " 05:00:00.000";
 dayStart = new java.sql.Timestamp(sdf1.parse(shiftDayTimeStart).getTime());
 shiftDayTimeEnd = nextDateTime + " 04:59:59.000";
 dayEnd = new java.sql.Timestamp(sdf1.parse(shiftDayTimeEnd).getTime());
-List receiptsList = FastList.newInstance();
 milkTransferDetailsList = [];
 ShiftWiseMap = [:];
 shiftTime = null;
@@ -83,11 +82,11 @@ def setShiftDateTime(int i){
 		  }
 		  else if(i==3){
 			  shiftTimeStart = shiftDateTime + " 21:00:00.0";
-			  shiftTimeEnd = shiftDateTime + " 04:59:59.0";
+			  shiftTimeEnd = nextDateTime + " 04:59:59.0";
 			  shiftTime = "2100 TO 0500";
 		  }
 		  shiftDateTimeStart = new java.sql.Timestamp(sdf.parse(shiftTimeStart).getTime());
-		  shiftDateTimeEnd = new java.sql.Timestamp(sdf.parse(shiftTimeEnd).getTime());
+		  shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());
 		}
 	  }catch (ParseException e) {
 		  Debug.logError(e, "Cannot parse date string: " + e, "");
