@@ -702,7 +702,7 @@ public class EmplLeaveService {
 				validLeaveRulesMap.put("maxFullDayHours",maxFullDayHours);
 				validLeaveRulesMap.put("maxHalfDayHours",maxHalfDayHours);
 				//Half Pay Leave Rules
-				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("HPL")){
+				if(UtilValidate.isNotEmpty(leaveTypeId) && (leaveTypeId.equals("HPL") || leaveTypeId.equals("CML"))){
 					try{
 						serviceResult = dispatcher.runSync("getHalfPayLeaveRules", validLeaveRulesMap);
 			            if (ServiceUtil.isError(serviceResult)) {
@@ -767,7 +767,7 @@ public class EmplLeaveService {
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId)){
 				if(maxFullDayHours<72 || (maxHalfDayHours!=0 && maxHalfDayHours<72)){
-					return ServiceUtil.returnError("You have to apply minimum 3 Full days or 6 Half Days for leave type :  Half Pay Leave"); 
+					return ServiceUtil.returnError("You have to apply minimum 3 Full days or 6 Half Days for leave type : "+leaveTypeId); 
 				}
 			}
 		}catch(Exception e){
