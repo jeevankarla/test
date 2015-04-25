@@ -821,6 +821,7 @@ under the License.
       <field name="quantity" type="fixed-point"></field>
       <field name="cancelQuantity" type="fixed-point"></field>
       <field name="unitPrice" type="currency-amount"></field>
+      <field name="unitListPrice" type="currency-amount"></field>
       <field name="itemDescription" type="description"></field>
       <field name="reasonEnumId" type="id"></field>
       <field name="changeComments" type="comment"></field>

@@ -173,6 +173,13 @@ public class MaterialPurchaseServices {
 			String extPOId = "";
 			List productList = FastList.newInstance();
 			
+			if((UtilDateTime.getIntervalInDays(UtilDateTime.getDayStart(receiptDate), UtilDateTime.getDayStart(nowTimeStamp))) != 0){
+	    		Debug.logError("Check local system date", module);
+	    		request.setAttribute("_ERROR_MESSAGE_", "Check local system date");	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+			
 			GenericValue orderHeader = null;
 			if(UtilValidate.isNotEmpty(orderId)){
 				orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -227,7 +234,19 @@ public class MaterialPurchaseServices {
 			}
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			//receiptDate
+			List changeExprList = FastList.newInstance();
+			changeExprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			changeExprList.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.LESS_THAN_EQUAL_TO, receiptDate));
+			EntityCondition condExpr1 = EntityCondition.makeCondition(changeExprList, EntityOperator.AND);
+			List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", condExpr1, null, UtilMisc.toList("-effectiveDatetime"), null, false);
 			
+			Timestamp effectiveDatetime = null;
+			if(UtilValidate.isNotEmpty(orderItemChanges)){
+				effectiveDatetime = (EntityUtil.getFirst(orderItemChanges)).getTimestamp("effectiveDatetime");
+				orderItemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDatetime));
+			}
+			 
 			List orderAdjustmentTypes = EntityUtil.getFieldListFromEntityList(orderAdjustments, "orderAdjustmentTypeId", true);
 			
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
@@ -395,7 +414,14 @@ public class MaterialPurchaseServices {
 				GenericValue ordItm = null;
 				if(UtilValidate.isNotEmpty(filteredOrderItem)){
 					ordItm = EntityUtil.getFirst(filteredOrderItem);
+					String orderItemSeqId = ordItm.getString("orderItemSeqId");
+					
+					List<GenericValue> itemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+					if(UtilValidate.isNotEmpty(itemChanges)){
+						ordItm = EntityUtil.getFirst(itemChanges);
+					}
 				}
+				
 				
 				List<GenericValue> filterProdFacility = EntityUtil.filterByCondition(productsFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				GenericValue facilityProd = EntityUtil.getFirst(filterProdFacility);
@@ -474,8 +500,18 @@ public class MaterialPurchaseServices {
 					
 					List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, condition);
 					
+					condExpr.clear();
+					condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipReceipt.getString("orderId")));
+					condExpr.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, shipReceipt.getString("orderItemSeqId")));
+					EntityCondition condition1 = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+					
+					List<GenericValue> ordItmChange = EntityUtil.filterByCondition(orderItemChanges, condition);
+					
 					if(UtilValidate.isNotEmpty(orderItem)){
 						BigDecimal unitListPrice = (EntityUtil.getFirst(orderItem)).getBigDecimal("unitListPrice");
+						if(UtilValidate.isNotEmpty(ordItmChange)){
+							unitListPrice = (EntityUtil.getFirst(ordItmChange)).getBigDecimal("unitListPrice");
+						}
 						BigDecimal qty = shipReceipt.getBigDecimal("quantityAccepted");
 						
 						BigDecimal itemValue = unitListPrice.multiply(qty);
@@ -548,7 +584,6 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  		}
 	  	}
-		
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}
@@ -2274,7 +2309,7 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
 		  	}
 	  	}
-	  	
+	  	String primaryOrderId = "";
 	  	try{
 	  		//
 		  	for (int i = 1; i < rowCount; i++) {
@@ -2291,6 +2326,7 @@ public class MaterialPurchaseServices {
 				
 				if (paramMap.containsKey("orderId" + thisSuffix)) {
 					orderId = (String) paramMap.get("orderId" + thisSuffix);
+					primaryOrderId = orderId;
 				}else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing order id");
 					return "error";			  
@@ -2324,7 +2360,6 @@ public class MaterialPurchaseServices {
 					amendedPrice = new BigDecimal(amendedPriceStr);
 				}
 				GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId), false);
-				//GenericValue orderItemChange = delegator.makeValue("OrderItemChange");
 				Map<String, Object> orderItemChange = FastMap.newInstance();
 				orderItemChange.put("userLogin", userLogin);
                 //
@@ -2358,8 +2393,58 @@ public class MaterialPurchaseServices {
 		        }
 		        request.setAttribute("orderId",orderId);
 		  	}
+		  	if(UtilValidate.isNotEmpty(primaryOrderId)){
+		  		
+		  		Map resultMap = MaterialHelperServices.getOrderItemAndTermsMapForCalculation(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", primaryOrderId));
+				if (ServiceUtil.isError(resultMap)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+	  		  		Debug.logError(errMsg , module);
+	  		  		request.setAttribute("_ERROR_MESSAGE_", errMsg);	
+	  		  		TransactionUtil.rollback();
+	  		  		return "error";
+	  		  	}
+				List<Map> otherCharges = (List)resultMap.get("otherCharges");
+				List<Map> productQty = (List)resultMap.get("productQty");
+				resultMap = MaterialHelperServices.getMaterialItemValuationDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "productQty", productQty, "otherCharges", otherCharges, "incTax", ""));
+				if(ServiceUtil.isError(resultMap)){
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+	  		  		Debug.logError(errMsg , module);
+	  		  		request.setAttribute("_ERROR_MESSAGE_", errMsg);	
+	  		  		TransactionUtil.rollback();
+	  		  		return "error";
+				}
+				List<Map> itemDetails = (List)resultMap.get("itemDetail");
+				
+				List<GenericValue> orderItem = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+				
+				Map productSeqMap = FastMap.newInstance();
+				for(GenericValue eachItem : orderItem){
+					productSeqMap.put(eachItem.getString("productId"), eachItem.getString("orderItemSeqId"));
+				}
+				List condExpr = FastList.newInstance();
+	        	condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
+	        	condExpr.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDate));
+	        	EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+	        	List<GenericValue> orderItemChange = delegator.findList("OrderItemChange", cond, null, null, null, false);
+				
+				for(Map item : itemDetails){
+					String prodId = (String)item.get("productId");
+					BigDecimal unitListPrice = (BigDecimal) item.get("unitListPrice");
+					String seqId = (String)productSeqMap.get(prodId);
+					List<GenericValue> changeItem = EntityUtil.filterByCondition(orderItemChange, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seqId));
+					if(UtilValidate.isNotEmpty(changeItem)){
+						GenericValue changeItemStore = EntityUtil.getFirst(changeItem);
+						changeItemStore.set("unitListPrice", unitListPrice);
+						changeItemStore.store();
+					}
+				}
+				
+		  	}
+		  	
 	  	}catch(Exception e){
-	  		
+	  		Debug.logError(e, "Error in amending order, module");
+			request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
+			return "error";
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully Done");	
 		return "sucess";
@@ -2686,12 +2771,27 @@ public class MaterialPurchaseServices {
 	  		return "error";
 		}
 		
+		List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, UtilMisc.toList("-effectiveDatetime"), null, false);
+		if(UtilValidate.isNotEmpty(orderItemChanges)){
+			Timestamp effectiveDatetime = (EntityUtil.getFirst(orderItemChanges)).getTimestamp("effectiveDatetime");
+			orderItemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDatetime));
+		}
+		
+		
+		
 		for (GenericValue orderItem : orderItems) {
 			//if(UtilValidate.isNotEmpty(orderItem)){
 				String productId=orderItem.getString("productId");
-				BigDecimal unitCost=orderItem.getBigDecimal("unitListPrice");
 				String orderItemSeqId=orderItem.getString("orderItemSeqId");
+				List<GenericValue> eachChangedItem = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+				
+				BigDecimal unitCost=orderItem.getBigDecimal("unitListPrice");
+				
+				if(UtilValidate.isNotEmpty(eachChangedItem)){
+					unitCost=(EntityUtil.getFirst(eachChangedItem)).getBigDecimal("unitListPrice");
+				}
 				//update shipmentReceiptItem
+				
 				List<GenericValue> filterShipmentReceiptList = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				GenericValue shipmentReceipt = EntityUtil.getFirst(filterShipmentReceiptList);
 				

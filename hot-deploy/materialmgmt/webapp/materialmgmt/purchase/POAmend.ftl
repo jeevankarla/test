@@ -118,17 +118,16 @@
 			
 			message +=   <#list amendedPOList as orderItem>
 							"<tr class='h3'>"+
-							"<input type='hidden' value='${orderItem.orderId}' name='orderId_o_"+${orderItem.orderItemSeqId}+"'/><input type='hidden' value='${orderItem.orderItemSeqId}' name='orderItemSeqId_o_"+${orderItem.orderItemSeqId}+"'/>"+
+							"<input type='hidden' value='${orderItem.orderId}' name='orderId_o_"+${orderItem.orderItemSeqId}+"'/>"+
+							"<input type='hidden' value='${orderItem.orderItemSeqId}' name='orderItemSeqId_o_"+${orderItem.orderItemSeqId}+"'/>"+
 							"<input type='hidden' value='${orderItem.productId}' name='productId_o_"+${orderItem.orderItemSeqId}+"'/>"+
-					    	"<input type='hidden' value='${orderItem.internalName}' name='internalId_o_"+${orderItem.orderItemSeqId}+"'/>"+
-					    	"<input type='hidden' value='${orderItem.unit}' name='unit_o_"+${orderItem.orderItemSeqId}+"'/>"+
 
 							"<td align='center' >${orderItem.internalName}(${orderItem.description})</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>${orderItem.quantity}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>${orderItem.unitPrice}</td>"+
-                           "<td align='center'>${orderItem.unit}</td>"+
+                           "<td align='center'>${orderItem.unit?if_exists}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center' class='h2'><input type='text'  id='amendedQuantity' name='amendedQuantity_o_"+${orderItem.orderItemSeqId}+"'  size='12'/></td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
