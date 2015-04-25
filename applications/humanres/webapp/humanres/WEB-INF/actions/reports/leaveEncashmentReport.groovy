@@ -44,21 +44,24 @@ conList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQ
 conList.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"SP_LEAVE_ENCASH"));
 conList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("GENERATED","APPROVED")));
 con=EntityCondition.makeCondition(conList,EntityOperator.AND);
-periodList=delegator.findList("PeriodBilling",con,null,null,null,false);
-periodBillingIds=EntityUtil.getFieldListFromEntityList(periodList,"periodBillingId",true);
+periodList=delegator.findList("PeriodBilling",con,null,["-basicSalDate"],null,false);
+//periodBillingIds=EntityUtil.getFieldListFromEntityList(periodList,"periodBillingId",true);
+
+periodList = EntityUtil.getFirst(periodList);
+periodBillingIds = periodList.get("periodBillingId");
+
 periodBillingMap=[:];
 if(periodList){
-	for(GenericValue period:periodList){
-		periodBillingId=period.get("periodBillingId");
-		basicSalDate=period.get("basicSalDate");
-		if(UtilValidate.isEmpty(periodBillingMap[periodBillingId])){
-			periodBillingMap[periodBillingId]=basicSalDate;
-		}
+	periodBillingId=periodList.get("periodBillingId");
+	basicSalDate=periodList.get("basicSalDate");
+	if(UtilValidate.isEmpty(periodBillingMap[periodBillingId])){
+		periodBillingMap[periodBillingId]=basicSalDate;
 	}
 }
+
 employementIds=[];
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.IN,periodBillingIds));
+conditionList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.EQUALS,periodBillingIds));
 conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,"Company"));
  if(UtilValidate.isNotEmpty(employeeId))
  {
