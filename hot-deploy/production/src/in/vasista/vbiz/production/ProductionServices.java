@@ -115,9 +115,6 @@ public class ProductionServices {
 	protected static final HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
     protected static final FoScreenRenderer foScreenRenderer = new FoScreenRenderer();
     
-    
-    
-    
     /**
      * returns Opening Balance map for the given Silo(Facility) as on that Date
      * @param dctx
@@ -272,9 +269,6 @@ public class ProductionServices {
 	                	TransactionUtil.rollback();
 	            		return "error";
 	                }
-	                Debug.log("issued ##############################################");
-	                
-                
 		  	  }
 	  	  }
 	  	catch (GenericEntityException e) {
@@ -303,52 +297,243 @@ public class ProductionServices {
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
 		return "success";  
     }
-    /*public static Map<String, Object> issueRoutingTaskNeededMaterial(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        String workEffortId = (String)context.get("workEffortId");
-        List<Map> issueComponents = (List)context.get("issueComponents");
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        GenericValue facility = null;
-        Debug.log("called ##############################################");
-        try {
-        	
-        	if(UtilValidate.isEmpty(issueComponents)){
-        		Debug.logError("No material to issue for routing task : "+workEffortId, module);
-        		return ServiceUtil.returnError("No material to issue for routing task : "+workEffortId);
-            }
-        	
-        	for(Map eachComponent : issueComponents){
-        		String productId = (String)eachComponent.get("productId");
-        		BigDecimal quantity = (BigDecimal)eachComponent.get("quantity");
-        		String facilityId = (String)eachComponent.get("facilityId");
-        		
-                GenericValue productFacility = delegator.findOne("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId), false);
-                if(UtilValidate.isEmpty(productFacility)){
-                	Debug.logError("No material to issue for routing task : "+workEffortId, module);
-            		return ServiceUtil.returnError("No material to issue for routing task : "+workEffortId);
-                }
-                
-                Map inputCtx = FastMap.newInstance();
-                inputCtx.put("productId", productId);
-                inputCtx.put("facilityId", facilityId);
-                inputCtx.put("quantity", quantity);
-                inputCtx.put("workEffortId", workEffortId);
-                inputCtx.put("userLogin", userLogin);
-                Map resultCtx = dispatcher.runSync("issueProductionRunTaskComponent", inputCtx);
-                if(ServiceUtil.isError(resultCtx)){
-                	Debug.logError("Error issuing material for routing task : "+workEffortId, module);
-            		return ServiceUtil.returnError("Error issuing material for routing task : "+workEffortId);
-                }
-                Debug.log("issued ##############################################");
-                
-        	}
-        } catch (Exception e) {
-        	Debug.logError(e, module);
-            return ServiceUtil.returnError("Error fetching data " + e);
-        }
-        return result;
-    }// End of the Service
-*/    
+    
+    public static String returnUnusedMaterialOfRoutingTask(HttpServletRequest request, HttpServletResponse response) {
+	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  String workEffortId = (String) request.getParameter("workEffortId");
+	  	  boolean beginTransaction = false;
+	  	  try{
+	  		  beginTransaction = TransactionUtil.begin();
+		  	  for (int i = 0; i < rowCount; i++){
+		  		  
+		  		  String facilityId = "";
+		  		  String productId = "";
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  BigDecimal quantity = BigDecimal.ZERO;
+		  		  String quantityStr = "";
+		  		  if (paramMap.containsKey("productId" + thisSuffix)) {
+		  			  productId = (String) paramMap.get("productId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("quantity" + thisSuffix)) {
+		  			quantityStr = (String) paramMap.get("quantity"+thisSuffix);
+		  		  }
+		  		  
+		  		  if(UtilValidate.isNotEmpty(quantityStr)){
+		  			  quantity = new BigDecimal(quantityStr);
+		  		  }
+		  		  
+		  		  Map inputCtx = FastMap.newInstance();
+		  		  inputCtx.put("productId", productId);
+		  		  inputCtx.put("quantity", quantity);
+		  		  inputCtx.put("workEffortId", workEffortId);
+		  		  inputCtx.put("userLogin", userLogin);
+		  		  Map resultCtx = dispatcher.runSync("productionRunTaskReturnMaterial", inputCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		  			  Debug.logError("Error issuing material for routing task : "+workEffortId, module);
+		  			  TransactionUtil.rollback();
+		  			  return "error";
+		  		  }
+		  	  }
+	  	  }
+	  	catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+	  	catch (GenericServiceException e) {
+	  		try {
+			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
+	  		} catch (GenericEntityException e2) {
+			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while calling services", module);
+	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beginTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		}
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
+		return "success";  
+    }
+    
+    public static String declareRoutingTaskMaterial(HttpServletRequest request, HttpServletResponse response) {
+	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  String workEffortId = (String) request.getParameter("workEffortId");
+	  	  String productionRunId = (String) request.getParameter("productionRunId");
+	  	  boolean beginTransaction = false;
+	  	  try{
+	  		  beginTransaction = TransactionUtil.begin();
+		  	  for (int i = 0; i < rowCount; i++){
+		  		  
+		  		  String facilityId = "";
+		  		  String productId = "";
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  BigDecimal quantity = BigDecimal.ZERO;
+		  		  String quantityStr = "";
+		  		  if (paramMap.containsKey("productId" + thisSuffix)) {
+		  			  productId = (String) paramMap.get("productId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("quantity" + thisSuffix)) {
+		  			quantityStr = (String) paramMap.get("quantity"+thisSuffix);
+		  		  }
+		  		  
+		  		  if(UtilValidate.isNotEmpty(quantityStr)){
+		  			  quantity = new BigDecimal(quantityStr);
+		  		  }
+		  		  Map inputCtx = FastMap.newInstance();
+		  		  inputCtx.put("productId", productId);
+		  		  inputCtx.put("quantity", quantity);
+		  		  inputCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+		  		  inputCtx.put("workEffortId", workEffortId);
+		  		  inputCtx.put("userLogin", userLogin);
+		  		  Debug.log("inputCtx #############"+inputCtx);
+		  		  Map resultCtx = dispatcher.runSync("productionRunTaskProduce", inputCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		  			  Debug.logError("Error in declaring material of routing task : "+workEffortId, module);
+		  			  TransactionUtil.rollback();
+		  			  return "error";
+		  		  }
+		  		  List inventoryItemIds = (List)resultCtx.get("inventoryItemIds");
+		  		  Debug.log("inventoryItemIds ###################"+inventoryItemIds);
+		  	  }
+	  	  }
+	  	catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+	  	catch (GenericServiceException e) {
+	  		try {
+			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
+	  		} catch (GenericEntityException e2) {
+			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while calling services", module);
+	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beginTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		}
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
+		return "success";  
+    }
+    
+    public static String changeRoutingTaskStatus(HttpServletRequest request, HttpServletResponse response) {
+	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	  	  String workEffortId = (String) request.getParameter("workEffortId");
+	  	  String productionRunId = (String) request.getParameter("productionRunId");
+	  	  boolean beginTransaction = false;
+	  	  try{
+	  		  beginTransaction = TransactionUtil.begin();
+		  	 
+	  		  // we have to work on work effort status
+	  		  
+	  		  /*Map inputStatusCtx = FastMap.newInstance();
+	  		  inputStatusCtx.put("productionRunId", productionRunId);
+	  		  inputStatusCtx.put("workEffortId", workEffortId);
+	  		  Debug.log("inputStatusCtx #############"+inputStatusCtx);
+	  		  Map resultCtx = dispatcher.runSync("changeProductionRunTaskStatus", inputStatusCtx);
+	  		  if(ServiceUtil.isError(resultCtx)){
+	  			  Debug.logError("Error changing routing task status : "+workEffortId, module);
+	  			  TransactionUtil.rollback();
+	  			  return "error";
+	  		  }
+	  		  
+	  		  Debug.log("resultCtx #############"+resultCtx);
+	  		  String newStatusId = (String)resultCtx.get("newStatusId");
+			  String oldStatusId = (String)resultCtx.get("oldStatusId");*/
+	  		  
+	  		  GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
+	  		  
+	  		  GenericValue newEntity = delegator.makeValue("WorkEffortStatus");
+	  		  newEntity.set("workEffortId", workEffortId);
+	  		  newEntity.set("statusId", "PRUN_RUNNING");
+	  		  newEntity.set("statusDatetime", UtilDateTime.nowTimestamp());
+	  		  newEntity.set("setByUserLogin", userLogin.get("userLoginId"));
+	  		  newEntity.create();
+	  		  
+	  		  workEffort.set("currentStatusId", "PRUN_RUNNING");
+	  		  workEffort.store();
+		  	  
+	  		  GenericValue newEntity1 = delegator.makeValue("WorkEffortStatus");
+	  		  newEntity1.set("workEffortId", workEffortId);
+	  		  newEntity1.set("statusId", "PRUN_COMPLETED");
+	  		  newEntity1.set("statusDatetime", UtilDateTime.nowTimestamp());
+	  		  newEntity1.set("setByUserLogin", userLogin.get("userLoginId"));
+	  		  newEntity1.create();
+	  		  
+	  		  workEffort.set("currentStatusId", "PRUN_COMPLETED");
+	  		  workEffort.store();
+	  		  
+	  	 }
+	  	 catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	 }
+	  	 /*catch (GenericServiceException e) {
+	  		try {
+			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
+	  		} catch (GenericEntityException e2) {
+			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while calling services", module);
+	  	 }*/
+	  	 finally {
+	  		try {
+	  			TransactionUtil.commit(beginTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		}
+	  	 }
+	  	 request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
+		 return "success";  
+     }
+    
 }
