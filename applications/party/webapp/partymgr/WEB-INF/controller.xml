@@ -986,7 +986,18 @@ under the License.
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
-
+    <request-map uri="createEmployeeContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPartyContentFile"/>
+        <response name="success" type="view" value="viewprofile"/>
+   	</request-map>
+    <request-map uri="removeSRDocument">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removePartyContent"/>
+        <response name="success" type="request-redirect" value="viewprofile">
+            <redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
     <!-- <request-map uri="EditPartySkills">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPartySkills"/>
