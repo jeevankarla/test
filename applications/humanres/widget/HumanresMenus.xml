@@ -121,6 +121,9 @@
         		<link target="LeaveReports"/>
         </menu-item>
         <menu-item name="AnnualIT" title="Annual IT">
+        	<condition>
+				<if-has-permission permission="HR"  action="_ANNUALIT_VIEW"/>
+			</condition>
             <link target="AnnualIT"/>
         </menu-item>
 	</menu>
