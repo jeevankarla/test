@@ -1532,7 +1532,7 @@
         </section>
     </screen>
     
-<screen name="FindApInvoices">
+<screen name="DepotPurchaseInvoice">
         <section>
             <actions>
                 <set field="titleProperty" value="Find Purchase Invoices"/>

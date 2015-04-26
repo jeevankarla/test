@@ -436,7 +436,7 @@
             </hyperlink>
          </field>
     </form>
-     <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
+     <form name="FindInvoices" type="single" target="DepotPurchaseInvoice" title="Find and list invoices"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="hideSearch"><hidden value="Y"/></field>
@@ -471,7 +471,7 @@
         <field name="dueDate"><hidden/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-     <form name="FindApInvoices" type="single" target="ApInvoices" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+     <form name="FindApInvoices" type="single" target="DepotPurchaseInvoice" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
 		<!-- <field name="invoiceTypeId" position="2">
 			<drop-down allow-empty="true">
