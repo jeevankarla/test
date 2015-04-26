@@ -102,7 +102,7 @@
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
             	</or>            
             </condition> -->
-			<link target="PurchaseInvoice">
+			<link target="DepotPurchaseInvoice">
 				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
 				<parameter param-name="subTabButtonValue" value="Manufacturing" />
 				<parameter param-name="actionSubTabButtonValue" value="find" />
@@ -122,7 +122,7 @@
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
-       	  <menu-item name="depotpayments" title="Purchase Invoice Payments">
+       	  <menu-item name="depotpayments" title="Payments">
 		  <!--    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>

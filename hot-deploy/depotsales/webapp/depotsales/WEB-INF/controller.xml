@@ -192,8 +192,8 @@
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
-       <response name="success" type="request-redirect-noparam" value="PurchaseInvoice"/>
-       <response name="error" type="view" value="PurchaseInvoice"/>
+       <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
+       <response name="error" type="view" value="DepotPurchaseInvoice"/>
      </request-map>
      
      <request-map uri="FindMaterialInvoices">
@@ -392,9 +392,21 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentVsDispatchPDF"/>
     </request-map>
-    <request-map uri="PurchaseInvoice">
+    <request-map uri="DepotPurchaseInvoice">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindApInvoices"/>
+        <response name="success" type="view" value="DepotPurchaseInvoice"/>
+    </request-map>
+     <request-map uri="createApDepotApPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVoucherPayment"/>
+        <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice">
+        <redirect-parameter  name="invoiceId"/> 
+         <redirect-parameter  name="parentTypeId"/> 
+        </response>
+        <response name="error" type="request-redirect-noparam" value="DepotPurchaseInvoice">
+        <redirect-parameter name="invoiceId"/>
+         <redirect-parameter  name="parentTypeId"/> 
+        </response>
     </request-map>
      <request-map uri="APInvoiceOverview">
         <security https="true" auth="true"/>
@@ -480,8 +492,8 @@
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
-   	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/>
-   	   	<view-map name="PurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/>
+   <!-- 	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/> -->
+   	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>

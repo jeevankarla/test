@@ -233,7 +233,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	 	   }
 		  paymentMethodList = methodOptionList;
 		  
-			message += "<html><head></head><body><form action='createApVoucherPaymentTreasurer' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			message += "<html><head></head><body><form action='createApDepotApPayment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
