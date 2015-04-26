@@ -764,7 +764,10 @@ public class GeneralLedgerServices {
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.findList("AcctgTransEntry",con , null, null, null, false);
         	if(UtilValidate.isNotEmpty(acctgTransList)){
-        		for(GenericValue acctgTrans:acctgTransList){
+        		Iterator<GenericValue> acctgTran = acctgTransList.iterator();
+        		while (acctgTran.hasNext()) {
+                    GenericValue acctgTrans = acctgTran.next();
+//        		for(GenericValue acctgTrans:acctgTransList){
         			String acctgTransId=(String)acctgTrans.get("acctgTransId");
         			conditionList.clear();
         			conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.EQUALS,acctgTransId));
