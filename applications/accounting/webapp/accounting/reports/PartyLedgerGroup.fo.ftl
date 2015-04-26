@@ -146,14 +146,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                             <#if openBal gte 0>
                              <#assign openDebit=openBal>
                             <#else>
-                              <#assign openCredit=openBal>
+                              <#assign openCredit=((-1)*openBal)>
                             </#if> 
                             </#if>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${openDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${((-1)*openCredit)?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${openCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                 		<fo:table-row>
@@ -228,8 +228,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                              <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                            <#assign grdDebit=grdDebit+totDebit>
-                            <#assign grdCredit=grdCredit+totCredit>
+                            <#assign grdDebit=grdDebit+totDebit+openDebit>
+                            <#assign grdCredit=grdCredit+totCredit+openCredit>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${totDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
@@ -273,13 +273,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                             <#if closingTot gte 0>
                              <#assign closingDebit=closingTot>
                              <#else>
-                             <#assign closingCredit=((-1)*(closingTot))>
+                             <#assign closingCredit=closingTot>
                              </#if>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${closingDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${closingCredit?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*closingCredit)?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                 		<fo:table-row>
@@ -372,13 +372,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                             <#if balance gte 0>
                              <#assign clsGrdDebit=balance> 
                             <#else>
-                              <#assign clsGrdCredit=((-1)*(balance))>
+                              <#assign clsGrdCredit=balance>
                             </#if>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${clsGrdDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${clsGrdCredit?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*clsGrdCredit)?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                     </fo:table-body>

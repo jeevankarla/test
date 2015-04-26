@@ -24,12 +24,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-
+import java.util.Iterator;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
@@ -752,12 +753,16 @@ public class GeneralLedgerServices {
         BigDecimal debit = BigDecimal.ZERO;
         BigDecimal openingBalance = BigDecimal.ZERO;
         try{
-        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+//        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransList = delegator.findList("AcctgTrans",condition,null,null,null,false);
         	acctgTransIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "acctgTransId", false);
-        	acctgTransEntryList = delegator.findList("AcctgTransEntry", EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds), null, null, null, false);
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds));
+        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+        	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        	acctgTransEntryList = delegator.findList("AcctgTransEntry",con , null, null, null, false);
         	if(UtilValidate.isNotEmpty(acctgTransList)){
         		for(GenericValue acctgTrans:acctgTransList){
         			String acctgTransId=(String)acctgTrans.get("acctgTransId");
@@ -766,14 +771,24 @@ public class GeneralLedgerServices {
         			conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE"));
         			EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         			List<GenericValue> acctgTransEntry = EntityUtil.filterByCondition(acctgTransEntryList, cond);
-        			for(GenericValue TransEntry:acctgTransEntry){
+        			Iterator<GenericValue> transEntry = acctgTransEntry.iterator();
+                    while (transEntry.hasNext()) {
+                        GenericValue TransEntry = transEntry.next();
+                        if(((String)TransEntry.get("debitCreditFlag")).equals("C") && UtilValidate.isNotEmpty((BigDecimal)TransEntry.get("amount"))){
+        					credit=credit.add((BigDecimal)TransEntry.get("amount"));
+        				}
+        				if(((String)TransEntry.get("debitCreditFlag")).equals("D") && UtilValidate.isNotEmpty((BigDecimal)TransEntry.get("amount"))){
+        					debit=debit.add((BigDecimal)TransEntry.get("amount"));
+        				}
+                    }
+        			/*for(GenericValue TransEntry:acctgTransEntry){
         				if(((String)TransEntry.get("debitCreditFlag")).equals("C") && UtilValidate.isNotEmpty((BigDecimal)TransEntry.get("amount"))){
         					credit=credit.add((BigDecimal)TransEntry.get("amount"));
         				}
         				if(((String)TransEntry.get("debitCreditFlag")).equals("D") && UtilValidate.isNotEmpty((BigDecimal)TransEntry.get("amount"))){
         					debit=debit.add((BigDecimal)TransEntry.get("amount"));
         				}
-        			}
+        			}*/
         		}
         		openingBalance=(debit).subtract(credit);
         	}
