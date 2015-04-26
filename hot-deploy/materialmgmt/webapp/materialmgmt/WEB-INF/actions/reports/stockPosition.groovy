@@ -184,6 +184,14 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 			 quantitySummary.totalAvailableToPromise = resultOutput.availableToPromiseTotal;
 			 quantitySummary.totalQuantityInQcHand = 0;// totalInventory.quantityOnHandTotal-resultOutput.quantityOnHandTotal;
 			 quantitySummary.receivedQty = 0;
+			
+		 //Product Minimum Quantity for each Facility 
+		 ProductFacilityList = delegator.findOne("ProductFacility",["productId":productId,"facilityId":facility.facilityId],false);
+		 if(ProductFacilityList){
+			 minimumStock=ProductFacilityList.get("minimumStock");
+			 quantitySummary.minimumStock=minimumStock;
+		 }
+		
 			 ecl = 	EntityCondition.makeCondition([
 				 	EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
 					EntityCondition.makeCondition("statusId", EntityOperator.IN,UtilMisc.toList("SR_RECEIVED","SR_QUALITYCHECK"))],
