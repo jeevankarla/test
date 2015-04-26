@@ -1957,6 +1957,7 @@
             <actions>
                 <set field="titleProperty" value="Find Depot Payments"/>
                 <set field="tabButtonItem" value="depotpayments"/>
+                <set field="tabButtonItem2" value="find"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
@@ -1973,6 +1974,7 @@
             <widgets>
                  <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                          <include-menu name="purchasePaymentTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" />
                         <section>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
