@@ -63,11 +63,11 @@ List acctgPartyIds = FastList.newInstance();
 		partyIds=EntityUtil.getFieldListFromEntityList(partyClassification, "partyId", false)
 	}
 }*/
-if(UtilValidate.isNotEmpty(parameters.partyId)){
+/*if(UtilValidate.isNotEmpty(parameters.partyId)){
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
 }else{
    conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
-}
+}*/
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -77,12 +77,18 @@ partyMap=[:];
 openingBalMap=[:];
 if(acctgTransList){
 	acctgTransIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "acctgTransId", false);
-	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "partyId", true);
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds));
+	if(UtilValidate.isNotEmpty(parameters.partyId)){
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
+	}
+	EntityCondition transEntryEcl=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	acctgTransEntryList = delegator.findList("AcctgTransEntry",transEntryEcl,null,null,null,false);
+	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransEntryList, "partyId", true);
 	acctgPartyIds.each{partyId->
 		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate));
 		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
 	}
-	acctgTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds),null,null,null,false);
 	acctgTransList.each{acctgTrans->
 		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("acctgTransId",EntityOperator.EQUALS,acctgTrans.acctgTransId),
 			                               EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE")],EntityOperator.AND)
@@ -198,7 +204,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		if(openBal>=0){
 			openDebit=openBal;
 		}else{
-		   openCredit=openBal;
+		   openCredit=-(openBal);
 		}
 		tempMap.isPosted="Opening Balance";
 		tempMap.credit=openCredit;
@@ -240,16 +246,40 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			partyLedgerCsv.add(tempTransMap);
 		}
 		tempMap=[:];
-		tempMap.glAccDescription="TOTAL  :";
+		tempMap.glAccDescription="TRANSACTION TOTAL  :";
 		tempMap.debit=totDebit;
 		grdDebit=grdDebit+totDebit;
 		tempMap.credit=totCredit;
 		grdCredit=grdCredit+totCredit;
 		partyLedgerCsv.add(tempMap);
+		tempMap=[:];
+		tempMap.glAccDescription="CLOSING TRANSACTION TOTAL :";
+		bal=0;clsDebit=0;clsCredit=0;
+		bal=grdDebit-grdCredit;
+		if(bal>0){
+			clsDebit=bal;
+		}else{
+			clsCredit=-(bal);
+		}
+		tempMap.debit=clsDebit;
+		tempMap.credit=clsCredit;
+		partyLedgerCsv.add(tempMap);
 	}
 	finalMap.glAccDescription="GRAND TOTAL :";
 	finalMap.debit=grdDebit;
 	finalMap.credit=grdCredit;
+	partyLedgerCsv.add(finalMap);
+	finalMap=[:];
+	balance=0;clsGrdDebit=0;clsGrdCredit=0;
+	finalMap.glAccDescription="CLOSING GRAND TOTAL :";
+	balance=grdDebit-grdCredit;
+	if(balance>0){
+		clsGrdDebit=balance;
+	}else{
+		clsGrdCredit=balance;
+	}
+	finalMap.debit=clsGrdDebit;
+	finalMap.credit=clsGrdCredit;
 	partyLedgerCsv.add(finalMap);
 	context.partyLedgerCsv=partyLedgerCsv;
 }
