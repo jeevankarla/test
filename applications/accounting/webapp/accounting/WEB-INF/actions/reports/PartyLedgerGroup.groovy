@@ -71,7 +71,6 @@ List acctgPartyIds = FastList.newInstance();
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-
 acctgTransList = delegator.findList("AcctgTrans",condition,null,null,null,false);
 partyMap=[:];
 openingBalMap=[:];
@@ -89,12 +88,18 @@ if(acctgTransList){
 		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate));
 		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
 	}
-	acctgTransList.each{acctgTrans->
+	acctgTransItr = acctgTransList.iterator();
+	while (acctgTransItr.hasNext()) {
+	GenericValue acctgTrans = acctgTransItr.next();
+//	acctgTransList.each{acctgTrans->
 		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("acctgTransId",EntityOperator.EQUALS,acctgTrans.acctgTransId),
-			                               EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE")],EntityOperator.AND)
+			                               EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE")],EntityOperator.AND);
 		List transEntryList = EntityUtil.filterByCondition(acctgTransEntryList, ecl);
 		if(transEntryList){
-			transEntryList.each{transEntry->
+			TransItr = transEntryList.iterator();
+			while (TransItr.hasNext()) {
+				GenericValue transEntry = TransItr.next();
+//			transEntryList.each{transEntry->
 				if(UtilValidate.isEmpty(partyMap[acctgTrans.partyId])){
 					tempList=[];
 					tempMap=[:];
