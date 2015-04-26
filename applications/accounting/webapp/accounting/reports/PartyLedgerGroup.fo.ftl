@@ -34,6 +34,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			<fo:static-content flow-name="xsl-region-before">
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
+				 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                         MOTHER DAIRY, YALAHANKA KMF UNIT : GKVK POST.BANGALORE-560 065                          Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
 				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold"  font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
 				<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">PARTY LEDGER FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
@@ -98,7 +99,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			<#assign acctgDetails=partyList.getValue()>
 			<#assign totDebit=0>
             <#assign totCredit=0>			
-			
+			<#assign closingTot=0>
 			<fo:block>
                     <fo:table>
 				    <fo:table-column column-width="9%"/>
@@ -152,7 +153,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${openDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${openCredit?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${((-1)*openCredit)?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                 		<fo:table-row>
@@ -197,25 +198,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                           <#assign totCredit=totCredit+acctgTrans.get("credit")>
                 		</fo:table-row>
 						</#list>
-                    </fo:table-body>
-                </fo:table>
-               </fo:block> 
-               
-             <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-             <fo:block>
-                    <fo:table>
-				     <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="5%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="20%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="10%"/> 
-			        <fo:table-body>
-                    	<fo:table-row>
+                        <fo:table-row>
+                			<fo:table-cell>
+                			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                			</fo:table-cell>
+                		</fo:table-row>
+						<fo:table-row>
                     	   <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
@@ -232,10 +220,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">TRANSACTIONS TOTALS :</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">TOTALS :</fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                              <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
@@ -249,10 +237,59 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${totCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
+                		<fo:table-row>
+                			<fo:table-cell>
+                			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                			</fo:table-cell>
+                		</fo:table-row>
+                		<fo:table-row>
+                    	   <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CLOSING TRANSACTION TOTAL:</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                            <#assign closingTot=totDebit-totCredit>
+                            <#assign closingDebit=0>
+                            <#assign closingCredit=0>   
+                            <#if closingTot gte 0>
+                             <#assign closingDebit=closingTot>
+                             <#else>
+                             <#assign closingCredit=((-1)*(closingTot))>
+                             </#if>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${closingDebit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${closingCredit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                		</fo:table-row>
+                		<fo:table-row>
+                			<fo:table-cell>
+                			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                			</fo:table-cell>
+                		</fo:table-row>
                     </fo:table-body>
                 </fo:table>
-               </fo:block>
-               <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+               </fo:block> 
              </#list>
 	          <fo:block>
                     <fo:table>
@@ -268,7 +305,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			        <fo:table-column column-width="10%"/>
                     <fo:table-body>
                     	<fo:table-row>
-                			
                 			<fo:table-cell>
                     			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
@@ -285,10 +321,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">GRAND TOTALS :</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">GRAND TOTALS :</fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                              <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
@@ -298,6 +334,51 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grdCredit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                		</fo:table-row>
+                		<fo:table-row>
+                			<fo:table-cell>
+                			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                			</fo:table-cell>
+                		</fo:table-row>
+                		<fo:table-row>
+                			<fo:table-cell>
+                    			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CLOSING GRAND TOTALS :</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<#assign clsGrdDebit=0>
+                            <#assign clsGrdCredit=0>
+                            <#assign balance=grdDebit-grdCredit> 
+                            <#if balance gte 0>
+                             <#assign clsGrdDebit=balance> 
+                            <#else>
+                              <#assign clsGrdCredit=((-1)*(balance))>
+                            </#if>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${clsGrdDebit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${clsGrdCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                     </fo:table-body>
