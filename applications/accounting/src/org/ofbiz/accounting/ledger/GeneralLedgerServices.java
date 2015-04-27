@@ -765,6 +765,8 @@ public class GeneralLedgerServices {
         	//conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
+        	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 //        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
         	conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
