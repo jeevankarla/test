@@ -208,7 +208,8 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		tempMap=[:];
 		partyName=PartyHelper.getPartyName(delegator, partyId, false);
 		name=partyName+"["+partyId+"]";
-		tempMap.glAccountId="PARTY NAME :"
+		tempMap.glAccountId="PARTY NAME :";
+		tempMap.partyId=partyId;
 		tempMap.glAccDescription=name;
 		openDebit=0;openCredit=0;
 		openBal=0;
@@ -245,6 +246,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 				paymentId=acctgTrans.paymentId;
 			}
 			tempTransMap.invoiceId=invoiceId;
+			tempTransMap.partyId=partyId;
 			tempTransMap.paymentId=paymentId;
 			tempTransMap.isPosted=acctgTrans.isPosted;
 			tempTransMap.postedDate=acctgTrans.postedDate;
@@ -267,6 +269,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		grdCredit=grdCredit+totCredit;
 		partyLedgerCsv.add(tempMap);
 		tempMap=[:];
+		tempMap.partyId=partyId;
 		tempMap.glAccDescription="CLOSING TOTAL :";
 		bal=0;clsDebit=0;clsCredit=0;
 		bal=totDebit-totCredit;
@@ -280,6 +283,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		partyLedgerCsv.add(tempMap);
 	}
 	finalMap.glAccDescription="GRAND TOTAL :";
+	finalMap.partyId=partyId;
 	finalMap.debit=grdDebit;
 	finalMap.credit=grdCredit;
 	partyLedgerCsv.add(finalMap);
@@ -292,6 +296,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	}else{
 		clsGrdCredit=-(balance);
 	}
+	finalMap.partyId=partyId;
 	finalMap.debit=clsGrdDebit;
 	finalMap.credit=clsGrdCredit;
 	partyLedgerCsv.add(finalMap);
