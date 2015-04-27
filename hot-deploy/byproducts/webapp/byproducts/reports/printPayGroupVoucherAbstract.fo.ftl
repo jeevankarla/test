@@ -132,7 +132,8 @@ under the License.
     						</fo:table-row>
 							<fo:table-row>
         						<fo:table-cell number-columns-spanned="2">
-        								<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" wrap-option="wrap"> In Words: ${abstractDetails.get('amountInWords')} </fo:block>
+        						    <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalAmount, "%indRupees-and-paiseRupees", locale)>
+        								<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" wrap-option="wrap"> In Words: ${amountWords} only</fo:block>
         						</fo:table-cell>
     						</fo:table-row>
 							<fo:table-row>
