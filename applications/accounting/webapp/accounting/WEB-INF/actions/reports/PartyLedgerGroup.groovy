@@ -91,7 +91,7 @@ openingBalMap=[:];
 	acctgTransEntryList = delegator.findList("AcctgTransEntry",transEntryEcl,null,null,null,false);*/
 	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "partyId", true);
 	acctgPartyIds.each{partyId->
-		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate));
+		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId",glAccountTypeId));
 		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
 	}
 //	acctgTransItr = acctgTransList.iterator();

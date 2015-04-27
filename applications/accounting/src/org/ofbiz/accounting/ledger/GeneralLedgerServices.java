@@ -742,7 +742,7 @@ public class GeneralLedgerServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String partyId = (String) context.get("partyId");
-        String glAccountTypeId ="ACCOUNTS_RECEIVABLE";
+        String glAccountTypeId =(String) context.get("glAccountTypeId");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
@@ -754,6 +754,8 @@ public class GeneralLedgerServices {
         BigDecimal debit = BigDecimal.ZERO;
         BigDecimal openingBalance = BigDecimal.ZERO;
         try{
+        	GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault", UtilMisc.toMap("glAccountTypeId",glAccountTypeId,"organizationPartyId","Company"), false);
+        	String glAccountId = glAccountTypeDefault.getString("glAccountId");
 //        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
         	/*conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -763,7 +765,8 @@ public class GeneralLedgerServices {
         	//conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
-        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
+//        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
+        	conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
         	//Debug.log("acctgTransEntryList==========="+acctgTransEntryList.getCompleteList());
