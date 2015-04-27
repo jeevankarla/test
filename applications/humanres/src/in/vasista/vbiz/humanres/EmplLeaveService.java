@@ -63,6 +63,16 @@ public class EmplLeaveService {
         if(UtilValidate.isEmpty(balanceDate)){
         	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
         }
+        Timestamp leaveDate = null;
+	     if(UtilValidate.isNotEmpty(flag) && flag.equals("createLeave")){
+	    	flag = "creditLeaves";
+	        leaveDate =  UtilDateTime.toTimestamp(balanceDate);
+	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(leaveDate, -1));
+		    if(UtilValidate.isNotEmpty(previousDayEnd)){
+		    	balanceDate = UtilDateTime.toSqlDate(previousDayEnd);
+		    }
+	     }
+        
         String leaveTypeIdCtx = (String)context.get("leaveTypeId");
         try{		
         	List conditionList = UtilMisc.toList(
@@ -145,7 +155,7 @@ public class EmplLeaveService {
 					}
 				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && (leaveTypeIdCtx.equals("CML") || leaveTypeIdCtx.equals("HPL"))){
 					  
-					 // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+					  // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
 					  Map leaveCtx = FastMap.newInstance();
 						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
@@ -199,7 +209,11 @@ public class EmplLeaveService {
 				}
 				result.put("leaveBalances", leaveBalancesMap);
 				//this is to return date for json request
-				result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
+				if(UtilValidate.isNotEmpty(leaveDate)){
+					result.put("leaveBalanceDateStr",UtilDateTime.toDateString(leaveDate,"dd-MM-yyyy"));
+				}else{
+					result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
+				}
         		
         	}
         } catch (Exception e) {
@@ -702,7 +716,7 @@ public class EmplLeaveService {
 				validLeaveRulesMap.put("maxFullDayHours",maxFullDayHours);
 				validLeaveRulesMap.put("maxHalfDayHours",maxHalfDayHours);
 				//Half Pay Leave Rules
-				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("HPL")){
+				if(UtilValidate.isNotEmpty(leaveTypeId) && (leaveTypeId.equals("HPL") || leaveTypeId.equals("CML"))){
 					try{
 						serviceResult = dispatcher.runSync("getHalfPayLeaveRules", validLeaveRulesMap);
 			            if (ServiceUtil.isError(serviceResult)) {
@@ -767,7 +781,7 @@ public class EmplLeaveService {
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId)){
 				if(maxFullDayHours<72 || (maxHalfDayHours!=0 && maxHalfDayHours<72)){
-					return ServiceUtil.returnError("You have to apply minimum 3 Full days or 6 Half Days for leave type :  Half Pay Leave"); 
+					return ServiceUtil.returnError("You have to apply minimum 3 Full days or 6 Half Days for leave type : "+leaveTypeId); 
 				}
 			}
 		}catch(Exception e){
@@ -1024,14 +1038,14 @@ public class EmplLeaveService {
 		TimeZone timeZone = TimeZone.getDefault();
 	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();	
     	try{
-    		GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+    		/*GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
 			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 			if(UtilValidate.isNotEmpty(fromDateTime)){
     			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
     			if (ServiceUtil.isError(customTimePeriodIdMap)) {
     				return customTimePeriodIdMap;
     			}
-			}
+			}*/
     		if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL")){
 		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
 		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
