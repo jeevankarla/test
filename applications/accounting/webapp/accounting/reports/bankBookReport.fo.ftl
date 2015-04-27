@@ -43,11 +43,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
               		<fo:block>
 	                 	<fo:table border-style="solid">
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="125pt"/>
+                    	<fo:table-column column-width="175pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="100pt"/>  
-               	    	<fo:table-column column-width="150pt"/>
+               	    	<fo:table-column column-width="200pt"/>
             			<fo:table-column column-width="125pt"/> 		
             			<fo:table-column column-width="125pt"/>
 	                    <fo:table-body>
@@ -63,9 +62,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Inst.No</fo:block>  
-                       			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">PartyId </fo:block>
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">PartyName</fo:block> 
@@ -85,11 +81,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             	<fo:block>
                  	<fo:table border-style="solid">
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="125pt"/>
+                    	<fo:table-column column-width="175pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="100pt"/>  
-               	    	<fo:table-column column-width="150pt"/>
+               	    	<fo:table-column column-width="200pt"/>
             			<fo:table-column column-width="125pt"/> 		
             			<fo:table-column column-width="125pt"/>
                     <fo:table-body>
@@ -131,9 +126,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
 				       				
-				       				<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
@@ -195,7 +187,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </#if>	
                                 	<#if ((paymentMethodTypeDes)?has_content)>
                                 	<fo:table-cell>
-	                                    <fo:block font-size="13pt" text-align="left">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
+	                                    <fo:block font-size="13pt" text-align="center">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell >
@@ -211,7 +203,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
                                 	</#if>
-                                	<#if ((partyId)?has_content)>
+                                	<#--> <#if ((partyId)?has_content)>
                                 	<fo:table-cell>
 	                                    <fo:block font-size="13pt" text-align="left">${(partyId)}</fo:block>
 	                                </fo:table-cell>
@@ -219,18 +211,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                                  	<fo:table-cell >
 	                                    <fo:block text-align="left">${finAccountOwnerPartyId?if_exists}</fo:block>
 	                                </fo:table-cell>
-                                	</#if>
+                                	</#if>  --> 
                                 	<#if (paymentId != "DAY TOTAL")>
                                 		<#if finAccountPartyName?has_content>
                                 		<fo:table-cell >
                                     		<fo:block text-align="left" font-size="13pt">
-                                            	${partyName?if_exists}/${finAccountPartyName?if_exists}
+                                            	${partyName?if_exists}/${finAccountPartyName?if_exists}<#if ((partyId)?has_content)>(${(partyId)}) 	<#else>(${finAccountOwnerPartyId?if_exists})</#if>
+                                            	
                                     		</fo:block>
 	                                	</fo:table-cell>
 	                                	 <#else>
 	                                	 <fo:table-cell >
                                     		<fo:block text-align="left" font-size="13pt">
-                                            	${partyName?if_exists}
+                                            	${partyName?if_exists}<#if ((partyId)?has_content)>(${(partyId)}) 	<#else>(${finAccountOwnerPartyId?if_exists})</#if>
                                     		</fo:block>
 	                                	</fo:table-cell>
 	                                	</#if>
@@ -301,10 +294,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                <fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve"></fo:block>
 				       				</fo:table-cell>
-	                                <fo:table-cell  font-weight="bold">
-	                                    <fo:block text-align="right" font-size="13pt" keep-together = "always">
-	                                    </fo:block>
-	                                </fo:table-cell>
 	                                <fo:table-cell  font-weight="bold">
 	                                    <fo:block text-align="right" font-size="13pt" keep-together = "always">
 	                                    </fo:block>
