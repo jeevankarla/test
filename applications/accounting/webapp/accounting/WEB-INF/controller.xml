@@ -3812,6 +3812,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyLedgerGroupReportCSV"/>
     </request-map>
+    <request-map uri="PartyLedgerCreditorsReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyLedgerCreditorsReportPDF"/>
+    </request-map>
+    <request-map uri="PartyLedgerCreditorsReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyLedgerCreditorsReportCSV"/>
+    </request-map>
      <!--================= Bank Guarantee ==================== -->
 	
 	<request-map uri="BankGuaranteeReceipt">
@@ -4361,6 +4369,8 @@ under the License.
    <view-map name="EmployeeAdvancesAndSubScheduleReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#EmployeeAdvancesAndSubScheduleReportCSV" content-type="text/csv" encoding="none"/>
    <view-map name="PartyLedgerGroupReportPDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyLedgerGroupReportPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="PartyLedgerGroupReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyLedgerGroupReportCSV" content-type="text/csv" encoding="none"/>
+   <view-map name="PartyLedgerCreditorsReportPDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyLedgerCreditorsReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="PartyLedgerCreditorsReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyLedgerCreditorsReportCSV" content-type="text/csv" encoding="none"/>
     <!-- NEW REPORTS -->
    <view-map name="GlAccountMasterReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountMasterReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="InvoiceSummaryReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InvoiceSummaryReportPdf" content-type="application/pdf" encoding="none"/>
