@@ -1281,6 +1281,7 @@ under the License.
     <field name="glAccDescription" title="Gl Account Description"><display></display></field>
     <field name="invoiceId" title="Invoice Id"><display></display></field>
     <field name="paymentId" title="Payment Id"><display></display></field>
+    <field name="partyId" title="PartyId"><display></display></field>
     <field name="isPosted" title="Is Posted"><display></display></field>
     <field name="postedDate" title="Posted Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(postedDate,&quot;dd-MM-yyyy&quot;)}"></display></field>
     <field name="debit" title="Debit"><display></display></field>
