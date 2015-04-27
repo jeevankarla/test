@@ -259,6 +259,8 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		}
 		tempMap=[:];
 		tempMap.glAccDescription="TRANSACTION TOTAL  :";
+		totDebit=totDebit+openDebit;
+		totCredit=totCredit+openCredit;
 		tempMap.debit=totDebit;
 		grdDebit=grdDebit+totDebit;
 		tempMap.credit=totCredit;
@@ -288,7 +290,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	if(balance>0){
 		clsGrdDebit=balance;
 	}else{
-		clsGrdCredit=balance;
+		clsGrdCredit=-(balance);
 	}
 	finalMap.debit=clsGrdDebit;
 	finalMap.credit=clsGrdCredit;
