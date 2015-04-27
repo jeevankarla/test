@@ -3246,6 +3246,10 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FinancialAccountTransForMonthCsv"/>
     </request-map>
+    <request-map uri="consolidatedFinAccntTransReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ConsolidatedFinAccntTransReport"/>
+    </request-map>
     
 
     <!--Add Tax Settings -->
@@ -4264,6 +4268,8 @@ under the License.
     <view-map name="FinancialAccountTransForMonth" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransForMonth"/>
     <view-map name="FinancialAccountTransForMonthPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransForMonthPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="FinancialAccountTransForMonthCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransForMonthCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="ConsolidatedFinAccntTransReport" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ConsolidatedFinAccntTransReport" content-type="application/pdf" encoding="none"/>
+    
     
     <view-map name="CostCenters" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#CostCenters"/>
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>
