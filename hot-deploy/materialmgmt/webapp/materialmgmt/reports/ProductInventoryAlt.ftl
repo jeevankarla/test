@@ -19,15 +19,9 @@ under the License.
 <div class="screenlet">
   <#if product?exists>
     <div class="screenlet-body">
-        <table style="width:100%; font-size:1.3em">
-            <tr class="header-row">
-                <td style="width:30%"><b>${uiLabelMap.ProductFacility}</b></td>
-                <td style="width:30%; text-align: center"><b>Quantity</b></td>
-                 <td style="width:20%; text-align: center"><b>In-QC</b></td>
-				<td style="width:20%; text-align: rignt"><b>Received</b></td>
-            </tr>
-            <#assign rowClass = "2">
-            <#list quantitySummaryByFacility.values() as quantitySummary>
+                   <#-->     <#assign rowClass = "2">   -->
+                 <#assign sNo=1>     
+             <#list quantitySummaryByFacility.values() as quantitySummary>
                 <#if quantitySummary.facilityId?exists>
                     <#assign facilityId = quantitySummary.facilityId>
                     <#assign facility = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId))>
@@ -37,24 +31,43 @@ under the License.
                     <#assign mktgPkgATP = quantitySummary.mktgPkgATP?if_exists>
                     <#assign mktgPkgQOH = quantitySummary.mktgPkgQOH?if_exists>
                     <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
-                   <#assign totalQuantityInQcHand = quantitySummary.totalQuantityInQcHand?if_exists>
-                   <#assign receivedQty = quantitySummary.receivedQty?if_exists> 
-                    <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if> >
-                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em" width="50%">${(facility.facilityName)?if_exists}</td>
-                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: center"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
-                    	<td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: center"><#if totalQuantityInQcHand?exists>${totalQuantityInQcHand}<#else>&nbsp;</#if></td>
-                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: center"><#if receivedQty?exists>${receivedQty}<#else>&nbsp;</#if></td>
-                    </tr>
-
+                    <#assign totalQuantityInQcHand = quantitySummary.totalQuantityInQcHand?if_exists>
+                    <#assign receivedQty = quantitySummary.receivedQty?if_exists> 
+                    <#assign minimumStock = quantitySummary.minimumStock?if_exists> 
+                   <#if sNo != 1>
+               <fo:block   text-align="center" font-size="15pt" white-space-collapse="false" font-weight="bold">----------------------------------------</fo:block>  
+                   </#if>
+            <table style="width:100%; font-size:1.3em">
+                 <tr class="header-row">
+                <td style="text-align: left"><b>${uiLabelMap.ProductFacility} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></td>
+                <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em text-align: right" width="50%">${(facility.facilityName)?if_exists}</td>
+                 </tr>
+                 <tr>
+                <td style="text-align: left"><b>Quantity &nbsp;&nbsp;&nbsp;:</b></td>
+                <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: right"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
+                 </tr>
+               <tr>
+                <td style="text-align: left"><b>In-QC &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></td>
+                <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: right"><#if totalQuantityInQcHand?exists>${totalQuantityInQcHand}<#else>&nbsp;</#if></td>
+              </tr>
+                <tr>
+                <td style="text-align: left"><b>Received &nbsp;&nbsp;:</b></td>
+                <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: right"><#if receivedQty?exists>${receivedQty}<#else>&nbsp;</#if></td>
+                </tr>
+                   <tr>
+                <td style="text-align: left"><b>Min. Qty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></td>
+                <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.1em; text-align: right"><#if minimumStock?exists>${minimumStock}<#else>&nbsp;</#if></td>
+                   </tr>
+         </table>
+        <#assign sNo=sNo+1>
                 </#if>
-                <#-- toggle the row color -->
+                <#-- toggle the row color 
                 <#if rowClass == "2">
                     <#assign rowClass = "1">
-                <#else>
+                <#else> 
                     <#assign rowClass = "2">
-                </#if>
+                 </#if>  -->
             </#list>
-        </table>
     </div>
      <div class="clear"></div>
   <#else>
