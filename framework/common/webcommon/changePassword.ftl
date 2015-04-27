@@ -41,6 +41,9 @@ under the License.
           <td class="label">${uiLabelMap.CommonNewPassword}</td>
           <td><input type="password" name="newPassword" value="" size="20" onblur="validatePassword()"/></td>
         </tr>
+         <tr>
+          <td colspan="2" align="center">(<font color="blue" size="10">Password must be atleast <b>6</b> characters.!)</font></td>
+        </tr>
         <tr>
           <td class="label">${uiLabelMap.CommonNewPasswordVerify}</td>
           <td><input type="password" name="newPasswordVerify" value="" size="20"/></td>
