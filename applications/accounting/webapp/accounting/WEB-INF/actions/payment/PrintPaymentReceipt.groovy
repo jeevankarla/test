@@ -102,6 +102,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	finAccountFinalTransList = [];
 	finAccountTransMap = [:];
 	finAccountId = parameters.finAccountId;
+	context.finAccountId=finAccountId;
 	description = null;
 	partyId = null;
 	partyName = null;
