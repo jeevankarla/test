@@ -7956,7 +7956,8 @@ public class ByProductNetworkServices {
 			}
 		}
 		Map result = ServiceUtil.returnSuccess();
-		//result.put("paymentList", paymentList);
+		result.put("paymentList", paymentList);
+		result.put("responseCode", "001");
 		return result;
 	}
 	
