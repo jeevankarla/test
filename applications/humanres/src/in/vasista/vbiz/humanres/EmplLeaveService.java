@@ -1024,6 +1024,14 @@ public class EmplLeaveService {
 		TimeZone timeZone = TimeZone.getDefault();
 	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();	
     	try{
+    		GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+			if(UtilValidate.isNotEmpty(fromDateTime)){
+    			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
+    			if (ServiceUtil.isError(customTimePeriodIdMap)) {
+    				return customTimePeriodIdMap;
+    			}
+			}
     		if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL")){
 		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
 		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
