@@ -227,6 +227,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("invAppFromDate","invAppFromDate");
 	    makeDatePicker4("invAppThruDate","invAppThruDate");
 	    makeDatePicker4("PartyLedgerFromDate","PartyLedgerThruDate");
+		makeDatePicker4("PartyLedgerCreditorFromDate","PartyLedgerCreditorThruDate");
 	    $('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -537,7 +538,7 @@ function reportTypeChangeFunc() {
               </tr>
               <tr class="alternate-row">
 				<form id="PartyLedgerGroup" name="PartyLedgerGroup" method="post" action="<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>" target="_blank">	
-					<td width="30%">Party Ledger Report</td>
+					<td width="30%">Party Ledger Debtor Report</td>
 					<td width="10%">From<input  type="text" size="18pt" id="PartyLedgerFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="PartyLedgerThruDate" readonly  name="thruDate"/></td>
 				    <td width="10%"></td>
@@ -550,6 +551,23 @@ function reportTypeChangeFunc() {
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerGroup', '<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerGroup', '<@ofbizUrl>PartyLedgerGroupReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+				</form>
+              </tr>
+             <tr class="alternate-row">
+				<form id="PartyLedgerCreditors" name="PartyLedgerCreditors" method="post" action="<@ofbizUrl>PartyLedgerCreditorsReport.pdf</@ofbizUrl>" target="_blank">	
+					<td width="30%">Party Ledger Creditors Report</td>
+					<td width="10%">From<input  type="text" size="18pt" id="PartyLedgerCreditorFromDate" readonly  name="fromDate"/></td>
+				    <td width="10%">To<input  type="text" size="18pt" id="PartyLedgerCreditorThruDate" readonly  name="thruDate"/></td>
+				    <td width="10%"></td>
+  				<#--	<td width="10%">Party Group :<select name="groupId" id="groupId">
+  						<#list partyClsfList as list>
+                         <option value='${list.partyClassificationGroupId}'>${list.description?if_exists}</option>
+                         </#list> 
+  						</select></td>  -->
+					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
+					   <td width="5%">   </td>
+					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
+					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 				</form>
               </tr>
 		</table>     			     

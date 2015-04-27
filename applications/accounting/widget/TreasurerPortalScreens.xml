@@ -3368,6 +3368,7 @@
                <entity-condition list="partyClsfList" entity-name="PartyClassificationGroup">
                	<condition-expr field-name="partyClassificationTypeId" operator="equals" value="ACCTG_TRANS_GP"/>
                </entity-condition>
+               
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetInternalOrganisations.groovy"/>
               </actions>
             <widgets>
@@ -3782,6 +3783,7 @@
 		<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+		<set field="parameters.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
   	</actions>
   	<widgets>
@@ -3794,7 +3796,27 @@
   	</widgets>
   	</section>
   </screen>
-  
+  <screen name="PartyLedgerCreditorsReportPDF">
+  	<section>
+  	    <actions>
+	     <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+		<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+		<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+		<set field="parameters.glAccountTypeId" value="ACCOUNTS_PAYABLE"/>
+  		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
+  	</actions>
+  	<widgets>
+  		<platform-specific>
+            <xsl-fo>
+			<html-template
+				location="component://accounting/webapp/accounting/reports/PartyLedgerGroup.fo.ftl" />
+			</xsl-fo>
+        </platform-specific>
+  	</widgets>
+  	</section>
+  </screen>
   <!-- ==================================== Bank Guarantee  ===================================   -->
     <screen name="BankGuaranteeReceipt">
         <section>

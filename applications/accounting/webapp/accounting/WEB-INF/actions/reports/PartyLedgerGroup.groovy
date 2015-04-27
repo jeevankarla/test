@@ -20,6 +20,8 @@ dctx = dispatcher.getDispatchContext();
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 reportTypeFlag = parameters.reportTypeFlag;
+//Debug.log("type======="+parameters.glAccountTypeId);
+glAccountTypeId = parameters.glAccountTypeId;
 
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
@@ -70,11 +72,15 @@ List acctgPartyIds = FastList.newInstance();
 }*/
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
+}
+conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-acctgTransList = delegator.findList("AcctgTrans",condition,null,null,null,false);
+acctgTransList = delegator.findList("AcctgTransAndEntries",condition,null,null,null,false);
 partyMap=[:];
 openingBalMap=[:];
-if(acctgTransList){
+/*if(acctgTransList){
 	acctgTransIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "acctgTransId", false);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds));
@@ -82,31 +88,31 @@ if(acctgTransList){
 		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
 	}
 	EntityCondition transEntryEcl=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	acctgTransEntryList = delegator.findList("AcctgTransEntry",transEntryEcl,null,null,null,false);
-	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransEntryList, "partyId", true);
+	acctgTransEntryList = delegator.findList("AcctgTransEntry",transEntryEcl,null,null,null,false);*/
+	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "partyId", true);
 	acctgPartyIds.each{partyId->
 		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate));
 		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
 	}
-	acctgTransItr = acctgTransList.iterator();
-	while (acctgTransItr.hasNext()) {
-	GenericValue acctgTrans = acctgTransItr.next();
+//	acctgTransItr = acctgTransList.iterator();
+//	while (acctgTransItr.hasNext()) {
+//	GenericValue acctgTrans = acctgTransItr.next();
 //	acctgTransList.each{acctgTrans->
-		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("acctgTransId",EntityOperator.EQUALS,acctgTrans.acctgTransId),
-			                               EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE")],EntityOperator.AND);
-		List transEntryList = EntityUtil.filterByCondition(acctgTransEntryList, ecl);
-		if(transEntryList){
-			TransItr = transEntryList.iterator();
+//		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("acctgTransId",EntityOperator.EQUALS,acctgTrans.acctgTransId),
+//			                               EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE")],EntityOperator.AND);
+//		List transEntryList = EntityUtil.filterByCondition(acctgTransEntryList, ecl);
+		if(acctgTransList){
+			TransItr = acctgTransList.iterator();
 			while (TransItr.hasNext()) {
 				GenericValue transEntry = TransItr.next();
 //			transEntryList.each{transEntry->
-				if(UtilValidate.isEmpty(partyMap[acctgTrans.partyId])){
+				if(UtilValidate.isEmpty(partyMap[transEntry.partyId])){
 					tempList=[];
 					tempMap=[:];
 					tempMap.acctgTransId=transEntry.acctgTransId;
 					tempMap.acctgTransEntrySeqId=transEntry.acctgTransEntrySeqId;
-					tempMap.transactionDate=acctgTrans.transactionDate;
-					tempMap.acctgTransTypeId=acctgTrans.acctgTransTypeId;
+					tempMap.transactionDate=transEntry.transactionDate;
+					tempMap.acctgTransTypeId=transEntry.acctgTransTypeId;
 					tempMap.description=transEntry.description;
 					
 					if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
@@ -117,19 +123,19 @@ if(acctgTransList){
 					}
 					invoiceId=null;
 					paymentId=null;
-					if(UtilValidate.isNotEmpty(acctgTrans.invoiceId)){
-						invoiceId=acctgTrans.invoiceId;
+					if(UtilValidate.isNotEmpty(transEntry.invoiceId)){
+						invoiceId=transEntry.invoiceId;
 					}
-					if(UtilValidate.isNotEmpty(acctgTrans.paymentId)){
-						paymentId=acctgTrans.paymentId;
+					if(UtilValidate.isNotEmpty(transEntry.paymentId)){
+						paymentId=transEntry.paymentId;
 					}
 					tempMap.paymentId=paymentId;		
 					tempMap.invoiceId=invoiceId;
-					tempMap.partyId=acctgTrans.partyId;
-					partyName =  PartyHelper.getPartyName(delegator, acctgTrans.partyId, false);
+					tempMap.partyId=transEntry.partyId;
+					partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
 					tempMap.name=partyName;
-					tempMap.isPosted=acctgTrans.isPosted;
-					tempMap.postedDate=acctgTrans.postedDate;	
+					tempMap.isPosted=transEntry.isPosted;
+					tempMap.postedDate=transEntry.postedDate;	
 					debit=0;credit=0;
 					if(transEntry.debitCreditFlag=="C"){
 						credit=transEntry.amount;
@@ -140,13 +146,13 @@ if(acctgTransList){
 					tempMap.debit=debit;
 					tempMap.credit=credit;
 					tempList.add(tempMap);
-					partyMap[acctgTrans.partyId]=tempList;
+					partyMap[transEntry.partyId]=tempList;
 				}else{
 						tempMap=[:];
 						tempMap.acctgTransId=transEntry.acctgTransId;
 						tempMap.acctgTransEntrySeqId=transEntry.acctgTransEntrySeqId;
-						tempMap.transactionDate=acctgTrans.transactionDate;
-						tempMap.acctgTransTypeId=acctgTrans.acctgTransTypeId;
+						tempMap.transactionDate=transEntry.transactionDate;
+						tempMap.acctgTransTypeId=transEntry.acctgTransTypeId;
 						tempMap.description=transEntry.description;
 						
 						if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
@@ -157,19 +163,19 @@ if(acctgTransList){
 						}
 						invoiceId=null;
 						paymentId=null;
-						if(UtilValidate.isNotEmpty(acctgTrans.invoiceId)){
-							invoiceId=acctgTrans.invoiceId;
+						if(UtilValidate.isNotEmpty(transEntry.invoiceId)){
+							invoiceId=transEntry.invoiceId;
 						}
-						if(UtilValidate.isNotEmpty(acctgTrans.paymentId)){
-							paymentId=acctgTrans.paymentId;
+						if(UtilValidate.isNotEmpty(transEntry.paymentId)){
+							paymentId=transEntry.paymentId;
 						}
 						tempMap.paymentId=paymentId;
 						tempMap.invoiceId=invoiceId;
-						tempMap.partyId=acctgTrans.partyId;
-						partyName =  PartyHelper.getPartyName(delegator, acctgTrans.partyId, false);
+						tempMap.partyId=transEntry.partyId;
+						partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
 						tempMap.name=partyName;
-						tempMap.isPosted=acctgTrans.isPosted;
-						tempMap.postedDate=acctgTrans.postedDate;
+						tempMap.isPosted=transEntry.isPosted;
+						tempMap.postedDate=transEntry.postedDate;
 						debit=0;credit=0;
 						if(transEntry.debitCreditFlag=="C"){
 							credit=transEntry.amount;
@@ -179,16 +185,13 @@ if(acctgTransList){
 						}
 						tempMap.debit=debit;
 						tempMap.credit=credit;
-						tempList=partyMap[acctgTrans.partyId];
+						tempList=partyMap[transEntry.partyId];
 						tempList.add(tempMap);
-						partyMap[acctgTrans.partyId]=tempList;
+						partyMap[transEntry.partyId]=tempList;
 				}
 			}
 		
-		}
-	}
 }
-//Debug.log("openingBalMap============"+openingBalMap);
 context.partyMap=partyMap;
 context.openingBalMap=openingBalMap;
 if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
