@@ -4668,7 +4668,7 @@
 	<screen name="PartyLedgerGroupReportCSV">
 		<section>
 			<actions>
-			<set field="viewSize" value="99999" />
+			<set field="viewSize" value="999999999" />
 			<set field="parameters.flag" value="CSVReport"/>
 			<set field="parameters.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
@@ -4681,7 +4681,7 @@
 	<screen name="PartyLedgerCreditorsReportCSV">
 		<section>
 			<actions>
-			<set field="viewSize" value="99999" />
+			<set field="viewSize" value="999999999" />
 			<set field="parameters.flag" value="CSVReport"/>
 			<set field="parameters.glAccountTypeId" value="ACCOUNTS_PAYABLE"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>

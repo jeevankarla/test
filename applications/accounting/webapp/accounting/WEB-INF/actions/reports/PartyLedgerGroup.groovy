@@ -70,12 +70,16 @@ List acctgPartyIds = FastList.newInstance();
 }else{
    conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 }*/
+GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault",[glAccountTypeId:glAccountTypeId,organizationPartyId:"Company"],true);
+String glAccountId=glAccountTypeDefault.getString("glAccountId");
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
 }
-conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
+conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
+conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 acctgTransList = delegator.findList("AcctgTransAndEntries",condition,null,null,null,false);
 partyMap=[:];
