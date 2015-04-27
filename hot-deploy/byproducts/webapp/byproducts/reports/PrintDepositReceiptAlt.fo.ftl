@@ -227,37 +227,46 @@ under the License.
 														 
 						        						  <fo:table-row>
 															<fo:table-cell font-weight = "bold">
-                    											<fo:block keep-together="always" font-size="13pt">Deposit Type:</fo:block>
+                    											<fo:block keep-together="always" font-size="13pt">Deposit Type</fo:block>
 				        									</fo:table-cell>
 						   									<fo:table-cell >
-               													<fo:block keep-together="always" font-size="13pt">${description}</fo:block>
+               													<fo:block keep-together="always" font-size="13pt">:${description}</fo:block>
+			        							  		 	</fo:table-cell>
+						        						</fo:table-row>
+						        						
+						        						<fo:table-row>
+															<fo:table-cell font-weight = "bold">
+                    											<fo:block keep-together="always" font-size="13pt">Deposit Number</fo:block>
+				        									</fo:table-cell>
+						   									<fo:table-cell >
+               													<fo:block keep-together="always" font-size="13pt">:${finAccountId}</fo:block>
 			        							  		 	</fo:table-cell>
 						        						</fo:table-row>
 						        						
 						        						<fo:table-row>
             				     							<fo:table-cell font-weight = "bold">
-                    											<fo:block keep-together="always" font-size="13pt">Cheque in favour/Comments:</fo:block>
+                    											<fo:block keep-together="always" font-size="13pt">Cheque in favour/Comments</fo:block>
                												</fo:table-cell>
                												<fo:table-cell>
-               													<fo:block  font-size="13pt" keep-together="always" >${comments?if_exists}</fo:block>
+               													<fo:block  font-size="13pt" keep-together="always" >:${comments?if_exists}</fo:block>
                												</fo:table-cell>
 		  												</fo:table-row>
 		  												
 		  												<fo:table-row>
             				     							<fo:table-cell font-weight = "bold">
-                    											<fo:block keep-together="always" font-size="13pt">Instrument No:</fo:block>
+                    											<fo:block keep-together="always" font-size="13pt">Instrument No</fo:block>
                												</fo:table-cell>
                												<fo:table-cell>
-               													<fo:block keep-together="always" font-size="13pt">${contraRefNum?if_exists}</fo:block>
+               													<fo:block keep-together="always" font-size="13pt">:${contraRefNum?if_exists}</fo:block>
                												</fo:table-cell>
 		  												</fo:table-row>
 		  												
 		  												<fo:table-row>
                					 							<fo:table-cell font-weight = "bold">
-                    											<fo:block keep-together="always" font-size="13pt">Transferred To/From:</fo:block>
+                    											<fo:block keep-together="always" font-size="13pt">Transferred To/From</fo:block>
                												</fo:table-cell>
                												<fo:table-cell>
-               													<fo:block keep-together="always" font-size="13pt">${finAccountName?if_exists}</fo:block>
+               													<fo:block keep-together="always" font-size="13pt">:${finAccountName?if_exists}</fo:block>
                												</fo:table-cell>
                												</fo:table-row>
         						   									 </fo:table-body>
