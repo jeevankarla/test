@@ -267,9 +267,9 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		grdCredit=grdCredit+totCredit;
 		partyLedgerCsv.add(tempMap);
 		tempMap=[:];
-		tempMap.glAccDescription="CLOSING TRANSACTION TOTAL :";
+		tempMap.glAccDescription="CLOSING TOTAL :";
 		bal=0;clsDebit=0;clsCredit=0;
-		bal=grdDebit-grdCredit;
+		bal=totDebit-totCredit;
 		if(bal>0){
 			clsDebit=bal;
 		}else{
