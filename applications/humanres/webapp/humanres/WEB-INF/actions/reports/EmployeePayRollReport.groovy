@@ -449,6 +449,35 @@ if(UtilValidate.isEmpty(orgPartyId)){
 	orgPartyId = "Company";
 }
 
+emplWiseTypeIdsMap = [:];
+if(UtilValidate.isNotEmpty(payRollEmployeeMap)){
+	for(Map.Entry entry : payRollEmployeeMap.entrySet()){
+		dedList = [];
+		benList = [];
+		typeIdsSizeMap = [:];
+		partyId = entry.getKey();
+		amountMap = entry.getValue();
+		for(Map.Entry typeEntry : amountMap.entrySet()){
+			typeId = typeEntry.getKey();
+			for(dedTypeid in dedTypeIds){
+				if(dedTypeid.equals(typeId)){
+					dedList.add(dedTypeid);
+				}
+			}
+			for(benefitTypeId in benefitTypeIds){
+				if(benefitTypeId.equals(typeId)){
+					benList.add(benefitTypeId);
+				}
+			}
+		}
+		typeIdsSizeMap.put("dedTypeIds",dedList.size());
+		typeIdsSizeMap.put("benTypeIds",benList.size());
+		emplWiseTypeIdsMap.put(partyId,typeIdsSizeMap);
+	}
+}
+
+context.put("emplWiseTypeIdsMap",emplWiseTypeIdsMap);
+
 // Fetch Organisation logo url
 logoImageUrl = null;
 

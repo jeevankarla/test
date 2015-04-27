@@ -60,6 +60,19 @@ under the License.
       	 <#--<#if timePeriod?exists>
       	 		<#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
       	 </#if>-->  
+      	 <#if pageCnt != 0>
+	      	 <#assign emplWiseTypeids = emplWiseTypeIdsMap.entrySet()>
+	      	 <#list emplWiseTypeids as employee>
+	      	 	<#if employee.getKey() == partyId>
+	      	 		<#assign benTypeSize = employee.getValue().get("benTypeIds")>
+	      	 		<#assign dedTypeSize = employee.getValue().get("dedTypeIds")>
+	      	 		<#if (benTypeSize >= 11) || (dedTypeSize >= 11)>
+		            	<#assign pageCnt=0>
+		            	<fo:block page-break-after="always"></fo:block>
+		            </#if>
+	      	 	</#if>
+	      	 </#list>
+	   	</#if>
       	 
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign doj = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(doj?if_exists,timePeriodStart) />
@@ -82,7 +95,8 @@ under the License.
 		             				<#if logoImageUrl?has_content><fo:external-graphic src="<@ofbizContentUrl>${logoImageUrl}</@ofbizContentUrl>" width="40px" height="40px" content-height="scale-to-fit"/></#if>             
 		         				</fo:block>	
             				</fo:table-cell>
-            				<fo:table-cell><fo:block keep-together="always" white-space-collapse="false" text-indent="150pt">${partyGroup.groupName?if_exists}                            PaySlip No: ${paySlipNo?if_exists}</fo:block>
+            				<fo:table-cell>
+            					<fo:block keep-together="always" white-space-collapse="false" text-indent="150pt">${partyGroup.groupName?if_exists}                            PaySlip No: ${paySlipNo?if_exists}</fo:block>
             					<fo:block keep-together="always"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
             				</fo:table-cell>
             			</fo:table-row>
@@ -309,6 +323,8 @@ under the License.
                   </fo:table>	
             </fo:block>
             <fo:block font-size="8pt">
+            <#assign benNoOfLines = 1>
+            <#assign dedNoOfLines = 1>
             <fo:table width="100%"   border-style="solid">
             		<fo:table-column column-width="3.5in"/>
             		<fo:table-column column-width="3.5in"/>            		
@@ -341,6 +357,7 @@ under the License.
 		                    			<fo:block keep-together="always">&#160;${benefitDescMap[benefitType]?if_exists}</fo:block>                			
 		                    		</fo:table-cell>                 	              		
 		                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${value?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
+		                    		<#assign benNoOfLines = benNoOfLines + 1>
 		                    	</fo:table-row>
 	                    	</#if>
                     	</#list>
@@ -378,6 +395,7 @@ under the License.
 		                    			<fo:block keep-together="always">&#160;${dedDescMap[deductionType]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
 		                    		</fo:table-cell>                 	              		
 		                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${((-1)*(dedValue))?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
+		                    		<#assign dedNoOfLines = dedNoOfLines + 1>
 		                    	</fo:table-row>
 	                    	</#if>
                     	</#list>
@@ -403,7 +421,7 @@ under the License.
                    			<fo:block font-weight="bold">&#160;Net Pay   :
                             	<@ofbizCurrency amount=netAmt?string("#0")/>
                           	</fo:block>                       
-                   			<fo:block white-space-collapse="false" keep-together="always">&#160;(In Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmt?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY)</fo:block>
+                   			<fo:block white-space-collapse="false" keep-together="always">&#160;(In Words: RUPEES ${(Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmt?string("#0")), "%rupees-and-paise", locale).replace("rupees","")).toUpperCase()}ONLY)</fo:block>
                    			 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
                    		</fo:table-cell>
                    </fo:table-row>
@@ -414,6 +432,12 @@ under the License.
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>            
 	            <#assign pageCnt=pageCnt+1> 
+	            <#if pageCnt ==1>
+		            <#if (dedNoOfLines >= 11) || (benNoOfLines >= 11)>
+		            	<#assign pageCnt=0>
+		            	<fo:block page-break-after="always"></fo:block>
+		            </#if>
+		       	</#if>
 	            <#if pageCnt==2>
 	            	<#assign pageCnt=0>
 	            	<fo:block page-break-after="always"></fo:block>
