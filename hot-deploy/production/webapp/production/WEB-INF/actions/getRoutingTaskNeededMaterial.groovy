@@ -77,7 +77,6 @@ if (workEffortId) {
 		newObj.put("issueFacilityId", facilityId);
 		issueProductItemsJSON.add(newObj);
 	}
-	Debug.log("issueProductItemsJSON ##################"+issueProductItemsJSON);
 	request.setAttribute("issueProductItemsJSON", issueProductItemsJSON);
 	request.setAttribute("displayButton", displayButton);
 

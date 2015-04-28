@@ -11,4 +11,12 @@
     	<attribute name="productId" mode="IN" type="String" optional="true"/>
     	<attribute name="openingBalance" mode="OUT" type="Map"  optional="true"/>
     </service>
+    <service name="confirmProductionRunStatus" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="confirmProductionRunStatus">
+    	<attribute name="productionRunId" mode="INOUT" type="String" optional="false"/>
+    </service>
+     <service name="changeRoutingTaskStatus" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="changeRoutingTaskStatus">
+    	<attribute name="productionRunId" mode="INOUT" type="String" optional="false"/>
+    	<attribute name="workEffortId" mode="IN" type="String" optional="false"/>
+    	<attribute name="statusId" mode="IN" type="String" optional="true"/>
+    </service>
 </services>
