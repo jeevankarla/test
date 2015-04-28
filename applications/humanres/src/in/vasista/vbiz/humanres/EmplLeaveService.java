@@ -63,16 +63,6 @@ public class EmplLeaveService {
         if(UtilValidate.isEmpty(balanceDate)){
         	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
         }
-        Timestamp leaveDate = null;
-	     if(UtilValidate.isNotEmpty(flag) && flag.equals("createLeave")){
-	    	flag = "creditLeaves";
-	        leaveDate =  UtilDateTime.toTimestamp(balanceDate);
-	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(leaveDate, -1));
-		    if(UtilValidate.isNotEmpty(previousDayEnd)){
-		    	balanceDate = UtilDateTime.toSqlDate(previousDayEnd);
-		    }
-	     }
-        
         String leaveTypeIdCtx = (String)context.get("leaveTypeId");
         try{		
         	List conditionList = UtilMisc.toList(
@@ -141,7 +131,7 @@ public class EmplLeaveService {
 						if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
 				        	leaveCtx.put("createleaveFlag", "Y");
 				        }
-						if(flag == "creditLeaves"){
+						if(UtilValidate.isNotEmpty(flag) && flag.equals("creditLeaves")){
 							leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
 						}
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
@@ -160,7 +150,7 @@ public class EmplLeaveService {
 						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId","CML");
-						if(flag == "creditLeaves"){
+						if(UtilValidate.isNotEmpty(flag) && flag.equals("creditLeaves")){
 							leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
 						}
 						if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
@@ -182,7 +172,7 @@ public class EmplLeaveService {
 							leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 							leaveCtx.put("partyId", employeeId);
 							leaveCtx.put("leaveTypeId","CLP");
-							if(flag == "creditLeaves"){
+							if(UtilValidate.isNotEmpty(flag) && flag.equals("creditLeaves")){
 								leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
 							}
 							if(UtilValidate.isNotEmpty(context.get("createleaveFlag"))){
@@ -209,11 +199,7 @@ public class EmplLeaveService {
 				}
 				result.put("leaveBalances", leaveBalancesMap);
 				//this is to return date for json request
-				if(UtilValidate.isNotEmpty(leaveDate)){
-					result.put("leaveBalanceDateStr",UtilDateTime.toDateString(leaveDate,"dd-MM-yyyy"));
-				}else{
-					result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
-				}
+				result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
         		
         	}
         } catch (Exception e) {
@@ -1053,42 +1039,42 @@ public class EmplLeaveService {
 					emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
 					emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
 					emplLeaveBalanceStatus.set("partyId",partyId);
-					if (UtilValidate.isNotEmpty(openingBalance)) {
+					if (UtilValidate.isNotEmpty(openingBalance) && (openingBalance.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("openingBalance",openingBalance);
 					}
-					if (UtilValidate.isNotEmpty(allotedDays)) {
+					if (UtilValidate.isNotEmpty(allotedDays) && (allotedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("allotedDays",allotedDays);
 					}
-					if (UtilValidate.isNotEmpty(availedDays)) {
+					if (UtilValidate.isNotEmpty(availedDays) && (availedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("availedDays",availedDays);
 					}
-					if (UtilValidate.isNotEmpty(adjustedDays)) {
+					if (UtilValidate.isNotEmpty(adjustedDays) && (adjustedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("adjustedDays",adjustedDays);
 					}
-					if (UtilValidate.isNotEmpty(encashedDays)) {
+					if (UtilValidate.isNotEmpty(encashedDays) && (encashedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("encashedDays",encashedDays);
 					}
-					if (UtilValidate.isNotEmpty(lapsedDays)) {
+					if (UtilValidate.isNotEmpty(lapsedDays) && (lapsedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("lapsedDays",lapsedDays);
 					}
 					emplLeaveBalanceStatus.create();
 				}else{
-					if (UtilValidate.isNotEmpty(openingBalance)) {
+					if (UtilValidate.isNotEmpty(openingBalance) && (openingBalance.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("openingBalance",openingBalance);
 					}
-					if (UtilValidate.isNotEmpty(allotedDays)) {
+					if (UtilValidate.isNotEmpty(allotedDays) && (allotedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("allotedDays",allotedDays);
 					}
-					if (UtilValidate.isNotEmpty(availedDays)) {
+					if (UtilValidate.isNotEmpty(availedDays) && (availedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("availedDays",availedDays);
 					}
-					if (UtilValidate.isNotEmpty(adjustedDays)) {
+					if (UtilValidate.isNotEmpty(adjustedDays) && (adjustedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("adjustedDays",adjustedDays);
 					}
-					if (UtilValidate.isNotEmpty(encashedDays)) {
+					if (UtilValidate.isNotEmpty(encashedDays) && (encashedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("encashedDays",encashedDays);
 					}
-					if (UtilValidate.isNotEmpty(lapsedDays)) {
+					if (UtilValidate.isNotEmpty(lapsedDays) && (lapsedDays.compareTo(BigDecimal.ZERO) >= 0)) {
 						emplLeaveBalanceStatus.set("lapsedDays",lapsedDays);
 					}
 					emplLeaveBalanceStatus.store();
@@ -1117,12 +1103,13 @@ public class EmplLeaveService {
     	
     	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
 		try {
-			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL")){
+			//if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL")){
 				if(UtilValidate.isNotEmpty(partyId)){
 	    			Map getEmplLeaveBalMap = FastMap.newInstance();
 	    			getEmplLeaveBalMap.put("userLogin",userLogin);
 	    			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
 	    			getEmplLeaveBalMap.put("employeeId",partyId);
+	    			getEmplLeaveBalMap.put("flag","creditLeaves");
 	    			getEmplLeaveBalMap.put("createleaveFlag","Y");
 	    			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
 	    			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
@@ -1145,7 +1132,7 @@ public class EmplLeaveService {
 	        			}
 	    			}
 				}
-			}
+			//}
 		}catch(Exception e){
 			Debug.logError("Error while getting Leave Type Details"+e.getMessage(), module);
 		}
