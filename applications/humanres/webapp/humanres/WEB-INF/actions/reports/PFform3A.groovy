@@ -76,6 +76,7 @@ if(UtilValidate.isNotEmpty(parameters.employeeId)){
 
 employeeMap = [:];
 monthNameMap = [:];
+currMonthNameMap =[:];
 employeeWiseMap = [:];
 if(UtilValidate.isNotEmpty(employmentsList)){
 	employmentsList.each{ employee ->
@@ -98,6 +99,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 		periodWiseMap = [:];
 		if(UtilValidate.isNotEmpty(timePeriodIdsList)){
 			timePeriodIdsList.each{ periodId ->
+				timePeriodId = "";
 				detailsMap = [:];
 				workerShare = 0;
 				monthTotWages = 0;
@@ -109,9 +111,24 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 				if(UtilValidate.isNotEmpty(customTimePeriodDetails)){
 					monthFromDate=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("fromDate"));
 					monthThruDate=UtilDateTime.toTimestamp(customTimePeriodDetails.getDate("thruDate"));
-					monthNameMap.put(periodId, monthFromDate);
+					prevMonth = UtilDateTime.addDaysToTimestamp(monthFromDate, -1);
+					prevMonthStart=UtilDateTime.getMonthStart(prevMonth);
+					prevMonthEnd = UtilDateTime.getMonthEnd(prevMonthStart, timeZone, locale);
 					
-					Timestamp monthBegin = UtilDateTime.getMonthStart(monthFromDate);
+					List monthsConList=[];
+					monthsConList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "HR_MONTH"));
+					monthsConList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(prevMonthStart)));
+					monthsConList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(prevMonthEnd)));
+					monthCond=EntityCondition.makeCondition(monthsConList,EntityOperator.AND);
+					monthsList = delegator.findList("CustomTimePeriod", monthCond , null, null, null, false );
+					if(UtilValidate.isNotEmpty(monthsList)){
+						monthsList = EntityUtil.getFirst(monthsList);
+						timePeriodId = monthsList.get("customTimePeriodId");
+					}
+					monthNameMap.put(timePeriodId, prevMonthStart);
+					currMonthNameMap.put(timePeriodId, monthFromDate);
+					
+					Timestamp monthBegin = UtilDateTime.getMonthStart(prevMonthStart);
 					Timestamp monthEnd = UtilDateTime.getMonthEnd(monthBegin, timeZone, locale);
 					customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employee,"fromDate",monthBegin,"thruDate",monthEnd,"userLogin",userLogin)).get("periodTotalsForParty");
 					periodDetailsMap=[:];
@@ -224,7 +241,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 								conditionList=[];
 								conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PAYROLL_BILL"));
 								conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN  ,stautsList));
-								conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,periodId));
+								conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
 								condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 								periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 								if(UtilValidate.isNotEmpty(periodBillingList)){
@@ -296,7 +313,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 				detailsMap.put("employerEpf", employerEpf);
 				detailsMap.put("employerFpf", employerFpf);
 				detailsMap.put("workerShare", workerShare);
-				periodWiseMap.put(periodId, detailsMap);
+				periodWiseMap.put(timePeriodId, detailsMap);
 			}
 		}
 		employeeMap.put(employee,employeeDetailsMap);
@@ -305,6 +322,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 }
 
 context.put("employeeWiseMap", employeeWiseMap);
+context.put("currMonthNameMap", currMonthNameMap);
 context.put("monthNameMap", monthNameMap);
 context.put("employeeMap", employeeMap);
 
