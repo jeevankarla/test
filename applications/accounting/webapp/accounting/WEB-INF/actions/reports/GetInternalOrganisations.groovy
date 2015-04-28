@@ -22,7 +22,7 @@ import org.ofbiz.party.party.PartyHelper;
 context.put("intOrgIdsList", intOrgIdsList);
 
 
-List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCTG_TRANS_GP"),null,null,null,false);
+List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCOUNTING_ROLE"),null,null,null,false);
 roleTypeAttrList=[];
 if(roleTypeAttr){
 	roleTypeAttr.each{roleType->
