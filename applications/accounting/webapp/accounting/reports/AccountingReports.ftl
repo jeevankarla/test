@@ -541,12 +541,13 @@ function reportTypeChangeFunc() {
 					<td width="30%">Party Ledger Debtor Report</td>
 					<td width="10%">From<input  type="text" size="18pt" id="PartyLedgerFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="PartyLedgerThruDate" readonly  name="thruDate"/></td>
-				    <td width="10%"></td>
-  				<#--	<td width="10%">Party Group :<select name="groupId" id="groupId">
-  						<#list partyClsfList as list>
-                         <option value='${list.partyClassificationGroupId}'>${list.description?if_exists}</option>
+  					<td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					    <option value=''></option>
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-  						</select></td>  -->
+  						</select></td>  
+                     <td width="10%"></td>
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerGroup', '<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
@@ -558,12 +559,13 @@ function reportTypeChangeFunc() {
 					<td width="30%">Party Ledger Creditors Report</td>
 					<td width="10%">From<input  type="text" size="18pt" id="PartyLedgerCreditorFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="PartyLedgerCreditorThruDate" readonly  name="thruDate"/></td>
-				    <td width="10%"></td>
-  				<#--	<td width="10%">Party Group :<select name="groupId" id="groupId">
-  						<#list partyClsfList as list>
-                         <option value='${list.partyClassificationGroupId}'>${list.description?if_exists}</option>
+  					<td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					     <option value=''></option>
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-  						</select></td>  -->
+  						</select></td> 
+                      <td width="10%"></td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
