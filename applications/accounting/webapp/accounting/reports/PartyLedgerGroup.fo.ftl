@@ -45,6 +45,23 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 				<#assign grdDebit=0>
                 <#assign grdCredit=0>
 				<#list partyWiseList as partyList>
+                <#assign acctgDetails=partyList.getValue()>
+			    <#assign totDebit=0>
+                <#assign totCredit=0>			
+			    <#assign closingTot=0>
+
+                <#assign openBal=0>
+				<#assign openCredit=0>
+                <#assign openDebit=0>
+                <#if openingBalMap?has_content>
+                <#assign openBal=openingBalMap.get(partyList.getKey())>
+                <#if openBal gte 0>
+                <#assign openDebit=openBal>
+                <#else>
+                <#assign openCredit=((-1)*openBal)>
+                </#if> 
+                </#if>
+                <#if acctgDetails?has_content || ((openDebit !=0) || (openCredit!=0))>  
 				<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="11pt" white-space-collapse="false">PARTY NAME : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}[${partyList.getKey()}]</fo:block>
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                <fo:block>
@@ -96,10 +113,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 </fo:table>
                </fo:block> 
 			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-			<#assign acctgDetails=partyList.getValue()>
-			<#assign totDebit=0>
-            <#assign totCredit=0>			
-			<#assign closingTot=0>
 			<fo:block>
                     <fo:table>
 				    <fo:table-column column-width="9%"/>
@@ -138,17 +151,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                			<#assign openBal=0>
-							<#assign openCredit=0>
-                            <#assign openDebit=0>
-                            <#if openingBalMap?has_content>
-                			<#assign openBal=openingBalMap.get(partyList.getKey())>
-                            <#if openBal gte 0>
-                             <#assign openDebit=openBal>
-                            <#else>
-                              <#assign openCredit=((-1)*openBal)>
-                            </#if> 
-                            </#if>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="11pt" white-space-collapse="false">${openDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
@@ -292,6 +294,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     </fo:table-body>
                 </fo:table>
                </fo:block> 
+               </#if>
              </#list>
 	          <fo:block>
                     <fo:table>
