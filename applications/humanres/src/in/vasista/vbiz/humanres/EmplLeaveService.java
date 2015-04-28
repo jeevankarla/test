@@ -1020,6 +1020,25 @@ public class EmplLeaveService {
 	    BigDecimal encashedDays = (BigDecimal) context.get("encashedDays");
 	    BigDecimal lapsedDays = (BigDecimal) context.get("lapsedDays");
 	    
+	    if (UtilValidate.isNotEmpty(openingBalance) && (openingBalance.compareTo(BigDecimal.ZERO) < 0)) {
+			return ServiceUtil.returnError("You cannot give negative balance.");
+		}
+	    if (UtilValidate.isNotEmpty(allotedDays) && (allotedDays.compareTo(BigDecimal.ZERO) < 0)) {
+			return ServiceUtil.returnError("You cannot give negative balance.");
+		}
+	    if (UtilValidate.isNotEmpty(availedDays) && (availedDays.compareTo(BigDecimal.ZERO) < 0)) {
+			return ServiceUtil.returnError("You cannot give negative balance.");
+		}
+	    if (UtilValidate.isNotEmpty(adjustedDays) && (adjustedDays.compareTo(BigDecimal.ZERO) < 0)) {
+			return ServiceUtil.returnError("You cannot give negative balance.");
+		}
+	    if (UtilValidate.isNotEmpty(encashedDays) && (encashedDays.compareTo(BigDecimal.ZERO) < 0)) {
+			return ServiceUtil.returnError("You cannot give negative balance.");
+		}
+	    if (UtilValidate.isNotEmpty(lapsedDays) && (lapsedDays.compareTo(BigDecimal.ZERO) < 0)) {
+			return ServiceUtil.returnError("You cannot give negative balance.");
+		}
+	    
 	    Locale locale = new Locale("en","IN");
 		TimeZone timeZone = TimeZone.getDefault();
 	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();	
