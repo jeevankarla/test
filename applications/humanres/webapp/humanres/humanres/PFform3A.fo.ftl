@@ -75,12 +75,12 @@
 						<fo:block>&#160;</fo:block>
 						<fo:block>
 	                     	<fo:table border-style = "solid">
-		                		<fo:table-column column-width="93pt"/>
+		                		<fo:table-column column-width="120pt"/>
 			                	<fo:table-column column-width="70pt"/>
 			                	<fo:table-column column-width="327pt"/>
 			                	<fo:table-column column-width="60pt"/>
-			                	<fo:table-column column-width="90pt"/>
 			                	<fo:table-column column-width="60pt"/>
+			                	<fo:table-column column-width="53pt"/>
 		                		<fo:table-body> 
 	                     			<fo:table-row >
 		                     			<fo:table-cell border-right-style = "solid">	
@@ -152,15 +152,15 @@
 				              	</fo:table-body>
 	                     	</fo:table>	
 				            <fo:table border-style = "solid">
-		                		<fo:table-column column-width="93pt"/>
+		                		<fo:table-column column-width="120pt"/>
 			                	<fo:table-column column-width="70pt"/>
 			                	<fo:table-column column-width="90pt"/>
 			                	<fo:table-column column-width="73pt"/>
 								<fo:table-column column-width="73pt"/>
 			                	<fo:table-column column-width="90pt"/>
 			                	<fo:table-column column-width="60pt"/>
-			                	<fo:table-column column-width="90pt"/>
 			                	<fo:table-column column-width="60pt"/>
+			                	<fo:table-column column-width="53pt"/>
 			                	<fo:table-body>
 			                		<fo:table-row >
 		                     			<fo:table-cell border-right-style = "solid" border-bottom-style = "solid">	
@@ -204,7 +204,12 @@
 		                						<#assign total = 0>
 				                     			<fo:table-row >
 					                     			<fo:table-cell border-right-style = "solid" border-bottom-style = "solid">	
-						                            	<fo:block text-align="left"  font-weight="bold" font-size="10pt" line-height = "18pt">&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthName.getValue(), "MMMMM ,yyyy")}</fo:block>
+					                     				<#assign currMonthNameVal = currMonthNameMap.entrySet()>
+						                				<#list currMonthNameVal as currMonthName>
+						                					<#if currMonthName.getKey() == monthDetails.getKey()>
+						                            			<fo:block text-align="left"  font-weight="bold" font-size="10pt" line-height = "18pt">&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthName.getValue(), "MMM")}'${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthName.getValue(), "yy")} paid in ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(currMonthName.getValue(), "MMM")}'${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(currMonthName.getValue(), "yy")}</fo:block>
+						                            		</#if>
+						                            	</#list>
 						                            </fo:table-cell>
 						                            <fo:table-cell border-right-style = "solid" border-bottom-style = "solid">	
 						                            	<fo:block text-align="right"  font-weight="bold" font-size="10pt" line-height = "18pt">${monthDetails.getValue().get("monthTotWages")?if_exists?string("#0.00")}&#160;&#160; </fo:block>
@@ -276,7 +281,7 @@
 	                  	</fo:block>	
 	                  	<fo:block font-size="10pt" font-weight="bold">&#160;</fo:block>
                   		<fo:block font-size="10pt" font-weight="bold">&#160;</fo:block>
-                 	  	<fo:block font-size="10pt" font-weight="bold">Certified that total amount of contribution(both shares) indicated in this card i.e. Rs.${grandTot?if_exists?string("#0.00")} has remitted in full in E.P.F A/c No.1 and Pension Fund A/c No. 10 ${totalFPF?if_exists?string("#0.00")}(vide noted below)</fo:block>
+                 	  	<fo:block font-size="10pt" font-weight="bold">Certified that total amount of contribution(both shares) indicated in this card i.e. Rs.${(totalWorkShare + totalEPF)?if_exists?string("#0.00")} has remitted in full in E.P.F A/c No.1 and Pension Fund A/c No. 10 Rs. ${totalFPF?if_exists?string("#0.00")}(vide noted below)</fo:block>
                   		<fo:block font-size="10pt" font-weight="bold">&#160;</fo:block>
                   		<fo:block font-size="10pt" font-weight="bold">&#160;</fo:block>
                   		<fo:block font-size="10pt" font-weight="bold">Certified that the difference between the total of the contribution shown under cols. 3 and 4a and 4b of the above table and that arrived at on the total wages shown in column 2 at the prescribed rate is solely due to rounding of contributions to the nearest rupee under the rules.</fo:block>
