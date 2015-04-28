@@ -31,7 +31,9 @@
 		}
 		});
 	}	
-
+    $(document).ready(function(){
+	    makeDatePicker("shiftDate","shiftDate");
+	}); 
 function makeDatePicker1(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'dd MM, yy',
@@ -118,7 +120,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</table>
 				</form>
 			</tr>
-			
+			<tr class="alternate-row"> 
+				<form id="StockProcessingRegisterReport" name="StockProcessingRegisterReport" mothed="post" action="<@ofbizUrl>StockProcessingRegisterReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'>Stock Processing Register Report</span></td>
+							
+							<td width="25%">
+							     <span class='h3'>
+									Date <input  type="text" size="18pt" id="shiftDate"   name="shiftDate"/>
+								 </span>
+							</td>
+						    <td width="30%"><span class='h3'></span></td>
+						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
 	  </table>
     </div>
   </div>
