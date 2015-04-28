@@ -51,7 +51,7 @@ List finalList = FastList.newInstance();
 List acctgTransEntryList = FastList.newInstance();
 List partyIds = FastList.newInstance();
 List acctgPartyIds = FastList.newInstance();
-
+List opeinigBalPartyId= FastList.newInstance();
 /*if(UtilValidate.isNotEmpty(parameters.partyId)){
 	partyIds=parameters.partyId;
 }else{
@@ -70,13 +70,30 @@ List acctgPartyIds = FastList.newInstance();
 }else{
    conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 }*/
+if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
+	List partyRole= delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId),null,null,null,false);
+	partyIds = EntityUtil.getFieldListFromEntityList(partyRole, "partyId", true); 
+}
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	partyIds.add(parameters.partyId);
+}
+
 GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault",[glAccountTypeId:glAccountTypeId,organizationPartyId:"Company"],true);
 String glAccountId=glAccountTypeDefault.getString("glAccountId");
-conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
-conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
-if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+
+/*if(UtilValidate.isNotEmpty(parameters.partyId)){
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
-	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
+//	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId),EntityOperator.OR,
+		EntityCondition.makeCondition(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate),EntityOperator.AND,
+																	EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate))));
+}*/
+if(UtilValidate.isNotEmpty(partyIds)){
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds)));
+		              
 }
 conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
 conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
@@ -94,7 +111,18 @@ openingBalMap=[:];
 	EntityCondition transEntryEcl=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	acctgTransEntryList = delegator.findList("AcctgTransEntry",transEntryEcl,null,null,null,false);*/
 	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "partyId", true);
-	acctgPartyIds.each{partyId->
+	partyIds.each{partyId->
+		if(acctgPartyIds.contains(partyId)==false){
+			partyId=partyId.toUpperCase();
+			opeinigBalPartyId.add(partyId);
+			if(UtilValidate.isEmpty(partyMap[partyId])){
+				tempList=[];
+				partyMap[partyId]=tempList;
+			}
+		}
+	}
+	partyIds.each{partyId->
+			partyId=partyId.toUpperCase();
 		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId",glAccountTypeId));
 		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
 	}
@@ -110,7 +138,9 @@ openingBalMap=[:];
 			while (TransItr.hasNext()) {
 				GenericValue transEntry = TransItr.next();
 //			transEntryList.each{transEntry->
-				if(UtilValidate.isEmpty(partyMap[transEntry.partyId])){
+				partyId=transEntry.partyId;
+					partyId=partyId.toUpperCase();
+				if(UtilValidate.isEmpty(partyMap[partyId])){
 					tempList=[];
 					tempMap=[:];
 					tempMap.acctgTransId=transEntry.acctgTransId;
@@ -135,9 +165,9 @@ openingBalMap=[:];
 					}
 					tempMap.paymentId=paymentId;		
 					tempMap.invoiceId=invoiceId;
-					tempMap.partyId=transEntry.partyId;
-					partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
-					tempMap.name=partyName;
+//					tempMap.partyId=transEntry.partyId;
+//					partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
+//					tempMap.name=partyName;
 					tempMap.isPosted=transEntry.isPosted;
 					tempMap.postedDate=transEntry.postedDate;	
 					debit=0;credit=0;
@@ -150,7 +180,9 @@ openingBalMap=[:];
 					tempMap.debit=debit;
 					tempMap.credit=credit;
 					tempList.add(tempMap);
-					partyMap[transEntry.partyId]=tempList;
+					partyId=transEntry.partyId;
+					partyId=partyId.toUpperCase();
+					partyMap[partyId]=tempList;
 				}else{
 						tempMap=[:];
 						tempMap.acctgTransId=transEntry.acctgTransId;
@@ -175,9 +207,9 @@ openingBalMap=[:];
 						}
 						tempMap.paymentId=paymentId;
 						tempMap.invoiceId=invoiceId;
-						tempMap.partyId=transEntry.partyId;
-						partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
-						tempMap.name=partyName;
+//						tempMap.partyId=transEntry.partyId;
+//						partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
+//						tempMap.name=partyName;
 						tempMap.isPosted=transEntry.isPosted;
 						tempMap.postedDate=transEntry.postedDate;
 						debit=0;credit=0;
@@ -189,9 +221,11 @@ openingBalMap=[:];
 						}
 						tempMap.debit=debit;
 						tempMap.credit=credit;
-						tempList=partyMap[transEntry.partyId];
+						partyId=transEntry.partyId;
+						partyId=partyId.toUpperCase();
+						tempList=partyMap[partyId];
 						tempList.add(tempMap);
-						partyMap[transEntry.partyId]=tempList;
+						partyMap[partyId]=tempList;
 				}
 			}
 		

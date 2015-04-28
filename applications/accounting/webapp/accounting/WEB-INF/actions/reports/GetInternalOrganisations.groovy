@@ -20,3 +20,17 @@ import org.ofbiz.party.party.PartyHelper;
 	intOrgIdsList.add(organizationPartyId);
 	
 context.put("intOrgIdsList", intOrgIdsList);
+
+
+List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCTG_TRANS_GP"),null,null,null,false);
+roleTypeAttrList=[];
+if(roleTypeAttr){
+	roleTypeAttr.each{roleType->
+		tempMap=[:];
+		GenericValue roleTypeDes=delegator.findOne("RoleType",[roleTypeId:roleType.roleTypeId],false);
+		tempMap.roleTypeId=roleType.roleTypeId;
+		tempMap.description=roleTypeDes.description;
+		roleTypeAttrList.add(tempMap);
+	}
+}
+context.roleTypeAttrList=roleTypeAttrList;
