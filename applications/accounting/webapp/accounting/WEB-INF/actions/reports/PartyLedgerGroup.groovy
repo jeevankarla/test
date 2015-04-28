@@ -70,14 +70,23 @@ List opeinigBalPartyId= FastList.newInstance();
 }else{
    conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 }*/
+List nonRolePartyIds=FastList.newInstance();
+List rolePartyIds=FastList.newInstance();
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
-	List partyRole= delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId),null,null,null,false);
-	partyIds = EntityUtil.getFieldListFromEntityList(partyRole, "partyId", true); 
+	if(parameters.roleTypeId=="NONROLE"){
+		List roleTypeList=FastList.newInstance();
+		List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCOUNTING_ROLE"),null,null,null,false);
+		roleTypeList=EntityUtil.getFieldListFromEntityList(roleTypeAttr, "roleTypeId", true);
+		List partyRoles=delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,roleTypeList),null,null,null,false);
+		rolePartyIds= EntityUtil.getFieldListFromEntityList(partyRoles, "partyId", true);
+	}else{
+		List partyRole= delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId),null,null,null,false);
+		partyIds = EntityUtil.getFieldListFromEntityList(partyRole, "partyId", true);
+	}	 
 }
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	partyIds.add(parameters.partyId);
 }
-
 GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault",[glAccountTypeId:glAccountTypeId,organizationPartyId:"Company"],true);
 String glAccountId=glAccountTypeDefault.getString("glAccountId");
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
@@ -94,6 +103,11 @@ if(UtilValidate.isNotEmpty(partyIds)){
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds)));
 		              
+}
+if(UtilValidate.isNotEmpty(rolePartyIds)){
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,rolePartyIds)));
+					  
 }
 conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
 conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
