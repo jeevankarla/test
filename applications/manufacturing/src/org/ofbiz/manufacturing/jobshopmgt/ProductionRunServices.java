@@ -20,11 +20,14 @@ package org.ofbiz.manufacturing.jobshopmgt;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -303,7 +306,33 @@ public class ProductionRunServices {
             Debug.logError(e, "Problem calling the createWorkEffortGoodStandard service", module);
             return ServiceUtil.returnError(e.getMessage());
         }
-
+        List<GenericValue> WEGSDeliverablesList = FastList.newInstance();
+        List<String> WEGSworkEffortIds = FastList.newInstance();
+       //here we are trying to create product deliverables for the routing tasks.
+        if(UtilValidate.isNotEmpty(routingTaskAssocs)){
+        	List<String> workEffortIdsToList = EntityUtil.getFieldListFromEntityList(routingTaskAssocs, "workEffortIdTo", false);
+        	Set workEffortIdsToSet = new HashSet(workEffortIdsToList);
+        	workEffortIdsToList =  new ArrayList<String>(workEffortIdsToSet);
+        	List workEffortGoodStandardCondList = FastList.newInstance();
+        	workEffortGoodStandardCondList.add(EntityCondition.makeCondition("workEffortId",EntityOperator.IN,workEffortIdsToList));
+        	workEffortGoodStandardCondList.add(EntityCondition.makeCondition("workEffortGoodStdTypeId",EntityOperator.EQUALS,"PRUN_PROD_DELIV"));
+        	EntityCondition workEffortGoodCondition  = EntityCondition.makeCondition(workEffortGoodStandardCondList);
+        	try{
+        		WEGSDeliverablesList = delegator.findList("WorkEffortGoodStandard", workEffortGoodCondition, null, null, null,false );
+        	}catch(Exception e){
+        		Debug.logError("Error while getting WorkEffort deliverables="+e,module);
+        		return ServiceUtil.returnError("Error while getting WorkEffort deliverables="+e.getMessage());
+        	}        	
+        	
+        	if(UtilValidate.isNotEmpty(WEGSDeliverablesList)){
+        		List<String> wEIdsList = EntityUtil.getFieldListFromEntityList(WEGSDeliverablesList, "workEffortId", false);
+            	Set weIdsSet = new HashSet(wEIdsList);
+            	WEGSworkEffortIds =  new ArrayList<String>(weIdsSet);
+        	}
+        }
+        
+        
+        
         // Multi creation (like clone) ProductionRunTask and GoodAssoc
         Iterator<GenericValue>  rt = routingTaskAssocs.iterator();
         boolean first = true;
@@ -359,7 +388,44 @@ public class ProductionRunServices {
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem calling the createWorkEffortAssoc service", module);
                 }
-
+                
+               // here we are creating Routing wise Deliverable Products
+                if(UtilValidate.isNotEmpty(WEGSworkEffortIds)){
+                	String routingTaskIdFrom = routingTask.getString("workEffortId");
+                	if(UtilValidate.isNotEmpty(routingTaskIdFrom) && WEGSworkEffortIds.contains(routingTaskIdFrom)){
+	                	GenericValue WorkEffortAssocResult =(GenericValue) resultService.get("WorkEffortAssoc");
+	                	if(UtilValidate.isNotEmpty(WorkEffortAssocResult) && UtilValidate.isNotEmpty(WorkEffortAssocResult.get("workEffortIdTo"))  ){
+	                		List<GenericValue> productDeliverableListForRouting = FastList.newInstance();
+	                		List productDelConditionList = FastList.newInstance();
+	                		productDelConditionList.add(EntityCondition.makeCondition("workEffortId",EntityOperator.EQUALS,routingTaskIdFrom));
+	                		EntityCondition productDelCondition = EntityCondition.makeCondition(productDelConditionList);
+	                		productDeliverableListForRouting = EntityUtil.filterByCondition(WEGSDeliverablesList, productDelCondition);
+	                		if(UtilValidate.isNotEmpty(productDeliverableListForRouting)){
+	                			for(GenericValue productDeliverableRouting : productDeliverableListForRouting){
+	                				serviceContext.clear();
+	                                serviceContext.put("workEffortId", (String)WorkEffortAssocResult.get("workEffortIdTo"));
+	                                serviceContext.put("productId",(String) productDeliverableRouting.get("productId"));
+	                                serviceContext.put("workEffortGoodStdTypeId", "PRUN_PROD_DELIV");
+	                                serviceContext.put("statusId", "WEGS_CREATED");
+	                                serviceContext.put("fromDate", productDeliverableRouting.get("fromDate"));
+	                                // Here we use the getQuantity method to get the quantity already
+	                                // computed by the getManufacturingComponents service
+	                                serviceContext.put("estimatedQuantity", productDeliverableRouting.get("estimatedQuantity"));
+	                                serviceContext.put("userLogin", userLogin);
+	                                resultService = null;
+	                                try {
+	                                    resultService = dispatcher.runSync("createWorkEffortGoodStandard", serviceContext);
+	                                } catch (GenericServiceException e) {
+	                                    Debug.logError(e, "Problem calling the createWorkEffortGoodStandard Deliverables service", module);
+	                                }
+	                					
+	                			}
+	                			
+	                		}
+	                	}
+                	}
+                }
+                
                 // clone associated objects from the routing task to the run task
                 String routingTaskId = routingTaskAssoc.getString("workEffortIdTo");
                 cloneWorkEffortPartyAssignments(ctx, userLogin, routingTaskId, productionRunTaskId);
@@ -376,7 +442,8 @@ public class ProductionRunServices {
                     BOMNode node = pb.next();
                     GenericValue productBom = node.getProductAssoc();
                     if ((productBom.getString("routingWorkEffortId") == null && first) || (productBom.getString("routingWorkEffortId") != null && productBom.getString("routingWorkEffortId").equals(routingTask.getString("workEffortId")))) {
-                        serviceContext.clear();
+                    	
+                    	serviceContext.clear();
                         serviceContext.put("workEffortId", productionRunTaskId);
                         // Here we get the ProductAssoc record from the BOMNode
                         // object to be sure to use the

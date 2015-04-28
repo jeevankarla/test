@@ -8,6 +8,7 @@
    	<EnumerationType description="SILO Facility Category Type" enumTypeId="SILO_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
     <Enumeration description="POWDER SILO" enumCode="POWDER" enumId="POWDER" sequenceId="01" enumTypeId="SILO_CAT_TYPE"/>
     <Enumeration description="RAWMILK SILO" enumCode="RAWMILK" enumId="RAWMILK" sequenceId="02" enumTypeId="SILO_CAT_TYPE"/>
+    <Enumeration description="CREAM SILO" enumCode="CREAM" enumId="CREAM" sequenceId="03" enumTypeId="SILO_CAT_TYPE"/>
 	
 	
    	<Facility categoryTypeEnum="RAWMILK" facilityId="RM1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="RAW MILK SILO1" facilitySizeUomId="VLIQ_L" size="100000" sequenceNum="1" facilityCode="RM1" description="RAW MILK SILO 1"/>
@@ -22,15 +23,27 @@
    	<Facility categoryTypeEnum="POWDER" facilityId="SM2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SKIM MILK SILO2" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="8" facilityCode="SM2" description="SKIM MILK SILO 2"/>
     <Facility categoryTypeEnum="POWDER" facilityId="SM3" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SKIM MILK SILO3" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="9" facilityCode="SM3" description="SKIM MILK SILO 3"/>
     
-    
      <Facility categoryTypeEnum="POWDER" facilityId="POWDERSILO1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER SILO1" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="10" facilityCode="PS1" description="POWDER SILO 1"/>
      <Facility categoryTypeEnum="POWDER" facilityId="POWDERSILO2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="POWDER SILO2" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="11" facilityCode="PS2" description="POWDER SILO 2"/>
      
      <Facility categoryTypeEnum="POWDER" facilityId="SWEEPSILO" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SWEEPSILO" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="12" facilityCode="SS" description="SWEEP SILO"/>
      
      <Facility categoryTypeEnum="POWDER" facilityId="SMPFGS" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="SMPFGS" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="13" facilityCode="SMPFGS" description="SMPFGS"/>
+     <Facility categoryTypeEnum="CREAM" facilityId="BT1" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="BUTTER SILO1" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="14" facilityCode="BT1" description="BUTTER SILO 1"/>
+   	 <Facility categoryTypeEnum="CREAM" facilityId="BT2" facilityTypeId="SILO"  ownerPartyId="MD" facilityName="BUTTER SILO2" facilitySizeUomId="VLIQ_L" size="60000" sequenceNum="15" facilityCode="BT2" description="BUTTER SILO 2"/>
+    
+     
+     
       <EnumerationType  enumTypeId="PROD_SHIFT" />
        <Enumeration  description="First Shift" enumId="FIRST_SHIFT" enumTypeId="PROD_SHIFT" />
        <Enumeration  description="Second Shift" enumId="SECOND_SHIFT" enumTypeId="PROD_SHIFT" />
        <Enumeration  description="Third Shift" enumId="THIRD_SHIFT" enumTypeId="PROD_SHIFT" />
+       
+       <!-- Configuration for products  -->
+       
+       <ProductFacility facilityId="BT1" productId="RBUTTER" capacity="500000"/>
+       <ProductFacility facilityId="BT2" productId="RBUTTER" capacity="500000"/>
+       
+       <ProductFacility facilityId="RM1" productId="R111" capacity="100000" />
+       <ProductFacility facilityId="SMPFGS" productId="81" capacity="200000" />
 </entity-engine-xml>

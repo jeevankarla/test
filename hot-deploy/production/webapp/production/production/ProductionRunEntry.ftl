@@ -92,7 +92,15 @@
 				      				<div class='tabletext h3'>${productionRun.facilityId}</div>
 				      			</td>
 				      		<#else>
-				      			<td><input type="text" name="facilityId" id="facilityId" ></td>
+				      			<td>
+				      			<!-- <input type="text" name="facilityId" id="facilityId" > -->
+				      			 	<select name='facilityId'>
+				      			 		<#list storeList as store>
+				      			 			<option value='${store.get("facilityId")}'>${store.get("facilityName")}</option>
+				      			 		</#list>
+				      			 	</select>
+				      			 
+				      			</td>
 					      	</#if>
 					      	
 					      	<td> &nbsp;</td>

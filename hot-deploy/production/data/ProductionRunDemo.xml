@@ -15,19 +15,103 @@
     <WorkEffort workEffortId="WF103" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pasturization @ 72&#176;C" description="Pasturization @ 72&#176;C" estimatedSetupMillis="60000.0" fixedAssetId="Boiler" revisionNumber="2"/>
     <WorkEffort workEffortId="WF104" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Cooing @ 5&#176;C" description="Cooling @ 5&#176;C" estimatedSetupMillis="150000.0" fixedAssetId="Cooler" revisionNumber="3"/>
     
-    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF100" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2013-07-16 13:32:49.0"/>
-    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF101" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="2" fromDate="2013-07-16 13:32:20.0"/>
-    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF102" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="3" fromDate="2013-07-16 13:32:30.0"/>
-    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF103" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="4" fromDate="2013-07-16 13:32:59.0"/>
-    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF104" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="5" fromDate="2013-07-16 13:33:06.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF100" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2015-04-27 13:32:49.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF101" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="2" fromDate="2015-04-27 13:32:20.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF102" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="3" fromDate="2015-04-27 13:32:30.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF103" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="4" fromDate="2015-04-27 13:32:59.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF105" workEffortIdTo="WF104" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="5" fromDate="2015-04-27 13:33:06.0"/>
      
     <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="476" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF105"/>   
-    <WorkEffortGoodStandard fromDate="2013-07-16 13:36:09.0" productId="476" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF105"/>
+    <WorkEffortGoodStandard fromDate="2015-04-27 13:36:09.0" productId="476" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF105"/>
     
-    <WorkEffortGoodStandard workEffortId="WF100" productId="R111" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2013-07-16 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
-    <WorkEffortGoodStandard workEffortId="WF100" productId="RCREAM" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2013-07-16 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="0.0"/>
+    <WorkEffortGoodStandard workEffortId="WF100" productId="R111" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+    <WorkEffortGoodStandard workEffortId="WF100" productId="RCREAM" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="0.0"/>
     
-    <ProductAssoc fromDate="2012-07-23 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="R111" quantity="0.750000" routingWorkEffortId="WF100" sequenceNum="1"/>
-    <ProductAssoc fromDate="2012-07-23 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="RCREAM" quantity="0.0000" routingWorkEffortId="WF100" sequenceNum="2"/>
+    <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="R111" quantity="0.750000" routingWorkEffortId="WF100" sequenceNum="1"/>
+    <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="476" productIdTo="RCREAM" quantity="0.0000" routingWorkEffortId="WF100" sequenceNum="2"/>
+    
+    
+    
+    <!-- Process for ICE CREAM PREPARATION -->
+    
+    
+    <Product productId="RCHACO" productTypeId="RAW_MATERIAL" internalName="Chacolate Pieces" productName="Chacolate Pieces" brandName="Chacolate Pieces" description="Chacolate Pieces" longDescription="Chacolate Pieces" quantityUomId="VLIQ_K"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
+	<Product productId="RBUTTER" productTypeId="RAW_MATERIAL" internalName="BUTTER" productName="BUTTER" brandName="BUTTER" description="BUTTER" longDescription="BUTTER" quantityUomId="VLIQ_K"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
+   
+   <Product productId="RNUTS" productTypeId="RAW_MATERIAL" internalName="Nuts" productName="Nuts" brandName="Nuts" description="Nuts" longDescription="Nuts" quantityUomId="VLIQ_K"		taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
+   <Product productId="RBFLAVOUR" productTypeId="RAW_MATERIAL" internalName="Banana flavour" productName="Banana flavour" brandName="Banana flavour" description="Banana flavour" longDescription="Banana flavour" quantityUomId="VLIQ_K"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"/>
+  
+	
+	<FixedAsset fixedAssetId="CONTAINER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Container" uomId="INR"/>
+  
+    <FixedAsset fixedAssetId="PASTEURIZER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Pasteurizer" uomId="INR"/>
+	<FixedAsset fixedAssetId="PASTEURIZER_CHILLING" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Chilling Section Pasteurizer" uomId="INR"/>
+	<FixedAsset fixedAssetId="COOLER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Cooler" uomId="INR"/>
+	<FixedAsset fixedAssetId="PRESSURER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Pressurer" uomId="INR"/>
+	<FixedAsset fixedAssetId="AGINGTANK" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="AGING TANK" uomId="INR"/>
+	
+	<FixedAsset fixedAssetId="FREEZER" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="FREEZER" uomId="INR"/>
+	<FixedAsset fixedAssetId="CRATES" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Crates" uomId="INR"/>
+
+  
+   
+   <WorkEffort  currentStatusId="ROU_ACTIVE" description="Ice Cream Preparation" revisionNumber="1" workEffortId="WF716" workEffortName="Ice Cream Preparation" workEffortTypeId="ROUTING"/>
+    
+    <WorkEffort workEffortId="WF702" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pre-Heating at 40&#176;C" description="Pre-Heating at 40&#176;C" estimatedSetupMillis="120000.0" fixedAssetId="BOILER" revisionNumber="2"/>
+	<WorkEffort workEffortId="WF703" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="additives adding" description="Additives adding"  estimatedSetupMillis="60000.0" fixedAssetId="CONTAINER" revisionNumber="3"/>
+    <WorkEffort workEffortId="WF704" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Heating at 50&#176; -55&#176;C" description="Heating at 50&#176; -55&#176;C"  estimatedSetupMillis="120000.0" fixedAssetId="BOILER" revisionNumber="4"/>
+    <WorkEffort workEffortId="WF705" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Addition of Stabilizers" description="Addition of Stabilizers" estimatedSetupMillis="180000.0" fixedAssetId="CONTAINER" revisionNumber="5" />
+	<WorkEffort workEffortId="WF706" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pasteurization 75&#176;-85&#176;C for 30 min" description="Pasteurization" estimatedSetupMillis="30000.0" fixedAssetId="PASTEURIZER" revisionNumber="6" />
+	<WorkEffort workEffortId="WF707" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="cool to 65&#176;-75&#176;C" description="Pasteurization" estimatedSetupMillis="180000.0" fixedAssetId="COOLER" revisionNumber="7" />
+	<WorkEffort workEffortId="WF708" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pressure at 500 and 1500 psi" description="Pasteurization at 500 and 1500 psi" estimatedSetupMillis="180000.0" fixedAssetId="PRESSURER" revisionNumber="8" />
+	<WorkEffort workEffortId="WF709" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Chilling Pasteurization at 5&#176;-8&#176; C " description="Chilling Pasteurization at 5&#176;-8&#176; C" estimatedSetupMillis="180000.0" fixedAssetId="PASTEURIZER_CHILLING" revisionNumber="9" />
+	<WorkEffort workEffortId="WF710" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Aging tank at 4&#176;-6&#176;C" description="Aging tank at 4&#176;-6&#176;C for 6 hours" estimatedSetupMillis="21600000.0" fixedAssetId="AGINGTANK" revisionNumber="10" />
+	<WorkEffort workEffortId="WF711" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Flavour Mixing" description="Flavour Mixing" estimatedSetupMillis="180000.0" fixedAssetId="CONTAINER" revisionNumber="11" />
+	<WorkEffort workEffortId="WF712" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Freezing to -4&#176;to -5&#176; C" description="Freezing to -4&#176;to -5&#176; C" estimatedSetupMillis="180000.0" fixedAssetId="FREEZER" revisionNumber="12" />
+	<WorkEffort workEffortId="WF713" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Ingradient Mixing" description="Ingradient Mixing" estimatedSetupMillis="180000.0" fixedAssetId="CONTAINER" revisionNumber="13" />
+	<WorkEffort workEffortId="WF714" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Packing" description="Packing" estimatedSetupMillis="180000.0" fixedAssetId="CRATES" revisionNumber="14" />
+	<WorkEffort workEffortId="WF715" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"  workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Hardening" description="Hardening at -15&#176; to -30&#176; C " estimatedSetupMillis="7200000.0" fixedAssetId="FREEZER" revisionNumber="15" />
+
+	<WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF702" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2015-04-27 13:32:49.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF703" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="2" fromDate="2015-04-27 13:32:20.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF704" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="3" fromDate="2015-04-27 13:32:30.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF705" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="4" fromDate="2015-04-27 13:32:59.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF706" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="5" fromDate="2015-04-27 13:33:06.0"/>
+
+	<WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF707" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="6" fromDate="2015-04-27 13:32:49.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF708" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="7" fromDate="2015-04-27 13:32:20.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF709" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="8" fromDate="2015-04-27 13:32:30.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF710" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="9" fromDate="2015-04-27 13:32:59.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF711" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2015-04-27 13:33:06.0"/>
+
+	<WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF712" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="11" fromDate="2015-04-27 13:32:49.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF713" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="12" fromDate="2015-04-27 13:32:20.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF714" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="13" fromDate="2015-04-27 13:32:30.0"/>
+    <WorkEffortAssoc workEffortIdFrom="WF716" workEffortIdTo="WF715" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="14" fromDate="2015-04-27 13:32:59.0"/>
+
+    
+     
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="Ice Cream" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF715"/>   
+   <WorkEffortGoodStandard fromDate="2015-04-27 13:36:09.0" productId="Ice Cream" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF716"/>
+    
+   <WorkEffortGoodStandard workEffortId="WF702" productId="R111" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF702" productId="RBUTTER" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+
+	<WorkEffortGoodStandard workEffortId="WF703" productId="81" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+	
+	<WorkEffortGoodStandard workEffortId="WF713" productId="RCHACO" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+	<WorkEffortGoodStandard workEffortId="WF713" productId="RNUTS" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+
+	
+    
+    <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="R111" quantity="0.750000" routingWorkEffortId="WF702" sequenceNum="1"/>
+	<ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="RBUTTER" quantity="0.750000" routingWorkEffortId="WF702" sequenceNum="2"/>
+
+    <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="81" quantity="0.750000" routingWorkEffortId="WF713" sequenceNum="3"/>
+    
+    <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="RCHACO" quantity="0.750000" routingWorkEffortId="WF713" sequenceNum="4"/>
+	<ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="RNUTS" quantity="0.750000" routingWorkEffortId="WF713" sequenceNum="5"/>
+   
+   
     
 </entity-engine-xml>
