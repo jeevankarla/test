@@ -121,6 +121,9 @@ openingBalMap=[:];
 			}
 		}
 	}
+	if(UtilValidate.isEmpty(partyIds)){
+		partyIds=acctgPartyIds;
+	}
 	partyIds.each{partyId->
 			partyId=partyId.toUpperCase();
 		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId",glAccountTypeId));
