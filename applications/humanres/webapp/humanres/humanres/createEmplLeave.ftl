@@ -199,7 +199,7 @@ function viewGHandSS(){
     var fromDate = jQuery("#fromDate").val();
     $('[name="fromDate"]').datepicker( "option", "dateFormat", "dd-mm-yy");
     
-    var flag="createLeave";
+    var flag="creditLeaves";
     var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId+"&flag="+flag;
     data = data+"&balanceDate="+fromDate;
     
