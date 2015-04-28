@@ -546,7 +546,7 @@ function reportTypeChangeFunc() {
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-                         <option value='NONROLE'>Non-Role</option>
+                         <option value='NONROLE'>Others</option>
   						</select></td> 
   						<td width="10%"></td> 
                  <#--    <td width="10%">Report Type 
@@ -571,7 +571,7 @@ function reportTypeChangeFunc() {
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
-                         <option value='NONROLE'>Non-Role</option>
+                         <option value='NONROLE'>Others</option>
   						</select></td> 
                       <td width="10%"></td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
