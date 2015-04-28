@@ -337,7 +337,7 @@
 	function setupGrid1() {
 		    var columns = [
 					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor,<#if gridEditable?exists && gridEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false},
+					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title",editor:FloatCellEditor, <#if gridEditable?exists && gridEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false}
 			];
@@ -598,7 +598,7 @@
 	function setupGrid3() {
 		    var columns = [
 					{id:"cReturnProductName", name:"Material", field:"cReturnProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"returnQuantity", name:"Quantity", field:"returnQuantity", width:80, minWidth:80, editor:FloatCellEditor, <#if gridReturnEditable?exists && gridReturnEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: returnQuantityValidator, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false},
+					{id:"returnQuantity", name:"Quantity", field:"returnQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: returnQuantityValidator, sortable:false},
 					{id:"returnUOM", name:"UOM", field:"returnUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"returnFacilityId", name:"From Store", field:"returnFacilityId", width:140, minWidth:140, cssClass:"cell-title",editor:FloatCellEditor, <#if gridEditable?exists && gridEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false}
 			];

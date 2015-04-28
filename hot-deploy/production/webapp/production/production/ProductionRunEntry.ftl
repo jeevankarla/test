@@ -54,6 +54,7 @@
 	$(document).ready(function(){
 		$('#addMaterialDiv').hide();
 		$('#declareTaskOutDiv').hide();
+		
 	});
 		
 </script>
@@ -161,10 +162,23 @@
 				    	</div>
 			    	</#if>
 				</form>
+				<#if productionRunId?exists && productionRunData.currentStatusId == "PRUN_CREATED">
+	    			<div align="center">
+	    				<form id = "tempProcessForm' name = "tempProcessForm" method="post" action = "<@ofbizUrl>confirmProductionRunStatus</@ofbizUrl>">
+							<input type="hidden" name="productionRunId" value='${productionRunId?if_exists}'>
+							<input type="submit" style="padding:.5em" id="confirmSubmit" value="Confirm Run"/>
+						</form>
+			    	</div>
+		    	</#if>
+		    	<#if productionRunId?exists && productionRunData.currentStatusId != "PRUN_CREATED">
+	    			<div align="center">
+	    				<a class="buttontext" href="<@ofbizUrl>PrintProductionRun?productionRunId=${productionRunId?if_exists}</@ofbizUrl>" target="_blank"> Print </a>
+			    	</div>
+		    	</#if>
 			</div>
 		</div>		
 </div>
-<#if productionRunId?has_content>
+<#if productionRunId?has_content && productionRunData.currentStatusId != "PRUN_CREATED">
 	<div class="full">
 		<div class="screenlet">
 	    	<div class="screenlet-body">
@@ -173,11 +187,12 @@
 				</div>
 				<table width="100%" cellspacing="15" cellpadding="15" id="customTable">
 								        
-					<tr class='h2' style="border:1pt solid black;">
+					<tr class='h2' style="border:1pt solid black;width:100%">
 			        	<td style='float: left;width:5%;' >Sl.</td>
-			        	<td style='float: left;width:25%;'>Name</td>
+			        	<td style='float: left;width:35%;'>Name</td>
 			        	<td style='float: left;width:20%;'>Machine</td>
-			        	<td style='float: left;width:20%;'>Status</td>
+			        	<td style='float: left;width:15%;'>Status</td>
+			        	<td style='float: center;width:15%;'>Start</td>
 			        	<td style='float: center;width:10%;'>Add Material</td>
 			        	<td style='float: center;width:10%;'>Declare</td>
 			        	<td style='float: center;width:10%;'>Finish</td>
@@ -186,27 +201,59 @@
 			        <#assign allow = "yes">
 			        <#list productionRunRoutingTasks as eachTask>
 			        	<#assign statusId = eachTask.currentStatusId>
-			        	<#if statusId == 'PRUN_CREATED' && allow == "yes">
-					        <tr class='h3' style="border-bottom:1pt dotted black;background-color:#FAF998; line-height: 25px;">
+			        	<#if (statusId == 'PRUN_DOC_PRINTED' || statusId == 'PRUN_RUNNING') && allow == "yes">
+					        <tr class='h3' 
+					        	<#if statusId == 'PRUN_DOC_PRINTED'>
+					        		style="border-bottom:1pt dotted black;background-color:#FAF998; line-height: 25px;">
+					        	<#else>
+					        		style="border-bottom:1pt dotted black;background-color:#7FFFC7; line-height: 25px;">
+					        	</#if>
+					        	
 					        	<td style='float: left;width:5%;'> ${sl?if_exists}</td>
-					        	<td style='float: left;width:25%;'> ${eachTask.workEffortName?if_exists}</td>
+					        	<td style='float: left;width:35%;'> ${eachTask.workEffortName?if_exists}</td>
 						      	<td style='float: left;width:20%;'> ${eachTask.fixedAssetId?if_exists}</td>
-						      	<td style='float: left;width:20%;'> ${eachTask.currentStatusId?if_exists}</td>
-						      	<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="issueMaterial" id="issueMaterialBtn" value="Add" onclick="javascript: addMaterial('${eachTask.workEffortId}')"/></td>
-						      	<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="declareTask" id="declareTask" value="Declare" onclick="javascript: declareTaskOut('${eachTask.workEffortId}')""/></td>
-						      	<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="completeTask" id="completeTask" value="Finish" onclick="javascript:finishTask('${eachTask.workEffortId}')"/></td>
-						      	
+						      	<td style='float: left;width:15%;'> ${eachTask.currentStatusId?if_exists}</td>
+						      	<#if statusId == "PRUN_RUNNING">
+						      		<td style='width:15%;'>&nbsp;</td>
+						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="issueMaterial" id="issueMaterialBtn" value="Add" onclick="javascript: addMaterial('${eachTask.workEffortId}')"/></td>
+						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="declareTask" id="declareTask" value="Declare" onclick="javascript: declareTaskOut('${eachTask.workEffortId}')""/></td>
+						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> 
+						      			<form name="taskFinishForm" id="taskFinishForm" method="post" action="changeRoutingTaskStatus">
+						      				<input type="hidden" name="workEffortId" value="${eachTask.workEffortId?if_exists}"> 
+						      				<input type="hidden" name="productionRunId" value="${productionRunId?if_exists}">
+						      				<input type="hidden" name="statusId" value="PRUN_COMPLETED">
+						      				<input class="myButton" type="submit" name="completeTask" id="completeTask" value="Finish" />
+						      			</form>	
+						      		</td>
+						      	<#else>
+						      		<td style='float: center;width:15%;padding: 5px 5px 5px 5px;'>
+						      			<form name="taskStartForm" id="taskStartForm" method="post" action="changeRoutingTaskStatus">
+						      				<input type="hidden" name="workEffortId" value="${eachTask.workEffortId?if_exists}">
+						      				<input type="hidden" name="productionRunId" value="${productionRunId?if_exists}"> 
+						      				<input type="hidden" name="statusId" value="PRUN_RUNNING">
+						      				<input class="myButton" type="submit" name="startTaskBtn" id="startTaskBtn" value="Start"/></td>
+						      			</form>
+						      		<td style='width:10%;'>&nbsp;</td>
+						      		<td style='width:10%;'>&nbsp;</td>
+						      		<td style='width:10%;'>&nbsp;</td>
+						      	</#if>
 					    	</tr>
 					    	<#assign allow = "no">
 					    <#else>
-					    	<tr class='h3' style="border-bottom:1pt dotted black; line-height: 25px;">
+					    	<tr class='h3'
+					    		<#if statusId ==  "PRUN_COMPLETED">
+					        		style="border-bottom:1pt dotted black;background-color:#ECECEC; line-height: 25px;">
+					        	<#else>
+					        		style="border-bottom:1pt dotted black; line-height: 25px;">
+					        	</#if>
 					        	<td style='float: left;width:5%;'> ${sl?if_exists}</td>
-					        	<td style='float: left;width:25%;'> ${eachTask.workEffortName?if_exists}</td>
-						      	<td style='float: left;width:20%;'> ${eachTask.fixedAssetId?if_exists}</td>
-						      	<td style='float: left;width:20%;'> ${eachTask.currentStatusId?if_exists}</td>
-						      	<td>&nbsp;</td>
-						      	<td>&nbsp;</td>
-						      	<td>&nbsp;</td>
+					        	<td style='float: left;width:30%;'> ${eachTask.workEffortName?if_exists}</td>
+						      	<td style='float: left;width:25%;'> ${eachTask.fixedAssetId?if_exists}</td>
+						      	<td style='float: left;width:10%;'>${eachTask.currentStatusId?if_exists}</td>
+						      	<td style='width:10%;'>&nbsp;</td>
+						      	<td style='width:10%;'>&nbsp;</td>
+						      	<td style='width:10%;'>&nbsp;</td>
+						      	<td style='width:10%;'>&nbsp;</td>
 					    	</tr>
 				    	</#if>
 				    	<#assign sl = sl+1>
@@ -287,34 +334,6 @@
 				$('#startDate').val(dateTimestamp);
 			}
       }
-
-	  function finishTask(effortId){
-	  
-			var action = "changeRoutingTaskStatus";
-			var dataJson = {"workEffortId":effortId, "productionRunId": '${productionRun?if_exists}'};
-			$.ajax({
-				 type: "POST",
-	             url: action,
-	             data: dataJson,
-	             dataType: 'json',
-	             async: false,
-				success:function(result){
-					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-						msg = result["_ERROR_MESSAGE_"];
-						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
-							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
-						}
-					}else{
-						$("#completeTask").hide();
-						location.reload();
-					}					
-				},
-				error: function (xhr, textStatus, thrownError){
-					alert("record not found :: Error code:-  "+xhr.status);
-				}							
-			});
-				  
-	  }	
       
       function addMaterial(effortId){
       		$('#declareTaskOutDiv').hide();
@@ -350,6 +369,7 @@
 				}							
 			});
       }
+      
       function declareTaskOut(effortId){
 	  		addMaterial(effortId);
 	  		$('#declareTaskOutDiv').show();

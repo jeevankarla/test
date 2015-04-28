@@ -456,84 +456,59 @@ public class ProductionServices {
 		return "success";  
     }
     
-    public static String changeRoutingTaskStatus(HttpServletRequest request, HttpServletResponse response) {
-	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
-	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-	  	  Locale locale = UtilHttp.getLocale(request);
-	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
-	  	  HttpSession session = request.getSession();
-	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-	  	  String workEffortId = (String) request.getParameter("workEffortId");
-	  	  String productionRunId = (String) request.getParameter("productionRunId");
-	  	  boolean beginTransaction = false;
-	  	  try{
-	  		  beginTransaction = TransactionUtil.begin();
-		  	 
-	  		  // we have to work on work effort status
-	  		  
-	  		  /*Map inputStatusCtx = FastMap.newInstance();
+    public static Map<String, Object> changeRoutingTaskStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+	  	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	  	String workEffortId = (String) context.get("workEffortId");
+	  	String productionRunId = (String) context.get("productionRunId");
+	  	String statusId = (String) context.get("statusId");
+	  	try{
+	  		  Map inputStatusCtx = FastMap.newInstance();
 	  		  inputStatusCtx.put("productionRunId", productionRunId);
 	  		  inputStatusCtx.put("workEffortId", workEffortId);
-	  		  Debug.log("inputStatusCtx #############"+inputStatusCtx);
+	  		  inputStatusCtx.put("statusId", statusId);
+	  		  inputStatusCtx.put("userLogin", userLogin);
 	  		  Map resultCtx = dispatcher.runSync("changeProductionRunTaskStatus", inputStatusCtx);
 	  		  if(ServiceUtil.isError(resultCtx)){
 	  			  Debug.logError("Error changing routing task status : "+workEffortId, module);
-	  			  TransactionUtil.rollback();
-	  			  return "error";
+	  			  return ServiceUtil.returnError("Error changing routing task status : "+workEffortId);
 	  		  }
-	  		  
-	  		  Debug.log("resultCtx #############"+resultCtx);
 	  		  String newStatusId = (String)resultCtx.get("newStatusId");
-			  String oldStatusId = (String)resultCtx.get("oldStatusId");*/
-	  		  
-	  		  GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
-	  		  
-	  		  GenericValue newEntity = delegator.makeValue("WorkEffortStatus");
-	  		  newEntity.set("workEffortId", workEffortId);
-	  		  newEntity.set("statusId", "PRUN_RUNNING");
-	  		  newEntity.set("statusDatetime", UtilDateTime.nowTimestamp());
-	  		  newEntity.set("setByUserLogin", userLogin.get("userLoginId"));
-	  		  newEntity.create();
-	  		  
-	  		  workEffort.set("currentStatusId", "PRUN_RUNNING");
-	  		  workEffort.store();
-		  	  
-	  		  GenericValue newEntity1 = delegator.makeValue("WorkEffortStatus");
-	  		  newEntity1.set("workEffortId", workEffortId);
-	  		  newEntity1.set("statusId", "PRUN_COMPLETED");
-	  		  newEntity1.set("statusDatetime", UtilDateTime.nowTimestamp());
-	  		  newEntity1.set("setByUserLogin", userLogin.get("userLoginId"));
-	  		  newEntity1.create();
-	  		  
-	  		  workEffort.set("currentStatusId", "PRUN_COMPLETED");
-	  		  workEffort.store();
-	  		  
-	  	 }
-	  	 catch (GenericEntityException e) {
-			try {
-				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
-	  		} catch (GenericEntityException e2) {
-	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-	  		}
-	  		Debug.logError("An entity engine error occurred while fetching data", module);
-	  	 }
-	  	 /*catch (GenericServiceException e) {
-	  		try {
-			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
-	  		} catch (GenericEntityException e2) {
-			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-	  		}
-	  		Debug.logError("An entity engine error occurred while calling services", module);
-	  	 }*/
-	  	 finally {
-	  		try {
-	  			TransactionUtil.commit(beginTransaction);
-	  		} catch (GenericEntityException e) {
-	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
-	  		}
-	  	 }
-	  	 request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
-		 return "success";  
+			  String oldStatusId = (String)resultCtx.get("oldStatusId");
+	  	 
+	  	}catch(GenericServiceException e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+	  	}
+	  	result.put("productionRunId",productionRunId);
+	  	return result;
      }
     
+     public static Map<String, Object> confirmProductionRunStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String productionRunId = (String)context.get("productionRunId");
+        Map<String, Object> result = FastMap.newInstance();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        try {
+            Map inputCtx = FastMap.newInstance();
+            inputCtx.put("productionRunId", productionRunId);
+            inputCtx.put("statusId", "PRUN_DOC_PRINTED");
+            inputCtx.put("userLogin", userLogin);
+            Map resultCtx = dispatcher.runSync("changeProductionRunStatus", inputCtx);
+	  		if(ServiceUtil.isError(resultCtx)){
+	  			Debug.logError("Error changing production run status to confirmed: "+productionRunId, module);
+	  			return ServiceUtil.returnError("Error changing production run status to confirmed: "+productionRunId);
+	  		}
+	  		String newStatusId = (String)resultCtx.get("newStatusId");
+        }
+        catch(GenericServiceException e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        result.put("productionRunId",productionRunId);
+        return result;
+    }// End of the Service
 }

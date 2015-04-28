@@ -97,6 +97,12 @@
         <response name="error" type="view" value="ProductionRunEntry"/>
     </request-map>
     
+    <request-map uri="confirmProductionRunStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="confirmProductionRunStatus"/>
+        <response name="success" type="view" value="ProductionRunEntry"/>
+    </request-map>
+    
     <request-map uri="getRoutingTaskNeededMaterial">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="getRoutingTaskNeededMaterial.groovy"/>
@@ -126,8 +132,10 @@
     
     <request-map uri="changeRoutingTaskStatus">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="changeRoutingTaskStatus" global-transaction="true"/>
-        <response name="success" type="request" value="json"/>
+        <event type="service" path=""  invoke="changeRoutingTaskStatus" global-transaction="true"/>
+        <response name="success" type="request-redirect-noparam" value="ProductionRunEntry">
+        	<redirect-parameter name="productionRunId"/>
+        </response>
     </request-map>
     
     <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
