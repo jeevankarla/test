@@ -20,4 +20,18 @@
 	   </widgets>
 	  </section>
   </screen>
+  <screen name="StockProcessingRegisterReportPDF">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo>					  
+				    <html-template location="component://production/webapp/production/reports/StockProcessingRegisterReport.fo.ftl" /> 
+                  </xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
 </screens> 

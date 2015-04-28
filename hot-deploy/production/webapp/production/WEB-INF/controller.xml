@@ -137,6 +137,10 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MilkConversionReportPDF"/>        
     </request-map>
+    <request-map uri="StockProcessingRegisterReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="StockProcessingRegisterReportPDF"/>        
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#main"/>
@@ -151,5 +155,6 @@
    
     <!-- View Mappings for Production Reports-->
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     
 </site-conf>
