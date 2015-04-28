@@ -7956,8 +7956,21 @@ public class ByProductNetworkServices {
 			}
 		}
 		Map result = ServiceUtil.returnSuccess();
-		result.put("paymentList", paymentList);
-		result.put("responseCode", "001");
+		boolean enableAPIOutParams = Boolean.TRUE;
+		try {
+			GenericValue tenantConfigEnableAPIOutParams = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId", "LMS", "propertyName","enableAPIOutParams"), false);
+			if (UtilValidate.isNotEmpty(tenantConfigEnableAPIOutParams) && (tenantConfigEnableAPIOutParams.getString("propertyValue")).equals("N")) {
+				enableAPIOutParams = Boolean.FALSE;
+			}
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+		}
+		if(enableAPIOutParams){
+			result.put("paymentList", paymentList);
+			result.put("responseCode", "001");
+		}
+		
 		return result;
 	}
 	
