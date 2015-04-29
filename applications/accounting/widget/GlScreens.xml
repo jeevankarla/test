@@ -1070,6 +1070,7 @@ reportType:byAccount -->
 	<screen name="AcctgTransEntriesSearchResultsCsv">
 		<section>
 			<actions>
+			<set field="viewSize" value="999999" />
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
