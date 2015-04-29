@@ -548,13 +548,12 @@ function reportTypeChangeFunc() {
                          </#list> 
                          <option value='NONROLE'>Others</option>
   						</select></td> 
-  						<td width="10%"></td> 
-                 <#--    <td width="10%">Report Type 
+                     <td width="10%">Report Type 
 					    <select name="reportTypeFlag" id="reportTypeFlag">
 						   <option value='Ledger'>Ledger</option>
 						   <option value='Abstract'>Abstract</option>
 					   </select>
-                     </td> -->
+                     </td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerGroup', '<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
@@ -573,7 +572,12 @@ function reportTypeChangeFunc() {
                          </#list> 
                          <option value='NONROLE'>Others</option>
   						</select></td> 
-                      <td width="10%"></td> 
+                      <td width="10%">Report Type 
+					    <select name="reportTypeFlag" id="reportTypeFlag">
+						   <option value='Ledger'>Ledger</option>
+						   <option value='Abstract'>Abstract</option>
+					   </select>
+                     </td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
