@@ -263,17 +263,22 @@ context.partyMap=partyMap;
 context.openingBalMap=openingBalMap;
 if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	partyLedgerCsv=[];
+	partyLedgerAbsCsv=[];
 	grdDebit=0;grdCredit=0;
 	finalMap=[:];
 	for(Map.Entry partyDetails : partyMap.entrySet()){
 		partyId = partyDetails.getKey();
 		partyVal = partyDetails.getValue();
 		tempMap=[:];
+		tempAbsMap=[:];
 		partyName=PartyHelper.getPartyName(delegator, partyId, false);
 		name=partyName+"["+partyId+"]";
 		tempMap.glAccountId="PARTY NAME :";
 		tempMap.partyId=partyId;
 		tempMap.glAccDescription=name;
+		//for abstract csv
+		tempAbsMap.partyId=partyId;
+		tempAbsMap.name=name;
 		openDebit=0;openCredit=0;
 		openBal=0;
 		openBal=openingBalMap.get(partyId);
@@ -344,12 +349,23 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		tempMap.debit=clsDebit;
 		tempMap.credit=clsCredit;
 		partyLedgerCsv.add(tempMap);
+		//for abstract csv
+		tempAbsMap.debit=clsDebit;
+		tempAbsMap.credit=clsCredit;
+		partyLedgerAbsCsv.add(tempAbsMap);
 	}
 	finalMap.glAccDescription="GRAND TOTAL :";
 	finalMap.partyId=partyId;
 	finalMap.debit=grdDebit;
 	finalMap.credit=grdCredit;
 	partyLedgerCsv.add(finalMap);
+	//for abstract csv
+	tempFinalAbsMap=[:];
+	tempFinalAbsMap.name="TOTAL :";
+	tempFinalAbsMap.debit=grdDebit;
+	tempFinalAbsMap.credit=grdCredit;
+	partyLedgerAbsCsv.add(tempFinalAbsMap);
+	
 	finalMap=[:];
 	balance=0;clsGrdDebit=0;clsGrdCredit=0;
 	finalMap.glAccDescription="CLOSING GRAND TOTAL :";
@@ -364,6 +380,13 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	finalMap.credit=clsGrdCredit;
 	partyLedgerCsv.add(finalMap);
 	context.partyLedgerCsv=partyLedgerCsv;
+	
+	tempFinalAbsMap=[:];
+	tempFinalAbsMap.name="NET AMOUNT :";
+	tempFinalAbsMap.debit=clsGrdDebit;
+	tempFinalAbsMap.credit=clsGrdCredit;
+	partyLedgerAbsCsv.add(tempFinalAbsMap);
+	context.partyLedgerAbsCsv=partyLedgerAbsCsv;
 }
 
 

@@ -1287,4 +1287,10 @@ under the License.
     <field name="debit" title="Debit"><display></display></field>
     <field name="credit" title="Credit"><display></display></field>
     </form>
+     <form name="PartyLedgerGroupAbstractReportCSV" type="list" list-name="partyLedgerAbsCsv">
+     <field name="partyId" title="PartyId"><display></display></field>
+    <field name="name" title="Party Name"><display></display></field>
+    <field name="debit" title="Debit"><display></display></field>
+    <field name="credit" title="Credit"><display></display></field>
+    </form>
 </forms>
