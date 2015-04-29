@@ -43,27 +43,24 @@ context.DebitAmount=0;
 DebitAmount=amount;
 context.CreditAmount=0;
 context.DebitAmount=DebitAmount;
-}
-*/
+}*/
 transDescription=null;
 invoiceDetails = delegator.findOne("Invoice", [invoiceId : parameters.invoiceId], false);
 
 if(UtilValidate.isNotEmpty(invoiceDetails)){
    transDescription = invoiceDetails.description;
 }
-   if(UtilValidate.isEmpty(transDescription)){
-  paymentDetails = delegator.findOne("Payment", [paymentId : parameters.paymentId], false);
-  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  
-  transDescription = paymentDetails.comments;
-  finAccountTransId=paymentDetails.finAccountTransId
-  if(UtilValidate.isEmpty(transDescription)){
-	  finAccountTransData = delegator.findOne("FinAccountTrans", [finAccountTransId :finAccountTransId], false);
-	  if(UtilValidate.isNotEmpty(finAccountTransData)){
-		  transDescription=finAccountTransData.comments;
-		  
-	  }  
+if(UtilValidate.isEmpty(transDescription)){
+    paymentDetails = delegator.findOne("Payment", [paymentId : parameters.paymentId], false);
+    if(UtilValidate.isNotEmpty(paymentDetails)){
+       transDescription = paymentDetails.comments;
+       finAccountTransId=paymentDetails.finAccountTransId
+       if(UtilValidate.isEmpty(transDescription)){
+          finAccountTransData = delegator.findOne("FinAccountTrans", [finAccountTransId :finAccountTransId], false);
+          if(UtilValidate.isNotEmpty(finAccountTransData)){
+	         transDescription=finAccountTransData.comments;
+          }  
+       }
     }
-  }
-   }
-   context.transDescription=transDescription;
+ }
+context.transDescription=transDescription;

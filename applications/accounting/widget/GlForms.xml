@@ -1238,18 +1238,17 @@ under the License.
             </entity-condition>
         </actions>
         <row-actions>
-        	<set field="parameters.invoiceId" value="${invoiceId}"/>
-        	<set field="parameters.paymentId" value="${paymentId}"/>
-      <!--  <set field="parameters.amount" default-value="${amount}"/>
-            <set field="parameters.flag" default-value="${debitCreditFlag}"/>
-        	 -->
+           <set field="parameters.invoiceId" value="${invoiceId}"/>
+           <set field="parameters.paymentId" value="${paymentId}"/>
+      <!-- <set field="parameters.amount" default-value="${amount}"/>
+           <set field="parameters.flag" default-value="${debitCreditFlag}"/>-->
    	       <script	location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/transdescription.groovy" />
    	       <set field="transDescription" default-value="${context.transDescription}"/>
    	       
    	       <set field="DebitAmount" value="${groovy:if(debitCreditFlag.equals('D'))return(amount);if(debitCreditFlag.equals('C'))return(0);}"/>
    	       <set field="CreditAmount" default-value="${groovy:if(debitCreditFlag.equals('C'))return(amount);if(debitCreditFlag.equals('D'))return(0);}" />
-   	        
         </row-actions>
+
         <field name="acctgTransId"><display/></field>
         <field name="acctgTransEntrySeqId"><display description="${acctgTransEntrySeqId}"/></field>
         <field name="transactionDate"><display/></field>
@@ -1265,8 +1264,7 @@ under the License.
         <field name="debitCreditFlag"><display/></field> 
         <field name="DebitAmount" ><display/></field>
         <field name="CreditAmount" ><display/></field>
-        
-        </form>
+   </form>
 
     <form name="AcctgTransSearchResultsCsv" type="list" title="List Accounting Transactions" list-name="acctgTransList" paginate="false">
         <actions>
