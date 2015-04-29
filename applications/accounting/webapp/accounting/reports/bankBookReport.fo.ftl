@@ -269,7 +269,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 									<#if ((comments)?has_content)>
 									<fo:table-row>
                                 	<fo:table-cell>
-	                                    <fo:block text-align="left" keep-together="always" font-size="12pt">Description:  ${(comments)}</fo:block>
+	                                    <fo:block text-align="left"  font-size="12pt">Description:  ${(comments)}</fo:block>
 	                                </fo:table-cell>
 	                                </fo:table-row>
                                  	<#else>
