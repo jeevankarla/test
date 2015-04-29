@@ -311,7 +311,7 @@
 		<field name="gender" title="Category of Employee [331] "><display/></field>
 		<field name="employmentStartDate" title="Date from Which Employeed with the current employer  (dd/mm/yyyy) [332]"><display/></field>
 		<field name="employmentEndDate" title="Date upto Which Employeed with the current employer  (dd/mm/yyyy) [332] "><display/></field>
-		<field name="totalEarnings" title="Taxbale amount on Which Tax Deducted By Current Employer       [333]"><display /></field>
+		<field name="taxableInc" title="Taxbale amount on Which Tax Deducted By Current Employer       [333]"><display /></field>
 		<field name="ReportedTaxableAmount" title="Reported Taxable Amount by Previous Employer       [334]"><display /></field>
 		<field name="totalEarnings" title="Total Amount of Salary (333+ 334)   "><display/></field>
 		<field name="entertainAlw" title="Entertainment Allowance 16(ii)         [336]"><display/></field>
@@ -325,7 +325,7 @@
 		<field name="totalDedAmount" title="Gross Total of 'Amount deductible under provisions of chapter VI-A' under  associated ' Salary Details  - Chapter VIA Detail ' (341+342)     [343]"><display/></field>
 		<field name="totalIncome" title="Total Taxable Income           (Column 340 -  343)          [344]"><display/></field>
 		<field name="tax" title="Income Tax on Total Income      [345]"><display/></field>
-		<field name="rebate" title="Rebate"><display/></field>
+		<field name="Surcharge" title="Surcharge"><display/></field>
 		<field name="educationalCessAmount" title="Education Cess         [346]"><display/></field>
 		<field name="incomeTaxRelief" title="Income Tax Relief u/s 89 when salary etc is paid in arrear or advance        [347]"><display/></field>
 		<field name="taxPay" title="Net Income Tax payable (345+346-347)          [348]"><display/></field>
