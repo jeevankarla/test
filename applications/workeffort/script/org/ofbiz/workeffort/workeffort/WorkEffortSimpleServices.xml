@@ -753,6 +753,7 @@ under the License.
                 <set field="newEntity.sequenceNum" value="0" type="Long"/>
             </if-empty>
             <create-value value-field="newEntity"/>
+            <field-to-result field="newEntity" result-name="WorkEffortAssoc"/>
         </else>
         </if-not-empty>
     </simple-method>

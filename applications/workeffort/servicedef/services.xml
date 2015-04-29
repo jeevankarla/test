@@ -282,6 +282,7 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
+        <attribute name="WorkEffortAssoc" mode="OUT" type="Map" optional="true"></attribute>
     </service>
     <service name="updateWorkEffortAssoc" default-entity-name="WorkEffortAssoc" engine="simple"
             location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortAssoc">
