@@ -58,7 +58,17 @@ under the License.
       <field name="seqId" type="numeric"></field>
       <prim-key field="seqName"/>
     </entity>
-
+   <entity entity-name="SequenceValueItemPref" package-name="org.ofbiz.entity.sequence" title="Sequence Value Item Pref Entity">
+      <field name="seqName" type="id-long-ne"></field>
+      <field name="lastSeqNumber" type="numeric"></field>
+      <field name="sequenceIdPrefix" type="id-ne"></field>
+      <field name="sequenceEnumId" type="id-ne"></field>
+      <prim-key field="seqName"/>
+      <relation type="one" fk-name="SEQ_PRF_ENUM" title="Sequence EnumId " rel-entity-name="Enumeration">
+        	<key-map field-name="sequenceEnumId" rel-field-name="enumId"/>
+      </relation>
+   </entity>
+    
     <!-- ========================================================= -->
     <!-- org.ofbiz.entity.tenant -->
     <!-- ========================================================= -->
