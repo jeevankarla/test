@@ -175,8 +175,14 @@ public class ProductionServices {
             GenericValue inventoryTrans;
             while ((inventoryTrans = eli.next()) != null) {
             	BigDecimal quantityOnHandDiff = inventoryTrans.getBigDecimal("quantityOnHandDiff");
-                BigDecimal fatPercent = inventoryTrans.getBigDecimal("fatPercent");
-                BigDecimal snfPercent = inventoryTrans.getBigDecimal("snfPercent");
+                BigDecimal fatPercent = BigDecimal.ZERO;
+                BigDecimal snfPercent = BigDecimal.ZERO;
+                if(UtilValidate.isNotEmpty(inventoryTrans.get("fatPercent"))){
+                	fatPercent = inventoryTrans.getBigDecimal("fatPercent");
+                }
+                if(UtilValidate.isNotEmpty(inventoryTrans.get("snfPercent"))){
+                	snfPercent = inventoryTrans.getBigDecimal("snfPercent") ;
+                }
                 
                 BigDecimal kgFat =BigDecimal.ZERO;
                 BigDecimal kgSnf =BigDecimal.ZERO;

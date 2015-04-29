@@ -84,5 +84,44 @@
      	</widgets>
      </section>
     </screen>
+    <screen name="SMPproduction">
+        <section>
+            <actions>
+                <set field="tabButtonItem1" value="PowderPlant"/>
+                <set field="tabButtonItem2" value="PowderSMPproduction"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/GetShiftDetails.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="PowderPlantTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                    	<screenlet title="Powder Plant Shift Details">
+                    		<include-form name="PowderShiftDetails" location="component://production/widget/ProductionForms.xml"/>
+                    		<include-form name="SMPproduction" location="component://production/widget/ProductionForms.xml"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PowderPackingLog">
+        <section>
+            <actions>
+                <set field="tabButtonItem1" value="PowderPlant"/>
+                <set field="tabButtonItem2" value="PowderPackingLog"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/GetShiftDetails.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="PowderPlantTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                    	<screenlet title="Powder Packing - Log">
+                    		<include-form name="powderPackLog" location="component://production/widget/ProductionForms.xml"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>

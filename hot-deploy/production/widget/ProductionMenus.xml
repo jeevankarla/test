@@ -28,10 +28,10 @@
 		<menu-item name="PowderShiftStart" title="Shift Start ">
 			<link target="powderShiftStart"></link>
 		</menu-item>
-		<!-- <menu-item name="PowderSMPproduction" title="SMP Production">
+		<menu-item name="PowderSMPproduction" title="SMP Production">
 			<link target="SMPproduction"></link>
 		</menu-item>		
-		<menu-item name="PowderPackingLog" title="Packing Log">
+		<!-- <menu-item name="PowderPackingLog" title="Packing Log">
 			<link target="powderPackLog"></link>
 		</menu-item>	
 		<menu-item name="PowderIssueToStroe" title="Issue to Store">
