@@ -76,6 +76,7 @@
 	function cancelForm(){		 
 		return false;
 	}
+	var facilityDetails=[];
 	var globalUomOptionList="";
   	var paymentMethodList;
   	var uomList=[];
@@ -104,10 +105,12 @@
              				  var productDetails=[];
               		 			//alert("=result==="+result);
            	  					 productDetails =result["productObj"];
-           	  					 //alert("productDetails=========="+productDetails.longDescription);
+           	  					//alert("productDetails=========="+productDetails.longDescription);
           	 	 				GlobalproductName=productDetails.productName;
           	 					 GloballongDescription=productDetails.longDescription;
           	 	 				productAttributeValue=productDetails.attrValue;
+          	 	 			    facilityDetails =result["facilityJSONList"];
+          	 	 				
           					  }
                
           	} ,
@@ -130,17 +133,25 @@
 	 	    globalUomOptionList = UomOptionList;
            }
 		var message = "";
-		message += "<div style='width:100%;height:200px;overflow-x:auto;overflow-y:auto;' ><form action='updateProductDetails' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10  width='100%' > " ; 
-			message +="<tr ><td align='right' class='h2' width='15%' >Uom Id: </td><td align='left' width='60%'><select name='quantityUomId' id='quantityUomId' class='h3'>"+
+	     message += "<div style='width:100%;height:250px;overflow-x:auto;overflow-y:auto;' ><form action='updateProductDetails' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10  width='100%' > " ; 
+		 message +="<tr ><td align='right' class='h2' width='15%' >Uom Id: </td><td align='left' width='60%'><select name='quantityUomId' id='quantityUomId' class='h3'>"+
               		<#--<#list uomList as uom><option value='${uom.uomId}' <#if uom.uomId=='"+innerUomId+"'  > selected='selected'</#if> >${uom.description}[${uom.abbreviation}]</option></#list>"+   -->         
 					"</select></td></tr>";
-			message+="<tr><td align='right' class='h2' width='15%'>Ledger Folio No:</td><td align='left' width='75%'><input type='text' size='20'  id='attrValue' name='attrValue' onmouseover='onlyNumbers();' /><input type='hidden' id='attrName' name='attrName'/></td></tr>";
-		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='productName'/><input type='hidden' id='productId'  name='productId'  /> </tr></tbody></table></td></tr>";
-			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='right' class='label labelFontCSS' >Specification: </td><td align='left'  width='75%'  >";
-              message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'></textarea><input type='hidden' id='description'  name='description'  /><input type='hidden' id='brandName'  name='brandName'  /> </td></tr>";
+	    message += "<tr class='h3'><td align='right' class='h2' width='15%'>Minimum Stock:</td><td align='left' width='60%'><select name='facilityId' id='facilityId'>";
+		            	for(var i=0 ; i<facilityDetails.length ; i++){
+							var innerList=facilityDetails[i];
+				    	//alert("=====value of innerList========"+JSON.stringify(innerList));
+							message += "<option value='"+innerList['facilityId']+"'>"+ innerList['facilityName'] + "    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [           "+ innerList['minimumStock'] + "]</option>";
+						}
+						message += "</select> <input type='text' id='minimumStock' name='minimumStock'/></td> </tr>";	      				
+
+	      message+="<tr><td align='right' class='h2' width='15%'>Ledger Folio No:</td><td align='left' width='75%'><input type='text' size='20'  id='attrValue' name='attrValue' onmouseover='onlyNumbers();' /><input type='hidden' id='attrName' name='attrName'/></td></tr>";
+		  message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='productName'/><input type='hidden' id='productId'  name='productId'  /> </tr></tbody></table></td></tr>";
+		  message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='right' class='label labelFontCSS' >Specification: </td><td align='left'  width='75%'  >";
+          message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'></textarea><input type='hidden' id='description'  name='description'  /><input type='hidden' id='brandName'  name='brandName'  /> </td></tr>";
 			
-	          message +="<tr ><td align='right' class='h3' width='15%' ><input type='submit' value='Update' id='updateProduct' class='smallSubmit' onclick='setProductName();'/></td><td width='20%' align='center' class='h3' ><span align='center'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-	          message += "</table></form>";
+	      message +="<tr ><td align='right' class='h3' width='15%' ><input type='submit' value='Update' id='updateProduct' class='smallSubmit' onclick='setProductName();'/></td><td width='20%' align='center' class='h3' ><span align='center'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+	      message += "</table></form>";
 	      	
 		message += "</div>";				
 		var title = "<center  class='h2' >Update Material <center> ";

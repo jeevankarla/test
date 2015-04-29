@@ -38,6 +38,25 @@ if("y".equals(parameters.productflag))
 	productObj.put("productName",productDetails.productName);
 	productObj.put("description",productDetails.description);
 	productObj.put("longDescription",productDetails.longDescription);
+	
+	JSONArray facilityJSONList = new JSONArray();
+    ProductFacilitys = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId", EntityOperator.EQUALS ,productId) , null, null, null, false );
+    ProductFacilitys.each{eachFacility ->
+	JSONObject newFacilityObj = new JSONObject();
+	
+	facilityNames = delegator.findOne("Facility",["facilityId":eachFacility.facilityId],false);
+	if(facilityNames){
+		facilityName=facilityNames.get("facilityName");
+		newFacilityObj.put("facilityName",facilityName);
+	}
+	newFacilityObj.put("minimumStock",eachFacility.minimumStock);
+	newFacilityObj.put("facilityId",eachFacility.facilityId);
+	
+	facilityJSONList.add(newFacilityObj);
+   }
+request.setAttribute("facilityJSONList", facilityJSONList);
+context.facilityJSONList=facilityJSONList;
+
 	if(UtilValidate.isNotEmpty(productAttribute)){
 		if(UtilValidate.isNotEmpty(productAttribute.attrValue)){
 			productObj.put("attrValue",productAttribute.attrValue);
@@ -59,7 +78,6 @@ uomList.each{eachuom ->
 	dataJSONList.add(newUomObj);
 }
 context.dataJSONList=dataJSONList;
-
 
 
 

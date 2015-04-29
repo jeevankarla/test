@@ -3493,8 +3493,11 @@ catch(Exception e){
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 	    Delegator delegator = ctx.getDelegator();
 		Map result = ServiceUtil.returnSuccess();
-		
+        BigDecimal minimumStock = BigDecimal.ZERO;
+
 		String longDescription = (String) context.get("longDescription");
+		String facilityId = (String) context.get("facilityId");
+		 minimumStock = (BigDecimal) context.get("minimumStock");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String productId = (String) context.get("productId");
 		String productName = (String) context.get("productName");
@@ -3503,7 +3506,6 @@ catch(Exception e){
 		String quantityUomId = (String) context.get("quantityUomId");
 		String brandName = (String) context.get("brandName");
 		String description = (String) context.get("description");
-		
 		Map<String, Object> inputMap = FastMap.newInstance();
 		
 		try{
@@ -3556,6 +3558,19 @@ catch(Exception e){
 					return ServiceUtil.returnError(e.getMessage());
 				}
 		}	
+		if(UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(facilityId) && UtilValidate.isNotEmpty(minimumStock)){
+			try{
+				if (minimumStock.compareTo(BigDecimal.ZERO)<0 ){
+				return ServiceUtil.returnError("Can not Update -ve values for minimum quantity ..!");
+				}
+				GenericValue ProductFacilityUpdate = delegator.findOne("ProductFacility",UtilMisc.toMap("productId", productId ,"facilityId",facilityId), false);
+	            ProductFacilityUpdate.set("minimumStock", minimumStock);
+				ProductFacilityUpdate.store();
+	    }catch(GenericEntityException e){
+	    	
+			return ServiceUtil.returnError(e.getMessage());
+	      }
+		}
 		result = ServiceUtil.returnSuccess("Product Id: "+productId+" Successfully Updated..!");
 		return result;
 	}	
