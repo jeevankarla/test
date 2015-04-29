@@ -3784,15 +3784,37 @@
 		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 		<set field="parameters.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
+		<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+		<set field="reportName" value="DEBTORS ABSTRACT REPORT"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
   	</actions>
   	<widgets>
-  		<platform-specific>
-            <xsl-fo>
-			<html-template
-				location="component://accounting/webapp/accounting/reports/PartyLedgerGroup.fo.ftl" />
-			</xsl-fo>
-        </platform-specific>
+	  	<section>	
+	  		<condition>
+					<if-compare operator="equals" value="Ledger" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroup.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section> 
+	    <section>	
+	  		<condition>
+					<if-compare operator="equals" value="Abstract" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroupAbstract.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section>    
   	</widgets>
   	</section>
   </screen>
@@ -3805,15 +3827,37 @@
 		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 		<set field="parameters.glAccountTypeId" value="ACCOUNTS_PAYABLE"/>
+		<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+		<set field="reportName" value="CREDITORS ABSTRACT REPORT"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
   	</actions>
   	<widgets>
-  		<platform-specific>
-            <xsl-fo>
-			<html-template
-				location="component://accounting/webapp/accounting/reports/PartyLedgerGroup.fo.ftl" />
-			</xsl-fo>
-        </platform-specific>
+	  	<section>	
+	  		<condition>
+					<if-compare operator="equals" value="Ledger" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroup.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section> 
+	    <section>	
+	  		<condition>
+					<if-compare operator="equals" value="Abstract" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroupAbstract.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section>    
   	</widgets>
   	</section>
   </screen>
