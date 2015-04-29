@@ -87,14 +87,24 @@ grandTotalRevenue=0;
 						productTotList=daySalesMap.getValue().get("productTotals");
 						productTotList.each{ product->
 							count=0;
+							totalDays=0;
 							productId=product.getKey();
-							if(UtilValidate.isEmpty(countMap[productId])){
+							product = delegator.findOne("Product",[productId:productId],false);
+							if(UtilValidate.isNotEmpty(product.introductionDate)&& (product.introductionDate.compareTo(dayBegin)>0) && (product.introductionDate.compareTo(dayEnd)<0) ){
+								 Timestamp introductionDate  =  (Timestamp) product.introductionDate;
+								totalDays=UtilDateTime.getIntervalInDays(introductionDate,dayEnd)+1;
+							}else{
+							totalDays=UtilDateTime.getIntervalInDays(dayBegin,dayEnd)+1;
+							
+							}
+							countMap.put(productId, totalDays);
+							/*if(UtilValidate.isEmpty(countMap[productId])){
 							  countMap.put(productId, count+1);
 							}else{
 							   val=countMap.get(productId);
 							   count=val+1;
 							   countMap.put(productId, count);
-							}
+							}*/
 						}
 					 }						
 					}//curnt Day caliculation

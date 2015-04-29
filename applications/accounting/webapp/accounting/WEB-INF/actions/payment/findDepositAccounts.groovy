@@ -71,7 +71,8 @@ if ("Y".equals(parameters.noConditionFind)) {
 		   exprListForParameters.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 	   }
 	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
-	depositAccounts = delegator.findList("FinAccount", paramCond, null, null, null, false);
+	List<String> orderBy = UtilMisc.toList("-fromDate");				
+	depositAccounts = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
 	   context.depositAccounts=depositAccounts;
 	   parameters.AccDate=null;
    	   }

@@ -47,7 +47,22 @@
 		});
 	}
 	
-	function datepick()
+		function datepick()	{
+		$( "#transactionDate" ).datetimepicker({
+			dateFormat:'yy-mm-dd',
+			showSecond: true,
+			timeFormat: 'hh:mm:ss',
+			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
+	        //    var nowTime = new Date(); 
+	        //    onlyDate=onlyDate+" "+nowTime.getHours()+":"+nowTime.getMinutes()+":"+nowTime.getSeconds();
+	        //    $('#transactionDate').val(onlyDate);
+	        //},
+	        changeMonth: false,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+	}
+	
+	function datepick1()
 	{		
 		$( "#transactionDate" ).datepicker({
 			dateFormat:'dd MM, yy',
