@@ -190,16 +190,23 @@ if(reportType=="form24Q"){
 			employmentStartDate = "";
 			employmentEndDate = "";
 			personDetails = delegator.findOne("Person", UtilMisc.toMap("partyId",employee), false);
+			String age = "";
 			if(UtilValidate.isNotEmpty(personDetails)){
 				firstName = personDetails.get("firstName");
 				lastName = personDetails.get("lastName");
 				employeeName = firstName +" "+ lastName;
-				gender = personDetails.get("gender");
-				if(UtilValidate.isNotEmpty(gender)){
-					if(gender.equals("M")){
-						gender = "G";
+				genderVal = personDetails.get("gender");
+				if(UtilValidate.isNotEmpty(personDetails.getDate("birthDate"))){
+					ageTime = (UtilDateTime.toSqlDate(monthEnd)).getTime()- (personDetails.getDate("birthDate")).getTime();
+					age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_DOWN)).toString());
+					if(age >= "60"){
+						gender = "S";
 					}else{
-						gender = "W";
+						if(genderVal.equals("M")){
+							gender = "G";
+						}else{
+							gender = "W";
+						}
 					}
 				}
 			}
@@ -217,8 +224,46 @@ if(reportType=="form24Q"){
 				employementDetailsList = EntityUtil.getFirst(employementDetailsList);
 				employmentStartDate= employementDetailsList.get("fromDate");
 				employmentEndDate= employementDetailsList.get("thruDate");
-				employmentStartDate = UtilDateTime.toDateString(employmentStartDate ,"dd-MM-yyyy");
-				employmentEndDate = UtilDateTime.toDateString(employmentEndDate ,"dd-MM-yyyy");
+				employmentStartDate = UtilDateTime.toDateString(employmentStartDate ,"dd/MM/yyyy");
+				employmentEndDate = UtilDateTime.toDateString(employmentEndDate ,"dd/MM/yyyy");
+				actualStartDate = UtilDateTime.toDateString(monthBegin ,"dd/MM/yyyy");
+				actualEndDate = UtilDateTime.toDateString(monthBegin ,"dd/MM/yyyy");
+				
+				Timestamp employmentStartDateTime = null;
+				Timestamp actualStartDateTime = null;
+				Timestamp employmentEndDateTime = null;
+				Timestamp actualEndDateTime = null;
+				
+				def sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+					if (employmentStartDate) {
+						employmentStartDateTime = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(employmentStartDate).getTime()));
+					}
+					if (actualStartDate) {
+						actualStartDateTime = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(actualStartDate).getTime()));
+					}
+					if (employmentEndDate) {
+						employmentEndDateTime = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(employmentEndDate).getTime()));
+					}
+					if (actualEndDate) {
+						actualEndDateTime = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(actualEndDate).getTime()));
+					}
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: ", "");
+				}
+				
+				if(employmentStartDateTime.compareTo(actualStartDateTime) < 0){	
+					employmentStartDate = actualStartDate;
+				}else{
+					employmentStartDate = employmentStartDate;
+				}
+				if(UtilValidate.isNotEmpty(employmentEndDateTime)){
+					if(employmentEndDateTime.compareTo(actualEndDateTime) < 0){
+						employmentEndDate = actualStartDate;
+					}else{
+						employmentEndDate = employmentEndDate;
+					}
+				}
 			}
 			otherAlwDeductableAmount = 0;
 			licAmount = 0;
@@ -632,14 +677,6 @@ if(reportType=="form24Q"){
 			BigDecimal totIncome = new BigDecimal(totalIncome);
 			
 			currDayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-			person = delegator.findOne("Person", [partyId : employee], false);
-			String age = "";
-			if(UtilValidate.isNotEmpty(person)){
-				if(UtilValidate.isNotEmpty(person.getDate("birthDate"))){
-					ageTime = (UtilDateTime.toSqlDate(monthEnd)).getTime()- (person.getDate("birthDate")).getTime();
-					age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_DOWN)).toString());
-				}
-			}
 			List employeeTaxSlabList=[];
 			employeeTaxSlabList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, currCustomTimePeriodId));
 			employeeTaxSlabList.add(EntityCondition.makeCondition("age", EntityOperator.EQUALS, "60"));
@@ -737,6 +774,7 @@ if(reportType=="form24Q"){
 			}
 			if(totInc != 0){
 				employeeDetailsMap.put("totalIncome",totInc);
+				employeeDetailsMap.put("taxableInc",totInc);
 			}
 			if(grossTotInc != 0){
 				employeeDetailsMap.put("grossTotIncome",grossTotInc);
@@ -750,6 +788,7 @@ if(reportType=="form24Q"){
 				employeeDetailsMap.put("employmentEndDate",employmentEndDate);
 				employeeDetailsMap.put("ReportedTaxableAmount","");
 				employeeDetailsMap.put("80CCGAmount","");
+				employeeDetailsMap.put("Surcharge","");
 				employeeDetailsMap.put("incomeTaxRelief","");
 				employeeDetailsMap.put("ReportedAmountOfTax","");
 				employeeDetailsMap.put("TaxDeductedatHigherRate","");
