@@ -174,4 +174,8 @@ under the License.
     <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATION_FAIL" transitionName="Generated"/>
      
 	<TenantConfiguration propertyName="showServerDownTimeMsg" propertyValue="N" propertyTypeEnumId="GLOBAL" description="Show server downtime message in header"/>
+	<EnumerationType description="Sequnce item value sequence item"  enumTypeId="SQIT_SEQMD"/>
+	<Enumeration description="Standard (faster, may have gaps, per system)" enumCode="STANDARD" enumId="SQIT_STANDARD" enumTypeId="SQIT_SEQMD" sequenceId="1"/>
+    <Enumeration description="Enforced Sequence (no gaps, per organization)" enumCode="ENF_SEQ" enumId="SQIT_ENF_SEQ" enumTypeId="SQIT_SEQMD" sequenceId="2"/>
+	
 </entity-engine-xml>

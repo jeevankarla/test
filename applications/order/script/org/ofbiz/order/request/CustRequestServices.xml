@@ -47,12 +47,60 @@ under the License.
         </if>
         <field-to-result field="hasPermission"/>
     </simple-method>
+    
+    <simple-method method-name="getNextCustRequestId" short-description="Get Next custRequestId">
+        <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special custRequest number sequencing -->
+        <entity-one entity-name="SequenceValueItemPref" value-field="sequenceValueItemPref" auto-field-map="false">
+            <field-map field-name="seqName" value="CustRequest"/>
+        </entity-one>
+       
+        <if>
+            <condition>
+                <if-compare field="sequenceValueItemPref.sequenceEnumId" operator="equals" value="SQIT_ENF_SEQ"/>
+            </condition>
+            <then>
+                <log level="info" message="In createCustRequest sequence enum SQIT_ENF_SEQ"/>
+                <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
+                <if-not-empty field="sequenceValueItemPref.lastSeqNumber">
+                    <calculate field="sequenceValueItemPref.lastSeqNumber" type="Long">
+                        <calcop operator="add" field="sequenceValueItemPref.lastSeqNumber"/>
+                        <number value="1"/>
+                    </calculate>
+                    <else>
+                        <calculate field="sequenceValueItemPref.lastSeqNumber" type="Long"><number value="1"/></calculate>
+                    </else>
+                </if-not-empty>
+                <store-value value-field="sequenceValueItemPref"/>
+                <set from-field="sequenceValueItemPref.lastSeqNumber" field="custRequestIdTemp"/>
+            </then>
+            <else>
+                <log level="info" message="In createCustRequest sequence enum SQIT_STANDARD"/>
+                <!-- default to the default sequencing: SQIT_STANDARD -->
+                <set from-field="parameters.custRequestId" field="custRequestIdTemp"/>
+                <if-empty field="custRequestIdTemp">
+                    <sequenced-id sequence-name="Invoice" field="custRequestIdTemp"/>
+                    <else>
+                        <!-- check the provided ID -->
+                        <check-id field="custRequestIdTemp"/>
+                        <check-errors/>
+                    </else>
+                </if-empty>
+            </else>
+        </if>
 
+        <!-- use custRequestIdTemp along with the sequenceIdPrefix to create the real ID -->
+        <set field="custRequestId" value="${sequenceValueItemPref.sequenceIdPrefix}${str:toString(custRequestIdTemp)}"/>
+        <field-to-result field="custRequestId" result-name="custRequestId"/>
+    </simple-method>
+    
     <simple-method method-name="createCustRequest" short-description="Create Customer Request">
         <make-value value-field="newEntity" entity-name="CustRequest"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <now-timestamp field="newEntity.lastModifiedDate"/>
-
+        <if-empty field="parameters.custRequestId">
+            <call-simple-method method-name="getNextCustRequestId"/>
+            <set from-field="custRequestId" field="parameters.custRequestId"/>
+        </if-empty>
         <now-timestamp field="nowTimestamp"/>
         <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
         <set from-field="nowTimestamp" field="newEntity.createdDate"/>
