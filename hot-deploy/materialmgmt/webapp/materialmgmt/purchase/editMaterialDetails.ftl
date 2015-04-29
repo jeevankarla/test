@@ -105,7 +105,7 @@
              				  var productDetails=[];
               		 			//alert("=result==="+result);
            	  					 productDetails =result["productObj"];
-           	  					alert("productDetails=========="+productDetails.longDescription);
+           	  					//alert("productDetails=========="+productDetails.longDescription);
           	 	 				GlobalproductName=productDetails.productName;
           	 					 GloballongDescription=productDetails.longDescription;
           	 	 				productAttributeValue=productDetails.attrValue;
@@ -118,25 +118,6 @@
           	 	alert(result["_ERROR_MESSAGE_"]);
          	 }
           }); 
-    <#--> $.ajax({
-             type: "POST",
-             url: "getfacilityListName",
-           	 data: dataString ,
-           	 dataType: 'json',
-           	 async: false,
-        	 success: function(result) {
-              if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-           		 alert(result["_ERROR_MESSAGE_"]);
-            		}else{
-       	 			//alert("=result==="+result);
-     				 facilityDetails =result["facilityJSONList"];
-     		    }
-          	  } ,
-         	 error: function() {
-             alert(result["_ERROR_MESSAGE_"]);
-         	 }
-          }); 
-          -->
  		if(uomList != undefined && uomList != ""){
  		        UomOptionList.push('<option value=""></option>');
 				$.each(uomList, function(key, item){

@@ -79,6 +79,5 @@ uomList.each{eachuom ->
 }
 context.dataJSONList=dataJSONList;
 
-Debug.log("dataJSONList============================"+dataJSONList);
 
 
