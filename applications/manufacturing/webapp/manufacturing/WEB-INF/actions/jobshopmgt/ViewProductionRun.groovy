@@ -22,6 +22,10 @@
 
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.base.util.UtilDateTime;
 
 productionRunId = parameters.productionRunId;
 if (productionRunId) {
@@ -41,8 +45,22 @@ if (productionRunId) {
         productionRunData.quantity = productionRun.getQuantity();
         productionRunData.estimatedStartDate = productionRun.getEstimatedStartDate();
         productionRunData.estimatedCompletionDate = productionRun.getEstimatedCompletionDate();
-        context.productionRunData = productionRunData;
 
+		if(productionRunData.productId){
+			conditionList = [];
+			conditionList.add(EntityCondition.makeCondition("workEffortGoodStdTypeId", EntityOperator.EQUALS, "ROU_PROD_TEMPLATE"));
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productionRunData.productId));
+			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			productionRunRoutingTasks = delegator.findList("WorkEffortGoodStandard", condition, null, null, null, false);
+			
+			productionRunRoutingTasks = EntityUtil.filterByDate(productionRunRoutingTasks, UtilDateTime.nowTimestamp());
+			
+			if(productionRunRoutingTasks){
+				productionRunData.routingTaskId = (EntityUtil.getFirst(productionRunRoutingTasks)).workEffortId;
+			}
+		}
+		
+		context.productionRunData = productionRunData;
         // Find all the order items to which this production run is linked.
         orderItems = delegator.findByAnd("WorkOrderItemFulfillment", [workEffortId : productionRunId]);
         if (orderItems) {
