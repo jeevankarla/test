@@ -46,4 +46,7 @@
        
        <ProductFacility facilityId="RM1" productId="R111" capacity="100000" />
        <ProductFacility facilityId="SMPFGS" productId="81" capacity="200000" />
+       
+      <Facility  defaultDaysToShip="25" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" description="ICE CREAM PLANT" facilityId="ICP" facilityName="ICE CREAM PLANT" facilityTypeId="PLANT" geoPointId="9000"  ownerPartyId="Company" sequenceNum="1"/>
+       
 </entity-engine-xml>
