@@ -79,7 +79,6 @@ if(productUomMap){
 }
 }
 
-//Debug.log("====productUOMJSON=="+productUOMJSON+"====uomLabelJSON==="+uomLabelJSON);
 
 context.productUOMJSON = productUOMJSON;
 context.uomLabelJSON = uomLabelJSON;

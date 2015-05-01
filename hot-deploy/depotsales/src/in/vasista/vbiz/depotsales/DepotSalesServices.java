@@ -541,7 +541,6 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
-		Debug.log("productStoreId============== pppppp "+productStoreId);
 		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
