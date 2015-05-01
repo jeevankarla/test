@@ -801,8 +801,7 @@ if(reportType=="form24Q"){
 			}
 		}
 	}
+	context.finalList=finalList;
 }
-
-context.finalList=finalList;
 
 
