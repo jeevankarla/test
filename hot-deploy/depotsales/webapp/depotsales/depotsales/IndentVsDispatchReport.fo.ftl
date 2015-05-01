@@ -67,13 +67,13 @@ under the License.
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Name</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Qty</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Quantity</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Qty</fo:block>  
+							            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Quantity</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Difference Qty</fo:block>  
+							            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Difference Quantity</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 							     </fo:table-body>
