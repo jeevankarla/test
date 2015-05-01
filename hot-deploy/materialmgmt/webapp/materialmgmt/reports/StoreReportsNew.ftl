@@ -105,6 +105,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	    makeDatePicker("datependingPOs");
 		makeDatePicker("stockDate");
 		makeDatePicker("fromDateScrap","thruDateScrap");
+		makeDatePicker("icpStockFDate","icpStockTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -543,7 +544,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
-         
+		    <tr class="alternate-row">
+				<form id="icpStockStatement" name="icpStockStatement" method="post" action="<@ofbizUrl>icpStockStatement.pdf</@ofbizUrl>" target="_blank">        
+                   <table class="basic-table" cellspacing="5">
+                         <tr class="alternate-row">
+                               <td width="20%"><span class='h3'>Icp Stock Statement Report</span></td>
+                               <td width="17%"><span class='h3'>From<input  type="text" size="18pt" id="icpStockFDate" readonly  name="fromDate"/></span></td>
+                               <td width="17%"><span class='h3'>To<input  type="text" size="18pt" id="icpStockTDate" readonly  name="thruDate"/></span></td>
+                               <td width="20%"></td>
+                               <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"/></span></td> 		 	
+                        </tr>
+				  </table>
+                </form>
+		   </tr>
 	  </table>
     </div>
   </div>
