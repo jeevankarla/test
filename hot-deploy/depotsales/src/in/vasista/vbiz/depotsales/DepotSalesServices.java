@@ -27,6 +27,8 @@ import org.ofbiz.entity.GenericDelegator;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import java.util.Iterator;
+
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
@@ -51,7 +53,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
@@ -540,7 +541,7 @@ public class DepotSalesServices{
 		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
 			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
-		
+		Debug.log("productStoreId============== pppppp "+productStoreId);
 		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
@@ -866,4 +867,251 @@ public class DepotSalesServices{
 		result.put("orderId", orderId);
 		return result;
    }
+   
+   public static String processDepotSalesReturnEntry(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		String partyId = (String) request.getParameter("partyId");
+		String screenFlag = (String)request.getParameter("screenFlag");//using For Amul Sales
+		String productStoreId = (String)request.getParameter("productStoreId");
+		Map resultMap = FastMap.newInstance();
+		List invoices = FastList.newInstance(); 
+		String effectiveDateStr = (String) request.getParameter("effectiveDate");
+		String receiveInventory = (String) request.getParameter("receiveInventory");
+		String returnHeaderTypeId = (String) request.getParameter("returnHeaderTypeId");
+		String subscriptionTypeId = "AM";
+		String partyIdFrom = "";
+		String shipmentId = "";
+		String productId="";
+		BigDecimal quantity=BigDecimal.ZERO;
+		String returnReasonId="";
+		Timestamp effectiveDate=null;
+		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+		String quantityStr="";
+		String salesChannel = (String)request.getParameter("salesChannel");
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		 Map<String  ,Object> returnHeaderMap = FastMap.newInstance();
+		 List detailReturnsList = FastList.newInstance();
+		 
+		 
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+			try {
+				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			}
+		}
+		else{
+			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		if (partyId == "") {
+			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
+			return "error";
+		}
+		try{
+			GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+			if(UtilValidate.isEmpty(party)){
+				request.setAttribute("_ERROR_MESSAGE_","Not a valid Party");
+				return "error";
+			}
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Error fetching partyId " + partyId, module);
+			request.setAttribute("_ERROR_MESSAGE_","Invalid party Id");
+			return "error";
+		}
+		
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+	  		  return "success";
+	  	  }
+	  	
+	  	  
+	  	  for (int i = 0; i < rowCount; i++) {
+	  		 
+	  		 
+	  		List<GenericValue> subscriptionProductsList = FastList.newInstance();
+	  		 Map<String  ,Object> productQtyMap = FastMap.newInstance();
+	  		
+	  		  
+	  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  		  if (paramMap.containsKey("productId" + thisSuffix)) {
+	  			  productId = (String) paramMap.get("productId" + thisSuffix);
+	  			productQtyMap.put("productId", productId);
+	  		  }
+	  		  else {
+	  			  request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+	  			  return "error";			  
+	  		  }
+	  		  if (paramMap.containsKey("quantity" + thisSuffix)) {
+	  			  quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+	  			 
+	  		  }
+	  		  else {
+	  			  request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+	  			  return "error";			  
+	  		  }		  
+	  		  if (quantityStr.equals("")) {
+	  			  request.setAttribute("_ERROR_MESSAGE_", "Empty product quantity");
+	  			  return "error";	
+	  		  }
+	  		  if (paramMap.containsKey("returnReasonId" + thisSuffix)) {
+	  			returnReasonId = (String) paramMap.get("returnReasonId" + thisSuffix);
+	  			productQtyMap.put("returnReasonId", returnReasonId);
+	  		  }
+	  		  try {
+	  			  quantity = new BigDecimal(quantityStr);
+	  			productQtyMap.put("quantity", quantity);
+	  		  } catch (Exception e) {
+	  			  Debug.logError(e, "Problems parsing quantity string: " + quantityStr, module);
+	  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
+	  			  return "error";
+	  		  } 
+	  		detailReturnsList.add(productQtyMap);
+	  	}
+	  	 
+	  	returnHeaderMap.put("returnHeaderTypeId",returnHeaderTypeId);
+  		returnHeaderMap.put("fromPartyId",partyId);
+  		returnHeaderMap.put("productStoreId",productStoreId);
+  		returnHeaderMap.put("effectiveDate",effectiveDate);
+  		returnHeaderMap.put("needsInventoryReceive", receiveInventory);
+  		returnHeaderMap.put("userLogin", userLogin);
+  		returnHeaderMap.put("detailReturnsList", detailReturnsList);
+	  	  
+	  	try{
+			result = dispatcher.runSync("createDepotSalesReturnHeader", returnHeaderMap);
+	    	  if (ServiceUtil.isError(result)) {
+	    		  request.setAttribute("_ERROR_MESSAGE_", "Error Occurred in Service");
+	  			  return "error";	    	            
+	          } 
+		}
+		catch (GenericServiceException e) {
+			 Debug.logError(e, "Error Occured in creating Return Header: ", module);
+ 			  request.setAttribute("_ERROR_MESSAGE_", "Error Occured in creating Return Header: ");
+ 			  return "error";
+		}
+	  	String returnId=(String)result.get("returnId");
+	  	request.setAttribute("_EVENT_MESSAGE_", "Return Successfully created for PartyId: "+partyId+", returnId: "+returnId);
+		return "success";
+	}
+   
+   
+   public static Map<String, Object> createDepotSalesReturnHeader(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	    String returnHeaderTypeId= (String)context.get("returnHeaderTypeId");
+	    String fromPartyId = (String)context.get("fromPartyId");
+	    String productStoreId = (String)context.get("productStoreId");
+	    Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+	    String needsInventoryReceive= (String)context.get("needsInventoryReceive");
+	    List detailReturnsList = (List) context.get("detailReturnsList");
+	    String returnId="";
+	    String geoTax = "";
+	    boolean isSale = Boolean.TRUE;
+	   
+	    if((UtilValidate.isEmpty(returnHeaderTypeId)) || UtilValidate.isEmpty(fromPartyId)){
+	    	Debug.logError("Error creating ReturnHeader: " + ServiceUtil.getErrorMessage(result), module);
+			  return ServiceUtil.returnError("Error creating ReturnHeader: returnHeaderTypeId or fromPartyId is Empty" + ServiceUtil.getErrorMessage(result));     
+	    }
+	    
+	    try{
+	    	GenericValue newEntryReturnHeader = delegator.makeValue("ReturnHeader");
+	    	newEntryReturnHeader.set("returnHeaderTypeId", returnHeaderTypeId);
+	    	newEntryReturnHeader.set("fromPartyId", fromPartyId);
+	    	newEntryReturnHeader.set("toPartyId", "Company");
+	    	newEntryReturnHeader.set("needsInventoryReceive", needsInventoryReceive);
+	    	newEntryReturnHeader.set("statusId", "RETURN_ACCEPTED");
+	    	newEntryReturnHeader.set("entryDate", nowTimestamp);
+	    	newEntryReturnHeader.set("createdBy", userLogin.get("userLoginId"));
+	    	delegator.createSetNextSeqId(newEntryReturnHeader);
+	    	
+	    	returnId = (String) newEntryReturnHeader.get("returnId");
+	    	 result.put("returnId",returnId);
+	    }
+	    catch (Exception e) {
+			  Debug.logError(e, "Problem Creating the Return Header for party " + fromPartyId, module);		  
+			  return ServiceUtil.returnError("Problem Creating the Return Header for party " + fromPartyId);			  
+		  }
+	    
+	   //Creating ReturnItem
+	    try{
+	    		    	
+	    	Iterator<Map> itr = detailReturnsList.iterator();
+	    	while (itr.hasNext()) {
+	            Map detailReturn = itr.next();
+	           //calculating price------------
+	            Map<String, Object> priceResult;
+	            Map<String, Object> priceContext = FastMap.newInstance();
+				priceContext.put("userLogin", userLogin);
+				priceContext.put("productId", detailReturn.get("productId"));	
+				priceContext.put("priceDate", effectiveDate);
+				priceContext.put("geoTax", geoTax);
+				priceContext.put("productStoreId", productStoreId);
+				priceContext.put("isSale", isSale);
+				priceContext.put("partyId", fromPartyId);
+				priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
+			if (ServiceUtil.isError(priceResult)) {
+				Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
+				return ServiceUtil.returnError("There was an error while calculating the price");
+				}
+                List taxList = (List)priceResult.get("taxList");
+                BigDecimal vatPercent=BigDecimal.ZERO; 
+                BigDecimal vatAmount=BigDecimal.ZERO; 
+                for(int m=0;m<taxList.size(); m++){
+               		 Map taxComp = (Map)taxList.get(m);
+               		 String taxType= (String) taxComp.get("taxType");
+               		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
+               		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
+               		 if(taxType.startsWith("VAT_")){
+               			vatPercent = percentage;
+               			vatAmount = amount;
+               		 }
+                }
+	            //------------------------------------
+	            
+	            GenericValue returnItem = delegator.makeValue("ReturnItem");
+	    		returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+	    		if(UtilValidate.isNotEmpty(detailReturn.get("returnReasonId"))){
+	    			returnItem.put("returnReasonId", detailReturn.get("returnReasonId"));
+	    		}
+	            returnItem.put("statusId", "RETURN_ACCEPTED");
+	    		returnItem.put("returnId", returnId);
+	    		returnItem.put("productId", detailReturn.get("productId"));
+	    		returnItem.put("returnQuantity", detailReturn.get("quantity"));
+	    		returnItem.put("returnTypeId", "RTN_REFUND");
+	    		returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
+	     		returnItem.put("returnPrice", priceResult.get("totalPrice"));
+	     		returnItem.put("returnBasicPrice", priceResult.get("basicPrice"));
+	    		returnItem.put("vatAmount", vatAmount);
+	    		returnItem.put("vatPercent", vatPercent);
+	   		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
+	    		delegator.create(returnItem);
+	    	}
+	    }
+	    catch(Exception e){
+	    	 Debug.logError(e, "Problem Creating the Return Item for party " + fromPartyId, module);		  
+			  return ServiceUtil.returnError("Problem Creating the Return Item for party " + fromPartyId);			
+	    }
+
+	    return result;
+   }
+   
+   
+   
+   
+   
+   
 }

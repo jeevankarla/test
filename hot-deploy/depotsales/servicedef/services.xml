@@ -12,4 +12,19 @@
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="createDepotSalesReturnHeader" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createDepotSalesReturnHeader" >
+        <description>Create a new Depot Sales ReturnHeader</description>
+        <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="detailReturnsList" mode="IN" type="List" optional="false"/>
+        <attribute name="fromPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="needsInventoryReceive" mode="IN" type="String" optional="true"/>
+        <attribute name="userLogin" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="returnId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    
 </services>
+

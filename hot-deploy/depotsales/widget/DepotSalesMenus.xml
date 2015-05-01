@@ -96,6 +96,9 @@
             <link target="DepotSalesOrder">
             </link>
         </menu-item>
+        <menu-item name="SalesReturns" title="Sales Returns">
+            <link target="FindSalesReturns"/>
+        </menu-item>  
          <menu-item name="purchaseinvoice" title="Purchase Invoices">
 		  <!--    <condition>
 				<or>
@@ -453,4 +456,14 @@
             </link>
         </menu-item>
     </menu>       
+    
+    <menu name="SalesReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="findSalesReturn" title="Find Return">
+            <link target="FindSalesReturns"/>
+        </menu-item>
+        <menu-item name="createSalesReturn" title="Create Return">
+            <link target="salesReturnHeaderItems">
+            </link>
+        </menu-item>
+     </menu>
 </menus>

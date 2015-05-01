@@ -442,6 +442,24 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinddepotPayments"/>
     </request-map>
+    <request-map uri="FindSalesReturns">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindSalesReturns"/>    	
+    </request-map>
+    <request-map uri="salesReturnHeaderItems">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="SalesReturnItems"/>    	
+    </request-map>
+    <request-map uri="processSalesReturnAction">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="processDepotSalesReturnEntry" global-transaction="true"/> 
+        <response name="success" type="view" value="FindSalesReturns"/>
+        <response name="error" type="view" value="FindSalesReturns"/>
+    </request-map>
+    <request-map uri="salesReturnHeaderItems">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="SalesReturnItems"/>    	
+    </request-map>
     
     
     <!-- View Mappings -->
@@ -479,6 +497,9 @@
     <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>
     <view-map name="StockStatementReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#StockStatementReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="IndentVsDispatchPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentVsDispatchPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="FindSalesReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindSalesReturns"/>
+    <view-map name="SalesReturnItems" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SalesReturnItems"/>
+    
     
     
     
