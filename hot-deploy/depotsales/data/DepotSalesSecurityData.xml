@@ -45,7 +45,83 @@
 	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="PAYMENTSTATUS_CANCEL"/>
 	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="DEPOTSALES_CHEQUE"/>
 	<SecurityGroupPermission groupId="DEPOTSALES_MANAGER" permissionId="PAYMENTSTATUS_CANCEL"/>
-    
-    
+ 
+ <!--TABS PERMISSIONS  --> 
+   
+    <SecurityPermission description="View Purchase Order" permissionId="DEPOTSALES_PORDER_VIEW"/>
+    <SecurityGroup description="Viewing the Purchase TAB!" groupId="DEPOTSALES_PO_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_PO_VIEW"  permissionId="DEPOTSALES_PORDER_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_PORDER_VIEW"/>
+
+    <SecurityPermission description="View   Receipts of Goods " permissionId="DEPOTSALES_GRECEIPTS_VIEW"/>
+    <SecurityGroup description="Viewing the  Receipts of Goods TAB!" groupId="DEPOTSALES_GR_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_GR_VIEW"  permissionId="DEPOTSALES_GRECEIPTS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_GRECEIPTS_VIEW"/>
+
+    <SecurityPermission description="View Sale Order" permissionId="DEPOTSALES_SALE_VIEW"/>
+    <SecurityGroup description="Viewing the Sale Order TAB!" groupId="DEPOTSALES_SALE_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_SALE_VIEW"  permissionId="DEPOTSALES_SALE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_SALE_VIEW"/>
+
+    <SecurityPermission  description="View Treasurer Potal View in Accounting"  permissionId="MYPORTAL_TREASURER"/> 
+    <SecurityGroup  description="Treasurer Role user will have myportal Access" groupId="MYPORTAL_TREASURER" />
+    <SecurityGroupPermission  groupId="MYPORTAL_TREASURER" permissionId="ACCOUNTING_TREASURER"/> 
+
+    <SecurityPermission description=" View  Reports" permissionId="DEPOTSALES_REPORTS_VIEW"/>
+    <SecurityGroup description="Viewing the Reports TAB!" groupId="DEPOTSALES_REPORTS"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_REPORTS"  permissionId="DEPOTSALES_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_REPORTS_VIEW"/>
+
+    <SecurityPermission description="View Sale Variance" permissionId="DEPOTSALES_RETURNS_VIEW"/>
+    <SecurityGroup description="Viewing the Sale Variance TAB!" groupId="DEPOTSALES_RTRN_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_RTRN_VIEW"  permissionId="DEPOTSALES_RETURNS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_RETURNS_VIEW"/>
+
+
+<!-- PO PERMISSIONS  -->
+
+	<SecurityPermission description="Create Purchase Order" permissionId="DEPOTSALES_CREATE_PO"/>
+    <SecurityGroup description="Creating Purchase Orders!" groupId="DEPOTSALES_CREATE_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_CREATE_PO"  permissionId="DEPOTSALES_CREATE_PO"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_CREATE_PO"/>
+ 
+
+	<SecurityPermission description="Edit Purchase Order" permissionId="DEPOTSALES_EDIT_PO"/>
+    <SecurityGroup description="Edit Purchase Order!" groupId="DEPOTSALES_EDIT_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_EDIT_PO"  permissionId="DEPOTSALES_EDIT_PO"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_EDIT_PO"/>
+
+
+	<SecurityPermission description="Approve Purchase Order" permissionId="DEPOTSALES_APPROVE_PO"/>
+    <SecurityGroup description="Approve Purchase Order!" groupId="DEPOTSALES_APPR_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_APPR_PO"  permissionId="DEPOTSALES_APPROVE_PO"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_APPROVE_PO"/>
+
+
+	<SecurityPermission description="Cancel Purchase Order" permissionId="DEPOTSALES_CANCEL_PO"/>
+    <SecurityGroup description="Cancel Purchase Order!" groupId="DEPOTSALES_CANCEL_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_CANCEL_PO"  permissionId="DEPOTSALES_CANCEL_PO"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_CANCEL_PO"/>
+
+<!-- Raise GRN -->
+
+	<SecurityPermission description="Raise GRN" permissionId="DEPOTSALES_RAISE_GRN"/>
+    <SecurityGroup description="Raise GRN!" groupId="DEPOTSALES_RAISE_GRN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_RAISE_GRN"  permissionId="DEPOTSALES_RAISE_GRN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_RAISE_GRN"/>
+
+<!-- Raise Invoice -->
+
+	<SecurityPermission description="Raise Invoice" permissionId="DEPOTSALES_RAISE_INVOICE "/>
+    <SecurityGroup description="Raise Invoice!" groupId="DEPOTSALES_RAISE_INV"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_RAISE_INV"  permissionId="DEPOTSALES_RAISE_INVOICE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_RAISE_INVOICE"/>
+
+<!-- cancel shipmet -->
+
+   <SecurityPermission  description="Permission to Cancel FGS Shipment" permissionId="FGSSALE_SHIP_CANCEL"/> 
+   <SecurityGroup description="Permission to Cancel FGS Shipment" groupId="CANCELFGS_SHIPMENT"/> 
+   <SecurityGroupPermission  groupId="FULLADMIN"permissionId="FGSSALE_SHIP_CANCEL"/> 
+   <SecurityGroupPermission groupId="CANCELFGS_SHIPMENT"  permissionId="FGSSALE_SHIP_CANCEL"/>
 	
 </entity-engine-xml>

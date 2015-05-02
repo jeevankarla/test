@@ -79,12 +79,31 @@
             <link target="stockPositionDepotSales"/>
         </menu-item>
         <menu-item name="FindPO" title="Purchase Order">
+        	<condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	
+			 </or>
+	        </condition>
 	        	<link target="FindPO"/>
 	    </menu-item>
         <menu-item name="FindGRNReceipts" title="Receipt of Goods">
+       		 <condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
 	        	<link target="FindGRNReceiptsDepot"/>
 	     </menu-item>
 	     <menu-item name="PhysicalInventory" title="Stock Variance">
+	      <condition>
+	     	    <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_RETURNS_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	</or> 
+	        </condition>
            <!--  <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
             </condition>   -->        
@@ -93,6 +112,12 @@
             </link>
         </menu-item>
 	     <menu-item name="DepotSalesOrder" title="Sales Order">
+	      <condition>
+	     	    <or>
+	        		<if-has-permission permission="DEPOTSALES"  action="_SALE_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	</or> 
+	        </condition>  
             <link target="DepotSalesOrder">
             </link>
         </menu-item>
@@ -100,11 +125,12 @@
             <link target="FindSalesReturns"/>
         </menu-item>  
          <menu-item name="purchaseinvoice" title="Purchase Invoices">
-		  <!--    <condition>
+		    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            
-            </condition> -->
+            </condition> 
 			<link target="DepotPurchaseInvoice">
 				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
 				<parameter param-name="subTabButtonValue" value="Manufacturing" />
@@ -112,25 +138,26 @@
 			</link>
 		</menu-item>
         <menu-item name="NonRouteCustomPayments" title="Receipts"> 
-    		<!-- <condition>
+    		 <condition>
 				<or><if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 					<if-has-permission permission="DEPOTSALES" action="_CASH"/>
 					<if-has-permission permission="DEPOTSALES" action="_CHEQUE"/>
 					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
 				</or>
-            </condition> -->
+            </condition> 
             <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="${subTabItem}"/>
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}" />
             </link>	        
        </menu-item>
        	  <menu-item name="depotpayments" title="Payments">
-		  <!--    <condition>
+		    <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            
-            </condition> -->
+            </condition> 
 			<link target="finddepotPayments">
 <!-- 				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" /> -->
 			<parameter param-name="subTabButtonValue" value="Find Payments" />
@@ -149,6 +176,12 @@
 	        	<link target="MaterialForQCApproval"/>
 	     </menu-item> -->
 	    <menu-item name="DepotSalesReports" title="Reports">
+	   		 <condition>
+				<or>
+	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+	        </condition>
 	      	<link target="DepotSalesReports"/>
 	    </menu-item>
 	        
@@ -376,11 +409,11 @@
       <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="CashPayment" selected-menuitem-context-field-name="subTabButtonItem">
            <menu-item name="CashPayment" title="Cash">
-          <!-- 	<condition>
+          	<condition>
 				<or>
             		<if-has-permission permission="DEPOTSALES"  action="_CASH"/>
             	</or>            
-            </condition> -->
+            </condition> 
             <link target="FindPaymentDepotSales">
             	<parameter param-name="subTabItem" value="CashPayment"/>
             	<parameter param-name="defaultMethodTypeId" value="CASH_PAYIN"/>
