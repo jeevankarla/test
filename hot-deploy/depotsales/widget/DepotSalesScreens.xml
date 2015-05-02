@@ -1817,6 +1817,9 @@
 						<section>
 							<widgets>
 								<section>
+                             		<condition>
+                            			<if-has-permission permission="DEPOTSALES"  action="_CREATE_PO"/>
+                            		</condition>
 									<widgets>
 										<link target="CreatePO" text="Create PO" style="buttontext" />
 									</widgets>
