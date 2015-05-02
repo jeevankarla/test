@@ -72,10 +72,22 @@
     <SecurityGroupPermission groupId="DEPOTSALES_REPORTS"  permissionId="DEPOTSALES_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_REPORTS_VIEW"/>
 
-    <SecurityPermission description="View Sale Variance" permissionId="DEPOTSALES_RETURNS_VIEW"/>
-    <SecurityGroup description="Viewing the Sale Variance TAB!" groupId="DEPOTSALES_RTRN_VIEW"/>
-    <SecurityGroupPermission groupId="DEPOTSALES_RTRN_VIEW"  permissionId="DEPOTSALES_RETURNS_VIEW"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_RETURNS_VIEW"/>
+    <SecurityPermission description="View Sale Variance" permissionId="DEPOTSALES_PUR_RTRNS"/>
+    <SecurityGroup description="View and Edit of Purchases Returns!" groupId="DEPOTSALES_PUR_RTRNS"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_PUR_RTRNS"  permissionId="DEPOTSALES_PUR_RTRNS"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_PUR_RTRNS"/>
+    
+    <SecurityPermission description="View Sale Returns" permissionId="DEPOTSALES_SALE_RTRN"/>
+    <SecurityGroup description=" View and Edit of Sales Returns!" groupId="DEPOTSALES_SALE_RTRN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_SALE_RTRN"  permissionId="DEPOTSALES_SALE_RTRN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_SALE_RTRN"/>
+    
+    <SecurityPermission description="View Stock Possition" permissionId="DEPOTSALES_STCK_PSTN"/>
+    <SecurityGroup description="Viewing the Stock Possition!" groupId="DEPOTSALES_STCK_PSTN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_STCK_PSTN"  permissionId="DEPOTSALES_STCK_PSTN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_STCK_PSTN"/>
+    
+    
 
 
 <!-- PO PERMISSIONS  -->
