@@ -49,31 +49,39 @@ under the License.
           			<fo:block text-align="left"  keep-together="always" font-family="Courier,monospace" white-space-collapse="false" font-size="8pt"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------</fo:block>
           			<fo:table>
-          			<fo:table-column column-width="15%"/>
+          					<fo:table-column column-width="11.6%"/>
+		                    <fo:table-column column-width="11.6%"/>
 		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="25%"/>
+		                    <fo:table-column column-width="11.6%"/>
 		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="15%"/>
+		                    <fo:table-column column-width="11.6%"/>
+		                    <fo:table-column column-width="11.6%"/>
+		                    <fo:table-column column-width="11.6%"/>
 		                    <fo:table-body>
 		                    	<fo:table-row>
 					                    <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Id.</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Id</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Code.</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Date</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Name</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Party Name</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Quantity</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Code</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Quantity</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Name</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Difference Quantity</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Quantity</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Quantity</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Difference Quantity</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 							     </fo:table-body>
@@ -88,12 +96,14 @@ under the License.
           			<#assign orderWiseList = orderWiseMap.entrySet()>
           			<#--  <fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order: -->
           			<fo:table>
-          			<fo:table-column column-width="15%"/>
+          					<fo:table-column column-width="11.6%"/>
+		                    <fo:table-column column-width="11.6%"/>
 		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="25%"/>
+		                    <fo:table-column column-width="11.6%"/>
 		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="15%"/>
+		                    <fo:table-column column-width="11.6%"/>
+		                    <fo:table-column column-width="11.6%"/>
+		                    <fo:table-column column-width="11.6%"/>
 		                    <fo:table-body>
 		                    	
 							     <#list orderWiseList as orderWiseEntry>
@@ -101,20 +111,26 @@ under the License.
 					                    <fo:table-cell>
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderID}</fo:block>  
 							            </fo:table-cell>
-							             <fo:table-cell>
+							             <fo:table-cell>																	
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderWiseEntry.getValue().get("orderDate")?if_exists, "dd-MM-yy")}</fo:block>  
+							            </fo:table-cell>
+							              <fo:table-cell>
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("partyName")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							              <fo:table-cell>
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("productCode")?if_exists}</fo:block>  
 							            </fo:table-cell>
-							              <fo:table-cell>
+							             <fo:table-cell>
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("productName")?if_exists}</fo:block>  
 							            </fo:table-cell>
-							              <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("initialQty")?if_exists}</fo:block>  
-							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("finalQty")?if_exists}</fo:block>  
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("initialQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
-							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("diffQty")?if_exists}</fo:block>  
+							            <fo:table-cell>
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("finalQty")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("diffQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 							     </#list>
