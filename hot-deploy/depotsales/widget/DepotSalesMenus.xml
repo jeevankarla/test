@@ -72,8 +72,8 @@
         <menu-item name="stockPositionDepotSales" title="Stock Position">
         	<condition>
         		<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+	        		<if-has-permission permission="DEPOTSALES" action="_STCK_PSTN"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>
         	</condition>
             <link target="stockPositionDepotSales"/>
@@ -100,7 +100,7 @@
 	     <menu-item name="PhysicalInventory" title="Stock Variance">
 	      <condition>
 	     	    <or>
-	        		<if-has-permission permission="DEPOTSALES" action="_RETURNS_VIEW"/>
+	        		<if-has-permission permission="DEPOTSALES" action="_PUR_RTRNS"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 	        	</or> 
 	        </condition>
@@ -122,6 +122,12 @@
             </link>
         </menu-item>
         <menu-item name="SalesReturns" title="Sales Returns">
+         <condition>
+	     	    <or>
+	        		<if-has-permission permission="DEPOTSALES"  action="_SALE_RTRN"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	</or> 
+	        </condition> 
             <link target="FindSalesReturns"/>
         </menu-item>  
          <menu-item name="purchaseinvoice" title="Purchase Invoices">
