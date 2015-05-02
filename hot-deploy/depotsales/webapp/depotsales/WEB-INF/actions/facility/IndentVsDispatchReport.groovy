@@ -15,6 +15,7 @@ import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.product.inventory.InventoryWorker;
 import org.ofbiz.product.inventory.InventoryServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
+import org.ofbiz.party.party.PartyHelper;
 
 fromDate = parameters.ivdFromDate;
 thruDate = parameters.ivdThruDate;
@@ -54,37 +55,55 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 				
 				Map ProductWiseMap = FastMap.newInstance(); 
 				List productList = EntityUtil.filterByAnd(OrderHeaderList, UtilMisc.toMap("orderId", orderId));
+				//Debug.log("productList====================== ####### "+productList);
 				if(UtilValidate.isNotEmpty(productList)){
 					productList.each{productEntry->
 						conditionList.clear();
 						tempMap =[:];
-						 initial="";
+						 BigDecimal initial=BigDecimal.ZERO;
 						tempMap["productCode"]="";
 						tempMap["productName"]="";
 						tempMap["initialQty"]=BigDecimal.ZERO;
 						tempMap["finalQty"]=BigDecimal.ZERO;
 						tempMap["diffQty"]=BigDecimal.ZERO;
+						
+						tempMap["partyName"]="";
+						
+						//give prefrence to ShipToCustomer
+						conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+						conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+						shipCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+						orderRole = EntityUtil.getFirst(delegator.findList("OrderRole", shipCond, null, null, null, false));
+						
+						
 						product = delegator.findOne("Product",UtilMisc.toMap("productId", productEntry.productId), false);
-						if(UtilValidate.isNotEmpty(product)){
-							tempMap["productName"]=product.productName;
-							tempMap["productCode"]=(product.internalName).substring(0, 8);
-						}
-						tempMap["finalQty"]=productEntry.quantity;
+						
 						OrderItemAttr = EntityUtil.getFirst(delegator.findByAnd("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"attrName","INDENTQTY_FOR:"+productEntry.productId)));
-						if(UtilValidate.isNotEmpty(OrderItemAttr)){
-							initial=OrderItemAttr.attrValue;
-							tempMap["initialQty"]=new BigDecimal(initial);
-						}
+						if(UtilValidate.isNotEmpty(OrderItemAttr) && UtilValidate.isNotEmpty(productEntry)){
+							initial=new BigDecimal(OrderItemAttr.attrValue);
+						if(!(initial.compareTo(productEntry.quantity)==0)){
+						
+							tempMap["initialQty"]=initial;
+							tempMap["finalQty"]=productEntry.quantity;
+						
 						if(tempMap["initialQty"]!=null && tempMap["finalQty"]!=null){
 							
 						tempMap["diffQty"] = (tempMap["initialQty"]).subtract(tempMap["finalQty"]);
 						}
+						if(UtilValidate.isNotEmpty(product)){
+							tempMap["productName"]=product.productName;
+							tempMap["productCode"]=(product.internalName).substring(0, 8);
+						}
+						tempMap["partyName"] = PartyHelper.getPartyName(delegator, orderRole.partyId, false);
+						tempMap["orderDate"]=productEntry.orderDate;
 						
 						ProductWiseMap.put(productEntry.productId, tempMap);
 						
-					}
 					finalMap.put(orderId, ProductWiseMap);
+					}
+				  }
 				}
 			}
+		}
 	}
 	context.IndentVsDispatchMap=finalMap;
