@@ -427,12 +427,9 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  inventoryItemList = delegator.findList("InventoryItem", condition, null, null, null, false);
  
  if(UtilValidate.isNotEmpty(inventoryItemList)){
- 
-	 inventoryItemIdList = EntityUtil.getFieldListFromEntityList(inventoryItemList, "inventoryItemId", true);
- 
-	 inventoryItemIdList.each{inventoryItemId->
 	 conditionList.clear();
-	 conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId));
+	 inventoryItemIdList = EntityUtil.getFieldListFromEntityList(inventoryItemList, "inventoryItemId", true);
+	 conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIdList));
 	 conditionList.add(EntityCondition.makeCondition("varianceReasonId", EntityOperator.EQUALS, "VAR_DAMAGED"));
 	 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	 inventoryItemVarianceList = delegator.findList("InventoryItemVariance", condition, null, null, null, false);
@@ -447,7 +444,6 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 
 	 		}
 	 	}
- 	}
  }
  context.damagedQty=damagedQty;
  
