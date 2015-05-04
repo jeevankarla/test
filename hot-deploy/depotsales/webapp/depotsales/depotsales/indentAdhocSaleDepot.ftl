@@ -62,6 +62,12 @@ $(document).ready(function(){
 		
 	});
 	
+	var partyName;
+	function dispSuppName(selection){
+	   var value = $("#partyId").val();
+	   partyName = partyNameObj[value];
+	   $("#partyName").html("<h4>"+partyName+"</h4>");
+	}   
 	
 	
 	var globalCatgoryOptionList=[];
@@ -235,7 +241,8 @@ $(document).ready(function(){
           		</td>       
        		<#else>               
           		<td valign='middle'>
-          			<input type="text" name="partyId" id="partyId" />
+          			<input type="text" name="partyId" id="partyId" onblur= 'javascript:dispSuppName(this);' />
+          			 <span class="tooltip" id="partyName"></span>
           			 <span class="tooltip">Input party code and press Enter</span>
           		</td>
           	</#if>

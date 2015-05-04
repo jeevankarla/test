@@ -96,6 +96,7 @@
 	data2=${StringUtil.wrapString(data2JSON)!'[]'};
 	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
+	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
 	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
 	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
