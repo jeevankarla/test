@@ -534,6 +534,9 @@ under the License.
             <result-to-field result-name="physicalInventoryId" field="parameters.physicalInventoryId"/>
             <result-to-result result-name="physicalInventoryId" service-result-name="physicalInventoryId"/>
         </call-service>
+         <if-empty field="parameters.availableToPromiseVar">
+       		 <set from-field="parameters.quantityOnHandVar" field="parameters.availableToPromiseVar"/>
+         </if-empty>
         <set-service-fields service-name="createInventoryItemVariance" map="parameters" to-map="createInventoryItemVarianceMap"/>
         <call-service service-name="createInventoryItemVariance" in-map-name="createInventoryItemVarianceMap"/>
     </simple-method>

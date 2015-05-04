@@ -557,7 +557,7 @@
                 <entity-options entity-name="VarianceReason" description="${description}"/>
             </drop-down>
         </field>
-        <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
+<!--    <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field> -->
         <field name="quantityOnHandVar" title="${uiLabelMap.ProductProductQOHVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
