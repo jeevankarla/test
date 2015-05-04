@@ -76,7 +76,7 @@
 				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Production Name:</div></td>
 					      	<#if productionRunData?exists && productionRunData.workEffortName?has_content>
 			      				<input type="hidden" name="workEffortName" id="workEffortName" value="${productionRunData.workEffortName}">
-				      			<td>
+				      			<td align='left' style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${productionRun.workEffortName?if_exists}</div>
 				      			</td>
 				      		<#else>
@@ -87,9 +87,10 @@
 					      	
 					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Store:</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.facilityId?has_content>
+			      				<#assign facility = delegator.findOne("Facility", {"facilityId" : productionRunData.facilityId}, false)>
 			      				<input type="hidden" name="facilityId" id="facilityId" value="${productionRunData.facilityId}">
-				      			<td>
-				      				<div class='tabletext h3'>${productionRun.facilityId}</div>
+				      			<td style="color:#706B6B;text-align:left;">
+				      				<div class='tabletext h3'>${facility.facilityName?if_exists} [${productionRun.facilityId}]</div>
 				      			</td>
 				      		<#else>
 				      			<td>
@@ -106,10 +107,11 @@
 					      	<td> &nbsp;</td>
 					      	
 					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Routing:</div></td>
-					      	<#if routingId?has_content>
-			      				<input type="hidden" name="routingId" id="routingId" value="${routingId}">
-				      			<td>
-				      				<div class='tabletext h3'>${routingId?if_exists} [${routingId}]</div>
+					      	<#if productionRunData?exists &&  productionRunData.routingTaskId?has_content>
+			      				<input type="hidden" name="routingId" id="routingId" value="${productionRunData.routingTaskId?if_exists}">
+			      				<#assign routingTask = delegator.findOne("WorkEffort", {"workEffortId" : productionRunData.routingTaskId}, false)>
+				      			<td style="color:#706B6B;text-align:left;">
+				      				<div class='tabletext h3'>${routingTask.workEffortName?if_exists} [${productionRunData.routingTaskId?if_exists}]</div>
 				      			</td>
 				      		<#else>
 				      			<td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="productionRunEntryInit" name="routingId" id="routingId" fieldFormName="LookupRouting"/></td>
@@ -119,9 +121,10 @@
 					    <tr>
 				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Product:</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.productId?has_content>
+					      		<#assign product = delegator.findOne("Product", {"productId" : productionRunData.productId}, false)>
 			      				<input type="hidden" name="productId" id="productId" value="${productionRunData.productId}">
-				      			<td>
-				      				<div class='tabletext h3'>${productionRunData.productId}</div>
+				      			<td style="color:#706B6B;text-align:left;">
+				      				<div class='tabletext h3'> ${product.productName?if_exists} [${productionRunData.productId}]</div>
 				      			</td>
 				      		<#else>
 				      			<td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="productionRunEntryInit" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
@@ -132,7 +135,7 @@
 					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce:</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.quantity?has_content>
 			      				<input type="hidden" name="pRQuantity" id="pRQuantity" value="${productionRunData.quantity}">
-				      			<td>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${productionRunData.quantity?if_exists}</div>
 				      			</td>
 				      		<#else>
@@ -144,7 +147,7 @@
 					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Start Date:</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.estimatedStartDate?has_content>
 			      				<input type="hidden" name="startDate" id="startDate" value="${productionRunData.estimatedStartDate}">
-				      			<td>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${productionRunData.estimatedStartDate?if_exists}</div>
 				      			</td>
 				      		<#else>
@@ -153,10 +156,11 @@
 					      	
 					      	<#if productionRunId?exists>
 					      		<td> &nbsp;</td>
-						      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Status:</div></td>
+						      	<td valign='middle' nowrap="nowrap"><div class='h3'>Status:</div></td>
 					      		<#if productionRunData.currentStatusId?has_content>
-				      				<td>
-				      					<div class='tabletext h3'>${productionRunData.currentStatusId?if_exists}</div>
+					      			<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : productionRunData.currentStatusId}, true)>
+				      				<td style="color:#706B6B;text-align:left;">
+				      					<div class='tabletext h3'>${statusItem.statusCode?if_exists}</div>
 				      				</td>
 				      			</#if>
 				      		</#if>
@@ -194,21 +198,21 @@
 			 		<label>Routing Tasks</label>
 				</div>
 				<table width="100%" cellspacing="15" cellpadding="15" id="customTable">
-								        
-					<tr class='h2' style="border:1pt solid black;width:100%">
-			        	<td style='float: left;width:5%;' >Sl.</td>
-			        	<td style='float: left;width:35%;'>Name</td>
-			        	<td style='float: left;width:20%;'>Machine</td>
-			        	<td style='float: left;width:15%;'>Status</td>
-			        	<td style='float: center;width:15%;'>Start</td>
-			        	<td style='float: center;width:10%;'>Add Material</td>
-			        	<td style='float: center;width:10%;'>Declare</td>
-			        	<td style='float: center;width:10%;'>Finish</td>
+					<tr class='h2' style="border:1pt solid black;background-color:#F4DFBD; line-height: 25px;">
+			        	<td style='float: center;width:5%;' >SL.</td>
+			        	<td style='float: center;width:22%;'>NAME</td>
+			        	<td style='float: center;width:18%;'>MACHINE</td>
+			        	<td style='float: center;width:15%;'>STATUS</td>
+			        	<td style='float: center;width:10%;'>START</td>
+			        	<td style='float: center;width:10%;'>ADD MATERIAL</td>
+			        	<td style='float: center;width:10%;'>DECLARE</td>
+			        	<td style='float: center;width:10%;'>FINISH</td>
 			        </tr>
 			        <#assign sl=1>
 			        <#assign allow = "yes">
 			        <#list productionRunRoutingTasks as eachTask>
 			        	<#assign statusId = eachTask.currentStatusId>
+			        	<#assign eachStatusItem = delegator.findOne("StatusItem", {"statusId" : statusId}, false)>
 			        	<#if (statusId == 'PRUN_DOC_PRINTED' || statusId == 'PRUN_RUNNING') && allow == "yes">
 					        <tr class='h3' 
 					        	<#if statusId == 'PRUN_DOC_PRINTED'>
@@ -217,12 +221,12 @@
 					        		style="border-bottom:1pt dotted black;background-color:#7FFFC7; line-height: 25px;">
 					        	</#if>
 					        	
-					        	<td style='float: left;width:5%;'> ${sl?if_exists}</td>
-					        	<td style='float: left;width:35%;'> ${eachTask.workEffortName?if_exists}</td>
-						      	<td style='float: left;width:20%;'> ${eachTask.fixedAssetId?if_exists}</td>
-						      	<td style='float: left;width:15%;'> ${eachTask.currentStatusId?if_exists}</td>
+					        	<td style='float: center;width:5%;'> ${sl?if_exists}</td>
+					        	<td style='float: center;width:22%;'> ${eachTask.workEffortName?if_exists}</td>
+						      	<td style='float: center;width:18%;'> ${eachTask.fixedAssetId?if_exists}</td>
+						      	<td style='float: center;width:15%;'> ${eachStatusItem.statusCode?if_exists}</td>
 						      	<#if statusId == "PRUN_RUNNING">
-						      		<td style='width:15%;'>&nbsp;</td>
+						      		<td style='width:10%;'>&nbsp;</td>
 						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="issueMaterial" id="issueMaterialBtn" value="Add" onclick="javascript: addMaterial('${eachTask.workEffortId}')"/></td>
 						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="declareTask" id="declareTask" value="Declare" onclick="javascript: declareTaskOut('${eachTask.workEffortId}')""/></td>
 						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> 
@@ -234,7 +238,7 @@
 						      			</form>	
 						      		</td>
 						      	<#else>
-						      		<td style='float: center;width:15%;padding: 5px 5px 5px 5px;'>
+						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'>
 						      			<form name="taskStartForm" id="taskStartForm" method="post" action="changeRoutingTaskStatus">
 						      				<input type="hidden" name="workEffortId" value="${eachTask.workEffortId?if_exists}">
 						      				<input type="hidden" name="productionRunId" value="${productionRunId?if_exists}"> 
@@ -254,10 +258,10 @@
 					        	<#else>
 					        		style="border-bottom:1pt dotted black; line-height: 25px;">
 					        	</#if>
-					        	<td style='float: left;width:5%;'> ${sl?if_exists}</td>
-					        	<td style='float: left;width:30%;'> ${eachTask.workEffortName?if_exists}</td>
-						      	<td style='float: left;width:25%;'> ${eachTask.fixedAssetId?if_exists}</td>
-						      	<td style='float: left;width:10%;'>${eachTask.currentStatusId?if_exists}</td>
+					        	<td style='float: center;width:5%;'> ${sl?if_exists}</td>
+					        	<td style='float: center;width:22%;'> ${eachTask.workEffortName?if_exists}</td>
+						      	<td style='float: center;width:18%;'> ${eachTask.fixedAssetId?if_exists}</td>
+						      	<td style='float: center;width:15%;'> ${eachStatusItem.statusCode?if_exists}</td>
 						      	<td style='width:10%;'>&nbsp;</td>
 						      	<td style='width:10%;'>&nbsp;</td>
 						      	<td style='width:10%;'>&nbsp;</td>
@@ -410,10 +414,6 @@
 						}
 						prepareDeclareGrid(declareProductJSON, effortId, declareBtn);
 						
-						if(returnBtn == "N" && declareBtn=="N"){
-							$("#declareTask").hide();
-						}
-						
 					}					
 				},
 				error: function (xhr, textStatus, thrownError){
@@ -423,4 +423,3 @@
       }
       
 </script>
-

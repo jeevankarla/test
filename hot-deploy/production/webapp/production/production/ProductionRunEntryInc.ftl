@@ -149,12 +149,14 @@
 					}
 				}else{
 					$('#declareMaterialDiv').hide();
+					$("#declareSave").hide();
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){
 				alert("record not found :: Error code:-  "+xhr.status);
 			}							
 		});
+		
 	}
 	function processReturnComponentEntry(){
 		

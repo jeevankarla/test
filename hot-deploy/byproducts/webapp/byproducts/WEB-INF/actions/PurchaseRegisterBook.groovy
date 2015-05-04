@@ -68,6 +68,8 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
    partyIds.addAll(amulPartyIds);
 }*/
 // Invoice No Purchase report
+termTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), null, null, null, false);
+otherTermIds = EntityUtil.getFieldListFromEntityList(termTypes, "termTypeId", true);
 invoiceMap = [:];
 purchaseRegisterList = [];
 salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
@@ -134,39 +136,30 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				insuranceAmount = 0;
 				packForwAmount = 0;
 				otherAmount = 0;
+				exlTermList = ["COGS_INSURANCE", "COGS_DISC", "COGS_DISC_ATR", "COGS_DISC_BASIC"]
 				invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(invoiceItemsList)){
 					invoiceItemsList.each{ invoiceItem ->
-						if(UtilValidate.isNotEmpty(invoiceItem)){
-							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_FREIGHT")){
-								freightAmount = invoiceItem.amount;
+						invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+						
+						if(UtilValidate.isNotEmpty(invoiceItemTypeId) && (invoiceItemTypeId.equals("COGS_DISC") || invoiceItemTypeId.equals("COGS_DISC_ATR") || invoiceItemTypeId.equals("COGS_DISC_BASIC"))){
+							discountAmount = invoiceItem.amount;
+						}
+						if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_INSURANCE")){
+							insuranceAmount = invoiceItem.amount;
+						}
+						if(UtilValidate.isNotEmpty(invoiceItemTypeId)){
+							if((!exlTermList.contains(invoiceItemTypeId)) && otherTermIds.contains(invoiceItemTypeId)){
+								freightAmount = freightAmount+invoiceItem.amount;
 							}
 						}
-						if(UtilValidate.isNotEmpty(invoiceItem)){
-							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_DISC")){
-								discountAmount = invoiceItem.amount;
-							}
-						}
-						if(UtilValidate.isNotEmpty(invoiceItem)){
-							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_INSURANCE")){
-								insuranceAmount = invoiceItem.amount;
-							}
-						}
-						if(UtilValidate.isNotEmpty(invoiceItem)){
-							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_PCK_FWD")){
-								packForwAmount = invoiceItem.amount;
-							}
-						}
-						if(UtilValidate.isNotEmpty(invoiceItem)){
+						
+						/*if(UtilValidate.isNotEmpty(invoiceItem)){
 							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
 							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_OTH_CHARGES")){
 								otherAmount = invoiceItem.amount;
 							}
-						}
+						}*/
 						totalFreight = 0;
 						totalFreight = freightAmount+packForwAmount+otherAmount;
 					}
