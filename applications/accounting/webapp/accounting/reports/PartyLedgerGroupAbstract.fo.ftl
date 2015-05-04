@@ -99,8 +99,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 						</#list>
                 			<#assign totDebit=totDebit+openDebit>
                             <#assign totCredit=totCredit+openCredit>
-                            <#assign grdDebit=grdDebit+totDebit>
-                            <#assign grdCredit=grdCredit+totCredit>
+                        <#assign closingTot=totDebit-totCredit>
+                        <#assign closingDebit=0>
+                        <#assign closingCredit=0>   
+                        <#if closingTot gte 0>
+                        <#assign closingDebit=closingTot>
+                        <#else>
+                        <#assign closingCredit=closingTot>
+                        </#if>
+                        <#assign grdDebit=grdDebit+closingDebit>
+                        <#assign grdCredit=grdCredit+((-1)*closingCredit)>
+                      <#if closingDebit !=0 || closingCredit !=0>
                 		<fo:table-row>
                 			<fo:table-cell>
                     			 <fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${sno}</fo:block>  
@@ -109,16 +118,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${partyList.getKey()}</fo:block>  
                 			</fo:table-cell>
                              <fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}</fo:block>  
+                    			<fo:block   text-align="left"   font-size="12pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}</fo:block>  
                 			</fo:table-cell>
-                            <#assign closingTot=totDebit-totCredit>
-                            <#assign closingDebit=0>
-                            <#assign closingCredit=0>   
-                            <#if closingTot gte 0>
-                             <#assign closingDebit=closingTot>
-                             <#else>
-                             <#assign closingCredit=closingTot>
-                             </#if>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${closingDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
@@ -127,6 +128,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			</fo:table-cell>
                 		</fo:table-row>
                 		<#assign sno=sno+1>
+                        </#if>
                       </#if>
              	      </#list>
                          <fo:table-row>
