@@ -26,8 +26,9 @@ condList = [];
 condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
 condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
 condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null));
+List<String> orderBy = UtilMisc.toList("-orderDate");
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-orderHeader = delegator.findList("OrderHeader", cond, null, null, null ,false);
+orderHeader = delegator.findList("OrderHeader", cond, null, orderBy, null ,false);
 
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 custCondList = [];
