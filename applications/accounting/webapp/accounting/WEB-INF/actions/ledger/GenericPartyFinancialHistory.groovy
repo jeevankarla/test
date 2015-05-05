@@ -22,6 +22,7 @@ import org.ofbiz.common.*;
 import org.ofbiz.webapp.control.*;
 import org.ofbiz.accounting.invoice.*;
 import org.ofbiz.accounting.payment.*;
+import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
@@ -143,9 +144,9 @@ if (UtilValidate.isEmpty(partyDetail)) {
 
 conditionList=[];
 
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_IN_PROCESS"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_WRITEOFF"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_IN_PROCESS","INVOICE_WRITEOFF","INVOICE_CANCELLED")));
+//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_WRITEOFF"));
+//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
@@ -412,6 +413,7 @@ while (payment = payIterator.next()) {
 	if(payCounter==0){
 		paymentFirstDate=payment.paymentDate;
 	}
+	GenericValue paymentTemp = delegator.findOne("Payment",UtilMisc.toMap("paymentId", payment.paymentId), false);
 	payCounter=payCounter+1;
 	innerMap=[:];
 	curntDay=UtilDateTime.toDateString(paymentDate ,"dd-MM-yyyy");
@@ -429,7 +431,7 @@ while (payment = payIterator.next()) {
 	innerMap["debitValue"]=0;
 	innerMap["creditValue"]=0;
 	
-    if ("DISBURSEMENT".equals(payment.parentTypeId) || "TAX_PAYMENT".equals(payment.parentTypeId)) {
+    if (UtilAccounting.isDisbursement(paymentTemp) || UtilAccounting.isTaxPayment(paymentTemp)) {
 		innerMap["partyId"]=payment.partyIdTo;
 		innerMap["vchrType"]="DISBURSEMENT";
 		innerMap["crOrDbId"]="D";
@@ -473,7 +475,7 @@ while (payment = payIterator.next()) {
 			}
 		}
     }
-    else if ("RECEIPT".equals(payment.parentTypeId)) {
+    else if (UtilAccounting.isReceipt(paymentTemp)) {
 		innerMap["partyId"]=payment.partyIdFrom;
 		innerMap["vchrType"]="RECEIPT";
 		innerMap["vchrCode"]="Receipt";
