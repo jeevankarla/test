@@ -79,8 +79,10 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 						product = delegator.findOne("Product",UtilMisc.toMap("productId", productEntry.productId), false);
 						
 						OrderItemAttr = EntityUtil.getFirst(delegator.findByAnd("OrderItemAttribute", UtilMisc.toMap("orderId",orderId,"attrName","INDENTQTY_FOR:"+productEntry.productId)));
-						if(UtilValidate.isNotEmpty(OrderItemAttr) && UtilValidate.isNotEmpty(productEntry)){
+						if(UtilValidate.isNotEmpty(orderRole)){
+						if(UtilValidate.isNotEmpty(OrderItemAttr)){
 							initial=new BigDecimal(OrderItemAttr.attrValue);
+						}
 						if(!(initial.compareTo(productEntry.quantity)==0)){
 						
 							tempMap["initialQty"]=initial;
