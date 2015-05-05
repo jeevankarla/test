@@ -43,9 +43,9 @@
 			<script
 				location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy" />
 		</actions>
-    <!--	<menu-item name="MilkReceiptsDashboard" title="MilkReceipts Dashboard">
+    	<menu-item name="MilkReceiptsDashboard" title="MilkReceipts Dashboard">
 			<link target="MilkReceiptDashboard"></link>
-		</menu-item> -->
+		</menu-item>
     	<menu-item name="MilkReceiptEntry" title="Milk Receipts" >
             <link target="MilkReceiptsTankerEntry">
 			</link>

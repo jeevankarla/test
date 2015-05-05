@@ -46,9 +46,9 @@
     <StatusItem description="Vehicle Entered" sequenceId="1" statusCode="VEHICLE ENTERED" statusId="MR_VEHICLE_IN" statusTypeId="MR_VEHICLE_STATUS"/>
     <StatusItem description="Vehicle at Grossweight" sequenceId="2" statusCode="VEHICLE AT GROSS WEIGHT" statusId="MR_VEHICLE_GRSWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
     <StatusItem description="Vehicle at Quality Control" sequenceId="3" statusCode="VEHICLE AT QUALITY CONTROL" statusId="MR_VEHICLE_QC" statusTypeId="MR_VEHICLE_STATUS"/>
-    <StatusItem description="Vehicle at TareWeight" sequenceId="4" statusCode="VEHICLE AT TARE WEIGHT" statusId="MR_VEHICLE_TARWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
-    <StatusItem description="Vehicle at CIP" sequenceId="5" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_CIP" statusTypeId="MR_VEHICLE_STATUS"/>
-    <StatusItem description="Vehicle out" sequenceId="" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_OUT" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle at CIP" sequenceId="4" statusCode="VEHICLE AT CIP" statusId="MR_VEHICLE_CIP" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle at TareWeight" sequenceId="5" statusCode="VEHICLE AT TARE WEIGHT" statusId="MR_VEHICLE_TARWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle out" sequenceId="6" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_OUT" statusTypeId="MR_VEHICLE_STATUS"/>
    
     <StatusValidChange condition="" statusId="MR_VEHICLE_IN" statusIdTo="MR_VEHICLE_GRSWEIGHT" transitionName="VEHICLE IN TO GRSWEIGHT"/>
     <StatusValidChange condition="" statusId="MR_VEHICLE_GRSWEIGHT" statusIdTo="MR_VEHICLE_QC" transitionName="GRSWEIGHT TO QC"/>
@@ -56,7 +56,9 @@
     <StatusValidChange condition="" statusId="MR_VEHICLE_CIP" statusIdTo="MR_VEHICLE_TARWEIGHT" transitionName="CIP TO TAREWEIGHT"/>
     <StatusValidChange condition="" statusId="MR_VEHICLE_TARWEIGHT" statusIdTo="MR_VEHICLE_OUT" transitionName="TAREWEIGHT TO OUT"/>
    
-   <Enumeration description="MilkReceipts Transporter Margin Period Billing" enumCode="PB_MR_TRSPT_MRGN" enumId="PB_MR_TRSPT_MRGN" sequenceId="03" enumTypeId="PBILLING_TYPE"/>
+   <Enumeration description="PTC Transporter Margin Period Billing" enumCode="PB_PTC_TRSPT_MRGN" enumId="PB_PTC_TRSPT_MRGN" sequenceId="03" enumTypeId="PBILLING_TYPE"/>
+   
+    <RoleType createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" description="Transport Booth" hasTable="N" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PTC_VEHICLE"/>
    
    <RateType rateTypeId="DISTANCE_FROM_MD" description="Distance from MDKMF"/>
    <RateType rateTypeId="TANKER_RATE" description="MilkTanker Rate"/>
@@ -123,7 +125,7 @@
 	<InvoiceItemTypeMap invoiceItemMapKey="PTC_MILKCOST_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_MILKCOST" />
 	
    
-   	
+   	<PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" periodLength="1" uomId="TF_mon"/>
    
    
 </entity-engine-xml>
