@@ -151,6 +151,7 @@ under the License.
         <auto-attributes entity-name="InventoryItemVariance" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="PhysicalInventory" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="InventoryItemVariance" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="isVarianceForDamage" type="String" mode="IN" optional="true"/>
         <override name="physicalInventoryId" mode="OUT"/>
     </service>
 

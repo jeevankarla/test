@@ -552,6 +552,7 @@
         <!--  <field name="productATP" title="${uiLabelMap.ProductProductATP}"><display/></field>
         <field name="productQOH" title="${uiLabelMap.ProductProductQOH}"><display/></field> -->
         <field name="quantityOnHandTotal" title="Quantity"><display/></field>
+        <field name="isVarianceForDamage"><hidden value="Y"/><!--it is to negate the QOH --></field>
         <field name="varianceReasonId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="VarianceReason" description="${description}"/>
