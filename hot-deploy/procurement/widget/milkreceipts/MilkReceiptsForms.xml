@@ -695,4 +695,14 @@
             <parameter param-name="recoveryId"/>
           </hyperlink></field>
     </form>
+    
+    <form name="ListVehicleTripStatus" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="listTripStatus"  default-table-style="basic-table " separate-columns="true"  paginate-target="MilkReceiptDashboard">    
+       <field name="vehicleId" title="Tanker"><display/></field>
+       <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
+       <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" key-field-name="statusId" description="${groovy: description.toUpperCase()}"></display-entity></field>
+       <field name="userLogin" title="Last Modified By">d<display/></field>
+       
+    </form>
+    
+    
 </forms>
