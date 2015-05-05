@@ -537,6 +537,22 @@ under the License.
          <if-empty field="parameters.availableToPromiseVar">
        		 <set from-field="parameters.quantityOnHandVar" field="parameters.availableToPromiseVar"/>
          </if-empty>
+         <if-not-empty  field="parameters.isVarianceForDamage">
+              <if-compare field="parameters.isVarianceForDamage" operator="equals" value="Y">
+                 <if-compare field="parameters.quantityOnHandVar" operator="greater" value="0">
+                  <calculate field="parameters.quantityOnHandVar">
+                      	<calcop operator="multiply" field="parameters.quantityOnHandVar">
+                      		 <number value="-1"/>
+                      	 </calcop>
+                   </calculate>
+                   <calculate field="parameters.availableToPromiseVar">
+                      	 <calcop operator="multiply" field="parameters.availableToPromiseVar">
+                      		 <number value="-1"/>
+                      	 </calcop>
+                  </calculate>
+               </if-compare>
+			</if-compare>
+         </if-not-empty>
         <set-service-fields service-name="createInventoryItemVariance" map="parameters" to-map="createInventoryItemVarianceMap"/>
         <call-service service-name="createInventoryItemVariance" in-map-name="createInventoryItemVarianceMap"/>
     </simple-method>
