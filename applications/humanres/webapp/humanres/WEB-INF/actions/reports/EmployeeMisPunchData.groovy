@@ -29,6 +29,7 @@ try {
 context.put("fromDate",fromDate);
 context.put("thruDate",thruDate);
 
+SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 totalDays=UtilDateTime.getIntervalInDays(fromDate,thruDate);
 if(totalDays > 31){
 Debug.logError("You Cannot Choose More Than 31 Days.","");
@@ -48,12 +49,6 @@ misPunchDataMap=[:];
 
 TwoPunchEmployeesList = delegator.findList("EmployeeDetail",EntityCondition.makeCondition("punchType", EntityOperator.EQUALS, "AA") , null, null, null, false);
 if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
-	leaveConditionList=[];
-	leaveConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,EntityUtil.getFieldListFromEntityList(TwoPunchEmployeesList, "partyId", false)));
-	leaveConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate),
-		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)]));
-	leavecondition=EntityCondition.makeCondition(leaveConditionList,EntityOperator.AND);
-	empLeavedetailsList = delegator.findList("EmplLeave", leavecondition , null, null, null, false );
 	
 	List conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.BETWEEN, UtilMisc.toList(UtilDateTime.toSqlDate(fromDate),UtilDateTime.toSqlDate(thruDate))));
@@ -61,7 +56,7 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 	//conditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "IN"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	punchdeatils = delegator.findList("EmplPunch", condition , null, null, null, false );
-	
+
 	TwoPunchEmployeesList.each{ employee ->
 		partyIdmisPunchDataMap=[:];
 		DateKeysList=[];
@@ -82,6 +77,14 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 			SimpleDateFormat Format = new SimpleDateFormat("MM/dd/yyyy");
 			fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(Format.parse(date).getTime()));
 			thruDate=UtilDateTime.getDayEnd(new java.sql.Timestamp(Format.parse(date).getTime()));
+			
+			leaveConditionList=[];
+			leaveConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,EntityUtil.getFieldListFromEntityList(TwoPunchEmployeesList, "partyId", false)));
+			leaveConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate),
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)]));
+			leavecondition=EntityCondition.makeCondition(leaveConditionList,EntityOperator.AND);
+			empLeavedetailsList = delegator.findList("EmplLeave", leavecondition , null, null, null, false );
+			
 			empLeavedetails = EntityUtil.filterByCondition(empLeavedetailsList, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,employee.get("partyId")));
 			if(UtilValidate.isEmpty(empLeavedetails)){
 				punchindeatils = EntityUtil.filterByAnd(punchdeatils,
@@ -90,26 +93,40 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 				if(UtilValidate.isNotEmpty(emplpunchindeatils)){
 					emplpunchindeatils.each{ emplpunchin ->
 						shiftTypeId = emplpunchin.get("shiftType");
+						String inTime = timeFormat.format(emplpunchin.get("punchtime"));
+						
 						if((emplpunchin.get("shiftType")).equals("SHIFT_NIGHT")){
 							SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 							dateStart = UtilDateTime.getDayStart(new java.sql.Timestamp(dateFormat.parse(date).getTime()));
 							nextDay= UtilDateTime.getNextDayStart(dateStart);
 							List shiftoutconditionList=[];
-							shiftoutconditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(nextDay)));
+							shiftoutconditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(date)));
 							shiftoutconditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee.get("partyId")));
 							shiftoutconditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
 							shiftoutconditionList.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, "SHIFT_NIGHT"));
+							shiftoutconditionList.add(EntityCondition.makeCondition("punchtime", EntityOperator.GREATER_THAN_EQUAL_TO, emplpunchin.get("punchtime")));
 							shiftoutcondition=EntityCondition.makeCondition(shiftoutconditionList,EntityOperator.AND);
 							shiftpunchoutdeatils = delegator.findList("EmplPunch", shiftoutcondition , null, null, null, false );
 							//shiftpunchoutdeatils = EntityUtil.filterByCondition(empLeavedetailsList, shiftoutcondition);
+							
 							if(UtilValidate.isEmpty(shiftpunchoutdeatils)){
-								shiftmispunchMap=[:];
-								shiftmispunchMap.put("date",dateStr);
-								shiftmispunchMap.put("partyId",employee.get("partyId"));
-								shiftmispunchMap.put("Time",emplpunchin.get("punchtime"));
-								String partyName = PartyHelper.getPartyName(delegator, employee.get("partyId"), false);
-								shiftmispunchMap.put("partyName",partyName);
-								partyIdmisPunchDataMap.put(emplpunchin.get("punchtime"),shiftmispunchMap);
+								List shiftoutconditionList1=[];
+								shiftoutconditionList1.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(nextDay)));
+								shiftoutconditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee.get("partyId")));
+								shiftoutconditionList1.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
+								shiftoutconditionList1.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, "SHIFT_NIGHT"));
+								shiftoutcondition1=EntityCondition.makeCondition(shiftoutconditionList1,EntityOperator.AND);
+								nightShiftPunchoutdeatils = delegator.findList("EmplPunch", shiftoutcondition1 , null, null, null, false );
+								
+								if(UtilValidate.isEmpty(nightShiftPunchoutdeatils)){
+									shiftmispunchMap=[:];
+									shiftmispunchMap.put("date",dateStr);
+									shiftmispunchMap.put("partyId",employee.get("partyId"));
+									shiftmispunchMap.put("Time",emplpunchin.get("punchtime"));
+									String partyName = PartyHelper.getPartyName(delegator, employee.get("partyId"), false);
+									shiftmispunchMap.put("partyName",partyName);
+									partyIdmisPunchDataMap.put(emplpunchin.get("punchtime"),shiftmispunchMap);
+								}
 							}
 						}
 						else{
