@@ -5663,7 +5663,7 @@ public class InvoiceServices {
 	        		         return ServiceUtil.returnError(e.toString());
 	                    }
 		                amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
-	                 	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
+	                 	/*if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
 	                 		try {
 	                 			paymentEntry.set("isFullyApplied", "Y");
 		                 		delegator.store(paymentEntry);
@@ -5673,7 +5673,7 @@ public class InvoiceServices {
 		        		         return ServiceUtil.returnError(e.toString());
 		                    }
 	                 		break;
-	                 	}
+	                 	}*/
             			
             		}
             		try {
