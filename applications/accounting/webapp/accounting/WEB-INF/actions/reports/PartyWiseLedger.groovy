@@ -95,7 +95,7 @@ if(UtilValidate.isNotEmpty(rolePartyIds)){
 }
 conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-acctgTransList = delegator.findList("AcctgTransAndEntries",condition,null,null,null,false);
+acctgTransList = delegator.findList("AcctgTransAndEntries",condition,null,UtilMisc.toList("transactionDate"),null,false);
 partyMap=[:];
 openingBalMap=[:];
 
@@ -164,6 +164,7 @@ openingBalMap=[:];
 					tempList.add(tempMap);
 					partyId=transEntry.partyId;
 					partyId=partyId.toUpperCase();
+					tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("transactionDate"));
 					partyMap[partyId]=tempList;
 				}else{
 						tempMap=[:];
@@ -205,6 +206,7 @@ openingBalMap=[:];
 						partyId=partyId.toUpperCase();
 						tempList=partyMap[partyId];
 						tempList.add(tempMap);
+						tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("transactionDate"));
 						partyMap[partyId]=tempList;
 				}
 			}
