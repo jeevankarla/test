@@ -478,7 +478,7 @@
 											  <fo:block text-align="right" font-size="10pt"><#-->${openingBalSiloDetails.openingSnf?if_exists}--></fo:block>
 										   </fo:table-cell >
 										    <fo:table-cell >
-											  <fo:block text-align="center" font-size="10pt">SSSS</fo:block>
+											  <fo:block text-align="center" font-size="10pt"></fo:block>
 										   </fo:table-cell >								   
 				                        </fo:table-row>  
 				                <#-->        </#if>  -->                                                                  
@@ -525,7 +525,7 @@
 	                      <fo:table-body>
 						   <fo:table-row>
 					           <fo:table-cell >
-								   <fo:block text-align="right" font-size="10pt"> 555 </fo:block>
+								   <fo:block text-align="right" font-size="10pt">  </fo:block>
 							   </fo:table-cell>
 	                          </fo:table-row>
 						</fo:table-body>   
