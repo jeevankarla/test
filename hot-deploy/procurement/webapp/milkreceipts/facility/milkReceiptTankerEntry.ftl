@@ -151,54 +151,20 @@ $(document).ready(function() {
 	var mccCodeJson = ${StringUtil.wrapString(mccCodeJson)}
 	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
 	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+	
 	$("input").keyup(function(e){
 	  		
 	  		if(e.target.name == "tankerName"){
 	  			
 	  			$('[name=tankerName]').val(($('[name=tankerName]').val()).toUpperCase());
 	  			populateVehicleName();
-				var tempVehJson = vehicleCodeJson[$('[name=tankerName]').val()];
-	  			if(tempVehJson){
-	  				$('span#tankerToolTip').addClass("tooltip");
-	  				$('span#tankerToolTip').removeClass("tooltipWarning");
-	  				var vehicleName = tempVehJson["vehicleName"];
-	  				var vehicleId = tempVehJson["vehicleId"];
-	  				if(!vehicleName){
-	  					vehicleName = vehicleId;
-	  				}
-	  				$('span#tankerToolTip').html(vehicleName);
-	  				$('[name=tankerNo]').val(vehicleId);
-	  				
-	  				fetchTankerRecordNumber();
-	  				
-	  			}else{
-	  				$('[name=tankerNo]').val('');
-	  				$('span#tankerToolTip').removeClass("tooltip");
-	  				$('span#tankerToolTip').addClass("tooltipWarning");
-	  				$('span#tankerToolTip').html('Code not found');
-	  			}
+				populateVehicleSpan();
 	  		}
 	  		
 	  		if(e.target.name == "partyName"){
 	  			$('[name=partyName]').val(($('[name=partyName]').val()).toUpperCase());
 	  			populatePartyName();
-				var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
-	  			if(tempPartyJson){
-	  				$('span#partyToolTip').addClass("tooltip");
-	  				$('span#partyToolTip').removeClass("tooltipWarning");
-	  				var partyName = tempPartyJson["partyName"];
-	  				var partyId = tempPartyJson["partyId"];
-	  				if(!partyName){
-	  					partyName = partyId;
-	  				}
-	  				$('span#partyToolTip').html(partyName);
-	  				$('[name=partyId]').val(partyId);
-	  			}else{
-	  				$('[name=partyId]').val('');
-	  				$('span#partyToolTip').removeClass("tooltip");
-	  				$('span#partyToolTip').addClass("tooltipWarning");
-	  				$('span#partyToolTip').html('Code not found');
-	  			}
+				populatePartySpan();
 	  		}
 	  		
 	  		if(e.target.name == "mccCode" ){
@@ -223,23 +189,72 @@ $(document).ready(function() {
 	  		
 	  		if(e.target.name == "product" ){
 	  			populateProductNames();
-				var tempProductJson = productJson[$('[name=product]').val()];
-	  			if(tempProductJson){
-	  				$('span#productToolTip').addClass("tooltip");
-	  				$('span#productToolTip').removeClass("tooltipWarning");
-	  				productName = tempProductJson["name"];
-	  				$('[name=productId]').val($('[name=product]').val());
-	  				$('span#productToolTip').html(productName);
-	  				
-	  			}else{
-	  				$('[name=productId]').val('');	
-	  				$('span#productToolTip').removeClass("tooltip");
-	  				$('span#productToolTip').addClass("tooltipWarning");
-	  				$('span#productToolTip').html('product not found');
-	  			}	  			
+				populateProductSpan();	  			
 	  		}
 	}); 
 });
+function populateProductSpan(){
+	var productJson = ${StringUtil.wrapString(productJson)}
+	var tempProductJson = productJson[$('[name=product]').val()];
+	if(tempProductJson){
+		$('span#productToolTip').addClass("tooltip");
+		$('span#productToolTip').removeClass("tooltipWarning");
+		productName = tempProductJson["name"];
+		$('[name=productId]').val($('[name=product]').val());
+		$('span#productToolTip').html(productName);
+		
+	}else{
+		$('[name=productId]').val('');	
+		$('span#productToolTip').removeClass("tooltip");
+		$('span#productToolTip').addClass("tooltipWarning");
+		$('span#productToolTip').html('product not found');
+	}
+}
+function populatePartySpan(){
+	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+	var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
+	if(tempPartyJson){
+		$('span#partyToolTip').addClass("tooltip");
+		$('span#partyToolTip').removeClass("tooltipWarning");
+		var partyName = tempPartyJson["partyName"];
+		var partyId = tempPartyJson["partyId"];
+		if(!partyName){
+			partyName = partyId;
+		}
+		$('span#partyToolTip').html(partyName);
+		$('[name=partyId]').val(partyId);
+	}else{
+		$('[name=partyId]').val('');
+		$('span#partyToolTip').removeClass("tooltip");
+		$('span#partyToolTip').addClass("tooltipWarning");
+		$('span#partyToolTip').html('Code not found');
+	}
+
+}
+function populateVehicleSpan(){
+	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
+	var tempVehJson = vehicleCodeJson[$('[name=tankerName]').val()];
+	if(tempVehJson){
+		$('span#tankerToolTip').addClass("tooltip");
+		$('span#tankerToolTip').removeClass("tooltipWarning");
+		var vehicleName = tempVehJson["vehicleName"];
+		var vehicleId = tempVehJson["vehicleId"];
+		if(!vehicleName){
+			vehicleName = vehicleId;
+		}
+		$('span#tankerToolTip').html(vehicleName);
+		$('[name=tankerNo]').val(vehicleId);
+		
+		fetchTankerRecordNumber();
+		
+	}else{
+		$('[name=tankerNo]').val('');
+		$('span#tankerToolTip').removeClass("tooltip");
+		$('span#tankerToolTip').addClass("tooltipWarning");
+		$('span#tankerToolTip').html('Code not found');
+	}
+
+}
 function fetchTankerRecordNumber(){
 	var action = "getTankerRecordNumber";
 	var tankerNo = $('[name=tankerNo]').val();
@@ -312,19 +327,34 @@ function fetchTankerRecordNumber(){
 function populateProductNames(){
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 		$("#product").autocomplete({					
-			source:  availableTags
+			source:  availableTags,
+			select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('#product').val(selectedValue);
+					        populateProductSpan();
+					    }
 		});
 }
 function populateVehicleName(){
 	var availableTags = ${StringUtil.wrapString(vehItemsJSON)!'[]'};
 				$("#tankerNo").autocomplete({					
-						source:  availableTags
+						source:  availableTags,
+						select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('[name=tankerName]').val(selectedValue);
+					        populateVehicleSpan();
+					    }
 				});
 }
 function populatePartyName(){
 	var availableTags = ${StringUtil.wrapString(partyItemsJSON)!'[]'};
 				$("#partyId").autocomplete({					
-						source:  availableTags
+						source:  availableTags,
+						select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('[name=partyName]').val(selectedValue);
+					        populatePartySpan();
+					    }
 				});
 }
 function populateMccNames(){
@@ -403,7 +433,7 @@ $( "#"+fromDateId ).datepicker({
 	          			<table>
 	          				<tr>
 					        	<td align='left'>Vehicle No </td><td>
-					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required"/><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
 					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
 					        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
