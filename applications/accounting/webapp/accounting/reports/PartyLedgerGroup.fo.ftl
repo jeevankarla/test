@@ -70,8 +70,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			        <fo:table-column column-width="5%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="19%"/>
+			     <#--   <fo:table-column column-width="10%"/> -->
+			        <fo:table-column column-width="25%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="10%"/>
@@ -90,11 +90,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Trans Type</fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                	<#--		<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">GlAccountId</fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell>  -->
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">GlAccount Description</fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Transaction Description</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Invoice Id</fo:block>  
@@ -119,8 +119,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			        <fo:table-column column-width="5%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="20%"/>
+			   <#--    <fo:table-column column-width="9%"/> -->
+			        <fo:table-column column-width="25%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
@@ -139,9 +139,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                		<#-- <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="11pt" white-space-collapse="false"></fo:block> 
-                			</fo:table-cell>
+                			</fo:table-cell>  -->
                 			<fo:table-cell>
                     			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">OPENING BALANCE:</fo:block>  
                 			</fo:table-cell>
@@ -178,11 +178,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTransType.description?if_exists}</fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                	<#--		<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("glAccountId")?if_exists}</fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell> -->
                 			<fo:table-cell>
-                    			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("glAccDescription")?if_exists}</fo:block>  
+                    			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("description")?if_exists}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("invoiceId")?if_exists}</fo:block>  
@@ -218,9 +218,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                 <#-- 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell>  -->
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">TRANSACTIONS TOTALS :</fo:block>  
                 			</fo:table-cell>
@@ -259,9 +259,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                	<#--	<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell>  -->
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CLOSING TRANSACTION TOTAL:</fo:block>  
                 			</fo:table-cell>
@@ -302,8 +302,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			        <fo:table-column column-width="5%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="11%"/>
-			        <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="20%"/>
+			   <#--     <fo:table-column column-width="9%"/> -->
+			        <fo:table-column column-width="25%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
@@ -322,9 +322,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                	<#--		<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell>   -->
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">GRAND TOTALS :</fo:block>  
                 			</fo:table-cell>
@@ -359,9 +359,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
-                			<fo:table-cell>
+                	<#--	<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
-                			</fo:table-cell>
+                			</fo:table-cell>  -->
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">CLOSING GRAND TOTALS :</fo:block>  
                 			</fo:table-cell>

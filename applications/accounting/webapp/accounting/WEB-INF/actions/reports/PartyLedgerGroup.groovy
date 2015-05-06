@@ -2,6 +2,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.EntityListIterator;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -45,13 +46,15 @@ context.thruDate=thruDate;
 
 List conditionList = FastList.newInstance();
 List condList = FastList.newInstance();
-List acctgTransList = FastList.newInstance();
+//List acctgTransList = FastList.newInstance();
 List acctgTransIds = FastList.newInstance();
 List finalList = FastList.newInstance();
 List acctgTransEntryList = FastList.newInstance();
 List partyIds = FastList.newInstance();
 List acctgPartyIds = FastList.newInstance();
 List opeinigBalPartyId= FastList.newInstance();
+EntityListIterator acctgTransList=null;
+EntityListIterator acctgTransIter=null;
 /*if(UtilValidate.isNotEmpty(parameters.partyId)){
 	partyIds=parameters.partyId;
 }else{
@@ -124,7 +127,8 @@ if(UtilValidate.isNotEmpty(rolePartyIds)){
 conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
 conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-acctgTransList = delegator.findList("AcctgTransAndEntries",condition,null,null,null,false);
+acctgTransList = delegator.find("AcctgTransAndEntries",condition,null,null,null,null);
+acctgTransIter = delegator.find("AcctgTransAndEntries",condition,null,null,null,null);
 partyMap=[:];
 openingBalMap=[:];
 /*if(acctgTransList){
@@ -136,7 +140,7 @@ openingBalMap=[:];
 	}
 	EntityCondition transEntryEcl=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	acctgTransEntryList = delegator.findList("AcctgTransEntry",transEntryEcl,null,null,null,false);*/
-	acctgPartyIds = EntityUtil.getFieldListFromEntityList(acctgTransList, "partyId", true);
+	acctgPartyIds = EntityUtil.getFieldListFromEntityListIterator(acctgTransList, "partyId", true);
 	partyIds.each{partyId->
 		if(acctgPartyIds.contains(partyId)==false){
 			partyId=partyId.toUpperCase();
@@ -162,10 +166,10 @@ openingBalMap=[:];
 //		ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("acctgTransId",EntityOperator.EQUALS,acctgTrans.acctgTransId),
 //			                               EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"ACCOUNTS_RECEIVABLE")],EntityOperator.AND);
 //		List transEntryList = EntityUtil.filterByCondition(acctgTransEntryList, ecl);
-		if(acctgTransList){
-			TransItr = acctgTransList.iterator();
-			while (TransItr.hasNext()) {
-				GenericValue transEntry = TransItr.next();
+		if(acctgTransIter){
+//			TransItr = acctgTransList.iterator();
+			while (acctgTransIter.hasNext()) {
+				GenericValue transEntry = acctgTransIter.next();
 //			transEntryList.each{transEntry->
 				partyId=transEntry.partyId;
 					partyId=partyId.toUpperCase();
@@ -177,13 +181,7 @@ openingBalMap=[:];
 					tempMap.transactionDate=transEntry.transactionDate;
 					tempMap.acctgTransTypeId=transEntry.acctgTransTypeId;
 					tempMap.description=transEntry.description;
-					
-					if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
-						tempMap.glAccountId=transEntry.glAccountId;
-					
-					glAccount=delegator.findOne("GlAccount",[glAccountId:transEntry.glAccountId],true);
-					tempMap.glAccDescription=glAccount.description;
-					}
+					description="";
 					invoiceId=null;
 					paymentId=null;
 					if(UtilValidate.isNotEmpty(transEntry.invoiceId)){
@@ -194,6 +192,31 @@ openingBalMap=[:];
 					}
 					tempMap.paymentId=paymentId;		
 					tempMap.invoiceId=invoiceId;
+					if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
+						tempMap.glAccountId=transEntry.glAccountId;
+					}
+					invoiceDes="";
+					if(UtilValidate.isNotEmpty(invoiceId)){
+						invoiceDetails = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+						invoiceDes=invoiceDetails.description;
+					}
+					description=invoiceDes;
+					paymentDes="";
+					if(UtilValidate.isNotEmpty(paymentId)){
+						paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+						paymentDes=paymentDetails.comments;
+					}
+					if(UtilValidate.isNotEmpty(description) && UtilValidate.isNotEmpty(paymentDes)){
+						description=description+" And "+paymentDes;
+					}else if(UtilValidate.isEmpty(description) && UtilValidate.isNotEmpty(paymentDes)){
+						description=paymentDes;
+					}
+					if(UtilValidate.isEmpty(description)){
+						glAccount=delegator.findOne("GlAccount",[glAccountId:transEntry.glAccountId],true);
+						description = glAccount.description;
+					}
+				    
+					tempMap.description=description;
 //					tempMap.partyId=transEntry.partyId;
 //					partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
 //					tempMap.name=partyName;
@@ -211,6 +234,7 @@ openingBalMap=[:];
 					tempList.add(tempMap);
 					partyId=transEntry.partyId;
 					partyId=partyId.toUpperCase();
+					tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("transactionDate"));
 					partyMap[partyId]=tempList;
 				}else{
 						tempMap=[:];
@@ -222,10 +246,8 @@ openingBalMap=[:];
 						
 						if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
 							tempMap.glAccountId=transEntry.glAccountId;
-						
-						glAccount=delegator.findOne("GlAccount",[glAccountId:transEntry.glAccountId],true);
-						tempMap.glAccDescription=glAccount.description;
 						}
+						description="";
 						invoiceId=null;
 						paymentId=null;
 						if(UtilValidate.isNotEmpty(transEntry.invoiceId)){
@@ -236,6 +258,28 @@ openingBalMap=[:];
 						}
 						tempMap.paymentId=paymentId;
 						tempMap.invoiceId=invoiceId;
+						
+						invoiceDes="";
+						if(UtilValidate.isNotEmpty(invoiceId)){
+							invoiceDetails = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+							invoiceDes=invoiceDetails.description;
+						}
+						description=invoiceDes;
+						paymentDes="";
+						if(UtilValidate.isNotEmpty(paymentId)){
+							paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+							paymentDes=paymentDetails.comments;
+						}
+						if(UtilValidate.isNotEmpty(description) && UtilValidate.isNotEmpty(paymentDes)){
+							description=description+" And "+paymentDes;
+						}else if(UtilValidate.isEmpty(description) && UtilValidate.isNotEmpty(paymentDes)){
+							description=paymentDes;
+						}
+						if(UtilValidate.isEmpty(description)){
+							glAccount=delegator.findOne("GlAccount",[glAccountId:transEntry.glAccountId],true);
+							description = glAccount.description;
+						}
+						tempMap.description=description;
 //						tempMap.partyId=transEntry.partyId;
 //						partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
 //						tempMap.name=partyName;
@@ -254,6 +298,7 @@ openingBalMap=[:];
 						partyId=partyId.toUpperCase();
 						tempList=partyMap[partyId];
 						tempList.add(tempMap);
+						tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("transactionDate"));
 						partyMap[partyId]=tempList;
 				}
 			}
@@ -301,10 +346,8 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			tempTransMap.description=acctgTrans.description;
 			if(UtilValidate.isNotEmpty(acctgTrans.glAccountId)){
 				tempTransMap.glAccountId=acctgTrans.glAccountId;
-			
-			glAccount=delegator.findOne("GlAccount",[glAccountId:acctgTrans.glAccountId],true);
-			tempTransMap.glAccDescription=glAccount.description;
 			}
+			glAccDescription="";
 			invoiceId=null;
 			paymentId=null;
 			if(UtilValidate.isNotEmpty(acctgTrans.invoiceId)){
@@ -313,6 +356,28 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			if(UtilValidate.isNotEmpty(acctgTrans.paymentId)){
 				paymentId=acctgTrans.paymentId;
 			}
+			invoiceDes="";
+			if(UtilValidate.isNotEmpty(invoiceId)){
+				invoiceDetails = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+				invoiceDes=invoiceDetails.description;
+			}
+			glAccDescription=invoiceDes;
+			paymentDes="";
+			if(UtilValidate.isNotEmpty(paymentId)){
+				paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+				paymentDes=paymentDetails.comments;
+			}
+			if(UtilValidate.isNotEmpty(glAccDescription) && UtilValidate.isNotEmpty(paymentDes)){
+				glAccDescription=glAccDescription+" And "+paymentDes;
+			}else if(UtilValidate.isEmpty(glAccDescription) && UtilValidate.isNotEmpty(paymentDes)){
+				glAccDescription=paymentDes;
+			}
+			if(UtilValidate.isEmpty(glAccDescription)){
+				glAccount=delegator.findOne("GlAccount",[glAccountId:acctgTrans.glAccountId],true);
+				glAccDescription = glAccount.description;
+			}
+			tempTransMap.glAccDescription=glAccDescription;
+			
 			tempTransMap.invoiceId=invoiceId;
 			tempTransMap.partyId=partyId;
 			tempTransMap.paymentId=paymentId;
