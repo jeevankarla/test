@@ -554,7 +554,7 @@ under the License.
                     </calculate>
                      <if-compare field="decimal" operator="greater" value="0">
                       <add-error >
-                 		 <fail-message message="Quantity should be integer for ${parameters.physicalInventoryId} inventoryId ooooo"  />
+                 		 <fail-message message="Varience should be integer for ${parameters.physicalInventoryId} inventoryId ooooo"  />
             		  </add-error>
             		  <check-errors></check-errors> 
                		</if-compare>
