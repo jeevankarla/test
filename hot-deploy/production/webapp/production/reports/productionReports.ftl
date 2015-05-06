@@ -31,11 +31,9 @@
 		}
 		});
 	}	
-    $(document).ready(function(){
-	    makeDatePicker("shiftDate","shiftDate");
-	}); 
-function makeDatePicker1(fromDateId ,thruDateId){
-	$( "#"+fromDateId ).datepicker({
+//one month restriction 
+    function makeDatePicker1(fromDateId ,thruDateId){
+	    $( "#"+fromDateId ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
@@ -43,7 +41,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
 		});
-	$( "#"+thruDateId ).datepicker({
+     	$( "#"+thruDateId ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
@@ -93,7 +91,16 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	}
+	
+//call one method for one time fromDATE And thruDATE
+	$(document).ready(function(){
+		makeDatePicker("fromDate","thruDate");
+		makeDatePicker("convFromDate","convThruDate");
+		makeDatePicker("milkProcessRegDate","");
 		
+		$('#ui-datepicker-div').css('clip', 'auto');		
+	});
+	
 </script>	
 <div>
   <div class="screenlet">
@@ -110,8 +117,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							
 							<td width="25%">
 							     <span class='h3'>
-									From <input  type="text" size="18pt" id="fromDate"   name="fromDate"/>
-									To   <input  type="text" size="18pt" id="thruDate"   name="thruDate"/>
+									From <input  type="text" size="18pt" id="convFromDate"   name="convFromDate"/>
+									To   <input  type="text" size="18pt" id="convThruDate"   name="convThruDate"/>
 								 </span>
 							</td>
 						    <td width="30%"><span class='h3'></span></td>
@@ -120,6 +127,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</table>
 				</form>
 			</tr>
+			
 			<tr class="alternate-row"> 
 				<form id="StockProcessingRegisterReport" name="StockProcessingRegisterReport" mothed="post" action="<@ofbizUrl>StockProcessingRegisterReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
@@ -128,7 +136,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							
 							<td width="25%">
 							     <span class='h3'>
-									Date <input  type="text" size="18pt" id="shiftDate"   name="shiftDate"/>
+									Date <input  type="text" size="18pt" id="milkProcessRegDate"   name="fromDate"/>
 								 </span>
 							</td>
 						    <td width="30%"><span class='h3'></span></td>
