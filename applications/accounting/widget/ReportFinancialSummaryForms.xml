@@ -1276,9 +1276,9 @@ under the License.
     <field name="acctgTransEntrySeqId" title="seq Id"><display></display></field>
     <field name="transactionDate" title="Transaction Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate,&quot;dd-MM-yyyy&quot;)}"></display></field>
     <field name="acctgTransTypeId" title="Transaction Type"><display-entity entity-name="AcctgTransType" description="${description}"></display-entity></field>
-    <field name="description" title="Acctg Trans Description"><display></display></field>
+    <!-- <field name="description" title="Acctg Trans Description"><display></display></field> -->
     <field name="glAccountId" title="Gl AccountId"><display></display></field>
-    <field name="glAccDescription" title="Gl Account Description"><display></display></field>
+    <field name="glAccDescription" title="Transaction Description"><display></display></field>
     <field name="invoiceId" title="Invoice Id"><display></display></field>
     <field name="paymentId" title="Payment Id"><display></display></field>
     <field name="partyId" title="PartyId"><display></display></field>
