@@ -179,6 +179,8 @@
 		
 		var hideQCflow = $("#hideQCflow").val();
 		var flag = jQuery("<input>").attr("type", "hidden").attr("name", "hideQCflow").val(hideQCflow);
+		var allowedGraterthanTheOrdered = $("#allowedGraterthanTheOrdered").val();
+		var flag = jQuery("<input>").attr("type", "hidden").attr("name", "allowedGraterthanTheOrdered").val(allowedGraterthanTheOrdered);
 			
 		jQuery(formId).append(jQuery(effDate));
 		jQuery(formId).append(jQuery(suppInvoice));
