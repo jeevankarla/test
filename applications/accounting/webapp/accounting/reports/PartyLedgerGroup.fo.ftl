@@ -66,15 +66,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                <fo:block>
                     <fo:table>
-				    <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="5%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="10%"/>
-			     <#--   <fo:table-column column-width="10%"/> -->
-			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="10%"/>
+				    <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="4%"/>
+			        <fo:table-column column-width="7.5%"/>
+			        <fo:table-column column-width="13%"/>
+			   <#--    <fo:table-column column-width="9%"/> -->
+			        <fo:table-column column-width="30%"/>
+			        <fo:table-column column-width="9%"/>
+			        <fo:table-column column-width="9%"/>
+			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="10%"/>
                     <fo:table-body>
                     	<fo:table-row>
@@ -88,7 +88,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Trans Date</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Trans Type</fo:block>  
+                    			<fo:block  keep-together="always" text-align="c" font-weight="bold"  font-size="10pt" white-space-collapse="false">Trans Type</fo:block>  
                 			</fo:table-cell>
                 	<#--		<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">GlAccountId</fo:block>  
@@ -97,16 +97,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Transaction Description</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Invoice Id</fo:block>  
+                    			<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">Invoice Id</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Payment Id</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Debit Amount</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">Debit Amount</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">Credit Amount</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">Credit Amount</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                     </fo:table-body>
@@ -115,12 +115,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			<fo:block>
                     <fo:table>
-				    <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="5%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="11%"/>
+				    <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="4%"/>
+			        <fo:table-column column-width="7.5%"/>
+			        <fo:table-column column-width="13%"/>
 			   <#--    <fo:table-column column-width="9%"/> -->
-			        <fo:table-column column-width="25%"/>
+			        <fo:table-column column-width="30%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
@@ -185,7 +185,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("description")?if_exists}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("invoiceId")?if_exists}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("invoiceId")?if_exists}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${acctgTrans.get("paymentId")?if_exists}</fo:block>  
@@ -298,12 +298,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
              </#list>
 	          <fo:block>
                     <fo:table>
-				    <fo:table-column column-width="9%"/>
-			        <fo:table-column column-width="5%"/>
-			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="11%"/>
-			   <#--     <fo:table-column column-width="9%"/> -->
-			        <fo:table-column column-width="25%"/>
+				    <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="4%"/>
+			        <fo:table-column column-width="7.5%"/>
+			        <fo:table-column column-width="13%"/>
+			   <#--    <fo:table-column column-width="9%"/> -->
+			        <fo:table-column column-width="30%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
 			        <fo:table-column column-width="9%"/>
