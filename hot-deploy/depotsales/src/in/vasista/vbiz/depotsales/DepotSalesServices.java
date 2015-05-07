@@ -417,7 +417,7 @@ public class DepotSalesServices{
 		processOrderContext.put("orderAdjChargesList", orderAdjChargesList);
 		processOrderContext.put("disableAcctgFlag", disableAcctgFlag);
 		
-		
+		try{
 		result = processDepotSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -431,6 +431,21 @@ public class DepotSalesServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
 			return "error";
 		}
+		
+		Map resultCtx = FastMap.newInstance();
+		
+				resultCtx = dispatcher.runSync("createOrderHeaderSequence",UtilMisc.toMap("orderId", orderId ,"userLogin",userLogin, "orderHeaderSequenceTypeId","DEPOT_SALE_SEQUENCE"));
+				if(ServiceUtil.isError(resultCtx)){
+					Debug.logError("Problem while Creating  Sequence for orderId:"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problem while Creating  Sequence for orderId: : "+orderId);
+					return "error";
+				}
+			}catch(Exception e){
+				Debug.logError(e, module);
+				return "error";
+			}
+		
+		
 		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
 		return "success";
 	}
