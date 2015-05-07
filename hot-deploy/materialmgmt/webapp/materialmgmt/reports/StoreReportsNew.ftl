@@ -586,7 +586,11 @@ function makeDatePicker1(fromDateId ,thruDateId){
                                <td width="20%"><span class='h3'>Icp Stock Statement Report</span></td>
                                <td width="17%"><span class='h3'>From<input  type="text" size="18pt" id="icpStockFDate" readonly  name="fromDate"/></span></td>
                                <td width="17%"><span class='h3'>To<input  type="text" size="18pt" id="icpStockTDate" readonly  name="thruDate"/></span></td>
-                               <td width="20%"></td>
+                               <td width="20%">By<select name="categoryType">
+				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+									</select>
+                               </td>
                                <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"/></span></td> 		 	
                         </tr>
 				  </table>

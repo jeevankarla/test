@@ -37,7 +37,7 @@ under the License.
                 <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				<fo:block text-align="center" keep-together="always"  >&#160;------------------------------------------------------------------------------------------</fo:block>
-				<fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >&#160;   DAILY STOCK STATEMENT OF NANDINI ICE CREAM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
+				<fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >&#160;   DAILY STOCK STATEMENT OF <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 			    <fo:block text-align="left" white-space-collapse="false">&#160;&#160;DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}                                                              BATCH NO: </fo:block>                
 			    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
@@ -143,7 +143,7 @@ under the License.
 							 <#assign productDetails = prodCategory.getValue().entrySet()>
 		                     <#list productDetails as prod>
 		                     <#assign catProdDetails = prod.getValue().entrySet()>
-		                     <#assign prodSubCat = delegator.findOne("Product", {"productId" : prod.getKey()}, true)?if_exists/>			
+                                <#assign product=delegator.findOne("ProductCategory",{"productCategoryId":prod.getKey()},true)>
 							<fo:table-row>
 	                        	<fo:table-cell>
 	                        	<fo:table >
@@ -156,7 +156,7 @@ under the License.
 												</fo:table-cell>
                       					   
                       					  		 <fo:table-cell>
-	                            					<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${prodSubCat.get("description")?if_exists}</fo:block>  
+	                            					<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${product.description}</fo:block>  
 												</fo:table-cell>
 											</fo:table-row>
 											 <fo:table-row>
@@ -173,9 +173,12 @@ under the License.
 	                            		<fo:block font-size="10pt"></fo:block>
 	                        	</fo:table-cell>
 		                     </fo:table-row>
+		                     <#assign TotalIssueValue =0>
 							<#list catProdDetails as catProd>
 		                    <#assign product = delegator.findOne("Product", {"productId" : catProd.getKey()}, true)?if_exists/>
  							<#assign grandTotalIssueValue = grandTotalIssueValue+catProd.getValue().get("quantity")?if_exists>
+ 							<#assign TotalIssueValue = TotalIssueValue+catProd.getValue().get("quantity")?if_exists>
+
 						     <fo:table-row height="30pt" >
 					            <fo:table-cell>
 									    <fo:block text-align="left" keep-together="always" font-size="10pt" >${sno?if_exists}</fo:block>
@@ -212,7 +215,43 @@ under the License.
 							    </fo:table-cell>
 					       <#assign sno=sno+1>
 						</fo:table-row>
+					
 					</#list> 
+						<fo:table-row border-style="solid">
+						<fo:table-cell>
+									    <fo:block text-align="left" keep-together="always" font-size="10pt" ></fo:block>
+								     </fo:table-cell>
+					            <#--<fo:table-cell > 
+					                     <fo:block text-align="left" font-size="10pt" ></fo:block>
+					            </fo:table-cell>-->	
+                                <fo:table-cell >
+					                     <fo:block text-align="left" font-size="10pt" white-space-collapse="false">Total:</fo:block>
+					            </fo:table-cell>	
+                                <fo:table-cell >
+								    <fo:block text-align="right"  font-size="10pt" ></fo:block>
+							    </fo:table-cell>
+							    <fo:table-cell >
+								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
+							    </fo:table-cell>
+                                <fo:table-cell >
+								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
+							    </fo:table-cell>
+							    <fo:table-cell >
+								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
+							    </fo:table-cell>
+                   				<fo:table-cell >
+								   <fo:block text-align="right" font-size="10pt"  >${TotalIssueValue?if_exists?string("#0.00")}</fo:block>
+							    </fo:table-cell>
+							   <fo:table-cell >
+								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
+							    </fo:table-cell>
+							    <fo:table-cell >
+							 	   <fo:block text-align="right" font-size="10pt"  ></fo:block>
+							    </fo:table-cell>
+							    <fo:table-cell >
+								   <fo:block text-align="right" font-size="10pt"  ></fo:block>
+							    </fo:table-cell>
+		            </fo:table-row>
 			        <fo:table-row border-style="solid">
 		                 <fo:table-cell >
 		                         <fo:block font-size="10pt"></fo:block>
