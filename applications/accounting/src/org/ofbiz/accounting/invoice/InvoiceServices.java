@@ -5611,6 +5611,9 @@ public class InvoiceServices {
         			
         			EntityListIterator invoicesListItr = null;
         			exprListForParameters.clear();
+        			if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+                    	exprListForParameters.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN, UtilMisc.toList(UtilDateTime.getDayStart(fromDate),UtilDateTime.getDayEnd(thruDate)))); 
+                    }
         			exprListForParameters.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.IN, invoiceTypeIds));
         			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdTo)); 
         			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom)); 
