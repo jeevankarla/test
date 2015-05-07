@@ -192,14 +192,30 @@ public class CustomSequenceServices {
 			        
 			        GenericValue userLogin = (GenericValue) context.get("userLogin");
 			        Map<String, Object> result = ServiceUtil.returnSuccess();
+			        GenericValue tenantConfigEnableSeq;
+			        Boolean enableSequence = Boolean.FALSE;
 			        try {
-			        	Boolean enablePOSequence  = Boolean.FALSE;
-			    		GenericValue tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enablePOSequence"), false);
+			        	
+			        	GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+			        	 if (orderHeader == null) {
+				                Debug.logError("Invalid order id  " + orderId, module);
+				                return ServiceUtil.returnError("Invalid order id  " + orderId);            	
+				            }
+			        	 
+			   GenericValue orderType = delegator.findOne("OrderType",UtilMisc.toMap("orderTypeId",orderHeader.getString("orderTypeId")) , false);
+			   if((orderHeader.getString("orderTypeId").equals("SALES_ORDER") ) || (orderType.getString("parentTypeId").equals("") )) {
+				   tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","DEPOT_SALES_ORDER", "propertyName","enableDepotSalesOrderSequence"), false);
+				   if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
+					   enableSequence = Boolean.TRUE;
+		       		}
+	            }else{	
+			    		tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enablePOSequence"), false);
 			       		if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
-			       			enablePOSequence = Boolean.TRUE;
+			       			enableSequence = Boolean.TRUE;
 			       		}
-			       		if(enablePOSequence && UtilValidate.isNotEmpty(orderId)){
-			       			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			   		}
+			       		if(enableSequence && UtilValidate.isNotEmpty(orderId)){
+			       		//	GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			       			//at present sequence is generated only for OrderHeader
 			       			//if( UtilValidate.isNotEmpty(custRequest) && ("RF_PUR_QUOTE".equals(custRequest.getString("custRequestTypeId"))) ){
 			       			orderDate = orderHeader.getTimestamp("orderDate");

@@ -1239,6 +1239,7 @@ under the License.
         location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="createOrderHeaderSequence">
         <description>Get the Next Sequence for the given orderId in OrderHeader Entity</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+         <attribute name="orderHeaderSequenceTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="sequenceId" type="String" mode="OUT" optional="true"/>
     </service>
      <service name="updateOrResetOrderHeaderSequence" engine="java"
