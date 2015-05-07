@@ -456,10 +456,7 @@
         <response name="success" type="view" value="FindSalesReturns"/>
         <response name="error" type="view" value="FindSalesReturns"/>
     </request-map>
-    <request-map uri="salesReturnHeaderItems">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="SalesReturnItems"/>    	
-    </request-map>
+    
     
     
     <!-- View Mappings -->
