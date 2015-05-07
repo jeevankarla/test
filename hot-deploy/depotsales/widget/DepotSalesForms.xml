@@ -559,7 +559,7 @@
             </drop-down>
         </field>
 <!--    <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field> -->
-        <field name="quantityOnHandVar" title="Varience" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
+        <field name="quantityOnHandVar" title="Variance" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit/>

@@ -1066,8 +1066,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentDate" id-name="paymentDateReceipt" position="1" title="${uiLabelMap.paymentDate}" required-field="true"><text/></field>
-         <field use-when="&quot;${paymentMethodTypeId}&quot;.equals(&quot;FUND_TRANSFER&quot;)" name="finAccountId" title="Fin Account" position="2" required-field="true">
+        <field name="paymentDate" title="Payment Date" id-name="paymentDateReceipt" position="1"  required-field="true"><text/></field>
+         <field use-when="&quot;${paymentMethodTypeId}&quot;.equals(&quot;FUND_TRANSFER&quot;)" name="finAccountId" title="Bank Account" position="2" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                     <entity-constraint name="ownerPartyId" value="Company"/>
