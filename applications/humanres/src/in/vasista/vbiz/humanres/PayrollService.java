@@ -6629,16 +6629,15 @@ public class PayrollService {
 		        	input.put("timePeriodId", customTimePeriodId);
 		        	input.put("timePeriodEnd", fromDateTime);
 		        	
-		        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
+		        	/*Map resultMap = getPayrollAttedancePeriod(dctx,input);
 		        	GenericValue lastCloseAttedancePeriod=null;
 		        	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 		  	    		lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
-		  	    	}
-        			
-        			
+		  	    	}*/
+		        	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
         			Map inputMap =FastMap.newInstance();
                 	inputMap.put("leaveTypeId", leaveTypeIds.get(i));
-        			inputMap.put("balanceDate", lastCloseAttedancePeriod.get("fromDate"));
+        			inputMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
         			inputMap.put("employeeId", partyId);
         			inputMap.put("flag",flag);
         			Map resultValue = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
