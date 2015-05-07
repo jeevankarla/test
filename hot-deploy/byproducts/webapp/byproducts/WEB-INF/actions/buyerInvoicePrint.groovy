@@ -70,6 +70,8 @@ finalProdIdsList.each{ eachProdId ->
 //Debug.log("##########duplicateProdList######"+duplicateProdList);
 
 invoiceSlipsMap = [:];
+totVatsPercesntMap = [:];
+
 shipmentId = parameters.shipmentId;
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -167,6 +169,25 @@ invoiceIds.each { invoiceId ->
 	invoiceDetailMap.put("shipment", shipment);
 	invoiceDetailMap.put("billingAddress", billingAddress);
 	invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+	
+	vatPercentMap=[:];
+	vatPercent=null;	bedPercent=null;	cstPercent=null;
+	invoiceItems.each{ eachinvoicePercent ->
+		if(UtilValidate.isNotEmpty(eachinvoicePercent.vatPercent)){
+			vatPercent=eachinvoicePercent.vatPercent;
+		}
+		if(UtilValidate.isNotEmpty(eachinvoicePercent.cstPercent)){
+		cstPercent=eachinvoicePercent.cstPercent;
+		}
+		if(UtilValidate.isNotEmpty(eachinvoicePercent.bedPercent)){
+		bedPercent=eachinvoicePercent.bedPercent;
+		}
+		vatPercentMap.put("vatPercent",vatPercent);
+		vatPercentMap.put("cstPercent",cstPercent);
+		vatPercentMap.put("bedPercent",bedPercent);
+	}
+	totVatsPercesntMap.put(invoiceId,vatPercentMap);
+	
 	productIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true);
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	
@@ -282,4 +303,4 @@ context.invoiceSlipsMap = invoiceSlipsMap;
 context.taxParty = taxParty;
 context.taxAuthority = taxAuthority;
 context.taxLabelFlag = taxLabelFlag;
-
+context.totVatsPercesntMap = totVatsPercesntMap;

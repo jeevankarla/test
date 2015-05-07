@@ -368,6 +368,7 @@ under the License.
 												</fo:table-row>
 												<#assign exduty = "N">
 												<#if invoiceTaxItems?has_content>
+									 <#assign vatsData = totVatsPercesntMap.get(invoiceNo)>
 												<#assign totWithBedSale=0>
 													<#list invoiceTaxItems as eachTaxItem>
 													<#assign taxDetails = eachTaxItem.entrySet()>
@@ -378,22 +379,22 @@ under the License.
 							            					</fo:table-cell>
 							            					<#assign text = "">
 							            					<#if eachTax.getKey()=="BED_SALE">
-							            						<#assign text = "Excise Duty (Deposit) Including CESS [2.06%]">
+							            						<#assign text = "Excise Duty (Deposit) Including CESS [${vatsData.get('bedPercent')}%]">
 							            						<#assign exduty = "Y">
 							            						<#assign totWithBedSale = totWithBedSale+totalAmt+eachTax.getValue()>
 							            					<#elseif eachTax.getKey()=="CST_SALE">
-							            						<#assign text = "Central Sales Tax(CST) [2.0%]">
+							            						<#assign text = "Central Sales Tax(CST) [${vatsData.get('cstPercent')}%]">
 							            					<#elseif eachTax.getKey()=="SERTAX_SALE">
 							            						<#assign text = "Service Tax ">
 							            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()>0)>
 							            						<#if taxLabelFlag?has_content && taxLabelFlag == "icpChannel">
-							            							<#assign text = "Value Added Tax(VAT) [14.5%]">
+							            							<#assign text = "Value Added Tax(VAT) [${vatsData.get('vatPercent')}%]">
 							            						<#else>
 							            							<#assign text = "Value Added Tax(VAT) ">
 							            						</#if>
 							            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()<0)>
 							            						<#if taxLabelFlag?has_content && taxLabelFlag == "icpChannel">
-							            							<#assign text = "VAT Adjustment [14.5 %]">
+							            							<#assign text = "VAT Adjustment [${vatsData.get('vatPercent')}%]">
 							            						<#else>
 							            							<#assign text = "VAT Adjustment">
 							            						</#if>
