@@ -304,4 +304,3 @@ context.taxParty = taxParty;
 context.taxAuthority = taxAuthority;
 context.taxLabelFlag = taxLabelFlag;
 context.totVatsPercesntMap = totVatsPercesntMap;
-Debug.log("=========================="+totVatsPercesntMap);
