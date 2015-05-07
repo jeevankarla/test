@@ -134,6 +134,7 @@
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
+			if(qty>0){
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
@@ -182,7 +183,7 @@
 			
 				}
 			</#if>
-   			
+   			}
 		}
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{ 
