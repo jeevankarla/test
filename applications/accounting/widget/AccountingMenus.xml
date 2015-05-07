@@ -70,7 +70,7 @@
 			</condition>
 			<link target="ListCompaniesAccountingTransactions" />
 		</menu-item>
-		<menu-item name="AccountingReports" title="${uiLabelMap.AccountingReports}">
+		<menu-item name="AccountingReports" title="Final Accounts">
 			<condition>
 				<if-has-permission permission="ACCOUNTING" action="_REPORTS" />
 			</condition>
@@ -1231,6 +1231,11 @@
 		</menu-item>		
 		<menu-item name="TransactionTotals" title="${uiLabelMap.AccountingTransactionTotals}">
 			<link target="TransactionTotals">
+				<parameter param-name="organizationPartyId" />
+			</link>
+		</menu-item>
+		<menu-item name="SubLedgers" title="Sub Ledgers">
+			<link target="SubLedgers">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>

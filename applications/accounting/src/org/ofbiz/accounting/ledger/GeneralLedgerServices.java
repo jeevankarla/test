@@ -744,6 +744,7 @@ public class GeneralLedgerServices {
         String partyId = (String) context.get("partyId");
         String glAccountTypeId =(String) context.get("glAccountTypeId");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        String fromGlAccountId =(String) context.get("glAccountId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
         List conditionList = FastList.newInstance();
@@ -759,6 +760,9 @@ public class GeneralLedgerServices {
 	        	GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault", UtilMisc.toMap("glAccountTypeId",glAccountTypeId,"organizationPartyId","Company"), false);
 	        	glAccountId = glAccountTypeDefault.getString("glAccountId");
         	}
+        	if(UtilValidate.isNotEmpty(fromGlAccountId)){
+	        	glAccountId = fromGlAccountId;
+        	}
 //        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
         	/*conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -771,7 +775,7 @@ public class GeneralLedgerServices {
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
         	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 //        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
-        	if(UtilValidate.isNotEmpty(glAccountTypeId)){
+        	if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
         	}    
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -781,7 +785,6 @@ public class GeneralLedgerServices {
         		//Iterator<GenericValue> acctgTran = acctgTransEntryList.iterator();
         		while (acctgTransEntryList.hasNext()) {
                     GenericValue acctgTrans = acctgTransEntryList.next();
-//                    Debug.log("acctgTransEntryList==========="+acctgTransEntryList);
 //        		for(GenericValue acctgTrans:acctgTransList){
 //        			String acctgTransId=(String)acctgTrans.get("acctgTransId");
 //        			conditionList.clear();
