@@ -33,8 +33,8 @@ dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
-//categoryType=parameters.categoryType;
-//context.put("categoryType",categoryType);
+categoryType=parameters.categoryType;
+context.put("categoryType",categoryType);
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -54,7 +54,7 @@ context.thruDate = thruDateTime;
 //totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 
 
-salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd, categoryType:categoryType]);
 prodTotals=salesInvoiceTotals.get("productTotals");
 productCategoryMap = [:];
 	if(UtilValidate.isNotEmpty(prodTotals)){
@@ -74,12 +74,21 @@ productCategoryMap = [:];
 					
 					virtualProductId = currentProduct;
 					tempVariantMap =[:];
-					
-					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
+					productId = productValue.getKey();
+					exprList=[];
+					exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
+					exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+					productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+					 if(UtilValidate.isNotEmpty(productList)){
+						productList=EntityUtil.getFirst(productList);
+						virtualProductId = productList.get("productCategoryId");
+					 }
+					/*productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
 					
 					if(UtilValidate.isNotEmpty(productAssoc)){
 						virtualProductId = productAssoc.productId;
-					}
+					}*/
 					if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 						
 						tempMap = [:];
