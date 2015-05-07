@@ -107,7 +107,169 @@
 						        						</fo:table-cell>
 						        					</fo:table-row>	
 						        				 
-						        						<#-- payment details here -->
+						        					
+															<fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">INVOICE DETAILS</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+
+						        						
+						        								<#list invoiceDetailsList as eachinvoiceinfo>
+															 <#assign invoiceId=eachinvoiceinfo.getKey()>
+													<fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 <fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;Invoice ID:${invoiceId?if_exists}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">INVOICE DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.get(invoiceId).invoiceDate?if_exists, "dd-MM-yyyy")} 	</fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+													 <fo:table-row>
+						        						<fo:table-cell bottom="">
+						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
+		        				    								 <fo:table-column column-width="10%"/>
+        						   									 <fo:table-column column-width="60%"/>
+        						   									 <fo:table-column column-width="55%"/>
+        						   									 <fo:table-column column-width="27%"/>	
+        						   									 <fo:table-body>
+        						   									 <fo:table-row>
+        						   									 <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;S.No</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; PARTICULARS </fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; GL ACCOUNT </fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; AMOUNT Rs. </fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        							  		  </fo:table-cell>
+        						   									 </fo:table-row>
+															
+        						   									 </fo:table-body>
+        						   		                    </fo:table>
+						        						</fo:table-cell>
+ 															
+						        						</fo:table-row>	
+						        						<#assign sno=0>
+														<#list eachinvoiceinfo.getValue() as invoiceItem>						        						
+  															<#assign acctngTransDetails = {}>
+						        						  <#assign glAccountDetails = {}>
+						        						 
+															<#assign sno=sno+1>
+														
+														
+												            <#--<#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
+												            <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>-->
+																 	<#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, false)?if_exists/>
+																 	<#if invoiceItem.description?has_content>
+														                <#assign description=invoiceItem.description>
+														            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
+														                <#assign description=taxRate.get("description",locale)>
+														            <#elseif invoiceItemType.get("description",locale)?has_content>
+														                <#assign description=invoiceItemType.get("description",locale)>
+														            </#if>
+														            <#assign glAccountId = "">
+														   			<#if invoiceItemType.defaultGlAccountId?has_content>
+														   				<#assign glAccountId =   invoiceItemType.defaultGlAccountId?if_exists>
+														   			<#elseif glAccntIdslist.get(invoiceId)?has_content>	
+														   				<#assign glAccountId =   glAccntIdslist.get(invoiceId)?if_exists>  
+														   			</#if>
+																    <#if glAccountId?has_content>
+																    	<#assign glAccountDetails = delegator.findOne("GlAccount", {"glAccountId" : glAccountId}, false)?if_exists/>
+																    </#if> 
+						        						<fo:table-row>
+							        						<fo:table-cell bottom="">
+						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
+		        				    								 <fo:table-column column-width="10%"/>
+        						   									 <fo:table-column column-width="60%"/>
+        						   									 <fo:table-column column-width="55%"/>
+        						   									 <fo:table-column column-width="27%"/>	
+        						   									 <fo:table-body>
+        						   									 <fo:table-row>
+        						   									 <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${description?if_exists} </fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; <#if glAccountDetails?has_content>${glAccountDetails.description?if_exists}(${glAccountId})</#if> </fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        							  		   	<#assign  amount=0>
+						        							  		   	<#assign quantity=0>
+						        							  		   	<#assign Totalamount=0>
+						        							  		      <#assign amount= invoiceItem.amount?if_exists>
+																			<#if invoiceItem.quantity?has_content>
+						        							  		      		<#assign quantity= invoiceItem.quantity?if_exists>
+						        							  		      		<#assign Totalamount= amount*quantity>
+ 																			<#else>
+					      						        						<#assign Totalamount= amount>
+																			</#if>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${Totalamount?if_exists?string("#0.00")} </fo:block>
+						        							  		  </fo:table-cell>
+        						   									 </fo:table-row>
+        						   									 </fo:table-body>
+        						   		                    </fo:table>
+						        						</fo:table-cell> 
+						        						</fo:table-row>	
+						        						 </#list>
+													
+						        						 <fo:table-row>
+															<fo:table-cell>
+											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+											       			</fo:table-cell>
+														 </fo:table-row>
+						        						  <fo:table-row>
+						   									 <fo:table-cell>
+				        										<fo:block font-size="12pt"  white-space-collapse="false" font-weight="bold" ></fo:block>
+				        									</fo:table-cell>
+						   									 <fo:table-cell >
+				        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+				        							  		 </fo:table-cell>
+			        							  		 	<fo:table-cell >
+			        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">TOTAL Rs.: ${paymentApplicationMap.get(invoiceId).amountApplied?if_exists?string("#0.00")} </fo:block>
+			        							  		 	</fo:table-cell>
+						        						</fo:table-row>
+						        						</#list>
+
+														<fo:table-row>
+															<fo:table-cell>
+											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+											       			</fo:table-cell>
+														 </fo:table-row>
+
+												<#-- payment details here -->
 						        						  <#assign  partyName="">
 						        						  <#assign  partyId="">
 						        						  <#if payment.partyIdFrom?exists && payment.partyIdFrom == "Company">
@@ -310,166 +472,6 @@
 							        						</fo:table-row>
 							        						</#if>
 						        						</#if>
-														<fo:table-row>
-															<fo:table-cell>
-											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
-											       			</fo:table-cell>
-														 </fo:table-row>
-
-															<fo:table-row> 
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
-						        						 	</fo:table-cell>
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">INVOICE DETAILS</fo:block>
-						        						 	</fo:table-cell>
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        						 	</fo:table-cell>
-						        						 </fo:table-row>
-
-						        						
-						        								<#list invoiceDetailsList as eachinvoiceinfo>
-															 <#assign invoiceId=eachinvoiceinfo.getKey()>
-													<fo:table-row> 
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        						 	</fo:table-cell>
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
-						        						 	</fo:table-cell>
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
-						        						 	</fo:table-cell>
-						        						 </fo:table-row>
-						        						 <fo:table-row> 
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;Invoice ID:${invoiceId?if_exists}</fo:block>
-						        						 	</fo:table-cell>
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
-						        						 	</fo:table-cell>
-						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">INVOICE DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.get(invoiceId).invoiceDate?if_exists, "dd-MM-yyyy")} 	</fo:block>
-						        						 	</fo:table-cell>
-						        						 </fo:table-row>
-													 <fo:table-row>
-						        						<fo:table-cell bottom="">
-						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
-		        				    								 <fo:table-column column-width="10%"/>
-        						   									 <fo:table-column column-width="60%"/>
-        						   									 <fo:table-column column-width="55%"/>
-        						   									 <fo:table-column column-width="27%"/>	
-        						   									 <fo:table-body>
-        						   									 <fo:table-row>
-        						   									 <fo:table-cell border-style="solid">
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;S.No</fo:block>
-						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; PARTICULARS </fo:block>
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; GL ACCOUNT </fo:block>
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; AMOUNT Rs. </fo:block>
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-						        							  		  </fo:table-cell>
-        						   									 </fo:table-row>
-															
-        						   									 </fo:table-body>
-        						   		                    </fo:table>
-						        						</fo:table-cell>
- 															
-						        						</fo:table-row>	
-						        						<#assign sno=0>
-														<#list eachinvoiceinfo.getValue() as invoiceItem>						        						
-  															<#assign acctngTransDetails = {}>
-						        						  <#assign glAccountDetails = {}>
-						        						 
-															<#assign sno=sno+1>
-														
-														
-												            <#--<#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
-												            <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>-->
-																 	<#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, false)?if_exists/>
-																 	<#if invoiceItem.description?has_content>
-														                <#assign description=invoiceItem.description>
-														            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
-														                <#assign description=taxRate.get("description",locale)>
-														            <#elseif invoiceItemType.get("description",locale)?has_content>
-														                <#assign description=invoiceItemType.get("description",locale)>
-														            </#if>
-														            <#assign glAccountId = "">
-														   			<#if invoiceItemType.defaultGlAccountId?has_content>
-														   				<#assign glAccountId =   invoiceItemType.defaultGlAccountId?if_exists>
-														   			<#elseif glAccntIdslist.get(invoiceId)?has_content>	
-														   				<#assign glAccountId =   glAccntIdslist.get(invoiceId)?if_exists>  
-														   			</#if>
-																    <#if glAccountId?has_content>
-																    	<#assign glAccountDetails = delegator.findOne("GlAccount", {"glAccountId" : glAccountId}, false)?if_exists/>
-																    </#if> 
-						        						<fo:table-row>
-							        						<fo:table-cell bottom="">
-						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
-		        				    								 <fo:table-column column-width="10%"/>
-        						   									 <fo:table-column column-width="60%"/>
-        						   									 <fo:table-column column-width="55%"/>
-        						   									 <fo:table-column column-width="27%"/>	
-        						   									 <fo:table-body>
-        						   									 <fo:table-row>
-        						   									 <fo:table-cell border-style="solid">
-						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
-						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${description?if_exists} </fo:block>
-						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; <#if glAccountDetails?has_content>${glAccountDetails.description?if_exists}(${glAccountId})</#if> </fo:block>
-						        							  		  </fo:table-cell>
-						        							  		  <fo:table-cell border-style="solid">
-						        							  		   	<#assign  amount=0>
-						        							  		   	<#assign quantity=0>
-						        							  		   	<#assign Totalamount=0>
-						        							  		      <#assign amount= invoiceItem.amount?if_exists>
-																			<#if invoiceItem.quantity?has_content>
-						        							  		      		<#assign quantity= invoiceItem.quantity?if_exists>
-						        							  		      		<#assign Totalamount= amount*quantity>
- 																			<#else>
-					      						        						<#assign Totalamount= amount>
-																			</#if>
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${Totalamount?if_exists?string("#0.00")} </fo:block>
-						        							  		  </fo:table-cell>
-        						   									 </fo:table-row>
-        						   									 </fo:table-body>
-        						   		                    </fo:table>
-						        						</fo:table-cell> 
-						        						</fo:table-row>	
-						        						 </#list>
-													
-						        						 <fo:table-row>
-															<fo:table-cell>
-											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-											       			</fo:table-cell>
-														 </fo:table-row>
-						        						  <fo:table-row>
-						   									 <fo:table-cell>
-				        										<fo:block font-size="12pt"  white-space-collapse="false" font-weight="bold" ></fo:block>
-				        									</fo:table-cell>
-						   									 <fo:table-cell >
-				        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
-				        							  		 </fo:table-cell>
-			        							  		 	<fo:table-cell >
-			        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">TOTAL Rs.: ${paymentApplicationMap.get(invoiceId).amountApplied?if_exists?string("#0.00")} </fo:block>
-			        							  		 	</fo:table-cell>
-						        						</fo:table-row>
-						        						</#list>
 														<#if refundpaymentlist?has_content>
 														<fo:table-row>
 															<fo:table-cell>

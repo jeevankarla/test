@@ -551,7 +551,7 @@
         <field name="quantityOnHandTotal" title="${uiLabelMap.ProductItemQOH}"><display/></field> -->
         <!--  <field name="productATP" title="${uiLabelMap.ProductProductATP}"><display/></field>
         <field name="productQOH" title="${uiLabelMap.ProductProductQOH}"><display/></field> -->
-        <field name="quantityOnHandTotal" title="Quantity"><display/></field>
+        <field name="quantityOnHandTotal" title="Stock Avl"><display/></field>
         <field name="isVarianceForDamage"><hidden value="Y"/><!--it is to negate the QOH --></field>
         <field name="varianceReasonId">
             <drop-down allow-empty="false">
@@ -559,7 +559,7 @@
             </drop-down>
         </field>
 <!--    <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field> -->
-        <field name="quantityOnHandVar" title="${uiLabelMap.ProductProductQOHVar}" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
+        <field name="quantityOnHandVar" title="Varience" event="onchange" action="document.ListPhysicalInventoryDepot._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit/>

@@ -271,6 +271,7 @@
 				        <tr>
 				         	 <td>
 		          				<input type="hidden" name="hideQCflow" id="hideQCflow" value="Y"/>  
+				                <input type="hidden" name="allowedGraterthanTheOrdered" id="allowedGraterthanTheOrdered" value="N"/>  
 		          			</td>
 				        </tr>
 	    			</table>

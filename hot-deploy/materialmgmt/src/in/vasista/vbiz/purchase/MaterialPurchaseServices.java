@@ -96,6 +96,7 @@ public class MaterialPurchaseServices {
 	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    String remarks = (String) request.getParameter("remarks");
 	    String hideQCflow = (String) request.getParameter("hideQCflow");
+	    String allowedGraterthanTheOrdered = (String) request.getParameter("allowedGraterthanTheOrdered");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -316,11 +317,23 @@ public class MaterialPurchaseServices {
 							BigDecimal maxQty=oldRecvdQty.add(quantity);
 							Debug.log("=orderQty=="+orderQty+"==checkQty="+checkQty+"==maxQty=="+maxQty+"==quantity="+quantity);
 							//if(quantity.compareTo(checkQty)>0){
+							if(UtilValidate.isEmpty(allowedGraterthanTheOrdered)){								
 							if(maxQty.compareTo(checkQty)>0){	
 								Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
 								request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
 								TransactionUtil.rollback();
 						  		return "error";
+							}
+							}else{
+								if("N".equals(allowedGraterthanTheOrdered)){
+									if(maxQty.compareTo(orderQty)>0){	
+										Debug.logError("Quantity cannot be more than Order Quantity for PO : "+orderId, module);
+										request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than Order Quantity for PO : "+orderId);	
+										TransactionUtil.rollback();
+								  		return "error";
+									}
+								}
+								
 							}
 						}
 					}

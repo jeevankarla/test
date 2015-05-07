@@ -1066,8 +1066,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentDate" id-name="paymentDateReceipt" position="1" title="${uiLabelMap.paymentDate}"><text/></field>
-         <field use-when="&quot;${paymentMethodTypeId}&quot;.equals(&quot;FUND_TRANSFER&quot;)" name="finAccountId" title="Fin Account" position="2">
+        <field name="paymentDate" id-name="paymentDateReceipt" position="1" title="${uiLabelMap.paymentDate}" required-field="true"><text/></field>
+         <field use-when="&quot;${paymentMethodTypeId}&quot;.equals(&quot;FUND_TRANSFER&quot;)" name="finAccountId" title="Fin Account" position="2" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                     <entity-constraint name="ownerPartyId" value="Company"/>
@@ -1077,15 +1077,15 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" ><text></text></field>
+<!--         <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" ><text></text></field> -->
        <!--  <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field> 
        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>   -->     
         <field name="amount" position="2" required-field="true"><text/></field>
-        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" ><text/></field>
+        <field name="paymentRefNum" position="1" title="Reference Number" ><text/></field>
        <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createButton" widget-style="smallSubmit">
+        <field position="1" name="submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
