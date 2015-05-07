@@ -91,8 +91,14 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	partyIds.add(parameters.partyId);
 }
-GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault",[glAccountTypeId:glAccountTypeId,organizationPartyId:"Company"],true);
-String glAccountId=glAccountTypeDefault.getString("glAccountId");
+String glAccountId="";
+if(UtilValidate.isNotEmpty(glAccountTypeId)){
+	GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault",[glAccountTypeId:glAccountTypeId,organizationPartyId:"Company"],true);
+	glAccountId=glAccountTypeDefault.getString("glAccountId");
+}
+if(UtilValidate.isNotEmpty(parameters.glAccountId)){
+	glAccountId=parameters.glAccountId;
+}
 if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameters.partyId)){
 	List conList=FastList.newInstance();
 	conList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
@@ -155,8 +161,14 @@ openingBalMap=[:];
 		partyIds=acctgPartyIds;
 	}
 	partyIds.each{partyId->
-			partyId=partyId.toUpperCase();
-		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId",glAccountTypeId));
+		partyId=partyId.toUpperCase();
+		Map acctgTransMap=[:];
+		if(UtilValidate.isNotEmpty(glAccountTypeId)){	
+		 acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId",glAccountTypeId));
+		}
+		if(UtilValidate.isNotEmpty(parameters.glAccountId)){
+			acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountId",glAccountId));
+		}
 		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
 	}
 //	acctgTransItr = acctgTransList.iterator();

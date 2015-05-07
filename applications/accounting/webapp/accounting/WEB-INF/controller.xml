@@ -2949,6 +2949,8 @@ under the License.
     <request-map uri="ComparativeBalanceSheet.csv"><security https="true" auth="true"/><response name="success" type="view" value="ComparativeBalanceSheetCsv"/></request-map>
     <request-map uri="TransactionTotals"><security https="true" auth="true"/><response name="success" type="view" value="TransactionTotals"/></request-map>
     
+      <request-map uri="SubLedgers"><security https="true" auth="true"/><response name="success" type="view" value="SubLedgers"/></request-map>
+    
     <request-map uri="FindPaymentsForDepositOrWithdraw">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PaymentsDepositWithdraw"/>
@@ -3832,6 +3834,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyWiseLedgerReportCSV"/>
     </request-map>
+    <request-map uri="SubLedgersReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SubLedgersReportPDF"/>
+    </request-map>
+    <request-map uri="SubLedgersReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SubLedgersReportCSV"/>
+    </request-map>
      <!--================= Bank Guarantee ==================== -->
 	
 	<request-map uri="BankGuaranteeReceipt">
@@ -4210,6 +4220,7 @@ under the License.
     <view-map name="ComparativeBalanceSheetPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeBalanceSheetPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="ComparativeBalanceSheetCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeBalanceSheetCsv" content-type="text/csv" encoding="none"/>
     <view-map name="TransactionTotals" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TransactionTotals"/>
+    <view-map name="SubLedgers" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#SubLedgers"/>
     <view-map name="TransactionTotalsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TransactionTotalsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="TransactionTotalsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TransactionTotalsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="PaymentsDepositWithdraw" type="screen" page="component://accounting/widget/FinAccountScreens.xml#PaymentsDepositWithdraw"/>
@@ -4387,6 +4398,8 @@ under the License.
    <view-map name="PartyLedgerCreditorsReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyLedgerCreditorsReportCSV" content-type="text/csv" encoding="none"/>
    <view-map name="PartyWiseLedgerReportPDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyWiseLedgerReportPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="PartyWiseLedgerReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyWiseLedgerReportCSV" content-type="text/csv" encoding="none"/>
+   <view-map name="SubLedgersReportPDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#SubLedgersReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="SubLedgersReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#SubLedgersReportCSV" content-type="text/csv" encoding="none"/>
     <!-- NEW REPORTS -->
    <view-map name="GlAccountMasterReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountMasterReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="InvoiceSummaryReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#InvoiceSummaryReportPdf" content-type="application/pdf" encoding="none"/>
