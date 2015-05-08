@@ -386,11 +386,13 @@ language governing permissions and limitations under the License. -->
           						    <#assign codeIdList=codeIdMap.get("invoiceList")>
           						    
           						    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : codeId}, true)?if_exists/>
+       							   <#assign primaryProductCategoryGlaccount=delegator.findOne("ProductCategoryGlAccount", {"productCategoryId" : codeId, "organizationPartyId" :"Company", "glAccountTypeId" : "PURCHASE_ACCOUNT"}, true)?if_exists/>
+
 		   					  <fo:table-row>
 								<fo:table-cell number-columns-spanned="6">
 									<fo:block keep-together="always" text-align="left"
 										font-size="12pt" white-space-collapse="false"
-										font-weight="bold">Primary Code :${productCategory.description} </fo:block>
+										font-weight="bold">Primary Code :${productCategory.description}[${primaryProductCategoryGlaccount.glAccountId?if_exists}]</fo:block>
 								</fo:table-cell>
 							 </fo:table-row>
           						   <#assign productDetailMap=codeIdMap.get("productDetailMap") ?if_exists>
@@ -482,7 +484,7 @@ language governing permissions and limitations under the License. -->
 										font-weight="bold"></fo:block>
 								</fo:table-cell>
 								<fo:table-cell number-columns-spanned="3">
-									<fo:block text-align="left" font-weight="bold" font-size="11pt">Primery Code-Total</fo:block>
+									<fo:block text-align="left" font-weight="bold" font-size="11pt">Primary Code-Total</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
 									<fo:block keep-together="always" text-align="left"
