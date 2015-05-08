@@ -413,7 +413,16 @@ under the License.
             <call-service service-name="createAcctgTrans" in-map-name="createAcctgTransParams">
                 <result-to-field result-name="acctgTransId"/>
             </call-service>
-
+           <!-- consolidate entries by glAccountId ,partyId,debitCreditFlag -->
+           <iterate list="normalizedAcctgTransEntries" entry="acctgTransEntry">
+    		    <make-value entity-name="AcctgTransEntry" value-field="newEntity"/>
+		        <set-nonpk-fields map="acctgTransEntry" value-field="newEntity"/>
+		        <set-pk-fields map="acctgTransEntry" value-field="newEntity"/>
+		        <set field="normalizedAcctgTransEntryGenerics[]" from-field="newEntity"/>
+    	  </iterate>
+          <call-class-method class-name="org.ofbiz.accounting.ledger.GeneralLedgerServices" method-name="consolidateAcctgTransEntries" ret-field="normalizedAcctgTransEntries" >
+            <field field="normalizedAcctgTransEntries" type="List"/>
+          </call-class-method>
             <!-- Next, create the AcctgTransEntry entities one by one -->
             <iterate list="normalizedAcctgTransEntries" entry="acctgTransEntry">
                 <!-- if any amount is negative, then get the absolute (positive) value of that amount, and flip the Debit/Credit flag  -->
@@ -449,7 +458,18 @@ under the License.
         <!-- all done -->
         <field-to-result field="acctgTransId"/>
     </simple-method>
-
+    <!-- <simple-method method-name="consolidateAcctgTransEntries" short-description="consolidate entries by glAccountId ,partyId,debitCreditFlag">
+    		<iterate list="normalizedAcctgTransEntries" entry="acctgTransEntry">
+    		    <make-value entity-name="AcctgTransEntry" value-field="newEntity"/>
+		        <set-nonpk-fields map="acctgTransEntry" value-field="newEntity"/>
+		        <set-pk-fields map="acctgTransEntry" value-field="newEntity"/>
+		        <set field="normalizedAcctgTransEntryGenerics[]" from-field="newEntity"/>
+    		</iterate>
+    	   <iterate list="normalizedAcctgTransEntryGenerics" entry="acctgTransEntry">
+    		   
+    			
+    	  </iterate>
+    </simple-method> -->
     <!-- Miscellaneous services for product and inventory -->
 
     <simple-method method-name="getGlAccountFromAccountType" short-description="Look up a GlAccountId from GlAccountTypeId">
@@ -2890,6 +2910,6 @@ under the License.
            <field-map field-name="invoiceTypeId" from-field="invoiceType.parentTypeId"/>
            <field-map field-name="invoicePurposeTypeId" from-field="invoice.purposeTypeId"/>
         </entity-one>
-        <log level="always" message="InvoicePurposeTypeGlAccountDefault============${invoicePurposeTypeGlAccountDefault}"></log>
+        <log level="verbose" message="InvoicePurposeTypeGlAccountDefault============${invoicePurposeTypeGlAccountDefault}"></log>
     </simple-method>
 </simple-methods>
