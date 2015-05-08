@@ -225,10 +225,14 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				totalMap = [:];
 				totalMap["invoiceId"]=invoiceId;
 				totalMap["invoiceDate"]=invoiceDate;
-				totalMap["basicRevenue"]=basicRevenue;
+				if(UtilValidate.isNotEmpty(totalBedRevenue)){
+					totalMap["basicRevenue"]=basicRevenue+totalBedRevenue;
+				}else{
+					totalMap["basicRevenue"]=basicRevenue;
+				}
 				totalMap["partyId"]=invoicePartyId;
 				totalMap["partyName"]=partyName;
-				totalMap["bedRevenue"]=totalBedRevenue;
+				//totalMap["bedRevenue"]=totalBedRevenue;
 				totalMap["vatRevenue"]=vatRevenue;
 				totalMap["cstRevenue"]=cstRevenue;
 				totalMap["totalRevenue"]=totalRevenue;
@@ -297,7 +301,7 @@ purchaseRegisterList.each { purchaseRegisterList ->
 	partyMap["supInvNumber"]=eachlist.supInvNumber;
 	partyMap["supInvDate"]=eachlist.supInvDate;
 	partyMap["basicRevenue"]=eachlist.basicRevenue;
-	partyMap["bedRevenue"]=eachlist.bedRevenue;
+	//partyMap["bedRevenue"]=eachlist.bedRevenue;
 	partyMap["vatRevenue"]=eachlist.vatRevenue;
 	partyMap["cstRevenue"]=eachlist.cstRevenue;
 	partyMap["freightAmount"]=eachlist.freightAmount;
@@ -307,7 +311,7 @@ purchaseRegisterList.each { purchaseRegisterList ->
 	partyMap["tinNumber"]=eachlist.tinNumber;
 	//Debug.log("eachlist.partyId=============================="+eachlist.partyId);
 	totalBasicRev=totalBasicRev+eachlist.basicRevenue;
-	totalBedRev=totalBedRev+eachlist.bedRevenue;
+	//totalBedRev=totalBedRev+eachlist.bedRevenue;
 	totalVatRev=totalVatRev+eachlist.vatRevenue;
 	totalCstRev=totalCstRev+eachlist.cstRevenue;
 	totalRevenue=totalRevenue+eachlist.totalRevenue;
@@ -333,7 +337,7 @@ purchaseRegisterList.each { purchaseRegisterList ->
 grandtotalsMap=[:];
 grandtotalsMap["invoiceDate"]="grandtotal";
 	grandtotalsMap["basicRevenue"]=totalBasicRev;
-	grandtotalsMap["bedRevenue"]=totalBedRev;
+	//grandtotalsMap["bedRevenue"]=totalBedRev;
 	grandtotalsMap["vatRevenue"]=totalVatRev;
 	grandtotalsMap["cstRevenue"]=totalCstRev;
 	grandtotalsMap["freightAmount"]=totalFreightAmount;
