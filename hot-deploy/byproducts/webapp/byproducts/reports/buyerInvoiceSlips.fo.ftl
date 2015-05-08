@@ -368,7 +368,7 @@ under the License.
 												</fo:table-row>
 												<#assign exduty = "N">
 												<#if invoiceTaxItems?has_content>
-									 <#assign vatsData = totVatsPercesntMap.get(invoiceNo)>
+									 <#assign vatsData = totVatsPercesntMap.get(invoice.get('invoiceId'))>
 												<#assign totWithBedSale=0>
 													<#list invoiceTaxItems as eachTaxItem>
 													<#assign taxDetails = eachTaxItem.entrySet()>
