@@ -314,4 +314,50 @@
         <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams"/>
         <set field="successMessage" value="Enquiry Email Scheduled ToSend :${parameters.sendTo}"/>
     </simple-method>
+    
+    <simple-method method-name="getNextProductSeqID" short-description="Get Next Internal Name">
+        <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special custRequest number sequencing -->
+        <entity-one entity-name="SequenceValueItemPref" value-field="sequenceValueItemPref" auto-field-map="false">
+            <field-map field-name="seqName" value="Product"/>
+        </entity-one>
+       
+        <if>
+            <condition>
+                <if-compare field="sequenceValueItemPref.sequenceEnumId" operator="equals" value="SQIT_ENF_SEQ"/>
+            </condition>
+            <then>
+                <log level="info" message="In createNewProduct sequence enum SQIT_ENF_SEQ"/>
+                <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
+                <if-not-empty field="sequenceValueItemPref.lastSeqNumber">
+                    <calculate field="sequenceValueItemPref.lastSeqNumber" type="Long">
+                        <calcop operator="add" field="sequenceValueItemPref.lastSeqNumber"/>
+                        <number value="1"/>
+                    </calculate>
+                    <else>
+                        <calculate field="sequenceValueItemPref.lastSeqNumber" type="Long"><number value="1"/></calculate>
+                    </else>
+                </if-not-empty>
+                <store-value value-field="sequenceValueItemPref"/>
+                <set from-field="sequenceValueItemPref.lastSeqNumber" field="newProductIdTemp"/>
+            </then>
+            <else>
+                <log level="info" message="In createNewProduct sequence enum SQIT_STANDARD"/>
+                <!-- default to the default sequencing: SQIT_STANDARD -->
+                <set from-field="parameters.internalName" field="newProductIdTemp"/>
+                <if-empty field="newProductIdTemp">
+                    <sequenced-id sequence-name="Product" field="newProductIdTemp"/>
+                    <else>
+                        <!-- check the provided ID -->
+                        <check-id field="newProductIdTemp"/>
+                        <check-errors/>
+                    </else>
+                </if-empty>
+            </else>
+        </if>
+
+        <!-- use newProductIdTemp along with the sequenceIdPrefix to create the real ID -->
+        <set field="internalName" value="${sequenceValueItemPref.sequenceIdPrefix}${str:toString(newProductIdTemp)}"/>
+        <field-to-result field="internalName" result-name="internalName"/>
+    </simple-method>
+    
 </simple-methods>   

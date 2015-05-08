@@ -21,5 +21,6 @@ under the License.
 <entity-engine-xml>
 
  <SequenceValueItemPref  lastSeqNumber="104" seqName="CustRequest" sequenceEnumId="SQIT_ENF_SEQ"/>
+ <SequenceValueItemPref  lastSeqNumber="1001" seqName="Product" sequenceEnumId="SQIT_ENF_SEQ"/> 
  
  </entity-engine-xml>
