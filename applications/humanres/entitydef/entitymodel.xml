@@ -1835,6 +1835,7 @@ under the License.
       <field name="loanTypeId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="loanFinAccountId" type="id-ne"></field>
+      <field name="issuedPartyId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="sanctionedAmount" type="currency-amount"></field>
       <field name="principalAmount" type="currency-amount"></field>
@@ -1853,6 +1854,9 @@ under the License.
       <prim-key field="loanId"/>
       <relation type="one" fk-name="LON_PA" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="LON_ISPA" rel-entity-name="Party">
+        <key-map field-name="issuedPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="LON_LTP" rel-entity-name="LoanType">
         <key-map field-name="loanTypeId"/>
