@@ -275,7 +275,38 @@ under the License.
 															<fo:table-cell >
 																	 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
 															</fo:table-cell>
-														</#if>				
+														</#if>
+                                                    <#elseif values.get("termTypeId")=="INC_TAX">	
+                                                    	<#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_">
+											          		<fo:table-cell border-style="solid">
+											                      <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
+											                  </fo:table-cell>
+											                <#else>
+																<fo:table-cell >
+											                      <fo:block text-align="center"  font-size="10pt" ></fo:block>
+											                  </fo:table-cell>
+		                                                </#if>  
+										                  <#if values.get("uomId")=="PERCENT">
+			                                                  <#if values.get("description")?has_content && values.get("quoteItemSeqId")!="_NA_">
+											                  <fo:table-cell border-style="solid">
+											                      <fo:block text-align="right"  font-size="11pt" > ${values.get("description")?if_exists} %</fo:block>
+											                  </fo:table-cell>
+											                  <#else>
+			                                                   <fo:table-cell >
+											                      <fo:block text-align="center"  font-size="11pt" >${values.get("description")?if_exists} %</fo:block>
+											                  </fo:table-cell>
+		                                                   </#if>
+														  <#else>
+		                                                   <#if values.get("description")?has_content && values.get("quoteItemSeqId")!="_NA_">
+		                                                     <fo:table-cell border-style="solid">
+										                      <fo:block text-align="right"  font-size="11pt" > ${values.get("description")?if_exists} INR</fo:block>
+										                  </fo:table-cell>
+		                                                  <#else>
+		                                                      <fo:table-cell >
+										                      <fo:block text-align="center"  font-size="11pt" > ${values.get("description")?if_exists} INR</fo:block>
+										                  </fo:table-cell>
+		                                                  </#if>
+		                                                  </#if>			
 													<#else>		
 														<#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_">
 											          		<fo:table-cell border-style="solid">
