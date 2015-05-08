@@ -211,6 +211,7 @@ under the License.emplpunch
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateCreditLeaves" auth="true">
     	<description>Credit Leaves for Probationary Staff</description>
     	<attribute name="partyId" mode="IN" type="String" optional="false"/>
+    	<attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
     	<attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
         <attribute name="CL" mode="IN" type="BigDecimal" optional="true"/>
 		<attribute name="EL" mode="IN" type="BigDecimal" optional="true"/>

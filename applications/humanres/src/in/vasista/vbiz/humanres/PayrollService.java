@@ -759,11 +759,11 @@ public class PayrollService {
 								leaveBalanceCtx.put("userLogin", userLogin);
 								leaveBalanceCtx.put("partyId", payHeaderItemValue.get("partyIdFrom"));
 								//leaveBalanceCtx.put("EL", new BigDecimal(15));
+								leaveBalanceCtx.put("leaveTypeId", "EL");
 								leaveBalanceCtx.put("enCashedDays", BigDecimal.ZERO);								
 								leaveBalanceCtx.put("customTimePeriodId", hrCustomTimePeriodId);
 								try {
 									Map serviceLeaveBalanceResults = UpdateCreditLeaves(dctx, leaveBalanceCtx);
-									Debug.log("serviceLeaveBalanceResults======="+serviceLeaveBalanceResults);
 							        if (ServiceUtil.isError(serviceLeaveBalanceResults)) {
 							        	Debug.logError("Problems in service UpdateCreditLeaves", module);
 							  			return ServiceUtil.returnError("Problems in service UpdateCreditLeaves ");
@@ -2257,6 +2257,7 @@ public class PayrollService {
 							leaveBalanceCtx.put("userLogin", userLogin);
 							leaveBalanceCtx.put("partyId", payHeaderValue.get("partyIdFrom"));
 							//leaveBalanceCtx.put("EL", new BigDecimal(15));
+							leaveBalanceCtx.put("leaveTypeId", "EL");
 							leaveBalanceCtx.put("enCashedDays", new BigDecimal(15));
 							
 							leaveBalanceCtx.put("customTimePeriodId", hrCustomTimePeriodId);
@@ -6604,6 +6605,7 @@ public class PayrollService {
         BigDecimal earnedLeaves=(BigDecimal) context.get("EL");
         BigDecimal HPLeaves=(BigDecimal) context.get("HPL");
         BigDecimal enCashedDays=(BigDecimal) context.get("enCashedDays");
+        String leaveTypeId = (String) context.get("leaveTypeId");
         String flag ="creditLeaves";
         List leaveTypeIds=FastList.newInstance();
         Map<String, Object> leadaysMap=FastMap.newInstance();
@@ -6613,6 +6615,13 @@ public class PayrollService {
         try{
         	List<GenericValue> leaveTypeList=delegator.findList("EmplLeaveType",null,null,null,null,false);
         	leaveTypeIds=EntityUtil.getFieldListFromEntityList(leaveTypeList, "leaveTypeId", true);
+        	if(UtilValidate.isEmpty(leaveTypeId)){
+        		leaveTypeIds = leaveTypeIds;
+        	}else{
+        		leaveTypeIds.clear();
+        		leaveTypeIds.add(leaveTypeId);
+        	}
+        	
         	for(int i=0;i<leaveTypeIds.size();i++){
         		BigDecimal openingBalance=BigDecimal.ZERO;
         		BigDecimal adjustedDays=BigDecimal.ZERO;
@@ -6628,7 +6637,6 @@ public class PayrollService {
         			Map input = FastMap.newInstance();
 		        	input.put("timePeriodId", customTimePeriodId);
 		        	input.put("timePeriodEnd", fromDateTime);
-		        	
 		        	/*Map resultMap = getPayrollAttedancePeriod(dctx,input);
 		        	GenericValue lastCloseAttedancePeriod=null;
 		        	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
