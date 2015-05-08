@@ -823,4 +823,40 @@ public class GeneralLedgerServices {
 		result.put("openingBalance", openingBalance);
         return result;
     }
+	
+	public static List consolidateAcctgTransEntries(List<GenericValue> normalizedAcctgTransEntries){
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		/* consolidate entries by glAccountId ,partyId,debitCreditFlag*/
+		List consolidateAcctgTransEntries =FastList.newInstance();
+		List tempNormalizedAcctgTransEntries = FastList.newInstance();
+		tempNormalizedAcctgTransEntries.addAll(normalizedAcctgTransEntries);
+		for(int i=0;i<normalizedAcctgTransEntries.size();i++){
+			
+			Map transEntry = normalizedAcctgTransEntries.get(i);
+			Map tempTransEntry = FastMap.newInstance();
+			tempTransEntry.putAll(transEntry);
+			
+			String glAccountId = (String)transEntry.get("glAccountId");
+			String partyId = (String)transEntry.get("partyId");
+			String debitCreditFlag = (String)transEntry.get("debitCreditFlag");
+			Map condMap = UtilMisc.toMap("glAccountId",glAccountId,"partyId",partyId,"debitCreditFlag",debitCreditFlag);
+			
+			List parList = EntityUtil.filterByAnd(tempNormalizedAcctgTransEntries, condMap);
+			BigDecimal amount = BigDecimal.ZERO;
+			if(UtilValidate.isEmpty(parList)){
+				continue;
+			}
+			for(int j=0;j<parList.size();j++){
+				Map tempEntry = (Map)parList.get(j);
+				amount = amount.add((BigDecimal)tempEntry.get("amount"));
+			}
+			tempTransEntry.put("amount", amount);
+			tempTransEntry.put("origAmount", amount);
+			consolidateAcctgTransEntries.add(tempTransEntry);
+			tempNormalizedAcctgTransEntries.removeAll(parList);
+		}
+		//Debug.log("consolidateAcctgTransEntries============"+consolidateAcctgTransEntries);
+		return consolidateAcctgTransEntries;
+	}
+	
 }
