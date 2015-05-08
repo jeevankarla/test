@@ -64,16 +64,20 @@ under the License.
        							<#list primaryProdDetails as primaryProd>
        							   <#assign prodDetails = primaryProd.getValue().entrySet()>
        							   <#assign primaryProductCategory=delegator.findOne("ProductCategory", {"productCategoryId" : primaryProd.getKey()}, true)?if_exists/>
+       							   <#assign primaryProductCategoryGlaccount=delegator.findOne("ProductCategoryGlAccount", {"productCategoryId" : primaryProd.getKey(), "organizationPartyId" :"Company", "glAccountTypeId" : "PURCHASE_ACCOUNT"}, true)?if_exists/>
+
        							  <fo:table-row>
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Primary Code :</fo:block>  
 							            </fo:table-cell>
 					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${primaryProductCategory.description}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${primaryProductCategory.description}[${primaryProductCategoryGlaccount.glAccountId?if_exists}]</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
+							      <#assign Primarytotal=0>
        							  <#list prodDetails as prod>
        							  <#assign totalRevenue=totalRevenue+prod.getValue().get("totalRevenue")?if_exists>
+								 <#assign Primarytotal=Primarytotal+prod.getValue().get("totalRevenue")?if_exists>
        							  <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : prod.getKey()}, true)?if_exists/>
        							  <#assign prodDetails = prodMap.entrySet()>
        							<fo:table-row>
@@ -90,7 +94,13 @@ under the License.
 								</#list>
 								<fo:table-row>
        							       <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Total:</fo:block>  
+							            </fo:table-cell>
+										<fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${Primarytotal?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 								</#list>
