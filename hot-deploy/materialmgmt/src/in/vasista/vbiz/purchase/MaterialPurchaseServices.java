@@ -3361,7 +3361,7 @@ public class MaterialPurchaseServices {
 		}
 		try{
 			String materialCode = "";
-			result = dispatcher.runSync("getNextMaterialCode", UtilMisc.toMap("userLogin", userLogin));
+			result = dispatcher.runSync("getNextProductSeqID", UtilMisc.toMap("userLogin", userLogin));
 			if (ServiceUtil.isError(result)) {
 				request.setAttribute("_ERROR_MESSAGE_", "Error creating new product Sequence !" );	
 				return "error";

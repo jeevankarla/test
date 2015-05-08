@@ -315,7 +315,7 @@
         <set field="successMessage" value="Enquiry Email Scheduled ToSend :${parameters.sendTo}"/>
     </simple-method>
     
-    <simple-method method-name="getNextMaterialCode" short-description="Get Next Internal Name">
+    <simple-method method-name="getNextProductSeqID" short-description="Get Next Internal Name">
         <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special custRequest number sequencing -->
         <entity-one entity-name="SequenceValueItemPref" value-field="sequenceValueItemPref" auto-field-map="false">
             <field-map field-name="seqName" value="Product"/>
@@ -355,7 +355,7 @@
             </else>
         </if>
 
-        <!-- use custRequestIdTemp along with the sequenceIdPrefix to create the real ID -->
+        <!-- use newProductIdTemp along with the sequenceIdPrefix to create the real ID -->
         <set field="internalName" value="${sequenceValueItemPref.sequenceIdPrefix}${str:toString(newProductIdTemp)}"/>
         <field-to-result field="internalName" result-name="internalName"/>
     </simple-method>
