@@ -145,4 +145,10 @@
          <attribute name="periodName" mode="IN" type="String" optional="true"/>
          <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"/>
     </service>
+    
+    <service name="getNextMaterialCode" engine="simple" location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="getNextMaterialCode">
+        <description>create a sequence for the new Product  </description>
+        <attribute name="internalName" mode="OUT" type="String" optional="false"/>
+    </service>
+    
 </services>

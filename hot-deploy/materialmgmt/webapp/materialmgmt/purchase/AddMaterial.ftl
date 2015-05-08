@@ -40,16 +40,18 @@ function makeDatePicker(fromDateId ,thruDateId){
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
                 	if(currentIndex == 0 && newIndex == 1){
-                		if(!($("#newMaterialCheck").is(":checked"))){
-                			var materialCode = $("#materialCode").val();
-                	  	  if( (materialCode).length < 1 ) {
-					    	$('#materialCode').css('background', 'yellow'); 
+                
+                	//	if(!($("#newMaterialCheck").is(":checked"))){
+                			var desc = $("#description").val();
+                	  	  if( (desc).length < 1 ) {
+					    	$('#description').css('background', 'yellow'); 
 					       	setTimeout(function () {
-					           	$('#materialCode').css('background', 'white').focus(); 
+					           	$('#description').css('background', 'white').focus(); 
 					       	}, 800);
 					    	return false;
 					    	}
-					    }
+					//    }
+					    
                 		return true;
                 	}
                 	if(currentIndex == 1 && newIndex == 2){
@@ -129,18 +131,21 @@ function makeDatePicker(fromDateId ,thruDateId){
 						      	</select>
 						    </td>
 						</tr>
+				<#--
 						<tr>
 							<td class="label">New Material:   </td>
 							<td><input type="checkbox" id="newMaterialCheck" name="newMaterialCheck" onchange="javascript:checkNewMaterial(this);"/></td>
-						</tr>
+						</tr>    
+				
 						<tr>
           		        	<td class="label"><b>Material Code: <div id="codeId">(<font color="red">*</font>)</div></b></td>
 					    	<td>
 						      	<input type="text" name="materialCode" id="materialCode" size="18" maxlength="60" autocomplete="off"/>
         				 	</td>
 						</tr>
+				-->
 						<tr>
-          		        	<td class="label"><b>Product Name: </b></td>
+          		        	<td class="label"><b>Product Name: <div id="codeId">(<font color="red">*</font>)</div></b></td>
 					    	<td>
          						<textarea cols="40" rows="5" name="description" id="description"></textarea>
      					    </td>
@@ -198,10 +203,13 @@ function makeDatePicker(fromDateId ,thruDateId){
                      </section>
                 </form>
 <script type="text/javascript">
+
+/*
 function checkNewMaterial(){
 	if($("#newMaterialCheck").is(":checked")){
 	jQuery('#codeId').hide();
 	}
 	else{ jQuery('#codeId').show(); }
 }
+*/
 </script>

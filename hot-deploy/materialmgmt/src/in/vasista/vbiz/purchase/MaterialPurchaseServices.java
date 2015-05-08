@@ -3326,14 +3326,14 @@ public class MaterialPurchaseServices {
 		String productTypeId = (String) request.getParameter("productTypeId");
 		String primaryCategoryId = (String) request.getParameter("primaryCategoryId");
 		String[] productCategoryIds = request.getParameterValues("productCategoryId");
-		String materialCode = (String) request.getParameter("materialCode");
+		//String materialCode = (String) request.getParameter("materialCode");
 		String description = (String) request.getParameter("description");
 		String productUOMtypeId = (String) request.getParameter("productUOMtypeId");
 		String longDescription = (String) request.getParameter("specification");
 		String facilityId = (String) request.getParameter("facilityId");
 		String prodAttribute = (String) request.getParameter("attributeName");
 		String attributeValue = (String) request.getParameter("attributeValue");
-		if(UtilValidate.isNotEmpty(materialCode)){
+		/*if(UtilValidate.isNotEmpty(materialCode)){
 		try
 		{
 			List conditionList = FastList.newInstance();
@@ -3351,7 +3351,7 @@ public class MaterialPurchaseServices {
 			request.setAttribute("_ERROR_MESSAGE_", e.getMessage());	
 			return "error";
 			}
-		}
+		}*/
 		List materialCategoryList = new ArrayList();
 		if(UtilValidate.isNotEmpty(productCategoryIds)){
 			for(int i=0;i<productCategoryIds.length;i++)
@@ -3360,6 +3360,15 @@ public class MaterialPurchaseServices {
 			}
 		}
 		try{
+			String materialCode = "";
+			result = dispatcher.runSync("getNextMaterialCode", UtilMisc.toMap("userLogin", userLogin));
+			if (ServiceUtil.isError(result)) {
+				request.setAttribute("_ERROR_MESSAGE_", "Error creating new product Sequence !" );	
+				return "error";
+			}
+			if(UtilValidate.isNotEmpty(result)){
+				materialCode = (String)result.get("internalName");
+			}
 			Map newProductMap = FastMap.newInstance();
 			newProductMap.put("productTypeId", productTypeId);
 			newProductMap.put("primaryCategoryId", primaryCategoryId);
