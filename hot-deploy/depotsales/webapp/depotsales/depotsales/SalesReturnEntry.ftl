@@ -129,7 +129,7 @@ $(document).ready(function(){
     	<div align="center">
     		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processSalesReturn('salesReturnEntryInit','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processSalesReturn('salesReturnEntryInit','<@ofbizUrl>SupplDeliverySchedule</@ofbizUrl>');"/>   	
+    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processSalesReturn('salesReturnEntryInit','<@ofbizUrl>salesReturnHeaderItems</@ofbizUrl>');"/>   	
     	</div>     
 	</div>
 </div>     
