@@ -46,8 +46,8 @@ under the License.
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">PURCHASE REGISTER REPORT</fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice        	Retailer Name    	Ex-Tax    					ED            VAT      	C.S.T         Freight    			Discount   	Insurance			Total    					TIN</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number        	              					Value     				Value   							    																	Pack,Forwd,Other																																						Number</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice        	Retailer Name    	Ex-Tax    					VAT      	C.S.T         Freight    			Discount   			Insurance			Total    					TIN</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number        	              					Value     				   							    																					Pack,Forwd,Other																											Number</fo:block>
 	        		<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -62,9 +62,9 @@ under the License.
 		            		<fo:table-column column-width="110pt"/>
 		            		<fo:table-column column-width="110pt"/>
 		            		<fo:table-column column-width="90pt"/>
-		            		<fo:table-column column-width="80pt"/>
 		            		<fo:table-column column-width="120pt"/>
-		            		<fo:table-column column-width="130pt"/>
+		            		<fo:table-column column-width="10pt"/>
+		            		<fo:table-column column-width="150pt"/>
 		                    <fo:table-body>
 		                    <#assign invoiceDetails = invoiceMap.entrySet()>
 		                    <#assign totalBasicRev=0>
@@ -79,7 +79,6 @@ under the License.
 		                    
        							<#list invoiceDetails as invoiceDet>
        							<#assign totalBasicRev=totalBasicRev+invoiceDet.getValue().get("basicRevenue")?if_exists>
-       							<#assign totalBedRev=totalBedRev+invoiceDet.getValue().get("bedRevenue")?if_exists>
        							<#assign totalVatRev=totalVatRev+invoiceDet.getValue().get("vatRevenue")?if_exists>
        							<#assign totalCstRev=totalCstRev+invoiceDet.getValue().get("cstRevenue")?if_exists>
        							<#assign totalRevenue=totalRevenue+invoiceDet.getValue().get("totalRevenue")?if_exists>
@@ -128,9 +127,6 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("basicRevenue")?if_exists?string("#0.00")}</fo:block> 
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("bedRevenue")?if_exists?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
-							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("vatRevenue")?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
@@ -167,9 +163,6 @@ under the License.
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">${totalBasicRev?if_exists?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
-							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">${totalBedRev?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">${totalVatRev?if_exists?string("#0.00")}</fo:block>  

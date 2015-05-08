@@ -153,7 +153,6 @@
         <field name="supInvNumber" title="Supp Invoice Number"><display/></field>
         <field name="supInvDate" title="Supp Invoice Date"><display/></field>
         <field name="basicRevenue" title="Basic Revenue"><display/></field>
-        <field name="bedRevenue" title="Bed Revenue"><display/></field>
         <field name="vatRevenue" title="Vat Revenue"><display/></field>
         <field name="cstRevenue" title="CST Revenue"><display/></field>
         <field name="freightAmount" title="Freight Amount"><display/></field>
