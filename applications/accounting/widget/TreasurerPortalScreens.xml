@@ -3912,7 +3912,8 @@
 		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 		<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
-		<set field="reportName" value="PARTY LEDGER ABSTRACT REPORT"/>
+		<set field="fromGlAccountId" from-field="parameters.glAccountId"/>
+		<set field="reportName" value="SUBLEDGER"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
   	</actions>
   	<widgets>
