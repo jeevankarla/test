@@ -5649,7 +5649,11 @@ public class InvoiceServices {
 	        				 Debug.logError(e, e.toString(), module);
 	        		         return ServiceUtil.returnError(e.toString());
 	        			}
-	        			
+	        			BigDecimal amountApplied = outstandingAmount;
+	        			if(amountAppliedRunningTotal.compareTo(outstandingAmount) <0){
+	        				Debug.log("amountAppliedRunningTotal====="+amountAppliedRunningTotal+"===outstandingAmount===="+outstandingAmount);
+	        				amountApplied = amountAppliedRunningTotal;
+	        			}
 	        			Map<String, Object> appl = FastMap.newInstance();
 		                appl.put("paymentId", paymentId);
 		                appl.put("amountApplied", amountAppliedRunningTotal);
@@ -5666,7 +5670,7 @@ public class InvoiceServices {
 	        		         return ServiceUtil.returnError(e.toString());
 	                    }
 		                amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
-	                 	/*if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
+	                 	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
 	                 		try {
 	                 			paymentEntry.set("isFullyApplied", "Y");
 		                 		delegator.store(paymentEntry);
@@ -5676,7 +5680,7 @@ public class InvoiceServices {
 		        		         return ServiceUtil.returnError(e.toString());
 		                    }
 	                 		break;
-	                 	}*/
+	                 	}
             			
             		}
             		try {
