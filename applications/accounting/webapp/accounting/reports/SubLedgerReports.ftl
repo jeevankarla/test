@@ -15,6 +15,11 @@
 	jQuery(formId).submit();
     }
     
+    function appendParameters(formName, action){
+    	var formId = "#" + formName;
+		jQuery(formId).attr("action", action);	
+		jQuery(formId).submit();
+    }
     var glAccountType = ${StringUtil.wrapString(glAccountTypeJSON)!'[]'};
     var glAccountName = ${StringUtil.wrapString(glAccountName)!'[]'};
 
@@ -168,6 +173,7 @@ function reportTypeChangeFunc() {
 
 	$(document).ready(function(){
 	    makeDatePicker4("SubLedgersFromDate","SubLedgersThruDate");
+	    makeDatePicker4("SaleAnalysisFromDate","SaleAnalysisThruDate");
 	    $('#ui-datepicker-div').css('clip', 'auto');	
 	    $("#glAccountId").autocomplete({ source: glAccountType }).keydown(function(e){});	
 	});
@@ -264,6 +270,20 @@ function reportTypeChangeFunc() {
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="SubLedgers" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					  <td width="5%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('SubLedgers', '<@ofbizUrl>SubLedgersReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('SubLedgers', '<@ofbizUrl>SubLedgersReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+				</form>
+              </tr>
+              <tr class="alternate-row">
+				<form id="SalesAnalysis" name="SalesAnalysis" method="post" action="<@ofbizUrl>SalesAnalysisReport.pdf</@ofbizUrl>" target="_blank">	
+					<td width="15%">Sales Analysis Report</td>
+					<td width="15%">From<input  type="text" size="18pt" id="SaleAnalysisFromDate" readonly  name="fromDate"/></td>
+				    <td width="15%">To<input  type="text" size="18pt" id="SaleAnalysisThruDate" readonly  name="thruDate"/></td>
+  					<td width="15%">
+                     </td>  
+                      <td width="10%">
+                     </td> 
+					  <td width="20%"> </td>
+					  <td width="5%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParameters('SalesAnalysis', '<@ofbizUrl>SalesAnalysisReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
+					<#--  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParameters('SalesAnalysis', '<@ofbizUrl>SalesAnalysisReport.csv</@ofbizUrl>');" class="buttontext"/></td>  -->
 				</form>
               </tr>
 		</table>     			     
