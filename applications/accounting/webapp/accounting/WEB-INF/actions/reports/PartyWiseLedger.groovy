@@ -76,6 +76,10 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	partyIds.add(parameters.partyId);
 }
+List glAccountIds=FastList.newInstance();
+ glAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault",EntityCondition.makeCondition("glAccountTypeId",EntityOperator.IN,UtilMisc.toList("ACCOUNTS_RECEIVABLE","ACCOUNTS_PAYABLE")),null,null,null,false);
+ glAccountIds=EntityUtil.getFieldListFromEntityList(glAccountTypeDefaultList, "glAccountId", true);
+
 if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameters.partyId)){
 	List conList=FastList.newInstance();
 	conList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
@@ -100,6 +104,7 @@ if(UtilValidate.isNotEmpty(rolePartyIds)){
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,rolePartyIds)));
 					  
 }
+conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
 conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 acctgTransList = delegator.find("AcctgTransAndEntries",condition,null,null,null,null);
@@ -123,8 +128,9 @@ openingBalMap=[:];
 	}
 	partyIds.each{partyId->
 			partyId=partyId.toUpperCase();
-		Map acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate));
-		openingBalMap[partyId]=acctgTransMap.get("openingBalance");
+		Map acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_RECEIVABLE"));
+		Map acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE"));
+		openingBalMap[partyId]=acctgReceiveMap.get("openingBalance")+acctgPayMap.get("openingBalance");
 	}
 		if(acctgTransIter){
 //			TransItr = acctgTransList.iterator();
