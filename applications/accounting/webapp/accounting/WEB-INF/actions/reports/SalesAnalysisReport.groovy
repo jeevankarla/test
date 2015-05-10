@@ -211,10 +211,82 @@ if(acctgTransList){
 context.glAccountMap=glAccountMap;
 context.channelWiseMap=channelWiseMap;
 context.saleTypeMap=saleTypeMap;
-
-
-
-
+//For CSV
+if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
+salesAnalysisCsv=[];
+if(UtilValidate.isNotEmpty(glAccountMap)){
+	titleMap=[:];
+	for(Map.Entry glAccount:glAccountMap.entrySet()){
+		tempMap=[:];
+		glAccountId=glAccount.getKey();
+		amount=0;
+		if(glAccount.getValue()>=0){
+			amount=glAccount.getValue() +"(Dr)" ;
+		}else{
+			amount=-(glAccount.getValue()) +"(Cr)";
+		}
+		tempMap.glAccountId=glAccountId;
+		glAccnt=delegator.findOne("GlAccount",[glAccountId:glAccountId],false);
+		description="";
+		if(glAccnt){
+			description=glAccnt.description;
+		}
+		tempMap.description=description;
+		tempMap.amount=amount;
+		salesAnalysisCsv.add(tempMap);
+	}
+	titleMap.glAccountId="CHANNEL / CATEGORY";
+	titleMap.productId="PRODUCT ID";
+	titleMap.description="PRODUCT NAME";
+	titleMap.amount="AMOUNT";
+	salesAnalysisCsv.add(titleMap);
+	for(Map.Entry channel:channelWiseMap.entrySet()){
+		if(UtilValidate.isNotEmpty(channel.getValue())){
+            Map categoryWise=FastMap.newInstance();
+			categoryWise=channel.getValue();
+			tempMap=[:];
+			tempMap.glAccountId=saleTypeMap.get(channel.getKey());
+			salesAnalysisCsv.add(tempMap);
+			for(Map.Entry category:categoryWise.entrySet()){
+				products=category.getValue();
+				prodCat=delegator.findOne("ProductCategory",[productCategoryId:category.getKey()],false);
+				tempMap=[:];
+				tempMap.glAccountId=prodCat.description;
+				salesAnalysisCsv.add(tempMap);
+				totValue=0;
+				for(Map.Entry product:products.entrySet()){
+					tempMap=[:];
+					if(product.getValue()!=0){
+					value=0;
+					if(product.getValue()>=0){
+						value=product.getValue() +"(Dr)";
+					}else{
+						value=-(product.getValue()) +"(Cr)";
+					}
+					totValue=totValue+product.getValue();
+					productId=product.getKey();
+					prod=delegator.findOne("Product",[productId:productId],false);
+					tempMap.productId=productId;
+					tempMap.description=prod.productName;
+					tempMap.amount=value;
+					salesAnalysisCsv.add(tempMap);
+					}
+				}
+				tempMap=[:];
+				if(totValue>=0){
+					totValue=totValue +"(Dr)";
+				}else{
+					totValue=-(totValue) +"(Cr)";
+				}
+				tempMap.description="TOTAL  :";
+				tempMap.amount=totValue;
+				salesAnalysisCsv.add(tempMap);
+			}
+		}
+	}
+}
+context.salesAnalysisCsv=salesAnalysisCsv;
+}
 
 
 

@@ -1254,6 +1254,7 @@ under the License.
         <field name="transactionDate"><display/></field>
         <field name="invoiceId"><display/></field>
         <field name="paymentId"><display/></field>
+        <field name="productId"><display></display></field>
         <field name="transDescription"><display/></field>
         <field name="partyId"><display/></field>
         <field name="partyName" title="${uiLabelMap.PartyName}" entry-name="partyId">
