@@ -283,7 +283,7 @@ function reportTypeChangeFunc() {
                      </td> 
 					  <td width="20%"> </td>
 					  <td width="5%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParameters('SalesAnalysis', '<@ofbizUrl>SalesAnalysisReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
-					<#--  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParameters('SalesAnalysis', '<@ofbizUrl>SalesAnalysisReport.csv</@ofbizUrl>');" class="buttontext"/></td>  -->
+					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParameters('SalesAnalysis', '<@ofbizUrl>SalesAnalysisReport.csv</@ofbizUrl>');" class="buttontext"/></td>  
 				</form>
               </tr>
 		</table>     			     
