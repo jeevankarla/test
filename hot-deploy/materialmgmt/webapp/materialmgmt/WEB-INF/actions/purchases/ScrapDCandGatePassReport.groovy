@@ -23,6 +23,7 @@ import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.party.party.PartyHelper;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +55,13 @@ List orderHeaders=FastList.newInstance();
 List orderIds = FastList.newInstance();
 List orderRoleList = FastList.newInstance();
 List orderItemsList = FastList.newInstance();
+List scrapProductsList = FastList.newInstance();
 finalMap=[:];
+
+scrapProducts=ProductWorker.getProductsByCategory(delegator ,"SCRAP_MATERIAL" ,null);
+if(scrapProducts){
+	scrapProductsList=EntityUtil.getFieldListFromEntityList(scrapProducts, "productId", true);
+}
 condition=EntityCondition.makeCondition([EntityCondition.makeCondition("estimatedShipDate",EntityOperator.GREATER_THAN_EQUAL_TO,formDate),
 	                                     EntityCondition.makeCondition("estimatedShipDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate),
 										 EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"GENERATED"),
@@ -67,7 +74,9 @@ orderCondition=EntityCondition.makeCondition([EntityCondition.makeCondition("shi
 orderHeaders = delegator.findList("OrderHeader", orderCondition, null, null, null, false);
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
 
-orderItemsList = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIds),null,null,null,false);
+orderItemCodition=EntityCondition.makeCondition([EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIds),
+	                                             EntityCondition.makeCondition("productId",EntityOperator.IN,scrapProductsList)],EntityOperator.AND);
+orderItemsList = delegator.findList("OrderItem",orderItemCodition,null,null,null,false);
 
 
 orderRoleCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIds)],EntityOperator.AND);
