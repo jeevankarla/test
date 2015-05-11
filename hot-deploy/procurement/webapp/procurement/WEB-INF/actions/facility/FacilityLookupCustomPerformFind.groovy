@@ -27,7 +27,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
 import javolution.util.FastList;
-import org.ofbiz.network.NetworkServices;
+
 
 if(UtilValidate.isEmpty(parameters.facilityTypeId_0)){
 	selectFacilityType = UtilMisc.toList("UNIT","SHED","PLANT","CENTER");
