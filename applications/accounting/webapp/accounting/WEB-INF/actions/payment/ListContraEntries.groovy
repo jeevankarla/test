@@ -53,6 +53,7 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 import org.ofbiz.party.party.PartyHelper;
 
 reportTypeFlag = parameters.reportTypeFlag;
+interUnitFlag = parameters.interUnitFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
 	finAccountTransList = [];
 	finAccountId = parameters.finAccountId;
@@ -80,9 +81,20 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		transDateStart = UtilDateTime.getDayStart(transDate);
 		transDateEnd = UtilDateTime.getDayEnd(transDate);
 	}
+	finAccountIdsList = [];
+	if(UtilValidate.isNotEmpty(interUnitFlag) && interUnitFlag == "interUnitFlag"){
+		finAccountList = delegator.findList("FinAccount", EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"), null, null, null, false);
+		if(UtilValidate.isNotEmpty(finAccountList)){
+			finAccountIdsList = EntityUtil.getFieldListFromEntityList(finAccountList, "finAccountId", true);
+		}
+	}
 	List conditionList=[];
 	if(UtilValidate.isNotEmpty(finAccountId)){
 		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+	}else{
+		if(UtilValidate.isNotEmpty(interUnitFlag) && interUnitFlag == "interUnitFlag"){
+			conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdsList));
+		}
 	}
 	if(UtilValidate.isNotEmpty(amountStr)){
 		BigDecimal amount = new BigDecimal(amountStr);

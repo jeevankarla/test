@@ -311,6 +311,30 @@ under the License.
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
+    <form name="FindInterUnitContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="finAccountId" title="From Financial Account" >
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+                   <entity-constraint name="organizationPartyId" value="Company"/> 
+                   <entity-constraint name="finAccountTypeId" value="INTERUNIT_ACCOUNT"/>
+                   <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="transactionDate"><date-time type="timestamp"/></field>
+        <field name="amount" ><text ></text></field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>
+        <field name="finAccountTransTypeId">
+        	<drop-down allow-empty="false">
+        		<option key="WITHDRAWAL" description="WITHDRAWAL"/>
+        		<option key="DEPOSIT" description="DEPOSIT"/>
+        	</drop-down>
+        </field>
+        <field name="interUnitFlag"><hidden value="interUnit"/></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
     <form name="FindBatchContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -363,6 +387,34 @@ under the License.
              <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field> 
+    </form>
+    <form name="ListInterUnitContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
+      default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
+    	 <actions>
+			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/>	
+        </actions>
+    	<field name="finAccountId" title = "Fin Account">
+          <display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountName}"/>
+        </field>
+        <field name="contraRefNum" title="Instrument Number"><display></display></field>
+        <field name="transactionDate"><display></display></field>
+    	<field name="amount" title="Amount(Rs)"><display/></field>
+    	<field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
+            <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
+                <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field>
+    	<!-- <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+             <parameter param-name="finAccountId"/>
+             <parameter param-name="finAccountTransId"/>
+             <parameter param-name="amount"/>
+             <parameter param-name="comments"/>
+             <parameter param-name="transactionDate"/>
+             <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field>  -->
     </form>
     <form name="ListBatchContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
       default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
@@ -459,7 +511,58 @@ under the License.
         <field name="comments" title="Cheque in favour"><text/></field>
         <field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+    <form name="InterUnitContraEntry" type="single" target="preCreateInterUnitContraEntry"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <set field="statusId" value="FINACT_TRNS_CREATED"/>
+        </actions>
+        <!-- <auto-fields-service service-name="createFinAccountTrans"/> -->
+       <!--  <field name="finAccountId"><hidden/></field>     -->
+        <field name="finAccountId" title="From Financial Account" >
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+                   <entity-constraint name="organizationPartyId" value="Company"/> 
+                     <entity-constraint name="finAccountTypeId" value="INTERUNIT_ACCOUNT"/>
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+            </drop-down>
+        </field>        
+        <field name="finAccountTransId"><hidden/></field>
+        <field name="entryType"   ><hidden value="Contra"/></field>       
+        <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
+            <drop-down no-current-selected-key="WITHDRAWAL">
+                <entity-options description="${description}" entity-name="FinAccountTransType">  
+                	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
+                    <entity-order-by field-name="-description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="transactionDate"> <date-time/> </field>
+        <field name="entryDate"><date-time/></field>
+        <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
+        <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
+        <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
+        <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down>
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="contraFinAccountId"  title="To Financial Account"  >
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
+                   <entity-constraint name="organizationPartyId" value="Company"/> 
+                   <entity-constraint name="finAccountTypeId" value="INTERUNIT_ACCOUNT"/>
+                   <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>         
+        <field name="comments" title="Cheque in favour"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     <form name="WithdrawAcctFinTransEntry" type="single" target="preCreateDepositAcctContraEntry"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
