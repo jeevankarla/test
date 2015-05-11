@@ -1192,6 +1192,52 @@
             </widgets>
         </section>
     </screen>
+    <screen name="InterUnitContraEntry">
+        <section>
+             <actions>
+                <set field="titleProperty" value="Inter Unit Contra Transactions" />
+                <set field="tabButtonItem" value="InterUnitContraEntry"/>
+                <set field="tabButtonItem4" value="InterUnitContraEntry"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <set field="parameters.interUnitFlag" value="interUnitFlag"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="InterUnitContraEntryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="CreateNewInterUnitContra" text="Create Inter Unit Contra" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Find Inter Unit Contra Entries">				
+									<include-form name="FindInterUnitContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<container>
+									<link target="BankContraEntry.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="amount" from-field="parameters.amount"/>
+									<parameter param-name="contraRefNum" from-field="parameters.contraRefNum"/>
+									<parameter param-name="transactionDate" from-field="parameters.transactionDate"/>
+									<parameter param-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+									</link>
+								</container>
+								<screenlet title="List Inter Unit Contra Entries">				
+									<include-form name="ListInterUnitContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="BatchBankContraEntry">
         <section>
              <actions>
@@ -1263,6 +1309,38 @@
 							<widgets>
 								<screenlet title="Create Contra Entry">				
 									<include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateNewInterUnitContra">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Inter Unit Contra" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="InterUnitContraEntry"/>
+                <set field="tabButtonItem4" value="InterUnitContraEntry"/>
+                
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="InterUnitContraEntryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Inter Unit Contra Entry">				
+									<include-form name="InterUnitContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
 							</widgets>      
                     	</section>
