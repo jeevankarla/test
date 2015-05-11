@@ -59,6 +59,8 @@ if (orderId) {
 	grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
 	roundedGrandTotal=grandTotal.setScale(0,rounding);
 	allDetailsMap["grandTotal"] = grandTotal;
+	statusId = orderHeader.statusId;
+	context.statusId=statusId;
  }}
 context.roundedGrandTotal=roundedGrandTotal;
 context.orderDesctioption=orderDesctioption;
