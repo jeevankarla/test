@@ -158,6 +158,7 @@
         <field name="freightAmount" title="Freight Amount"><display/></field>
         <field name="discountAmount" title="Discount Amount"><display/></field>
         <field name="insuranceAmount" title="Insurance Amount"><display/></field>
+        <field name="otherAmount" title="Others"><display/></field>
         <field name="grandTotal" title="Total Amount"><display/></field>
         <field name="tinNumber" title="Tin Number"><display/></field>
     </form>
