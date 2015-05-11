@@ -110,14 +110,15 @@ shipmentMap["totalPaidAmt"]=BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(shipmentReceipts)){
 shipmentReceipts.each{eachShipmentId->
-	shipmentData = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachShipmentId));
-	shipmentData=EntityUtil.getFirst(shipmentData);
+	shipmentDataList = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachShipmentId));
+	inventoryItemIds=EntityUtil.getFieldListFromEntityList(shipmentDataList, "inventoryItemId", true);
+	shipmentData=EntityUtil.getFirst(shipmentDataList);
 	
    shipmentDetailMap=[:];
    shipmentDetailMap["receiptId"]=shipmentData.receiptId;
    shipmentDetailMap["datetimeReceived"]=shipmentData.datetimeReceived;
    shipmentDetailMap["shipmentId"]=shipmentData.shipmentId;
-   shipmentDetailMap["inventoryItemId"]=shipmentData.inventoryItemId;
+   //shipmentDetailMap["inventoryItemId"]=shipmentData.inventoryItemId;
 
    coList =[];
 coList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, shipmentData.receiptId));
@@ -165,7 +166,7 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 	con = EntityCondition.makeCondition(cList,EntityOperator.AND);
    invoiceDetails = delegator.findList("Invoice", con, null,null, null, false);
    invoiceDetails=EntityUtil.getFirst(invoiceDetails);
-   
+   BigDecimal invoiceAmount=BigDecimal.ZERO;
    if(UtilValidate.isNotEmpty(invoiceDetails)){
 	   
  //  shipmentDetailMap["invoiceId"]=invoiceDetails.invoiceId;
@@ -194,15 +195,21 @@ if(UtilValidate.isNotEmpty(shipmentQCdate)){
 		   
 	   }
    }
-	 }
+	 }		
+   BigDecimal inventoryAmount=BigDecimal.ZERO;
    if(UtilValidate.isEmpty(invoiceDetails)){
-	   inventoryItemDetails = delegator.findOne("InventoryItem",["inventoryItemId":shipmentData.inventoryItemId],false);
-	   
+//   inventoryItemDetails = delegator.findOne("InventoryItem",["inventoryItemId":shipmentData.inventoryItemId],false);
+	   inventoryItemDetails = delegator.findList("InventoryItem",EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN , inventoryItemIds)  , null, null, null, false );
 		 if(inventoryItemDetails){
-		   quantityAccepted=shipmentData.quantityAccepted;
-		   unitCost=inventoryItemDetails.get("unitCost");
-		   invoiceAmount=quantityAccepted*unitCost;
-		   shipmentDetailMap.put("invoiceAmount",invoiceAmount);
+			 inventoryItemDetails.each{inventoryItemData->
+				 inventoryItemQtys = EntityUtil.filterByCondition(shipmentReceiptList, EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemData.inventoryItemId));
+                 inventoryItemQty=EntityUtil.getFirst(inventoryItemQtys);
+		         quantityAccepted=inventoryItemQty.quantityAccepted;
+		         unitCost=inventoryItemData.unitCost;
+		         inventoryAmount=quantityAccepted*unitCost;
+		         invoiceAmount=invoiceAmount+inventoryAmount;
+			 }
+		  shipmentDetailMap.put("invoiceAmount",invoiceAmount);
 		  shipmentMap["totalInvoiceAmt"]+=invoiceAmount;
 
 //	   invoiceToApply=0;paidAmount=0;totalPaidAmt=0;
