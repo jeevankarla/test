@@ -136,7 +136,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				insuranceAmount = 0;
 				packForwAmount = 0;
 				otherAmount = 0;
-				exlTermList = ["COGS_INSURANCE", "COGS_DISC", "COGS_DISC_ATR", "COGS_DISC_BASIC"]
+				exlTermList = ["COGS_INSURANCE", "COGS_DISC", "COGS_DISC_ATR", "COGS_DISC_BASIC","COGS_FREIGHT"]
 				invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(invoiceItemsList)){
 					invoiceItemsList.each{ invoiceItem ->
@@ -148,9 +148,12 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 						if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_INSURANCE")){
 							insuranceAmount = invoiceItem.amount;
 						}
+						if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_FREIGHT")){
+							freightAmount = invoiceItem.amount;
+						}
 						if(UtilValidate.isNotEmpty(invoiceItemTypeId)){
 							if((!exlTermList.contains(invoiceItemTypeId)) && otherTermIds.contains(invoiceItemTypeId)){
-								freightAmount = freightAmount+invoiceItem.amount;
+								otherAmount = otherAmount+invoiceItem.amount;
 							}
 						}
 						
@@ -160,8 +163,8 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 								otherAmount = invoiceItem.amount;
 							}
 						}*/
-						totalFreight = 0;
-						totalFreight = freightAmount+packForwAmount+otherAmount;
+						totalOtherAmount = 0;
+						totalOtherAmount = packForwAmount+otherAmount;
 					}
 				}
 				orderId = null;
@@ -220,7 +223,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 							
 				}
 				grandTotal = 0;
-				grandTotal = totalRevenue+totalFreight+discountAmount+insuranceAmount;
+				grandTotal = totalRevenue+totalOtherAmount+discountAmount+insuranceAmount+freightAmount;
 				
 				totalMap = [:];
 				totalMap["invoiceId"]=invoiceId;
@@ -236,10 +239,10 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				totalMap["vatRevenue"]=vatRevenue;
 				totalMap["cstRevenue"]=cstRevenue;
 				totalMap["totalRevenue"]=totalRevenue;
-				totalMap["freightAmount"]=totalFreight;
+				totalMap["freightAmount"]=freightAmount;
 				totalMap["discountAmount"]=discountAmount;
 				totalMap["insuranceAmount"]=insuranceAmount;
-				totalMap["otherAmount"]=otherAmount;
+				totalMap["otherAmount"]=totalOtherAmount;
 				totalMap["grandTotal"]=grandTotal;
 				totalMap["tinNumber"]=tinNumber;
 				totalMap["mrrNumber"]=mrrNumber;
@@ -307,6 +310,7 @@ purchaseRegisterList.each { purchaseRegisterList ->
 	partyMap["freightAmount"]=eachlist.freightAmount;
 	partyMap["discountAmount"]=eachlist.discountAmount;
 	partyMap["insuranceAmount"]=eachlist.insuranceAmount;
+	partyMap["otherAmount"]=eachlist.otherAmount;
 	partyMap["grandTotal"]=eachlist.grandTotal;
 	partyMap["tinNumber"]=eachlist.tinNumber;
 	//Debug.log("eachlist.partyId=============================="+eachlist.partyId);
