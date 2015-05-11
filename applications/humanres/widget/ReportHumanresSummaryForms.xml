@@ -1701,5 +1701,41 @@
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>  
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
+    <form name="FindPayHead" type="single" header-row-style="header-row" default-table-style="basic-table" target = "PayHeadRules">
+    	<field name="payrollBenDedRuleId" title="payrollBenDedRuleId"><text size="10"/></field>
+    	<field name="payHeadTypeId" title="payHeadTypeId" >
+         	<drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="benefitTypeId" entity-name="BenefitType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                 <entity-options description="${description}" key-field-name="deductionTypeId" entity-name="DeductionType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="ruleName" title="ruleName"><text size="10"/></field>
+    	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+        
+    <form name="ListPayHeadRules" list-name="benDedRuleList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
+       paginate-target="PayHeadRules" separate-columns="true" default-table-style="basic-table hover-bar" target="updateEmployeeLoan" >
+    	<actions>
+            <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/payHeadRulesList.groovy"/>
+    	</actions>
+        <field name="payrollBenDedRuleId" title="payrollBenDedRuleId" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${payrollBenDedRuleId}" target="CreateNewPayHead">
+                <parameter param-name="payrollBenDedRuleId" from-field="payrollBenDedRuleId"/>
+            </hyperlink>
+        </field>
+    	<field name="payHeadTypeId" title="payHeadTypeId"><display></display></field>
+    	<field name="ruleName" title="ruleName"><display></display></field>
+    	<field name="inputParamEnumId" title = "inputParamEnumId"><display></display></field>
+    	<field name="operatorEnumId" title="operatorEnumId"><display></display></field>
+    	<field name="condValue" title="condValue"><display></display></field>
+    	<field name="payHeadPriceActionTypeId" title="payHeadPriceActionTypeId" ><display></display></field>
+    	<field name="amount" title="amount" ><display></display></field>
+    	<field name="customPriceCalcService" title="customPriceCalcService"><display></display></field>
+    	<field name="acctgFormulaId" title="acctgFormulaId"><display></display></field>
+    </form>
 </forms>
         
