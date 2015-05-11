@@ -1246,5 +1246,89 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>        
+    </screen>     
+    
+    <screen name="PayHeadRules">
+	 	<section>
+			<actions>
+				<set field="tabButtonItem" value="HRReports"/>            
+                <set field="titleProperty" value="CreateNewPayHead"/>
+                <set field="tabButtonItem" value="benefitOrDeduction"/>
+                <set field="tabButtonItem2" value="CreateNewPayHead"/>  
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/payHeadRulesList.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="BenDedTabBar"/> 
+						<container>
+							<container style="button-bar">
+                        		<link target="CreateNewPayHead" text="New Pay Head" style="buttontext"></link>
+                        	</container>
+							<screenlet title="Search Options">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="FindPayHead"/>
+							</screenlet>
+							<screenlet title="Search Results">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListPayHeadRules"/>
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	 </screen>
+	 
+     <screen name="CreateNewPayHead">
+        <section>
+            <actions>
+			    <set field="tabButtonItem" value="HRReports"/>            
+                <set field="titleProperty" value="CreateNewPayHead"/>
+                <set field="tabButtonItem" value="benefitOrDeduction"/>
+                <set field="tabButtonItem2" value="CreateNewPayHead"/>  
+                
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+                <set field="payrollBenDedRuleId" from-field="parameters.payrollBenDedRuleId"/>
+
+				<entity-condition entity-name="PayrollBenDedRule" list="PayrollBenDedRules">
+                    <condition-expr field-name="payrollBenDedRuleId" from-field="payrollBenDedRuleId"/>
+                    <order-by field-name="ruleName"/>
+                </entity-condition>
+                <entity-condition entity-name="PayrollBenDedCond" list="PayrollBenDedConds">
+                    <condition-expr field-name="payrollBenDedRuleId" from-field="payrollBenDedRuleId"/>
+                    <order-by field-name="payrollBenDedCondSeqId"/>
+                </entity-condition>
+                <entity-condition entity-name="PayHeadPriceAction" list="PayHeadPriceActions">
+                    <condition-expr field-name="payrollBenDedRuleId" from-field="payrollBenDedRuleId"/>
+                    <order-by field-name="payHeadPriceActionSeqId"/>
+                </entity-condition>
+                <!-- General Data for Drop-downs, etc -->
+                <entity-condition entity-name="Enumeration" list="inputParamEnums" use-cache="true">
+                    <condition-expr field-name="enumTypeId" value="PYHD_PRICE_IN_PARAM"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition entity-name="Enumeration" list="condOperEnums" use-cache="true">
+                    <condition-expr field-name="enumTypeId" value="PROD_PRICE_COND"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition entity-name="PayHeadPriceActionType" list="PayHeadPriceActionTypes" use-cache="true">
+                </entity-condition>
+                <entity-condition entity-name="BenefitType" list="BenefitTypes" use-cache="true">
+                </entity-condition>
+                <entity-condition entity-name="DeductionType" list="DeductionTypes" use-cache="true">
+                </entity-condition>
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="BenDedTabBar"/>                                                        
+                    	<platform-specific>
+                            <html><html-template location="component://humanres/webapp/humanres/humanres/createNewPayHead.ftl"/></html>
+                        </platform-specific>
+               </decorator-section>
+               </decorator-screen>    
+            </widgets>
+        </section>
+    </screen>   
 </screens>

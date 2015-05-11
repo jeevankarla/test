@@ -294,6 +294,9 @@
         <menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
 			<link target="BenefitDeductionCalculator"/>
 		</menu-item>
+		<menu-item name="CreateNewPayHead" title="Create New Pay Head">
+    		<link target="PayHeadRules"/>
+		</menu-item>
     </menu>
     <menu name="AnnualItTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">

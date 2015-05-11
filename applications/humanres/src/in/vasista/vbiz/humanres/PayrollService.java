@@ -8809,4 +8809,222 @@ public class PayrollService {
     	
 		return result;
   	}
+  	
+  	public static Map<String, Object> createOrUpdatePayHeadRules(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String ruleName = (String) context.get("ruleName");
+    	String inputParamEnumId = (String) context.get("inputParamEnumId");
+    	String payHeadTypeId = (String) context.get("payHeadTypeId");
+    	String ruleFromDate = (String) context.get("ruleFromDate");
+    	String ruleThruDate = (String) context.get("ruleThruDate");
+    	String payrollBenDedRuleId = (String) context.get("payrollBenDedRuleId");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+    	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+    	
+    	Timestamp fromDate = null;
+    	Timestamp thruDate = null;
+    	SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");	
+        if(UtilValidate.isNotEmpty(ruleFromDate)){
+        	try {
+        		fromDate = new java.sql.Timestamp(sdf.parse(ruleFromDate).getTime());
+    		} catch (ParseException e) {
+    			Debug.logError(e, "Cannot parse date string: " + fromDate, module);
+    			 return ServiceUtil.returnError(e.toString());
+    		}
+        }
+        if(UtilValidate.isNotEmpty(ruleThruDate)){
+        	try {
+        		thruDate = new java.sql.Timestamp(sdf.parse(ruleThruDate).getTime());
+    		} catch (ParseException e) {
+    			Debug.logError(e, "Cannot parse date string: " + thruDate, module);
+    			 return ServiceUtil.returnError(e.toString());
+    		}
+        }
+    	
+    	try {
+    		if(UtilValidate.isNotEmpty(payrollBenDedRuleId)){
+    			List conList= FastList.newInstance();
+	    		conList.add(EntityCondition.makeCondition("payrollBenDedRuleId", EntityOperator.EQUALS ,payrollBenDedRuleId));
+	     		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+	     		List<GenericValue> PayrollBenDedRuleList = delegator.findList("PayrollBenDedRule", cond, null, null, null, false);
+                if(UtilValidate.isNotEmpty(PayrollBenDedRuleList)){
+                	GenericValue benDedRuleList = EntityUtil.getFirst(PayrollBenDedRuleList);
+                	benDedRuleList.set("payHeadTypeId", payHeadTypeId);
+                	benDedRuleList.set("ruleName", ruleName);
+                	benDedRuleList.set("fromDate", fromDate);
+                	if(UtilValidate.isNotEmpty(thruDate)){
+                		benDedRuleList.set("thruDate", thruDate);
+                	}
+                	benDedRuleList.store();
+                }
+                result.put("payrollBenDedRuleId", payrollBenDedRuleId);
+    		}
+            else{
+            	GenericValue PayrollBenDedRule = delegator.makeValue("PayrollBenDedRule");
+        		PayrollBenDedRule.set("payHeadTypeId", payHeadTypeId);
+        		PayrollBenDedRule.set("ruleName",ruleName);
+        		PayrollBenDedRule.set("fromDate",fromDate);
+        		if(UtilValidate.isNotEmpty(thruDate)){
+        			PayrollBenDedRule.set("thruDate",thruDate);
+        		}
+    		    delegator.setNextSubSeqId(PayrollBenDedRule, "payrollBenDedRuleId", 3, 1);
+                delegator.create(PayrollBenDedRule);
+                
+                result.put("payrollBenDedRuleId", PayrollBenDedRule.get("payrollBenDedRuleId"));
+            }
+    	}catch(Exception e){
+			Debug.logError("Error while creating or updating Payroll Rule"+e.getMessage(), module);
+		}
+    	
+		return result;
+  	}
+  	
+  	public static Map<String, Object> createOrUpdatePayHeadCondition(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String payrollBenDedRuleId = (String) context.get("payrollBenDedRuleId");
+    	String inputParamEnumId = (String) context.get("inputParamEnumId");
+    	String operatorEnumId = (String) context.get("operatorEnumId");
+    	String payrollBenDedCondSeqId = (String) context.get("payrollBenDedCondSeqId");
+    	String condValue = (String) context.get("condValue");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+    	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+    	
+    	try {
+    		if(UtilValidate.isNotEmpty(payrollBenDedCondSeqId)){
+    			List conList= FastList.newInstance();
+	    		conList.add(EntityCondition.makeCondition("payrollBenDedRuleId", EntityOperator.EQUALS ,payrollBenDedRuleId));
+	    		conList.add(EntityCondition.makeCondition("payrollBenDedCondSeqId", EntityOperator.EQUALS ,payrollBenDedCondSeqId));
+	     		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+	     		List<GenericValue> PayrollBenDedCondList = delegator.findList("PayrollBenDedCond", cond, null, null, null, false);
+                if(UtilValidate.isNotEmpty(PayrollBenDedCondList)){
+                	GenericValue benDedCondList = EntityUtil.getFirst(PayrollBenDedCondList);
+                	benDedCondList.set("inputParamEnumId", inputParamEnumId);
+                	benDedCondList.set("operatorEnumId", operatorEnumId);
+                	benDedCondList.set("condValue", condValue);
+                	benDedCondList.store();
+                }
+                result.put("payrollBenDedRuleId", payrollBenDedRuleId);
+    		}else{
+    			GenericValue PayrollBenDedCond = delegator.makeValue("PayrollBenDedCond");
+                PayrollBenDedCond.set("payrollBenDedRuleId", payrollBenDedRuleId);
+                PayrollBenDedCond.set("inputParamEnumId",inputParamEnumId);
+                PayrollBenDedCond.set("operatorEnumId",operatorEnumId);
+                PayrollBenDedCond.set("condValue",condValue);
+    		    delegator.setNextSubSeqId(PayrollBenDedCond, "payrollBenDedCondSeqId", 2, 1);
+                delegator.create(PayrollBenDedCond);
+                
+                result.put("payrollBenDedRuleId", payrollBenDedRuleId);
+    		}
+    	}catch(Exception e){
+			Debug.logError("Error while creating or updating Payroll condition"+e.getMessage(), module);
+		}
+		return result;
+  	}
+  	
+  	public static Map<String, Object> createOrUpdatePayHeadPriceAction(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String payrollBenDedRuleId = (String) context.get("payrollBenDedRuleId");
+    	String PriceActionTypeId = (String) context.get("PriceActionTypeId");
+    	String acctgFormulaId = (String) context.get("acctgFormulaId");
+    	String serviceName = (String) context.get("serviceName");
+    	String actionFromDate = (String) context.get("actionFromDate");
+    	String actionThruDate = (String) context.get("actionThruDate");
+    	BigDecimal amount = (BigDecimal) context.get("amount");
+    	String payHeadPriceActionSeqId = (String) context.get("payHeadPriceActionSeqId");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+    	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+    	
+    	Timestamp fromDate = null;
+    	Timestamp thruDate = null;
+    	SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");	
+        if(UtilValidate.isNotEmpty(actionFromDate)){
+        	try {
+        		fromDate = new java.sql.Timestamp(sdf.parse(actionFromDate).getTime());
+    		} catch (ParseException e) {
+    			Debug.logError(e, "Cannot parse date string: " + fromDate, module);
+    			 return ServiceUtil.returnError(e.toString());
+    		}
+        }
+        if(UtilValidate.isNotEmpty(actionThruDate)){
+        	try {
+        		thruDate = new java.sql.Timestamp(sdf.parse(actionThruDate).getTime());
+    		} catch (ParseException e) {
+    			Debug.logError(e, "Cannot parse date string: " + thruDate, module);
+    			 return ServiceUtil.returnError(e.toString());
+    		}
+        }
+        
+        
+        try {
+    		if(UtilValidate.isNotEmpty(payHeadPriceActionSeqId)){
+    			List conList= FastList.newInstance();
+	    		conList.add(EntityCondition.makeCondition("payrollBenDedRuleId", EntityOperator.EQUALS ,payrollBenDedRuleId));
+	    		conList.add(EntityCondition.makeCondition("payHeadPriceActionSeqId", EntityOperator.EQUALS ,payHeadPriceActionSeqId));
+	     		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+	     		List<GenericValue> payHeadPriceActionList = delegator.findList("PayHeadPriceAction", cond, null, null, null, false);
+                if(UtilValidate.isNotEmpty(payHeadPriceActionList)){
+                	GenericValue priceActionList = EntityUtil.getFirst(payHeadPriceActionList);
+                	priceActionList.set("payHeadPriceActionTypeId", PriceActionTypeId);
+                	if(PriceActionTypeId.equals("PRICE_FLAT")){
+                    	if(UtilValidate.isNotEmpty(acctgFormulaId)){
+                    		priceActionList.set("acctgFormulaId",acctgFormulaId);
+                        }
+                    }
+                	if(PriceActionTypeId.equals("PRICE_SERVICE")){
+                    	if(UtilValidate.isNotEmpty(serviceName)){
+                    		priceActionList.set("customPriceCalcService",serviceName);
+                        }
+                    }
+                	if(UtilValidate.isNotEmpty(amount)){
+                		priceActionList.set("amount",amount);
+                    }
+                	priceActionList.store();
+                }
+                result.put("payrollBenDedRuleId", payrollBenDedRuleId);
+    		}else{
+    			GenericValue PayHeadPriceAction = delegator.makeValue("PayHeadPriceAction");
+                PayHeadPriceAction.set("payrollBenDedRuleId", payrollBenDedRuleId);
+                PayHeadPriceAction.set("payHeadPriceActionTypeId",PriceActionTypeId);
+                if(PriceActionTypeId.equals("PRICE_FLAT")){
+                	if(UtilValidate.isNotEmpty(acctgFormulaId)){
+                		PayHeadPriceAction.set("acctgFormulaId",acctgFormulaId);
+                    }
+                }
+                if(PriceActionTypeId.equals("PRICE_SERVICE")){
+                	if(UtilValidate.isNotEmpty(serviceName)){
+                		PayHeadPriceAction.set("customPriceCalcService",serviceName);
+                    }
+                }
+                if(UtilValidate.isNotEmpty(amount)){
+                	PayHeadPriceAction.set("amount",amount);
+                }
+                if(UtilValidate.isNotEmpty(fromDate)){
+                	PayHeadPriceAction.set("fromDate",fromDate);
+                }
+        		if(UtilValidate.isNotEmpty(thruDate)){
+        			PayHeadPriceAction.set("thruDate",thruDate);
+        		}
+    		    delegator.setNextSubSeqId(PayHeadPriceAction, "payHeadPriceActionSeqId", 2, 1);
+                delegator.create(PayHeadPriceAction);
+                
+                result.put("payrollBenDedRuleId", payrollBenDedRuleId);
+    		}
+    	}catch(Exception e){
+			Debug.logError("Error while creating or updating Payroll Action"+e.getMessage(), module);
+		}
+        
+		return result;
+	}
 }//end of class

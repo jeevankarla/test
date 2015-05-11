@@ -770,7 +770,32 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BenefitDeductionCalculator"/>
     </request-map>
-    
+    <request-map uri="PayHeadRules">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PayHeadRules"/>
+    </request-map>
+    <request-map uri="CreateNewPayHead">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewPayHead"/>
+    </request-map>
+    <request-map uri="createOrUpdatePayHeadRules">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrUpdatePayHeadRules"/>
+        <response name="success" type="view" value="CreateNewPayHead"/>
+        <response name="error" type="view" value="CreateNewPayHead"/>
+    </request-map>
+    <request-map uri="createOrUpdatePayHeadCondition">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrUpdatePayHeadCondition"/>
+        <response name="success" type="view" value="CreateNewPayHead"/>
+        <response name="error" type="view" value="CreateNewPayHead"/>
+    </request-map>
+    <request-map uri="createOrUpdatePayHeadPriceAction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrUpdatePayHeadPriceAction"/>
+        <response name="success" type="view" value="CreateNewPayHead"/>
+        <response name="error" type="view" value="CreateNewPayHead"/>
+    </request-map>
     <request-map uri="calculateEmployeeBenefitDeduction">
         <security https="true" auth="true"/>
         <event type="service" invoke="getPayHeadAmount"/>
@@ -2427,6 +2452,7 @@ under the License.
     <request-map uri="updateDeductionType"><security https="true" auth="true"/><event type="service" invoke="updateDeductionType"/><response name="success" type="view" value="EditDeductionType"/><response name="error" type="view" value="EditDeductionType"/></request-map>
     <request-map uri="deleteDeductionType"><security https="true" auth="true"/><event type="service" invoke="deleteDeductionType"/><response name="success" type="view" value="FindDeductionTypes"/><response name="error" type="view" value="FindDeductionTypes"/></request-map>
     <request-map uri="LookupDeductionTypes"><security auth="true" https="true"/><response name="success" type="view" value="LookupDeductionTypes"/></request-map>
+	<request-map uri="LookupAcctgFormula"><security auth="true" https="true"/><response name="success" type="view" value="LookupAcctgFormula"/></request-map>
 	<request-map uri="LookupEmployeeName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
     <request-map uri="LookupTerminationReason"><security auth="true" https="true"/><response name="success" type="view" value="LookupTerminationReason"/></request-map>
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
@@ -2434,7 +2460,8 @@ under the License.
    
 	<view-map name="EditDeductionType" type="screen" page="component://humanres/widget/DeductionTypeScreens.xml#EditDeductionType"/>	
 	<view-map name="FindBenefits" type="screen" page="component://humanres/widget/BenefitTypeScreens.xml#FindBenefits"/>	
-	<view-map name="LookupDeductionTypes" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupDeductionTypes"/>	
+	<view-map name="LookupDeductionTypes" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupDeductionTypes"/>
+	<view-map name="LookupAcctgFormula" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupAcctgFormula"/>	
 	<view-map name="LookupBenefits" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupBenefits"/>	
 	<view-map name="EditBenefit" type="screen" page="component://humanres/widget/BenefitTypeScreens.xml#EditBenefit"/>	
 	<view-map name="FindDeductionTypes" type="screen" page="component://humanres/widget/DeductionTypeScreens.xml#FindDeductionTypes"/>	
@@ -2760,7 +2787,8 @@ under the License.
     
     <view-map name="loanDisbursement" type="screen" page="component://humanres/widget/HumanresScreens.xml#loanDisbursement"></view-map>
     
-    
+    <view-map name="PayHeadRules" type="screen" page="component://humanres/widget/HumanresScreens.xml#PayHeadRules"/>
+    <view-map name="CreateNewPayHead" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewPayHead"/>
     <view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>  
 	<!-- Employee Content -->
 	<view-map name="AddEmployeeNote" type="screen" page="component://humanres/widget/EmployeeScreens.xml#AddEmployeeNote"/>

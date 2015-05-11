@@ -475,4 +475,23 @@ under the License.
         </field>        
         <field name="description" title="description"><display/></field>
     </form>
+    <form name="LookupAcctgFormula" type="single" target="LookupAcctgFormula" header-row-style="header-row" default-table-style="basic-table">
+        <field name="description" title="AcctgFormulaId"><text-find ignore-case="true"/></field>
+        <field name="noConditionFind"><hidden value="Y"/></field> 
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListLookupAcctgFormula" type="list" list-name="listIt" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="AcctgFormula"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="acctgFormulaId" title="acctgFormulaId" widget-style="buttontext">
+             <hyperlink also-hidden="false" target-type="plain" description="${acctgFormulaId}" target="javascript:set_value('${acctgFormulaId}')"/>
+        </field>        
+        <field name="description" title="description"><display/></field>
+    </form>
 </forms>
