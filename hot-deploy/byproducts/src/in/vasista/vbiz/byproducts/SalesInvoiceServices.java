@@ -766,23 +766,47 @@ public class SalesInvoiceServices {
 					Debug.logError(e, "Exception while getting shipment ids ", module);
 				}			
 				EntityCondition shipCond = EntityCondition.makeCondition(shipCondList,	EntityOperator.AND);
-				List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond,null, null, null, false);
-				if(UtilValidate.isNotEmpty(shipmentList)){
-					List shipmentIdList = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);
+				//List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond,null, null, null, false);
+				EntityListIterator shipmentListIter = delegator.find("Shipment", shipCond, null,null,null, null);
+				
+				//if(UtilValidate.isNotEmpty(shipmentList)){
+					//List shipmentIdList = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);
+					List shipmentIdList = EntityUtil.getFieldListFromEntityListIterator(shipmentListIter, "shipmentId", false);
 					if(UtilValidate.isNotEmpty(shipmentIdList)){
-						List<GenericValue> orderHeaderList = delegator.findList("OrderHeader",	EntityCondition.makeCondition("shipmentId",EntityOperator.IN, shipmentIdList), null, null,null, false);
-						if(UtilValidate.isNotEmpty(orderHeaderList)){
-							List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderList, "orderId", true);
+						EntityListIterator orderHeaderItrList = delegator.find("OrderHeader",	EntityCondition.makeCondition("shipmentId",EntityOperator.IN, shipmentIdList), null, null,null, null);
+						if(UtilValidate.isNotEmpty(orderHeaderItrList)){
+							List orderIds = EntityUtil.getFieldListFromEntityListIterator(orderHeaderItrList, "orderId", true);
 							if(UtilValidate.isNotEmpty(orderIds)){
-								List<GenericValue> orderItemList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem",	EntityCondition.makeCondition("orderId",EntityOperator.IN, orderIds), null, null,null, false);
-								if(UtilValidate.isNotEmpty(orderItemList)){
-									invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemList, "invoiceId", true);
-									Debug.log("invoiceIds===================="+invoiceIds+"flag================"+isAllSalesInvoice);
+								EntityListIterator orderItemItrList = delegator.find("OrderItemBillingAndInvoiceAndInvoiceItem",	EntityCondition.makeCondition("orderId",EntityOperator.IN, orderIds), null, null,null, null);
+								if(UtilValidate.isNotEmpty(orderItemItrList)){
+									invoiceIds = EntityUtil.getFieldListFromEntityListIterator(orderItemItrList, "invoiceId", true);
 								}
+								if (orderItemItrList != null) {
+							         try{
+							        	   orderItemItrList.close();
+							           } catch (GenericEntityException e) {
+							               Debug.logWarning(e, module);
+							           }
+							       }
+								
 							}
 						}
+						   if(orderHeaderItrList != null) {
+					          try{
+					        	   orderHeaderItrList.close();
+					           } catch (GenericEntityException e) {
+					               Debug.logWarning(e, module);
+					           }
+					       }
 					}
-				}
+				//}
+				if (shipmentListIter != null) {
+			           try {
+			        	   shipmentListIter.close();
+			           } catch (GenericEntityException e) {
+			               Debug.logWarning(e, module);
+			           }
+			       }
 			}
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
