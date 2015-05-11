@@ -414,7 +414,7 @@ under the License.
                 <result-to-field result-name="acctgTransId"/>
             </call-service>
            <!-- consolidate entries by glAccountId ,partyId,debitCreditFlag -->
-           <iterate list="normalizedAcctgTransEntries" entry="acctgTransEntry">
+           <!-- <iterate list="normalizedAcctgTransEntries" entry="acctgTransEntry">
     		    <make-value entity-name="AcctgTransEntry" value-field="newEntity"/>
 		        <set-nonpk-fields map="acctgTransEntry" value-field="newEntity"/>
 		        <set-pk-fields map="acctgTransEntry" value-field="newEntity"/>
@@ -422,7 +422,7 @@ under the License.
     	  </iterate>
           <call-class-method class-name="org.ofbiz.accounting.ledger.GeneralLedgerServices" method-name="consolidateAcctgTransEntries" ret-field="normalizedAcctgTransEntries" >
             <field field="normalizedAcctgTransEntries" type="List"/>
-          </call-class-method>
+          </call-class-method> -->
             <!-- Next, create the AcctgTransEntry entities one by one -->
             <iterate list="normalizedAcctgTransEntries" entry="acctgTransEntry">
                 <!-- if any amount is negative, then get the absolute (positive) value of that amount, and flip the Debit/Credit flag  -->
