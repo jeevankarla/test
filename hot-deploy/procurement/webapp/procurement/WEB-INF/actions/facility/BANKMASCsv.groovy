@@ -6,7 +6,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
 import javolution.util.FastList;
 import javolution.util.FastMap;
-import org.ofbiz.network.NetworkServices;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;

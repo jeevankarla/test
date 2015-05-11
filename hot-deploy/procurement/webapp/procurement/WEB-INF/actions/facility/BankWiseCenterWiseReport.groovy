@@ -7,7 +7,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.UtilDateTime;
 import javolution.util.FastList;
 import javolution.util.FastMap;
-import org.ofbiz.network.NetworkServices;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;

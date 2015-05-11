@@ -17,7 +17,7 @@ import java.text.Normalizer.Form;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilNumber;
-import org.ofbiz.network.NetworkServices;
+
 import java.math.RoundingMode;
 import java.util.Map;
 

@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilNumber;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import org.ofbiz.network.NetworkServices;
+
 import java.math.RoundingMode;
 import java.util.Map;
 import org.ofbiz.entity.util.EntityFindOptions;
