@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
@@ -35,13 +38,13 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
-
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 public class PurchaseStoreServices {
@@ -1070,6 +1073,12 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	            //raising DebitNote Here for UNITS PURCHASES  
 	            
 	            if("INTER_PRCHSE_CHANNEL".equals(salesChannel)){
+	            	Boolean turnOnCreditOrDebitNote  = Boolean.FALSE;
+		    		GenericValue tenantConfigTurnOnCreditOrDebitNote = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","ACCOUNT_INVOICE", "propertyName","turnOnCreditOrDebitNote"), true);
+		       		if (UtilValidate.isNotEmpty(tenantConfigTurnOnCreditOrDebitNote) && (tenantConfigTurnOnCreditOrDebitNote.getString("propertyValue")).equals("Y")) {
+		       			turnOnCreditOrDebitNote = Boolean.TRUE;
+		       		}
+		       		if(turnOnCreditOrDebitNote){
 		    		  Map paymentInputMap = FastMap.newInstance();
 			  		  paymentInputMap.put("userLogin", userLogin);
 			  		  paymentInputMap.put("paymentTypeId", "EXPENSE_PAYOUT");
@@ -1085,6 +1094,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			  		  }
 			  		  List paymentIds = (List)paymentResult.get("paymentsList");
   	                  Debug.log("+++++++===paymentIds===AfterDEbitNote=="+paymentIds);
+		       		}
 		        }else{
 		        	if(enableAdvancePaymentApp){ //invoice application basing on flag
 		     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));

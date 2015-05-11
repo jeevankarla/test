@@ -762,42 +762,49 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					partyIdFrom = invoice.getString("partyId");
 				}
 		        //creditNote is created here
-		        if("INTUNIT_TR_CHANNEL".equals(salesChannelEnumId) || "ICP_TRANS_CHANNEL".equals(salesChannelEnumId)){
-		    		  Map paymentInputMap = FastMap.newInstance();
-			  		  paymentInputMap.put("userLogin", userLogin);
-			  		  paymentInputMap.put("paymentTypeId", "SALES_PAYIN");
-			  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
-			  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
-			  		  paymentInputMap.put("paymentPurposeType","NON_ROUTE_MKTG");
-			  		  paymentInputMap.put("statusId", "PMNT_NOT_PAID");
-			  		  paymentInputMap.put("invoiceIds",UtilMisc.toList(invoiceId));
-			  		  String finAccountId =  null;
-			  		  List conditionList = FastList.newInstance();
-			  		  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyIdFrom));
-			  		  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"INTERUNIT_ACCOUNT"));
-			  		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-			  		  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
-			  		  List<GenericValue> finAccountList = delegator.findList("FinAccount", condition, null, null, null, false);
-			  		  if(UtilValidate.isNotEmpty(finAccountList)){
-			  			  GenericValue finAccount = EntityUtil.getFirst(finAccountList);
-				  			if(UtilValidate.isNotEmpty(finAccount)){
-				  				finAccountId = finAccount.getString("finAccountId");
-				  			}
-			  		  }
-				  	  if(UtilValidate.isNotEmpty(finAccountId)){
-				  		  paymentInputMap.put("finAccountId", finAccountId);
-					  }
-			  		  
-			  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
-			  		  if(ServiceUtil.isError(paymentResult)){
-		    			     Debug.logError(paymentResult.toString(), module);
-	    			        request.setAttribute("_ERROR_MESSAGE_", "There was an error in service createCreditNoteOrDebitNoteForInvoice");
-	    			        TransactionUtil.rollback();
-	    			        return "error";
-			  		  }
-			  		  List paymentIds = (List)paymentResult.get("paymentsList");
-    	        Debug.log("+++++++===paymentIds====="+paymentIds);
-		        }
+				Boolean turnOnCreditOrDebitNote  = Boolean.FALSE;
+	    		GenericValue tenantConfigTurnOnCreditOrDebitNote = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","ACCOUNT_INVOICE", "propertyName","turnOnCreditOrDebitNote"), true);
+	       		if (UtilValidate.isNotEmpty(tenantConfigTurnOnCreditOrDebitNote) && (tenantConfigTurnOnCreditOrDebitNote.getString("propertyValue")).equals("Y")) {
+	       			turnOnCreditOrDebitNote = Boolean.TRUE;
+	       		}
+		       	 if(turnOnCreditOrDebitNote){
+			        if("INTUNIT_TR_CHANNEL".equals(salesChannelEnumId) || "ICP_TRANS_CHANNEL".equals(salesChannelEnumId)){
+			    		  Map paymentInputMap = FastMap.newInstance();
+				  		  paymentInputMap.put("userLogin", userLogin);
+				  		  paymentInputMap.put("paymentTypeId", "SALES_PAYIN");
+				  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
+				  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+				  		  paymentInputMap.put("paymentPurposeType","NON_ROUTE_MKTG");
+				  		  paymentInputMap.put("statusId", "PMNT_NOT_PAID");
+				  		  paymentInputMap.put("invoiceIds",UtilMisc.toList(invoiceId));
+				  		  String finAccountId =  null;
+				  		  List conditionList = FastList.newInstance();
+				  		  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyIdFrom));
+				  		  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"INTERUNIT_ACCOUNT"));
+				  		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+				  		  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+				  		  List<GenericValue> finAccountList = delegator.findList("FinAccount", condition, null, null, null, false);
+				  		  if(UtilValidate.isNotEmpty(finAccountList)){
+				  			  GenericValue finAccount = EntityUtil.getFirst(finAccountList);
+					  			if(UtilValidate.isNotEmpty(finAccount)){
+					  				finAccountId = finAccount.getString("finAccountId");
+					  			}
+				  		  }
+					  	  if(UtilValidate.isNotEmpty(finAccountId)){
+					  		  paymentInputMap.put("finAccountId", finAccountId);
+						  }
+				  		  
+				  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
+				  		  if(ServiceUtil.isError(paymentResult)){
+			    			     Debug.logError(paymentResult.toString(), module);
+		    			        request.setAttribute("_ERROR_MESSAGE_", "There was an error in service createCreditNoteOrDebitNoteForInvoice");
+		    			        TransactionUtil.rollback();
+		    			        return "error";
+				  		  }
+				  		  List paymentIds = (List)paymentResult.get("paymentsList");
+	    	        Debug.log("+++++++===paymentIds====="+paymentIds);
+			        }
+		       	 }//Credit Note functionality check
 		        
     	        if(enableAdvancePaymentApp){
     		            // apply invoice if any adavance payments from this  party

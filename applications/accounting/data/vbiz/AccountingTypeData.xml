@@ -58,4 +58,6 @@ under the License.
 <FinAccountType description="Walk-In Security Deposit" finAccountTypeId="WALKIN_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
 <FinAccountType description="Earnest Money Deposit" finAccountTypeId="EMDR_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
 <FinAccountType  description="Inter Unit Account" finAccountTypeId="INTERUNIT_ACCOUNT" hasTable="N" isRefundable="Y" parentTypeId="DEPOSIT_ACCOUNT" replenishEnumId="FARP_MANUAL"/>
+
+<TenantConfiguration propertyName="turnOnCreditOrDebitNote" propertyValue="N" propertyTypeEnumId="ACCOUNT_INVOICE" description="Turn On Credit Note Or DebitNote For Invoice"/>
 </entity-engine-xml>
