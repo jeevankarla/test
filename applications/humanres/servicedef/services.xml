@@ -959,6 +959,7 @@ under the License.emplpunch
         <attribute name="chDate" mode="IN" type="List" optional="true"/>
         <attribute name="serviceName" mode="IN" type="String" optional="true"/>
         <attribute name="dayFractionId" mode="IN" type="String" optional="true"/>
+        <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
         <override name="partyId" optional="false"/>
     </service>
     
@@ -1948,5 +1949,41 @@ under the License.emplpunch
          <attribute name="thruDate" mode="IN" type="Date" optional="false"/>
          <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"/>
          <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="createOrUpdatePayHeadRules" engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePayHeadRules" 
+                 auth="true">
+         <description>Create a CustomTimePeriod record</description>
+         <attribute name="ruleName" mode="IN" type="String" optional="false"/>
+         <attribute name="payHeadTypeId" mode="IN" type="String" optional="false"/>
+         <attribute name="ruleFromDate" mode="IN" type="String" optional="false"/>
+         <attribute name="ruleThruDate" mode="IN" type="String" optional="true"/>
+         <attribute name="payrollBenDedRuleId" mode="IN" type="String" optional="true"/>
+         <attribute name="payrollBenDedRuleId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="createOrUpdatePayHeadCondition" engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePayHeadCondition" 
+                 auth="true">
+         <description>Create a CustomTimePeriod record</description>
+         <attribute name="payrollBenDedRuleId" mode="IN" type="String" optional="true"/>
+         <attribute name="payrollBenDedCondSeqId" mode="IN" type="String" optional="true"/>
+         <attribute name="inputParamEnumId" mode="IN" type="String" optional="true"/>
+         <attribute name="operatorEnumId" mode="IN" type="String" optional="false"/>
+         <attribute name="condValue" mode="IN" type="String" optional="false"/>
+         <attribute name="payrollBenDedRuleId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="createOrUpdatePayHeadPriceAction" engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePayHeadPriceAction" 
+                 auth="true">
+         <description>Create a CustomTimePeriod record</description>
+         <attribute name="payrollBenDedRuleId" mode="IN" type="String" optional="true"/>
+         <attribute name="payHeadPriceActionSeqId" mode="IN" type="String" optional="true"/>
+         <attribute name="PriceActionTypeId" mode="IN" type="String" optional="false"/>
+         <attribute name="acctgFormulaId" mode="IN" type="String" optional="true"/>
+         <attribute name="actionFromDate" mode="IN" type="String" optional="true"/>
+         <attribute name="actionThruDate" mode="IN" type="String" optional="true"/>
+         <attribute name="serviceName" mode="IN" type="String" optional="true"/>
+         <attribute name="amount" mode="IN" type="BigDecimal" optional="true"/>
+         <attribute name="payrollBenDedRuleId" mode="OUT" type="String" optional="false"/>
     </service>
 </services>
