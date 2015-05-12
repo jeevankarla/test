@@ -287,6 +287,7 @@ public class EmplLeaveService {
         String partyId =  (String)context.get("partyId");
         List chDateStringList =  (List)context.get("chDate");
         String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
+        String leaveTypeId =  (String)context.get("leaveTypeId");
         String leaveStatus =  (String)context.get("leaveStatus");
         String serviceName = (String)context.get("serviceName");
         String dayFractionId = (String)context.get("dayFractionId");
@@ -348,7 +349,15 @@ public class EmplLeaveService {
 										 int minutes = Integer.parseInt(timeSplit.get(1));
 										 if(UtilValidate.isEmpty(dayFractionId)){
 											 if(((hours*60)+minutes) >=225 && ((hours*60)+minutes) <=465){
-												 return ServiceUtil.returnError("Full Day Leave Not Applicable for GH/SS: "+tempDate); 
+												 return ServiceUtil.returnError("Full Day Leave Not Applicable for "+leaveTypeId+": "+tempDate); 
+											 }else{
+												 if(((hours*60)+minutes) <=225){
+													 return ServiceUtil.returnError("Leave Not Applicable for "+leaveTypeId+": "+tempDate);
+												 }
+											 }
+										 }else{
+											 if(((hours*60)+minutes) <=225){
+												 return ServiceUtil.returnError("Half Day Leave Not Applicable for "+leaveTypeId+": "+tempDate);
 											 }
 										 }
 									}

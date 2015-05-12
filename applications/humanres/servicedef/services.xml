@@ -959,6 +959,7 @@ under the License.emplpunch
         <attribute name="chDate" mode="IN" type="List" optional="true"/>
         <attribute name="serviceName" mode="IN" type="String" optional="true"/>
         <attribute name="dayFractionId" mode="IN" type="String" optional="true"/>
+        <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
         <override name="partyId" optional="false"/>
     </service>
     
