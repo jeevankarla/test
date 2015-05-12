@@ -308,6 +308,7 @@
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="userLogin" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="materialCategoryList" mode="IN" type="List" optional="true"/>
+        <attribute name="vatCategory" type="String" mode="IN" optional="true"/>
         <attribute name="prodAttribute" type="String" mode="IN" optional="true"/>
         <attribute name="attributeValue" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="OUT" optional="false"/>

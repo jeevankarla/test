@@ -131,6 +131,16 @@ function makeDatePicker(fromDateId ,thruDateId){
 						      	</select>
 						    </td>
 						</tr>
+						<tr>
+							<td class="label">VAT Category :</td>
+						    <td>
+							<select name="vatCategory" id="vatCategory">
+						      	    <#list vatList as vatEntry>
+						      	   			<option value='${vatEntry.productCategoryId}'>${vatEntry.description}</option>
+								    </#list>  
+						      	</select>
+						    </td>
+						</tr>
 				<#--
 						<tr>
 							<td class="label">New Material:   </td>
