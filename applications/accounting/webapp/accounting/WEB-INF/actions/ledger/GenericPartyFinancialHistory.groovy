@@ -677,10 +677,10 @@ partyOBMap["creditValue"]=BigDecimal.ZERO;
 oB=finAccntsOpeningBalance+arOpeningBalance-apOpeningBalance;
 if(oB>0){
 	partyOBMap["debitValue"]=oB;
-	partyTotalMap["debitValue"]+=(oB);
+	partyTrTotalMap["debitValue"]+=(oB);
 }else{
   partyOBMap["creditValue"]=(-1*oB);
-  partyTotalMap["creditValue"]+=(-1*oB) ;
+  partyTrTotalMap["creditValue"]+=(-1*oB) ;
 }
 partyTotalMap["debitValue"]+=(partyTrTotalMap["debitValue"]) ;
 partyTotalMap["creditValue"]+=(partyTrTotalMap["creditValue"]) ;
