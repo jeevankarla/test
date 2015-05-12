@@ -38,6 +38,14 @@ conditionUOMlist.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.E
 condition = EntityCondition.makeCondition(conditionUOMlist,EntityOperator.OR);
 productUOMList = delegator.findList("Uom", condition, null, null, null, false);
 context.productUOMList=productUOMList;
+
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "VAT_CATEGORY"));
+conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "VATPUR_OTHERS"));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.OR);
+vatList = delegator.findList("ProductCategory", condition, null, null, null, false);
+context.vatList=vatList;
+
 /*
 conditionAttributeList = [];
 conditionAttributeList.add(EntityCondition.makeCondition("enumId", EntityOperator.EQUALS, "LEDGERFOLIONO"));

@@ -3326,6 +3326,7 @@ public class MaterialPurchaseServices {
 		String productTypeId = (String) request.getParameter("productTypeId");
 		String primaryCategoryId = (String) request.getParameter("primaryCategoryId");
 		String[] productCategoryIds = request.getParameterValues("productCategoryId");
+		String vatCategory = request.getParameter("vatCategory");
 		//String materialCode = (String) request.getParameter("materialCode");
 		String description = (String) request.getParameter("description");
 		String productUOMtypeId = (String) request.getParameter("productUOMtypeId");
@@ -3372,6 +3373,7 @@ public class MaterialPurchaseServices {
 			Map newProductMap = FastMap.newInstance();
 			newProductMap.put("productTypeId", productTypeId);
 			newProductMap.put("primaryCategoryId", primaryCategoryId);
+			newProductMap.put("vatCategory", vatCategory);
 			newProductMap.put("materialCode", materialCode);
 			newProductMap.put("description", description);
 			newProductMap.put("productUOMtypeId", productUOMtypeId);	
@@ -3404,6 +3406,7 @@ public class MaterialPurchaseServices {
 
 	String productTypeId = (String) context.get("productTypeId");
 	String primaryCategoryId = (String) context.get("primaryCategoryId");
+	String vatCategory = (String) context.get("vatCategory");
 	String materialCode = (String) context.get("materialCode");
 	String description = (String) context.get("description");
 	String productUOMtypeId = (String) context.get("productUOMtypeId");
@@ -3469,6 +3472,14 @@ public class MaterialPurchaseServices {
 		result = dispatcher.runSync("addProductToCategory", productCatgMap);
 	if (ServiceUtil.isError(result)) {
 		return ServiceUtil.returnError("Error Occurred While updating Product Category");
+			}
+		productCatgMap.put("productCategoryId",vatCategory);
+		productCatgMap.put("productId", productId);
+		productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+		productCatgMap.put("userLogin", userLogin);
+		result = dispatcher.runSync("addProductToCategory", productCatgMap);
+		if (ServiceUtil.isError(result)) {
+			return ServiceUtil.returnError("Error Occurred While updating Product Category");
 			}
 		}
 catch(Exception e){
