@@ -134,10 +134,12 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		totalMap["vatRevenue"]=vatRevenue+vatAdj;
 		totalMap["cstRevenue"]=cstRevenue;
 		totalMap["ppd"]=ppd;
-		totalMap["total"]=basicRevenue+bedRevenue+totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["ppd"]+ppd+vatAdj;
+		//totalMap["total"]=basicRevenue+bedRevenue+totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["ppd"]+ppd+vatAdj;
+		totalMap["total"]=basicRevenue+bedRevenue+vatRevenue+cstRevenue+ppd+vatAdj;    //totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["ppd"]+ppd+vatAdj;
 		if(quantity != 0){
 			partWiseSaleMap.put(eachParty.getKey(), totalMap);
 		}
+		
 	  //}
 	 //}
 	}
