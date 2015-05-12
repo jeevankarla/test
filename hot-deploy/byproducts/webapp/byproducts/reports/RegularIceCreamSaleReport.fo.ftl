@@ -372,6 +372,7 @@ under the License.
 								</#list>
 								
 								<#assign grandTotal=grandTotal+totalPpd+totalVatAdj>
+                                <#assign totalVatRev=totalVatRev+totalVatAdj>
 								 <fo:table-row>
 					                    <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
