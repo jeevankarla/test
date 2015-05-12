@@ -723,13 +723,20 @@ public class SalesInvoiceServices {
 			conditnList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			EntityCondition cond = EntityCondition.makeCondition(conditnList, EntityOperator.AND);
 
-			List<GenericValue> invoiceRoles = delegator.findList("InvoiceAndRole",cond , null, null,null, false);
-	        for(GenericValue invoiceRolesvalue : invoiceRoles){
+			EntityListIterator invoiceRolesIter = delegator.find("InvoiceAndRole",cond , null, null,null, null);
+			
+			 GenericValue invoiceRole;   
+			   while( invoiceRolesIter != null && (invoiceRole = invoiceRolesIter.next()) != null) {
+				   String shipInvoiceId = invoiceRole.getString("invoiceId");
+			    	String shipPartyId = invoiceRole.getString("invoiceRolePartyId");
+		           	shipInvoicePartyMap.put(shipInvoiceId,shipPartyId);
+			   }
+	        /*for(GenericValue invoiceRolesvalue : invoiceRoles){
 	        	
 		    	String shipInvoiceId = invoiceRolesvalue.getString("invoiceId");
 		    	String shipPartyId = invoiceRolesvalue.getString("invoiceRolePartyId");
 	           	shipInvoicePartyMap.put(shipInvoiceId,shipPartyId);
-		    		 }
+		    		 }*/
 	        //Debug.log("shipInvoicePartyMap=========================="+shipInvoicePartyMap);
 		 }
 			catch (GenericEntityException e) {
