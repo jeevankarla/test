@@ -1363,6 +1363,10 @@
 		<security https="true" auth="true" /> 
 	 <response name="success" type="view" value="purchaseVatReportPDF" /> 
  	 </request-map>
+ 	  <request-map uri="purchaseVatCategoryReport.pdf">
+		<security https="true" auth="true" /> 
+	 <response name="success" type="view" value="purchaseVatCategoryReportPDF" /> 
+ 	 </request-map>
      
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
@@ -1489,6 +1493,7 @@
    
     <view-map name="PurchaseChannelWiseSalesPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseChannelWiseSalesPDF" content-type="application/pdf" /> 
 	<view-map name="purchaseVatReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatReportPDF" content-type="application/pdf" /> 
+	<view-map name="purchaseVatCategoryReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatCategoryReportPDF" content-type="application/pdf" /> 
 	<view-map name="icpStockStatementPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#icpStockStatementPDF" content-type="application/pdf" /> 
 	
 </site-conf>
