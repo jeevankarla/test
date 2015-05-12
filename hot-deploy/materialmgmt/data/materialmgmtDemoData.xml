@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 
+<ProductCategoryType description="VAT Category" productCategoryTypeId="VAT_CATEGORY"/> 
+<ProductCategoryType description="VAT Purchase Others" productCategoryTypeId="VATPUR_OTHERS"/> 
+
+<ProductCategory categoryName="Eligible" description="Eligible" productCategoryId="ELIGIBLE" productCategoryTypeId="VAT_CATEGORY"/>
+<ProductCategory categoryName="Ineligible" description="Ineligible" productCategoryId="INELIGIBLE" productCategoryTypeId="VAT_CATEGORY"/>  
+<ProductCategory categoryName="Purchase Others(VAT)" description="Purchase Others(VAT)" productCategoryId="VATPUR_OTHERS" productCategoryTypeId="VATPUR_OTHERS"/> 
+
+
+
 </entity-engine-xml>
