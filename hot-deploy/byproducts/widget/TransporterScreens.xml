@@ -366,7 +366,41 @@
 				</decorator-screen>
             </widgets>
         </section>
-    </screen>	
+    </screen>
+    <screen name="DtcBillingTimePeriod">
+ 	   <section>
+		  <actions>
+			<set field="titleProperty" value="TimePeriod" />
+			<set field="tabButtonItem" value="TransporterMargins" />
+			<set field="tabButtonItem2" value="DtcBillingTimePeriod" />
+			<entity-condition list="TimePeriods" entity-name="CustomTimePeriod">
+           		<condition-expr field-name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
+           	    <order-by field-name="-customTimePeriodId" />
+	        </entity-condition>
+		 </actions>
+ 		 <widgets>
+			<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                <decorator-section name="body">
+                <include-menu name="TransporterMarginsTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+            	  <section>
+					<widgets>
+						<screenlet title="Time Periods">
+							<include-form name="ListTimePeriods" location="component://byproducts/widget/TransporterForms.xml" />
+						</screenlet>
+						<section>
+						  <widgets>
+							<screenlet title="New Time Period">
+								<include-form name="CreateDtcBillingTimePeriod" location="component://byproducts/widget/TransporterForms.xml" />
+							</screenlet>
+						  </widgets>
+						</section>
+					</widgets>
+				  </section>
+			   </decorator-section>
+			</decorator-screen>
+ 		 </widgets>
+ 	   </section>
+	</screen>	
      <screen name="DieselHikePayment">
         <section>
             <actions>

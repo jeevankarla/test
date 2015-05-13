@@ -1107,6 +1107,12 @@
         <response name="success" type="view" value="TimePeriod"/>
         <response name="error" type="view" value="TimePeriod"/>
     </request-map>
+    <request-map uri="createDtcBillingCustomTimePeriod">
+	        <security https="true" auth="true"/>
+	        <event type="service" invoke="createCustTimePeriodMM"/>
+	        <response name="success" type="request-redirect" value="DtcBillingTimePeriod"/>
+	        <response name="error" type="request-redirect" value="DtcBillingTimePeriod"/>
+    </request-map>
   <request-map uri="cancelAdhocSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelAdhocSalesOrder"/>
@@ -1391,6 +1397,10 @@
     <request-map uri="TimePeriod">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="TimePeriod"/>
+    </request-map> 
+    <request-map uri="DtcBillingTimePeriod">
+            <security https="true" auth="true"/>               
+            <response name="success" type="view" value="DtcBillingTimePeriod"/>
     </request-map> 
     <request-map uri="PartywiseBalanceAbstract.pdf">
     	<security https="true" auth="true"/>
@@ -1868,6 +1878,7 @@
    <view-map name="FinesAndPenalties" type="screen" page="component://byproducts/widget/TransporterScreens.xml#FinesAndPenalties"/>
    <view-map name="CreateNewFineorPenalty" type="screen" page="component://byproducts/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
    <view-map name="Transporters" type="screen" page="component://byproducts/widget/TransporterScreens.xml#Transporters"/>
+   <view-map name="DtcBillingTimePeriod" type="screen" page="component://byproducts/widget/TransporterScreens.xml#DtcBillingTimePeriod"/>
    <view-map name="DieselHikePayment" type="screen" page="component://byproducts/widget/TransporterScreens.xml#DieselHikePayment"/>
    <view-map name="EnterNewHikeOrPayment" type="screen" page="component://byproducts/widget/TransporterScreens.xml#EnterNewHikeOrPayment"/>
    
