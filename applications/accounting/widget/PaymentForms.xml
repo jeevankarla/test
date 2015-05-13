@@ -68,6 +68,7 @@ under the License.
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+          <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentSearchFilter.groovy"/>
         </actions>
        <row-actions>
            <set field="amountToApply" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
