@@ -1524,4 +1524,14 @@
         <field name="thruDate" required-field="true"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
+    <form name="CreateDtcBillingTimePeriod" type="single" title="Create Time Period" target="createDtcBillingCustomTimePeriod"
+		header-row-style="header-row" default-table-style="basic-table"  paginate-target="DtcBillingTimePeriod" >
+        <field name="organizationPartyId"><hidden value="Company"/></field>
+        <field name="isClosed"><hidden value="N"/></field>
+        <field name="periodTypeId"><hidden value="DTC_FORTNIGHT_BILL"/></field>
+        <field name="periodName" title="period Name"><text/></field>
+        <field name="fromDate" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" required-field="true"><date-time type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
 </forms>

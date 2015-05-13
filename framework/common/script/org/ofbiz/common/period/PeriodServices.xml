@@ -25,7 +25,7 @@ under the License.
         <check-permission permission="PERIOD_MAINT">
             <fail-property resource="CommonUiLabels" property="CommonGenericPermissionError"/>
         </check-permission>
-           <if-compare-field field="parameters.fromDate" operator="greater-equals" to-field="parameters.thruDate"> 
+           <if-compare-field field="parameters.fromDate" operator="greater" to-field="parameters.thruDate"> 
             	<add-error>
             		<fail-message message="FromDate Should Be LessThen The Thrudate"></fail-message>
             	</add-error> 

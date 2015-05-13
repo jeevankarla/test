@@ -264,14 +264,15 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 	inMap.put("periodNum",periodNum);
 	inMap.put("periodName",periodName);
 	inMap.put("userLogin",userLogin);
-
+    
+	Map<String, Object> result = ServiceUtil.returnSuccess();
 	Map<String,Object> customTime = FastMap.newInstance();
 
 	try{
 		customTime = dispatcher.runSync("createCustomTimePeriod",inMap);
 		if(ServiceUtil.isError(customTime)){
 		Debug.logError("Error while creating customTimePeriod ::"+ServiceUtil.getErrorMessage(customTime),module);
-		return ServiceUtil.returnError("This Time Period already Exist");
+		return ServiceUtil.returnError(ServiceUtil.getErrorMessage(customTime));
 		}
 		
 		if((isClosed).equals("Y")){
@@ -285,7 +286,9 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 		Debug.logError(e,module);
 		return ServiceUtil.returnError("Error While creating customTimePeriod");
 	}	
-	return customTime;
+	result = ServiceUtil.returnSuccess("Successfully created for timeperiod:" +customTime.get("customTimePeriodId"));
+	result.put("customTimePeriodId", (String)customTime.get("customTimePeriodId"));
+	return result;
 }
 
 	public static Map<String, Object> populateInventoryPeriodSummary(DispatchContext ctx,Map<String, ? extends Object> context) {
