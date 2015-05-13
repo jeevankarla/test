@@ -385,12 +385,12 @@
             	  <section>
 					<widgets>
 						<screenlet title="Time Periods">
-							<include-form name="ListTimePeriods" location="component://byproducts/widget/ByProductsNgForms.xml" />
+							<include-form name="ListTimePeriods" location="component://byproducts/widget/TransporterForms.xml" />
 						</screenlet>
 						<section>
 						  <widgets>
 							<screenlet title="New Time Period">
-								<include-form name="CreateDtcBillingTimePeriod" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								<include-form name="CreateDtcBillingTimePeriod" location="component://byproducts/widget/TransporterForms.xml" />
 							</screenlet>
 						  </widgets>
 						</section>
