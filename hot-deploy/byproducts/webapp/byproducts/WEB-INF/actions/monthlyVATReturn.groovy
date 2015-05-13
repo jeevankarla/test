@@ -103,7 +103,6 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 dayTotals = SalesHistoryServices.getSalesDayPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true,"periodTypeId":"SALES_DAY"]);
 resultMap = dayTotals.get("productTotals");*/
 
-
 // handle subsidy ghee invoices
 condExpr = [];
 condExpr.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
