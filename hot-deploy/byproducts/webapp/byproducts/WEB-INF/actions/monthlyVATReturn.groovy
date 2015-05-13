@@ -87,7 +87,7 @@ List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentag
 context.vatList = vatList;
 
 resultMap = [:];
-/*shipmentIds = [];
+shipmentIds = [];
 amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
 shipmentIds.addAll(amShipmentIds);
 pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
@@ -98,10 +98,11 @@ if(UtilValidate.isNotEmpty(adhocShipments)){
 }
 if(UtilValidate.isNotEmpty(shipmentIds)){
 	resultMap = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]).get("productTotals");
-}*/
-boothsList=ByProductNetworkServices.getBoothList(delegator ,null);
+}
+/*boothsList=ByProductNetworkServices.getBoothList(delegator ,null);
 dayTotals = SalesHistoryServices.getSalesDayPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true,"periodTypeId":"SALES_DAY"]);
-resultMap = dayTotals.get("productTotals");
+resultMap = dayTotals.get("productTotals");*/
+
 // handle subsidy ghee invoices
 condExpr = [];
 condExpr.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
