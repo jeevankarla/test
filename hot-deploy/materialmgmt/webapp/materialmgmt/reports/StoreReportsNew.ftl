@@ -141,6 +141,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	//	makeDatePicker3("purchaseSumFDateNew","purchaseSumTDateNew");
 		oldMenumakeDatePicker("cwsFDate","cwsTDate");
 		oldMenumakeDatePicker("purchaseVatFDate","purchaseVatTDate");
+		oldMenumakeDatePicker("purchaseVatCatFDate","purchaseVatCatTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -734,8 +735,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
                            </form>
 		                </tr>
 		                </#if>
-				
-				
+				       <tr class="alternate-row">
+							<form id="purchaseVatCategoryReport" name="purchaseVatCategoryReport" method="post" action="<@ofbizUrl>purchaseVatCategoryReport.pdf</@ofbizUrl>" target="_blank">        
+                               <td width="30%">Purchase Vat Catogiry Wise Report</td>
+                               <td width="15%">From<input  type="text" size="18pt" id="purchaseVatCatFDate" readonly  name="fromDate"/></td>
+                               <td width="15%">To<input  type="text" size="18pt" id="purchaseVatCatTDate" readonly  name="thruDate"/></td>
+                               <td width="15%">ReportType
+                                       <select name='reportTypeFlag' id = "reportTypeFlag">
+                                             <option value='ELIGIBLE'>Eligible</option>
+                                             <option value='INELIGIBLE'>Ineligible</option>
+                                       </select>
+                                </td>
+                                <td width="15%"></td>
+                                <td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+                           </form>
+		                </tr>
+		                
+		
 				<tr class="alternate-row">
 						<form id="purchasechannelWiseSales" name="purchasechannelWiseSales" method="post" action="<@ofbizUrl>purchaseChannelWiseSales.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Purchase Channel Wise Sales Report</td>
