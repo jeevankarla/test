@@ -196,12 +196,15 @@ for(i=0; i<routesList.size(); i++){
 		if(crateProductsIdsList.contains(productId)){
 			if(piecesPerCrate && piecesPerCrate.get(productId)){
 				int crateDivisior=(piecesPerCrate.get(productId)).intValue();
+				
 			   tempCrates = (qty/(crateDivisior)).intValue();
 			   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
 			   if(tempExcess>0){
 			   tempCrates=tempCrates+1;
 			   }
 			   prodMap["crates"]=tempCrates;
+			   prodMap["dockCrates"]=tempCrates;
+			   
 			   totalCrates+=tempCrates;
 			   rtCrates = rtCrates+tempCrates;
 		   }
@@ -245,6 +248,18 @@ for(i=0; i<routesList.size(); i++){
 			if(UtilValidate.isNotEmpty(oldCans)){
 			oldCans=oldCans+tempCan;
 			newProdMap["cans"]=oldCans;
+			}
+			
+			if(piecesPerCrate && piecesPerCrate.get(productId)){
+			int crateDivisiordock=(piecesPerCrate.get(productId)).intValue();
+			 if(UtilValidate.isNotEmpty(crateDivisiordock)){
+			   dockCrates = (tempQty/(crateDivisiordock)).intValue();
+			      tempExcess=((tempQty.intValue())%(crateDivisiordock.intValue()));
+			     if(tempExcess>0){
+			      dockCrates=dockCrates+1;
+			      }
+			     newProdMap["dockCrates"]=dockCrates;
+			 }
 			}
 			grandProdTotal[productId]=newProdMap;
 		}

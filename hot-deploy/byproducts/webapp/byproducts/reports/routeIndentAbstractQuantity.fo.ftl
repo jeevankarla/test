@@ -46,10 +46,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
               	<#else>	
               	<fo:block text-align="left" white-space-collapse="false">&#160;  ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- MORNING &amp; EVENING; Date&amp;Time :${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MMMM-yyyy HH:mm:ss")} </fo:block>
               	</#if> 
-              	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	<fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">ROUTE  PRODUCT  PRODUCT                                          QTY     CRATES       CANS </fo:block>
-                <fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">CODE   CODE     NAME                                                         </fo:block>
-            	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              	<fo:block >-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            	<fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">ROUTE  PRODUCT  PRODUCT                                      QTY         CRATES       CANS     FULL CRATES </fo:block>
+                <fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">CODE   CODE     NAME                                                                           (MPacU DOCK)</fo:block>
+            	<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    </fo:static-content>
 	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">	
 	 <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160;  </fo:block>
@@ -62,7 +62,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 	   	    <fo:table-column column-width="85pt"/>
 	   	    <fo:table-column column-width="70pt"/>
 	   	    <fo:table-column column-width="60pt"/>
+   	   	    <fo:table-column column-width="70pt"/>
 	        <fo:table-body>
+	        <#assign totDuckCrates=0 >
 	            <#list prodIdsSeqList as productId>
 	            		 <#assign  productEntryMap=GrandTotalProdMap.get(productId)?if_exists>
 	            			<#if productEntryMap?has_content>
@@ -91,11 +93,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 	                            	         </fo:table-cell>
 			                            	</#if>
 			                            	 <#assign cansVal = productEntryMap.get("cans")?if_exists>
-			                            	<#if cansVal?has_content>
+			                            	
 				                      		<fo:table-cell>
-	                                	         <fo:block  text-align="right">${productEntryMap.get("cans")?if_exists}</fo:block>
+	                                	         <fo:block  text-align="right"><#if cansVal?has_content>${productEntryMap.get("cans")?if_exists}	</#if></fo:block>
+	                            	         </fo:table-cell>
+			                            	<#assign dockcrateVal = productEntryMap.get("dockCrates")?if_exists>
+			                            	<#if dockcrateVal?has_content>
+          		  								<#assign totDuckCrates=totDuckCrates+productEntryMap.get("dockCrates")>
+				                      		<fo:table-cell>
+	                                	         <fo:block  text-align="right">${productEntryMap.get("dockCrates")?if_exists}</fo:block>
+	                            	         </fo:table-cell>
+	                            	         <#else>
+	                            	         <fo:table-cell>
+	                                	         <fo:block  text-align="right">-</fo:block>
 	                            	         </fo:table-cell>
 			                            	</#if>
+			                            	
 	                     	         </fo:table-row>
 	                     	         </#if>
 	                     	         </#list>
@@ -120,15 +133,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 				                      		<fo:table-cell>
 	                                	         <fo:block  text-align="right">${totalCrates?if_exists}</fo:block>
 	                            	         </fo:table-cell>
-				                      		<fo:table-cell>
+	                            	         	<fo:table-cell>
 	                                	         <fo:block  text-align="right">${totalCans?if_exists}</fo:block>
+	                            	         </fo:table-cell>
+				                      		<fo:table-cell>
+	                                	         <fo:block  text-align="right">${totDuckCrates?if_exists}</fo:block>
 	                            	         </fo:table-cell>
 	                            	     </fo:table-row >  
 	                     	         
 	          </fo:table-body>
 	          </fo:table> 
 	           </fo:block>
-	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
+	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------</fo:block>
              <fo:block  font-size="8pt" break-after="page"> </fo:block>
 			<#-- eachRoute TotalStarts Here-->
 			<#if !(parameters.summeryOnly?exists)>
@@ -159,6 +175,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
  						   	    <fo:table-column column-width="85pt"/>
  						   	    <fo:table-column column-width="70pt"/>
  						   	    <fo:table-column column-width="60pt"/>
+			   	       	   	    <fo:table-column column-width="70pt"/>
 				                <fo:table-body>
                 				    <#if productEntries?has_content>                     		                      	                     	
                       					<#assign facility = delegator.findOne("Facility", {"facilityId" : routeIndent.getKey()}, true)>
@@ -196,6 +213,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 						                                	         <fo:block  text-align="right">${productEntryMap.get("cans")?if_exists}</fo:block>
 						                            	         </fo:table-cell>
 								                            	</#if>
+								                            	<fo:table-cell>
+						                                	         <fo:block  text-align="right"></fo:block>
+						                            	         </fo:table-cell>
 					                         	         </fo:table-row>
 					                         	         </#if>
 					                         	         </#list>
@@ -203,7 +223,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 					                         	         <#if productEntryTotMap?has_content>
 					                         	          <fo:table-row >  
 		              							          <fo:table-cell>
-					                         	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
+					                         	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------</fo:block>
 					                         	         </fo:table-cell>
 					                         	         </fo:table-row>
 		              							          <fo:table-row >  
@@ -236,7 +256,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
  				            </#if>
 	                     </fo:table-body>
                       </fo:table>
-                 <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block> 
+                 <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------</fo:block> 
        </fo:block>
    </#list> 
    </#if>
