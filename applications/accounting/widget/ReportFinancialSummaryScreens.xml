@@ -4804,6 +4804,37 @@
             </widgets>
 		</section>
 	</screen>
+	<screen name="PartyWiseInterUnitLedgerReportCSV">
+		<section>
+			<actions>
+			<set field="viewSize" value="999999999" />
+			<set field="parameters.flag" value="CSVReport"/>
+			<set field="parameters.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
+			<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+			<set field="parameters.interUnitFalg" value="InterUnit"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyWiseLedger.groovy"/>
+			</actions>
+			<widgets>
+			<section>
+			<condition>
+					<if-compare operator="equals" value="Ledger" field="reportTypeFlag" />
+			</condition>
+			<widgets>
+			 <include-form name="PartyLedgerGroupReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+			 </widgets>
+			</section>
+			<section>
+             <condition>
+					<if-compare operator="equals" value="Abstract" field="reportTypeFlag" />
+			</condition>	
+			<widgets>
+				<include-form name="PartyLedgerGroupAbstractReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+			</widgets>		
+			</section>
+            </widgets>
+		</section>
+	</screen>
+	
 	<screen name="SubLedgersReportCSV">
 		<section>
 			<actions>
