@@ -633,7 +633,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		String partyId = (String) context.get("partyId");
 		java.sql.Date seleDate = (java.sql.Date) context.get("punchDate");
 		java.sql.Date selectedDate;
-		
+		String encashFlag = (String) context.get("encashFlag");
 		try{
 			selectedDate = seleDate;
 		} catch (Exception e) {
@@ -648,6 +648,9 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		if(UtilValidate.isEmpty(employeeList)){
 			emplDailyPunchMap.clear();
 			emplDailyPunchMap.put("employeeId", partyId);
+			if(UtilValidate.isNotEmpty(encashFlag)){
+				emplDailyPunchMap.put("encashFlag", encashFlag);
+			}
 			populateChildren(dctx, emplDailyPunchMap, employeeList);
 		}
 		List empPartyIds = EntityUtil
@@ -773,7 +776,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		if(UtilValidate.isEmpty(thruDate)){
 			thruDate = UtilDateTime.nowTimestamp();
 		}
-		
+		String encashFlag = (String) context.get("encashFlag");
 		try {
 			List<String> orderBy = UtilMisc.toList("groupName");
 			if(UtilValidate.isNotEmpty(orgId)){
@@ -804,8 +807,12 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 					condList, EntityOperator.AND);
 			List<GenericValue> employments = delegator.findList("EmploymentAndPerson", condition,
 					null, order, null, false);
+			if(UtilValidate.isNotEmpty(encashFlag)){
+				employments = employments;
+			}else{
+				employments = EntityUtil.filterByDate(employments, thruDate);
+			}
 			
-			employments = EntityUtil.filterByDate(employments, thruDate);
 			for (GenericValue employee : employments) {
 				employeeList.add(employee);
 			}

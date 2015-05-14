@@ -4,6 +4,7 @@ jQuery(document).ready(function() {
 
 function picker(){
 	jQuery("#fromDate").datepicker({
+			$('[name=leaveTypeId]').val( '' );
 			dateFormat:'dd-mm-yy',
 			changeMonth: true,
 			numberOfMonths: 1,

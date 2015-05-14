@@ -44,10 +44,12 @@ $(function() {
   });
 
   jQuery(document).ready(function () {
-    
 	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy',
 									onSelect: function( selectedDate ) {
 									var leaveTypeId = $('select[name=leaveTypeId]').val();
+									$('[name=leaveTypeId]').val( '' );
+									$('#chghss').remove();
+									$('#ghssDropDown').hide();
      								if(leaveTypeId){
 										if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
 	     									return viewGHandSS();
@@ -173,7 +175,7 @@ function viewGHandSS(){
 	            	     jQuery('#ghssDropDown').show();
 	            	     jQuery('#chDate').append(chDateDropDown);
 	            	     $("#chDate").multiselect("refresh");
-	            	    $('#leaveBalance').html('<span style="color:green; font-size:11pt; font-stlye:bold">'+innerHtmlStr+'</span>');
+	            	    $('#leaveBalance').html('<span id="chghss" style="color:green; font-size:11pt; font-stlye:bold">'+innerHtmlStr+'</span>');
 	            	 }
             	 }else{
             	     $('#leaveBalance').html('');
