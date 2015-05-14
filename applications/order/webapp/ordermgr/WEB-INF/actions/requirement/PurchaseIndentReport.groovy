@@ -6,6 +6,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionList;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 import javolution.util.FastMap;
+import javolution.util.FastList;
 import java.sql.Timestamp;
 import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ departmentName="";
 departmentId="";
 qtyIndented="";
 uom="";
+List indentDetails=FastList.newInstance();
 requirement = delegator.findOne("Requirement",UtilMisc.toMap("requirementId", requirementId), false);
 context.facilityId=requirement.facilityId;
 if(UtilValidate.isNotEmpty(requirement)){	
@@ -64,39 +66,48 @@ conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUA
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ENQ_CANCELLED"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 requirementCustRequestList = delegator.findList("RequirementCustRequestView", condition, null, null, null, false);
-
 if(UtilValidate.isNotEmpty(requirementCustRequestList)){
-requirementCustRequest = EntityUtil.getFirst(requirementCustRequestList);
-requirementIndent = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", requirementCustRequest.custRequestId), false);
-indentNo=requirementIndent.custRequestId;
-indentDate=UtilDateTime.toDateString(requirementIndent.custRequestDate, "dd-MM-yyyy");
+	requirementCustRequestList.each{requirementCustRequest->
+		tempMap=[:];
+		//requirementCustRequest = EntityUtil.getFirst(requirementCustRequestList);
+		requirementIndent = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", requirementCustRequest.custRequestId), false);
+		indentNo=requirementIndent.custRequestId;
+		indentDate=UtilDateTime.toDateString(requirementIndent.custRequestDate, "dd-MM-yyyy");
+		tempMap.indentNo=indentNo;
+		tempMap.indentDate=indentDate;
+		context.indentNo=indentNo;
+		context.indentDate=indentDate;
+		
+		conditionStatus = [];
+		conditionStatus.add(EntityCondition.makeCondition("requirementId", EntityOperator.EQUALS, requirementId));
+		conditionStatus.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "REQ_APPROVED"));
+		condition = EntityCondition.makeCondition(conditionStatus, EntityOperator.AND);
+		requirementStatusList = delegator.findList("RequirementStatus", condition, null, null, null, false);
+		statusList = EntityUtil.getFirst(requirementStatusList);
+		if(UtilValidate.isNotEmpty(statusList)){
+		approvedDate=UtilDateTime.toDateString(statusList.statusDate, "dd-MM-yyyy");
+		tempMap.approvedDate=approvedDate;
+		}
+		context.approvedDate=approvedDate;
+		if(UtilValidate.isNotEmpty(requirementCustRequest.custRequestId)){
+		department = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", requirementIndent.fromPartyId), false);
+		departmentName = department.groupName;
+		departmentId = department.partyId;
+		tempMap.department=departmentName+"["+departmentId+"]";
+		}
+		context.departmentName=departmentName;
+		context.departmentId=departmentId;
+		conditionQty = [];
+		conditionQty.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, requirementIndent.custRequestId));
+		conditionQty.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, product.productId));
+		condition = EntityCondition.makeCondition(conditionQty, EntityOperator.AND);
+		conditionQtyList= delegator.findList("CustRequestItem", condition, null, null, null, false);
+		indentQty = EntityUtil.getFirst(conditionQtyList);
+		qtyIndented = indentQty.origQuantity;
+		tempMap.qtyIndented=qtyIndented;
+		context.qtyIndented=qtyIndented;
+		indentDetails.add(tempMap);
+	}
+}
+context.indentDetails=indentDetails;
 
-context.indentNo=indentNo;
-context.indentDate=indentDate;
-
-conditionStatus = [];
-conditionStatus.add(EntityCondition.makeCondition("requirementId", EntityOperator.EQUALS, requirementId));
-conditionStatus.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "REQ_APPROVED"));
-condition = EntityCondition.makeCondition(conditionStatus, EntityOperator.AND);
-requirementStatusList = delegator.findList("RequirementStatus", condition, null, null, null, false);
-statusList = EntityUtil.getFirst(requirementStatusList);
-if(UtilValidate.isNotEmpty(statusList)){
-approvedDate=UtilDateTime.toDateString(statusList.statusDate, "dd-MM-yyyy");
-}
-context.approvedDate=approvedDate;
-if(UtilValidate.isNotEmpty(requirementCustRequest.custRequestId)){
-department = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", requirementIndent.fromPartyId), false);
-departmentName = department.groupName;
-departmentId = department.partyId;
-}
-context.departmentName=departmentName;
-context.departmentId=departmentId;
-conditionQty = [];
-conditionQty.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, requirementIndent.custRequestId));
-conditionQty.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, product.productId));
-condition = EntityCondition.makeCondition(conditionQty, EntityOperator.AND);
-conditionQtyList= delegator.findList("CustRequestItem", condition, null, null, null, false);
-indentQty = EntityUtil.getFirst(conditionQtyList);
-qtyIndented = indentQty.origQuantity;
-context.qtyIndented=qtyIndented;
-}

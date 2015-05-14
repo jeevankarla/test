@@ -43,47 +43,68 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
             <fo:block  keep-together="always" text-align="center" font-size = "12pt" font-family="Arial" white-space-collapse="false" font-weight= "bold">PURCHASE INDENT</fo:block>
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
           		<fo:table  align="center">
-               	    <fo:table-column column-width="25%"/>
-               	    <fo:table-column column-width="25%"/>
-               	    <fo:table-column column-width="25%"/>
-               	    <fo:table-column column-width="25%"/>
+               	    <fo:table-column column-width="35%"/>
+               	    <fo:table-column column-width="35%"/>
+               	    <fo:table-column column-width="30%"/>
+               	   <#-- <fo:table-column column-width="25%"/> -->
                     <fo:table-body>
                      		<fo:table-row  font-family="Arial" font-weight="bold">	
-                     				<fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENT NO: ${indentNo?if_exists}</fo:block>  
-	                       			</fo:table-cell>
-                     				<fo:table-cell>
+                     		        <fo:table-cell>
 	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">REQUIREMENT ID: ${requirementId?if_exists}</fo:block>  
 	                       			</fo:table-cell>
 	                       		   <fo:table-cell>
 	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">FACILITY:    ${facilityId?if_exists}</fo:block>  
 	                       			</fo:table-cell>
-	                       			<fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENT DATE : ${indentDate?if_exists}</fo:block>  
+                                    <fo:table-cell>
+                     				<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">UOM : ${uom?if_exists}</fo:block>  
 	                       			</fo:table-cell>
+	                       		<#--	<fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENT DATE : ${indentDate?if_exists}</fo:block>  
+	                       			</fo:table-cell> -->
 	                         </fo:table-row>
 	                </fo:table-body>
                 </fo:table>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                
-                <fo:table  align="center">
-               	    <fo:table-column column-width="46%"/>
-               	    <fo:table-column column-width="27%"/>
-               	    <fo:table-column column-width="27%"/>
+                <#if indentDetails?has_content>
+                <fo:table border-style="solid" align="center">
+               	    <fo:table-column column-width="20%"/>
+               	    <fo:table-column column-width="40%"/>
+               	    <fo:table-column column-width="20%"/>
+               	    <fo:table-column column-width="15%"/>
                     <fo:table-body>
-                     		<fo:table-row  font-family="Arial" font-weight="bold">	
-	                       		   <fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">DEPARTMENT:  ${departmentName?if_exists} [${departmentId?if_exists}]</fo:block>  
+                     		<fo:table-row border-style="solid" font-family="Arial" font-weight="bold">	
+                     		       <fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENT NO</fo:block>
 	                       			</fo:table-cell>
-	                       			<fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENTED QTY:    ${qtyIndented?if_exists} </fo:block>  
+	                       		   <fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">DEPARTMENT</fo:block>  
 	                       			</fo:table-cell>
-	                       			<fo:table-cell>
-	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">UOM : ${uom?if_exists}</fo:block>  
+	                       			<fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENTED DATE</fo:block>
+	                       			</fo:table-cell>
+	                       			<fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">INDENTED QTY</fo:block>  
 	                       			</fo:table-cell>
 	                         </fo:table-row>
+	                         <#list indentDetails as indent>
+	                         <fo:table-row border-style="solid" font-family="Arial" font-weight="bold">	
+                     		       <fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">${indent.indentNo?if_exists}</fo:block>
+	                       			</fo:table-cell>
+	                       		   <fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">${indent.department?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">${indent.indentDate?if_exists}</fo:block>
+	                       			</fo:table-cell>
+	                       			<fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="center"  font-size="9pt" white-space-collapse="false">${indent.qtyIndented?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                         </fo:table-row>
+                             </#list> 
 	                </fo:table-body>
                 </fo:table>
+               </#if>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
