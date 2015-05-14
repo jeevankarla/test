@@ -945,6 +945,7 @@ public class EmplLeaveService {
         			getEmplLeaveBalMap.put("userLogin",userLogin);
         			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
         			getEmplLeaveBalMap.put("employeeId",partyId);
+        			getEmplLeaveBalMap.put("flag","creditLeaves");
         			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
         			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
         				try{
