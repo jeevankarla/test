@@ -84,7 +84,7 @@
 		return false;
 	}
 	
-	function showDepositRefundEntry(finAccountId) {
+	function showDepositRefundEntry(finAccountId,acctype) {
 		
 		finAccId = finAccountId;
 		var message = "";
@@ -94,7 +94,13 @@
 						"<option value=''>-- Select -- </option>"+
 						"<#if companyBanksList?has_content><#list companyBanksList as eachFinAccount><option value='${eachFinAccount.finAccountId?if_exists}' >${eachFinAccount.finAccountName?if_exists}</option></#list></#if>"+            
 						"</select>";
-		message += "<form action='refundDepositContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
+						
+		if(acctype == "ReceivedAccount"){
+		message += "<form action='refundDepositReceivedContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
+		}else{
+		message += "<form action='refundDepositPaidContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
+		}
+		
 		message += "<input type=hidden name=entryType value=Contra><input type=hidden name=finAccountTransTypeId value=DEPOSIT><input type=hidden name=statusId value=FINACT_TRNS_CREATED><input type=hidden name=finAccountId value="+finAccId+">";
 		message += "<tr class='h3'><td>From/To Account</td><td>"+htmlMsg+"</td></tr>";
 		message += "<tr class='h3'><td>Transaction Date</td><td><input type=text name=transactionDate id=transactionDate onmouseover='datepick()'></td></tr>";

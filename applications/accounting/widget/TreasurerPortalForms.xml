@@ -144,6 +144,36 @@ under the License.
         <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
+        <form name="FindDepositReceivedAccount" type="single" target="FindDepositReceivedAccount" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="hideSearch"><hidden value="Y" /></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="finAccountId" position="1"><text-find/></field>
+          <field name="AccDate" position="2"><date-time type="date"/></field>
+        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="amount" position="2"><text/></field>
+        <field name="finAccountTypeId" position="1">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
+    </form>
+        <form name="FindDepositPaidAccount" type="single" target="FindDepositPaidAccount" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="hideSearch"><hidden value="Y" /></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="finAccountId" position="1"><text-find/></field>
+          <field name="AccDate" position="2"><date-time type="date"/></field>
+        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="amount" position="2"><text/></field>
+        <field name="finAccountTypeId" position="1">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
+    </form>
     <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/></field>
@@ -155,6 +185,58 @@ under the License.
         <field name="actualBalance" title="Acc Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}');" description="Refund">
+            </hyperlink>
+        </field>
+        <field name="printReceipt" widget-style="buttontext">
+            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+        <field name="transactionView" widget-style="buttontext" >
+            <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
+             	<parameter param-name="finAccountId"/>
+             	<parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+    </form>
+     <form name="ListDepositReceivedAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositReceivedAccount" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+        <field name="finAccountName" title="Acc Name"><display/></field>
+        <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
+        <field name="fromDate" title="Acc Date"><display/></field>
+<!--         <field name="finAccountType"><display></display></field> -->
+        <field name="actualBalance" title="Acc Balance"><display/></field>
+        <field name="refund" widget-style="buttontext" event="onclick" action="" >
+            <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','ReceivedAccount');" description="Refund">
+            </hyperlink>
+        </field>
+        <field name="printReceipt" widget-style="buttontext">
+            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+        <field name="transactionView" widget-style="buttontext" >
+            <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
+             	<parameter param-name="finAccountId"/>
+             	<parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+    </form>
+     <form name="ListDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+        <field name="finAccountName" title="Acc Name"><display/></field>
+        <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
+        <field name="fromDate" title="Acc Date"><display/></field>
+<!--         <field name="finAccountType"><display></display></field> -->
+        <field name="actualBalance" title="Acc Balance"><display/></field>
+        <field name="refund" widget-style="buttontext" event="onclick" action="" >
+            <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','PaidAccount');" description="Refund">
             </hyperlink>
         </field>
         <field name="printReceipt" widget-style="buttontext">
@@ -671,6 +753,110 @@ under the License.
             <entity-condition entity-name="FinAccountType" list="depositAccountTypes">
             	<condition-list combine="or">
             		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+            		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_PAID"/>
+            	</condition-list>
+            </entity-condition>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done after creating the Deposit Account --></field>
+        
+		<field name="acctParentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
+        	<drop-down>
+        		<list-options key-name="finAccountTypeId" list-name="depositAccountTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
+      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Deposit Account Type" >
+            <drop-down no-current-selected-key="DEPOSIT_ACCOUNT">
+                <entity-options description="${description}" entity-name="FinAccountType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="finAccountName" title="Account Name"><text size="20"/></field>
+        <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
+        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="entryType"><hidden value="Contra"/></field>
+        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
+        <!-- <field name="contraFinAccountId"  title="From Account">
+            <drop-down>
+            	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
+            </drop-down>
+        </field> -->
+        <field name="finAccountIdTo" title="From/To Account" >
+            <drop-down allow-empty="false">
+            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            </drop-down>
+        </field>
+        <field name="amount" required-field="true"><text/></field>
+        <field name="contraRefNum" title="Instrument No"><text/></field>
+        <field name="inFavor" title="Cheque Infavor of"><text/></field>         
+        <field name="comments"><text/></field>
+        <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
+        <field name="currencyUomId"><hidden value="INR"/></field>
+        <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}"><hidden value="FNACT_ACTIVE"/></field>
+        <field name="isRefundable"><hidden value="Y"/></field>
+        <!-- <field name="ownerPartyId"><hidden value="Company"/></field> -->
+        <field name="organizationPartyId"><hidden value="Company"/></field>
+        <field name="submitButton" use-when="finAccountId==null &amp;&amp; hasFinEditPermission" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+      <form name="EditDepositReceivedAccount" type="single" target="createDepositReceivedFinAccountAndDeposit" default-map-name="finAccount"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="FinAccountType" list="depositAccountTypes">
+            	<condition-list combine="or">
+            		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+<!--             		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_PAID"/> -->
+            	</condition-list>
+            </entity-condition>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done after creating the Deposit Account --></field>
+        
+		<field name="acctParentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
+        	<drop-down>
+        		<list-options key-name="finAccountTypeId" list-name="depositAccountTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
+      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Deposit Account Type" >
+            <drop-down no-current-selected-key="DEPOSIT_ACCOUNT">
+                <entity-options description="${description}" entity-name="FinAccountType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="finAccountName" title="Account Name"><text size="20"/></field>
+        <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
+        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="entryType"><hidden value="Contra"/></field>
+        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
+        <!-- <field name="contraFinAccountId"  title="From Account">
+            <drop-down>
+            	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
+            </drop-down>
+        </field> -->
+        <field name="finAccountIdTo" title="From/To Account" >
+            <drop-down allow-empty="false">
+            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            </drop-down>
+        </field>
+        <field name="amount" required-field="true"><text/></field>
+        <field name="contraRefNum" title="Instrument No"><text/></field>
+        <field name="inFavor" title="Cheque Infavor of"><text/></field>         
+        <field name="comments"><text/></field>
+        <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
+        <field name="currencyUomId"><hidden value="INR"/></field>
+        <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}"><hidden value="FNACT_ACTIVE"/></field>
+        <field name="isRefundable"><hidden value="Y"/></field>
+        <!-- <field name="ownerPartyId"><hidden value="Company"/></field> -->
+        <field name="organizationPartyId"><hidden value="Company"/></field>
+        <field name="submitButton" use-when="finAccountId==null &amp;&amp; hasFinEditPermission" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+      <form name="EditDepositPaidAccount" type="single" target="createDepositPaidFinAccountAndDeposit" default-map-name="finAccount"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="FinAccountType" list="depositAccountTypes">
+            	<condition-list combine="or">
+<!--             		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_RECEIPT"/> -->
             		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_PAID"/>
             	</condition-list>
             </entity-condition>
