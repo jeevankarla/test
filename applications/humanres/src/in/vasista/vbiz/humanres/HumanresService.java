@@ -987,6 +987,7 @@ public class HumanresService {
 	    	String partyIdFrom = (String) context.get("partyIdFrom");
 	    	String partyIdTo = (String) context.get("partyIdTo");
 	    	String fromDateStr = (String) context.get("fromDate");
+	    	String editFromDateStr = (String) context.get("editFromDate");
 	    	String reportingDateStr =  (String)context.get("reportingDate");
 	    	String newLocationGeoId = (String)context.get("locationGeoId");
 	    	Timestamp reportingDateStamp=null;
@@ -999,6 +1000,15 @@ public class HumanresService {
 					Debug.logError(e, "Cannot parse date string: "+ fromDateStr, module);
 				} catch (NullPointerException e) {
 					Debug.logError(e, "Cannot parse date string: "	+ fromDateStr, module);
+				}
+			}else{
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					fromDate = new java.sql.Timestamp(sdf.parse(editFromDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ editFromDateStr, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "	+ editFromDateStr, module);
 				}
 			}
 	        if (UtilValidate.isNotEmpty(reportingDateStr)) {
@@ -1032,22 +1042,27 @@ public class HumanresService {
 					GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
 					appointmentDate = activeEmployment.getTimestamp("appointmentDate");
 					locationGeoId = activeEmployment.getString("locationGeoId");
-					activeEmployment.set("thruDate", previousDayEnd);
-					activeEmployment.store();
-					GenericValue newEntity = delegator.makeValue("Employment");
-					newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
-					newEntity.set("roleTypeIdTo", "EMPLOYEE");
-					newEntity.set("partyIdFrom", partyIdFrom);
-					newEntity.set("partyIdTo", partyIdTo);
-					newEntity.set("fromDate", fromDateStart);
-					newEntity.set("reportingDate", reportingDateStart);
-					newEntity.set("appointmentDate", appointmentDate);
-					if(UtilValidate.isNotEmpty(newLocationGeoId)){
-						newEntity.set("locationGeoId", newLocationGeoId);
+					Timestamp newFromDate = activeEmployment.getTimestamp("fromDate");
+					if(newFromDate.compareTo(fromDateStart)>= 0){
+						return ServiceUtil.returnError("Department already exists.....!");
 					}else{
-						newEntity.set("locationGeoId", locationGeoId);
+						activeEmployment.set("thruDate", previousDayEnd);
+						activeEmployment.store();
+						GenericValue newEntity = delegator.makeValue("Employment");
+						newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+						newEntity.set("roleTypeIdTo", "EMPLOYEE");
+						newEntity.set("partyIdFrom", partyIdFrom);
+						newEntity.set("partyIdTo", partyIdTo);
+						newEntity.set("fromDate", fromDateStart);
+						newEntity.set("reportingDate", reportingDateStart);
+						newEntity.set("appointmentDate", appointmentDate);
+						if(UtilValidate.isNotEmpty(newLocationGeoId)){
+							newEntity.set("locationGeoId", newLocationGeoId);
+						}else{
+							newEntity.set("locationGeoId", locationGeoId);
+						}
+						newEntity.create();
 					}
-					newEntity.create();
 				}else{
 					GenericValue newEntity = delegator.makeValue("Employment");
 					newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");

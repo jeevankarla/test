@@ -176,7 +176,7 @@
          <field name="roleTypeIdTo"  title="${uiLabelMap.HumanResEmploymentroleTypeIdTo}" tooltip="${uiLabelMap.CommonRequired}"><hidden/></field>
         <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         <field name="partyIdTo"  title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
-        <field name="fromDate"  title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="fromDate"  parameter-name="editFromDate" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName}[${partyId}]">

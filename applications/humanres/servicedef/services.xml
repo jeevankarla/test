@@ -322,7 +322,8 @@ under the License.emplpunch
        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
        <attribute name="reportingDate" mode="IN" type="String" optional="true"/>
-       <attribute name="fromDate" type="String" mode="IN" optional="false"/>
+       <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+       <attribute name="editFromDate" type="String" mode="IN" optional="true"/>
        <attribute name="locationGeoId" type="String" mode="IN" optional="true"/>
    </service>
 
