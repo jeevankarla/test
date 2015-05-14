@@ -229,6 +229,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("PartyLedgerFromDate","PartyLedgerThruDate");
 		makeDatePicker4("PartyLedgerCreditorFromDate","PartyLedgerCreditorThruDate");
 		makeDatePicker4("PartyWiseLedgerFromDate","PartyWiseLedgerThruDate");
+		makeDatePicker4("PartyWiseLedgerInterFromDate","PartyWiseLedgerInterThruDate");
 	    $('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -562,6 +563,30 @@ function reportTypeChangeFunc() {
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyWiseLedger', '<@ofbizUrl>PartyWiseLedgerReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 				</form>
               </tr>  
+              <tr class="alternate-row">
+				<form id="PartyWiseInterUnitLedger" name="PartyWiseInterUnitLedger" method="post" action="<@ofbizUrl>PartyWiseInterUnitLedgerReport.pdf</@ofbizUrl>" target="_blank">	
+					<td width="30%">Party Ledger - InterUnit Report</td>
+					<td width="10%">From<input  type="text" size="18pt" id="PartyWiseLedgerInterFromDate" readonly  name="fromDate"/></td>
+				    <td width="10%">To<input  type="text" size="18pt" id="PartyWiseLedgerInterThruDate" readonly  name="thruDate"/></td>
+  					<td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					    <option value=''></option>
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
+                         </#list> 
+                         <option value='NONROLE'>Others</option>
+  						</select></td> 
+                     <td width="10%">Report Type 
+					    <select name="reportTypeFlag" id="reportTypeFlag">
+						   <option value='Ledger'>Ledger</option>
+						   <option value='Abstract'>Abstract</option>
+					   </select>
+                     </td> 
+					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyWiseLedger" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
+					   <td width="5%">   </td>
+					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyWiseInterUnitLedger', '<@ofbizUrl>PartyWiseInterUnitLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
+					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyWiseInterUnitLedger', '<@ofbizUrl>PartyWiseInterUnitLedgerReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+				</form>
+              </tr>
                 
               <tr class="alternate-row">
 				<form id="PartyLedgerGroup" name="PartyLedgerGroup" method="post" action="<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>" target="_blank">	

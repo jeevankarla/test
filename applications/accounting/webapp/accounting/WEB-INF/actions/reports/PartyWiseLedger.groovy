@@ -79,7 +79,9 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 List glAccountIds=FastList.newInstance();
  glAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault",EntityCondition.makeCondition("glAccountTypeId",EntityOperator.IN,UtilMisc.toList("ACCOUNTS_RECEIVABLE","ACCOUNTS_PAYABLE")),null,null,null,false);
  glAccountIds=EntityUtil.getFieldListFromEntityList(glAccountTypeDefaultList, "glAccountId", true);
-
+if(UtilValidate.isNotEmpty(parameters.interUnitFalg) && parameters.interUnitFalg=="InterUnit"){
+	glAccountIds.add("119000");
+}
 if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameters.partyId)){
 	List conList=FastList.newInstance();
 	conList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
@@ -113,6 +115,7 @@ partyMap=[:];
 openingBalMap=[:];
 
 	acctgPartyIds = EntityUtil.getFieldListFromEntityListIterator(acctgTransList, "partyId", true);
+	acctgTransList.close();
 	partyIds.each{partyId->
 		if(acctgPartyIds.contains(partyId)==false){
 			partyId=partyId.toUpperCase();
@@ -267,7 +270,7 @@ openingBalMap=[:];
 						partyMap[partyId]=tempList;
 				}
 			}
-		
+			acctgTransIter.close();
 }
 context.partyMap=partyMap;
 context.openingBalMap=openingBalMap;
