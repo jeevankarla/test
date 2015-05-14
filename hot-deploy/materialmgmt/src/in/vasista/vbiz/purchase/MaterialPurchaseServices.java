@@ -3426,6 +3426,7 @@ public class MaterialPurchaseServices {
 		newProduct.put("brandName", description);
 		newProduct.put("productName", description);
 		newProduct.put("description", description);
+		newProduct.put("quantityIncluded",new BigDecimal(1));
 		if(!productUOMtypeId.equals(null) || UtilValidate.isNotEmpty(productUOMtypeId))
 		{	newProduct.put("quantityUomId", productUOMtypeId);	}
 		newProduct.put("longDescription", longDescription);
