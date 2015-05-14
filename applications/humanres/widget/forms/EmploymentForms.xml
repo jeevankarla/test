@@ -168,7 +168,7 @@
            </hyperlink>
         </field>
     	</form>
-    <form name="EditEmployment" type="single" target="createEmployment" 
+    <form name="EditEmployment" type="single" target="createNewEmployment" 
         header-row-style="header-row" default-table-style="basic-table">
         <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>

@@ -988,6 +988,7 @@ public class HumanresService {
 	    	String partyIdTo = (String) context.get("partyIdTo");
 	    	String fromDateStr = (String) context.get("fromDate");
 	    	String reportingDateStr =  (String)context.get("reportingDate");
+	    	String newLocationGeoId = (String)context.get("locationGeoId");
 	    	Timestamp reportingDateStamp=null;
 	    	Timestamp fromDate = UtilDateTime.nowTimestamp();
 	        if (UtilValidate.isNotEmpty(fromDateStr)) {
@@ -1023,8 +1024,8 @@ public class HumanresService {
 				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
 				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
 				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
-				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,fromDateStart));
-				conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS ,null));
+				//conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,fromDateStart));
+				//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart)));
 		    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
 				List<GenericValue> activeEmploymentList = delegator.findList("Employment", condition, null, UtilMisc.toList("-fromDate"), null, false);
 				if(UtilValidate.isNotEmpty(activeEmploymentList)){
@@ -1041,10 +1042,27 @@ public class HumanresService {
 					newEntity.set("fromDate", fromDateStart);
 					newEntity.set("reportingDate", reportingDateStart);
 					newEntity.set("appointmentDate", appointmentDate);
-					newEntity.set("locationGeoId", locationGeoId);
+					if(UtilValidate.isNotEmpty(newLocationGeoId)){
+						newEntity.set("locationGeoId", newLocationGeoId);
+					}else{
+						newEntity.set("locationGeoId", locationGeoId);
+					}
 					newEntity.create();
 				}else{
-					return ServiceUtil.returnError("Department already exists.....!");
+					GenericValue newEntity = delegator.makeValue("Employment");
+					newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+					newEntity.set("roleTypeIdTo", "EMPLOYEE");
+					newEntity.set("partyIdFrom", partyIdFrom);
+					newEntity.set("partyIdTo", partyIdTo);
+					newEntity.set("fromDate", fromDateStart);
+					newEntity.set("reportingDate", reportingDateStart);
+					newEntity.set("appointmentDate", appointmentDate);
+					if(UtilValidate.isNotEmpty(newLocationGeoId)){
+						newEntity.set("locationGeoId", newLocationGeoId);
+					}else{
+						newEntity.set("locationGeoId", locationGeoId);
+					}
+					newEntity.create();
 				}
 	        }catch(GenericEntityException e){
 				Debug.logError("Error while creating new Employment"+e.getMessage(), module);
