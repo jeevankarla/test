@@ -191,7 +191,8 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		workedHolidaysList =[];
 		for(GenericValue workedHoliday: workedHolidaysListTemp){
 			Date tempDate = workedHoliday.getDate("date");
-			Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+			String encashFlag = "encashFlag";	
+			Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate,"encashFlag",encashFlag));
 			if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 				Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
 				if(UtilValidate.isNotEmpty(punchDetails)){
@@ -297,7 +298,6 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 	   }
 	}
 }
-
 context.emplList=emplList;
 context.holidaysList=workedHolidaysList;
 context.EncashmentList=EncashmentList;

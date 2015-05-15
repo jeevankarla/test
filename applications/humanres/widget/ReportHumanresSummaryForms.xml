@@ -1556,7 +1556,7 @@
 				</entity-options>
 			</drop-down>
 		</field> -->
-		<field name="caste" title="${uiLabelMap.Caste}" >
+		<field name="caste" title="${uiLabelMap.Caste}" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
 					<entity-constraint name="partyClassificationTypeId" value="PCG_REC_CA" />

@@ -49,7 +49,12 @@ under the License.
               <input type="hidden" size="20" id = "customTimePeriodId" name="customTimePeriodId" value="${customTimePeriodId?if_exists}" />
               <input type="hidden" size="20" id = "partyId" name="partyId" value="${partyId?if_exists}" />
               <td><input type="display" readOnly size="10" id = "leaveTypeId" name="leaveTypeId" value="${leaveTypeId?if_exists}" /></td>
-              <td><input type="display" readOnly size="10" id = "openingBalance" name="openingBalance" value="${openingBalance?if_exists}" /></td>
+              <#if security.hasPermission("EMP_OB_EDIT", session)>
+              	  <td><input type="text"  size="10" id = "openingBalance" name="openingBalance" value="${openingBalance?if_exists}" /></td>
+              <#else>
+              	 <td><input type="display" readOnly size="10" id = "openingBalance" name="openingBalance" value="${openingBalance?if_exists}" /></td>
+              </#if>
+              
               <#if security.hasPermission("EMP_ALLOTEDDAYS_EDIT", session)>
               	  <td><input type="text" size="10" id = "allotedDays" name="allotedDays" value="${allotedDays?if_exists}" /></td>
               <#else>

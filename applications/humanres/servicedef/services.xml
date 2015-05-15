@@ -322,7 +322,9 @@ under the License.emplpunch
        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
        <attribute name="reportingDate" mode="IN" type="String" optional="true"/>
-       <attribute name="fromDate" type="String" mode="IN" optional="false"/>
+       <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+       <attribute name="editFromDate" type="String" mode="IN" optional="true"/>
+       <attribute name="locationGeoId" type="String" mode="IN" optional="true"/>
    </service>
 
     <service name="createEmploymentApp" engine="simple" default-entity-name="EmploymentApp"
@@ -934,6 +936,7 @@ under the License.emplpunch
         <attribute name="leaveTypeId" optional="true" type="String" mode="IN"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="chDate" mode="IN" type="List" optional="true"/>
     </service>
      <service name="createEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmplLeave" auth="true">
@@ -1314,6 +1317,7 @@ under the License.emplpunch
         <attribute name="partyId"  mode="IN" type="String" optional="false"/>
         <attribute name="punchDate"  mode="IN" type="java.sql.Date" optional="true"/>
         <attribute name="punchDataList" mode="OUT" type="List"/>
+        <attribute name="encashFlag"  mode="IN" type="String" optional="true"/>
      </service>
      <service name="emplMonthlyPunchReport" engine="java"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplMonthlyPunchReport" auth="true">
