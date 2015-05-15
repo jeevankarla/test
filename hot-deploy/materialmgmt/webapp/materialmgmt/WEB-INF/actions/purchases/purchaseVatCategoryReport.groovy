@@ -82,10 +82,10 @@ if(UtilValidate.isNotEmpty(invoiceIds)){
 	if(UtilValidate.isNotEmpty(productCatDetails)){
 	productIds = EntityUtil.getFieldListFromEntityList(productCatDetails, "productId", true);
 	} 
-
-if(UtilValidate.isNotEmpty(InvoiceList)){
-	sNo=0;
-	InvoiceList.each{eachInvoiceItem->
+if(UtilValidate.isNotEmpty(productIds)){
+   if(UtilValidate.isNotEmpty(InvoiceList)){
+	  sNo=0;
+	  InvoiceList.each{eachInvoiceItem->
 		invoiceProdMap=FastMap.newInstance();
 		
 		invoiceId=eachInvoiceItem.invoiceId;
@@ -94,7 +94,7 @@ if(UtilValidate.isNotEmpty(InvoiceList)){
 		invoiceDate=eachInvoiceItem.invoiceDate;
 		invoiceQty=eachInvoiceItem.quantity;
 		partyId=eachInvoiceItem.partyId	;
-		
+
 		if(UtilValidate.isNotEmpty(productId) && productIds.contains(productId) && UtilValidate.isNotEmpty(vatAmount)){
 			totVatAmount=invoiceQty*vatAmount;
 			invoiceProdMap.invoiceId=invoiceId;
@@ -112,6 +112,7 @@ if(UtilValidate.isNotEmpty(InvoiceList)){
 		}
 		
 	}
+ }
 }
 }
 context.vatReturnMap=vatReturnMap;
