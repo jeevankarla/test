@@ -76,7 +76,7 @@ if(UtilValidate.isNotEmpty(partyId)){
 			ob = (BigDecimal) leaveBalances.get(leaveTypeId);
 		}
 	} 
-	if(UtilValidate.isEmpty(openingBalance) || openingBalance == 0){
+	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
 		if(UtilValidate.isNotEmpty(ob)){
 			openingBalance = ob;
 		}else{
