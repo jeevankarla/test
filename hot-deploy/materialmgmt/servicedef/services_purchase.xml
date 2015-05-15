@@ -158,7 +158,21 @@
          <attribute name="requestDate" type="String" mode="IN" optional="true"/>
          <attribute name="closedDate" type="String" mode="IN" optional="true"/>
    </service>
-   
+   <service name="sendRequirementsForGroup" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="sendRequirementsForGroup">
+        <description> Create Requirements Group</description>        
+        <attribute name="requirementIds" mode="IN" type="List" optional="false"/>
+   </service>
+   <service name="approveRequirementGroup" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="approveRequirementGroup">
+        <description> Create Requirements Group</description>        
+        <attribute name="requirementGroupId" mode="IN" type="String" optional="false"/>
+   </service>
+   <service name="rejectRequirementGroup" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="rejectRequirementGroup">
+        <description> Create Requirements Group</description>        
+        <attribute name="requirementGroupId" mode="IN" type="String" optional="false"/>
+   </service>
     <service name="CreateMaterialPO" engine="java"
                 location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPO" default-entity-name="OrderHeader">
         <description> Create Material Purchase Order</description>        

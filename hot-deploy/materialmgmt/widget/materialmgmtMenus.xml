@@ -402,6 +402,12 @@
         	</condition>
         	<link target="EnquiryForApprovedMatRequirements"/>
         </menu-item>
+        <menu-item name="GroupedRequirements" title="Grouped Requirements">
+        	<condition>
+        		<if-has-permission permission="MM" action="_ENQ_REQMENT_VIEW"/>
+        	</condition>
+        	<link target="GroupedRequirements"/>
+        </menu-item>
        <!--  <menu-item name="ApprovedMatRequirementBySupplier" title="Requirement To PO">
         	<link target="ApprovedMatRequirementBySupplier"/>
         </menu-item> -->

@@ -2512,7 +2512,46 @@ under the License.
         <key-map field-name="workReqFulfTypeId"/>
       </relation>
     </entity>
-
+     <entity entity-name="RequirementGroup"
+            package-name="org.ofbiz.order.requirement"
+            title="Requirement Group Entry">
+        <description> For grouping the Requirement</description>
+        <field name="requirementGroupId" type="id-ne"></field>
+        <field name="groupTypeId" type="id"></field>
+        <field name="statusId" type="id"></field>
+        <field name="approverPartyId" type="id"></field>
+        <field name="approvedDate" type="date-time"></field>
+        <field name="createdDate" type="date-time"></field>
+        <field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <prim-key field="requirementGroupId"/>
+        <relation type="one" fk-name="RG_RGTYPE_ID" rel-entity-name="Enumeration">
+        	<key-map field-name="groupTypeId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="RG_STTS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" rel-field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="RG_APPR_PARTY" rel-entity-name="Party">
+            <key-map field-name="approverPartyId" rel-field-name="partyId"/>
+        </relation>
+    </entity>
+    <entity entity-name="RequirementGroupMember"
+            package-name="org.ofbiz.order.requirement"
+            title="Requirement Group Member Entry">
+        <description> Group member for RequirementGroup</description>
+        <field name="requirementGroupId" type="id-ne"></field>
+        <field name="requirementId" type="id-ne"></field>
+        <prim-key field="requirementGroupId"/>
+        <prim-key field="requirementId"/>
+        <relation type="one" fk-name="REQGRPMMBR_RG" rel-entity-name="RequirementGroup">
+            <key-map field-name="requirementGroupId" />
+        </relation>
+        <relation type="one" fk-name="REQGRPMMBR_REQ"
+            rel-entity-name="Requirement">
+            <key-map field-name="requirementId"/>
+        </relation>
+    </entity>
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.return -->
     <!-- ========================================================= -->

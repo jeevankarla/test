@@ -90,9 +90,22 @@ $(document).ready(function(){
 		 jQuery("#sendRequirementIds").submit();
        
  	}	
+ 	function makeRequiremtsGroup(current){
+ 		jQuery(current).attr("disabled","disabled");
+ 		var requirements = jQuery("#EnquiryForApprovedMatRequirements :checkbox[name='requirementIds']");
+		jQuery.each(requirements,function(){
+			if(jQuery(this).is(':checked')){
+				var reqId=$(this).val();
+				$('#sendRequirementsForGroup').append('<input type="hidden" name="requirementIds" value="'+reqId+'" />');
+			}		
+		});
+		jQuery("#sendRequirementsForGroup").submit();
+ 	}
 </script>
 <#if requirements?has_content>
 <form id="sendRequirementIds" name="sendRequirementIds" action="sendRequirementIds" method="post">
+</form>
+<form id="sendRequirementsForGroup" name="sendRequirementsForGroup" action="sendRequirementsForGroup" method="post">
 </form>
 <div align="left">
 	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>
@@ -102,7 +115,13 @@ $(document).ready(function(){
 	</div>
 <form id="EnquiryForApprovedMatRequirements" name="EnquiryForApprovedMatRequirements" action="" method="post">
 	<div align="right">
-		<input id="submitButton" type="button"  onclick="javascript:massRequirementsSubmit(this);" value="Submit" />
+		<table cellspacing="10">
+			<tbody>
+			  <tr><td ><input id="submitButton" type="button" onclick="javascript:makeRequiremtsGroup(this);" value="Make As Group"/></td>
+			      <td ><input id="submitButton" type="button"  onclick="javascript:massRequirementsSubmit(this);" value="Submit" /></td>
+			  </tr>    
+			</tbody>
+		</table>
 	</div>
 	<table class="basic-table hover-bar" cellspacing="0">
 		<thead>

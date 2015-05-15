@@ -68,6 +68,11 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseIndentReport"/>
     </request-map>
+    <request-map uri="groupedReqDetailsReport">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="groupedReqDetailsReportPDF"/>
+    </request-map>
+    
     <request-map uri="getMaterialPOValue">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="getMaterialPOValue" global-transaction="true"/>
@@ -847,7 +852,16 @@
        <response name="success" type="view" value="EnquiryForApprovedMatRequirements"/>
        <response name="error" type="view" value="EnquiryForApprovedMatRequirements"/>
    </request-map>
-   
+   <request-map uri="GroupedRequirements">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="GroupedRequirements"/>
+       <response name="error" type="view" value="GroupedRequirements"/>
+   </request-map>
+   <request-map uri="findGroupedRequirements">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="GroupedRequirements"/>
+       <response name="error" type="view" value="GroupedRequirements"/>
+   </request-map>
    <request-map uri="sendRequirementIds">
      	<security https="true" auth="true"/>
      	<event type="service"  path=""  invoke="draftEnquiryForApprovedRequirements" >
@@ -857,7 +871,33 @@
         <response name="error" type="request-redirect" value="EnquiryForApprovedMatRequirements">
         </response>
     </request-map>
-   
+    <request-map uri="sendRequirementsForGroup">
+     	<security https="true" auth="true"/>
+     	<event type="service"  path=""  invoke="sendRequirementsForGroup" >
+     	</event>
+     	<response name="success" type="request-redirect" value="EnquiryForApprovedMatRequirements">
+        </response>     	
+        <response name="error" type="request-redirect" value="EnquiryForApprovedMatRequirements">
+        </response>
+    </request-map>
+    <request-map uri="approveRequirementGroup">
+     	<security https="true" auth="true"/>
+     	<event type="service"  path=""  invoke="approveRequirementGroup" >
+     	</event>
+     	<response name="success" type="request-redirect" value="GroupedRequirements">
+        </response>     	
+        <response name="error" type="request-redirect" value="GroupedRequirements">
+        </response>
+    </request-map>
+   <request-map uri="rejectRequirementGroup">
+     	<security https="true" auth="true"/>
+     	<event type="service"  path=""  invoke="rejectRequirementGroup" >
+     	</event>
+     	<response name="success" type="request-redirect" value="GroupedRequirements">
+        </response>     	
+        <response name="error" type="request-redirect" value="GroupedRequirements">
+        </response>
+    </request-map>
    <request-map uri="acceptReturnItemForReceipt">
      	<security https="true" auth="true"/>
      	<event type="service"  path=""  invoke="acceptReturnItemForReceipt" />
@@ -1428,7 +1468,7 @@
     <view-map name="stockPositionReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StockPositionReportPDF" content-type="application/pdf"/>
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
     <view-map name="ScrapDCandGatePassReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ScrapDCandGatePassReportPDF" content-type="application/pdf"/>
-    
+     <view-map name="groupedReqDetailsReportPDF" type="screenfop" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#groupedReqDetailsReportPDF" content-type="application/pdf"/>
     
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
@@ -1451,6 +1491,7 @@
     <view-map name="ApprovedMatRequirementBySupplier" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApprovedMatRequirementBySupplier"/>
     <view-map name="EnquiryForApprovedMatRequirements" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EnquiryForApprovedMatRequirements"/>
     <view-map name="requirementOverView" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#requirementOverView"/>
+    <view-map name="GroupedRequirements" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#GroupedRequirements"/>
     <!-- Return views -->
     <view-map name="FindMaterialReturns" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialReturns"/>
     <view-map name="ReturnEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ReturnEntry"/>
