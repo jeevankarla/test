@@ -80,6 +80,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	$(document).ready(function(){
 		makeDatePicker("fromDate","fromDateId");
 		
+	/*	
 		$("#productCategoryId").multiselect({
 			minWidth : 180,
 			height: 100,
@@ -90,6 +91,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 				at: 'left top'
 			}
 		});
+	*/
+		
 		
 	});
 	
@@ -124,7 +127,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						<tr>
 							<td class="label">Analysis Code :</td>
 						    <td>
-							<select name="productCategoryId" id="productCategoryId" multiple="multiple">
+							<select name="productCategoryId" id="productCategoryId">
 						      	    <#list materialCategoryList as materialCategory>
 						      	   			<option value='${materialCategory.productCategoryId}'>${materialCategory.description}</option>
 								    </#list>  
@@ -132,7 +135,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    </td>
 						</tr>
 						<tr>
-							<td class="label">VAT Category :</td>
+							<td class="label">VAT Tax Category :</td>
 						    <td>
 							<select name="vatCategory" id="vatCategory">
 						      	    <#list vatList as vatEntry>
@@ -140,6 +143,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    </#list>  
 						      	</select>
 						    </td>
+						</tr>
+						
+						<tr>
+							<td class="label">VAT Purchase Category :</td>
+							<td><input type="checkbox" id="vatPurCategory"  name="vatPurCategory" value="VATPUR_OTHERS"/></td>
 						</tr>
 				<#--
 						<tr>
