@@ -3325,8 +3325,10 @@ public class MaterialPurchaseServices {
 		
 		String productTypeId = (String) request.getParameter("productTypeId");
 		String primaryCategoryId = (String) request.getParameter("primaryCategoryId");
-		String[] productCategoryIds = request.getParameterValues("productCategoryId");
+		String productCategoryId = (String) request.getParameter("productCategoryId");
+	//	String[] productCategoryIds = request.getParameterValues("productCategoryId");
 		String vatCategory = request.getParameter("vatCategory");
+		String vatPurCategory = request.getParameter("vatPurCategory");
 		//String materialCode = (String) request.getParameter("materialCode");
 		String description = (String) request.getParameter("description");
 		String productUOMtypeId = (String) request.getParameter("productUOMtypeId");
@@ -3353,13 +3355,13 @@ public class MaterialPurchaseServices {
 			return "error";
 			}
 		}*/
-		List materialCategoryList = new ArrayList();
+		/*List materialCategoryList = new ArrayList();
 		if(UtilValidate.isNotEmpty(productCategoryIds)){
 			for(int i=0;i<productCategoryIds.length;i++)
 			{
 				materialCategoryList.add(productCategoryIds[i]);
 			}
-		}
+		}*/
 		try{
 			String materialCode = "";
 			result = dispatcher.runSync("getNextProductSeqID", UtilMisc.toMap("userLogin", userLogin));
@@ -3374,6 +3376,7 @@ public class MaterialPurchaseServices {
 			newProductMap.put("productTypeId", productTypeId);
 			newProductMap.put("primaryCategoryId", primaryCategoryId);
 			newProductMap.put("vatCategory", vatCategory);
+			newProductMap.put("vatPurCategory", vatPurCategory);
 			newProductMap.put("materialCode", materialCode);
 			newProductMap.put("description", description);
 			newProductMap.put("productUOMtypeId", productUOMtypeId);	
@@ -3382,7 +3385,7 @@ public class MaterialPurchaseServices {
 			newProductMap.put("prodAttribute",prodAttribute);
 			newProductMap.put("attributeValue",attributeValue);
 			newProductMap.put("userLogin", userLogin);
-			newProductMap.put("materialCategoryList", materialCategoryList);
+			newProductMap.put("productCategoryId", productCategoryId);
 			result = dispatcher.runSync("createNewProduct", newProductMap);
 			if (ServiceUtil.isError(result)) {
 				request.setAttribute("_ERROR_MESSAGE_", "Error creating new product  !" );	
@@ -3407,12 +3410,13 @@ public class MaterialPurchaseServices {
 	String productTypeId = (String) context.get("productTypeId");
 	String primaryCategoryId = (String) context.get("primaryCategoryId");
 	String vatCategory = (String) context.get("vatCategory");
+	String vatPurCategory = (String) context.get("vatPurCategory");
 	String materialCode = (String) context.get("materialCode");
 	String description = (String) context.get("description");
 	String productUOMtypeId = (String) context.get("productUOMtypeId");
 	String longDescription = (String) context.get("longDescription");
 	GenericValue userLogin = (GenericValue) context.get("userLogin");
-	List materialCategoryList = (List) context.get("materialCategoryList");
+	String productCategoryId = (String) context.get("productCategoryId");
 	String facilityId = (String) context.get("facilityId");
 	String prodAttribute = (String) context.get("prodAttribute");
 	String attributeValue = (String) context.get("attributeValue");
@@ -3449,17 +3453,13 @@ public class MaterialPurchaseServices {
         }
 //------------------------------------Updating the ProductCategoryMember Entity	
 		Map productCatgMap = FastMap.newInstance();
-	if(UtilValidate.isNotEmpty(materialCategoryList)){
+	if(UtilValidate.isNotEmpty(productCategoryId)){
 		try{
-		int length = materialCategoryList.size();
-		for(int i=0;i<length;i++)
-			{
-			productCatgMap.put("productCategoryId", materialCategoryList.get(i));
+			productCatgMap.put("productCategoryId", productCategoryId);
 			productCatgMap.put("productId", productId);
 			productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
 			productCatgMap.put("userLogin", userLogin);
 			result = dispatcher.runSync("addProductToCategory", productCatgMap);
-			}
 		}
 		catch(Exception e){
 			return ServiceUtil.returnError(e.getMessage());
@@ -3474,14 +3474,27 @@ public class MaterialPurchaseServices {
 	if (ServiceUtil.isError(result)) {
 		return ServiceUtil.returnError("Error Occurred While updating Product Category");
 			}
-		productCatgMap.put("productCategoryId",vatCategory);
-		productCatgMap.put("productId", productId);
-		productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
-		productCatgMap.put("userLogin", userLogin);
-		result = dispatcher.runSync("addProductToCategory", productCatgMap);
-		if (ServiceUtil.isError(result)) {
-			return ServiceUtil.returnError("Error Occurred While updating Product Category");
-			}
+		if(UtilValidate.isNotEmpty(vatCategory)){
+			productCatgMap.put("productCategoryId",vatCategory);
+			productCatgMap.put("productId", productId);
+			productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+			productCatgMap.put("userLogin", userLogin);
+			result = dispatcher.runSync("addProductToCategory", productCatgMap);
+			if (ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError("Error Occurred While updating Product Category");
+				}
+		  }
+		if(UtilValidate.isNotEmpty(vatPurCategory)){
+			productCatgMap.put("productCategoryId",vatPurCategory);
+			productCatgMap.put("productId", productId);
+			productCatgMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+			productCatgMap.put("userLogin", userLogin);
+			result = dispatcher.runSync("addProductToCategory", productCatgMap);
+			if (ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError("Error Occurred While updating Product Category");
+				}
+		  }
+		
 		}
 catch(Exception e){
 		return ServiceUtil.returnError(e.getMessage());
