@@ -66,6 +66,15 @@ condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 //get product from ProductCategory
 productCategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
 purchaseAnalysisProductIdsList=EntityUtil.getFieldListFromEntityList(productCategoryMember, "productId", true);
+
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "VATPUR_OTHERS"));
+condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+//get product from ProductCategory
+CategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+otherVatProductCategory = EntityUtil.filterByCondition(CategoryMember, EntityCondition.makeCondition("productCategoryId",EntityOperator.EQUALS, "VATPUR_OTHERS"));
+otherPurchaseVatProducts=EntityUtil.getFieldListFromEntityList(otherVatProductCategory, "productId", true);
+context.otherPurchaseVatProducts=otherPurchaseVatProducts;
 productCatMap=[:]
 productPrimaryCatMap=[:];
 eachProdPrimaryCatagoryMap=[:];
@@ -237,6 +246,9 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 		if (UtilValidate.isNotEmpty(invoiceIdsList)) {
 		 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIdsList));
 		 }
+		if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
+		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, otherPurchaseVatProducts));
+		}
 		conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 		conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
