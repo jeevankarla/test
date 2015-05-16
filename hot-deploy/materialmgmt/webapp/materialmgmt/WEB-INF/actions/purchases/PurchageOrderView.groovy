@@ -550,7 +550,10 @@ if (orderItems) {
 		   invoiceIds = EntityUtil.getFieldListFromEntityList(invoicesList, "invoiceId", true);
 		  if(UtilValidate.isNotEmpty(invoiceIds)){
 			   ivoCond=EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
-			   invoiceDetailList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate","createdByUserLogin"),null,null,false);		   
+			   invoiceList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate","createdByUserLogin"),null,null,false);		   
+			   invoiceList.each{invoiceData->
+				   invoiceDetailList.add(invoiceData);
+			   }
 			   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
 			   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
 			   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
