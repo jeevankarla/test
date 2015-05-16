@@ -466,14 +466,444 @@ under the License.
         </fo:page-sequence>
         </#if>
         <#else>	
-			<fo:page-sequence master-reference="main">
-		    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-		       		 <fo:block font-size="14pt">
-		            	${uiLabelMap.OrderNoOrderFound}.
-		       		 </fo:block>
-		    	</fo:flow>
-			</fo:page-sequence>
-		</#if>
+        	<#if invoice?has_content>
+        		<fo:page-sequence master-reference="main">
+        	<fo:static-content flow-name="xsl-region-before">
+					<fo:block  keep-together="always" text-align="right" font-size = "11pt" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+					<fo:block  keep-together="always" text-align="right" font-size = "11pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+					<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					<#assign invoiceTypeId = invoice.invoiceTypeId?if_exists>
+					<#assign invPartyIdFrom = invoice.partyIdFrom?if_exists>
+					<#assign invPartyId = invoice.partyId?if_exists>
+					<#assign invoiceId = invoice.invoiceId?if_exists>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company">CREDIT ADVICE <#else>DEBIT ADVICE</#if></fo:block>
+        	</fo:static-content>
+        	<fo:flow flow-name="xsl-region-body">
+              <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+              <fo:block font-size="12pt">                
+                <fo:table >
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/>                
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-body>  
+                    	<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>      
+	                        <fo:table-row>
+	                        	<fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt">Advice Invoice ID     </fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:  &#160;&#160;&#160;&#160;${invoiceId?if_exists}</fo:block>                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                        <fo:table-row> 
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt">Date</fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:   &#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoice.invoiceDate?if_exists, "dd/MM/yyyy")}</fo:block>                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                        <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+							</fo:table-row>
+							
+							<#if invPartyIdFrom?exists && invPartyIdFrom == "Company">
+	                             <#assign partyId = invPartyId>
+	                        <#else>
+	                             <#assign partyId = invPartyIdFrom>
+	                        </#if>
+							<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyId?if_exists, "userLogin", userLogin))/> 
+	                        <fo:table-row> 
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt">To</fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:   &#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId?if_exists, false)}(${partyId?if_exists})</fo:block>                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                        <fo:table-row> 
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt"></fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell>
+									 <#if (partyAddressResult.address1?has_content)>
+						   				<fo:block text-align="left" wrap-option="wrap" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${partyAddressResult.address1?if_exists}</fo:block>
+									</#if>
+									<#if (partyAddressResult.address2?has_content)>
+										<fo:block  text-align="left" wrap-option="wrap" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${partyAddressResult.address2?if_exists}</fo:block>
+									</#if>
+									<#if (partyAddressResult.city?has_content)>
+										<fo:block  text-align="left" wrap-option="wrap" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${partyAddressResult.city?if_exists} ${partyAddressResult.stateProvinceGeoId?if_exists}</fo:block>
+									</#if>
+									<#if (partyAddressResult.countryGeoId?has_content)>
+										<fo:block  text-align="left" wrap-option="wrap" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${partyAddressResult.countryGeoId?if_exists}</fo:block>
+									</#if>
+									<#if (partyAddressResult.postalCode?has_content)>
+									  	<fo:block  text-align="left" wrap-option="wrap" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${partyAddressResult.postalCode?if_exists}</fo:block>
+									</#if>   
+								</fo:table-cell>
+	                         </fo:table-row>
+	                         <#if orderMessage?has_content>
+	                         <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+	                         <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight="bold">Invoice Message          &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:</fo:block>     
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${orderMessage?if_exists}</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							</#if>
+	                        <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company">CREDITED<#else>DEBITED</#if> with Rs: <@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/>       on the basis of the </fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">following transactions.</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  ${comments?if_exists}</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+	               	</fo:table-body>
+                </fo:table>
+    	 	</fo:block>
+    	 	<fo:block>
+                 	<fo:table border-style="solid">
+                    <fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <#if productMrpPriceMap?has_content>
+                    <fo:table-column column-width="70pt"/>
+                    </#if>
+                    <fo:table-column column-width="95pt"/>
+                    <fo:table-body>
+                    	<fo:table-row >
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">S.No</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Qty(Ltrs/Kgs)</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Qty</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate</fo:block> 
+                   			</fo:table-cell>
+                   			<#if productMrpPriceMap?has_content>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">MRP</fo:block>  
+	                   			</fo:table-cell>
+	                   		</#if>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block> 
+                   			</fo:table-cell>
+            			</fo:table-row>
+                    </fo:table-body>
+                </fo:table>
+             </fo:block>
+             <fo:block>
+                 	<fo:table border-style="solid">
+                    <fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <#if productMrpPriceMap?has_content>
+                    <fo:table-column column-width="70pt"/>
+                    </#if>
+                    <fo:table-column column-width="95pt"/>
+                    <fo:table-body>
+                    	<#assign sno=0>
+						<#if invoiceItems?has_content>
+						<#list invoiceItems as invoiceItem>
+						 <#assign sno=sno+1>
+				         <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
+				         <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>
+						 <#if invoiceItem.productId?has_content>
+				                <#assign productId=invoiceItem.productId>
+				                <#assign productDetails = delegator.findOne("Product", {"productId" :productId}, true)>
+				                <#assign productMrp = delegator.findOne("Product", {"productId" :productId}, true)>
+				                <#if productDetails?has_content>
+				                  <#assign description=productDetails.get("description")>
+				                </#if>
+				            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
+				                <#assign description=taxRate.get("description",locale)>
+				            <#elseif itemType.get("description",locale)?has_content>
+				                <#assign description=itemType.get("description",locale)>
+				            </#if>
+				             <#assign prodUnitPriceInc = "">
+				             <#assign prodUnitPrice = "">
+				            <#if invoiceItem.productId?has_content>
+					            <#if invoiceItem.unitPrice?has_content>
+					            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
+					            	<#if productDetails.quantityIncluded?has_content && productDetails.quantityIncluded !=0>
+					            		<#assign prodUnitPriceInc = (prodUnitPrice/productDetails.quantityIncluded)>
+					            	</#if>
+					            </#if>
+					            <#assign invoiceQtyInc = "">
+					            <#assign invoiceQty = "">
+					            <#if productDetails?has_content>
+					            <#if invoiceItem.quantity?has_content>
+					            	<#assign invoiceQty = invoiceItem.quantity?if_exists>
+					            	<#if invoiceQty?has_content && invoiceQty !=0>
+					            	<#if productDetails.quantityIncluded?has_content && productDetails.quantityIncluded !=0>
+					            		<#assign invoiceQtyInc = invoiceQty*(productDetails.quantityIncluded?if_exists)>
+					            		</#if>
+					            	</#if>
+					            	</#if>
+					            </#if>
+				            </#if>
+							 <fo:table-row>
+	                   			<fo:table-cell border-style="solid">
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
+						     	</fo:table-cell>
+						     	<#if description?has_content>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block text-align="left" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
+	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#if invoiceItem.productId?has_content>
+		                   			<#if invoiceQtyInc?has_content>
+		                   			<fo:table-cell border-style="solid">
+	                        			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 
+	                   				</fo:table-cell>
+		                   			<#else>
+			                   			<#if invoiceQty?has_content>
+			                   			<fo:table-cell border-style="solid">
+			                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQty?if_exists?string("#0.00")}</fo:block> 
+			                   			</fo:table-cell>
+			                   			<#else>
+				                   			<fo:table-cell border-style="solid">
+				                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+				                   			</fo:table-cell>
+			                   			</#if>
+		                   			</#if>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#if invoiceItem.productId?has_content>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQty?if_exists?string("#0.00")}</fo:block> 
+	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#if invoiceItem.productId?has_content>
+	                   				<#if prodUnitPriceInc?has_content>
+		                   			<fo:table-cell border-style="solid">
+		                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("#0.00")}</fo:block> 
+		                   			</fo:table-cell>
+		                   			<#else>
+			                   			<#if prodUnitPrice?has_content>
+				                   			<fo:table-cell border-style="solid">
+			                        			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPrice?if_exists?string("#0.00")}</fo:block> 
+			                   				</fo:table-cell>
+		                   				<#else>
+				                   			<fo:table-cell border-style="solid">
+				                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+				                   			</fo:table-cell>
+		                   				</#if>
+		                   			</#if>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#if productMrpPriceMap?has_content>
+	                   			<#if invoiceItem.productId?has_content>
+	                   			<#if productMrpPriceMap.get(invoiceItem.productId)?has_content>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productMrpPriceMap.get(invoiceItem.productId)?if_exists?string("#0.00")}</fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			</#if>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/></fo:block> 
+	                   			</fo:table-cell>
+            				</fo:table-row>
+							</#list>
+							<fo:table-row>	
+	                   			<#if productMrpPriceMap?has_content>
+	                   			<fo:table-cell  number-columns-spanned="7">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block> 
+	                   			</fo:table-cell>
+	                   			<#else>
+								<fo:table-cell number-columns-spanned="6">
+			        				<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
+			        			</fo:table-cell>
+			        			</#if>
+			        		</fo:table-row>	
+                    	<#else>
+                    	<fo:table-row >
+                   			<fo:table-cell border-style="solid">
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;</fo:block>
+						     	</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${comments?if_exists}</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${amount?string("##0.00")}</fo:block> 
+                   			</fo:table-cell>
+            			</fo:table-row>
+            			</#if>
+					</fo:table-body>
+                </fo:table>
+             </fo:block>  
+					<fo:block>
+                 	<fo:table>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="170pt"/>
+                    <fo:table-column column-width="195pt"/>  
+                    <fo:table-body>
+                    	<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>	
+                    	<fo:table-row >
+                    			<#if amount?has_content>
+                    				<#assign amount=amount>
+                    			<#else>
+                    				<#assign amount = invoiceTotal isoCode=invoice.currencyUomId?if_exists/>
+                    			</#if>
+                          		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paise", locale)>
+			                   <fo:table-cell>
+			                        	<fo:block keep-together="always" font-size="12pt" font-weight = "bold">Amount Payable:(${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
+			                   </fo:table-cell>
+			             </fo:table-row>
+			             <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">Prepared By</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Auditor</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For MotherDairy</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+						<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
+			       			</fo:table-cell>
+							<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+                    </fo:table-body>
+                </fo:table>
+             </fo:block>  
+           </fo:flow>
+        </fo:page-sequence>
+		        <#else>	
+					<fo:page-sequence master-reference="main">
+				    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+				       		 <fo:block font-size="14pt">
+				            	${uiLabelMap.OrderNoOrderFound}.
+				       		 </fo:block>
+				    	</fo:flow>
+					</fo:page-sequence>
+				</#if>
+			</#if>
 		</fo:root>
 </#escape>
 </#if>
