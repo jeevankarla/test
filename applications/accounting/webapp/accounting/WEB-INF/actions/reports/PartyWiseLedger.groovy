@@ -133,7 +133,12 @@ openingBalMap=[:];
 			partyId=partyId.toUpperCase();
 		Map acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_RECEIVABLE"));
 		Map acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE"));
-		openingBalMap[partyId]=acctgReceiveMap.get("openingBalance")+acctgPayMap.get("openingBalance");
+		if(UtilValidate.isNotEmpty(parameters.interUnitFalg) && parameters.interUnitFalg=="InterUnit"){
+            Map interUnitMap= GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"transactionDate",fromDate,"glAccountId","119000"));
+            openingBalMap[partyId]=acctgReceiveMap.get("openingBalance")+acctgPayMap.get("openingBalance")+interUnitMap.get("openingBalance");
+        }else{
+        openingBalMap[partyId]=acctgReceiveMap.get("openingBalance")+acctgPayMap.get("openingBalance");
+        }
 	}
 		if(acctgTransIter){
 //			TransItr = acctgTransList.iterator();
