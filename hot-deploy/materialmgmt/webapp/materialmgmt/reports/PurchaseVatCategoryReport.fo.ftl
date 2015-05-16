@@ -97,7 +97,7 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${vatReturnMapDetail.getValue().get("invoiceId")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="dotted">
-							            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" ><#if vatReturnMapDetail.getValue().get("partyId")?has_content>${vatReturnMapDetail.getValue().get("partyId")?if_exists} </#if></fo:block>  
+							            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" ><#if vatReturnMapDetail.getValue().get("partyId")?has_content>${vatReturnMapDetail.getValue().get("partyName")?if_exists} [${vatReturnMapDetail.getValue().get("partyId")?if_exists}] </#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="dotted">
 							            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" >${productNameDetails.get("description")?if_exists} [${productNameDetails.get("internalName")?if_exists}]</fo:block>  
@@ -107,6 +107,14 @@ under the License.
 							            </fo:table-cell>
 							     </fo:table-row>
 							     </#list>
+							      <fo:table-row>
+       							      <fo:table-cell border-style="solid" number-columns-spanned="5">
+						                    <fo:block keep-together="always" font-weight="bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt"  >Total Vat Amount</fo:block>
+						              </fo:table-cell>
+							           <fo:table-cell border-style="solid">
+							            	<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false" >${totVatAmount?if_exists?string("##0.00")}</fo:block>  
+							           </fo:table-cell>
+							     </fo:table-row>
 							</fo:table-body>
                 		</fo:table>
         			</fo:block> 		
