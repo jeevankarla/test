@@ -64,8 +64,8 @@ conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LE
 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 InvoiceList = delegator.findList("InvoiceAndItem", condition, null,null, null, false);
-invoiceIds = EntityUtil.getFieldListFromEntityList(InvoiceList, "invoiceId", true);
-	
+invoiceIds = EntityUtil.getFieldListFromEntityList(InvoiceList, "invoiceId", true); 
+BigDecimal totVatAmount=BigDecimal.ZERO;
 if(UtilValidate.isNotEmpty(invoiceIds)){
 	exprList=[];
 	if(reportTypeFlag=="ELIGIBLE"){
@@ -93,19 +93,26 @@ if(UtilValidate.isNotEmpty(productIds)){
 		vatAmount=eachInvoiceItem.vatAmount;
 		invoiceDate=eachInvoiceItem.invoiceDate;
 		invoiceQty=eachInvoiceItem.quantity;
+		if(!"Company".equals(eachInvoiceItem.partyIdFrom)){
+			partyId=eachInvoiceItem.partyIdFrom	;
+		}else{
 		partyId=eachInvoiceItem.partyId	;
+		}
+		
 
 		if(UtilValidate.isNotEmpty(productId) && productIds.contains(productId) && UtilValidate.isNotEmpty(vatAmount)){
-			totVatAmount=invoiceQty*vatAmount;
+			//totVatAmount=invoiceQty*vatAmount;
+			totVatAmount=totVatAmount+vatAmount;
 			invoiceProdMap.invoiceId=invoiceId;
 			invoiceProdMap.productId=productId;
-			invoiceProdMap.vatAmount=totVatAmount;
+			invoiceProdMap.vatAmount=vatAmount;
 			invoiceProdMap.invoiceDate=invoiceDate;
-	       if(!"Company".equals(partyId)){
+			if(UtilValidate.isNotEmpty(productId)){
 			   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
-			   invoiceProdMap.partyId=partyName;
-				
-			}
+			   invoiceProdMap.partyId=partyId;
+			   invoiceProdMap.partyName=partyName;
+		    }
+		
 			sNo=sNo+1;
 			vatReturnMap.put(sNo, invoiceProdMap);
 			
@@ -116,5 +123,5 @@ if(UtilValidate.isNotEmpty(productIds)){
 }
 }
 context.vatReturnMap=vatReturnMap;
-
+context.totVatAmount=totVatAmount;
 
