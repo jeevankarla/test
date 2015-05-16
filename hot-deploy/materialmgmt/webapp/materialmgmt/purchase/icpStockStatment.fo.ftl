@@ -156,7 +156,7 @@ under the License.
 												</fo:table-cell>
                       					   
                       					  		 <fo:table-cell>
-	                            					<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${product.description}</fo:block>  
+	                            					<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${product.description?if_exists}</fo:block>  
 												</fo:table-cell>
 											</fo:table-row>
 											 <fo:table-row>

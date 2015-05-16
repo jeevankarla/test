@@ -57,7 +57,7 @@ if(totalDays > 32){
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
-exprList=[];
+/*exprList=[];
 conditionList=[];
 exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
 condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
@@ -81,6 +81,39 @@ productCategoryMember.each{prodCatMember ->
 	prodCatMember.productId
 	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
 	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.primaryParentCategoryId;
+}*/
+exprList=[];
+exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
+condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+//get product from ProductCategory
+productCategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+//Debug.log("productCategoryMember==============analysis========="+productCategoryMember);
+
+purchaseAnalysisProductIdsList=EntityUtil.getFieldListFromEntityList(productCategoryMember, "productId", true);
+productCatMap=[:]
+productPrimaryCatMap=[:]
+productCategoryMember.each{prodCatMember ->
+	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
+	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.primaryParentCategoryId;
+}
+
+//get Product Catagory
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
+condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
+productCategoryId = EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true);
+//get product from ProductCategory
+
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryId));
+exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, purchaseAnalysisProductIdsList));
+condition2 = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+productCategoryGlMember = delegator.findList("ProductCategoryAndMember",condition2 , null, null, null, false);
+
+productCategoryGlMember.each{prodCatMember ->
+	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
+	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.productCategoryId;
 }
 invoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 // Purchase abstract Sales report

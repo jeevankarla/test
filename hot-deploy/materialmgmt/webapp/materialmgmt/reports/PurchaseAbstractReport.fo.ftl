@@ -67,12 +67,14 @@ under the License.
 		                        <#assign dayWiseTotalsMap = dayWiseInvoice.entrySet()>
        							<#list dayWiseTotalsMap as dayWiseTotalsDetails>
        								<#assign primaryProductCategory = delegator.findOne("ProductCategory", {"productCategoryId" : dayWiseTotalsDetails.getKey()}, true)?if_exists/>
+       							    <#assign primaryProductCategoryGlaccount=delegator.findOne("ProductCategoryGlAccount", {"productCategoryId" : dayWiseTotalsDetails.getKey() , "organizationPartyId" :"Company", "glAccountTypeId" : "PURCHASE_ACCOUNT"}, true)?if_exists/>
+
        								<fo:table-row>
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Primary Category : </fo:block>  
 							            </fo:table-cell>
        							        <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${primaryProductCategory.description}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${primaryProductCategory.description?if_exists}[${primaryProductCategoryGlaccount.glAccountId?if_exists}]</fo:block>  
 							            </fo:table-cell>
 							    	</fo:table-row> 
        								<#assign dayWiseTotals = dayWiseTotalsDetails.getValue().entrySet()>
@@ -84,7 +86,7 @@ under the License.
 								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :</fo:block>  
 								            </fo:table-cell>
 	       							        <fo:table-cell>
-								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${productCategory.description}</fo:block>  
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">  <#if productCategory.description?exists>${productCategory.description}<#else>${primaryProductCategoryGlaccount.glAccountId?if_exists} </#if></fo:block>  
 								            </fo:table-cell>
 									    </fo:table-row> 
 		       							<#assign purchaseMap = dayWiseTotal.getValue().entrySet()>
