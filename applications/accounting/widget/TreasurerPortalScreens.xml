@@ -177,6 +177,136 @@
             </widgets>
         </section>
     </screen>
+      <screen name="FindDepositReceivedAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Deposit Accounts"/>
+                  <set field="tabButtonItem" value="FindDepositReceivedAccount"/>
+                 <set field="tabButtonItem2" value="FindDepositReceivedAccount"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="noConditionFind" value="N"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <entity-condition list="finAccountTypes" entity-name="FinAccountType">
+                	<condition-list combine="or">
+                		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
+            			</condition-list>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+            		</condition-list>
+            	</entity-condition>
+            	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+              		<decorator-section name="body">
+                    	<container style="button-bar">
+	                    	<link target="EditDepositReceivedFinAccount" text="Create Deposit Received Account" style="buttontext create"/>
+                    	</container>
+                    	<section>
+							<widgets>
+								<screenlet title="Find Deposit Account">				
+									 <include-form name="FindDepositReceivedAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/DepositContraRefund.ftl"/></html>
+                                </platform-specific>
+                                <container style="button-bar">
+									<link target="DepositAccount.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="finAccountName" from-field="parameters.finAccountName"/>
+									<parameter param-name="finAccountTypeId" from-field="parameters.finAccountTypeId"/>
+									<parameter param-name="AccDate" from-field="parameters.AccDate"/>
+									<parameter param-name="ownerPartyId" from-field="parameters.ownerPartyId"/>
+									<parameter param-name="noConditionFind" value="Y"/>
+									</link>
+								</container> 
+								<screenlet title="List Deposit Account">				
+									 <include-form name="ListDepositReceivedAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+	                   	</section>
+                   </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <screen name="FindDepositPaidAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Deposit Accounts"/>
+                  <set field="tabButtonItem" value="FindDepositPaidAccount"/>
+                 <set field="tabButtonItem2" value="FindDepositPaidAccount"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="noConditionFind" value="N"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <entity-condition list="finAccountTypes" entity-name="FinAccountType">
+                	<condition-list combine="or">
+                		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
+            			</condition-list>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+            		</condition-list>
+            	</entity-condition>
+            	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+              		<decorator-section name="body">
+                    	<container style="button-bar">
+	                    	<link target="EditDepositPaidFinAccount" text="Create Deposit Paid Account" style="buttontext create"/>
+                    	</container>
+                    	<section>
+							<widgets>
+								<screenlet title="Find Deposit Account">				
+									 <include-form name="FindDepositPaidAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/DepositContraRefund.ftl"/></html>
+                                </platform-specific>
+                                <container style="button-bar">
+									<link target="DepositAccount.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="finAccountName" from-field="parameters.finAccountName"/>
+									<parameter param-name="finAccountTypeId" from-field="parameters.finAccountTypeId"/>
+									<parameter param-name="AccDate" from-field="parameters.AccDate"/>
+									<parameter param-name="ownerPartyId" from-field="parameters.ownerPartyId"/>
+									<parameter param-name="noConditionFind" value="Y"/>
+									</link>
+								</container> 
+								<screenlet title="List Deposit Account">				
+									 <include-form name="ListDepositPaidAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+	                   	</section>
+                   </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="WithdrawFromDepositAcct">
         <section>
             <actions>
@@ -474,6 +604,130 @@
                                 </platform-specific>
                                 <screenlet title="Create Deposit Account">
                                     <include-form name="EditDepositAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
+                                <screenlet id="CreateFinAccountPanel" collapsible="true">
+                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="EditDepositReceivedFinAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Deposit Account"/>
+                <set field="tabButtonItem"  value="FindDepositReceivedAccount"/>
+                <set field="tabButtonItem2" value="EditDepositReceivedFinAccount"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
+            		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+            	</entity-condition>
+            	<entity-condition list="paidAccounts" entity-name="FinAccountType">
+            		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
+            	</entity-condition>
+            	<entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            			</condition-list>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+            		</condition-list>
+            	</entity-condition>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                      <!-- <include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+                                <not><if-empty field="finAccountId" /></not>
+                            </condition>
+                            <widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingEditDepositAcct}" ></label>
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/SetDepositAccntTypeDropDown.ftl"/></html>
+                                </platform-specific>
+                                <screenlet title="Create Deposit Received Account">
+                                    <include-form name="EditDepositReceivedAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
+                                <screenlet id="CreateFinAccountPanel" collapsible="true">
+                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="EditDepositPaidFinAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Deposit Account"/>
+                <set field="tabButtonItem"  value="FindDepositPaidAccount"/>
+                <set field="tabButtonItem2" value="EditDepositPaidFinAccount"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
+            		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+            	</entity-condition>
+            	<entity-condition list="paidAccounts" entity-name="FinAccountType">
+            		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
+            	</entity-condition>
+            	<entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            			</condition-list>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+            		</condition-list>
+            	</entity-condition>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                      <!-- <include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+                                <not><if-empty field="finAccountId" /></not>
+                            </condition>
+                            <widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingEditDepositAcct}" ></label>
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/SetDepositAccntTypeDropDown.ftl"/></html>
+                                </platform-specific>
+                                <screenlet title="Create Deposit Paid Account">
+                                    <include-form name="EditDepositPaidAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>

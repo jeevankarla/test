@@ -34,6 +34,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
 //Debug.log("parameters.noConditionFind================"+parameters.noConditionFind);
+
 if ("Y".equals(parameters.noConditionFind)) {
    List exprListForParameters = [];
    conditionlist=[];
@@ -60,7 +61,7 @@ if ("Y".equals(parameters.noConditionFind)) {
    if (finAccountTypeId) {
 	   exprListForParameters.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, finAccountTypeId));
 	   }else{
-	   exprListForParameters.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.LIKE,"%_DEPOSIT%"));
+	   exprListForParameters.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN,finAccountTypes.finAccountTypeId));
      }
     if (parameters.AccDate) {
 		   exprListForParameters.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, AccDateStart));

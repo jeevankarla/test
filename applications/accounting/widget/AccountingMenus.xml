@@ -2064,13 +2064,31 @@
 			<link target="FindEmpLoanFinAccount">
 			</link>
 		 </menu-item>
-		 <menu-item name="FindDepositAccount" title="Deposit Accounts">
+		<!--  <menu-item name="FindDepositAccount" title="Deposit Accounts">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
             	</or>            
             </condition>
 			<link target="FindDepositAccount">
+			</link>
+		 </menu-item> -->
+		 		 <menu-item name="FindDepositReceivedAccount" title="Deposit Received">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindDepositReceivedAccount">
+			</link>
+		 </menu-item>
+		 <menu-item name="FindDepositPaidAccount" title="Deposit Paid">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
 		 <menu-item name="IncomingAdvances" title="Advances Received">
