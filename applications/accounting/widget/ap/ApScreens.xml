@@ -36,6 +36,7 @@ under the License.
 	                <field-map field-name="viewSize" from-field="viewSize"/>
 	            </service>
 	            <set field="listIt" from-field="result.listIt"/>
+	            <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentSearchFilter.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -59,7 +60,7 @@ under the License.
                                         <include-form name="FindApPayments" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
-	                                     <link target="PaymentSearchResultsCsv.csv" text="Export As Csv" style="buttontext">
+                                         <link target="PaymentSearchResultsCsv.csv" text="Export As Csv" style="buttontext">
 													<parameter param-name="paymentId" from-field="parameters.paymentId"/>
 													<parameter param-name="paymentId_op" from-field="parameters.paymentId_op"/>
 													<parameter param-name="paymentId_ic" from-field="parameters.paymentId_ic"/>
@@ -90,6 +91,7 @@ under the License.
 												    <parameter param-name="statusId" from-field="parameters.statusId"/>
 												    <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
 												    <parameter param-name="noConditionFind" value="Y"/>
+												    <parameter param-name="unAppliedCheck" from-field="parameters.unAppliedCheck"/>
 	                                        </link>
                                         <include-form name="ListPayments" location="component://accounting/widget/PaymentForms.xml"/>
                                     </decorator-section>
