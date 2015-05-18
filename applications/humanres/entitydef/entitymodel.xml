@@ -1816,6 +1816,7 @@ under the License.
       <field name="finAccountTypeId" type="id-ne"></field>
       <field name="isActive" type="indicator"></field>
       <field name="isExternal" type="indicator"></field>
+      <field name="isFlatAmount" type="indicator"></field>
       <field name="description" type="description"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="maxAvails" type="numeric"></field>
@@ -1842,6 +1843,8 @@ under the License.
       <field name="interestAmount" type="currency-amount"></field>
       <field name="numInterestInst" type="numeric"></field>
       <field name="numPrincipalInst" type="numeric"></field>
+      <field name="numCompInterestInst" type="numeric"></field>
+      <field name="numCompPrincipalInst" type="numeric"></field>
       <field name="disbDate" type="date-time"></field>
       <field name="disbAmount" type="currency-amount"></field>
       <field name="disbRefInvoiceId" type="id"></field>
