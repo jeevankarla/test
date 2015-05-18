@@ -623,7 +623,7 @@ public class PunchService {
 	}
 
 	
-public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
+	public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 
 		Map emplDailyPunchMap = FastMap.newInstance();
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -668,7 +668,8 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			List<GenericValue> finalPunchIN = delegator.findList("EmplPunch",
 					condition1, null, null, null, false);
 			
-			GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
+			//GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
+		   GenericValue finalPunchINValue =  (GenericValue) finalPunchIN.get(finalPunchIN.size()-1);
            if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
         	   selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
            }
@@ -684,24 +685,24 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			List<GenericValue> finalPunchOUT = delegator.findList("EmplPunch",
 					condition2, null, null, null, false);
 			ArrayList punchDataList = new ArrayList();
-			for (GenericValue emplPunchIn : finalPunchIN) {
+			//for (GenericValue emplPunchIn : finalPunchIN) {
 				Map emplPunchMap = FastMap.newInstance();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-				String stDate = sdf.format(emplPunchIn.get("punchdate"));
+				String stDate = sdf.format(finalPunchINValue.get("punchdate"));
 				emplPunchMap.put("date", stDate.toString());
-				emplPunchMap.put("partyId", emplPunchIn.get("partyId"));
-				String EmployeeId = ((emplPunchIn.get("partyId")).toString());
+				emplPunchMap.put("partyId", finalPunchINValue.get("partyId"));
+				String EmployeeId = ((finalPunchINValue.get("partyId")).toString());
 				String EmployeeName = PartyHelper.getPartyName(delegator,
 						EmployeeId, false);
 				GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
 				emplPunchMap.put("Employee", EmployeeName);
-				emplPunchMap.put("inTime",(emplPunchIn.getTime("punchtime").getHours())+":"+(emplPunchIn.getTime("punchtime").getMinutes()));
+				emplPunchMap.put("inTime",(finalPunchINValue.getTime("punchtime").getHours())+":"+(finalPunchINValue.getTime("punchtime").getMinutes()));
 				//emplPunchMap.put("inTime", emplPunchIn.getString("punchtime"));
-				String inPunchTime = (emplPunchIn.get("punchtime")).toString();
-			     if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && employeeDetail.getString("companyBus").equalsIgnoreCase("Y") && UtilValidate.isNotEmpty(emplPunchIn.getString("shiftType"))){
+				String inPunchTime = (finalPunchINValue.get("punchtime")).toString();
+			     if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && employeeDetail.getString("companyBus").equalsIgnoreCase("Y") && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType"))){
 			    	 List condList = FastList.newInstance();
 						condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isDefault", EntityOperator.EQUALS, "Y"),EntityOperator.AND ,EntityCondition.makeCondition("isDefault", EntityOperator.NOT_EQUAL, null)));
-						condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, emplPunchIn.getString("shiftType")));
+						condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, finalPunchINValue.getString("shiftType")));
 						EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 						//punchTime 
 						List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", cond, null, UtilMisc.toList("-startTime"),null, false); 
@@ -711,7 +712,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 						 
 			     }
 				for (GenericValue emplPunchOut : finalPunchOUT) {
-					if (emplPunchIn.get("partyId").equals(
+					if (finalPunchINValue.get("partyId").equals(
 							emplPunchOut.get("partyId"))) {
 						SimpleDateFormat format = new SimpleDateFormat(
 								"HH:mm:ss");
@@ -723,7 +724,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 						Timestamp punchInTimestamp =
 							    Timestamp.valueOf(
 							        new SimpleDateFormat("yyyy-MM-dd ")
-							        .format(emplPunchIn.getDate("punchdate")) // get the current date as String
+							        .format(finalPunchINValue.getDate("punchdate")) // get the current date as String
 							        .concat(inPunchTime)        // and append the time
 							    );
 						Timestamp punchOutTimestamp =
@@ -749,7 +750,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 					}
 				}
 				punchDataList.add(emplPunchMap);
-			}
+			//}
 			result.put("punchDataList", punchDataList);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, e.getMessage());
@@ -762,6 +763,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		}
 		return result;
 	}
+
 
 	public static ArrayList populateChildren(DispatchContext dctx, Map context,
 			ArrayList employeeList) {
@@ -812,7 +814,6 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			}else{
 				employments = EntityUtil.filterByDate(employments, thruDate);
 			}
-			
 			for (GenericValue employee : employments) {
 				employeeList.add(employee);
 			}
