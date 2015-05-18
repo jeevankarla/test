@@ -12,14 +12,30 @@ import org.ofbiz.accounting.payment.PaymentWorker;
  
 unAppliedCheck=parameters.unAppliedCheck;
 
+//------------------------------------------------------------------------------checking Un-applied payments
 	if((UtilValidate.isNotEmpty(unAppliedCheck)) && "Y".equals(unAppliedCheck)){
 		if(UtilValidate.isNotEmpty(result.listIt)){
 			resultList = [];
 			list=result.listIt;
 			GenericValue paymentEntry = null;
 			while((paymentEntry=list.next()) != null){
-				paymentNotApplied = PaymentWorker.getPaymentNotApplied(delegator,paymentEntry.paymentId);
-				if(paymentNotApplied>0){
+				BigDecimal paymentNotApplied = PaymentWorker.getPaymentNotApplied(delegator,paymentEntry.paymentId);
+				if(paymentNotApplied.compareTo(BigDecimal.ZERO)>0){
+					resultList.add(paymentEntry);
+				}
+			}
+			context.listIt=resultList;
+		}
+	}
+//------------------------------------------------------------------------------checking applied payments
+	if((UtilValidate.isNotEmpty(unAppliedCheck)) && "N".equals(unAppliedCheck)){
+		if(UtilValidate.isNotEmpty(result.listIt)){
+			resultList = [];
+			list=result.listIt;
+			GenericValue paymentEntry = null;
+			while((paymentEntry=list.next()) != null){
+			BigDecimal paymentNotApplied = PaymentWorker.getPaymentNotApplied(delegator,paymentEntry.paymentId);
+				if(paymentNotApplied.compareTo(BigDecimal.ZERO)==0){
 					resultList.add(paymentEntry);
 				}
 			}
