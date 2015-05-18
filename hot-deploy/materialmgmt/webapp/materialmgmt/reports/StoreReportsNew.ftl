@@ -646,6 +646,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									     <option value='VAT5PT0'>Vat(5.0)</option>
 									    <option value='VAT5PT5'>Vat(5.5)</option>
 										<option value='VAT14PT5'>Vat(14.5)</option>
+										<option value='VATOthers'>VAT(Others)</option>
 										<option value='CST'>CST</option>
 										
 									</select>
