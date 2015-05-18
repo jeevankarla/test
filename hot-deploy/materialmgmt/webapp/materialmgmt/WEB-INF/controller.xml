@@ -1367,7 +1367,11 @@
 		<security https="true" auth="true" /> 
 	 <response name="success" type="view" value="purchaseVatCategoryReportPDF" /> 
  	 </request-map>
-     
+     <request-map uri="purchaseVatCategoryReport.csv">
+		<security https="true" auth="true" /> 
+	 <response name="success" type="view" value="purchaseVatCategoryReportCSV" /> 
+ 	 </request-map>
+ 	 
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
@@ -1495,5 +1499,6 @@
 	<view-map name="purchaseVatReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatReportPDF" content-type="application/pdf" /> 
 	<view-map name="purchaseVatCategoryReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatCategoryReportPDF" content-type="application/pdf" /> 
 	<view-map name="icpStockStatementPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#icpStockStatementPDF" content-type="application/pdf" /> 
+	<view-map name="purchaseVatCategoryReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatCategoryReportCSV" content-type="text/csv" encoding="none"/>
 	
 </site-conf>
