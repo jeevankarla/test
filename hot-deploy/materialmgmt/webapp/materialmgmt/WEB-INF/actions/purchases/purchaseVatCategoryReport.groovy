@@ -57,6 +57,7 @@ isByParty = Boolean.TRUE;
 	return;
 }*/
 vatReturnMap=[:];
+vatReturnList=[];
 productIds=null;
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
@@ -112,7 +113,7 @@ if(UtilValidate.isNotEmpty(productIds)){
 			   invoiceProdMap.partyId=partyId;
 			   invoiceProdMap.partyName=partyName;
 		    }
-		
+	       vatReturnList.addAll(invoiceProdMap);
 			sNo=sNo+1;
 			vatReturnMap.put(sNo, invoiceProdMap);
 			
@@ -122,6 +123,14 @@ if(UtilValidate.isNotEmpty(productIds)){
  }
 }
 }
+
 context.vatReturnMap=vatReturnMap;
 context.totVatAmount=totVatAmount;
+
+// Purchase vat category Report for CSV
+invoiceProdMap.partyName="TotalVatAmount";
+invoiceProdMap.vatAmount=totVatAmount;
+vatReturnList.addAll(invoiceProdMap);
+
+context.vatReturnList=vatReturnList;
 

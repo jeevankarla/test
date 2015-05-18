@@ -686,5 +686,15 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
+   
+     <form name="PurchaseVatCategoryForms" type="list" list-name="vatReturnList" view-size="99999">
+        <field name="invoiceDate" title="Invoice Date"><display/></field>
+        <field name="invoiceId" title="Invoice Id"><display/></field>
+        <field name="partyName" title="Party Name"><display  description="${partyName} - ${partyId}"> </display></field>
+        <field name="productId">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productName} - ${internalName}"/>
+        </field>
+        <field name="vatAmount" title="Vat Amount"><display/></field>
+    </form>
     
 </forms>

@@ -747,8 +747,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
                                        </select>
                                 </td>
                                 <td width="15%"></td>
-                                <td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
-                           </form>
+                          <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseVatCategoryReport', '<@ofbizUrl>purchaseVatCategoryReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							   								 <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseVatCategoryReport', '<@ofbizUrl>purchaseVatCategoryReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			                                                       </form>
+                              </form>
 		                </tr>
 		                
 		
