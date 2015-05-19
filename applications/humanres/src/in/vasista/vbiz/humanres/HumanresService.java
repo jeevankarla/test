@@ -361,7 +361,8 @@ public class HumanresService {
 	    	String loanTypeFlag=(String)context.get("loanType");
 	    	String loanTypeId = (String) context.get("loanTypeId");
 	    	/*String statusId = (String)context.get("statusId");*/
-	    	String statusId = (String) context.get("statusId");
+	    	String statusId = "LOAN_APPROVED";
+	    	String status = (String) context.get("statusId");
 	    	String description=(String)context.get("description");
 	    	String issuedPartyId=(String)context.get("issuedPartyId");
 	    	String extLoanRefNum=(String)context.get("extLoanRefNum");
@@ -381,6 +382,10 @@ public class HumanresService {
 			String payHeadTypeId = null;
 			String partyIdFrom = null;
 			String customTimePeriodId = null;
+			
+			if(UtilValidate.isNotEmpty(status)){
+				statusId = status;
+			}
 			try {
 				List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
