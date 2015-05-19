@@ -1000,6 +1000,7 @@
 				<set field="titleProperty" value="Loan" />
 				<set field="tabButtonItem2" value="loan" />
 				<set field="layoutSettings.javaScripts[]" value="/humanres/images/loanTypesAmountChange.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/humanres/images/loanTypesHideFields.js" global="true"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"

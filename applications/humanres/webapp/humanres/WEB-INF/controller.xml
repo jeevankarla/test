@@ -2359,6 +2359,11 @@ under the License.
     	<response name="success" type="view" value="loan"/>
     	<response name="error" type="view" value="loan"/>
     </request-map>
+    <request-map uri="getLoanTypeIdsForLoanType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="LoanTypeIdsListForLoanType.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <request-map uri="updateEmployeeLoan">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="updateEmployeeLoan"/>
