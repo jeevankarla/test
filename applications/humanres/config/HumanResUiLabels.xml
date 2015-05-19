@@ -2611,5 +2611,12 @@
     </property>  
     <property key="PlaceOfBirth">
         <value xml:lang="en">Place Of Birth</value>
-    </property>     
+    </property>
+    <property key="companyHeader">       
+        <value xml:lang="en">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED</value>        
+    </property>
+    <property key="companyName">       
+        <value xml:lang="en"> UNIT :  MOTHER DAIRY BANGALORE - 560065</value>        
+    </property>
+       
 </resource>
