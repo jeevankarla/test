@@ -19,4 +19,14 @@
     	<attribute name="workEffortId" mode="IN" type="String" optional="false"/>
     	<attribute name="statusId" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="createStockXferRequest" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createStockXferRequest">
+    	<attribute name="transferDate" mode="IN" type="String" optional="true"/>
+    	<attribute name="xferQty" mode="IN" type="BigDecimal" optional="false"/>
+    	<attribute name="fromFacilityId" mode="IN" type="String" optional="false"/>
+    	<attribute name="toFacilityId" mode="IN" type="String" optional="false"/>
+    	<attribute name="productId" mode="IN" type="String" optional="false"/>
+    	<attribute name="inventoryItemId" mode="IN" type="String" optional="true"/>
+    	<attribute name="statusId" mode="IN" type="String" optional="true"/>
+    </service>
+    
 </services>

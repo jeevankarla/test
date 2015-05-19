@@ -77,7 +77,7 @@ under the License.
                 <field-map field-name="entityName" value="WorkEffortAndGoods"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-                <field-map field-name="orderBy" value="estimatedStartDate"/>
+                <field-map field-name="orderBy" value="-estimatedStartDate"/>
             </service>
         </actions>
         <field name="workEffortId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
@@ -86,15 +86,16 @@ under the License.
             </hyperlink>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><display/></field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductName}"><display-entity entity-name="Product" key-field-name="productId" description="${productName} [${internalName}]"/></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
 
         <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
+        <field name="actualCompletionDate" title="${uiLabelMap.ManufacturingActualCompletionDate}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="facilityId" title="${uiLabelMap.ProductFacilityId}"><display/></field>
+        <field name="facilityId" title="Plant"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
     </form>
 
      <form name="UpdateProductionRun" type="single" target="updateProductionRun" title="" default-map-name="productionRunData"

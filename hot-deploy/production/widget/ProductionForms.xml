@@ -10,11 +10,6 @@
 		<field name="instructions" title="Instructions" position="1"><textarea read-only="true"/></field>
 		
 	</form>
-	<form name="PowderShiftDetails" type="single">
-		<field name="todayDate" title="Date :" position="1"><display/></field>
-		<field name="currentTime" title="Time :" position="2"><display/></field>
-		<field name="shift" title="Shift :" position="1"><display/></field>
-	</form>
 	<form name="PowderShiftStart" type="list" list-name="shiftSiloDetailsList" paginate="false" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<row-actions>
 		
@@ -37,15 +32,64 @@
 		<field name="acidity" title="Acidity"><display size="15"/></field>
 		<field name="temparature" title="Temparature" > <display size="15"/></field>
 		<field name="BD" title="BD" > <display  size="15"/></field>
+		
      </form>
-     <form name="SMPproduction" type="list" list-name="SmpProductionList" paginate="false" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-		<field name="milkReceipt" title="MILK RECEIPT"><display/></field>
-		<field name="issueMilk" title="ISSUE MILK"><display/></field>
-		<field name="addIngredients" title="ADD INGREDIENTS"><display/></field>
-		<field name="production" title="PRODUCTION"><display/></field>
-     </form>
-     <form name="powderPackLog" type="single">
-     	<field name="date" title="Date"><date-time type="date" input-method="text"/></field>
-     	<field name="submit" ><submit/></field>
-	</form>
+     
+     <form name="FindFacilityProducts" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
+    	<field name="hideSearch"><hidden value="N"/></field>
+        <field name="facilityId" title="Plant/Silo"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListFacilityProducts" odd-row-style="alternate-row" header-row-style="header-row" type="list" list-name="storeProductInventory"
+    	default-table-style="basic-table hover-bar" separate-columns="true" paginate-target="productionStockXfers">   
+        <field name="facilityId" title="Store"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
+        <field name="productId" title="Product"><display-entity entity-name="Product" key-field-name="productId" description="${productName} [${internalName}]"/></field>
+        <field name="qoh" title="Total Qty"><display/></field>
+        <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="Stock Xfer"  target="javascript: showXferForm('${facilityId}', '${productId}');" ></hyperlink></field>
+        <!-- <field name="Override" widget-style="buttontext"> 
+        </field>-->
+    </form>
+    <form name="FindInventoryTransfers" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
+    	<field name="hideSearch"><hidden value="N"/></field>
+        <field name="fromFacilityId" title="From Plant/Silo"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
+        <field name="toFacilityId" title="To Plant/Silo"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="statusId" title="To Plant/Silo"><hidden value="IXF_COMPLETE" /></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    
+     <form name="ListInventoryTransfers" type="list"  target="findStockXfer" title="" list-name="listIt"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="findStockXfer">
+        <actions>
+            <service service-name="performFind"  result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" value="InventoryTransferGroupAndMemberSum"/>
+                <field-map field-name="orderBy" value="transferGroupId DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="transferGroupId" title="Transfer Id">
+        	<display />
+        </field>
+        <field name="fromFacilityId" title="From Plant/Silo">
+        	<display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
+        </field>
+        <field name="toFacilityId" title="To Plant/Silo">
+        	<display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
+        </field>
+        <field name="statusId" title="Status">
+        	<display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity>
+        </field>
+        <field name="productId" title="Product">
+        	<display-entity entity-name="Product" key-field-name="productId" description="${productName} [${productId}]"></display-entity>
+        </field>
+        <field name="xferQtySum" title="Xfer Qty">
+        	<display />
+        </field>
+    </form>
+     
 </forms>

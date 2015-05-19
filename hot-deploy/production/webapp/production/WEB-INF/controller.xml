@@ -6,6 +6,9 @@
          elements found in the common-controller.xml file. -->
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
 	<include location="component://manufacturing/webapp/manufacturing/WEB-INF/controller.xml"/>
+	<include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/>    
+    <include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
+     <include location="component://byproducts/webapp/byproducts/WEB-INF/controller.xml"/>
     <description>Production Component Site Configuration File</description>
 
     <!-- Events to run on every request before security (chains exempt) -->
@@ -113,7 +116,11 @@
         <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="getRoutingTaskDeclareMaterial.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
-    
+    <request-map uri="getProductFacilityDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="getProductFacilityDetails.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <request-map uri="issueRoutingTaskNeededMaterial">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="issueRoutingTaskNeededMaterial" global-transaction="true"/>
@@ -138,28 +145,56 @@
         </response>
     </request-map>
     
-    <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
-    <request-map uri="SMPproduction">
-	    <security https="true" auth="true"/>
-	    <response name="success" type="view" value="SMPproduction"/>
+    <request-map uri="productionDashboardMain">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ProductionDashboardMain"/>
+        <response name="error" type="view" value="ProductionDashboardMain"/>         
     </request-map>
-    <!-- <request-map uri="powderPackLog">
-	    <security https="true" auth="true"/>
-	    <response name="success" type="view" value="PowderPackingLog"/>
-    </request-map> -->
+    <request-map uri="productionRunTrends">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ProductionRunTrends"/>
+        <response name="error" type="view" value="ProductionRunTrends"/>         
+    </request-map>
+    
+    <request-map uri="productionStockXfers">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="productionStockXfers"/>
+        <response name="error" type="view" value="productionStockXfers"/>         
+    </request-map>
+    <request-map uri="InOutStockXfers">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="InOutStockXfers"/>
+        <response name="error" type="view" value="InOutStockXfers"/>         
+    </request-map>
+    <request-map uri="findStockXfer">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="findStockXfer"/>
+        <response name="error" type="view" value="findStockXfer"/>         
+    </request-map>
+    <request-map uri="createStockXferRequest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createStockXferRequest"></event>                        
+        <response name="success" type="request-redirect-noparam" value="productionStockXfers"/>
+        <response name="error" type="view" value="productionStockXfers"/>         
+    </request-map>
+    <request-map uri="updateTransferGroupStatus">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="updateTransferGroupStatus" global-transaction="true"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
     
     <!--Production Reports  -->
     <request-map uri="MilkConversionReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MilkConversionReportPDF"/>        
     </request-map>
-    <request-map uri="StockProcessingRegisterReport.pdf">
-        <security https="true" auth="true"/>                        
-        <response name="success" type="view" value="StockProcessingRegisterReportPDF"/>        
-    </request-map>
     
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
+    
+    <view-map name="ProductionRunTrends" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionRunTrends"/>
+    <view-map name="ProductionDashboardMain" type="screen" page="component://production/widget/ProductionScreens.xml#productionDashboardMain"/>
+    <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#productionDashboardMain"/>
     <view-map name="powderShiftStart" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
     <view-map name="prePacking" type="screen" page="component://production/widget/ProductionScreens.xml#prePacking"></view-map>
     <view-map name="FindNgProductionRun" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#FindNgProductionRun"></view-map>
@@ -168,11 +203,11 @@
     <view-map name="ProductionRunNgDeclaration" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunNgDeclaration" type="screen"/>
     <view-map name="ProductionRunEntry" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunEntry"></view-map>
     <view-map name="ProductionReports" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionReports"></view-map>
-   
+    <view-map name="productionStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#productionStockXfers"></view-map>
+    <view-map name="InOutStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#InOutStockXfers"></view-map>
+    <view-map name="findStockXfer" type="screen" page="component://production/widget/ProductionScreens.xml#FindStockXfer"></view-map>
+  
     <!-- View Mappings for Production Reports-->
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
-    <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
-    <view-map name="SMPproduction" type="screen" page="component://production/widget/ProductionScreens.xml#SMPproduction"/>
-<!--    <view-map name="PowderPackingLog" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPackingLog"/> -->
     
 </site-conf>
