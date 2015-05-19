@@ -158,14 +158,14 @@ else if(tempRoute){
 context.routesJSON = routesJSON;
 
 //For Product Price Report
-List prodCatList=FastList.newInstance();
+/*List prodCatList=FastList.newInstance();
 ecl = EntityCondition.makeCondition([EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"FINISHED_GOOD"),
 	                                 EntityCondition.makeCondition("primaryProductCategoryId",EntityOperator.NOT_IN,UtilMisc.toList("BOX","CAN","CRATE"))],EntityOperator.AND);
 List productList=delegator.findList("Product",ecl,null,null,null,false);
 if(UtilValidate.isNotEmpty(productList)){
 	prodCatList=EntityUtil.getFieldListFromEntityList(productList, "primaryProductCategoryId", true);
 }
-context.prodCatList=prodCatList;
+context.prodCatList=prodCatList;*/
 
 
 
