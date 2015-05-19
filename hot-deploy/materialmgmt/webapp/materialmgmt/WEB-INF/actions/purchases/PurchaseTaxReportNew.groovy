@@ -752,6 +752,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 		}
 	}
 	// starting Other VAT
+	if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
 	try {
 		conditionList = [];
 		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -905,8 +906,8 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 		}
 	
 	}
-	
-	
+	}
+     
 	if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT5")){
 		context.put("taxDetails5pt5List",taxDetails5pt5Map.entrySet());
 	}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT0")){

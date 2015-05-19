@@ -1196,6 +1196,7 @@ purchaseSumInvDetaildMap=[:];
 		purchasOtherProdCatMap=[:];
 		purchasOtherProdCatMap["discount"]=BigDecimal.ZERO;
 		purchasOtherInvList=[];
+		if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
 		
 		invoiceItemsIter.each{invoiceItem->
 			//if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
@@ -1283,7 +1284,7 @@ purchaseSumInvDetaildMap=[:];
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
 		//Debug.log("==#####==purchasFreightProdCatMap=="+purchasFreightProdCatMap);
-		
+		}
 		purchaseSumInvDetaildMap["Purchase-OtherVAT"]=purchasOtherInvList;
 		prchaseCategorySummeryMap["Purchase-OtherVAT"]=purchaseOthersMap;
 		purchaseSumCatDetaildMap["Purchase-OtherVAT"]=purchasOtherProdCatMap;
