@@ -3770,8 +3770,11 @@ public class PayrollService {
 						}else{
 							// lets populate completed installment number as previous installment number if loan recovery is empty
 							if(UtilValidate.isEmpty(loanRecovery)){
-								loanRecovery.set("principalInstNum",loan.get("numCompPrincipalInst"));
-								loanRecovery.set("interestInstNum",loan.get("numCompInterestInst"));
+								if(UtilValidate.isNotEmpty(loan.get("numCompPrincipalInst")))
+									loanRecovery.set("principalInstNum",loan.get("numCompPrincipalInst"));
+								
+								if(UtilValidate.isNotEmpty(loan.get("numCompInterestInst")))
+										loanRecovery.set("interestInstNum",loan.get("numCompInterestInst"));
 							}
 							closingBalance = BigDecimal.ZERO;
 							if(UtilValidate.isNotEmpty(loanRecovery.getBigDecimal("closingBalance")))
@@ -5054,6 +5057,7 @@ public class PayrollService {
 	  	    	input.clear();
 	        	input.put("userLogin", userLogin);
 	        	input.put("orgPartyId", orgPartyId);
+	        	//input.put("orgPartyId", "6080");
 	        	input.put("fromDate", attdTimePeriodStart);
 	        	input.put("thruDate", attdTimePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
