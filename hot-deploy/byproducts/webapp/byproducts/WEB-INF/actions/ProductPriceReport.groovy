@@ -61,10 +61,10 @@ if(UtilValidate.isNotEmpty(primaryProductCategoryId)){
 if(UtilValidate.isNotEmpty(productId)){
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 }
-if(UtilValidate.isEmpty(primaryProductCategoryId) && UtilValidate.isEmpty(productId)){
 	conditionList.add(EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"FINISHED_GOOD"));
 	conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId",EntityOperator.NOT_IN,UtilMisc.toList("BOX","CAN","CRATE")));
-}
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+	                  EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 productList = delegator.findList("Product",condition,null,null,null,false);
 productIds=EntityUtil.getFieldListFromEntityList(productList, "productId", true);
@@ -97,6 +97,7 @@ if(UtilValidate.isNotEmpty(productList)){
 				tempMap["In_"+productPriceTypeId]="N";
 			}
 			tempMap[productPriceTypeId]=price;
+			tempMap.sequenceNum=product.sequenceNum;
 			tempMap.internalName=product.internalName;
 			tempMap.productId=product.productId;
 			tempMap.description=product.description;
@@ -107,12 +108,16 @@ if(UtilValidate.isNotEmpty(productList)){
 			if(UtilValidate.isNotEmpty(productPrices)){
 				tempList.add(tempMap);
 			}
+			Map sortedMap = FastMap.newInstance();
+			tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("sequenceNum"));
 			categoryWiseMap[product.primaryProductCategoryId]=tempList;
 		}else{
 			tempList=FastList.newInstance();
 			if(UtilValidate.isNotEmpty(productPrices)){
 				tempList.add(tempMap);
 			}
+			Map sortedMap = FastMap.newInstance();
+			tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("sequenceNum"));
 			categoryWiseMap[product.primaryProductCategoryId]=tempList;
 		}
 	}
