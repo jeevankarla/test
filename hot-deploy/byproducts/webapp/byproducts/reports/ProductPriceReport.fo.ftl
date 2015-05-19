@@ -23,7 +23,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
-        <fo:region-body margin-top="1.6in" margin-bottom=".6in"/>
+        <fo:region-body margin-top="1.7in" margin-bottom=".6in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>     
     </fo:simple-page-master>   
@@ -35,22 +35,26 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 				 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                         MOTHER DAIRY, YALAHANKA KMF UNIT : GKVK POST.BANGALORE-560 065           Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                ${uiLabelMap.KMFDairyHeader}             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                            ${uiLabelMap.KMFDairySubHeader}                  ${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block> 
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace"  font-weight="bold"  white-space-collapse="false">PRODUCT PRICE LIST AS ON ${fromDateTime?if_exists}</fo:block>
-                <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold"  font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
 				<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 				<fo:block>
                     <fo:table>
+                    <fo:table-column column-width="4%"/>
 				    <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="20%"/>
 			        <fo:table-column column-width="12%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="12%"/>
-			        <fo:table-column column-width="15%"/>
+			        <fo:table-column column-width="10%"/>
+			        <fo:table-column column-width="14%"/>
 			        <fo:table-column column-width="12%"/>
                     <fo:table-body>
                     	<fo:table-row>
+                    		<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">S.NO</fo:block>  
+                			</fo:table-cell>
                     	   <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">PRODUCT ID</fo:block>  
                 			</fo:table-cell>
@@ -85,21 +89,26 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
             <#assign categoryWise=categoryWiseMap.entrySet()>	
                <#list categoryWise as category>
                 <#assign productDetails=category.getValue()> 
+                <#assign sno=1>
                 <fo:block  keep-together="always" text-align="center"  font-size="11pt" white-space-collapse="false">${category.getKey()}</fo:block>
 	            <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------</fo:block> 
                <fo:block>
                     <fo:table>
+                    <fo:table-column column-width="4%"/>
 				    <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="20%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="12%"/>
-			        <fo:table-column column-width="15%"/>
+			        <fo:table-column column-width="10%"/>
+			        <fo:table-column column-width="14%"/>
 			        <fo:table-column column-width="12%"/>
                     <fo:table-body>
                      <#list productDetails as product>
                     	<fo:table-row>
+                    	   <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${sno}</fo:block>  
+                			</fo:table-cell>
                     	   <fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${product.internalName?if_exists}</fo:block>  
                 			</fo:table-cell>
@@ -197,6 +206,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 	                			</fo:table-cell>
                             </#if>
                 		</fo:table-row>
+                        <#assign sno=sno+1>
                         </#list>
                     </fo:table-body>
                 </fo:table>
