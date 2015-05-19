@@ -445,7 +445,9 @@
                  <condition-expr field-name="glAccountTypeId" operator="equals" value="PURCHASE_ACCOUNT" /> 
                  <order-by field-name="productCategoryId" /> 
                </entity-condition>
-                
+                <entity-condition list="productCategoryList" entity-name="ProductCategory" use-cache="true" filter-by-date="false">
+                 <order-by field-name="productCategoryId" /> 
+               </entity-condition>
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
               <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
@@ -1036,6 +1038,28 @@
 				 <platform-specific>
 					 <xsl-fo>
 					    <html-template location="component://materialmgmt/webapp/materialmgmt/reports/PurchaseVatReport.fo.ftl" /> 
+					  </xsl-fo>
+				  </platform-specific>
+			  </widgets>
+		  </section>
+	   </widgets>
+	  </section>
+  </screen>
+  <screen name="productPriceRevisionReportPDF">
+	 <section>
+	      <actions>
+			  <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" /> 
+			  <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" /> 
+		  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ProductPriceRevisionReport.groovy" /> 
+	    </actions>
+	    <widgets>
+		 <section>
+			 <widgets>
+				 <platform-specific>
+					 <xsl-fo>
+					    <html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductPriceRevisionReport.fo.ftl" /> 
 					  </xsl-fo>
 				  </platform-specific>
 			  </widgets>
