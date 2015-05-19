@@ -3739,6 +3739,7 @@ public class PayrollService {
                     dynamicView.addAlias("CT", "thruDate");
                     dynamicView.addViewLink("LR", "CT", Boolean.FALSE, ModelKeyMap.makeKeyMapList("customTimePeriodId"));
                     String isExternal =  loan.getString("isExternal");
+                    String isFlatAmount =  loan.getString("isFlatAmount");
                     newEntityLoanRecovery = delegator.makeValue("LoanRecovery");
                     newEntityLoanRecovery.set("loanId", loan.getString("loanId"));
                     newEntityLoanRecovery.set("customTimePeriodId", timePeriodId);
@@ -3756,16 +3757,22 @@ public class PayrollService {
 						closingBalance = closingBalance.add(loan.getBigDecimal("interestAmount"));
 					
 					
-					if(UtilValidate.isNotEmpty(isExternal) && isExternal.equalsIgnoreCase("Y")){
+					if(UtilValidate.isNotEmpty(isFlatAmount) && isFlatAmount.equalsIgnoreCase("Y")){
 						newEntityLoanRecovery.set("principalInstNum", new Long(1));
 						amount = loan.getBigDecimal("principalAmount");
 						newEntityLoanRecovery.set("principalAmount", amount);
 					}else{
-						if(UtilValidate.isEmpty(loanRecovery)){
+						if(UtilValidate.isEmpty(loanRecovery) && UtilValidate.isEmpty(loan.get("numCompInterestInst")) && UtilValidate.isEmpty(loan.get("numCompPrincipalInst"))){
+							
 							newEntityLoanRecovery.set("principalInstNum", new Long(1));
 							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,BigDecimal.ROUND_UP);
 							newEntityLoanRecovery.set("principalAmount", amount);
 						}else{
+							// lets populate completed installment number as previous installment number if loan recovery is empty
+							if(UtilValidate.isEmpty(loanRecovery)){
+								loanRecovery.set("principalInstNum",loan.get("numCompPrincipalInst"));
+								loanRecovery.set("interestInstNum",loan.get("numCompInterestInst"));
+							}
 							closingBalance = BigDecimal.ZERO;
 							if(UtilValidate.isNotEmpty(loanRecovery.getBigDecimal("closingBalance")))
 							      closingBalance = loanRecovery.getBigDecimal("closingBalance");
@@ -5052,7 +5059,6 @@ public class PayrollService {
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 	        	//Debug.log("employementList============"+employementList.size());
-	            //employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","6851"));
 	        	//general holidays in that period
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
@@ -5068,10 +5074,15 @@ public class PayrollService {
 	    		// second saturday
 	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(attdTimePeriodEnd),0,2,timeZone,locale), -1);
 	    		//Debug.log("employementList===="+employementList.size());
+	    		//Debug.log("employementList===="+employementList);
 	    		
 	        	for(GenericValue employement : employementList) {
-	        		double noOfCalenderDays= actualCalenderDays;
 	        		String employeeId = employement.getString("partyIdTo");
+	        		GenericValue modPayrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId ,"customTimePeriodId",lastCloseAttedancePeriod.getString("customTimePeriodId")), false);
+	        		if(UtilValidate.isNotEmpty(modPayrollAttendance)){
+	        			Debug.log("modPayrollAttendance========="+modPayrollAttendance);
+	        		}
+	        		double noOfCalenderDays= actualCalenderDays;
 	        		GenericValue newEntity = delegator.makeValue("PayrollAttendance");
 	        		newEntity.set("customTimePeriodId", lastCloseAttedancePeriod.getString("customTimePeriodId"));
 	        		newEntity.set("partyId",employeeId);
@@ -5082,6 +5093,8 @@ public class PayrollService {
 	        		newEntity.set("noOfCompoffAvailed", BigDecimal.ZERO);
 	        		newEntity.set("lateMin", BigDecimal.ZERO);
 	        		newEntity.set("extraMin", BigDecimal.ZERO);
+	        		newEntity.set("lossOfPayDays", BigDecimal.ZERO);
+	        		newEntity.set("noOfAttendedWeeklyOffDays", BigDecimal.ZERO);
 	        		newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 	        		newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	        		double noOfAttendedSsDays = 0;
@@ -5172,6 +5185,16 @@ public class PayrollService {
 				    		newEntity.set("noOfPayableDays", BigDecimal.ZERO);
 				    		newEntity.set("lateMin", BigDecimal.ZERO);
 			        		newEntity.set("extraMin", BigDecimal.ZERO);
+			        		/*if(UtilValidate.isNotEmpty(modPayrollAttendance)){
+			        			newEntity.set("lossOfPayDays", modPayrollAttendance.getBigDecimal("lossOfPayDays").add(newEntity.getBigDecimal("lossOfPayDays")));
+					    		newEntity.set("noOfAttendedHoliDays", modPayrollAttendance.getBigDecimal("noOfAttendedHoliDays").add(newEntity.getBigDecimal("noOfAttendedHoliDays")));
+					    		newEntity.set("noOfAttendedSsDays", modPayrollAttendance.getBigDecimal("noOfAttendedSsDays").add(newEntity.getBigDecimal("noOfAttendedSsDays")));
+					    		newEntity.set("noOfAttendedWeeklyOffDays", modPayrollAttendance.getBigDecimal("noOfAttendedWeeklyOffDays").add(newEntity.getBigDecimal("noOfAttendedWeeklyOffDays")));
+					    		newEntity.set("noOfPayableDays", modPayrollAttendance.getBigDecimal("noOfPayableDays").add(newEntity.getBigDecimal("noOfPayableDays")));
+					    		newEntity.set("lateMin", modPayrollAttendance.getBigDecimal("lateMin").add(newEntity.getBigDecimal("lateMin")));
+				        		newEntity.set("extraMin", modPayrollAttendance.getBigDecimal("extraMin").add(newEntity.getBigDecimal("extraMin")));
+			        			
+			        		}*/
 				    		delegator.createOrStore(newEntity);
 				    		continue;
 			    		}
@@ -5333,6 +5356,16 @@ public class PayrollService {
 			    		newEntity.set("noOfPayableDays",noOfEmployementDays.subtract(newEntity.getBigDecimal("lossOfPayDays")));
 			    		newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			    		//Debug.log("newEntity============="+newEntity);
+			    		/*if(UtilValidate.isNotEmpty(modPayrollAttendance)){
+		        			newEntity.set("lossOfPayDays", modPayrollAttendance.getBigDecimal("lossOfPayDays").add(newEntity.getBigDecimal("lossOfPayDays")));
+				    		newEntity.set("noOfAttendedHoliDays", modPayrollAttendance.getBigDecimal("noOfAttendedHoliDays").add(newEntity.getBigDecimal("noOfAttendedHoliDays")));
+				    		newEntity.set("noOfAttendedSsDays", modPayrollAttendance.getBigDecimal("noOfAttendedSsDays").add(newEntity.getBigDecimal("noOfAttendedSsDays")));
+				    		newEntity.set("noOfAttendedWeeklyOffDays", modPayrollAttendance.getBigDecimal("noOfAttendedWeeklyOffDays").add(newEntity.getBigDecimal("noOfAttendedWeeklyOffDays")));
+				    		newEntity.set("noOfPayableDays", modPayrollAttendance.getBigDecimal("noOfPayableDays").add(newEntity.getBigDecimal("noOfPayableDays")));
+				    		newEntity.set("lateMin", modPayrollAttendance.getBigDecimal("lateMin").add(newEntity.getBigDecimal("lateMin")));
+			        		newEntity.set("extraMin", modPayrollAttendance.getBigDecimal("extraMin").add(newEntity.getBigDecimal("extraMin")));
+		        			
+		        		}*/
 			    		delegator.createOrStore(newEntity);
 			    		
 			    		//here populate shift wise details
