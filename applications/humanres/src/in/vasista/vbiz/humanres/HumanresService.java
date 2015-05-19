@@ -358,16 +358,20 @@ public class HumanresService {
 	 public static Map<String, Object> createEmployeeLoan(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String partyId = (String) context.get("partyId");
+	    	String loanTypeFlag=(String)context.get("loanType");
 	    	String loanTypeId = (String) context.get("loanTypeId");
 	    	/*String statusId = (String)context.get("statusId");*/
-	    	String statusId = "LOAN_APPROVED";
+	    	String statusId = (String) context.get("statusId");
 	    	String description=(String)context.get("description");
+	    	String issuedPartyId=(String)context.get("issuedPartyId");
 	    	String extLoanRefNum=(String)context.get("extLoanRefNum");
 	    	Date disbDate =  (Date)context.get("disbDate");
 	    	BigDecimal principalAmount = (BigDecimal)context.get("principalAmount");
 	    	BigDecimal interestAmount = (BigDecimal)context.get("interestAmount");
 	    	Long numInterestInst = (Long)context.get("numInterestInst");
 	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
+	    	Long numCompInterestInst = (Long)context.get("numCompInterestInst");
+	    	Long numCompPrincipalInst = (Long)context.get("numCompPrincipalInst");
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    	Timestamp disbDateTime = UtilDateTime.toTimestamp(disbDate);
 	    	Timestamp disbDateStart = UtilDateTime.getDayStart(disbDateTime);
@@ -408,47 +412,51 @@ public class HumanresService {
 					Debug.logError("Error while creating Party Deduction"+s.getMessage(), module);
 				} 
 				//Creating finAccount related to loan
-				GenericValue LoanTypeDetails=null;
-				String finAccountTypeId="";
-				LoanTypeDetails =delegator.findOne("LoanType", UtilMisc.toMap("loanTypeId", loanTypeId), false);
-				if(UtilValidate.isNotEmpty(LoanTypeDetails)){
-					finAccountTypeId=LoanTypeDetails.getString("finAccountTypeId");
-				}	
-				String glAccountId = null;
-				if(UtilValidate.isNotEmpty(finAccountTypeId)){
-					GenericValue finAccountTypeGlAccount =delegator.findOne("FinAccountTypeGlAccount", UtilMisc.toMap("finAccountTypeId", finAccountTypeId, "organizationPartyId", "Company"), false);
-					glAccountId = finAccountTypeGlAccount.getString("glAccountId");
-					if(UtilValidate.isEmpty(glAccountId)){
-						Debug.logError("Accounting GL is missing", module);
-						return ServiceUtil.returnError("Accounting GL is missing...!");
+				String finAccountId=null;
+				if(!loanTypeFlag.equals("external")){
+					GenericValue LoanTypeDetails=null;
+					String finAccountTypeId="";
+					LoanTypeDetails =delegator.findOne("LoanType", UtilMisc.toMap("loanTypeId", loanTypeId), false);
+					if(UtilValidate.isNotEmpty(LoanTypeDetails)){
+						finAccountTypeId=LoanTypeDetails.getString("finAccountTypeId");
+					}	
+					String glAccountId = null;
+					if(UtilValidate.isNotEmpty(finAccountTypeId)){
+						GenericValue finAccountTypeGlAccount =delegator.findOne("FinAccountTypeGlAccount", UtilMisc.toMap("finAccountTypeId", finAccountTypeId, "organizationPartyId", "Company"), false);
+						glAccountId = finAccountTypeGlAccount.getString("glAccountId");
+						if(UtilValidate.isEmpty(glAccountId)){
+							Debug.logError("Accounting GL is missing", module);
+							return ServiceUtil.returnError("Accounting GL is missing...!");
+						}
+					}
+					
+					List finCondList=FastList.newInstance();
+					finCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+					finCondList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, finAccountTypeId));
+					finCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+					finCondList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+					EntityCondition finCondition = EntityCondition.makeCondition(finCondList, EntityOperator.AND);
+					List<GenericValue> finAccountList=FastList.newInstance();
+					finAccountList = delegator.findList("FinAccount", finCondition, null,null, null, false);
+					if(UtilValidate.isEmpty(finAccountList)){
+						GenericValue finAccount = delegator.makeValue("FinAccount");
+						finAccount.set("ownerPartyId", partyId);
+						finAccount.set("finAccountTypeId", finAccountTypeId);
+						finAccount.set("statusId", "FNACT_ACTIVE");
+						finAccount.set("organizationPartyId", "Company");
+						finAccount.set("postToGlAccountId", glAccountId);
+			 			delegator.createSetNextSeqId(finAccount);
+			 			if(UtilValidate.isNotEmpty(finAccount)){
+			 				finAccountId=finAccount.getString("finAccountId");
+			 			}	
+					}else{
+						GenericValue finAccount = EntityUtil.getFirst(finAccountList);
+						if(UtilValidate.isNotEmpty(finAccount)){
+			 				finAccountId=finAccount.getString("finAccountId");
+			 			}	
 					}
 				}
-				String finAccountId=null;
-				List finCondList=FastList.newInstance();
-				finCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
-				finCondList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, finAccountTypeId));
-				finCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
-				finCondList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
-				EntityCondition finCondition = EntityCondition.makeCondition(finCondList, EntityOperator.AND);
-				List<GenericValue> finAccountList=FastList.newInstance();
-				finAccountList = delegator.findList("FinAccount", finCondition, null,null, null, false);
-				if(UtilValidate.isEmpty(finAccountList)){
-					GenericValue finAccount = delegator.makeValue("FinAccount");
-					finAccount.set("ownerPartyId", partyId);
-					finAccount.set("finAccountTypeId", finAccountTypeId);
-					finAccount.set("statusId", "FNACT_ACTIVE");
-					finAccount.set("organizationPartyId", "Company");
-					finAccount.set("postToGlAccountId", glAccountId);
-		 			delegator.createSetNextSeqId(finAccount);
-		 			if(UtilValidate.isNotEmpty(finAccount)){
-		 				finAccountId=finAccount.getString("finAccountId");
-		 			}	
-				}else{
-					GenericValue finAccount = EntityUtil.getFirst(finAccountList);
-					if(UtilValidate.isNotEmpty(finAccount)){
-		 				finAccountId=finAccount.getString("finAccountId");
-		 			}	
-				}
+				
 				List conditionList=FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
@@ -465,11 +473,14 @@ public class HumanresService {
 				loan.set("loanTypeId", loanTypeId);
 				loan.set("statusId", statusId);
 				loan.set("description", description);
+				loan.set("issuedPartyId", issuedPartyId);
 				loan.set("extLoanRefNum", extLoanRefNum);
 				loan.set("principalAmount", principalAmount);
 				loan.set("interestAmount", interestAmount);
 				loan.set("numInterestInst", numInterestInst);
 				loan.set("numPrincipalInst", numPrincipalInst);
+				loan.set("numCompInterestInst", numCompInterestInst);
+				loan.set("numCompPrincipalInst", numCompPrincipalInst);
 				loan.set("disbDate", disbDateStart);
 				loan.set("loanFinAccountId", finAccountId);
 				loan.set("createdDate", UtilDateTime.nowTimestamp());

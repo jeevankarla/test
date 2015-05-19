@@ -1201,36 +1201,46 @@
 	        </hyperlink>
         </field>
 	</form>
-	<form name="CreateLoan" type="single" header-row-style="header-row" default-table-style="basic-table" target="createEmployeeLoan">
-    	<field name="partyId" title="Employee" id-name="partyId">
-			<lookup target-form-name="LookupEmployeeName"/>
-		</field>
-    	<field name="loanTypeId" id-name="loanTypeId" title="Loan Type" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:loanTypesAmountChange();">
-    		<drop-down allow-empty="true">
-    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
-    			</entity-options>
-    		</drop-down>
-    	</field>
-    	<!-- <field name="statusId" title="Status">
-            <drop-down allow-empty="false" >
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="EMPL_LOAN_STATUS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field> -->
-    	<field name="description" title="Description" required-field="false"><text size="20"/></field>
-    	<field name="principalAmount" id-name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
-    	<field name="interestAmount" id-name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
-    	<field name="numInterestInst" id-name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
-    	<field name="numPrincipalInst" id-name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
-    	<field name="rateOfInterest" id-name = "rateOfInterest" title="Rate Of Interest"><text></text></field>
-    	<field name="noOfMonthsToRetire" id-name = "noOfMonthsToRetire" title="No of Months to Retire"><text></text></field>
-    	<field name="retirementDate" id-name="retirementDate" title="Retirement Date" position="2"><text size="20"/></field>
-    	<field name="extLoanRefNum" title="External Loan Reference Number" required-field="false"><text size="20"/></field>
-    	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
-    	<field name="statusId" title="Status"><display description="Approved"></display></field>
-    	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+	<form name="CreateLoan" id="createLoanForm" type="single" header-row-style="header-row" default-table-style="basic-table" target="createEmployeeLoan">
+     	<field name="partyId" title="Employee" id-name="partyId" event="onchange" action="javascript: hideFields(this);">
+ 			<lookup target-form-name="LookupEmployeeName"/>
+ 		</field>
+ 		<field name="loanType" title="" position="1" id-name="loanType" event="onclick" action="javascript: hideFields(this);">
+             <radio no-current-selected-key="${checkRadio}" >
+                 <option key="internal" description="Internal" />
+                 <option key="external" description="External"/>
+             </radio>
+         </field>
+     	<field name="loanTypeId" id-name="loanTypeId" title="Loan Type Id" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:loanTypesAmountChange();">
+     		<drop-down allow-empty="true">
+     			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
+     				<entity-constraint name="isExternal" operator="equals" value=""/>
+     			</entity-options>
+     		</drop-down>
+     	</field>
+     	<!-- <field name="statusId" title="Status">
+             <drop-down allow-empty="false" >
+                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_LOAN_STATUS"/>
+                     <entity-order-by field-name="description"/>
+                 </entity-options>
+             </drop-down>
+         </field> -->
+     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
+     	<field name="principalAmount" id-name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
+     	<field name="interestAmount" id-name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
+     	<field name="numInterestInst" id-name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
+     	<field name="numPrincipalInst" id-name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
+     	<field name="issuedPartyId" id-name="issuedPartyId" title="Issued PartyId"><lookup target-form-name="LookupPartyName"/></field>
+     	<field name="rateOfInterest" id-name = "rateOfInterest" title="Rate Of Interest"><text></text></field>
+     	<field name="noOfMonthsToRetire" id-name = "noOfMonthsToRetire" title="No of Months to Retire"><text></text></field>
+     	<field name="numCompInterestInst" id-name = "numCompInterestInst" title="No of completed Interest Installments" required-field="true"><text></text></field>
+     	<field name="numCompPrincipalInst" id-name = "numCompPrincipalInst" title="No of completed Principal Installments" required-field="true"><text></text></field>
+     	<field name="retirementDate" id-name="retirementDate" title="Retirement Date" position="2"><text size="20"/></field>
+     	<field name="extLoanRefNum" title="External Loan Reference Number" required-field="false"><text size="20"/></field>
+     	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
+     	<field name="statusId" id-name="statusId" title="Status"><hidden/></field>
+     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="FindLoan" type="single" header-row-style="header-row" default-table-style="basic-table" target = "loan">
     	<field name="hideSearch"><hidden value="Y" /></field>
