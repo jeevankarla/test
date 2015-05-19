@@ -6,32 +6,57 @@
     </menu>
     
     <menu name="ProductionTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem1">
-		<menu-item name="PowderPlant" title="PowderPlant">
+		<!-- <menu-item name="PowderPlant" title="PowderPlant">
 			<link target="powderPlant"></link>
 		</menu-item>	
 		<menu-item name="prePack" title="Pre Packing">
        		<link target="prePacking" ></link>
+      	</menu-item> -->
+      	<menu-item name="productionDashboard" title="Dashboard">
+       		<link target="productionDashboardMain" ></link>
       	</menu-item>
-      	<menu-item name="productionRun" title="Production Run">
+      	<menu-item name="productionRun" title="Find Production Run">
        		<link target="FindNgProductionRun" ></link>
       	</menu-item>
       	<menu-item name="productionRunEntry" title="Production Run Entry">
        		<link target="ProductionRunEntry" ></link>
+      	</menu-item>
+      	<menu-item name="productionStockXfers" title="Material Transfers">
+       		<link target="findStockXfer"></link>
       	</menu-item>
       	<menu-item name="productionReports" title="Reports">
 	        <link target="ProductionReports"></link>
 	    </menu-item>	
 	</menu>
    
+   <menu name="InventoryTransferTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="findStockXfer" title="Find Transfers">
+       		<link target="findStockXfer" ></link>
+      	</menu-item>
+		<menu-item name="productionStockXfers" title="Initiate Transfer">
+       		<link target="productionStockXfers" ></link>
+      	</menu-item>
+      	<menu-item name="InOutTransfer" title="IN/OUT Transfers">
+       		<link target="InOutStockXfers" ></link>
+      	</menu-item>
+	</menu>
+	<menu name="AnalyticsMenusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="inventoryCheck" title="Silo Inventory">
+       		<link target="productionDashboardMain" ></link>
+      	</menu-item>
+      	<menu-item name="productionRunTrends" title="Production Run Trends">
+       		<link target="productionRunTrends" ></link>
+      	</menu-item>
+	</menu>	
    
     <menu name="PowderPlantTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="PowderShiftStart" title="Shift Start ">
 			<link target="powderShiftStart"></link>
 		</menu-item>
-		<menu-item name="PowderSMPproduction" title="SMP Production">
+		<!-- <menu-item name="PowderSMPproduction" title="SMP Production">
 			<link target="SMPproduction"></link>
 		</menu-item>		
-		<!-- <menu-item name="PowderPackingLog" title="Packing Log">
+		<menu-item name="PowderPackingLog" title="Packing Log">
 			<link target="powderPackLog"></link>
 		</menu-item>	
 		<menu-item name="PowderIssueToStroe" title="Issue to Store">

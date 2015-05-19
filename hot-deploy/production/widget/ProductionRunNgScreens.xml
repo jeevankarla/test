@@ -570,6 +570,7 @@ under the License.
                 <set field="titleProperty" value="FindProductionRun"/>
                 <set field="headerItem" value="jobshop"/>
                 <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>  
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem1" value="productionRun"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
@@ -580,11 +581,11 @@ under the License.
                         <section>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
+                                    <!-- <decorator-section name="menu-bar">
                                         <container style="button-bar">
                                             <link target="CreateNgProductionRun" text="Create Production Run" style="buttontext create"/>
                                         </container>
-                                    </decorator-section>
+                                    </decorator-section> -->
                                     <decorator-section name="search-options">
                                         <include-form name="findProductionRun" location="component://production/widget/ProductionRunNgForms.xml"/>
                                     </decorator-section>
