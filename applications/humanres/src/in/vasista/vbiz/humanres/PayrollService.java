@@ -3770,6 +3770,8 @@ public class PayrollService {
 						}else{
 							// lets populate completed installment number as previous installment number if loan recovery is empty
 							if(UtilValidate.isEmpty(loanRecovery)){
+								loanRecovery = delegator.makeValue("LoanRecovery");
+								Debug.log("loan============="+loan);
 								if(UtilValidate.isNotEmpty(loan.get("numCompPrincipalInst")))
 									loanRecovery.set("principalInstNum",loan.get("numCompPrincipalInst"));
 								
