@@ -278,6 +278,7 @@ function reportTypeChangeFunc() {
 		//makeDatePicker2("yearlySaleFromDateId","yearlySaleThruDateId");
 		makeDatePicker5("catYearSalesFromDateId","catYearSalesThruDateId");
 		makeDatePicker5("yearlySaleFromDateId","yearlySaleThruDateId");
+		makeDatePicker("ProductPriceFromDate","");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -918,6 +919,23 @@ function reportTypeChangeFunc() {
       					</form>
       				</tr> -->
       				 <#if security.hasEntityPermission("BYPRODUCTS", "_MNTHREPOR", session)>
+                      <tr class="alternate-row">
+			      	   <form id="productPrice" name="productPrice" method="post" action="<@ofbizUrl>productPriceReport.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Product Price Report</td>
+			             <td width="15%">Date <input  type="text" size="10pt" id="ProductPriceFromDate" readonly  name="fromDate"/></td>
+			      		 <td width="15%">Product Category 
+			      		 			<select name="primaryProductCategoryId" class='h4'>
+			      		 			<option value=''></option>
+	            					<#list prodCatList as category>    
+	              	    				<option value='${category}'>${category}</option>
+	            					</#list>            
+								</select>
+			      		 </td>
+			             <td width="15%"></td>
+			             <td width="15%">Product<@htmlTemplate.lookupField size="10" maxlength="22" formName="channelWiseProductWiseSales" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
       				 <tr class="alternate-row">
 			      	   <form id="paymentOBandCB" name="paymentOBandCB" method="post" action="<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Partywise Ledger Abstract</td>

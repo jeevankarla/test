@@ -1406,6 +1406,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="PartywiseBalanceAbstractPDF"/>
     </request-map>
+    <request-map uri="productPriceReport.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ProductPriceReportPDF"/>
+    </request-map>
       <request-map uri="DealerBankChallan.txt">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DealerBankChallanTXT"/>
@@ -1803,7 +1807,7 @@
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="text/plain"/>
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	<view-map name="ProductIndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductIndentAbstractReport" content-type="text/plain"/>
-	
+	<view-map name="ProductPriceReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductPriceReportPDF" content-type="application/pdf"/>
 	
 	<view-map name="TerminatedRetailerspdf" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TerminatedRetailerspdf" content-type="application/pdf"/>
 	
