@@ -1363,6 +1363,10 @@
 		<security https="true" auth="true" /> 
 	 <response name="success" type="view" value="purchaseVatReportPDF" /> 
  	 </request-map>
+ 	 <request-map uri="productPriceRevisionReport.pdf">
+		<security https="true" auth="true" /> 
+	 <response name="success" type="view" value="productPriceRevisionReportPDF" /> 
+ 	 </request-map>
  	  <request-map uri="purchaseVatCategoryReport.pdf">
 		<security https="true" auth="true" /> 
 	 <response name="success" type="view" value="purchaseVatCategoryReportPDF" /> 
@@ -1492,7 +1496,8 @@
 	<view-map name="editcontactmech" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#editcontactmech"/>
    
     <view-map name="PurchaseChannelWiseSalesPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseChannelWiseSalesPDF" content-type="application/pdf" /> 
-	<view-map name="purchaseVatReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatReportPDF" content-type="application/pdf" /> 
+	<view-map name="purchaseVatReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatReportPDF" content-type="application/pdf" />
+	<view-map name="productPriceRevisionReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#productPriceRevisionReportPDF" content-type="application/pdf" /> 
 	<view-map name="purchaseVatCategoryReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseVatCategoryReportPDF" content-type="application/pdf" /> 
 	<view-map name="icpStockStatementPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#icpStockStatementPDF" content-type="application/pdf" /> 
 	

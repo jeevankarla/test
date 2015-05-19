@@ -130,6 +130,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	    makeDatePicker("datependingPOs");
 		makeDatePicker("stockDate");
 		makeDatePicker("fromDateScrap","thruDateScrap");
+	    makeDatePicker("fromDateProduct","thruDateProduct");
 		
 		
 		oldMenumakeDatePicker("purchaseFromDate","purchaseThruDate");
@@ -597,6 +598,31 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				  </table>
                 </form>
 		   </tr>
+		 <tr class="alternate-row">
+			<form id="ProductPriceRevisionReport" name="ProductPriceRevisionReport" method="post" action="<@ofbizUrl>productPriceRevisionReport.pdf</@ofbizUrl>" target="_blank">        
+               <table class="basic-table" cellspacing="5">
+				  <tr class="alternate-row">
+				     <td width="20%"><span class='h3'>Product Price Revision Report</span></td>
+                          <td width="25%">
+						 <span class='h3'>
+						    From <input  type="text" size="18pt" id="fromDateProduct"   name="fromDateProduct"/>
+							To   <input  type="text" size="18pt" id="thruDateProduct"   name="thruDateProduct"/>
+						 </span>
+						 </td>
+					 <td width="15%"><span class='h3'>Category<select name="categoryType">${productCategoryList}
+                                 <option value=""></option>
+				      			 <#list productCategoryList as productCategory>   
+		                  	    	<option value='${productCategory.productCategoryId}'>
+			                    		${productCategory.productCategoryId?if_exists}
+			                        </option>
+		                	     </#list>     
+			      			</select></span></td>
+				     <td width="15%"><span class='h3'>  </span></td>	
+				     <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+	 		     </tr>
+			 </table>
+          </form>
+		</tr>   
 	  </table>
     </div>
   </div>
