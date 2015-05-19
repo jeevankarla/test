@@ -975,10 +975,35 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String)context.get("orderId");
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         try{
         	
         	GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-        	List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+        	
+        	List<GenericValue> extOrderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+        	
+        	List condExprList = FastList.newInstance();
+        	condExprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+        	condExprList.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
+        	EntityCondition cond = EntityCondition.makeCondition(condExprList, EntityOperator.AND);
+        	List<GenericValue> orderItemChange = delegator.findList("OrderItemChange", cond, null, UtilMisc.toList("-effectiveDatetime"), null, false);
+        	List<GenericValue> orderItems = FastList.newInstance();									
+        	if(UtilValidate.isNotEmpty(orderItemChange)){
+        		
+        		for(GenericValue itemChange : orderItemChange){
+        			List<GenericValue>  extOrdItm= EntityUtil.filterByCondition(extOrderItems, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, itemChange.getString("orderItemSeqId")));
+        			if(UtilValidate.isNotEmpty(extOrdItm)){
+        				GenericValue ordItm = EntityUtil.getFirst(extOrdItm);
+        				ordItm.set("quantity", itemChange.getBigDecimal("quantity"));
+        				ordItm.set("unitPrice", itemChange.getBigDecimal("unitPrice"));
+        				orderItems.add(ordItm);
+        				
+        			}
+        		}
+        	}
+        	else{
+        		orderItems.addAll(extOrderItems);
+        	}
         	
         	List<GenericValue> otherTermTypes = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), null, null, null, false);
         	List<String> otherTermTypeIds = EntityUtil.getFieldListFromEntityList(otherTermTypes, "termTypeId", true);
@@ -1066,8 +1091,8 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 			result.put("productQty", productQty);
         }
         catch(Exception e){
-        	Debug.logError("Error updating quote status", module);
-		    return ServiceUtil.returnError("Error updating quote status");
+        	Debug.logError("Error calculating order value for order : "+orderId, module);
+		    return ServiceUtil.returnError("Error calculating order value for order : "+orderId);
         }
         return result;
 	}
@@ -1633,8 +1658,12 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			BigDecimal amount = (BigDecimal)eachAdj.get("amount");
 			String termTypeId = (String)eachAdj.get("adjustmentTypeId");
 			boolean recalculateVAT = Boolean.FALSE;
+			boolean recalculateBEDAndVAT = Boolean.FALSE;
 			if(termTypeId.equals("COGS_DISC") || termTypeId.equals("COGS_PCK_FWD")){
 				recalculateVAT = Boolean.TRUE;
+			}
+			if(termTypeId.equals("COGS_DISC_BASIC")){
+				recalculateBEDAndVAT = Boolean.TRUE;
 			}
 			BigDecimal poValue = BigDecimal.ZERO;
 			
@@ -1647,6 +1676,20 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				BigDecimal unitListPriceAmt = ((BigDecimal)prodItemTemp.get("unitListPrice")).multiply((BigDecimal)prodItemTemp.get("quantity"));
 				BigDecimal extTaxesAmt = ((BigDecimal)prodItemTemp.get("vatAmount")).add((BigDecimal)prodItemTemp.get("cstAmount"));
 				if(recalculateVAT){
+					unitListPriceAmt = unitListPriceAmt.subtract(extTaxesAmt);
+				}
+				if(recalculateBEDAndVAT){
+					BigDecimal extBedAmt = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(prodItemTemp.get("bedAmount"))){
+						extBedAmt = extBedAmt.add((BigDecimal)prodItemTemp.get("bedAmount"));
+					}
+					if(UtilValidate.isNotEmpty(prodItemTemp.get("bedcessAmount"))){
+						extBedAmt = extBedAmt.add((BigDecimal)prodItemTemp.get("bedcessAmount"));
+					}
+					if(UtilValidate.isNotEmpty(prodItemTemp.get("bedseccessAmount"))){
+						extBedAmt = extBedAmt.add((BigDecimal)prodItemTemp.get("bedseccessAmount"));
+					}
+					extTaxesAmt = extTaxesAmt.add(extBedAmt);
 					unitListPriceAmt = unitListPriceAmt.subtract(extTaxesAmt);
 				}
 		    	poValue = poValue.add(unitListPriceAmt);
@@ -1681,10 +1724,23 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				BigDecimal recalcAdjPrice = BigDecimal.ZERO;
 				BigDecimal unitListPrice = BigDecimal.ZERO;
 				BigDecimal itemValue = BigDecimal.ZERO;
+				
+				BigDecimal bedItemTotal = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(prodMap.get("bedAmount"))){
+					bedItemTotal = bedItemTotal.add((BigDecimal)prodMap.get("bedAmount"));
+				}
+				if(UtilValidate.isNotEmpty(prodMap.get("bedcessAmount"))){
+					bedItemTotal = bedItemTotal.add((BigDecimal)prodMap.get("bedcessAmount"));
+				}
+				if(UtilValidate.isNotEmpty(prodMap.get("bedseccessAmount"))){
+					bedItemTotal = bedItemTotal.add((BigDecimal)prodMap.get("bedseccessAmount"));
+				}
+				BigDecimal bedUnitAmt = bedItemTotal.divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal vatUnitAmt = ((BigDecimal)prodMap.get("vatAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal cstUnitAmt = ((BigDecimal)prodMap.get("cstAmount")).divide((BigDecimal)prodMap.get("quantity"), purchaseTaxFinalDecimals, purchaseTaxRounding);
-				
 				itemValue = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
+
+				
 				if(UtilValidate.isNotEmpty(prodMap.get("bedAmount"))){
 					itemValue = itemValue.add((BigDecimal)prodMap.get("bedAmount"));
 				}
@@ -1695,9 +1751,16 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					itemValue = itemValue.add((BigDecimal)prodMap.get("bedseccessAmount"));
 				}
 				
+				if(!recalculateBEDAndVAT){
+					itemValue = itemValue.add(bedItemTotal);
+				}
+				
 				if(recalculateVAT){
 					//BigDecimal listAmt = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
 					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(vatUnitAmt.add(cstUnitAmt));
+				}
+				else if(recalculateBEDAndVAT){
+					unitListPrice = ((BigDecimal)prodMap.get("unitListPrice")).subtract(bedUnitAmt.add(vatUnitAmt.add(cstUnitAmt)));
 				}
 				else{
 					
@@ -1713,15 +1776,48 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				if(perProdAdjFlag){
 					recalcAdjPrice = amount;
 				}
-				
+					
 				totalItemValue = totalItemValue.add(recalcAdjPrice);
 				BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
 				BigDecimal basicPrice = uPrice.multiply(quantity);
+				BigDecimal bedPercent = (BigDecimal) prodMap.get("bedPercent");
+				BigDecimal bedcessPercent = (BigDecimal) prodMap.get("bedcessPercent");
+				BigDecimal bedseccessPercent = (BigDecimal) prodMap.get("bedseccessPercent");
 				BigDecimal vatPercent = (BigDecimal) prodMap.get("vatPercent");
 				BigDecimal cstPercent = (BigDecimal) prodMap.get("cstPercent");
 				
-				if(recalculateVAT){
+				if(recalculateVAT || recalculateBEDAndVAT){
+					
+					BigDecimal totBedAmt = BigDecimal.ZERO;
+					if(recalculateBEDAndVAT && UtilValidate.isNotEmpty(bedPercent) && bedPercent.compareTo(BigDecimal.ZERO)>0){
+
+						BigDecimal bedReCalc = (basicPrice.multiply(bedPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+						BigDecimal bedUnitPrice = bedReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+						uPrice = uPrice.add(bedUnitPrice);
+						prodMap.put("bedAmount", bedReCalc);
+						prodMap.put("unitListPrice", uPrice);
+						totBedAmt = totBedAmt.add(bedReCalc);
+						
+						if(UtilValidate.isNotEmpty(bedcessPercent) && bedcessPercent.compareTo(BigDecimal.ZERO)>0){
+							BigDecimal bedcessReCalc = (bedReCalc.multiply(bedcessPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+							BigDecimal bedcessUnitPrice = bedcessReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+							uPrice = uPrice.add(bedcessUnitPrice);
+							prodMap.put("bedcessAmount", bedcessReCalc);
+							prodMap.put("unitListPrice", uPrice);
+							totBedAmt = totBedAmt.add(bedcessReCalc);
+						}
+						if(UtilValidate.isNotEmpty(bedseccessPercent) && bedseccessPercent.compareTo(BigDecimal.ZERO)>0){
+							BigDecimal bedseccessReCalc = (bedReCalc.multiply(bedseccessPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
+							BigDecimal bedseccessUnitPrice = bedseccessReCalc.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
+							uPrice = uPrice.add(bedseccessUnitPrice);
+							prodMap.put("bedseccessAmount", bedseccessReCalc);
+							prodMap.put("unitListPrice", uPrice);
+							totBedAmt = totBedAmt.add(bedseccessReCalc);
+						}
+					}
+					
+					basicPrice = basicPrice.add(totBedAmt);
 					if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
 						
 						BigDecimal vatReCalc = (basicPrice.multiply(vatPercent)).divide(new BigDecimal(100), purchaseTaxFinalDecimals, purchaseTaxRounding);
@@ -1742,6 +1838,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				else{
 					prodMap.put("unitListPrice", uPrice);
 				}
+
 				
 				if(UtilValidate.isNotEmpty(adjValueMap.get(productId))){
 					BigDecimal extAmt = (BigDecimal)adjValueMap.get(productId);
@@ -1883,7 +1980,15 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 	       }
 	       
 	       poValue = basicAmount.add(exciseDuty.add(vatAmt.add(cstAmt)));
-    	   if(termTypeId.equals("COGS_DISC")){
+	       if(termTypeId.equals("COGS_DISC_BASIC")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = (basicAmount.multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+	       else if(termTypeId.equals("COGS_DISC")){
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
 	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding);
 	    		   termAmount = termAmount.negate();

@@ -2017,6 +2017,7 @@ under the License.
       <field name="lotId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="binNumber" type="id"></field>
+      <field name="batchNumber" type="id"></field>
       <field name="locationSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="quantityOnHandTotal" type="fixed-point"></field>
@@ -2171,6 +2172,7 @@ under the License.
         <alias name="shipmentItemSeqId" entity-alias="IID"></alias>
         <alias name="custRequestId" entity-alias="IID"></alias>
         <alias name="custRequestItemSeqId" entity-alias="IID"></alias>
+        <alias name="inventoryTransferId" entity-alias="IID"></alias>
         <view-link entity-alias="II" rel-entity-alias="IID">
             <key-map field-name="inventoryItemId"/>
         </view-link>
@@ -2198,6 +2200,7 @@ under the License.
       <field name="fixedAssetId" type="id"></field>
       <field name="maintHistSeqId" type="id"></field>
       <field name="itemIssuanceId" type="id"></field>
+      <field name="inventoryTransferId" type="id"></field>
       <field name="receiptId" type="id"></field>
       <field name="physicalInventoryId" type="id"></field>
       <field name="reasonEnumId" type="id"></field>
@@ -2238,6 +2241,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="INV_ITDTL_PHINV" rel-entity-name="PhysicalInventory">
         <key-map field-name="physicalInventoryId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITDTL_INVX" rel-entity-name="InventoryTransfer">
+        <key-map field-name="inventoryTransferId"/>
       </relation>
       <relation title="Reason" fk-name="INV_ITDTL_REAS" rel-entity-name="Enumeration" type="one">
         <key-map field-name="reasonEnumId" rel-field-name="enumId"/>
@@ -2520,6 +2526,45 @@ under the License.
         <key-map field-name="itemIssuanceId"/>
       </relation>
     </entity>
+    <entity entity-name="InventoryTransferGroup"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Transfer Group Entity">
+      <field name="transferGroupId" type="id-ne"></field>
+      <field name="transferGroupTypeId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <prim-key field="transferGroupId"/>
+      <relation type="one" fk-name="XFR_GRP_TYP" rel-entity-name="Enumeration">
+        	<key-map field-name="transferGroupTypeId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+	<entity entity-name="InventoryTransferGroupMember"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Transfer Group Member Entity">
+      <field name="transferGroupId" type="id-ne"></field>
+      <field name="inventoryTransferId" type="id-ne"></field>
+      <field name="itemStatusId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="xferQty" type="fixed-point"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <prim-key field="transferGroupId"/>
+      <prim-key field="inventoryTransferId"/>
+      <relation type="one" fk-name="XFER_GRP_INV" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="XFER_GRP_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="XFER_GRP_IT" rel-entity-name="InventoryTransfer">
+        <key-map field-name="inventoryTransferId"/>
+      </relation>
+      <relation type="one" fk-name="XFER_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
     <entity entity-name="MilkTransferAdvice"
             package-name="org.ofbiz.product.inventory"
             title="Milk Transfer Advice Entity">
@@ -2618,6 +2663,25 @@ under the License.
       <field name="generalComments" type="comment"></field>
       <prim-key field="physicalInventoryId"/>
     </entity>
+    <view-entity entity-name="InventoryTransferGroupAndMemberSum"
+            package-name="org.ofbiz.product.inventory"
+            title="InventoryTransferGroup and InventoryTransferGroupMember View Entity">
+      <member-entity entity-alias="ITG" entity-name="InventoryTransferGroup"/>
+      <member-entity entity-alias="ITGM" entity-name="InventoryTransferGroupMember"/>
+      <member-entity entity-alias="IT" entity-name="InventoryTransfer"/>
+      <alias entity-alias="ITGM" name="transferGroupId" group-by="true"/>
+      <alias entity-alias="ITGM" name="xferQtySum" field="xferQty" function="sum"/>
+      <alias entity-alias="IT" name="fromFacilityId" field="facilityId" group-by="true"/>
+      <alias entity-alias="IT" name="toFacilityId" field="facilityIdTo" group-by="true"/>
+      <alias entity-alias="ITG" name="statusId" group-by="true"/>
+      <alias entity-alias="ITGM" name="productId" group-by="true"/>
+      <view-link entity-alias="ITGM" rel-entity-alias="ITG">
+        	<key-map field-name="transferGroupId"/>
+      </view-link>
+      <view-link entity-alias="ITGM" rel-entity-alias="IT">
+        	<key-map field-name="inventoryTransferId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="PhysicalInventoryAndVariance"
             package-name="org.ofbiz.product.inventory"
             title="PhysicalInventory and InventoryItemVariance View Entity">

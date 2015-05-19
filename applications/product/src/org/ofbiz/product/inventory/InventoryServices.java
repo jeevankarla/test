@@ -240,7 +240,8 @@ public class InventoryServices {
             inventoryTransfer = delegator.findByPrimaryKey("InventoryTransfer",
                     UtilMisc.toMap("inventoryTransferId", inventoryTransferId));
             inventoryItem = inventoryTransfer.getRelatedOne("InventoryItem");
-            destinationFacility = inventoryTransfer.getRelatedOne("ToFacility");
+            //destinationFacility = inventoryTransfer.getRelatedOne("ToFacility");
+            destinationFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryTransfer.getString("facilityIdTo")), false);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
                     "ProductInventoryItemLookupProblem", 

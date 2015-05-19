@@ -193,7 +193,6 @@ if(shipments){
 				return ServiceUtil.returnError(errMsg);
 		}
 		Map adjPerUnit = (Map)resultCtx.get("productAdjustmentPerUnit");
-		Debug.log("adjPerUnit #######################"+adjPerUnit);
 		shipmentReceipts.each{ eachItem ->
 			
 			String productId = eachItem.productId;
@@ -208,6 +207,10 @@ if(shipments){
 				deductAmt = deductAmt+discAmt;
 			}
 			
+			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_DISC_BASIC")){
+				discAmt = adjUnitAmtMap.get("COGS_DISC_BASIC");
+				deductAmt = deductAmt+discAmt;
+			}
 			if(adjUnitAmtMap && adjUnitAmtMap.get("COGS_PCK_FWD")){
 				packFwdAmt = adjUnitAmtMap.get("COGS_PCK_FWD");
 				addAmt = addAmt+packFwdAmt;
@@ -304,7 +307,7 @@ if(shipments){
 			JSONObject newObj = new JSONObject();
 			newObj.put("invoiceItemTypeId", adjTypeId);
 			newObj.put("adjAmount", totalAdjAmt.setScale(0, rounding));
-			if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
+			if(!(adjTypeId == "COGS_DISC" || adjTypeId == "COGS_DISC_BASIC" || adjTypeId == "COGS_PCK_FWD" || adjTypeId == "COGS_INSURANCE")){
 				adjustmentJSON.add(newObj);
 			}
 			
