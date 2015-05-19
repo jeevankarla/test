@@ -1771,5 +1771,146 @@ public class MaterialRequestServices {
 			         request.setAttribute("_EVENT_MESSAGE_", "successfully Issued "+rowCount+" Selected Materials");
 				return "success";
 			}
-
+    public static Map<String, Object> sendRequirementsForGroup(DispatchContext ctx,Map<String, ? extends Object> context) {
+			Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			List requirementList = (List) context.get("requirementIds");
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map result = ServiceUtil.returnSuccess();
+			String groupTypeId = "ENQ_REQ_GROUP";
+			String statusId = "REQ_GRP_CREATED";
+			Timestamp createdDate = UtilDateTime.nowTimestamp();
+			String requirementGroupId="";
+			if(UtilValidate.isEmpty(requirementList)){
+				Debug.logError("No Requirements Selected to Process.", module);
+				return ServiceUtil.returnError("No Requirements Selected to Process.");
+			}
+			try{
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("requirementId", EntityOperator.IN, requirementList));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> requirements = delegator.findList("Requirement", condition, UtilMisc.toSet("requirementId"), null, null, false);
+				if(UtilValidate.isEmpty(requirements)){
+					Debug.logError("Requirements not found.", module);
+					return ServiceUtil.returnError("Requirements not found.");
+				}	
+				
+				GenericValue requirementGroup = delegator.makeValue("RequirementGroup");
+				requirementGroup.set("groupTypeId", groupTypeId);
+				requirementGroup.set("statusId", statusId);
+				requirementGroup.set("createdDate", createdDate);
+				requirementGroup.set("createdByUserLogin", userLogin.getString("userLoginId"));
+				requirementGroup.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+				requirementGroup.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+				delegator.createSetNextSeqId(requirementGroup);
+				if(UtilValidate.isNotEmpty(requirementGroup)){
+					requirementGroupId = requirementGroup.getString("requirementGroupId");
+				}
+				
+				for(GenericValue requirement: requirements){
+					String requirementId = requirement.getString("requirementId");
+					GenericValue requirementGroupMember = delegator.makeValue("RequirementGroupMember");
+					requirementGroupMember.set("requirementGroupId",requirementGroupId);
+					requirementGroupMember.set("requirementId",requirementId);
+					requirementGroupMember.create();
+				}
+				
+				} catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				}
+			result=ServiceUtil.returnSuccess("Successfully Requirement Group Created.! Group Id:"+requirementGroupId);
+			return result;
+    }
+    public static Map<String, Object> approveRequirementGroup(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String requirementGroupId = (String) context.get("requirementGroupId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		Timestamp approvedDate = UtilDateTime.nowTimestamp();
+		if(UtilValidate.isEmpty(requirementGroupId)){
+			Debug.logError("Requirements Group Id not found.", module);
+			return ServiceUtil.returnError("Requirements Group Id not found.");
+		}
+		try{
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("requirementGroupId", EntityOperator.EQUALS, requirementGroupId));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> requirements = delegator.findList("RequirementGroupMember", condition, null, null, null, false);
+			if(UtilValidate.isEmpty(requirements)){
+				Debug.logError("RequirementGroup not found.", module);
+				return ServiceUtil.returnError("RequirementGroup not found.");
+			}	
+			
+			for(GenericValue requirement: requirements){
+				String requirementId = requirement.getString("requirementId");
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("requirementGroupId", EntityOperator.NOT_EQUAL, requirementGroupId));
+				conditionList.add(EntityCondition.makeCondition("requirementId", EntityOperator.EQUALS, requirementId));
+				EntityCondition rGMCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				List<GenericValue> requirementGroupMember = delegator.findList("RequirementGroupMember",rGMCondition, UtilMisc.toSet("requirementGroupId"), null, null, false);
+				if(UtilValidate.isNotEmpty(requirementGroupMember)){
+					for(GenericValue reqmntGroup:requirementGroupMember){
+						String requGroupId = reqmntGroup.getString("requirementGroupId");
+						GenericValue requirementGroup = delegator.findOne("RequirementGroup",UtilMisc.toMap("requirementGroupId",requGroupId),false);
+						String statusId = requirementGroup.getString("statusId");
+						if(statusId.equals("REQ_GRP_APPROVED")){
+							Debug.logError(requirementId+" already approved in the Group."+requGroupId, module);
+							return ServiceUtil.returnError(requirementId+" already approved in the Group."+requGroupId);
+						}
+					}
+				}
+			}
+			GenericValue requirementGroup = delegator.findOne("RequirementGroup",UtilMisc.toMap("requirementGroupId",requirementGroupId),false);
+			requirementGroup.set("approverPartyId", userLogin.getString("partyId"));
+			requirementGroup.set("statusId", "REQ_GRP_APPROVED");
+			requirementGroup.set("approvedDate",approvedDate);
+			requirementGroup.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			requirementGroup.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+			requirementGroup.store();
+			} catch (GenericEntityException e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+		result=ServiceUtil.returnSuccess("Successfully Approved the Requirement Group :"+requirementGroupId);
+		return result;
+    }
+    
+    public static Map<String, Object> rejectRequirementGroup(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String requirementGroupId = (String) context.get("requirementGroupId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		Timestamp approvedDate = UtilDateTime.nowTimestamp();
+		if(UtilValidate.isEmpty(requirementGroupId)){
+			Debug.logError("Requirements Group Id not found.", module);
+			return ServiceUtil.returnError("Requirements Group Id not found.");
+		}
+		try{
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("requirementGroupId", EntityOperator.EQUALS, requirementGroupId));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> requirements = delegator.findList("RequirementGroupMember", condition, null, null, null, false);
+			if(UtilValidate.isEmpty(requirements)){
+				Debug.logError("RequirementGroup not found.", module);
+				return ServiceUtil.returnError("RequirementGroup not found.");
+			}	
+			
+			GenericValue requirementGroup = delegator.findOne("RequirementGroup",UtilMisc.toMap("requirementGroupId",requirementGroupId),false);
+			requirementGroup.set("statusId", "REQ_GRP_CANCELLED");
+			requirementGroup.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			requirementGroup.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+			requirementGroup.store();
+			} catch (GenericEntityException e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+		result=ServiceUtil.returnSuccess("Successfully Rejected the Requirement Group :"+requirementGroupId);
+		return result;
+    }
 }

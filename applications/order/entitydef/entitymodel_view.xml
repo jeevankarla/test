@@ -2222,5 +2222,25 @@ under the License.
 	        <key-map field-name="invoiceId"/>
 	    </relation> 
     </view-entity> 
+    
+    <view-entity entity-name="RequirementGroupAndMember"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Requirement Group And Requirement Group Member View Entity">
+      <member-entity entity-alias="RG" entity-name="RequirementGroup"/>
+      <member-entity entity-alias="RGM" entity-name="RequirementGroupMember"/>
+      <alias entity-alias="RG" name="requirementGroupId"/>
+      <alias entity-alias="RGM" name="requirementId"/>
+      <alias entity-alias="RG" name="groupTypeId"/>
+      <alias entity-alias="RG" name="statusId"/>
+      <alias entity-alias="RG" name="approverPartyId"/>
+      <alias entity-alias="RG" name="approvedDate"/>
+      <alias entity-alias="RG" name="createdDate"/>
+      <alias entity-alias="RG" name="createdByUserLogin"/>
+      <view-link entity-alias="RG" rel-entity-alias="RGM">
+        <key-map field-name="requirementGroupId"/>
+      </view-link>
+    </view-entity>
+    
 </entitymodel>
 

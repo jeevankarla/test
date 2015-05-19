@@ -207,4 +207,9 @@
      <RoleType  description="Indent Dept Head Approver" hasTable="N" roleTypeId="INDENTDEPTAPPROVER"/>
      
      <TenantConfiguration propertyName="enableAdvancePaymentApp" propertyValue="Y" propertyTypeEnumId="PURCHASE_OR_STORES" description="Enable Advance payment application while purchase invoice generation"/>
+     <StatusType  description="Requirement For Enquiry Group Status"  statusTypeId="ENQ_REQ_GRP_STATUS"/>
+     <StatusItem  description="Approved"  sequenceId="2" statusCode="APPROVED" statusId="REQ_GRP_APPROVED" statusTypeId="ENQ_REQ_GRP_STATUS"/>
+     <StatusItem  description="Cancelled"  sequenceId="3" statusCode="CANCELLED" statusId="REQ_GRP_CANCELLED" statusTypeId="ENQ_REQ_GRP_STATUS"/>
+     <StatusItem  description="Created"  sequenceId="1" statusCode="CREATED" statusId="REQ_GRP_CREATED" statusTypeId="ENQ_REQ_GRP_STATUS"/>
+     
 </entity-engine-xml>

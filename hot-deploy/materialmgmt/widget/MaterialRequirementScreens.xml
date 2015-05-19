@@ -219,4 +219,41 @@
    		</widgets>
    	</section>
    </screen>
+   <screen name="GroupedRequirements">
+   <section>
+   	<actions>
+   		<set field="titleProperty" value="Grouped Requirements"/>
+        <set field="headerItem" value="Requirement"/>
+        <set field="tabButtonItem" value="FindMaterialRequirement"/>
+        <set field="tabButtonItem2" value="GroupedRequirements"/>
+        <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+        <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+   	</actions>
+   	<widgets>
+   	<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+       	<decorator-section name="body">
+       	<include-menu name="RequirementTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+   			<screenlet title="Search Options">
+   			 <include-form name="groupedRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+   			</screenlet>
+   			<screenlet title="Search Results">
+   			<include-form  name="ListGroupedRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+   			</screenlet>
+   		</decorator-section>
+   	</decorator-screen>	
+   	</widgets>
+   </section>
+   </screen>
+   <screen name="groupedReqDetailsReportPDF">
+   	<section>
+            <actions>
+               <script location="component://order/webapp/ordermgr/WEB-INF/actions/requirement/GroupedReqDetailsReport.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/GroupedReqDetailsReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+   </screen>
 </screens>

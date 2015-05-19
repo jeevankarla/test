@@ -501,5 +501,10 @@
     <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_SALES_UPDATE"/>
     <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_UPDATE"/>
     <SecurityGroupPermission groupId="MM_INTERUNIT_CREATE" permissionId="ORDERMGR_VIEW"/>
+    
+    <SecurityPermission description="Grouped Requirements Approve or Reject" permissionId="MM_REQ_GROUP"/>
+    <SecurityGroup description="Grouped Requirements Approve or Reject.!" groupId="MM_REQ_GROUP"/>
+    <SecurityGroupPermission groupId="MM_REQ_GROUP"  permissionId="MM_REQ_GROUP"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_REQ_GROUP"/>
  
 </entity-engine-xml>

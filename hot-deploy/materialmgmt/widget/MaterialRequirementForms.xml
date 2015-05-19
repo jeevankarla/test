@@ -282,7 +282,46 @@
         <field name="requirementByDate"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+    <form name="groupedRequirements" type="single" target="findGroupedRequirements" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="requirementGroupId"><text-find></text-find></field>
+        <field name="statusId"><drop-down allow-empty="true"><entity-options description="${description}" entity-name="StatusItem"><entity-constraint name="statusTypeId" operator="equals" value="ENQ_REQ_GRP_STATUS"/></entity-options></drop-down></field>
+        <field name="createdDate" ><date-find type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListGroupedRequirements" type="list" target="" title="" list-name="listIt" 
+       use-row-submit="true" paginate-style="nav-pager" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RequirementGroup"/>
+                <field-map field-name="orderBy" value="-requirementGroupId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="requirementGroupId"><display></display></field>
+        <field name="createdDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;dd-MM-yyyy&quot;);}"/></field>
+       <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"></display-entity></field>
+       <field name="createdByUserLogin" title="Created By"><display></display></field>
+       <field name="approverPartyId" use-when="approverPartyId!=null">
+       			<display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, approverPartyId, false);} [${approverPartyId}]"/>
+       </field>
+       <field name="approvedDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(approvedDate, &quot;dd-MM-yyyy&quot;);}"/></field>
+       <field name="lastModifiedByUserLogin" title="Last Modified By"><display></display></field>
+       <field name="report" use-when="statusId.equals(&quot;REQ_GRP_CREATED&quot;)" widget-style="buttontext">
+       	<hyperlink  target="groupedReqDetailsReport" description="Report" target-window="_blank"><parameter param-name="requirementGroupId"/></hyperlink>
+       </field>
+       <field name="approve" use-when="statusId.equals(&quot;REQ_GRP_CREATED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_REQ_GROUP&quot;, session)))}" widget-style="buttontext">
+       	<hyperlink target="approveRequirementGroup" description="Approve"><parameter param-name="requirementGroupId"/></hyperlink>
+       </field>
+       <field name="reject" use-when="statusId.equals(&quot;REQ_GRP_CREATED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_REQ_GROUP&quot;, session)))}" widget-style="buttontext">
+       	<hyperlink target="rejectRequirementGroup" description="Reject"><parameter param-name="requirementGroupId"/></hyperlink>
+       </field>
+       </form> 
     <form name="ApprovedMatProductRequirementsList" type="list" title="" list-name="requirementsForSupplier" paginate-target="RequirementsForSupplier"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
