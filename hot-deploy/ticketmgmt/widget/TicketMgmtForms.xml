@@ -24,7 +24,7 @@
                 <option key="HARDWARE" description="Hardware"/>
             </drop-down>
         </field>
-          <field name="productCategoryId" title="Sub-Category">
+          <!-- <field name="productCategoryId" title="Sub-Category">
             <drop-down>
                 <list-options key-name="enumId" list-name="ProductCategories" description="${description}"/>
             </drop-down>
@@ -38,7 +38,7 @@
             <drop-down>
                 <list-options key-name="enumId" list-name="environmentDetail" description="${description}"/>
             </drop-down>
-        </field>
+        </field> -->
         <field name="project" title=" Project">
             <drop-down>
                 <list-options key-name="enumId" list-name="projectDetails" description="${description}"/>
@@ -48,7 +48,7 @@
         <field name="remarks" title="Remarks" ><text size="25" maxlength="25"/></field>
 <!--         <field name="sla" title=" SLA" ><text size="25" maxlength="10"/></field> -->
 <!--         <field name="email" title="E-mail "  required-field="true" tooltip="required"  widget-style="required"><text size="25"/></field> -->
-        <field name="groupClient" title="Group Client" ><text size="25" maxlength="15"/></field>
+        <!-- <field name="groupClient" title="Group Client" ><text size="25" maxlength="15"/></field> -->
         <field name="submit"><submit/></field>
     </form>
    <form name="FindComplaints" target="FindComplaint" title="" type="single" default-map-name="parameters"
@@ -128,16 +128,16 @@
         </actions>
         <field name="custRequestDate" title="Date"><display description="${custRequestDate}"/></field>
         <field name="custRequestTypeId" title="Nature Of Ticket"><display description="${custRequestTypeId} "/></field>
-         <field name="categoryId"  title="Category" ><display description="${categoryId} "/></field>
-        <field name="productCategoryId"  title="Sub-Category" ><display description="${productCategoryId} "/></field>
+         <field name="categoryId"  title="Brand Name" ><display description="${categoryId} "/></field>
+        <!-- <field name="productCategoryId"  title="Sub-Category" ><display description="${productCategoryId} "/></field> -->
         <field name="productId" title="Product"><display description="${productId} [${productName}]"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display description="${statusId}"/></field>
         <field name="severity" title="severity"><display description="${severity}"/></field>
-        <field name="assetMapping"  title="Asset_Mapping" ><display description="${assetMapping} "/></field>
+        <!-- <field name="assetMapping"  title="Asset_Mapping" ><display description="${assetMapping} "/></field>
         <field name="environment"  title="Environment" ><display description="${environment} "/></field>
         <field name="project"  title="project" ><display description="${project} "/></field>
-        <field name="groupClient"  title="Group Client" ><display description="${groupClient} "/></field>
-<!--         <field name="sla"  title="SLA" ><display description="${sla} "/></field>    -->
+        <field name="groupClient"  title="Group Client" ><display description="${groupClient} "/></field> 
+        <field name="sla"  title="SLA" ><display description="${sla} "/></field>    -->
     </form>
 	
     <form name="ListCustRequestContent" type="list" list-name="custRequestAndContents"
