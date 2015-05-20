@@ -24,6 +24,11 @@
                 <option key="HARDWARE" description="Hardware"/>
             </drop-down>
         </field>
+        <field name="categoryId" title="Brand Name">
+            <drop-down>
+                <list-options key-name="productCategoryId" list-name="categories" description="${description}"/>
+            </drop-down>
+        </field>
           <!-- <field name="productCategoryId" title="Sub-Category">
             <drop-down>
                 <list-options key-name="enumId" list-name="ProductCategories" description="${description}"/>
