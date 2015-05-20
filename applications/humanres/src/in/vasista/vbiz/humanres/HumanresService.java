@@ -92,9 +92,8 @@ public class HumanresService {
   				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
   						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
   				
-  				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+  				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
   				List<GenericValue> employments = delegator.findList("EmploymentAndPerson", condition, null, UtilMisc.toList("firstName","-thruDate"), null, false);
-  				
   				employementList.addAll(employments);
   				return;
   				
@@ -172,7 +171,7 @@ public class HumanresService {
 			List tempEmployementList = FastList.newInstance();
 			for(int i=0;i<employeeIds.size();i++){
 				String employeeId = (String)employeeIds.get(i);
-				GenericValue tempEmployement = EntityUtil.getFirst(EntityUtil.filterByAnd(employementList,UtilMisc.toMap("partyIdTo",employeeId)));
+				GenericValue tempEmployement = EntityUtil.getFirst(EntityUtil.orderBy(EntityUtil.filterByAnd(employementList,UtilMisc.toMap("partyIdTo",employeeId)),UtilMisc.toList("thruDate","-fromDate")));
 				tempEmployementList.add(tempEmployement);
 			}
 	    	Map result = FastMap.newInstance();  
