@@ -3896,12 +3896,21 @@ public class PayrollService {
 						//amount = loan.getBigDecimal("principalAmount");
 						newEntityLoanRecovery.set("principalAmount", amount);
 					}else{
-						if(UtilValidate.isEmpty(loanRecovery)){
+						if(UtilValidate.isEmpty(loanRecovery) && UtilValidate.isEmpty(loan.get("numCompPrincipalInst")) && UtilValidate.isEmpty(loan.get("numCompInterestInst"))){
 							newEntityLoanRecovery.set("principalInstNum", new Long(1));
 							//amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,BigDecimal.ROUND_UP);
 							newEntityLoanRecovery.set("principalAmount", amount);
 						}else{
 							closingBalance = BigDecimal.ZERO;
+							// lets populate completed installment number as previous installment number if loan recovery is empty
+							if(UtilValidate.isEmpty(loanRecovery)){
+								loanRecovery = delegator.makeValue("LoanRecovery");
+								if(UtilValidate.isNotEmpty(loan.get("numCompPrincipalInst")))
+									loanRecovery.set("principalInstNum",loan.get("numCompPrincipalInst"));
+								
+								if(UtilValidate.isNotEmpty(loan.get("numCompInterestInst")))
+										loanRecovery.set("interestInstNum",loan.get("numCompInterestInst"));
+							}
 							if(UtilValidate.isNotEmpty(loanRecovery.getBigDecimal("closingBalance")))
 							      closingBalance = loanRecovery.getBigDecimal("closingBalance");
 							
