@@ -3771,7 +3771,6 @@ public class PayrollService {
 							// lets populate completed installment number as previous installment number if loan recovery is empty
 							if(UtilValidate.isEmpty(loanRecovery)){
 								loanRecovery = delegator.makeValue("LoanRecovery");
-								Debug.log("loan============="+loan);
 								if(UtilValidate.isNotEmpty(loan.get("numCompPrincipalInst")))
 									loanRecovery.set("principalInstNum",loan.get("numCompPrincipalInst"));
 								
@@ -5059,12 +5058,12 @@ public class PayrollService {
 	  	    	input.clear();
 	        	input.put("userLogin", userLogin);
 	        	input.put("orgPartyId", orgPartyId);
-	        	//input.put("orgPartyId", "6080");
 	        	input.put("fromDate", attdTimePeriodStart);
 	        	input.put("thruDate", attdTimePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 	        	//Debug.log("employementList============"+employementList.size());
+	        	//employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","7058"));
 	        	//general holidays in that period
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
@@ -5085,9 +5084,7 @@ public class PayrollService {
 	        	for(GenericValue employement : employementList) {
 	        		String employeeId = employement.getString("partyIdTo");
 	        		GenericValue modPayrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId ,"customTimePeriodId",lastCloseAttedancePeriod.getString("customTimePeriodId")), false);
-	        		if(UtilValidate.isNotEmpty(modPayrollAttendance)){
-	        			Debug.log("modPayrollAttendance========="+modPayrollAttendance);
-	        		}
+	        		
 	        		double noOfCalenderDays= actualCalenderDays;
 	        		GenericValue newEntity = delegator.makeValue("PayrollAttendance");
 	        		newEntity.set("customTimePeriodId", lastCloseAttedancePeriod.getString("customTimePeriodId"));
@@ -5119,19 +5116,23 @@ public class PayrollService {
 	        			noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        			newEntity.set("noOfCalenderDays", new BigDecimal(noOfCalenderDays));
 	        		}
-	        		Timestamp employementThruDate = UtilDateTime.getDayEnd(employement.getTimestamp("thruDate"));
-	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <=0)){
-	        			Map inputMap = FastMap.newInstance();
-	        			inputMap.put("userLogin", userLogin);
-	        			inputMap.put("orgPartyId", employeeId);
-	        			inputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(employementThruDate,1)));
-	    	        	resultMap = HumanresService.getActiveEmployements(dctx,inputMap);
-	    	        	List<GenericValue> empEmployementList = (List<GenericValue>)resultMap.get("employementList");
-	    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
-	    	        	if(UtilValidate.isEmpty(empEmployement)){
-	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate));
-	    	        	}
+	        		
+	        		if(UtilValidate.isNotEmpty(employement.getTimestamp("thruDate"))){
+	        			Timestamp employementThruDate = UtilDateTime.getDayEnd(employement.getTimestamp("thruDate"));
+		        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <=0)){
+		        			Map inputMap = FastMap.newInstance();
+		        			inputMap.put("userLogin", userLogin);
+		        			inputMap.put("orgPartyId", employeeId);
+		        			inputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(employementThruDate,1)));
+		    	        	resultMap = HumanresService.getActiveEmployements(dctx,inputMap);
+		    	        	List<GenericValue> empEmployementList = (List<GenericValue>)resultMap.get("employementList");
+		    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
+		    	        	if(UtilValidate.isEmpty(empEmployement)){
+		    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate));
+		    	        	}
+		        		}
 	        		}
+	        		
 	        		if(UtilValidate.isNotEmpty(noOfEmployementDays) && (noOfEmployementDays.compareTo(BigDecimal.ZERO)) <= 0){
 	        			continue;
 	        		}
@@ -5191,16 +5192,6 @@ public class PayrollService {
 				    		newEntity.set("noOfPayableDays", BigDecimal.ZERO);
 				    		newEntity.set("lateMin", BigDecimal.ZERO);
 			        		newEntity.set("extraMin", BigDecimal.ZERO);
-			        		/*if(UtilValidate.isNotEmpty(modPayrollAttendance)){
-			        			newEntity.set("lossOfPayDays", modPayrollAttendance.getBigDecimal("lossOfPayDays").add(newEntity.getBigDecimal("lossOfPayDays")));
-					    		newEntity.set("noOfAttendedHoliDays", modPayrollAttendance.getBigDecimal("noOfAttendedHoliDays").add(newEntity.getBigDecimal("noOfAttendedHoliDays")));
-					    		newEntity.set("noOfAttendedSsDays", modPayrollAttendance.getBigDecimal("noOfAttendedSsDays").add(newEntity.getBigDecimal("noOfAttendedSsDays")));
-					    		newEntity.set("noOfAttendedWeeklyOffDays", modPayrollAttendance.getBigDecimal("noOfAttendedWeeklyOffDays").add(newEntity.getBigDecimal("noOfAttendedWeeklyOffDays")));
-					    		newEntity.set("noOfPayableDays", modPayrollAttendance.getBigDecimal("noOfPayableDays").add(newEntity.getBigDecimal("noOfPayableDays")));
-					    		newEntity.set("lateMin", modPayrollAttendance.getBigDecimal("lateMin").add(newEntity.getBigDecimal("lateMin")));
-				        		newEntity.set("extraMin", modPayrollAttendance.getBigDecimal("extraMin").add(newEntity.getBigDecimal("extraMin")));
-			        			
-			        		}*/
 				    		delegator.createOrStore(newEntity);
 				    		continue;
 			    		}
@@ -5361,17 +5352,7 @@ public class PayrollService {
 			    		newEntity.set("noOfAttendedWeeklyOffDays", new BigDecimal(noOfAttendedWeeklyOffDays));
 			    		newEntity.set("noOfPayableDays",noOfEmployementDays.subtract(newEntity.getBigDecimal("lossOfPayDays")));
 			    		newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-			    		//Debug.log("newEntity============="+newEntity);
-			    		/*if(UtilValidate.isNotEmpty(modPayrollAttendance)){
-		        			newEntity.set("lossOfPayDays", modPayrollAttendance.getBigDecimal("lossOfPayDays").add(newEntity.getBigDecimal("lossOfPayDays")));
-				    		newEntity.set("noOfAttendedHoliDays", modPayrollAttendance.getBigDecimal("noOfAttendedHoliDays").add(newEntity.getBigDecimal("noOfAttendedHoliDays")));
-				    		newEntity.set("noOfAttendedSsDays", modPayrollAttendance.getBigDecimal("noOfAttendedSsDays").add(newEntity.getBigDecimal("noOfAttendedSsDays")));
-				    		newEntity.set("noOfAttendedWeeklyOffDays", modPayrollAttendance.getBigDecimal("noOfAttendedWeeklyOffDays").add(newEntity.getBigDecimal("noOfAttendedWeeklyOffDays")));
-				    		newEntity.set("noOfPayableDays", modPayrollAttendance.getBigDecimal("noOfPayableDays").add(newEntity.getBigDecimal("noOfPayableDays")));
-				    		newEntity.set("lateMin", modPayrollAttendance.getBigDecimal("lateMin").add(newEntity.getBigDecimal("lateMin")));
-			        		newEntity.set("extraMin", modPayrollAttendance.getBigDecimal("extraMin").add(newEntity.getBigDecimal("extraMin")));
-		        			
-		        		}*/
+			    		
 			    		delegator.createOrStore(newEntity);
 			    		
 			    		//here populate shift wise details
