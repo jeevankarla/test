@@ -224,7 +224,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	        				 </td>
 					        </tr>
 					        <tr>
-					       	<td class="label"><b>Category</b></td></td>
+					       	<td class="label"><b>Brand Name</b></td></td>
 					    	<td>
 					            <select name="categoryId" id="categoryId">
 						     <option value=""></option>  
