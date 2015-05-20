@@ -56,12 +56,14 @@ environmentDetails = EntityUtil.filterByAnd(EnumerationDetails, [enumTypeId : "C
 projectDetails = EntityUtil.filterByAnd(EnumerationDetails, [enumTypeId : "CUST_PROJECT_TYPE"]);
 ProductIds= delegator.findList("Product",EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS ,"FINISHED_GOOD")  , null, null, null, false );
 
+categories = delegator.findList("ProductCategory",EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS ,"PRODUCTS_BRAND")  , null, null, null, false );
 
 StatusItemTypes= delegator.findList("StatusItem",null, null, null, null, false );
 
 statusTypeIds = EntityUtil.filterByAnd(StatusItemTypes, [statusTypeId : "CUST_COMP_STATUS"]);
 severityTypes = EntityUtil.filterByAnd(StatusItemTypes, [statusTypeId : "CUST_SEVERITY"]);
 context.put("ProductIds",ProductIds);
+context.put("categories",categories);
 context.put("assertMappingProds",assertMappingProds);
 context.put("ProductCategories",ProductCategories);
 context.put("statusTypeIds",statusTypeIds);

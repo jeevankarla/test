@@ -194,24 +194,15 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    
 					         <tr>
 						    <td class="label"><b> Date</b></td>
-						
-					         <input type="hidden" name="custRequestDate" id="custRequestDate" value="${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MM-yyyy hh:mm:ss.SSS")}"  />  
+						<#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
+					         <input type="hidden" name="custRequestDate" id="custRequestDate" value="${nowTimestamp}"  />  
 					           	<td>
 					            	<div class='tabletext h3'>${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MM-yyyy")}         
 					            	</div>
 					          	</td>        
 						</tr>
-						      <tr>
-					          	<td class="label"><b>Category</b></td></td>
-							    <td>
-		            			 <select name="categoryId"  id="categoryId">
-						       <option value='SOFTWARE'>Software</option>
-							   <option value='HARDWARE'>Hardware</option>
-					      	   </select>
-		          				</td>
-					        </tr>
-					         <tr>
-					       	<td class="label"><b>Sub-Category</b></td></td>
+					         	<#--<tr>
+					       <td class="label"><b>Sub-Category</b></td></td>
 					    	<td>
 					            <select name="productCategoryId" id="productCategoryId">
 						     <option value=""></option>  
@@ -220,9 +211,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 						     </#list>
 						     </select>
 						     </td>
-					        </tr>
+					        </tr>-->
 					         <tr>
-					            <td class="label"><b>Type</b></td></td>
+					            <td class="label"><b>Complaint Type</b></td></td>
 		       	  				 <td>
 						     <select name="custRequestTypeId" id="custRequestTypeId">
 						     <option value=""></option>  
@@ -232,8 +223,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 						     </select>
 	        				 </td>
 					        </tr>
+					        <tr>
+					       	<td class="label"><b>Category</b></td></td>
+					    	<td>
+					            <select name="categoryId" id="categoryId">
+						     <option value=""></option>  
+                         <#list categories as eachCategory>
+						     <option value='${eachCategory.productCategoryId?if_exists}' >${eachCategory.description?if_exists}</option>
+						     </#list>
+						     </select>
+						     </td>
+					        </tr>
 					         <tr>
-					            <td class="label"><b>Product / Component</b></td></td> 
+					            <td class="label"><b>Product</b></td></td> 
                              <td> <select name="productId" id="productId">
 						     <option value=""></option>  
 						     <#list ProductIds as productIds1>
@@ -275,7 +277,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						     </select>
 	        				 </td>
 	          				</tr>
-	          				 <tr>
+	          				 <#--<tr>
 					            <td class="label"><b>Environment</b></td></td>
 		          				<td>
                             <select name="environment" id="environment">
@@ -285,7 +287,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						     </#list>
 						     </select>
 		          				</td>
-	          				</tr> 
+	          				</tr>-->
 	          				<tr>
 					            <td class="label"><b>Project</b></td></td>
 		          				<td>
