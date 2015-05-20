@@ -58,7 +58,7 @@ public class TicketMgmtServices {
         String dateStr = (String)context.get("custRequestDate");
         Timestamp custRequestDate=null;
         if (UtilValidate.isNotEmpty(dateStr)) {
-        	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.SSS");
+        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
         	try {
         		custRequestDate = new java.sql.Timestamp(sdf.parse(dateStr)
         	.getTime());
@@ -70,7 +70,7 @@ public class TicketMgmtServices {
         	Debug.logError(e, "Cannot parse date string: " + dateStr,
         	module);
         	}
-        	}
+        }
 		String statusId = "OPEN_NEW";
 		String productId = (String)context.get("productId");
 		String salesChannelEnumId = (String)context.get("salesChannelEnumId");
