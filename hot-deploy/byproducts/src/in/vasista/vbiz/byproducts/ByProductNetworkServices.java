@@ -3164,6 +3164,12 @@ public class ByProductNetworkServices {
 					securityDeposit = booth.getBigDecimal("securityDeposit");
 				}
 				Map<String, Object> boothDetails = FastMap.newInstance();
+				List<GenericValue> paymentMethodTypes = delegator.findList("PartyProfileDefaultAndFacilityAndMethodType",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,boothId), null, UtilMisc.toList("partyId","description"), null,	false);
+				if(UtilValidate.isNotEmpty(paymentMethodTypes)){
+					GenericValue paymentMethodType = EntityUtil.getFirst(paymentMethodTypes);
+			        String paymentType=paymentMethodType.getString("description");
+				    boothDetails.put("paymentType", paymentType);
+				}				
 				boothDetails.put("facilityId", boothId);
 				boothDetails.put("facilityName",booth.getString("facilityName"));
 				boothDetails.put("category",booth.getString("categoryTypeEnum"));
