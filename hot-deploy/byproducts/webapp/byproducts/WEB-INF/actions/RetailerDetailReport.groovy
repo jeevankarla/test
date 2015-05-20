@@ -34,7 +34,11 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.product.product.ProductWorker;
 	
 dctx = dispatcher.getDispatchContext();
-boothsDetail = ByProductNetworkServices.getAllBoothsDetails(dctx, UtilMisc.toMap("userLogin", userLogin));
+boothCategory=parameters.categoryTypeEnum;
+Boolean activeOnly=parameters.activeOnly;
+if (activeOnly != true) {
+	activeOnly=false;
+}
+boothsDetail = ByProductNetworkServices.getAllBoothsDetails(dctx, UtilMisc.toMap("categoryTypeEnum", boothCategory , "activeOnly", activeOnly , "userLogin", userLogin));
 context.boothsDetail = boothsDetail.get("boothsDetailsList");
-	
 	

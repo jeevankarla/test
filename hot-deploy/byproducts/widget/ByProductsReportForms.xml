@@ -89,7 +89,8 @@
         <field name="amRouteId" title="AM Route"><display/></field> 
         <field name="pmRouteId" title="PM Route"><display/></field> 
         <field name="latitude" title="Latitude"><display/></field>
-        <field name="longitude" title="Longitude"><display/></field> 
+        <field name="longitude" title="Longitude"><display/></field>
+        <field name="paymentType" title="Payment Type"><display/></field> 
     </form>
     
     <form name="ListBoothPaymentsCSV" type="list" list-name="boothPaymentsCsvList" paginate="false"

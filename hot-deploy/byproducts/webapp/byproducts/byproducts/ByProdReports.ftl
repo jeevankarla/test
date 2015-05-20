@@ -527,8 +527,16 @@ function reportTypeChangeFunc() {
         	<form id="FacilityDetailReport" name="FacilityDetailReport" method="post"  target="_blank" action="<@ofbizUrl>RetailerDetailReport.csv</@ofbizUrl>">	
       			<td width="30%">Retailer Detail Report </td>
       			<td width="15%">Date<input  type="text" size="18pt" id="retailerDetailDate" readonly  name="supplyDate"/></td>			
-      			<td width="15%"></td>
-				<td width="15%"></td>
+      			<td width="15%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
+								<option value="">All Types</option>
+		                		<#list categoryTypeList as categoryType>    
+		                  	    <option value='${categoryType.enumId}'>
+			                    		${categoryType.description}
+			                     </option>
+		                		</#list>            
+								</select>
+			      </td>
+      			<td width="15%"><input type="checkbox" name="activeOnly" value="activeOnly">Active Booths Only<br>
 				<td width="15%"></td>	
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
