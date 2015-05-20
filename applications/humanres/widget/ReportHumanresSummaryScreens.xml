@@ -276,6 +276,22 @@
 			
 		</section>
 	</screen>
+	<screen name="PFform6A">
+   		<section>
+   			<actions>
+   				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+   				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+   				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+   				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+   				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PFform6A.groovy"/>
+   			</actions>
+   			<widgets>
+   				<platform-specific> 
+   				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/PFform6A.fo.ftl"/></xsl-fo> 
+                   </platform-specific>
+   			</widgets>
+   		</section>
+	</screen>
 	<screen name="ESIMonthlystatement">
 		<section>
 			<actions>
