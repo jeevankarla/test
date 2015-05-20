@@ -49,7 +49,7 @@ under the License.
             <set field="setStat.statusId" from-field="parameters.statusId"/>
             <set field="setStat.custRequestId" from-field="newEntity.custRequestId"/>
             <set field="setStat.changedByUserLogin" from-field="userLogin.userLoginId" type="String"/>
-            <set field="setStat.partyId" from-field="userLogin.userLoginId" type="String"/>
+            <set field="setStat.partyId" from-field="userLogin.partyId" type="String"/>
             <if-not-empty field="parameters.description">
             	<set field="setStat.comments" from-field="parameters.description"/>
             </if-not-empty>
