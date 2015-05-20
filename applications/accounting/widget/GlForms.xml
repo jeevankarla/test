@@ -695,7 +695,7 @@ under the License.
         <!-- <auto-fields-service service-name="createAcctgTrans"/> -->
         <field position="1" use-when="acctgTransId != null" name="acctgTransId"><display also-hidden="true"/></field>
         <field position="1" name="transactionDate"><date-time/></field>
-        <field position="2" name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName" size="20" maxlength="20"/></field>
+        <field position="2" name="partyId" title="${uiLabelMap.PartyPartyId}" required-field="true"><lookup target-form-name="LookupPartyName" size="20" maxlength="20"/></field>
         <field position="1" name="scheduledPostingDate"><date-time/></field>
         <field position="2" name="invoiceId">
             <lookup target-form-name="LookupInvoice" size="20" maxlength="20">
@@ -718,8 +718,8 @@ under the License.
         </field>
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
-        <field use-when="acctgTransId !=null" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
-        <field use-when="acctgTransId==null" name="createButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
+        <field use-when="acctgTransId !=null" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit/></field>
+        <field use-when="acctgTransId==null" name="createButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext" ><submit/></field>
         
     </form>
 
