@@ -128,7 +128,7 @@
 				            "<td align='center'>${orderItem.quantity}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center'>${orderItem.unitPrice}</td>"+
-                           "<td align='center'>${orderItem.unit}</td>"+
+                           "<td align='center'>${orderItem.unit?if_exists}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 				            "<td align='center' class='h2'><input type='text'  id='amendedQuantity' name='amendedQuantity_o_"+${orderItem.orderItemSeqId}+"'  size='12'/></td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
