@@ -184,7 +184,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 										tempMap = [:];
 										tempMap["invoiceDate"] = invoiceDate;
 										tempMap["supInvNumber"] = supInvNumber;
-										tempMap[productId] = invItemVal+cstRevenue;
+										tempMap[productId] = invItemVal;
 										invoiceMap[invoiceId]=tempMap;
 										temp=FastMap.newInstance();
 										temp.putAll(invoiceMap);
@@ -199,7 +199,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 											tempMap = [:];
 											tempMap["invoiceDate"] = invoiceDate;
 											tempMap["supInvNumber"] = supInvNumber;
-											tempMap[productId] = invItemVal+cstRevenue;
+											tempMap[productId] = invItemVal;
 											invoiceMap[invoiceId]=tempMap;
 											temp=FastMap.newInstance();
 											temp.putAll(invoiceMap);
@@ -212,7 +212,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 												prodMap=[:];
 												prodMap["invoiceDate"] = invoiceDate;
 												prodMap["supInvNumber"] = supInvNumber;
-												prodMap[productId] = invItemVal+cstRevenue;
+												prodMap[productId] = invItemVal;
 												catInvoiceMap[invoiceId]=prodMap;
 												temp=FastMap.newInstance();
 												temp.putAll(catInvoiceMap);
@@ -221,7 +221,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 											}else{
 												  tempInvoiceMap=[:];
 												  tempInvoiceMap.putAll(catInvoiceMap.get(invoiceId));
-												  tempInvoiceMap[productId]=invItemVal+cstRevenue;
+												  tempInvoiceMap[productId]=invItemVal;
 												  catInvoiceMap[invoiceId] = tempInvoiceMap;
 												  temp=FastMap.newInstance();
 												  temp.putAll(catInvoiceMap);
@@ -276,7 +276,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary
 												prodCatMap=[:];
 												cstRevenue = productValue.getValue().get("cstRevenue");
 												tempProdMap = FastMap.newInstance();
-												tempProdMap["totalRevenue"] = invItemVal+cstRevenue;
+												tempProdMap["totalRevenue"] = invItemVal;
 												prodCatMap[prodCategoryId] = tempProdMap;
 												prodPrimaryCategoryMap[prodPrimaryCategoryId]=prodCatMap;
 											 }else{
@@ -285,14 +285,14 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary
 													if(UtilValidate.isEmpty(prodCatMap[prodCategoryId])){
 														cstRevenue = productValue.getValue().get("cstRevenue");
 														tempProdMap = FastMap.newInstance();
-														tempProdMap["totalRevenue"] = invItemVal+cstRevenue;
+														tempProdMap["totalRevenue"] = invItemVal;
 														prodCatMap[prodCategoryId] = tempProdMap;
 													}else{
 														tempMap = [:];
 														productMap = [:];
 														tempMap.putAll(prodCatMap.get(prodCategoryId));
 														totalRevenue = productValue.getValue().get("totalRevenue");
-														tempMap["totalRevenue"]+= invItemVal+productValue.getValue().get("cstRevenue");
+														tempMap["totalRevenue"]+= invItemVal;
 														prodCatMap[prodCategoryId] = tempMap;
 													}
 													prodPrimaryCategoryMap[prodPrimaryCategoryId]=prodCatMap;
