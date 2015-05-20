@@ -230,6 +230,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker4("PartyLedgerCreditorFromDate","PartyLedgerCreditorThruDate");
 		makeDatePicker4("PartyWiseLedgerFromDate","PartyWiseLedgerThruDate");
 		makeDatePicker4("PartyWiseLedgerInterFromDate","PartyWiseLedgerInterThruDate");
+		makeDatePicker4("EMPLoanCrdtAdvFromDate","EMPLoanCrdtAdvThruDate");
 	    $('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -513,6 +514,15 @@ function reportTypeChangeFunc() {
 					   </select>
 				     </td>
 					  <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('OthersncesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+					</td>         			
+				</form>
+              </tr>
+              <tr class="alternate-row">
+              	<form id="EmployeeLoanCreditAdviseOtherUnits" name="EmployeeLoanCreditAdviseOtherUnits" method="post" action="<@ofbizUrl>EmployeeLoanCreditAdviseOtherUnits.pdf</@ofbizUrl>" target="_blank">	
+					<td width="30%"> Employee Loan credit advise other units/unions</td>
+					<td width="10%">From<input  type="text" size="18pt" id="EMPLoanCrdtAdvFromDate" readonly  name="fromDate"/></td>
+				    <td width="10%">To<input  type="text" size="18pt" id="EMPLoanCrdtAdvThruDate" readonly  name="thruDate"/></td>
+					  <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeLoanCreditAdviseOtherUnits', '<@ofbizUrl>EmployeeLoanCreditAdviseOtherUnits.pdf</@ofbizUrl>');" class="buttontext"/> </td>
 					</td>         			
 				</form>
               </tr>
