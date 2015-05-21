@@ -62,7 +62,7 @@ shiftTime = null;
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
 conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "MD"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 milkTransferDetails = delegator.findList("MilkTransferAndMilkTransferItem",condition,null,null,null,false);
@@ -100,9 +100,9 @@ def getShiftWiseRecords(int shiftType,Timestamp shiftDateTimeStart,Timestamp shi
 	  condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	  milkTransferDetailsList = EntityUtil.filterByCondition(milkTransferDetails, condition);
 	  conditionList.clear();
-	if(UtilValidate.isNotEmpty(milkTransferDetailsList)){
-		ShiftWiseMap.put(shiftType, milkTransferDetailsList);
-	}
+	  if(UtilValidate.isNotEmpty(milkTransferDetailsList)){
+		 ShiftWiseMap.put(shiftType, milkTransferDetailsList);
+	  }
 }
 
 if(shiftType.equalsIgnoreCase("all")){
