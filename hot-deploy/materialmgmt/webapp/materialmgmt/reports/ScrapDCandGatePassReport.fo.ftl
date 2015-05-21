@@ -48,7 +48,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-weight="bold" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-                                   <fo:block  keep-together="always" font-weight="bold"  text-align="center" font-size="12pt" white-space-collapse="false">SCRAP DC AND GATE PASS FORM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(formDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}</fo:block> 
+                                   <fo:block  keep-together="always" font-weight="bold"  text-align="center" font-size="12pt" white-space-collapse="false">SCRAP DC AND GATE PASS FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(formDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}</fo:block> 
 					            </fo:table-cell>
 							</fo:table-row>
 			            </fo:table-body>
