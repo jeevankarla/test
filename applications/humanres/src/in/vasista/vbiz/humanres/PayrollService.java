@@ -5067,6 +5067,7 @@ public class PayrollService {
 	  	    	input.clear();
 	        	input.put("userLogin", userLogin);
 	        	input.put("orgPartyId", orgPartyId);
+	        	//input.put("orgPartyId", "6295");
 	        	input.put("fromDate", attdTimePeriodStart);
 	        	input.put("thruDate", attdTimePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
@@ -5215,6 +5216,9 @@ public class PayrollService {
 			    		c1.setTime(UtilDateTime.toSqlDate(attdTimePeriodStart));
 			    		Calendar c2=Calendar.getInstance();
 			    		c2.setTime(UtilDateTime.toSqlDate(attdTimePeriodEnd));
+			    		if(UtilValidate.isNotEmpty(employement.getTimestamp("thruDate"))){
+			    			c2.setTime(UtilDateTime.toSqlDate(UtilDateTime.getDayEnd(employement.getTimestamp("thruDate"))));
+			    		}
 			    		String emplWeeklyOffDay = "SUNDAY";
 			    		
 				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
