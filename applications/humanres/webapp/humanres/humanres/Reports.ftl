@@ -1216,6 +1216,32 @@ function setOrgPartyId() {
 						</table>
 					</tr>
 				</#if>
+				<#if (reportDetailsMap.get("PFform6A.pdf") == "Y")> 
+					<tr class="alternate-row">
+						<form id="PFform6A" name="PFform6A" method="post" action="<@ofbizUrl>PFform6A.pdf</@ofbizUrl>" target="_blank">	
+							<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="20%"><span class='h3'>PF Form 6A</span></td>
+										<td width="30%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="Form16Report" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
+										<td width="32%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+												<#list customTimePeriodIdsList as customTimePeriod>
+													 <#if finYearId?exists && (finYearId == customTimePeriod.customTimePeriodId)>
+								      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								      					<#else>
+								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								                  		</option>
+								      				</#if>
+												</#list>
+											</select>
+										</td>	
+										<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									</tr>
+								</table>	
+							</form>
+						</table>
+					</tr>
+				</#if>
 				<#if (reportDetailsMap.get("ITAXStatement.pdf") == "Y")> 
 					<tr class="alternate-row">
 						<form id="ITAXStatement" name="ITAXStatement" mothed="post" action="<@ofbizUrl>ITAXStatement.pdf</@ofbizUrl>" target="_blank">
