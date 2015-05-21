@@ -47,7 +47,7 @@ milkTransferMap=[:];
 
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("dcNo", EntityOperator.EQUALS, dcNo));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"MXF_RECD"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 MilkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);

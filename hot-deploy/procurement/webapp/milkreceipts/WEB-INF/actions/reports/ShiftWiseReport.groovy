@@ -66,7 +66,7 @@ conditionList =[];
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO , shiftDateStart ));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO , shiftDateEnd ));
 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 ShiftWiseList = delegator.findList("MilkTransfer",condition,null,null,null,false);
 

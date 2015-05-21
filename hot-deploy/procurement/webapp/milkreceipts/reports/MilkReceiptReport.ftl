@@ -15,6 +15,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 			}
 			
 	$(document).ready(function(){
+		makeDatePicker("milkAnalysisDate","");
 		makeDatePicker("UnitWiseMilkReceiptFromDate","thruDate");
 		makeDatePicker("UnitWiseMilkReceiptThruDate","thruDate");
 		makeDatePicker("UnionFromDate","thruDate");
@@ -105,14 +106,14 @@ function appendParams(formName, action) {
          </tr>   
          <tr class="alternate-row"> 
 				<form id="MilkIncommingReport" name="MilkIncommingReport" mothed="post" action="<@ofbizUrl>MilkIncommingReport.pdf</@ofbizUrl>" target="_blank">
-				   <td>Milk Incomming Report</td>
+				   <td>Milk Incoming Report</td>
                     <td>dc No<input type="dcNo" id="dcNo"name="dcNo">
 				             <input type="submit" value="Download" class="buttontext"></td>
 			 </form>
 		  </tr>
           <tr class="alternate-row"> 		
 			  <form id="MilkAnalysisReportTxt" name="MilkAnalysisReportTxt" mothed="post" action="<@ofbizUrl>MilkAnalysisReport.txt</@ofbizUrl>">
-			     <td>Milk Analysis Report</td>
+			     <td> Dispatch Milk Analysis Report</td>
                   <td>
                   Select Shift <select name="shiftType">
 					                    <option value="all" selected></option>
@@ -120,7 +121,7 @@ function appendParams(formName, action) {
 			                            <option value="2">2nd Shift</option>
 			                            <option value="3">3rd Shift</option>
 		                   		</select>
-				   Shift Date <input  type="text" size="15pt" id="shiftDate" name="shiftDate" required />				  			   
+				   Shift Date <input  type="text" size="15pt" id="milkAnalysisDate" name="shiftDate" required />				  			   
 				   <input type="submit" value="Download" class="buttontext"/>
 				 </td>
 			  </form>
