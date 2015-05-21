@@ -10,8 +10,10 @@ $(document).ready(function(){
 		var prinAmount = $("#principalAmount").val();
 		if(prinAmount && !isNaN(prinAmount)){
 			if(prinAmount>prncplAmt){
-				$("#principalAmount").val(prncplAmt);
-				alert("You cannot give more than the predefined amount");
+				if(loanType != "external"){
+					$("#principalAmount").val(prncplAmt);
+					alert("You cannot give more than the predefined amount");
+				}
 			}
 		}
 	});
@@ -19,8 +21,10 @@ $(document).ready(function(){
 		var numPrinInst = $("#numPrincipalInst").val();
 		if(numPrinInst && !isNaN(numPrinInst)){
 			if(numPrinInst>prinplInst){
-				$("#numPrincipalInst").val(prinplInst);
-				alert("You cannot give more than the predefined amount");
+				if(loanType != "external"){
+					$("#numPrincipalInst").val(prinplInst);
+					alert("You cannot give more than the predefined amount");
+				}
 			}
 		}
 	});
@@ -28,17 +32,22 @@ $(document).ready(function(){
 		var numIntrstInst = $("#numInterestInst").val();
 		if(numIntrstInst && !isNaN(numIntrstInst)){
 			if(numIntrstInst>intrstInst){
-				$("#numInterestInst").val(intrstInst);
-				alert("You cannot give more than the predefined amount");
+				if(loanType != "external"){
+					$("#numInterestInst").val(intrstInst);
+					alert("You cannot give more than the predefined amount");
+				}
 			}
 		}
 	});
 	$("#interestAmount").blur(function(){
+		
 		var intrestAmount = $("#interestAmount").val();
 		if(intrestAmount && !isNaN(intrestAmount)){
 			if(intrestAmount>intrstAmt){
-				$("#interestAmount").val(intrstAmt);
-				alert("You cannot give more than the predefined amount");
+				if(loanType != "external"){
+					$("#interestAmount").val(intrstAmt);
+					alert("You cannot give more than the predefined amount");
+				}
 			}
 		}
 	});
@@ -46,16 +55,25 @@ $(document).ready(function(){
 		var rateOfIntrst = $("#rateOfInterest").val();
 		if(rateOfIntrst && !isNaN(rateOfIntrst)){
 			if((rateOfIntrst>rateOfInt) || (rateOfIntrst<rateOfInt)){
-				$("#rateOfInterest").val(rateOfInt);
-				alert("You cannot modify rate of interest");
+				if(loanType != "external"){
+					$("#rateOfInterest").val(rateOfInt);
+					alert("You cannot modify rate of interest");
+				}
 			}
 		}
 	});
 });
 
+var loanType = '';
 function loanTypesAmountChange(){
 	var loanTypeId = $("#loanTypeId").val();
 	var partyId = $("[name='partyId']").val();
+	
+	var selected = $("input[type='radio'][name='loanType']:checked");
+	if (selected.length > 0) {
+		loanType = selected.val();
+	}
+	
 	$.ajax({
          type: "POST",
          url: 'getLoanAmountsByLoanType',
