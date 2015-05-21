@@ -3814,7 +3814,7 @@ public class PayrollService {
 					
 				}
 				priceInfoDescription.append("found "+ loanList.size()+" active loans");
-	        	
+				priceInfoDescription.append("\n ::LoanRecovery Details   ["+ newEntityLoanRecovery);
 	        	priceInfos.add(priceInfoDescription);
 	            } catch (Exception e) {
 	                Debug.logError(e, "Error getting rules fr" +
@@ -3873,7 +3873,7 @@ public class PayrollService {
                    dynamicView.addAlias("CT", "fromDate");
                    dynamicView.addAlias("CT", "thruDate");
                    dynamicView.addViewLink("LR", "CT", Boolean.FALSE, ModelKeyMap.makeKeyMapList("customTimePeriodId"));
-                   String isExternal =  loan.getString("isExternal");
+                   String isFlatAmount =  loan.getString("isFlatAmount");
                    newEntityLoanRecovery = delegator.makeValue("LoanRecovery");
                    newEntityLoanRecovery.set("loanId", loan.getString("loanId"));
                    newEntityLoanRecovery.set("customTimePeriodId", timePeriodId);
@@ -3891,7 +3891,7 @@ public class PayrollService {
 						closingBalance = closingBalance.add(loan.getBigDecimal("interestAmount"));
 					
 					
-					if(UtilValidate.isNotEmpty(isExternal) && isExternal.equalsIgnoreCase("Y")){
+					if(UtilValidate.isNotEmpty(isFlatAmount) && isFlatAmount.equalsIgnoreCase("Y")){
 						newEntityLoanRecovery.set("principalInstNum", new Long(1));
 						//amount = loan.getBigDecimal("principalAmount");
 						newEntityLoanRecovery.set("principalAmount", amount);
