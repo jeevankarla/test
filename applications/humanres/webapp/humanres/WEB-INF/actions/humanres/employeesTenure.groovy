@@ -4,7 +4,9 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import org.apache.commons.collections.CollectionUtils;
 
+emplPositionIdsList = [];
 def populateChildren(org, employeeList) {
 	internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : org.partyId, partyRelationshipTypeId : "GROUP_ROLLUP"],["groupName"]));
 	internalOrgs.each { internalOrg ->
@@ -21,10 +23,15 @@ def populateChildren(org, employeeList) {
 		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
 			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
 			if (emplPositionType != null) {
-				employeePosition = emplPositionType.getString("description");
+				employeePosition = emplPositionType.getString("emplPositionTypeId");
+				if(UtilValidate.isEmpty(employeePosition)){
+					employeePosition = emplPositionType.getString("emplPositionTypeId");
+				}
 			}
 			else {
 				employeePosition = emplPositionAndFulfillment.getString("emplPositionId");
+				emplPositionIdsList.add(employeePosition);
+				
 			}
 		}
 		employee.put("position", employeePosition);
@@ -64,6 +71,40 @@ upcomingRetirements = [];
 thruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 365);
 
 JSONArray employeesJSON = new JSONArray();
+employeeListFiltered = [];
+gradeLevelList = [];
+gradeLevelEmplPosList = delegator.findList("EmplPositionType",null , UtilMisc.toSet("gradeLevel","emplPositionTypeId"), ["gradeLevel"], null, false );
+if(UtilValidate.isNotEmpty(gradeLevelEmplPosList)){
+	gradeLevelList = EntityUtil.getFieldListFromEntityList(gradeLevelEmplPosList,"gradeLevel",true);
+	if(UtilValidate.isNotEmpty(gradeLevelList)){
+		gradeLevelList.each{ gradeLevel ->
+			employeeListFiltered = EntityUtil.filterByAnd(gradeLevelEmplPosList, ["gradeLevel" : gradeLevel]);
+			employeeListFiltered.each { emplPostin ->
+				emplPosCnt = 0;
+				emplPosition = emplPostin.emplPositionTypeId;
+				for(i=0; i<employeeList.size(); i++){
+					employee = employeeList.get(i);
+					if(UtilValidate.isNotEmpty(employee.get("position"))){
+						if(UtilValidate.isNotEmpty(emplPosition)){
+							if(employee.get("position")   ==   emplPosition ){
+								emplPosCnt++;
+							}
+						}
+					}
+				}
+				if(emplPosCnt != 0){
+					positionMap[emplPosition] = emplPosCnt;
+				}
+			}
+		}
+	}
+}
+
+Map<String, Integer> frequencyMapping = CollectionUtils.getCardinalityMap(emplPositionIdsList);
+for(key in frequencyMapping.keySet()){
+	positionMap[key] = frequencyMapping.get(key);
+}
+
 
 employeeList.each {employee ->
 	if (departmentMap.containsKey(employee.department)) {
@@ -72,19 +113,19 @@ employeeList.each {employee ->
 	else {
 		departmentMap[employee.department] = 1;
 	}
-	if (positionMap.containsKey(employee.position)) {
+	/*if (positionMap.containsKey(employee.position)) {
 		positionMap[employee.position] += 1;
 	}
 	else {
 		positionMap[employee.position] = 1;
-	}	
+	}*/
 	if (employee.birthDate) {
 		int day =  UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale);
 		int month = UtilDateTime.getMonth(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 1;
 		if (day == 1) { // need to take the prev month last date
 			month--;
 		}
-		int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 60;	
+		int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 60;
 		retirementDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
 		retirementDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retirementDate), timeZone, locale);
 //Debug.logError("employee.birthDate="+employee.birthDate,"");
@@ -123,7 +164,12 @@ JSONArray positionPieDataJSON = new JSONArray();
 JSONArray positionEmployeesJSON = new JSONArray();
 positionMap.each { position ->
 	JSONArray positionJSON = new JSONArray();
-	positionJSON.add(position.getKey());
+	emplPosType = delegator.findOne("EmplPositionType",[emplPositionTypeId : position.getKey()], true);
+	if(UtilValidate.isNotEmpty(emplPosType)){
+		positionJSON.add(emplPosType.description);
+	}else{
+		positionJSON.add(position.getKey());
+	}
 	positionJSON.add(position.getValue());
 	positionEmployeesJSON.add(positionJSON);
 	
@@ -138,12 +184,11 @@ positionMap.each { position ->
 //Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
 Debug.logError("positionEmployeesJSON="+positionEmployeesJSON,"");
 Debug.logError("positionPieDataJSON="+positionPieDataJSON,"");
-//Debug.logError("employeesJSON="+employeesJSON,"");
+Debug.logError("employeesJSON="+employeesJSON,"");
 context.deptEmployeesJSON = deptEmployeesJSON;
 context.deptPieDataJSON = deptPieDataJSON;
 context.positionEmployeesJSON = positionEmployeesJSON;
 context.positionPieDataJSON = positionPieDataJSON;
 context.employeesJSON = employeesJSON;
-
 
 
