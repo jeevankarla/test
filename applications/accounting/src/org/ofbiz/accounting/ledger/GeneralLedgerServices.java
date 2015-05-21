@@ -742,11 +742,15 @@ public class GeneralLedgerServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String partyId = (String) context.get("partyId");
+        List<String> partyIdList = (List) context.get("partyIds");
         String glAccountTypeId =(String) context.get("glAccountTypeId");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
         String fromGlAccountId =(String) context.get("glAccountId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
+        List partyIds = FastList.newInstance();
+        Map<String, Object> openingBalMap = FastMap.newInstance();
         List conditionList = FastList.newInstance();
         List<GenericValue> acctgTransList=null;
         EntityListIterator acctgTransEntryList=null;
@@ -755,6 +759,12 @@ public class GeneralLedgerServices {
         BigDecimal debit = BigDecimal.ZERO;
         BigDecimal openingBalance = BigDecimal.ZERO;
         try{
+        	if(UtilValidate.isNotEmpty(partyId)){
+        		partyIds.add(partyId);
+        	}
+        	if(UtilValidate.isNotEmpty(partyIdList)){
+        		partyIds=partyIdList;
+        	}
         	String glAccountId="";
         	if(UtilValidate.isNotEmpty(glAccountTypeId)){
 	        	GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault", UtilMisc.toMap("glAccountTypeId",glAccountTypeId,"organizationPartyId","Company"), false);
@@ -771,11 +781,14 @@ public class GeneralLedgerServices {
         	conditionList.clear();
         	//conditionList.add(EntityCondition.makeCondition("acctgTransId",EntityOperator.IN,acctgTransIds));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
-        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
         	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 //        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
-        	if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
+        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
+        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
+        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
+        	}else if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
         	}    
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -801,6 +814,26 @@ public class GeneralLedgerServices {
         				if(((String)acctgTrans.get("debitCreditFlag")).equals("D") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
         					debit=debit.add((BigDecimal)acctgTrans.get("amount"));
         				}
+        				BigDecimal partyCredit = BigDecimal.ZERO;
+        				BigDecimal partyDebit = BigDecimal.ZERO;
+        				if(((String)acctgTrans.get("debitCreditFlag")).equals("C") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
+        					partyCredit=(BigDecimal)acctgTrans.get("amount");
+        				}
+        				if(((String)acctgTrans.get("debitCreditFlag")).equals("D") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
+        					partyDebit=(BigDecimal)acctgTrans.get("amount");
+        				}
+        				Map tempMap = FastMap.newInstance();
+        				tempMap.put("credit", partyCredit);
+        				tempMap.put("debit", partyDebit);
+        				if(UtilValidate.isEmpty(openingBalMap.get((acctgTrans.getString("partyId")).toUpperCase()))){
+        					openingBalMap.put(acctgTrans.getString("partyId").toUpperCase(),tempMap);
+        				}else{
+        					Map existing = FastMap.newInstance();
+        					existing = (Map)openingBalMap.get(acctgTrans.getString("partyId").toUpperCase());
+        					tempMap.put("credit", partyCredit.add((BigDecimal)existing.get("credit")));
+            				tempMap.put("debit", partyDebit.add((BigDecimal)existing.get("debit")));
+            				openingBalMap.put(acctgTrans.getString("partyId").toUpperCase(),tempMap);
+        				}
 //                    }
         			/*for(GenericValue TransEntry:acctgTransEntry){
         				if(((String)TransEntry.get("debitCreditFlag")).equals("C") && UtilValidate.isNotEmpty((BigDecimal)TransEntry.get("amount"))){
@@ -821,6 +854,7 @@ public class GeneralLedgerServices {
         result.put("credit", credit);
 		result.put("debit", debit);
 		result.put("openingBalance", openingBalance);
+		result.put("openingBalMap", openingBalMap);
         return result;
     }
 	
