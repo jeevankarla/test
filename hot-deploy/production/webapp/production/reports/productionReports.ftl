@@ -97,7 +97,7 @@
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("convFromDate","convThruDate");
 		makeDatePicker("milkProcessRegDate","");
-		
+		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 	
@@ -137,6 +137,24 @@
 							<td width="25%">
 							     <span class='h3'>
 									Date <input  type="text" size="18pt" id="milkProcessRegDate"   name="fromDate"/>
+								 </span>
+							</td>
+						    <td width="30%"><span class='h3'></span></td>
+						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+			
+			<tr class="alternate-row"> 
+				<form id="MaterialBalanceReport" name="MaterialBalanceReport" mothed="post" action="<@ofbizUrl>MaterialBalanceReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'>Material Balance Report</span></td>
+							<td width="25%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="mateBalanceFromDate"   name="mateBalanceFromDate"/>
+									To   <input  type="text" size="18pt" id="mateBalanceThruDate"   name="mateBalanceThruDate"/>
 								 </span>
 							</td>
 						    <td width="30%"><span class='h3'></span></td>
