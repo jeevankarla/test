@@ -118,21 +118,21 @@
 			
 			message +=   <#list amendedPOList as orderItem>
 							"<tr class='h3'>"+
-							"<input type='hidden' value='${orderItem.orderId}' name='orderId_o_"+${orderItem.orderItemSeqId}+"'/><input type='hidden' value='${orderItem.orderItemSeqId}' name='orderItemSeqId_o_"+${orderItem.orderItemSeqId}+"'/>"+
-							"<input type='hidden' value='${orderItem.productId}' name='productId_o_"+${orderItem.orderItemSeqId}+"'/>"+
-					    	"<input type='hidden' value='${orderItem.internalName}' name='internalId_o_"+${orderItem.orderItemSeqId}+"'/>"+
-					    	"<input type='hidden' value='${orderItem.unit}' name='unit_o_"+${orderItem.orderItemSeqId}+"'/>"+
+							"<input type='hidden' value='${orderItem.orderId?if_exists}' name='orderId_o_"+${orderItem.orderItemSeqId?if_exists}+"'/><input type='hidden' value='${orderItem.orderItemSeqId?if_exists}' name='orderItemSeqId_o_"+${orderItem.orderItemSeqId}+"'/>"+
+							"<input type='hidden' value='${orderItem.productId?if_exists}' name='productId_o_"+${orderItem.orderItemSeqId?if_exists}+"'/>"+
+					    	"<input type='hidden' value='${orderItem.internalName?if_exists}' name='internalId_o_"+${orderItem.orderItemSeqId}+"'/>"+
+					    	"<input type='hidden' value='${orderItem.unit?if_exists}' name='unit_o_"+${orderItem.orderItemSeqId?if_exists}+"'/>"+
 
-							"<td align='center' >${orderItem.internalName}(${orderItem.description})</td>"+
+							"<td align='center' >${orderItem.internalName}(${orderItem.description?if_exists})</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center'>${orderItem.quantity}</td>"+
+				            "<td align='center'>${orderItem.quantity?if_exists}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center'>${orderItem.unitPrice}</td>"+
+				            "<td align='center'>${orderItem.unitPrice?if_exists}</td>"+
                            "<td align='center'>${orderItem.unit?if_exists}</td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center' class='h2'><input type='text'  id='amendedQuantity' name='amendedQuantity_o_"+${orderItem.orderItemSeqId}+"'  size='12'/></td>"+
+				            "<td align='center' class='h2'><input type='text'  id='amendedQuantity' name='amendedQuantity_o_"+${orderItem.orderItemSeqId?if_exists}+"'  size='12'/></td>"+
 				            "<td align='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-				            "<td align='center' class='h2'><input type='text'  id='amendedPrice' name='amendedPrice_o_"+${orderItem.orderItemSeqId}+"' size='12'/></td>"+
+				            "<td align='center' class='h2'><input type='text'  id='amendedPrice' name='amendedPrice_o_"+${orderItem.orderItemSeqId?if_exists}+"' size='12'/></td>"+
 				            </#list>"";
 			
 			
