@@ -26,6 +26,29 @@
 	background-color:#BAD0EE;
 }
 
+.customLeftHalf {
+    float: left;
+    height: 1%;
+    left: 0;
+    margin: 0% 1% 1% 0%;
+    width: 69%;
+}
+.customRightHalf {
+    float: right;
+    height: 1%;
+    margin: 0 0 1% 1%;
+    right: 0;
+    width: 29%;
+}
+.displayMessage{
+	float: center;
+    height: 2%;
+    margin: 0 0 1% 1%;
+    right: 0;
+    background-color: #E7E5E5;
+    width: 100%;
+    font-size: 10px;
+}
 </style>
 
 
@@ -54,7 +77,6 @@
 	$(document).ready(function(){
 		$('#addMaterialDiv').hide();
 		$('#declareTaskOutDiv').hide();
-		
 	});
 		
 </script>
@@ -85,7 +107,7 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Store:</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Plant:</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.facilityId?has_content>
 			      				<#assign facility = delegator.findOne("Facility", {"facilityId" : productionRunData.facilityId}, false)>
 			      				<input type="hidden" name="facilityId" id="facilityId" value="${productionRunData.facilityId}">
@@ -204,7 +226,7 @@
 			        	<td style='float: center;width:18%;'>MACHINE</td>
 			        	<td style='float: center;width:15%;'>STATUS</td>
 			        	<td style='float: center;width:10%;'>START</td>
-			        	<td style='float: center;width:10%;'>ADD MATERIAL</td>
+			        	<td style='float: center;width:10%;'>ISSUE</td>
 			        	<td style='float: center;width:10%;'>DECLARE</td>
 			        	<td style='float: center;width:10%;'>FINISH</td>
 			        </tr>
@@ -227,7 +249,7 @@
 						      	<td style='float: center;width:15%;'> ${eachStatusItem.statusCode?if_exists}</td>
 						      	<#if statusId == "PRUN_RUNNING">
 						      		<td style='width:10%;'>&nbsp;</td>
-						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="issueMaterial" id="issueMaterialBtn" value="Add" onclick="javascript: addMaterial('${eachTask.workEffortId}')"/></td>
+						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="issueMaterial" id="issueMaterialBtn" value="Issue" onclick="javascript: addMaterial('${eachTask.workEffortId}')"/></td>
 						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> <input class="myButton" type="button" name="declareTask" id="declareTask" value="Declare" onclick="javascript: declareTaskOut('${eachTask.workEffortId}')""/></td>
 						      		<td style='float: center;width:10%;padding: 5px 5px 5px 5px;'> 
 						      			<form name="taskFinishForm" id="taskFinishForm" method="post" action="changeRoutingTaskStatus">
@@ -274,14 +296,15 @@
 			</div>
 		</div>
 	</div>
-	
+	<div class='clear'>&nbsp;</div>
+	<div class='full' id='displayMessage'><span class='displayMessage'></span></div>
 	<div class='clear'>&nbsp;</div>
 	<div class='full' id='addMaterialDiv'>
-		<div class="lefthalf">
+		<div class="customLeftHalf">
 			<div class="screenlet">
 				<div class="screenlet-title-bar">
 	         		<div class="grid-header" style="width:100%">
-						<label>Material Required</label>
+						<label>Issue Materials</label>
 					</div>
 			     </div>
 	      
@@ -294,7 +317,23 @@
 	    		</div>
 			</div>
 		</div>
+		<div class="customRightHalf">
+			<div class="screenlet">
+				<div class="screenlet-title-bar">
+	         		<div class="grid-header" style="width:100%">
+						<label>Required Material</label>
+					</div>
+			     </div>
+	      
+	    		<div class="screenlet-body">
+					<span id='printRequiredMaterial'></span>
+	    		</div>
+			</div>
+		</div>
+		
 	</div>
+	<div class='clear'>&nbsp;</div>
+	<div class='full' id='displayDeclareMessage'><span class='displayMessage'></span></div>
 	<div class='clear'>&nbsp;</div>
 	<div class="full" id='declareTaskOutDiv'>
 		<div class="screenlet-title-bar">
@@ -365,15 +404,19 @@
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
+						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+						$('#displayMessage').html(formattedMsg);
+              	    	$('div#displayMessage').delay(8000).fadeOut('slow');
 					}else{
-						var issueProductJSON = result['issueProductItemsJSON'];
 						var displayButton = result['displayButton'];
+						var requiredMaterial = result['requiredMaterial'];
+						printRequiredMaterial(requiredMaterial);
 						if(displayButton && displayButton == 'N'){
 							$("#issueMaterialSave").hide();
 							$("#issueMaterialBtn").hide();
 							$("#addMaterialDiv").show();
 						}
-						prepareIssueGrid(issueProductJSON, effortId, displayButton);
+						prepareIssueGrid(result, effortId, displayButton);
 					}					
 				},
 				error: function (xhr, textStatus, thrownError){
@@ -400,6 +443,9 @@
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
+						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+						$('div#displayDeclareMessage').html(formattedMsg);
+              	    	$('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 					}else{
 						var returnProductJSON = result['returnProductItemsJSON'];
 						var returnBtn = result['returnDisplayButton'];
@@ -422,4 +468,17 @@
 			});
       }
       
+      
+      function printRequiredMaterial(neededProducts){
+      		var htmlStr = "";
+      		if(neededProducts){
+      			htmlStr += "<table cellspacing='10px' cellpadding='10px' border='2px'><tr><td width='10%'><h2>Sl</h2></td><td width='60%' align='left'><h2>Material</h2></td><td width='20%' align='center'><h2>Qty Per UOM</h2></td></tr>";
+      			for(var i=0;i<neededProducts.length;i++){
+      				var eachProd = neededProducts[i];
+  					htmlStr += "<tr><td>"+(i+1)+"</td><td align='left'>"+eachProd['productName']+" ["+eachProd['productId']+" ]</td><td align='center'>&nbsp;</td></tr>";    			
+      			}
+      			htmlStr += "</table>";
+      			$('#printRequiredMaterial').html(htmlStr);
+      		}
+      }
 </script>

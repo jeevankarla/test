@@ -225,7 +225,6 @@ public class ProductionServices {
 	  		  return "error";
 	  	  }
 	  	  String workEffortId = (String) request.getParameter("workEffortId");
-	  	  Debug.log("workEffortId #########################"+workEffortId);
 	  	  boolean beginTransaction = false;
 	  	  try{
 	  		  beginTransaction = TransactionUtil.begin();
@@ -252,7 +251,7 @@ public class ProductionServices {
 		  		  
 			  		GenericValue productFacility = delegator.findOne("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId), false);
 	                if(UtilValidate.isEmpty(productFacility)){
-	                	Debug.logError("No material to issue for routing task : "+workEffortId, module);
+	                	Debug.logError("Material not associated to the Plant/Silo: "+facilityId, module);
 	                	TransactionUtil.rollback();
 	            		return "error";
 	                }
@@ -305,7 +304,7 @@ public class ProductionServices {
 	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
 	  	  HttpSession session = request.getSession();
 	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	      Timestamp nowTimestamp = UtilDateTime.nowTimestamp();	 
 	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 	  	  if (rowCount < 1) {
@@ -314,13 +313,36 @@ public class ProductionServices {
 	  		  return "error";
 	  	  }
 	  	  String workEffortId = (String) request.getParameter("workEffortId");
+	  	  
 	  	  boolean beginTransaction = false;
 	  	  try{
 	  		  beginTransaction = TransactionUtil.begin();
-		  	  for (int i = 0; i < rowCount; i++){
+	  		  
+	  		  GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
+	  		  if(UtilValidate.isEmpty(workEffort)){
+	  			  Debug.logError("Not a valid production run : "+workEffortId, module);
+	  			  TransactionUtil.rollback();
+	  			  return "error";
+	  		  }
+	  		  String facilityId = workEffort.getString("facilityId");
+	  		  
+	  		  GenericValue returnHeader = delegator.makeValue("ReturnHeader");
+	  		  returnHeader.set("returnHeaderTypeId", "PRODUCTION_RETURN");
+	  		  returnHeader.set("statusId", "RTN_INITIATED");
+	  		  returnHeader.set("originFacilityId", facilityId);
+	  		  returnHeader.set("entryDate", nowTimestamp);
+	  		  returnHeader.set("createdBy", userLogin.getString("userLoginId"));
+	  		  returnHeader.set("returnDate", nowTimestamp);
+	  		  returnHeader.set("workEffortId", workEffortId);
+	  		  delegator.createSetNextSeqId(returnHeader);
+    		
+	  		  String returnId = (String)returnHeader.get("returnId");
+	  		  
+	  		  for (int i = 0; i < rowCount; i++){
 		  		  
-		  		  String facilityId = "";
 		  		  String productId = "";
+		  		  String returnReasonId = "";
+		  		  String description = "";
 		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 		  		  BigDecimal quantity = BigDecimal.ZERO;
 		  		  String quantityStr = "";
@@ -334,8 +356,29 @@ public class ProductionServices {
 		  		  if(UtilValidate.isNotEmpty(quantityStr)){
 		  			  quantity = new BigDecimal(quantityStr);
 		  		  }
-		  		  
-		  		  Map inputCtx = FastMap.newInstance();
+		  		  if (paramMap.containsKey("returnReasonId" + thisSuffix)) {
+		  			  returnReasonId = (String) paramMap.get("returnReasonId"+thisSuffix);
+		  		  }
+		  			if (paramMap.containsKey("description" + thisSuffix)) {
+		  			  description = (String) paramMap.get("description"+thisSuffix);
+		  		  }
+		  			
+		  			GenericValue returnItem = delegator.makeValue("ReturnItem");
+		    		returnItem.set("returnReasonId", "RTN_DEFECTIVE_ITEM");
+		    		if(UtilValidate.isNotEmpty(returnReasonId)){
+		    			returnItem.set("returnReasonId", returnReasonId);
+		    		}
+		    		returnItem.set("statusId", "RTN_INITIATED");
+		    		returnItem.set("returnId", returnId);
+		    		returnItem.set("productId", productId);
+		    		returnItem.set("returnQuantity", quantity);
+		    		returnItem.set("description", description);
+		    		returnItem.set("returnTypeId", "RTN_REFUND");
+		    		returnItem.set("returnItemTypeId", "RET_FPROD_ITEM");
+	    		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
+		    		delegator.create(returnItem);
+		    		
+		  		  /*Map inputCtx = FastMap.newInstance();
 		  		  inputCtx.put("productId", productId);
 		  		  inputCtx.put("quantity", quantity);
 		  		  inputCtx.put("workEffortId", workEffortId);
@@ -345,7 +388,7 @@ public class ProductionServices {
 		  			  Debug.logError("Error issuing material for routing task : "+workEffortId, module);
 		  			  TransactionUtil.rollback();
 		  			  return "error";
-		  		  }
+		  		  }*/
 		  	  }
 	  	  }
 	  	catch (GenericEntityException e) {
@@ -356,14 +399,6 @@ public class ProductionServices {
 	  		}
 	  		Debug.logError("An entity engine error occurred while fetching data", module);
 	  	}
-	  	catch (GenericServiceException e) {
-	  		try {
-			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
-	  		} catch (GenericEntityException e2) {
-			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-	  		}
-	  		Debug.logError("An entity engine error occurred while calling services", module);
-	  	}
 	  	finally {
 	  		try {
 	  			TransactionUtil.commit(beginTransaction);
@@ -371,7 +406,7 @@ public class ProductionServices {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  		}
 	  	}
-	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
+	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made return of material for Task :"+workEffortId);
 		return "success";  
     }
     

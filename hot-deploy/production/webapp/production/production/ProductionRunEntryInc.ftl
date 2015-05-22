@@ -13,7 +13,7 @@
 	}
 	.readOnlyColumnClass {
 		font-weight: normal;
-		background: mistyrose;
+		background: #F3F3F3;
 	}
 	
 	.btn {
@@ -77,17 +77,17 @@
 	var grid3;
 	var data2 = ${StringUtil.wrapString(additionalChargesJSON)!'[]'};
 	var data3;
-	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
-	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
-	var addChargesIdLabelJSON = ${StringUtil.wrapString(addChargesIdLabelJSON)!'{}'};
-	var addChargesLabelIdJSON = ${StringUtil.wrapString(addChargesLabelIdJSON)!'{}'};
+	var dropDownOption = "RTN_DEFECTIVE_ITEM , RTN_NOT_WANT";
+	var productLabelIdGrid1;
+	var productIdLabelGrid1;
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
-	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
-	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
-	var data;
+	var availProdTagsGrid1;
+	var availFacilityTagsGrid1 = [];
+	var productDetails = [];
+	var data = [];
 	var taskEffortId;
-	var gridEditable;
-	var gridReturnEditable;
+	var gridEditable = 'Y';
+	var gridReturnEditable='Y';
 	var gridDeclareEditable;
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
@@ -95,8 +95,15 @@
 		else
 			return {valid:true, msg:null};
 	}
-	function prepareIssueGrid(issueProdItem, workEffortId, displayBtn){
-		data = issueProdItem;
+	function prepareIssueGrid(resultParam, workEffortId, displayBtn){
+		
+		if(displayBtn == 'N'){
+			data = resultParam['issuedProductItemsJSON'];
+		}
+		availProdTagsGrid1 = resultParam['productItemsJSON'];
+		productIdLabelGrid1 = resultParam['productIdLabelJSON'];
+		productLabelIdGrid1 = resultParam['productLabelIdJSON'];
+		productDetails = resultParam['productDetailJSON'];
 		taskEffortId = workEffortId;
 		gridEditable = displayBtn;
 		setupGrid1();
@@ -147,9 +154,14 @@
 					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
+					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+					$('#displayMessage').html(formattedMsg);
+              	    $('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 				}else{
 					$('#declareMaterialDiv').hide();
 					$("#declareSave").hide();
+					$('div#displayDeclareMessage').html("<div style='background-color:#E7E5E5'><font color='green'><h2>Successfully Updated</h2></font></div>"); 
+					$('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){
@@ -169,10 +181,14 @@
 		{ 
 			var productId = data3[rowCount]["cReturnProductId"];
 			var qty = parseFloat(data3[rowCount]["returnQuantity"]);
+			var returnReasonId = data3[rowCount]["returnReason"];
+			var description = data3[rowCount]["description"];
 			//var facilityId = data3[rowCount]["returnFacilityId"];
 	 		if (!isNaN(qty) && qty>0) {
 	 			dataJson['productId_o_'+index] = productId;
 	 			dataJson['quantity_o_'+index] = qty;
+	 			dataJson['returnReasonId_o_'+index] = returnReasonId;
+	 			dataJson['description_o_'+index] = description;
 	 			//dataJson['facilityId_o_'+index] = facilityId;
 				index += 1;
    			}
@@ -191,9 +207,15 @@
 					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
+					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+					$('div#displayDeclareMessage').html(formattedMsg);
+              	    $('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 				}else{
-					$('#returnMaterialDiv').hide();
-					
+					//$('#returnMaterialDiv').hide();
+					$('#returnMaterialSave').hide();
+					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='green'><h2>Successfully Updated</h2></font></div>";
+					$('div#displayDeclareMessage').html(formattedMsg);
+              	    $('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){
@@ -235,8 +257,15 @@
 					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
+					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+					$('#displayMessage').html(formattedMsg);
+              	    $('div#displayMessage').delay(8000).fadeOut('slow');
 				}else{
+					$('div#displayMessage').html("<div style='background-color:#E7E5E5'><font color='green'><h2>Successfully Updated</h2></font></div>"); 
+					$('div#displayMessage').delay(8000).fadeOut('slow');
 					$('#addMaterialDiv').hide();
+					$('#issueMaterialBtn').hide();
+					//button hide
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){
@@ -245,42 +274,10 @@
 		});
 	}
 	
-    function productFormatter(row, cell, value, columnDef, dataContext) {   
-        return productIdLabelMap[value];
-    }
-    function termFormatter(row, cell, value, columnDef, dataContext) {   
-        return addChargesIdLabelJSON[value];
+    function issueProductFormatter(row, cell, value, columnDef, dataContext) {
+    	return productIdLabelGrid1[value];
     }
 	
-    function productValidator(value,item) {
-      
-    	var currProdCnt = 1;
-	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
-	  	{ 
-			if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
-				++currProdCnt;
-			}
-	  	}
-	  
-	  	var invalidProdCheck = 0;
-	  	for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
-	  	{  
-			if (value == availableTags[rowCount]["label"]) {
-				invalidProdCheck = 1;
-			}
-	  	}
-      	if (currProdCnt > 1) {
-        	return {valid: false, msg: "Duplicate Product " + value};      				
-      	}
-      	if(invalidProdCheck == 0){
-      		return {valid: false, msg: "Invalid Product " + value};
-      	}
-      
-      	if (item != null && item != undefined ) {
-      		item['cProductId'] = productLabelIdMap[value];
-	  	}      
-      	return {valid: true, msg: null};
-    }
     
     //quantity validator
 	function quantityFormatter(row, cell, value, columnDef, dataContext) { 
@@ -289,25 +286,19 @@
 		}
         return  value;
     }
-     //deliveryChallanQty validator
-	function deliveryChallanQtyFormatter(row, cell, value, columnDef, dataContext) { 
-		if(value == null){
-			return "";
-		}
-        return  value;
-    }
-	
-	function rateFormatter(row, cell, value, columnDef, dataContext) { 
-		var formatValue = parseFloat(value).toFixed(2);
-        return formatValue;
-    }
 	
 	function returnQuantityValidator(value ,item) {
 			for (var rowCount=0; rowCount < data3.length; ++rowCount)
 	  		{ 
 				if (data3[rowCount]['returnQuantity'] != null && data3[rowCount]['returnQuantity'] != undefined) {
-					if(value && value >= data3[rowCount]['returnQuantity']){
-        				return {valid: false, msg: "Cannot Return greater than the quantity issued " + value};      				
+					if(value && value > data3[rowCount]['returnQuantity']){
+        				return {valid: false, msg: "Cannot Return greater than the quantity issued "};      				
+					}
+					else if(value && value <= 0){
+						return {valid: false, msg: "Cannot Return quantity of value less than 1 "};
+					}
+					else{
+						return {valid: true, msg: null};
 					}
 				}
 	  		}
@@ -326,22 +317,16 @@
 	     
       return {valid: true, msg: null};
     }
-    function deliveryChallanQtyValidator(value ,item) {
-		var quarterVal = value*4;
-		var floorValue = Math.floor(quarterVal);
-		var remainder = quarterVal - floorValue;
-		var remainderVal =  Math.floor(value) - value;
-	     
-      return {valid: true, msg: null};
-    }
+    
     
 	var mainGrid;		
 	function setupGrid1() {
 		    var columns = [
-					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
+					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, <#if gridEditable?exists && gridEditable == 'Y'>cssClass:"cell-title", regexMatcher:"contains", availableTags: availProdTagsGrid1, editor: AutoCompleteEditor,<#else>cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor,</#if> formatter: issueProductFormatter, sortable:false, toolTip:""},
+					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, <#if gridEditable?exists && gridEditable == 'Y'>cssClass:"cell-title", formatter: quantityFormatter,<#else> cssClass:"readOnlyColumnClass", focusable :false, </#if>validator: quantityValidator, sortable:false},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
-					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title",editor:FloatCellEditor, <#if gridEditable?exists && gridEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false}
+					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, <#if gridEditable?exists && gridEditable == 'Y'>cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor,<#else>cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor,</#if> sortable:false},
+					{id:"inventoryAvl", name:"Available Stock", field:"inventoryAvl", width:140, minWidth:140, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, focusable :false, sortable:false}
 			];
 		
 			var options = {
@@ -432,17 +417,39 @@
         
                 
     	grid.onAddNewRow.subscribe(function (e, args) {
-      		var item = args.item;   
-      		var productLabel = item['cProductName']; 
-      		item['cProductId'] = productLabelIdMap[productLabel];     		 		
+      		var item = args.item;
+      		var productLabel = item['cIssueProductName'];
+      		item['cIssueProductName'] = productLabelIdGrid1[productLabel];
+      		item['cIssueProductId'] = productLabelIdGrid1[productLabel];
       		grid.invalidateRow(data.length);
       		data.push(item);
       		grid.updateRowCount();
       		grid.render();
     	});
+    	
         grid.onCellChange.subscribe(function(e,args) {
 			if (args.cell == 0 || args.cell == 1) {
-				var prod = data[args.row]["cProductId"];
+				var prod = data[args.row]["cIssueProductId"];
+				if(productDetails){
+					var prodDetMap = {};
+					prodDetMap = productDetails[prod];
+					availFacilityTagsGrid1 = prodDetMap['productFacilityJSON'];
+					var setData = grid.getColumns();
+					setData[3].availableTags = availFacilityTagsGrid1;
+					grid.setColumns(setData);
+				}
+				grid.updateRow(args.row);
+			}
+			if(args.cell == 3){
+				
+				var prod = data[args.row]["cIssueProductId"];
+				if(productDetails){
+					var prodDetMap = {};
+					prodDetMap = productDetails[prod];
+					var productInventoryMap = prodDetMap['facilityInventoryJSON'];
+					var facilityId = data[args.row]["issueFacilityId"];
+					data[args.row]['inventoryAvl'] = productInventoryMap[facilityId];
+				}
 				grid.updateRow(args.row);
 			}
 			
@@ -450,7 +457,7 @@
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {
-				var prod = data[args.row]["cProductId"];
+				var prod = data[args.row]["cIssueProductId"];
 			}
 			
 		});
@@ -539,7 +546,7 @@
 				cell && (cell.cell == 0) && 
 				cell.row != data2.length) {
 				grid2.getEditController().commitCurrentEdit();	
-				$(grid.getCellNode(cell.row, cellNav)).click();
+				$(grid2.getCellNode(cell.row, cellNav)).click();
 				e.stopPropagation();	
 			}else if (e.which == $.ui.keyCode.ENTER) {
         		grid2.getEditController().commitCurrentEdit();
@@ -595,14 +602,17 @@
         }
 
 	    });
+	    mainGrid = grid2;
 	}
 	
 	function setupGrid3() {
 		    var columns = [
-					{id:"cReturnProductName", name:"Material", field:"cReturnProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"returnQuantity", name:"Quantity", field:"returnQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: returnQuantityValidator, sortable:false},
-					{id:"returnUOM", name:"UOM", field:"returnUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
-					{id:"returnFacilityId", name:"From Store", field:"returnFacilityId", width:140, minWidth:140, cssClass:"cell-title",editor:FloatCellEditor, <#if gridEditable?exists && gridEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false}
+					{id:"cReturnProductName", name:"Material", field:"cReturnProductName", width:180, minWidth:180, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false, toolTip:""},
+					{id:"returnQuantity", name:"Qty", field:"returnQuantity", width:50, minWidth:50, editor:FloatCellEditor, <#if gridReturnEditable?exists && gridReturnEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: returnQuantityValidator,<#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false},
+					{id:"returnUOM", name:"UOM", field:"returnUom", width:50, minWidth:50, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
+					{id:"returnReasonId", name:"Reason", field:"returnReasonId", width:100, minWidth:100, <#if gridReturnEditable?exists && gridReturnEditable=='Y'>cssClass:"cell-title", options: dropDownOption, editor: SelectCellEditor,<#else> cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false},
+					{id:"description", name:"Comment", field:"description", width:150, minWidth:150, <#if gridEditable?exists && gridEditable=='Y'>editor:LongTextCellEditor, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if> 	sortable:false, align:"right", toolTip:"Term Description"}
+					//{id:"returnFacilityId", name:"From Store", field:"returnFacilityId", width:140, minWidth:140, cssClass:"cell-title",editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false}
 			];
 		
 			var options = {
@@ -628,6 +638,21 @@
 		}else{
 			$(grid3.getCellNode(0,0)).click();
 		}
+		
+		grid3.onValidationError.subscribe(function(e, args) {
+	        var validationResult = args.validationResults;
+	        var activeCellNode = args.cellNode;
+	        var editor = args.editor;
+	        var errorMessage = validationResult.msg;
+	        alert(errorMessage);
+	        /*var valid_result = validationResult.valid;
+	        if (!valid_result) {
+	           $(activeCellNode).attr("title", errorMessage);
+	            }
+	        else {
+	           $(activeCellNode).attr("title", "");
+	        }*/
+	    });
          grid3.onKeyDown.subscribe(function(e) {
 			var cellNav = 2;
 			var cell = grid3.getCellFromEvent(e);		

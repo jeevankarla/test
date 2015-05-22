@@ -2686,6 +2686,7 @@ under the License.
         <field name="paymentId" type="id"></field><!-- Returns for kmf  -->
         <field name="finAccountId" type="id"></field>
         <field name="billingAccountId" type="id"></field>
+        <field name="workEffortId" type="id"></field>
         <field name="entryDate" type="date-time"></field>
         <field name="originContactMechId" type="id"></field>
         <field name="destinationFacilityId" type="id"></field>
@@ -2704,6 +2705,9 @@ under the License.
         </relation>
         <relation type="one" fk-name="RTN_SHPMNT" rel-entity-name="Shipment">
         	<key-map field-name="shipmentId"/>
+      	</relation>
+      	<relation type="one" fk-name="RTN_WEF" rel-entity-name="WorkEffort">
+        	<key-map field-name="workEffortId"/>
       	</relation>
       	<relation type="one" fk-name="RTN_PAY" rel-entity-name="Payment">
         	<key-map field-name="paymentId"/>
