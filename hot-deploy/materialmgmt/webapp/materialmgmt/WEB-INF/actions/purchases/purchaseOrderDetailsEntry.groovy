@@ -76,11 +76,13 @@ if(orderId){
 		receivedQty=0;
 		maxReceivedQty=0;
 		poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
-		if(UtilValidate.isNotEmpty(poBalDetailsMap.get("receivedQty"))){
-			receivedQty=poBalDetailsMap.get("receivedQty");
-		}
-		if(UtilValidate.isNotEmpty(poBalDetailsMap.get("maxReceivedQty"))){
-			maxReceivedQty=poBalDetailsMap.get("maxReceivedQty");
+		if(UtilValidate.isNotEmpty(poBalDetailsMap)){
+			if(UtilValidate.isNotEmpty(poBalDetailsMap.get("receivedQty"))){
+				receivedQty=poBalDetailsMap.get("receivedQty");
+			}
+			if(UtilValidate.isNotEmpty(poBalDetailsMap.get("maxReceivedQty"))){
+				maxReceivedQty=poBalDetailsMap.get("maxReceivedQty");
+		    }
 		}
 		productDetails = delegator.findOne("Product", UtilMisc.toMap("productId", eachItem.productId), false);
 		if(UtilValidate.isNotEmpty(productDetails)){

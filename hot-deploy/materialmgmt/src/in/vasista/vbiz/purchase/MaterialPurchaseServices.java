@@ -64,6 +64,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.base.conversion.JSONConverters.JSONToList;
+import org.ofbiz.entity.util.EntityFindOptions;
 
 public class MaterialPurchaseServices {
 
@@ -235,7 +236,6 @@ public class MaterialPurchaseServices {
 			}
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-			
 			List changeExprList = FastList.newInstance();
 			changeExprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 			changeExprList.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.LESS_THAN_EQUAL_TO, receiptDate));
@@ -247,7 +247,14 @@ public class MaterialPurchaseServices {
 				effectiveDatetime = (EntityUtil.getFirst(orderItemChanges)).getTimestamp("effectiveDatetime");
 				orderItemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDatetime));
 			}
-			
+
+			Map orderItemSeq = FastMap.newInstance();
+			for(GenericValue orderItemsValues : orderItems){
+				String productId = orderItemsValues.getString("productId");
+				String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
+				orderItemSeq.put(productId, orderItemSeqId);
+			}
+
 			List orderAdjustmentTypes = EntityUtil.getFieldListFromEntityList(orderAdjustments, "orderAdjustmentTypeId", true);
 			
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
@@ -321,38 +328,46 @@ public class MaterialPurchaseServices {
 				}
 				if(UtilValidate.isNotEmpty(oldRecvdQtyStr)){
 					oldRecvdQty = new BigDecimal(oldRecvdQtyStr);
+
 				}
 				if(UtilValidate.isEmpty(withoutPO)){
 					if(directPO){
 						GenericValue checkOrderItem = null;
+						GenericValue ordChangesApo = null;
+						BigDecimal orderChangeQty=BigDecimal.ZERO;
+						BigDecimal orderQty=BigDecimal.ZERO;
+						String orderSeqNo="";
 						List<GenericValue> ordItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						if(UtilValidate.isNotEmpty(orderItemSeq)){
+							orderSeqNo=(String)orderItemSeq.get(productId);
+
+							List<GenericValue> ordersequenceChangeList = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderSeqNo));
+				 			if(UtilValidate.isNotEmpty(ordersequenceChangeList)){
+				 				orderChangeQty = (EntityUtil.getFirst(ordersequenceChangeList)).getBigDecimal("quantity");
+
+				 			}	
+						}
 						if(UtilValidate.isNotEmpty(ordItems)){
 							checkOrderItem = EntityUtil.getFirst(ordItems);
+
 						}
 						
 						if(UtilValidate.isNotEmpty(checkOrderItem)){
-							BigDecimal orderQty = checkOrderItem.getBigDecimal("quantity");
+							     orderQty = checkOrderItem.getBigDecimal("quantity");
+						    if(orderChangeQty.compareTo(BigDecimal.ZERO)>0 ){
+								 orderQty = orderChangeQty;
+						    }
 							BigDecimal checkQty = (orderQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
 							BigDecimal maxQty=oldRecvdQty.add(quantity);
 							Debug.log("=orderQty=="+orderQty+"==checkQty="+checkQty+"==maxQty=="+maxQty+"==quantity="+quantity);
 							//if(quantity.compareTo(checkQty)>0){
-							if(UtilValidate.isEmpty(allowedGraterthanTheOrdered)){								
-							if(maxQty.compareTo(checkQty)>0){	
-								Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
-								request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
-								TransactionUtil.rollback();
-						  		return "error";
-							}
-							}else{
-								if("N".equals(allowedGraterthanTheOrdered)){
-									if(maxQty.compareTo(orderQty)>0){	
-										Debug.logError("Quantity cannot be more than Order Quantity for PO : "+orderId, module);
-										request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than Order Quantity for PO : "+orderId);	
-										TransactionUtil.rollback();
-								  		return "error";
-									}
+							if(UtilValidate.isEmpty(allowedGraterthanTheOrdered) || (UtilValidate.isNotEmpty(allowedGraterthanTheOrdered) && "N".equals(allowedGraterthanTheOrdered))){								
+								if(maxQty.compareTo(checkQty)>0){	
+									Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
+									request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
+									TransactionUtil.rollback();
+							  		return "error";
 								}
-								
 							}
 						}
 					}
@@ -2358,6 +2373,7 @@ public class MaterialPurchaseServices {
 				
 				if (paramMap.containsKey("orderId" + thisSuffix)) {
 					orderId = (String) paramMap.get("orderId" + thisSuffix);
+					primaryOrderId=orderId;
 				}else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing order id");
 					return "error";			  
@@ -2802,18 +2818,21 @@ public class MaterialPurchaseServices {
 			TransactionUtil.rollback();
 	  		return "error";
 		}
-		
 		List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, UtilMisc.toList("-effectiveDatetime"), null, false);
 		if(UtilValidate.isNotEmpty(orderItemChanges)){
 			Timestamp effectiveDatetime = (EntityUtil.getFirst(orderItemChanges)).getTimestamp("effectiveDatetime");
 			orderItemChanges = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDatetime));
 		}
-		
+	    // shipmentOrders
+	    List<GenericValue> shipmentOrders= FastList.newInstance();
+		if(UtilValidate.isNotEmpty(orderId)){
+			shipmentOrders = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		}
 		for (GenericValue orderItem : orderItems) {
 			//if(UtilValidate.isNotEmpty(orderItem)){
 				String productId=orderItem.getString("productId");
 				String orderItemSeqId=orderItem.getString("orderItemSeqId");
-				//update shipmentReceiptItem
+				
 				List<GenericValue> eachChangedItem = EntityUtil.filterByCondition(orderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 				
 				BigDecimal unitCost=orderItem.getBigDecimal("unitListPrice");
@@ -2822,6 +2841,36 @@ public class MaterialPurchaseServices {
 					unitCost=(EntityUtil.getFirst(eachChangedItem)).getBigDecimal("unitListPrice");
 				}
 				
+				BigDecimal orderQuantity=orderItem.getBigDecimal("quantity");
+				
+	 			if(UtilValidate.isNotEmpty(eachChangedItem) && ((EntityUtil.getFirst(eachChangedItem)).getBigDecimal("quantity")).compareTo(BigDecimal.ZERO)>0){
+	 				orderQuantity = (EntityUtil.getFirst(eachChangedItem)).getBigDecimal("quantity");
+	 			}
+
+			 // Checking Order Qty > Received Qty 			
+				BigDecimal totReceivedQty = BigDecimal.ZERO;
+				List<GenericValue> OrdersequenceShipList = EntityUtil.filterByCondition(shipmentOrders, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+	 			if(UtilValidate.isNotEmpty(OrdersequenceShipList)){
+	 				for (GenericValue Ordersequence : OrdersequenceShipList) {
+	 					 totReceivedQty = totReceivedQty.add(Ordersequence.getBigDecimal("quantityAccepted"));
+
+	 				}
+	 			}
+                List<GenericValue> filterShipmentReceiptProduct = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	 			if(UtilValidate.isNotEmpty(filterShipmentReceiptProduct)){
+	 				totReceivedQty = totReceivedQty.add((EntityUtil.getFirst(filterShipmentReceiptProduct)).getBigDecimal("quantityAccepted"));
+
+	 			}
+	 			BigDecimal checkQty = (orderQuantity.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
+				Debug.log("=orderQty=="+orderQuantity+"==checkQty="+checkQty+"==totReceivedQty=="+totReceivedQty);
+				//if(quantity.compareTo(checkQty)>0){
+				if(totReceivedQty.compareTo(checkQty)>0){	
+					Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
+					TransactionUtil.rollback();
+			  		return "error";
+				}
+				//update shipmentReceiptItem
 				List<GenericValue> filterShipmentReceiptList = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				GenericValue shipmentReceipt = EntityUtil.getFirst(filterShipmentReceiptList);
 				
