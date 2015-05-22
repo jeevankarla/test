@@ -41,41 +41,35 @@ if (workEffortId) {
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	inventoryItemAndDetail = delegator.findList("InventoryItemAndDetail", condition, null, null, null, false);
 	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, workEffortId));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "RTN_CANCELLED"));
+	cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	returnHeaders = delegator.findList("ReturnHeader", cond1, null, null, null,false);
+	
+	returnIds = EntityUtil.getFieldListFromEntityList(returnHeaders, "returnId", true);
+	
+	returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.IN, returnIds), null, null, null, false);
+	
 	JSONArray returnProductItemsJSON = new JSONArray();
-	returnDispBtn = 'N';
+	returnDispBtn = 'Y';
 	products.each{ eachProd ->
 		
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
-		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
-		cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		returnedMaterial = EntityUtil.filterByCondition(inventoryItemAndDetail, cond1);
-		
-		if(!returnedMaterial){
-			conditionList.clear();
-			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
-			conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN, BigDecimal.ZERO));
-			cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			returnedMaterial = EntityUtil.filterByCondition(inventoryItemAndDetail, cond1);
-			returnDispBtn = 'Y';
-		}
-		
-		qty = 0;
+		returnedMaterial = EntityUtil.filterByCondition(returnItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
+		JSONObject newObj = new JSONObject();
+		newObj.put("cReturnProductId",eachProd.productId);
+		newObj.put("cReturnProductName", eachProd.brandName+" [ "+eachProd.description+"]");
 		if(returnedMaterial){
-			qty = ((EntityUtil.getFirst(returnedMaterial)).quantityOnHandDiff);
-			facilityId = (EntityUtil.getFirst(returnedMaterial)).facilityId;
-			JSONObject newObj = new JSONObject();
-			newObj.put("cReturnProductId",eachProd.productId);
-			newObj.put("cReturnProductName", eachProd.brandName+" [ "+eachProd.description+"]");
-			newObj.put("returnQuantity", qty.negate());
-			if(returnDispBtn == 'N'){
-				newObj.put("returnQuantity", qty);
-			}
-			newObj.put("returnFacilityId", facilityId);
-			returnProductItemsJSON.add(newObj);
-		} 	
-	
-		
+			rtnItem = EntityUtil.getFirst(returnedMaterial); 
+			qty = rtnItem.returnQuantity;
+			returnReasonId = rtnItem.returnReasonId;
+			description = rtnItem.description;
+			newObj.put("returnQuantity", qty);
+			newObj.put("returnReasonId", returnReasonId);
+			newObj.put("description", description);
+			returnDispBtn = 'N';
+		}
+		returnProductItemsJSON.add(newObj);
 	}
 	request.setAttribute("returnProductItemsJSON", returnProductItemsJSON);
 	request.setAttribute("returnDisplayButton", returnDispBtn);

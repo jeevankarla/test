@@ -4,22 +4,29 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastMap;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+
 import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.util.Map;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 
 workEffortId = parameters.workEffortId;
-Debug.log("workEffortId ###############"+workEffortId);
 
 if (workEffortId) {
 	
@@ -42,44 +49,88 @@ if (workEffortId) {
 	inventoryItemAndDetail = delegator.findList("InventoryItemAndDetail", condition, null, null, null, false);
 	productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	
-	JSONArray issueProductItemsJSON = new JSONArray();
+	JSONArray issuedProductItemsJSON = new JSONArray();
 	displayButton = 'Y';
+	rawMaterialNeededList = [];
 	products.each{ eachProd ->
 		
-		
-		prodFacility = EntityUtil.filterByCondition(productFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
-		facilityId = "";
-		if(prodFacility){
-			facilityId = (EntityUtil.getFirst(prodFacility)).facilityId;
-		}
+		tempMap = [:];
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
-		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN, BigDecimal.ZERO));
 		cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		
 		inventoryItemDetail = EntityUtil.filterByCondition(inventoryItemAndDetail, cond1);
 		
+		facilityId = "";
 		qty = 0;
 		if(inventoryItemDetail){
 			qty = ((EntityUtil.getFirst(inventoryItemDetail)).quantityOnHandDiff).negate();
+			facilityId = (EntityUtil.getFirst(inventoryItemDetail)).facilityId;
 		} 	
-	
+		tempMap.putAt("productId", eachProd.productId);
+		tempMap.putAt("productName", eachProd.productName);
+		rawMaterialNeededList.add(tempMap);
 		JSONObject newObj = new JSONObject();
 		newObj.put("cIssueProductId",eachProd.productId);
-		newObj.put("cIssueProductName", eachProd.brandName+" [ "+eachProd.description+"]");
-		newObj.put("issueQuantity", "");
+		newObj.put("cIssueProductName", eachProd.productId);
+		newObj.put("issueQuantity", qty);
 		if(qty > 0){
 			displayButton = 'N';
 			newObj.put("issueQuantity", qty);
 		}
 		newObj.put("issueFacilityId", facilityId);
-		issueProductItemsJSON.add(newObj);
+		issuedProductItemsJSON.add(newObj);
 	}
-	request.setAttribute("issueProductItemsJSON", issueProductItemsJSON);
+	JSONArray productItemsJSON = new JSONArray();
+	JSONObject productIdLabelJSON = new JSONObject();
+	JSONObject productLabelIdJSON = new JSONObject();
+	JSONObject productDetailJSON = new JSONObject();
+	products.each{eachItem ->
+		prodFacility = EntityUtil.filterByCondition(productFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+		
+		prodFacIds = EntityUtil.getFieldListFromEntityList(prodFacility, "facilityId", true);
+		facilities = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, prodFacIds), null, null, null, false);
+		JSONObject tempProdFacJSON = new JSONObject();
+		JSONArray productFacilityJSON = new JSONArray();
+		JSONObject facilityIdLabelJSON = new JSONObject();
+		JSONObject facilityLabelIdJSON = new JSONObject();
+		JSONObject facilityInventoryJSON = new JSONObject();
+		facilities.each{ eachFac ->
+			JSONObject newObj1 = new JSONObject();
+			newObj1.put("value",eachFac.facilityId);
+			newObj1.put("label", eachFac.facilityId);
+			productFacilityJSON.add(newObj1);
+			facilityIdLabelJSON.put(eachFac.facilityId,  eachFac.facilityName);
+			facilityLabelIdJSON.put(eachFac.facilityName, eachFac.facilityId);
+			inputCtx = UtilMisc.toMap("productId", eachItem.productId, "facilityId", eachFac.facilityId, "userLogin", userLogin);
+			resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", inputCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+eachItem.productId);
+			}
+			qoh = (BigDecimal)resultCtx.get("quantityOnHandTotal");
+			facilityInventoryJSON.put(eachFac.facilityId, qoh);
+		}
+		tempProdFacJSON.put("productFacilityJSON", productFacilityJSON);
+		tempProdFacJSON.put("facilityIdLabelJSON", facilityIdLabelJSON);
+		tempProdFacJSON.put("facilityLabelIdJSON", facilityLabelIdJSON);
+		tempProdFacJSON.put("facilityInventoryJSON", facilityInventoryJSON);
+		productDetailJSON.put(eachItem.productId, tempProdFacJSON);
+		
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachItem.productId);
+		newObj.put("label", eachItem.brandName+"["+eachItem.description+"]");
+		productItemsJSON.add(newObj);
+		productIdLabelJSON.put(eachItem.productId,eachItem.brandName+"["+eachItem.description+"]");
+		productLabelIdJSON.put(eachItem.brandName+"["+eachItem.description+"]", eachItem.productId);
+	}
+	request.setAttribute("issuedProductItemsJSON", issuedProductItemsJSON);
+	request.setAttribute("productItemsJSON", productItemsJSON);
+	request.setAttribute("productIdLabelJSON", productIdLabelJSON);
+	request.setAttribute("productLabelIdJSON", productLabelIdJSON);
+	request.setAttribute("productDetailJSON", productDetailJSON);
 	request.setAttribute("displayButton", displayButton);
-
+	request.setAttribute("requiredMaterial",rawMaterialNeededList);
 }
 return "success";
-
