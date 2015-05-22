@@ -78,7 +78,8 @@ if(UtilValidate.isNotEmpty(gradeLevelEmplPosList)){
 	gradeLevelList = EntityUtil.getFieldListFromEntityList(gradeLevelEmplPosList,"gradeLevel",true);
 	if(UtilValidate.isNotEmpty(gradeLevelList)){
 		gradeLevelList.each{ gradeLevel ->
-			employeeListFiltered = EntityUtil.filterByAnd(gradeLevelEmplPosList, ["gradeLevel" : gradeLevel]);
+			int gradeLevelInt = Integer.parseInt(gradeLevel);
+			employeeListFiltered = EntityUtil.filterByAnd(gradeLevelEmplPosList, ["gradeLevel" : gradeLevelInt.toString()]);
 			employeeListFiltered.each { emplPostin ->
 				emplPosCnt = 0;
 				emplPosition = emplPostin.emplPositionTypeId;
