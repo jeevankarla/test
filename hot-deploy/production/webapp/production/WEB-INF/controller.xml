@@ -157,6 +157,10 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="StockProcessingRegisterReportPDF"/>        
     </request-map>
+    <request-map uri="MaterialBalanceReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="MaterialBalanceReportPDF"/>        
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
@@ -170,6 +174,7 @@
     <view-map name="ProductionReports" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionReports"></view-map>
    
     <!-- View Mappings for Production Reports-->
+    <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="SMPproduction" type="screen" page="component://production/widget/ProductionScreens.xml#SMPproduction"/>
