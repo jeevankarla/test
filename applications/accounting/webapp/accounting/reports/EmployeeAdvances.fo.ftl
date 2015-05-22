@@ -98,10 +98,23 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 <#assign grandClosingCredit=0>
                 <#assign grandTotalBalance=0>
 				<#list finAccntValues as finAccntValue>
-				<#assign grandOpenBalDebit=grandOpenBalDebit+finAccntValue.get("openBalanceDebit")>
-				<#assign grandOpenBalCredit=grandOpenBalCredit+finAccntValue.get("openBalanceCredit")>
-				<#assign grandCurrentDebit=grandCurrentDebit+finAccntValue.get("currentDebit")>
-				<#assign grandCurrentCredit=grandCurrentCredit+finAccntValue.get("currentCredit")>
+                <#assign openBalanceDebit=0> 
+                <#assign openBalanceDebit=finAccntValue.get("openBalanceDebit")> 
+                <#assign openBalanceCreditt=0>  
+                <#assign openBalanceCredit=finAccntValue.get("openBalanceCredit")> 
+                <#assign currentDebit=0>  
+                <#assign currentDebit=finAccntValue.get("currentDebit")>
+                <#assign currentCredit=0>  
+                <#assign currentCredit=finAccntValue.get("currentCredit")>
+                <#assign balance=0>
+    			<#if finAccntValue.get("balance")?has_content>
+                  <#assign balance=finAccntValue.get("balance")>
+                </#if>
+				<#assign grandOpenBalDebit=grandOpenBalDebit+openBalanceDebit>
+				<#assign grandOpenBalCredit=grandOpenBalCredit+openBalanceCredit>
+				<#assign grandCurrentDebit=grandCurrentDebit+currentDebit>
+				<#assign grandCurrentCredit=grandCurrentCredit+currentCredit>
+                <#if openBalanceDebit !=0 || openBalanceCreditt !=0 || currentDebit !=0 || currentCredit!=0 || balance!=0>
                <fo:block>
                     <fo:table>
 				    <fo:table-column column-width="8%"/>
@@ -121,16 +134,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                     			<fo:block  text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("Name")?if_exists?upper_case}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("openBalanceDebit")?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${openBalanceDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("openBalanceCredit")?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${openBalanceCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("currentDebit")?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${currentDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("currentCredit")?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${currentCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		<#--	<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("closingDebit")?if_exists?string("##0.00")}</fo:block>  
@@ -138,10 +151,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${finAccntValue.get("closingCredit")?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell> -->
-                			<#assign balance=0>
-                			<#if finAccntValue.get("balance")?has_content>
-                              <#assign balance=finAccntValue.get("balance")>
-                             </#if>
                              <#if balance gt 0> 
                              <#assign grandClosingDebit=grandClosingDebit+balance> 
                 			<fo:table-cell>
@@ -162,7 +171,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 		</fo:table-row>
                     </fo:table-body>
                 </fo:table>
-               </fo:block> 	
+               </fo:block> 
+                </#if>	
 				</#list>	
 			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			<fo:block>
