@@ -126,10 +126,15 @@ List mapsList = FastList.newInstance();
 Map interUnitMap = FastMap.newInstance();
 Map acctgReceiveMap = FastMap.newInstance();
 Map acctgPayMap = FastMap.newInstance();
-		
-		acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_RECEIVABLE","acctgTransTypeId","INCOMING_PAYMENT"));
-		acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT"));
-        
+List paymentGlAccountType=FastList.newInstance();
+List PaymentGlAccountIds=FastList.newInstance();
+ 		paymentGlAccountType=delegator.findList("PaymentGlAccountTypeMap",null,null,null,null,false);
+		PaymentGlAccountTypeIds=EntityUtil.getFieldListFromEntityList(paymentGlAccountType,"glAccountTypeId", true);
+		PaymentGlAccountTypeIds.add("ACCOUNTS_RECEIVABLE");
+		PaymentGlAccountTypeIds.add("ACCOUNTS_PAYABLE");
+//		acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_RECEIVABLE","acctgTransTypeId","INCOMING_PAYMENT"));
+//		acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT"));
+		acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeIds",PaymentGlAccountTypeIds));
 		if(UtilValidate.isNotEmpty(parameters.interUnitFalg) && parameters.interUnitFalg=="InterUnit"){
 			interUnitMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountId","119000"));
 		}
