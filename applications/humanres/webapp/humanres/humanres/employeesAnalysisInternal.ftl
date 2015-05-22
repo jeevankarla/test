@@ -146,6 +146,7 @@ $(document).ready(function() {
 		"columns": [
 			{ "title": "Position" },			
 			{ "title": "Number of Employees", sClass: "myRightAlignClass" }],
+		"aaSorting": [],
 		"iDisplayLength" : 100,
         "footerCallback": function ( row, data, start, end, display ) {
 			var api = this.api(), data;
