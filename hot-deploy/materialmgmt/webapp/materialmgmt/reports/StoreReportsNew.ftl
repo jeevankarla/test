@@ -586,12 +586,17 @@ function makeDatePicker1(fromDateId ,thruDateId){
                    <table class="basic-table" cellspacing="5">
                          <tr class="alternate-row">
                                <td width="20%"><span class='h3'>Icp Stock Statement Report</span></td>
-                               <td width="17%"><span class='h3'>From<input  type="text" size="18pt" id="icpStockFDate" readonly  name="fromDate"/></span></td>
-                               <td width="17%"><span class='h3'>To<input  type="text" size="18pt" id="icpStockTDate" readonly  name="thruDate"/></span></td>
-                               <td width="20%">By<select name="categoryType">
+                               <td width="15%"><span class='h3'>From<input  type="text" size="18pt" id="icpStockFDate" readonly  name="fromDate"/></span></td>
+                               <td width="10%"><span class='h3'>To<input  type="text" size="18pt" id="icpStockTDate" readonly  name="thruDate"/></span></td>
+                               <td width="16%"><span class='h3'>categoryType<select name="categoryType">
 				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
 				      			<option value="ICP_AMUL_CHANNEL">Amul Ice Cream</option>
-									</select>
+									</select></span>
+                               </td>
+                               <td width="12%"><span class='h3'>ReportType<select name="ReportType">
+				      			<option value="Detailed">Detailed</option>
+				      			<option value="Abstract">Abstract</option>
+									</select></span>
                                </td>
                                <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"/></span></td> 		 	
                         </tr>

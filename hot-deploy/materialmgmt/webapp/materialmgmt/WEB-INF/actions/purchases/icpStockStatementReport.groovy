@@ -34,6 +34,9 @@ context.put("dctx",dctx);
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
 categoryType=parameters.categoryType;
+ReportType=parameters.ReportType;
+context.put("ReportType",ReportType);
+
 context.put("categoryType",categoryType);
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
@@ -142,11 +145,39 @@ productCategoryMap = [:];
 					
 				}
 			}
-		
-			context.putAt("productCategoryMap", productCategoryMap);
-
-		
+			productCategorySummaryMap = [:];
+			productCategorySummary=[];
+			productCategoryMap.each{ eachcat ->
+//				Debug.log("eachcat==============================="+eachcat.getValue());
+				prdcat=eachcat.getValue();
+				
+				prdcat.each { eachprdctg ->
+					//Debug.log("eachprdctg==============================="+eachprdctg.getKey());
+					temptotalMap=[:];
+					total=BigDecimal.ZERO;
+					eachprdctg.getValue().each{ prdlist ->
+					
+						//Debug.log("prdlist==============================="+prdlist.getValue().get("quantity"));
+						total=total+prdlist.getValue().get("quantity");
+					}
+					temptotalMap.put(eachprdctg.getKey(), total);
+					productCategorySummary.addAll(temptotalMap);
+//					Debug.log("temptotalMap==============================="+temptotalMap);
+					
+					
+				}
+				
+				
+			}
+			if(UtilValidate.isNotEmpty(ReportType)){
+				
+			if("Detailed".equals(ReportType)){
+			context.put("productCategoryMap", productCategoryMap);
+			}else if("Abstract".equals(ReportType)){
+			context.put("productCategorySummary", productCategorySummary);
+			}		
 		}
+	}
 	
 
 
