@@ -1,3 +1,18 @@
+Skip to content
+This repository  
+Explore
+Gist
+Blog
+Help
+@t-suneel t-suneel
+ 
+ Watch 1
+  Star 2
+ Fork 0VESPL/mdkmf PRIVATE
+ tree: c09dd95f2c  mdkmf/hot-deploy/production/webapp/production/WEB-INF/controller.xml
+@t-suneelt-suneel 21 minutes ago control changes
+6 contributors @CharanVarma @t-suneel @kmKrishna1 @nareshGuntur @leelarani @nagababut
+RawBlameHistory    183 lines (170 sloc)  10.799 kb
 <?xml version="1.0" encoding="UTF-8"?>
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
@@ -170,14 +185,16 @@
     <view-map name="CreateNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#CreateNgProductionRun" type="screen"/>
     <view-map name="EditNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#EditNgProductionRun" type="screen"/>
     <view-map name="ProductionRunNgDeclaration" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunNgDeclaration" type="screen"/>
-    <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="ProductionRunEntry" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunEntry"></view-map>
     <view-map name="ProductionReports" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionReports"></view-map>
    
     <!-- View Mappings for Production Reports-->
+    <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="SMPproduction" type="screen" page="component://production/widget/ProductionScreens.xml#SMPproduction"/>
 <!--    <view-map name="PowderPackingLog" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPackingLog"/> -->
     
 </site-conf>
+Status API Training Shop Blog About
+© 2015 GitHub, Inc. Terms Privacy Security Contact
