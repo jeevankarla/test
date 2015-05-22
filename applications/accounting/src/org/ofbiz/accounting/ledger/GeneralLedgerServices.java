@@ -744,8 +744,9 @@ public class GeneralLedgerServices {
         String partyId = (String) context.get("partyId");
         List<String> partyIdList = (List) context.get("partyIds");
         String glAccountTypeId =(String) context.get("glAccountTypeId");
+        List<String> glAccountTypeIds = (List) context.get("glAccountTypeIds");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
-        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
+//        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
         String fromGlAccountId =(String) context.get("glAccountId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
@@ -754,7 +755,7 @@ public class GeneralLedgerServices {
         List conditionList = FastList.newInstance();
         List<GenericValue> acctgTransList=null;
         EntityListIterator acctgTransEntryList=null;
-        List acctgTransIds = FastList.newInstance();
+        List glAccountIds = FastList.newInstance();
         BigDecimal credit = BigDecimal.ZERO;
         BigDecimal debit = BigDecimal.ZERO;
         BigDecimal openingBalance = BigDecimal.ZERO;
@@ -769,6 +770,10 @@ public class GeneralLedgerServices {
         	if(UtilValidate.isNotEmpty(glAccountTypeId)){
 	        	GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault", UtilMisc.toMap("glAccountTypeId",glAccountTypeId,"organizationPartyId","Company"), false);
 	        	glAccountId = glAccountTypeDefault.getString("glAccountId");
+        	}
+        	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
+	        	List<GenericValue> glAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault",EntityCondition.makeCondition("glAccountTypeId",EntityOperator.IN,glAccountTypeIds),UtilMisc.toSet("glAccountId"),null,null,false);
+	        	glAccountIds = EntityUtil.getFieldListFromEntityList(glAccountTypeDefaultList, "glAccountId", true);
         	}
         	if(UtilValidate.isNotEmpty(fromGlAccountId)){
 	        	glAccountId = fromGlAccountId;
@@ -785,12 +790,16 @@ public class GeneralLedgerServices {
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
         	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 //        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
-        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
-        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
-        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
-        	}else if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
+//        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
+//        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
+//        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
+//        	}else
+        	if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
-        	}    
+        	}  
+        	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
+        		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
+        	} 
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
         	//Debug.log("acctgTransEntryList==========="+acctgTransEntryList.getCompleteList());
