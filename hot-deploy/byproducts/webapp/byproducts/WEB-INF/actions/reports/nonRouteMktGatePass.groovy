@@ -169,6 +169,7 @@ orderIds.each{ eachOrderId ->
 		}
 		tempMap = [:];
 		tempMap.put("productId",eachItem.productId);
+		tempMap.put("sequenceNum",prodDetail.sequenceNum);
 		tempMap.put("description",prodDetail.description);
 //		tempMap.put("itemDescription",eachItem.itemDescription);
 		tempMap.put("batchNo", batchNo);
@@ -180,6 +181,7 @@ orderIds.each{ eachOrderId ->
 		tempMap.put("totalAmt", eachItem.quantity*eachItem.unitListPrice);
 		orderItemsList.add(tempMap);
 	}
+	orderItemsList=UtilMisc.sortMaps(orderItemsList, UtilMisc.toList("sequenceNum"));
 	ordersMap.put("orderItems", orderItemsList);
 	ordersMap.put("orderHeader", orderDetail);
 	ordersMap.put("shipment", shipment);

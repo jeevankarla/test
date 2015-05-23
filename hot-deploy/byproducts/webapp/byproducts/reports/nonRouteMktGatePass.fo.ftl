@@ -222,7 +222,7 @@ under the License.
 										            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">BATCH NO</fo:block>  
 										            </fo:table-cell>
 										            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
-								            			<fo:table-cell border-style="solid">
+								            			<fo:table-cell border-style="solid" >
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">NO. OF</fo:block>
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">CRATES</fo:block>  
 										            	</fo:table-cell>
@@ -262,27 +262,39 @@ under the License.
 												<#if orderItems?has_content>
 													<#list orderItems as eachItem>
 														<fo:table-row>
-										                    <fo:table-cell>
+														<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+										                    <fo:table-cell border-style="solid">
+												            	<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell border-style="solid" >	
+												            	<fo:block  keep-together="always" text-align="left" font-size="14pt" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('description')?if_exists)),28)}</fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell border-style="solid" >
+												            	<fo:block  keep-together="always" text-align="left" font-size="14pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
+												            </fo:table-cell>
+												            <#else>
+                                                             <fo:table-cell >
 												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
 												            </fo:table-cell>
-												            <fo:table-cell>	
+												            <fo:table-cell  >	
 												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('description')?if_exists)),28)}</fo:block>
 												            </fo:table-cell>
-												            <fo:table-cell>
+												            <fo:table-cell  >
 												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
-												            </fo:table-cell>
+												            </fo:table-cell>  
+                                                            </#if>
 												            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
-												            	<fo:table-cell>
-												            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
+												            	<fo:table-cell border-style="solid" hight="10pt">
+												            		<fo:block  keep-together="always" text-align="right" font-size="14pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
 												           		</fo:table-cell>
-												           		<fo:table-cell>
-												            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${eachItem.get('qtyPerCrate')?if_exists}</fo:block>  
+												           		<fo:table-cell border-style="solid">
+												            		<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false">${eachItem.get('qtyPerCrate')?if_exists}</fo:block>  
 												            	</fo:table-cell>
-												           		<fo:table-cell>	
-												            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${eachItem.get('qtyLtr')?if_exists?string("#0.00")}</fo:block>
+												           		<fo:table-cell border-style="solid">	
+												            		<fo:block  keep-together="always" text-align="right" font-size="14pt" white-space-collapse="false">${eachItem.get('qtyLtr')?if_exists?string("#0.00")}</fo:block>
 												            	</fo:table-cell>
-												            	<fo:table-cell>
-												            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block>  
+												            	<fo:table-cell border-style="solid">
+												            		<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false"></fo:block>  
 												            	</fo:table-cell>
 												            <#else>
 												           		 <fo:table-cell>
@@ -311,16 +323,16 @@ under the License.
 												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block>
 												            </fo:table-cell>
 												            <fo:table-cell>	
-												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Total</fo:block>
+												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">TOTAL</fo:block>
 												            </fo:table-cell>
 												            <fo:table-cell>
-												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Crates:</fo:block>
+												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">CRATES:</fo:block>
 												            </fo:table-cell>
 									            			<fo:table-cell>
 												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalCrates?if_exists?string("#0.00")}</fo:block>  
 												            </fo:table-cell>
 												            <fo:table-cell>
-												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Ltrs:</fo:block>
+												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">LTRS:</fo:block>
 												            </fo:table-cell>
 												            <fo:table-cell>
 												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalLtrs?if_exists?string("#0.00")}</fo:block>  
