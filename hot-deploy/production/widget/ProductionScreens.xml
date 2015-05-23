@@ -154,6 +154,9 @@
 		     	<set field="tabButtonItem1" value="productionDashboard"/>
 		     	<set field="tabButtonItem2" value="inventoryCheck"/>
 		     	<set field="titleProperty" value="Dashboard"/>
+		     	<entity-condition list="facilityList" entity-name="Facility">
+		     		<condition-expr field-name="facilityTypeId" operator="equals" value="PLANT"/>
+		     	</entity-condition>
 		     	<script location="component://production/webapp/production/WEB-INF/actions/SiloInventoryCharts.groovy"/>
 		     </actions>
 		     <widgets>
