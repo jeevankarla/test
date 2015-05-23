@@ -128,7 +128,7 @@
     </request-map>
     <request-map uri="returnUnusedMaterialOfRoutingTask">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="issueRoutingTaskNeededMaterial" global-transaction="true"/>
+        <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="returnUnusedMaterialOfRoutingTask" global-transaction="true"/>
         <response name="success" type="request" value="json"/>
     </request-map>
     <request-map uri="declareRoutingTaskMaterial">
