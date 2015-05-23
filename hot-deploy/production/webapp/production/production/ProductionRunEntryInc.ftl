@@ -96,7 +96,6 @@
 			return {valid:true, msg:null};
 	}
 	function prepareIssueGrid(resultParam, workEffortId, displayBtn){
-		
 		if(displayBtn == 'N'){
 			data = resultParam['issuedProductItemsJSON'];
 		}
@@ -322,10 +321,10 @@
 	var mainGrid;		
 	function setupGrid1() {
 		    var columns = [
-					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, <#if gridEditable?exists && gridEditable == 'Y'>cssClass:"cell-title", regexMatcher:"contains", availableTags: availProdTagsGrid1, editor: AutoCompleteEditor,<#else>cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor,</#if> formatter: issueProductFormatter, sortable:false, toolTip:""},
-					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, <#if gridEditable?exists && gridEditable == 'Y'>cssClass:"cell-title", formatter: quantityFormatter,<#else> cssClass:"readOnlyColumnClass", focusable :false, </#if>validator: quantityValidator, sortable:false},
+					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, cssClass:"cell-title", regexMatcher:"contains", availableTags: availProdTagsGrid1, editor: AutoCompleteEditor,formatter: issueProductFormatter, sortable:false, toolTip:""},
+					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter,validator: quantityValidator, sortable:false},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
-					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, <#if gridEditable?exists && gridEditable == 'Y'>cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor,<#else>cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor,</#if> sortable:false},
+					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor, sortable:false},
 					{id:"inventoryAvl", name:"Available Stock", field:"inventoryAvl", width:140, minWidth:140, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, focusable :false, sortable:false}
 			];
 		
@@ -608,10 +607,10 @@
 	function setupGrid3() {
 		    var columns = [
 					{id:"cReturnProductName", name:"Material", field:"cReturnProductName", width:180, minWidth:180, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"returnQuantity", name:"Qty", field:"returnQuantity", width:50, minWidth:50, editor:FloatCellEditor, <#if gridReturnEditable?exists && gridReturnEditable=='Y'>cssClass:"cell-title", formatter: quantityFormatter, validator: returnQuantityValidator,<#else>cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false},
+					{id:"returnQuantity", name:"Qty", field:"returnQuantity", width:50, minWidth:50, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: returnQuantityValidator, sortable:false},
 					{id:"returnUOM", name:"UOM", field:"returnUom", width:50, minWidth:50, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
-					{id:"returnReasonId", name:"Reason", field:"returnReasonId", width:100, minWidth:100, <#if gridReturnEditable?exists && gridReturnEditable=='Y'>cssClass:"cell-title", options: dropDownOption, editor: SelectCellEditor,<#else> cssClass:"readOnlyColumnClass", focusable :false,</#if>sortable:false},
-					{id:"description", name:"Comment", field:"description", width:150, minWidth:150, <#if gridEditable?exists && gridEditable=='Y'>editor:LongTextCellEditor, <#else>cssClass:"readOnlyColumnClass", focusable :false,</#if> 	sortable:false, align:"right", toolTip:"Term Description"}
+					{id:"returnReasonId", name:"Reason", field:"returnReasonId", width:100, minWidth:100, cssClass:"cell-title", options: dropDownOption, editor: SelectCellEditor,sortable:false},
+					{id:"description", name:"Comment", field:"description", width:150, minWidth:150, editor:LongTextCellEditor,	sortable:false, align:"right", toolTip:"Term Description"}
 					//{id:"returnFacilityId", name:"From Store", field:"returnFacilityId", width:140, minWidth:140, cssClass:"cell-title",editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false}
 			];
 		
