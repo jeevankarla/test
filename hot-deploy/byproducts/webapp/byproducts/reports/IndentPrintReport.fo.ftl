@@ -113,6 +113,9 @@ under the License.
 			                    <fo:table-cell>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>
 							<fo:table-row border-style="solid" >
 			                    <fo:table-cell number-columns-spanned="4">
@@ -122,14 +125,14 @@ under the License.
 								            <fo:table-column column-width="200pt"/>
 								            <fo:table-column column-width="100pt"/>
 								            <fo:table-body>
-								                <fo:table-row>
-								                    <fo:table-cell >
+								                <fo:table-row >
+								                    <fo:table-cell border-style="solid">
 										            	<fo:block text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">SL NO</fo:block>
 										            </fo:table-cell>
-													<fo:table-cell>
+													<fo:table-cell border-style="solid">
 										            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">PRODUCT</fo:block>
 										            </fo:table-cell>
-										            <fo:table-cell>
+										            <fo:table-cell border-style="solid">
 										            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">QTY IN <#if screenFlag?exists && (screenFlag == "NANDINI" || screenFlag == "AMUL")>CRATES<#else>LTR/KGS</#if></fo:block>
 										            </fo:table-cell>
 												</fo:table-row>
@@ -139,25 +142,26 @@ under the License.
 													<#assign slNo = 1>
 													<#list orderItems as eachItem>
 														<fo:table-row>
-										                    <fo:table-cell>
-												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
+										                    <fo:table-cell border-style="solid">
+												            	<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
 												            </fo:table-cell>
-												            <fo:table-cell>	
-												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachItem.get('description')?if_exists}</fo:block>
+												            <fo:table-cell border-style="solid">	
+												            	<fo:block  keep-together="always" text-align="left" font-size="14pt" white-space-collapse="false">${eachItem.get('description')?if_exists}</fo:block>
 												            </fo:table-cell>
-												            <fo:table-cell>
-												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
+												            <fo:table-cell border-style="solid">
+												            	<fo:block  keep-together="always" text-align="right" font-size="14pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
 												            </fo:table-cell>
 														</fo:table-row>
 														<#assign totalCrates = totalCrates+eachItem.get('qtyInCrate')>
 														<#assign slNo = slNo+1>
 													</#list>
-													<fo:table-row >
-									                    <fo:table-cell>	
+                                                    
+													<fo:table-row border-style="solid">
+									                    <fo:table-cell >	
 											            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>
 											            </fo:table-cell>
 											            <fo:table-cell>
-											            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Total:</fo:block>
+											            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">TOTAL:</fo:block>
 											            </fo:table-cell>
 											            <fo:table-cell>
 											            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalCrates?if_exists?string("#0.00")}</fo:block>  
@@ -169,7 +173,8 @@ under the License.
 											</fo:table>
 					            	</fo:block>
 					            </fo:table-cell>
-							</fo:table-row>
+                                
+							   </fo:table-row>
 			            </fo:table-body>
 			        </fo:table>
           		</fo:block>
