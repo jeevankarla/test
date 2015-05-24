@@ -188,7 +188,7 @@
 	     		 	<decorator-section name="body">
 	     		 		<include-menu name="AnalyticsMenusTabBar" location="component://production/widget/ProductionMenus.xml"/>
 		     		 	<platform-specific><html><html-template location="component://production/webapp/production/analytics/findProductionRunTrend.ftl"/></html></platform-specific>
-		     		 	<screenlet title="Chart">
+		     		 	<screenlet title="Products Manufactured in Plant(${facId}): ${froDate} - ${toDate}">
 		     		 		<platform-specific><html><html-template location="component://production/webapp/production/analytics/ProductionRunCharts.ftl"/></html></platform-specific>
 		     		 	</screenlet>	  
 	     		 	</decorator-section>

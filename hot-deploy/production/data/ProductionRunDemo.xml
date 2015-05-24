@@ -112,6 +112,6 @@
     <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="RCHACO" quantity="0.750000" routingWorkEffortId="WF713" sequenceNum="4"/>
 	<ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="RNUTS" quantity="0.750000" routingWorkEffortId="WF713" sequenceNum="5"/>
    
-   
+     <ReturnHeaderType description="Return From Production" returnHeaderTypeId="PRODUCTION_RETURN"/>
     
 </entity-engine-xml>

@@ -11,37 +11,7 @@
 <script type="application/javascript">
     var chart;
             var legend;
-			//var chartData = ${StringUtil.wrapString(productionRunData)!'[]'};
-            var chartData = [
-                {
-                    "product": "TM",
-                    "quantity": 55500
-                },
-                {
-                    "product": "DTM",
-                    "quantity": 12398
-                },
-                {
-                    "product": "HCM",
-                    "quantity": 6000
-                },
-                {
-                    "product": "HTM",
-                    "quantity": 9875
-                },
-                {
-                    "product": "WM",
-                    "quantity": 6985
-                },
-                {
-                    "product": "SBM",
-                    "quantity": 7625
-                },
-                {
-                    "product": "HFM",
-                    "quantity": 4256
-                }
-            ];
+			var chartData = ${StringUtil.wrapString(productionRunData)!'[]'};
 
             AmCharts.ready(function () {
                 // PIE CHART
