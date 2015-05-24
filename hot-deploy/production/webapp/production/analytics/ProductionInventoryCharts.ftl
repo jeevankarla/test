@@ -12,20 +12,31 @@
     
             var chart;
 			var data = ${StringUtil.wrapString(categorySiloJSON)!'[]'};
+			
+			var chartData1;
+			var chartData2;
+			var chartData3;
+			var chartData4;
+			var chartData5;
+			var chartData6;
+			var chartData7;
+			var chartData8;
+			<#assign i = 1>
+			<#list categoryList as eachCategory>
+				<#assign chartData = "chartData"+i>
+				<#assign catId = eachCategory.siloType />
+				${chartData} = data["${catId}"];
+				<#assign i = i+1>
+			</#list>			
 			AmCharts.ready(function () {
 				<#if categoryList?exists && categoryList?has_content>
-					<#assign i = 1>
+					
+					// serial chart
+					<#assign i = 1>	
 					<#list categoryList as eachCategory>
 						<#assign catId = eachCategory.siloType />
 						<#assign chartData = "chartData"+i>
-						<#assign chartdiv = "chartdiv"+i>
 						<#assign chart = "chart"+i>
-						<#assign valueAxis = "valueAxis"+i>
-						<#assign graph = "graph"+i>
-						<#assign chartCursor = "chartCursor"+i>
-						<#assign categoryAxis = "categoryAxis"+i>
-						// serial chart
-						var ${chartData} = data["${catId}"];
 						var ${chart} = new AmCharts.AmSerialChart();
 		                ${chart}.dataProvider = ${chartData};
 		                ${chart}.categoryField = "facility";
@@ -33,21 +44,38 @@
 		                ${chart}.depth3D = 50;
 		                ${chart}.angle = 30;
 		                ${chart}.marginRight = -45;
-		                
+		                <#assign i = i+1>
+		            </#list>    
 		        		// AXES
                 		// category
+		            <#assign i = 1>	
+					<#list categoryList as eachCategory>
+					    <#assign chart = "chart"+i>
+					    <#assign categoryAxis = "categoryAxis"+i>
 		                var ${categoryAxis} = ${chart}.categoryAxis;
 		                ${categoryAxis}.gridAlpha = 0;
 		                ${categoryAxis}.axisAlpha = 0;
 		                ${categoryAxis}.gridPosition = "start";
-						
+						<#assign i = i+1>
+		            </#list>
+					
 						// value
+					<#assign i = 1>	
+					<#list categoryList as eachCategory>
+					    <#assign chart = "chart"+i>
+		                <#assign valueAxis = "valueAxis"+i>
 		                var ${valueAxis} = new AmCharts.ValueAxis();
 		                ${valueAxis}.axisAlpha = 0;
 		                ${valueAxis}.gridAlpha = 0;
 		                ${chart}.addValueAxis(${valueAxis});
+						<#assign i = i+1>
+		            </#list>
 						
 						// GRAPH
+					<#assign i = 1>	
+					<#list categoryList as eachCategory>
+					    <#assign chart = "chart"+i>
+		            	<#assign graph = "graph"+i>
 		                var ${graph} = new AmCharts.AmGraph();
 		                ${graph}.valueField = "quantity";
 		                ${graph}.colorField = "color";
@@ -59,8 +87,14 @@
 		                ${graph}.topRadius = 1;
 		                ${graph}.fillAlphas = 0.8;
 		                ${chart}.addGraph(${graph});
-						
+						<#assign i = i+1>
+		            </#list>
+		            
 						// CURSOR
+					<#assign i = 1>	
+					<#list categoryList as eachCategory>
+					    <#assign chart = "chart"+i>
+		                <#assign chartCursor = "chartCursor"+i>
 		                var ${chartCursor} = new AmCharts.ChartCursor();
 		                ${chartCursor}.cursorAlpha = 0;
 		                ${chartCursor}.zoomable = false;
@@ -69,11 +103,14 @@
 		                ${chartCursor}.valueLineBalloonEnabled = false;
 		                ${chartCursor}.valueLineAlpha = 1;
 		                ${chart}.addChartCursor(${chartCursor});
-						
-		                ${chart}.creditsPosition = "top-right";
-		                
-		                ${chart}.write("${chartdiv}");					        
 		                <#assign i = i+1>
+					</#list>
+					<#assign i = 1>
+					<#list categoryList as eachCategory>
+						<#assign chartdiv = "chartdiv"+i>
+						<#assign chart = "chart"+i>
+						${chart}.write("${chartdiv}");
+						<#assign i = i+1>
 					</#list>
 				</#if>
             });

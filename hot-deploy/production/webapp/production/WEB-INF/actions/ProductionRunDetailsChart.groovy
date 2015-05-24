@@ -17,10 +17,6 @@ facilityId = parameters.facilityId;
 fromDate = parameters.fromDate;
 thruDate = parameters.thruDate;
 
-Debug.log("facilityId ########"+facilityId);
-Debug.log("fromDate ########"+fromDate);
-Debug.log("thruDate ########"+thruDate);
-
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	if (parameters.fromDate) {
@@ -29,7 +25,7 @@ try {
 	}
 	else {
 		froDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-		context.froDate = froDate
+		context.froDate = UtilDateTime.toDateString(froDate, "MMMM dd, yyyy");
 		fromDate = froDate;
 	}
 	if (parameters.thruDate) {
@@ -37,7 +33,7 @@ try {
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.thruDate).getTime()));
 	}
 	else {
-		context.toDate = UtilDateTime.nowDate();
+		context.toDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "MMMM dd, yyyy");
 		thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 	}
 } catch (ParseException e) {
@@ -45,7 +41,7 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
-
+context.facId = facilityId;
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("actualCompletionDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 conditionList.add(EntityCondition.makeCondition("actualCompletionDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
@@ -57,9 +53,7 @@ if(facilityId){
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
 workEffort = delegator.findList("WorkEffort", condition, null, null, null, false);
-Debug.log("condition #################"+condition);
 workEffortIds = EntityUtil.getFieldListFromEntityList(workEffort, "workEffortId", true);
-Debug.log("workEffortIds #################"+workEffortIds);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("workEffortParentId",EntityOperator.IN, workEffortIds));
 conditionList.add(EntityCondition.makeCondition("currentStatusId",EntityOperator.EQUALS, "PRUN_COMPLETED"));
@@ -69,7 +63,6 @@ routingTasks = delegator.findList("WorkEffort", cond1, null, null, null, false);
 routingIds = EntityUtil.getFieldListFromEntityList(routingTasks, "workEffortId", true);
 
 workEffortIds.addAll(routingIds);
-Debug.log("workEffortIds #################"+workEffortIds);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("workEffortId",EntityOperator.IN, workEffortIds));
 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff",EntityOperator.GREATER_THAN, BigDecimal.ZERO));
@@ -77,7 +70,6 @@ cond2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 productionDetails = delegator.findList("InventoryItemAndDetail", cond2, null, null, null, false);
 
 productIds = EntityUtil.getFieldListFromEntityList(productionDetails, "productId", true);
-Debug.log("productIds #################"+productIds);
 JSONArray productionRunData = new JSONArray();
 productIds.each{ eachProdId ->
 	JSONObject newObj = new JSONObject();
@@ -90,5 +82,4 @@ productIds.each{ eachProdId ->
 	newObj.put("quantity", qoh);
 	productionRunData.add(newObj);
 }
-Debug.log("productionRunData ##########"+productionRunData);
 context.productionRunData = productionRunData;

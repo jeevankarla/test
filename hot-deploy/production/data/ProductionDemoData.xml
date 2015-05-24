@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-
+	<StatusType description="Inventory Return Status" statusTypeId="INV_RETURN_STATUS"/>
+	<StatusItem description="Initiated" sequenceId="01" statusCode="INITIATED" statusId="RTN_INITIATED" statusTypeId="INV_RETURN_STATUS"/>
+	<StatusItem description="Approved" sequenceId="02" statusCode="APPROVED" statusId="RTN_APPROVED" statusTypeId="INV_RETURN_STATUS"/>
+	<StatusItem description="Accepted" sequenceId="03" statusCode="ACCEPTED" statusId="RTN_ACCEPTED" statusTypeId="INV_RETURN_STATUS"/>
+	<StatusItem description="Cancelled" sequenceId="05" statusCode="CANCELLED" statusId="RTN_CANCELLED" statusTypeId="INV_RETURN_STATUS"/>
+	
+	<StatusValidChange statusId="RTN_INITIATED" statusIdTo="RTN_CANCELLED" transitionName="Cancel"/>
+	<StatusValidChange statusId="RTN_INITIATED" statusIdTo="RTN_APPROVED" transitionName="Sec. Head Approval"/>
+	<StatusValidChange statusId="RTN_APPROVED" statusIdTo="RTN_ACCEPTED" transitionName="Accepted"/>
+	<StatusValidChange statusId="RTN_ACCEPTED" statusIdTo="RTN_CANCELLED" transitionName="Accepted And Dumped"/>
+	<StatusValidChange statusId="RTN_APPROVED" statusIdTo="RTN_CANCELLED" transitionName="Rejected"/>
 </entity-engine-xml>
