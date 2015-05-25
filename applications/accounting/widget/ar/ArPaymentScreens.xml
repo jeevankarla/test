@@ -39,6 +39,7 @@ under the License.
 	                <field-map field-name="viewSize" from-field="viewSize"/>
 	            </service>
 	            <set field="payments" from-field="result.listIt"/>
+	            <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentSearchFilter.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">

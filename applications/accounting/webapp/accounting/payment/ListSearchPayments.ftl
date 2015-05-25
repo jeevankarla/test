@@ -107,9 +107,12 @@ function setVoidPaymentParameters(currentPayment){
     
     }
 </script>
+<#if paymentList?has_content>
+<#else>
 <#if payments?has_content>
   <#assign paymentList  =  payments.getCompleteList() />
   <#assign eliClose = payments.close() />
+</#if>
 </#if>
 <#if paymentList?has_content && (parameters.noConditionFind)?if_exists == 'Y'>
   <div>
