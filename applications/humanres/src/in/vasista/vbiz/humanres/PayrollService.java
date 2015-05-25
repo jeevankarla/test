@@ -711,6 +711,7 @@ public class PayrollService {
 				String periodBillingId = (String) context.get("periodBillingId");
 				GenericValue periodBilling = null;
 				String billingTypeId =null;
+				Timestamp basicSalDate = null;
 		    	try {
 	    			/*EntityFindOptions opts = new EntityFindOptions();
 	    	        opts.setMaxRows(1);
@@ -731,6 +732,9 @@ public class PayrollService {
 		    		try {
 						periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 						billingTypeId =(String) periodBilling.get("billingTypeId");
+						if(UtilValidate.isNotEmpty(periodBilling)){
+							basicSalDate = (Timestamp) periodBilling.get("basicSalDate");
+						}
 					} catch (GenericEntityException e1) {
 						Debug.logError(e1,"Error While Finding PeriodBilling");
 						return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
@@ -744,8 +748,8 @@ public class PayrollService {
 							Timestamp dateEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 							List condPeriodList = FastList.newInstance();
 							condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
-							condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date((dateStart).getTime())));
-							condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
+							condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayEnd(basicSalDate))));
+							condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(basicSalDate))));
 							EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
 							List<GenericValue> hrCustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
 							String hrCustomTimePeriodId=null;
@@ -2195,8 +2199,8 @@ public class PayrollService {
 						Timestamp dateEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 						List condPeriodList = FastList.newInstance();
 						condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
-						condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date((dateStart).getTime())));
-						condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
+						condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayEnd(basicSalDate))));
+						condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(basicSalDate))));
 						EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
 						List<GenericValue> hrCustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
 						String hrCustomTimePeriodId=null;
