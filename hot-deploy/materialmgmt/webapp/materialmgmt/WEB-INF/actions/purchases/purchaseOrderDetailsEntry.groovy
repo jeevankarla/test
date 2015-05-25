@@ -57,6 +57,12 @@ if(orderId){
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderItemsAndRole = delegator.findList("OrderHeaderItemAndRoles", condition, null, null, null, false);
 	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conditionList.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemChanges = delegator.findList("OrderItemChange", cond, null, UtilMisc.toList("-effectiveDatetime"), null, false);
+	
 	productIds = EntityUtil.getFieldListFromEntityList(orderItemsAndRole, "productId", true);
 	result = MaterialHelperServices.getProductUOM(delegator, productIds);
 	uomLabelMap = result.get("uomLabel");
@@ -106,6 +112,14 @@ if(orderId){
 		newObj.put("unitPrice",eachItem.unitListPrice);
 		// }
 		newObj.put("orderedQty",eachItem.quantity);
+		if(UtilValidate.isNotEmpty(OrderItemChanges)){
+			orderItemChange = EntityUtil.filterByCondition(OrderItemChanges, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+			if(UtilValidate.isNotEmpty(orderItemChange)){
+				orderItemChange = EntityUtil.getFirst(orderItemChange);
+				quantityOAP=orderItemChange.quantity;
+		        newObj.put("orderedQty",quantityOAP);
+			}
+		}
 		newObj.put("oldRecvdQty",receivedQty);
 		newObj.put("maxReceivedQty",maxReceivedQty);
 		newObj.put("uomDescription",uomLabel);
