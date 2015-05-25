@@ -75,8 +75,21 @@
 	}
 	
 	$(document).ready(function(){
+		var statusId = "";
+		<#if productionRun?exists>
+			statusId = "${productionRun.currentStatusId}";
+		</#if>
 		$('#addMaterialDiv').hide();
 		$('#declareTaskOutDiv').hide();
+		if(statusId == 'PRUN_COMPLETED'){
+			$('#addMaterialDiv').show();
+			$('#declareTaskOutDiv').show();
+			<#if lastWorkEffortList?has_content>
+				<#assign effortId = (lastWorkEffortList[0]).workEffortId>
+				var effortId = "${effortId}";
+				declareTaskOut(effortId);
+			</#if>
+		}
 	});
 		
 </script>
