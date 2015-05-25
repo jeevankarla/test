@@ -9,8 +9,8 @@ import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import org.ofbiz.accounting.payment.PaymentWorker;
- 
 unAppliedCheck=parameters.unAppliedCheck;
+parentTypeId=parameters.parentTypeId;
 
 //------------------------------------------------------------------------------checking Un-applied payments
 	if((UtilValidate.isNotEmpty(unAppliedCheck)) && "Y".equals(unAppliedCheck)){
@@ -24,7 +24,11 @@ unAppliedCheck=parameters.unAppliedCheck;
 					resultList.add(paymentEntry);
 				}
 			}
+			if(parentTypeId.equals("RECEIPT")){
+			context.paymentList=resultList;
+			}else if(parentTypeId.equals("DISBURSEMENT")){
 			context.listIt=resultList;
+			}
 		}
 	}
 //------------------------------------------------------------------------------checking applied payments
@@ -39,6 +43,10 @@ unAppliedCheck=parameters.unAppliedCheck;
 					resultList.add(paymentEntry);
 				}
 			}
+			if(parentTypeId.equals("RECEIPT")){
+			context.paymentList=resultList;
+			}else if(parentTypeId.equals("DISBURSEMENT")){
 			context.listIt=resultList;
+			}
 		}
 	}
