@@ -906,7 +906,8 @@ public class EmplLeaveService {
     	// filtering probationary staff
     	try{
     		if(UtilValidate.isNotEmpty(activeEmployementList)){
-        		List probStaffPartyList = FastList.newInstance();
+    			//disabling check thru Employment Date
+        		/*List probStaffPartyList = FastList.newInstance();
         		List conditionList = FastList.newInstance();
         		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, partyIdList));
             	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -925,14 +926,14 @@ public class EmplLeaveService {
             			}
             		}
             		partyIdList.removeAll(probStaffPartyList);
-            		List partyClassList = FastList.newInstance();
-            		partyClassList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList));
-            		partyClassList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "PROB_STAFF"));
-                    EntityCondition partyClassCond = EntityCondition.makeCondition(partyClassList,EntityOperator.AND);
-                    List<GenericValue> partyClassificationList = delegator.findList("PartyClassification",partyClassCond, null, UtilMisc.toList("-thruDate"), null, false);
-                    List partyClassIdList = EntityUtil.getFieldListFromEntityList(partyClassificationList, "partyId", true);
-                    partyIdList.removeAll(partyClassIdList);
-            	}
+            	}*/
+	    		List partyClassList = FastList.newInstance();
+	    		partyClassList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList));
+	    		partyClassList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "PROB_STAFF"));
+	            EntityCondition partyClassCond = EntityCondition.makeCondition(partyClassList,EntityOperator.AND);
+	            List<GenericValue> partyClassificationList = delegator.findList("PartyClassification",partyClassCond, null, UtilMisc.toList("-thruDate"), null, false);
+	            List partyClassIdList = EntityUtil.getFieldListFromEntityList(partyClassificationList, "partyId", true);
+	            partyIdList.removeAll(partyClassIdList);
         	}
     	}catch(Exception e){
 			Debug.logError("Error while getting Employement"+e.getMessage(), module);
