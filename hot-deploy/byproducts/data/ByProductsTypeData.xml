@@ -195,7 +195,9 @@
      <OrderAdjustmentType orderAdjustmentTypeId="ROUNDING_ADJUSTMENT" parentTypeId="" hasTable="N" description="Rounding Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
     <InvoiceItemType description="Rounding Adjustment" hasTable="N" invoiceItemTypeId="ROUNDING_ADJUSTMENT"/>
 	<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="ROUNDING_ADJUSTMENT" invoiceItemTypeId="ROUNDING_ADJUSTMENT"/>
-    
+    <RateType  description="SHOPEE RENT SERVICE TAX" rateTypeId="SHOP_RENT_SRVTAX"/> 
+    <FacilityRate  facilityId="MAIN_PLANT" fromDate="2014-04-01 00:00:00.0" productId="_NA_" rateAmount="1.123600" rateCurrencyUomId="INR" rateTypeId="SHOP_RENT_SRVTAX" supplyTypeEnumId="_NA_" thruDate="2015-05-31 23:59:59.0"/> 
+    <FacilityRate  facilityId="MAIN_PLANT" fromDate="2015-06-01 00:00:00.0"  productId="_NA_" rateAmount="1.140000" rateCurrencyUomId="INR" rateTypeId="SHOP_RENT_SRVTAX" supplyTypeEnumId="_NA_"/> 
      
      
      <EnumerationType enumTypeId="FAC_CLOSE_REASON" /> 
