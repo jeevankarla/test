@@ -453,15 +453,35 @@ public class ProductionServices {
 		  		  inputCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 		  		  inputCtx.put("workEffortId", workEffortId);
 		  		  inputCtx.put("userLogin", userLogin);
-		  		  Debug.log("inputCtx #############"+inputCtx);
 		  		  Map resultCtx = dispatcher.runSync("productionRunTaskProduce", inputCtx);
 		  		  if(ServiceUtil.isError(resultCtx)){
 		  			  Debug.logError("Error in declaring material of routing task : "+workEffortId, module);
+		  			  request.setAttribute("_ERROR_MESSAGE_", "Error in declaring material of routing task : "+workEffortId);
 		  			  TransactionUtil.rollback();
 		  			  return "error";
 		  		  }
-		  		  List inventoryItemIds = (List)resultCtx.get("inventoryItemIds");
-		  		  Debug.log("inventoryItemIds ###################"+inventoryItemIds);
+		  		  
+		  		  List<String> inventoryItemIds = (List)resultCtx.get("inventoryItemIds");
+		  		  Map batchCtx = FastMap.newInstance();
+		  		  batchCtx.put("productId", productId);
+		  		  batchCtx.put("workEffortId", workEffortId);
+		  		  batchCtx.put("userLogin", userLogin);
+		  		  resultCtx = dispatcher.runSync("createBatchForRoutingTask", batchCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		  			  Debug.logError("Error while creating batch number for production run : "+workEffortId, module);
+		  			  request.setAttribute("_ERROR_MESSAGE_", "Error while creating batch number for production run : "+workEffortId);
+		  			  TransactionUtil.rollback();
+		  			  return "error";
+		  		  }
+		  		  
+		  		  String productBatchId = (String)resultCtx.get("productBatchId");
+		  		  
+		  		  for(String eachItem : inventoryItemIds){
+		  			  GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", eachItem), false);
+		  			 inventoryItem.put("productBatchId", productBatchId);
+		  			 inventoryItem.store();
+		  		  }
+		  		  
 		  	  }
 	  	  }
 	  	catch (GenericEntityException e) {
@@ -489,6 +509,117 @@ public class ProductionServices {
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
 		return "success";  
+    }
+    
+    public static Map<String, Object> createBatchForRoutingTask(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+	  	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	  	String workEffortId = (String) context.get("workEffortId");
+	  	String productId = (String) context.get("productId");
+	  	String productBatchId = "";
+	  	Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	  	try{
+	  		
+	  		GenericValue productionRun = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
+	  		
+	  		Timestamp manufacturedDate = UtilDateTime.getDayStart(nowTimestamp);
+	  		if(UtilValidate.isNotEmpty(productionRun)){
+	  			manufacturedDate = UtilDateTime.getDayStart(productionRun.getTimestamp("actualStartDate"));
+	  		}
+	  		List conditionList = FastList.newInstance();
+	  		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	  		conditionList.add(EntityCondition.makeCondition("manufacturedDate", EntityOperator.EQUALS, manufacturedDate));
+	  		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PBTCH_CANCELLED"));
+	  		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	  		List<GenericValue> productBatch = delegator.findList("ProductBatch", condition, null, null, null, false);
+	  		
+	  		if(UtilValidate.isEmpty(productBatch)){
+	  			GenericValue newEntity = delegator.makeValue("ProductBatch");
+	        	 newEntity.set("productId", productId);
+	 	         newEntity.set("manufacturedDate", manufacturedDate);
+	 	         newEntity.set("statusId", "PBTCH_CREATED");
+	 	         newEntity.set("createdDate", nowTimestamp);
+	 	         newEntity.set("createdByUserLogin", userLogin.getString("userLoginId"));
+	 	         newEntity.set("lastModifiedDate", nowTimestamp);
+	 	         newEntity.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+	 	         delegator.createSetNextSeqId(newEntity);
+	 	         productBatchId = newEntity.getString("productBatchId");
+	  		}
+	  		else{
+	  			GenericValue prodBatch = EntityUtil.getFirst(productBatch);
+	  			productBatchId = prodBatch.getString("productBatchId");
+	  		}
+	  	}catch(Exception e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+	  	}
+	  	result.put("productBatchId", productBatchId);
+	  	return result;
+    }
+    
+    public static Map<String, Object> createProductBatchSequence(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+	  	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	  	String productBatchId = (String) context.get("productBatchId");
+	  	Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	  	try{
+	  		
+	  		if(UtilValidate.isEmpty(productBatchId)){
+	  			Debug.logError("productBatchId cannot be empty, to create sequence ", module);
+				return ServiceUtil.returnError("Problem creating Product Batch");
+	  		}
+	  		
+	  		GenericValue productBatch = delegator.findOne("ProductBatch", UtilMisc.toMap("productBatchId", productBatchId), false);
+	  		Timestamp manufacturedDate = productBatch.getTimestamp("manufacturedDate");
+	  		String productId = productBatch.getString("productId");
+	  		
+	  		Map finYearContext = FastMap.newInstance();
+			finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+			finYearContext.put("organizationPartyId", "Company");
+			finYearContext.put("userLogin", userLogin);
+			finYearContext.put("findDate", manufacturedDate);
+			finYearContext.put("excludeNoOrganizationPeriods", "Y");
+			List customTimePeriodList = FastList.newInstance();
+			Map resultCtx = FastMap.newInstance();
+			try{
+				resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+				if(ServiceUtil.isError(resultCtx)){
+					Debug.logError("Problem in fetching financial year ", module);
+					return ServiceUtil.returnError("Problem in fetching financial year ");
+				}
+			}catch(GenericServiceException e){
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+			customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+			String finYearId = "";
+			if(UtilValidate.isNotEmpty(customTimePeriodList)){
+				GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+				finYearId = (String)customTimePeriod.get("customTimePeriodId");
+			}
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("productBatchId",EntityOperator.EQUALS, productBatchId));
+			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
+			conditionList.add(EntityCondition.makeCondition("finYearId",EntityOperator.EQUALS, finYearId));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> batchSequence = delegator.findList("ProductBatchSequence", condition, null, null, null, false);
+			if(UtilValidate.isEmpty(batchSequence)){
+				GenericValue batchSeq = delegator.makeValue("ProductBatchSequence");
+				batchSeq.set("productBatchId", productBatchId);
+				batchSeq.set("finYearId", finYearId);
+				batchSeq.set("productId", productId);
+				delegator.setNextSubSeqId(batchSeq, "sequenceId", 10, 1);
+	            delegator.create(batchSeq);
+			}
+	  	}catch(Exception e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+	  	}
+	  	return result;
     }
     
     public static Map<String, Object> changeRoutingTaskStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
