@@ -132,7 +132,7 @@ public class GeneralLedgerServices {
 		if(UtilValidate.isNotEmpty(context.get("isOBCallForAP"))){
 			isOBCallForAP = (Boolean)context.get("isOBCallForAP");
 		}
-		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF","INVOICE_IN_PROCESS");
 		//separate query for AR and AP
 		if(isOBCallForAP){
 			exprListForParameters.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
