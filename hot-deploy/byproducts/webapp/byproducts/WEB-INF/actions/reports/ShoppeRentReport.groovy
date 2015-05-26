@@ -17,6 +17,8 @@ import org.ofbiz.network.LmsServices;
 import org.ofbiz.entity.util.EntityFindOptions;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.service.ServiceUtil;
+
 rounding = RoundingMode.HALF_UP;
 customTimePeriod=delegator.findList("CustomTimePeriod", EntityCondition.makeCondition("customTimePeriodId", parameters.customTimePeriodId), null,null, null, false);
 dayStartfromDate=UtilDateTime.toTimestamp(customTimePeriod[0].fromDate);
@@ -35,7 +37,19 @@ facilityIdsList =[];
 conditionList =[];
 //Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",parameters.customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));
 //List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
-
+BigDecimal taxRateAmount=BigDecimal.ZERO;
+Map inputRtAmt = UtilMisc.toMap("userLogin", userLogin);
+inputRtAmt.put("rateCurrencyUomId", "INR");
+inputRtAmt.put("facilityId", "MAIN_PLANT");
+inputRtAmt.put("fromDate",dayStartfromDate);
+inputRtAmt.put("rateTypeId", "SHOP_RENT_SRVTAX");
+facilityRates = dispatcher.runSync("getFacilityRateAmount", inputRtAmt);
+if(ServiceUtil.isError(facilityRates)){
+	Debug.logError("Problem in fetching service tax rate ", module);
+	return ServiceUtil.returnError("Problem in fetching service tax rate ");
+}else{
+ taxRateAmount=(BigDecimal)facilityRates.get("rateAmount");
+}
 boothList = ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
 boothList = (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,dayBegin)).get("boothActiveList");
 boothList.each{facility ->
@@ -49,7 +63,7 @@ boothList.each{facility ->
 	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
 	BigDecimal basicRateAmount=BigDecimal.ZERO;;
 	if (rateAmount>0) {
-	    basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
+	    basicRateAmount = (rateAmount.divide(new BigDecimal(taxRateAmount) , 0, rounding));
 	}
 	tempMap =[:];
 	tempMap.put("boothId", facility.facilityId);
