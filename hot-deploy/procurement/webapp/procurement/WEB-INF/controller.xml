@@ -31,6 +31,13 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="getSnfFromLactoReading">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getSnfFromLactoReading"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     
     <request-map uri="ProcurementEntry">
         <security https="true" auth="true"/>        

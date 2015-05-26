@@ -419,6 +419,12 @@
         <attribute name="unitId" mode="IN" type="String" optional="false"/>
         <attribute name="centerWiseAbsMap" mode="OUT" type="Map" optional="false"/>
     </service>
+     <service name="getSnfFromLactoReading" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="getSnfFromLactoReading" auth="true" transaction-timeout="30000">
+        <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="fatQty" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="snfQty" mode="OUT" type="BigDecimal" optional="true"/>
+    </service>
     <service name="getProcFacilityBillingPeriods" engine="java"
                 location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="getProcFacilityBillingPeriods" auth="true" transaction-timeout="30000">
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>

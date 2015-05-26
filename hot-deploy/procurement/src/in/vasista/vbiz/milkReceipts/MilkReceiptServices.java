@@ -580,7 +580,7 @@ public class MilkReceiptServices {
         BigDecimal sendLR = (BigDecimal)context.get("sendLR");
         BigDecimal sendTemparature = (BigDecimal)context.get("sendTemparature");
         String cellType = (String) context.get("cellType");
-        Long sendAcidity = (Long) context.get("sendAcidity");        
+        BigDecimal sendAcidity = (BigDecimal) context.get("sendAcidity");        
         Timestamp receivedDate = (Timestamp) context.get("receivedDate");
         String receivedProductId = (String) context.get("receivedProductId");
         BigDecimal receivedQuantityLtrs = (BigDecimal)context.get("receivedQuantityLtrs");
@@ -590,7 +590,8 @@ public class MilkReceiptServices {
         BigDecimal receivedLR = (BigDecimal)context.get("receivedLR");
         String ackTime = (String) context.get("ackTime");     
         BigDecimal receivedTemparature = (BigDecimal)context.get("receivedTemparature");
-        Long receivedAcidity = (Long) context.get("receivedAcidity");
+        BigDecimal receivedAcidity = (BigDecimal) context.get("receivedAcidity");
+        String recdOrganoLepticTest = (String) context.get("recdOrganoLepticTest");
         
         String sequenceNum = null;
         try{        	
@@ -631,7 +632,9 @@ public class MilkReceiptServices {
 			newTransferItem.set("receivedQuantityLtrs", receivedQuantityLtrs);
 			newTransferItem.set("receivedSoda", soda);
 			newTransferItem.set("createdDate", UtilDateTime.nowTimestamp());
-			newTransferItem.set("lastModifiedDate", UtilDateTime.nowTimestamp());  
+			newTransferItem.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			Debug.log("recdOrganoLepticTest======================"+recdOrganoLepticTest);
+			newTransferItem.set("recdOrganoLepticTest", recdOrganoLepticTest);
 			delegator.setNextSubSeqId(newTransferItem,"sequenceNum",5,1);
 			delegator.create(newTransferItem);
 			sequenceNum = (String)newTransferItem.get("sequenceNum");
@@ -1094,7 +1097,7 @@ public class MilkReceiptServices {
 	    BigDecimal sendLR = (BigDecimal)context.get("sendLR");
 	    BigDecimal sendTemparature = (BigDecimal)context.get("sendTemparature");
 	    String cellType = (String) context.get("cellType");
-	    Long sendAcidity = (Long) context.get("sendAcidity");        
+	    BigDecimal sendAcidity = (BigDecimal) context.get("sendAcidity");        
 	    Timestamp receivedDate = (Timestamp) context.get("receivedDate");
 	    BigDecimal receivedQuantityLtrs = (BigDecimal)context.get("receivedQuantityLtrs");
 	    BigDecimal receivedQty = (BigDecimal)context.get("receivedQuantity");
@@ -2276,11 +2279,19 @@ public class MilkReceiptServices {
 			if(UtilValidate.isNotEmpty(transfersList)){
 				GenericValue transferRecord = EntityUtil.getFirst(transfersList);
 				resultMap = ServiceUtil.returnSuccess();
+				resultMap.put("dcNo", transferRecord.get("dcNo"));
+				resultMap.put("productId", transferRecord.get("productId"));
 				resultMap.put("milkTransferId", transferRecord.get("milkTransferId"));
 				resultMap.put("vehicleId", transferRecord.get("containerId"));
+				resultMap.put("grossWeight", (BigDecimal)transferRecord.get("grossWeight"));
 				resultMap.put("sequenceNum", transferRecord.get("sequenceNum"));
 				resultMap.put("partyId", transferRecord.get("partyId"));
-				
+				resultMap.put("isSealChecked",transferRecord.get("isSealChecked"));
+				java.sql.Date sendDateFormat = new java.sql.Date(((Timestamp)transferRecord.get("sendDate")).getTime());
+				String sendDateStr = UtilDateTime.toDateString(sendDateFormat,"dd-MM-yyyy");
+				String sendTimeStr = UtilDateTime.toDateString(sendDateFormat,"HHmm");
+				resultMap.put("sendDateStr", sendDateStr);
+				resultMap.put("sendTimeStr", sendTimeStr);
 				return resultMap;
 			}else{
 				resultMap = ServiceUtil.returnError("No record Found");
@@ -2309,6 +2320,7 @@ public class MilkReceiptServices {
    	 	String sendTime = (String) context.get("sendTime");
    	 	String entryTime = (String) context.get("entryTime");
    	 	String dcNo=(String)context.get("dcNo");
+   	 	String productId = (String) context.get("productId");
    	 	
    	 	String partyId = (String) context.get("partyId");
 	 	String partyIdTo = (String) context.get("partyIdTo");
@@ -2379,11 +2391,13 @@ public class MilkReceiptServices {
 	 		newTransfer.set("sequenceNum", sequenceNum);
 	 		newTransfer.set("sendDate", sendDate);
 	 		newTransfer.set("dcNo", dcNo);
+	 		newTransfer.set("productId",productId);
 	 		newTransfer.set("partyId", partyId);
 	 		newTransfer.set("isSealChecked", sealCheck);
 	 		newTransfer.set("statusId", "MXF_INPROCESS");
 	 		newTransfer.set("partyIdTo", partyIdTo);
-	 		
+	 		newTransfer.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
+	 		newTransfer.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
 	 		delegator.createSetNextSeqId(newTransfer);
 	 		resultMap = ServiceUtil.returnSuccess("Successfully Created Tanker Receipt with Record Number :"+newTransfer.get("milkTransferId"));
 	 		
@@ -2431,6 +2445,8 @@ public class MilkReceiptServices {
 	 			String grossDateStr = (String) context.get("grossDate"); 
 	 	        String grossTime = (String) context.get("grossTime");
 	 	        Timestamp grossDate = UtilDateTime.nowTimestamp();
+	 	        String driverName = (String) context.get("driverName");
+	 	        
 	 	        try{
 	 		 		if(UtilValidate.isNotEmpty(grossDateStr)){
 	 		 			if(UtilValidate.isNotEmpty(grossTime)){
@@ -2448,26 +2464,28 @@ public class MilkReceiptServices {
 	 	        try{
 	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
 	 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
-	 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
-	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+	 	        		Debug.logError("Error while updating the vehicleTrip Status ::"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status ::"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
 			 			return resultMap;
 	 	        	}
 	 	        }catch (GenericServiceException e) {
 					// TODO: handle exception
 	 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
- 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
 		 			return resultMap;
 	 	        	
 				}catch(Exception e){
 					Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
- 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
 		 			return resultMap;
 				}
-	 	        
+	 	        String sealCheck = (String) context.get("sealCheck");
 				milkTransfer.set("dispatchWeight", dispatchWeight);
 				milkTransfer.set("grossWeight", grossWeight);
 				milkTransfer.set("numberOfCells", numberOfCells);
-	 			
+				milkTransfer.set("isSealChecked",sealCheck);
+				milkTransfer.set("driverName", driverName);
+				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_TARWEIGHT")){
 	 			BigDecimal tareWeight = (BigDecimal)context.get("tareWeight");
 	 			String tareDateStr = (String) context.get("tareDate"); 
@@ -2568,7 +2586,7 @@ public class MilkReceiptServices {
 				milkTransfer.set("receivedKgSnf",receivedKgSnf);
 				milkTransfer.set("sendKgFat", sendKgFat);
 				milkTransfer.set("sendKgSnf",sendKgSnf);
-				
+				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 				//need to update TransferItem
 				try{
 					
@@ -2590,6 +2608,7 @@ public class MilkReceiptServices {
 						item.set("sendKgSnf",sendKgSnf);
 						item.set("quantityLtrs", quantityLtrs);
 						item.set("receivedQuantityLtrs", receivedQuantityLtrs);
+						item.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 						item.store();
 					
 				}catch(Exception e){
@@ -2640,11 +2659,12 @@ public class MilkReceiptServices {
 				}
 	 	        
 				milkTransfer.set("statusId", "MXF_RECD");
-	 			
+				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
 	 	        String siloId = (String)context.get("silo");
+	 	        String purposeTypeId = (String) context.get("purposeTypeId");
 	 	        Timestamp cipDate = UtilDateTime.nowTimestamp();
 	 	        try{
 	 		 		if(UtilValidate.isNotEmpty(cipDateStr)){
@@ -2678,13 +2698,13 @@ public class MilkReceiptServices {
  	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
 		 			return resultMap;
 				}
-	 	        
-	 	     try{
+	 	    try{
 	 	    	 
 	 	         List<GenericValue> milkTransferItems = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);	
 	 	         if(UtilValidate.isNotEmpty(milkTransferItems)){
 	 	        	 for(GenericValue milkTransferItem : milkTransferItems){
 	 	        		 milkTransferItem.set("siloId", siloId);
+	 	        		 milkTransferItem.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	 	        		 milkTransferItem.store();
 	 	        	 }
 	 	        	 
@@ -2695,6 +2715,16 @@ public class MilkReceiptServices {
 	        		resultMap = ServiceUtil.returnError("Exception while updating the Silo Id :"+e.getMessage());
 		 			return resultMap;
 				}
+	 	     
+	 	    try{
+ 	        	milkTransfer.set("purposeTypeId", purposeTypeId);
+ 	        	milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 	        	milkTransfer.store();
+	 	   }catch(Exception e){
+				Debug.logError("Exception while updating the purpose  :"+e,module);
+				resultMap = ServiceUtil.returnError("Exception while updating purpose :"+e.getMessage());
+	 			return resultMap;
+			}
 	 	        
 	 			
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_QC")){
@@ -2735,15 +2765,18 @@ public class MilkReceiptServices {
  	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
 		 			return resultMap;
 				}
-				
+				String qcComments = (String) context.get("qcComments");
 	 	        milkTransfer.set("productId",productId);
 	 	        milkTransfer.set("fat",(BigDecimal)context.get("sendFat"));
 				milkTransfer.set("snf",(BigDecimal)context.get("sendSnf"));
 				milkTransfer.set("receivedFat",(BigDecimal)context.get("recdFat"));
 				milkTransfer.set("receivedSnf",(BigDecimal)context.get("recdSnf"));
+				milkTransfer.set("comments", qcComments);
+				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+				Debug.log("context=============="+context);
 				
+				Map milkTransferItemResult = dispatcher.runSync("createTankerReceiptItem", context);
 				
-				Map milkTransferItemResult = dispatcher.runSync("createTankerReceiptItem", context); 
 	 	        if(ServiceUtil.isError(milkTransferItemResult)){
 	 	        	Debug.logError("Error while storing QC details"+ServiceUtil.getErrorMessage(milkTransferItemResult),module);
 	 	        	resultMap = ServiceUtil.returnError("Error while storing QC details");
@@ -2789,11 +2822,33 @@ public class MilkReceiptServices {
 	 		// here we are getting 
 	 		List vehicleTripStatusConditionList = UtilMisc.toList(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
 	 		vehicleTripStatusConditionList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
-	 		vehicleTripStatusConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,previousStatusId));
-	 		GenericValue previousStatusRecord = delegator.findOne("VehicleTripStatus",UtilMisc.toMap("vehicleId", vehicleId,"sequenceNum",sequenceNum,"statusId",previousStatusId),false);
+	 		EntityCondition vehicleTripStatusCondition = EntityCondition.makeCondition(vehicleTripStatusConditionList);
+	 		List<GenericValue> previousStatusRecordList = delegator.findList("VehicleTripStatus",vehicleTripStatusCondition,null,null,null,false);
+	 		
+	 		EntityCondition prevStatCond = EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,previousStatusId);
+	 		List<GenericValue> prevStatRecStatusList = EntityUtil.filterByCondition(previousStatusRecordList,prevStatCond);
+	 		GenericValue previousStatusRecord =EntityUtil.getFirst(prevStatRecStatusList);
+	 		
 	 		if(UtilValidate.isEmpty(previousStatusRecord)){
+	 			EntityCondition prevVehicleCondition = EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null);
+	 			prevStatRecStatusList = EntityUtil.filterByCondition(previousStatusRecordList,prevVehicleCondition);
+	 			
 	 			Debug.logError("Cannot update to presnet status ",module);
 	 			resultMap = ServiceUtil.returnError("Cannot update to present Status . Reason : Previous action is not completed");
+	 			
+	 			if(UtilValidate.isNotEmpty(prevStatRecStatusList)){
+	 				String currentVehicleStatusId = (String)(EntityUtil.getFirst(prevStatRecStatusList)).get("statusId");
+	 				try{
+	 					GenericValue statusItem = delegator.findOne("StatusItem", UtilMisc.toMap("statusId",currentVehicleStatusId),false); 
+	 					Debug.logError("Cannot update to presnet status . Vehucle status is  :"+statusItem.get("description"), module);
+	 					return ServiceUtil.returnError("Cannot update to presnet status . Vehucle status is :"+statusItem.get("description"));
+	 					
+	 				}catch(Exception e){
+	 					Debug.logError("Error while getting status Description", module);
+	 					return ServiceUtil.returnError("Error while getting status Description");
+	 				}
+	 			}
+	 			
 	 		}
 	 		if(UtilValidate.isNotEmpty(previousStatusRecord.get("estimatedEndDate"))){
 	 			Debug.logError("Cannot update present Status ",module);
@@ -2845,15 +2900,15 @@ public class MilkReceiptServices {
 		Map resultMap = ServiceUtil.returnSuccess();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
    	 	Delegator delegator = dctx.getDelegator();
-		
+   	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String milkTransferId = (String)context.get("milkTransferId");
 
 		BigDecimal sendTemp = (BigDecimal)context.get("sendTemp");
         BigDecimal recdTemp = (BigDecimal)context.get("recdTemp");
         
         
-        Long sendAcid = (Long)context.get("sendAcid");
-        Long recdAcid = (Long)context.get("recdAcid");
+        BigDecimal sendAcid = (BigDecimal)context.get("sendAcid");
+        BigDecimal recdAcid = (BigDecimal)context.get("recdAcid");
         
         
         BigDecimal sendFat = (BigDecimal)context.get("sendFat");
@@ -2877,6 +2932,8 @@ public class MilkReceiptServices {
         String recdFlavour = (String)context.get("recdSedimentTest");
 		
         String productId = (String) context.get("productId");
+        
+        String recdOrganoLepticTest = (String) context.get("recdOrganoLepticTest");
         try{
 	        GenericValue newTransferItem = delegator.makeValue("MilkTransferItem");
 	        newTransferItem.set("milkTransferId",milkTransferId);
@@ -2886,6 +2943,7 @@ public class MilkReceiptServices {
 	        
 	        newTransferItem.set("sendAcidity",sendAcid);
 	        newTransferItem.set("receivedAcidity",recdAcid);
+	        newTransferItem.set("recdOrganoLepticTest",recdOrganoLepticTest);
 	        
 	        newTransferItem.set("fat",sendFat);
 	        newTransferItem.set("receivedFat",recdFat);
@@ -2908,6 +2966,8 @@ public class MilkReceiptServices {
 	        newTransferItem.set("receivedPH",recdPH);
 	        newTransferItem.set("receivedMBRT",recdMBRT);
 	        newTransferItem.set("receivedFlavour",recdFlavour);
+	        newTransferItem.set("createdByUserLogin", userLogin.get("userLoginId"));
+	        newTransferItem.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	        
 	        delegator.setNextSubSeqId(newTransferItem,"sequenceNum",5,1);
 	        delegator.create(newTransferItem);
@@ -2975,8 +3035,10 @@ public class MilkReceiptServices {
 						String partyIdFrom = milkTransfer.getString("partyId");
 						String containerId = milkTransfer.getString("containerId");
 						String productId = milkTransfer.getString("receivedProductId");
-						BigDecimal quantity = milkTransfer.getBigDecimal("quantity");
+						BigDecimal quantity = milkTransfer.getBigDecimal("receivedQuantity");
 						String facilityId = milkTransfer.getString("siloId");
+						BigDecimal fat = milkTransfer.getBigDecimal("receivedFat");
+						BigDecimal snf = milkTransfer.getBigDecimal("receivedSnf");
 					
 						GenericValue newEntity = delegator.makeValue("Shipment");
 				        newEntity.set("estimatedShipDate", nowTimeStamp);
@@ -2996,6 +3058,9 @@ public class MilkReceiptServices {
 				        itemInMap.put("userLogin",userLogin);
 				        itemInMap.put("productId",productId);
 				        itemInMap.put("quantity",quantity);
+				        itemInMap.put("fat",fat);
+				        itemInMap.put("snf",snf);
+				        
 				        Map resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
 				        
 				        if (ServiceUtil.isError(resultMap)) {
@@ -3010,6 +3075,9 @@ public class MilkReceiptServices {
 				        Map inventoryReceiptCtx = FastMap.newInstance();
 						inventoryReceiptCtx.put("userLogin", userLogin);
 						inventoryReceiptCtx.put("productId", productId);
+						inventoryReceiptCtx.put("snfPercent", snf);
+						inventoryReceiptCtx.put("fatPercent", fat);
+						
 						inventoryReceiptCtx.put("datetimeReceived", dateTimeReceived);
 						inventoryReceiptCtx.put("quantityAccepted", quantity);
 						inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);

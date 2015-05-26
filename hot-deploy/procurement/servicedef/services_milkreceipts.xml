@@ -68,7 +68,7 @@
 	 	<attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="snf" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="sendLR" mode="IN" type="BigDecimal" optional="true"/>
-	 	<attribute name="sendAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="sendAcidity" mode="IN" type="BigDecimal" optional="true"/>
 	 	<attribute name="sendTemparature" mode="IN" type="BigDecimal" optional="true"/>
 	 	
 	 	<attribute name="ackTime" mode="IN" type="String" optional="true"/>
@@ -79,7 +79,7 @@
 	 	<attribute name="receivedFat" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="receivedSnf" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="receivedLR" mode="IN" type="BigDecimal" optional="true"/>
-	 	<attribute name="receivedAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="receivedAcidity" mode="IN" type="BigDecimal" optional="true"/>
 	 	<attribute name="receivedTemparature" mode="IN" type="BigDecimal" optional="true"/>	 	
 	 	
 	 	
@@ -106,7 +106,7 @@
 	 	<attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="snf" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="sendLR" mode="IN" type="BigDecimal" optional="true"/>
-	 	<attribute name="sendAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="sendAcidity" mode="IN" type="BigDecimal" optional="true"/>
 	 	<attribute name="sendTemparature" mode="IN" type="BigDecimal" optional="true"/>
 	 	
 	 	<attribute name="ackTime" mode="IN" type="String" optional="true"/>
@@ -117,7 +117,7 @@
 	 	<attribute name="receivedFat" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="receivedSnf" mode="IN" type="BigDecimal" optional="false"/>
 	 	<attribute name="receivedLR" mode="IN" type="BigDecimal" optional="true"/>
-	 	<attribute name="receivedAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="receivedAcidity" mode="IN" type="BigDecimal" optional="true"/>
 	 	<attribute name="receivedTemparature" mode="IN" type="BigDecimal" optional="true"/>	 	
 	 	
     </service>
@@ -343,6 +343,8 @@
         <attribute name="amountTypeId" mode="IN" type="String" optional="false"/>
     </service>
     
+    
+    
     <!-- Service Definitions for Tanker Receipts -->
     <service name="createMilkTankerReceiptEntry" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTankerReceiptEntry" auth="true">
@@ -355,6 +357,8 @@
         <attribute name="sendTime" mode="IN" type="String" optional="false"/>
         <attribute name="entryDate" mode="IN" type="String" optional="false"/>
         <attribute name="entryTime" mode="IN" type="String" optional="false"/>
+	 	<attribute name="productId" mode="IN" type="String" optional="false"/>
+	 	
 	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
     </service>
@@ -362,10 +366,14 @@
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="getTankerRecordNumber" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="vehicleId" mode="OUT" type="String" optional="true"></attribute>
-	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="true"/>
+	 	<!-- <attribute name="milkTransferId" mode="OUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
 	 	<attribute name="partyId" mode="OUT" type="String" optional="true"/>
-	 	<attribute name="partyName" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="partyName" mode="OUT" type="String" optional="true"/> -->
+	 	<auto-attributes mode="OUT" entity-name="MilkTransfer" optional="true"></auto-attributes>
+	 	<attribute name="sendTimeStr" mode="OUT" type="String" optional="true"></attribute>
+	 	<attribute name="sendDateStr" mode="OUT" type="String" optional="true"></attribute>
+	 	
     </service>
     
     <service name="updateMilkTankerReceiptEntryGrsWeight" engine="java"
@@ -379,6 +387,9 @@
 		<attribute name="numberOfCells" mode="IN" type="Long" optional="false"/>
 		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="dispatchWeight" mode="IN" type="BigDecimal" optional="false"/>
+		
+		<attribute name="sealCheck" mode="IN" type="String" optional="false"/>
+		<attribute name="driverName" mode="IN" type="String" optional="false"/>
     </service>
     <service name="createTankerReceiptItem" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createTankerReceiptItem" auth="true">
@@ -393,10 +404,10 @@
 		<attribute name="testTime" mode="IN" type="String" optional="false"/>
 		<!-- Dispatch Quality -->
 		<attribute name="sendCob" mode="IN" type="String" optional="false"/>
-		<attribute name="sendNutriliser" mode="IN" type="String" optional="false"/>
+		<attribute name="sendNutriliser" mode="IN" type="String" optional="true"/>
 		
 		<attribute name="sendTemp" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="sendAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="sendAcid" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
@@ -407,13 +418,16 @@
 		<attribute name="recdSedimentTest" mode="IN" type="String" optional="false"/>
 		<!--  recdFlavour  need to handle later-->
 		<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="recdAcid" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="false"/>
-		
+		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
+		<attribute name="sendOrganoLepticTest" mode="IN" type="String" optional="true"/>
+		<attribute name="qcComments" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="recdOrganoLepticTest" mode="IN" type="String" optional="false"></attribute>
 		
     </service>
     <service name="updateMilkTankerReceiptEntryTareWeight" engine="java"
@@ -435,6 +449,7 @@
 		<attribute name="cipDate" mode="IN" type="String" optional="false"/>
 		<attribute name="cipTime" mode="IN" type="String" optional="false"/>
 		<attribute name="silo" mode="IN" type="String" optional="false"/>
+		<attribute name="purposeTypeId" mode="IN" type="String" optional="false"/>
     </service>
     
     
@@ -444,6 +459,8 @@
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
+		<attribute name="qcComments" mode="IN" type="String" optional="true"/>
 		<!-- Product -->
 		<attribute name="productId" mode="IN" type="String" optional="false"/>
 		<!-- Quality Control -->
@@ -451,28 +468,26 @@
 		<attribute name="testTime" mode="IN" type="String" optional="false"/>
 		<!-- Dispatch Quality -->
 		<attribute name="sendCob" mode="IN" type="String" optional="false"/>
-		<attribute name="sendNutriliser" mode="IN" type="String" optional="false"/>
 		
 		<attribute name="sendTemp" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="sendAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="sendAcid" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
-		
+		<attribute name="sendOrganismTest" mode="IN" type="String" optional="true"/>
 		<!-- Received Quality -->
 		
 		<attribute name="recdCob" mode="IN" type="String" optional="false"/>
 		<attribute name="recdSedimentTest" mode="IN" type="String" optional="false"/>
+		<attribute name="recdOrganoLepticTest" mode="IN" type="String" optional="false"/>
 		<!--  recdFlavour  need to handle later-->
 		<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="recdAcid" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="false"/>
-		
-		
+		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="true"/>
     </service>
     <service name="updateMilkTankerReceiptEntryOut" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
