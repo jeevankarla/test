@@ -119,6 +119,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArInvoices"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
+                <set field="viewSize" value="50" type="Integer"/>
+                <set field="nextFlag" type="String" default-value="Y"/>
+                <set field="prevFlag" type="String" default-value="N"/>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
@@ -131,6 +135,7 @@ under the License.
                 <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>  
                  <set field="parentTypeId" from-field="parameters.parentTypeId" />      
                  <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>            
+            	 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/InvoiceSearchFilter.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -162,7 +167,7 @@ under the License.
             							<screenlet title="Invoices List"> 
             								<section>   
             									<condition>
-            										<not><if-empty field="invoices" /></not>
+	            								    <not><if-empty field="invoices" /></not>
             									</condition>
             									<widgets>              							                                   
 		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
@@ -186,9 +191,88 @@ under the License.
 														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
 														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
 														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
-													</link>	  
+													</link>
 												</widgets>
 											</section> 
+											<section>
+												<condition>
+            										<and>
+	            										<not><if-empty field="invoices" /></not>
+	            										<if-compare operator="equals" value="Y" field="prevFlag"/>
+            										</and>
+            									</condition>
+            									<widgets>
+            										<link text="Previous" style="buttontext"
+														target="findInvoices">
+														<parameter param-name="VIEW_INDEX_1" value="${viewIndex-1}"/>
+														<parameter param-name="VIEW_SIZE_1" value="${viewSize}"/>
+														<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic"/>
+														<parameter param-name="description_op" from-field="parameters.description_op"/>
+														<parameter param-name="description" from-field="parameters.description"/>
+														<parameter param-name="description_ic" from-field="parameters.description_ic"/>
+														<parameter param-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>
+														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+														<parameter param-name="partyId" from-field="parameters.partyId"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="facilityId_op" from-field="parameters.facilityId_op"/>
+														<parameter param-name="facilityId_ic" from-field="parameters.facilityId_ic"/>
+														<parameter param-name="invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
+														<parameter param-name="invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
+														<parameter param-name="invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
+														<parameter param-name="invoiceDate_fld1_op" from-field="parameters.invoiceDate_fld1_op"/>
+														<parameter param-name="dueDate_fld0_value" from-field="parameters.dueDate_fld0_value"/>
+														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
+														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
+														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
+													</link>	 
+            									</widgets>
+											</section>
+											<section>
+												<condition>
+            										<and>
+	            										<not><if-empty field="invoices" /></not>
+	            										<if-compare operator="equals" value="Y" field="nextFlag"/>
+            										</and>
+            									</condition>
+            									<widgets>
+            										<link text="Next" style="buttontext"
+														target="findInvoices">
+														<parameter param-name="VIEW_INDEX_1" value="${viewIndex+1}"/>
+														<parameter param-name="VIEW_SIZE_1" value="${viewSize}"/>
+														<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic"/>
+														<parameter param-name="description_op" from-field="parameters.description_op"/>
+														<parameter param-name="description" from-field="parameters.description"/>
+														<parameter param-name="description_ic" from-field="parameters.description_ic"/>
+														<parameter param-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>
+														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+														<parameter param-name="partyId" from-field="parameters.partyId"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="facilityId_op" from-field="parameters.facilityId_op"/>
+														<parameter param-name="facilityId_ic" from-field="parameters.facilityId_ic"/>
+														<parameter param-name="invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
+														<parameter param-name="invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
+														<parameter param-name="invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
+														<parameter param-name="invoiceDate_fld1_op" from-field="parameters.invoiceDate_fld1_op"/>
+														<parameter param-name="dueDate_fld0_value" from-field="parameters.dueDate_fld0_value"/>
+														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
+														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
+														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
+													</link>	  
+            									</widgets>
+											</section>
+											
 											<platform-specific>
                                         	<html><html-template location="component://accounting/webapp/accounting/invoice/massPayments.ftl"/></html>
 											</platform-specific>

@@ -351,15 +351,19 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	
 	
 </script>
+<#if invoiceList?has_content>
+<#else>
 <#if invoices?has_content>
   <#assign invoiceList  =  invoices.getCompleteList() />
   <#assign eliClose = invoices.close() />
+</#if>
 </#if>
 <#if invoiceList?has_content && (parameters.noConditionFind)?if_exists == 'Y'>
 <form name="paymentSubmitForm" id="paymentSubmitForm" method="post" action="makeMassInvoicePayments">
 </form>
   <div>
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
+    <#if invoiceList?has_content><span class="label">Displaying <#if lowIndex?has_content>${lowIndex?if_exists}<#else>1</#if>-<#if highIndex?has_content>${highIndex?if_exists}<#else>50</#if></span></#if> 
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
     <span class="label" id="showInvoiceRunningTotal"></span>
   </div>
