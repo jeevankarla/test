@@ -35,25 +35,14 @@ facilityIdsList =[];
 conditionList =[];
 //Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",parameters.customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));
 //List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
-String taxRateAmount;
-List exprList = FastList.newInstance();
-// facility level
-exprList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, "MAIN_PLANT"));
-exprList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS, "SHOP_RENT_SRVTAX"));
-exprList.add(EntityCondition.makeCondition("rateCurrencyUomId",	EntityOperator.EQUALS, "INR"));
-exprList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayStartfromDate));
-exprList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStartThruDate),
-EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
-EntityCondition paramCond = EntityCondition.makeCondition(exprList,	EntityOperator.AND);
-try {
-	facilityRates = delegator.findList("FacilityRate", paramCond, null,	null, null, false);
-	facilityRates.each{ rtamt ->
-	taxRateAmount=rtamt.rateAmount;
-	}
-} catch (GenericEntityException e) {
-	Debug.logError(e, module);
-	return ServiceUtil.returnError(e.toString());
-}
+
+Map inputRtAmt = UtilMisc.toMap("userLogin", userLogin);
+inputRtAmt.put("rateCurrencyUomId", "INR");
+inputRtAmt.put("facilityId", "MAIN_PLANT");
+inputRtAmt.put("fromDate",dayStartfromDate);
+inputRtAmt.put("rateTypeId", "SHOP_RENT_SRVTAX");
+facilityRates = dispatcher.runSync("getFacilityRateAmount", inputRtAmt);
+BigDecimal taxRateAmount=(BigDecimal)facilityRates.get("rateAmount");
 boothList = ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
 boothList = (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,dayBegin)).get("boothActiveList");
 boothList.each{facility ->
