@@ -84,7 +84,7 @@ productCategoriesList.each{productCatg->
 			
 			
 			tempMap["productName"]=productEntry.productName;
-			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayStart,productId:productEntry.productId,ownerPartyId:"Company",getInventoryOnlyWithUnitCost:"Y"]);
+			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayStart,productId:productEntry.productId,getInventoryOnlyWithUnitCost:"Y"]);
 			if(UtilValidate.isNotEmpty(inventoryItem)){
 				openingBalance=inventoryItem.inventoryCount;
 				openingValue=inventoryItem.inventoryCost;
@@ -96,7 +96,7 @@ productCategoriesList.each{productCatg->
 				tempMap["openingValue"]=openingValue;
 			}
 			
-			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productEntry.productId,ownerPartyId:"Company",getInventoryOnlyWithUnitCost:"Y"]);
+			inventoryItem = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:dayEnd,productId:productEntry.productId,getInventoryOnlyWithUnitCost:"Y"]);
 			if(UtilValidate.isNotEmpty(inventoryItem)){
 				closingBalance=inventoryItem.inventoryCount;
 				closingValue=inventoryItem.inventoryCost;
