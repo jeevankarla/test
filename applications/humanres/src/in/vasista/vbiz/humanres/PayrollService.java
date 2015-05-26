@@ -4144,6 +4144,43 @@ public class PayrollService {
 	        }	
 	        //Added Check for payableDays of LeaveEncashment not exceeds 15
 	        if(UtilValidate.isNotEmpty(screenFlag) && (screenFlag.equals("leaveEncash"))){
+	        	//checking sufficient balance here
+	        	try {
+	    	        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+	    	        if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	            		Timestamp fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	            		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	            		Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+	            		
+	            		String leaveTypeId = "EL";
+		        		Map getEmplLeaveBalMap = FastMap.newInstance();
+	        			getEmplLeaveBalMap.put("userLogin",userLogin);
+	        			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
+	        			getEmplLeaveBalMap.put("employeeId",partyId);
+	        			getEmplLeaveBalMap.put("flag","creditLeaves");
+	        			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+	        			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
+	        				try{
+	        					Map<String, Object> serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
+	        		            if (ServiceUtil.isError(serviceResult)){
+	        		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+	        		            	return "success";
+	        		            } 
+	        	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
+	        	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
+	        	    			if((leaveClosingBalance.compareTo(new BigDecimal(15))) < 0){	  
+	        	    				request.setAttribute("_ERROR_MESSAGE_", "Insufficient Leave Balance, Less than 15");
+	        						return "error";
+	        	    			}
+	        				}catch(Exception e){
+	        					Debug.logError("Error while getting Employee Leave Balance"+e.getMessage(), module);
+	        				}
+	        			}
+	            	}
+	            }catch (GenericEntityException e) {
+	            	Debug.logError(e, module);
+	            	return "error";
+	    		}
 	        	if((noOfPayableDays.compareTo(new BigDecimal(15))) >0){	    	
 	        		request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds 15");
 					return "error";
