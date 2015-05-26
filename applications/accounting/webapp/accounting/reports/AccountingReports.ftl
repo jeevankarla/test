@@ -805,7 +805,7 @@ function reportTypeChangeFunc() {
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
        	
-      	<tr> 
+      	<#--<tr> 
       		<form id="GlAccountMasterReport" name="GlAccountMasterReport" method="post" action="<@ofbizUrl>GlAccountMasterReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="10%">GlAccountMaster Report</td>
 			  	<td width="25%">Internal Org
@@ -823,7 +823,7 @@ function reportTypeChangeFunc() {
           		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
-      	<#--<tr> 
+      	<tr> 
       		<form id="InvoiceSummaryReport" name="InvoiceSummaryReport" method="post" action="<@ofbizUrl>InvoiceSummaryReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="10%">Invoice Summary Report</td>
 			  	<td width="25%">Internal Org
@@ -903,7 +903,7 @@ function reportTypeChangeFunc() {
                 </td>
           		
       		</form>
-      	</tr>-->
+      	</tr>
       	<tr class="alternate-row">
       	   <form id="InvoiceItemTypes" name="InvoiceItemTypes" method="post" action="<@ofbizUrl>invoiceItemTypes.pdf</@ofbizUrl>" target="_blank">        
              <td width="30%">Invoice Item Type</td>
@@ -951,7 +951,7 @@ function reportTypeChangeFunc() {
 			<td width="20%">Gl Account Id<@htmlTemplate.lookupField size="10" maxlength="22" formName="FinAccountSummary" name="glAccountId" id="glAccountId" fieldFormName="LookupGlAccount"/>
             <td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
            </form>
-		</tr>
+		</tr>-->
 		<tr class="alternate-row">
       	   <form id="FinAccountTransDetails" name="FinAccountTransDetails" method="post" action="<@ofbizUrl>FinAccountTransDetails.csv</@ofbizUrl>" target="_blank">        
              <td width="30%">Other Units Loan Recovery FinAccountTrans Details</td>
