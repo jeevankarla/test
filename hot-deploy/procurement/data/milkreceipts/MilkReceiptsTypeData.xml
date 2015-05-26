@@ -127,5 +127,5 @@
    
    	<PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" periodLength="1" uomId="TF_mon"/>
    
-   
+   <EnumerationType enumTypeId="MILK_PRCH_PURP" description="Milk Purchase Purpose" hasTable="N"></EnumerationType>
 </entity-engine-xml>

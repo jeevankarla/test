@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
     		}
 		}
 		// auto tab  for time tabs and those which need only number input
-    	if(curentElName == "recdMBRT" || curentElName == "exitTime" || curentElName == "cipTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells"){
+    	if(curentElName == "recdMBRT" || curentElName == "exitTime" || curentElName == "cipTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells" || curentElName == "sealNumber"  ){
     		if(e.which == 110 || e.which == 190){
     			$(this).val( $(this).val().replace('.',''));
     		}
@@ -155,7 +155,7 @@ $(function() {
              	    $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
              	   $('div#milkReceiptEntry_spinner').addClass("messageStr");
              	   $('div#milkReceiptEntry_spinner').html('<label>succesfully updated.</label>'); 
-             	   $('div#milkReceiptEntry_spinner').delay(5000).fadeOut('slow');
+             	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
              	   $('input[name=submitButton]').removeAttr("disabled");
                 }
               },
@@ -172,7 +172,7 @@ function populateError(msg){
 	$('div#milkReceiptEntry_spinner').removeClass("messageStr");
 	$('div#milkReceiptEntry_spinner').addClass("errorMessage");
 	$('div#milkReceiptEntry_spinner').html('<label>'+msg +'</label>');
-	$('div#milkReceiptEntry_spinner').delay(5000).fadeOut('slow');
+	$('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
 	$('input[name=submitButton]').removeAttr("disabled");
 	
 }

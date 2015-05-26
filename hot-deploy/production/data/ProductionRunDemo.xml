@@ -113,5 +113,143 @@
 	<ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="Ice Cream" productIdTo="RNUTS" quantity="0.750000" routingWorkEffortId="WF713" sequenceNum="5"/>
    
      <ReturnHeaderType description="Return From Production" returnHeaderTypeId="PRODUCTION_RETURN"/>
+   
+   
+   <!-- ICE CREAM MIX PREPARATION -->
+   
+   <WorkEffort  currentStatusId="ROU_ACTIVE" description="Ice Cream Base Mix Preparation" revisionNumber="1" workEffortId="WF3001" workEffortName="Ice Cream Base Mix Preparation" workEffortTypeId="ROUTING"/>
+   
+   <WorkEffort workEffortId="WF3002" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Ice Cream Mix Preparation" description="Ice Cream Mix Preparation" estimatedSetupMillis="120000.0" revisionNumber="2"/>
+   
+   <WorkEffortAssoc workEffortIdFrom="WF3001" workEffortIdTo="WF3002" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2015-04-27 13:32:49.0"/>
+   
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="Butter" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="CREM_SAMPN" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="TONEDMILK" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="81" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="RM4378" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="RM1420" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="VEG_FAT" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   <WorkEffortGoodStandard workEffortId="WF3002" productId="WATER" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="ICECREAMMIX" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3002"/>
+   <WorkEffortGoodStandard fromDate="2015-04-27 13:36:09.0" productId="ICECREAMMIX" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF3001"/>
+   
+   
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="Butter" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="CREM_SAMPN" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="2"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="TONEDMILK" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="3"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="81" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="4"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="RM4378" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="5"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="RM1420" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="6"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="VEG_FAT" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="7"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="ICECREAMMIX" productIdTo="WATER" quantity="0.750000" routingWorkEffortId="WF3002" sequenceNum="8"/>
+   
+   
+   
+   
+   
+   <!--  Kesari  FLavour adding  -->
+   <WorkEffort  currentStatusId="ROU_ACTIVE" description="Kesar Pista Flavour Addition" revisionNumber="1" workEffortId="WF3003" workEffortName="Kesar Pista Flavour Addition" workEffortTypeId="ROUTING"/>
+   
+   <WorkEffort workEffortId="WF3004" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Kesar Pista Flavour Addition" description="Ice Cream Kesar Pista Flavour Addition" estimatedSetupMillis="120000.0" revisionNumber="2"/>
+   
+   <WorkEffortAssoc workEffortIdFrom="WF3003" workEffortIdTo="WF3004" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2015-04-27 13:32:49.0"/>
+   
+   
+   <WorkEffortGoodStandard workEffortId="WF3004" productId="RM4701" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="70"/>
+   <WorkEffortGoodStandard workEffortId="WF3004" productId="RM4702" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="20"/>
+   <WorkEffortGoodStandard workEffortId="WF3004" productId="RM4397" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="60"/>
+   <WorkEffortGoodStandard workEffortId="WF3004" productId="RM4667" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="130"/>
+   <WorkEffortGoodStandard workEffortId="WF3004" productId="RM9654" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="5"/>
+   <WorkEffortGoodStandard workEffortId="WF3004" productId="RM4718" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="5"/>
+   
+   <!--  Deliverable goods(Kesar Pista) config -->
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="KESAR_PISTA" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3004"/>
+   <WorkEffortGoodStandard fromDate="2015-04-27 13:36:09.0" productId="KESAR_PISTA" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF3003"/>
+   
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="RM4701" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="RM4702" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="2"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="RM4397" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="3"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="RM4667" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="4"/>
+   
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="RM9654" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="5"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="RM4718" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="6"/>
+   
+   
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productId="KESAR_PISTA" productIdTo="ICECREAMMIX" quantity="0.750000" routingWorkEffortId="WF3004" sequenceNum="5"/>
+   
+   
+   
+   
+   
+   
+   <!-- Packing Routing -->
+   <WorkEffort  
+   	currentStatusId="ROU_ACTIVE" 
+   	description=" Kesar Pista Ice Cream Packing" 
+   	revisionNumber="1" workEffortId="WF3005" workEffortName="Kesar Pista Ice Cream Packing" workEffortTypeId="ROUTING"/>
+   
+   <WorkEffort workEffortId="WF3006" 
+   			workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" 
+   			workEffortPurposeTypeId="ROU_MANUFACTURING" 
+   			workEffortName="Kesar Pista Ice Cream Packing" 
+   			description="Kesar Pista Ice Cream Packing" estimatedSetupMillis="120000.0" revisionNumber="2"/>
+   <WorkEffortAssoc workEffortIdFrom="WF3005" workEffortIdTo="WF3006" 
+   	workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="1" fromDate="2015-04-27 13:32:49.0"/>
+   
+   
+    <WorkEffortGoodStandard fromDate="2015-04-27 13:36:09.0" productId="KES_PIST_PACK" statusId="WEGS_CREATED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="WF3005"/>
+   
+  	<!--  Raw Meterial needed -->
+  	<WorkEffortGoodStandard workEffortId="WF3006" productId="10177" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/> 
+  	<WorkEffortGoodStandard workEffortId="WF3006" productId="RM12332" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+  	<WorkEffortGoodStandard workEffortId="WF3006" productId="RM5445" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+  	<WorkEffortGoodStandard workEffortId="WF3006" productId="RM10344" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+  	<WorkEffortGoodStandard workEffortId="WF3006" productId="RM10349" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+    <WorkEffortGoodStandard workEffortId="WF3006" productId="RM10349" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+    <WorkEffortGoodStandard workEffortId="WF3006" productId="KESAR_PISTA" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" fromDate="2015-04-27 13:38:02.0" statusId="WEGS_CREATED" estimatedQuantity="75.0"/>
+   
+   <!--  Deliverable goods(Kesar Pista Packing) config -->
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="552" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3006"/>
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="404" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3006"/>
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="224" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3006"/>
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="271" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3006"/>
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="300" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3006"/>
+   <WorkEffortGoodStandard estimatedQuantity="100.0" fromDate="2013-05-09 11:42:03.0" productId="526" statusId="WEGS_CREATED" workEffortGoodStdTypeId="PRUN_PROD_DELIV" workEffortId="WF3006"/>
+   
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="10177"    productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="RM12332"    productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="RM5445"    productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="RM10344"    productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="RM10349" productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="RM10349" productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   <ProductAssoc fromDate="2015-04-27 12:16:37.0" productAssocTypeId="MANUF_COMPONENT" productIdTo="KESAR_PISTA" productId="KES_PIST_PACK" quantity="0.750000" routingWorkEffortId="WF3006" sequenceNum="1"/>
+   
+   
+   <ProductFacility facilityId="ICP_FLOOR" productId="10177" capacity="500000"/>
+   <ProductFacility facilityId="ICP_FLOOR" productId="RM12332" capacity="500000"/>
+   <ProductFacility facilityId="ICP_FLOOR" productId="RM5445" capacity="500000"/>
+   <ProductFacility facilityId="ICP_FLOOR" productId="RM10344" capacity="500000"/>
+   <ProductFacility facilityId="ICP_FLOOR" productId="RM10349" capacity="500000"/>
+   <ProductFacility facilityId="ICP_FLOOR" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="FT1" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="FT2" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="FT3" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="FT4" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="FT5" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="FT6" productId="KESAR_PISTA" capacity="500000"/>
+   <ProductFacility facilityId="DF1" productId="224" capacity="500000"/>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
     
 </entity-engine-xml>

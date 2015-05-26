@@ -1,23 +1,33 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
+
 import java.util.*;
 import java.lang.*;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+
 import java.sql.*;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+
 import org.ofbiz.service.ServiceUtil;
+import org.webslinger.resolver.UtilDateResolver;
+
 import java.util.Calendar;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
 detailsMap=[:];
@@ -132,7 +142,17 @@ context.put("productJson",productJson);
 
 
 // vehicles auto complete from vehicle master
-List<GenericValue> vehiclesList = delegator.findList("Vehicle",null, null, null, null, true);
+Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+Timestamp thruDate = UtilDateTime.getDayEnd(fromDate);
+
+List vehCondList = FastList.newInstance();
+vehCondList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
+vehCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate)));
+EntityCondition vehCondition = EntityCondition.makeCondition(vehCondList);
+List vehicleRoleList = delegator.findList("VehicleRole",vehCondition, null, null, null, true);
+
+Set vehicleIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(vehicleRoleList, "vehicleId", false));
+List<GenericValue> vehiclesList = delegator.findList("Vehicle",EntityCondition.makeCondition("vehicleId",EntityOperator.IN,vehicleIdsSet), null, null, null, true);
 
 JSONObject vehicleCodeJson = new JSONObject();
 JSONArray vehItemsJSON = new JSONArray();
@@ -182,9 +202,16 @@ for(union in unionsList){
 context.put("partyCodeJson",unionCodeJson);
 context.put("partyItemsJSON",unionItemsJSON);
 
+List rawMilkSilosList = FastList.newInstance();
+List rawMilkSiloConditionList = FastList.newInstance();
+rawMilkSiloConditionList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"SILO"));
+rawMilkSiloConditionList.add(EntityCondition.makeCondition("categoryTypeEnum",EntityOperator.EQUALS,"RAWMILK"));
+EntityCondition rawMilkSiloCondition = EntityCondition.makeCondition(rawMilkSiloConditionList,EntityOperator.AND);
+rawMilkSilosList = delegator.findList("Facility",rawMilkSiloCondition, null, null, null, true);
+context.putAt("rawMilkSilosList", rawMilkSilosList);
 
+List milkPurchasePurposeTypeList = FastList.newInstance();
+milkPurchasePurposeTypeList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId",EntityOperator.EQUALS,"MILK_PRCH_PURP"), null, ["sequenceId"], null, true);
 
-
-
-
+context.put("milkPurchasePurposeTypeList",milkPurchasePurposeTypeList);
 

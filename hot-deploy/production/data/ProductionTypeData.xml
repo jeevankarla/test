@@ -40,6 +40,9 @@
        <Enumeration  description="Third Shift" enumId="THIRD_SHIFT" enumTypeId="PROD_SHIFT" />
        
        <!-- Configuration for products  -->
+       <ProductFacility facilityId="AT1" productId="ICECREAMMIX" capacity="500000"/>
+       <ProductFacility facilityId="AT2" productId="ICECREAMMIX" capacity="500000"/>
+       <ProductFacility facilityId="AT3" productId="ICECREAMMIX" capacity="500000"/>
        
        <ProductFacility facilityId="BT1" productId="RBUTTER" capacity="500000"/>
        <ProductFacility facilityId="BT2" productId="RBUTTER" capacity="500000"/>
@@ -47,6 +50,21 @@
        <ProductFacility facilityId="RM1" productId="R111" capacity="100000" />
        <ProductFacility facilityId="SMPFGS" productId="81" capacity="200000" />
        
+     
+     
+     
+     
+     
+      <ProductFacility facilityId="ICP_FLOOR" productId="RM4701" capacity="500000"/>
+	  <ProductFacility facilityId="ICP_FLOOR" productId="RM4702" capacity="500000"/>
+	  <ProductFacility facilityId="ICP_FLOOR" productId="RM4397" capacity="500000"/>
+	  <ProductFacility facilityId="ICP_FLOOR" productId="RM4667" capacity="500000"/>
+	  <ProductFacility facilityId="ICP_FLOOR" productId="RM9654" capacity="500000"/>
+	  <ProductFacility facilityId="ICP_FLOOR" productId="RM4718" capacity="500000"/>
+	  <ProductFacility facilityId="ICP_FLOOR" productId="KESARI_PISTA" capacity="500000"/>     
+     
+     
+     
       <Facility  defaultDaysToShip="25" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" description="ICE CREAM PLANT" facilityId="ICP" facilityName="ICE CREAM PLANT" facilityTypeId="PLANT" geoPointId="9000"  ownerPartyId="Company" sequenceNum="1"/>
        
 </entity-engine-xml>

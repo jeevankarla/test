@@ -358,6 +358,8 @@
       <field name="facilityId" type="id"></field>
       <field name="facilityIdTo" type="id"></field>
       <field name="dcNo" type="id"></field>
+      <field name="sealNo" type="id"></field>
+      <field name="purposeTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="partyIdTo" type="id"></field> 
       <field name="numberOfCells" type="numeric"/>
@@ -381,6 +383,7 @@
       <field name="receivedQuantityLtrs" type="fixed-point"></field>
       <field name="milkType" type="indicator"></field>
       <field name="supplyTypeEnumId" type="id"/>
+      <field name="driverName" type="id"/>
       
       <field name="grossWeight" type="fixed-point"></field>
       <field name="tareWeight" type="fixed-point"></field>
@@ -403,6 +406,11 @@
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="milkTransferId"/>
+      
+      <relation type="one" fk-name="MILK_XFER_PURTYP_ENUM" rel-entity-name="Enumeration">
+          <key-map field-name="purposeTypeId" rel-field-name="enumId"/>
+      </relation>
+      
       <relation type="one" fk-name="MILK_XFER_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
@@ -487,15 +495,20 @@
      <field name="receivedPH" type="fixed-point"></field>
      <field name="receivedMBRT" type="fixed-point"></field>
      <field name="receivedFlavour" type="id"></field>
-     <field name="sendFlavour" type="id"></field> 
+     <field name="sendFlavour" type="id"></field>
+     
+     <field name="sendOrganoLepticTest" type="id"></field> 
+     <field name="recdOrganoLepticTest" type="id"></field>
      
      <!--  <field name="sendHour" type="numeric"></field>
       <field name="receivedHour" type="numeric"></field> -->
      
-      <field name="sendAcidity" type="numeric"></field>
-      <field name="receivedAcidity" type="numeric"></field>
+      <field name="sendAcidity" type="fixed-point"></field>
+      <field name="receivedAcidity" type="fixed-point"></field>
       <field name="sendTemparature" type="fixed-point"></field>
       <field name="receivedTemparature" type="fixed-point"></field>
+      
+      
       
       <field name="cellType" type="id"></field><!-- FC/MC/BC -->
       <field name="capacity" type="indicator"></field><!-- Y/N -->

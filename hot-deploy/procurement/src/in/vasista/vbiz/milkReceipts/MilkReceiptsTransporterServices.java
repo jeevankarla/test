@@ -937,7 +937,9 @@ import org.ofbiz.product.product.ProductEvents;
 					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 					conditionList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 					conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
-					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MXF_RECD"));
+					List<String> stausList = UtilMisc.toList("MXF_APPROVED");
+					stausList.add("MXF_RECD");
+					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,stausList));
 					conditionList.add(EntityCondition.makeCondition("receivedQuantity",EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
 					milkTransferList = delegator.findList("MilkTransfer", condition, null, null, null, false);
@@ -1087,7 +1089,7 @@ import org.ofbiz.product.product.ProductEvents;
 					
 					GenericValue VehicleRate = EntityUtil.getFirst(VehicleRateList);
 					if(UtilValidate.isEmpty(VehicleRate)){
-						Debug.logError("Vehicle rate not Configured  :",module);
+						Debug.logError("Vehicle rate not Configured  :"+vehicleId,module);
 						return ServiceUtil.returnError("Vehicle rate not configured  for :"+vehicleId);	
 					}
 					rate = (BigDecimal)VehicleRate.get("rateAmount");

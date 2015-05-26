@@ -68,5 +68,6 @@
 	<ContactList contactListId="RECPT_NOTIFY_LST" contactListName="RECEIPTS NOTIFY LIST"  description="RECEIPTS NOTIFY LIST"
 				 contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10200" />
 				 
-	
+	<Enumeration enumId="INTERNAL" enumCode="IDR" description="Internal Dairy Pupose" enumTypeId="MILK_PRCH_PURP" sequenceId="1"></Enumeration>
+	<Enumeration enumId="CONVERSION" enumCode="CONVERSION" description="Conversion Purpose" enumTypeId="MILK_PRCH_PURP" sequenceId="2"></Enumeration>
 </entity-engine-xml>

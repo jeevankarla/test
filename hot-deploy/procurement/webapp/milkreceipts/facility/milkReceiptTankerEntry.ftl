@@ -69,6 +69,7 @@
 	var dispatchDateFormat;
 	if($('#displayScreen').val()=="VEHICLE_IN"){
 		$('#displayRecord').hide();
+		$('#displayRecievedFrom').hide();
 		dispatchDateFormat = $('#sendDate').datepicker( "option", "dateFormat" );
 		
 		//$('#dispatchDate').datepicker().datepicker('setDate', new Date()); 
@@ -97,6 +98,7 @@
 	}
 });
 var productJson = ${StringUtil.wrapString(productJson)}
+var grossWeight = 0;
 $(document).ready(function() {	
   $('#recdPH').autoNumeric({mNum: 1,mDec: 1 , autoTab : true}).trigger('focusout');
   
@@ -104,8 +106,8 @@ $(document).ready(function() {
   $('#sendTemp').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   
   
-  $('#recdAcid').autoNumeric({mNum: 3,mDec: 1 , autoTab : true}).trigger('focusout');
-  $('#sendAcid').autoNumeric({mNum: 3,mDec: 1 , autoTab : true}).trigger('focusout');
+  $('#recdAcid').autoNumeric({mNum: 1,mDec: 3 , autoTab : true}).trigger('focusout');
+  $('#sendAcid').autoNumeric({mNum: 1,mDec: 3 , autoTab : true}).trigger('focusout');
   
   $('#recdCLR').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   $('#sendCLR').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
@@ -113,8 +115,12 @@ $(document).ready(function() {
   $('#recdFat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   $('#sendFat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   
-  $('#recdSnf').autoNumeric({mNum: 2,mDec: 2 , autoTab : true}).trigger('focusout');
-  $('#sendSnf').autoNumeric({mNum: 2,mDec: 2 , autoTab : true}).trigger('focusout');
+  $('#recdSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
+  $('#sendSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
+  
+  $('#recdSnf').attr("readonly","readonly");
+  $('#sendSnf').attr("readonly","readonly");
+  
   
   $('#tareWeight').autoNumeric({mDec: 2 ,mRound: 'A' ,	aSep:'' , autoTab : true}).trigger('focusout');
   $('#grossWeight').autoNumeric({mDec: 2 ,mRound: 'A' ,	aSep:'' , autoTab : true}).trigger('focusout');
@@ -129,20 +135,30 @@ $(document).ready(function() {
 	if($('#displayScreen').val()=="VEHICLE_IN"){
  		makeDatePicker1("sendDate","fromDate");
  		makeDatePicker("entryDate","fromDate");
+ 		$('#dcNo').removeAttr("readonly");
  	}
  	if($('#displayScreen').val()=="VEHICLE_OUT"){
+ 		$('#dcNo').attr("readonly","readonly");
  		makeDatePicker("exitDate","fromDate");
  	}
  	if($('#displayScreen').val()=="VEHICLE_TAREWEIGHT"){
+ 		$('#dcNo').attr("readonly","readonly");
+ 		$('#grossWeightToolTip').attr("readonly","readonly");
+ 		$('#netWeightToolTip').attr("readonly","readonly");
  		makeDatePicker("tareDate","fromDate");
  	}
  	if($('#displayScreen').val()=="VEHICLE_GRSWEIGHT"){
+ 		$('#dcNo').attr("readonly","readonly");
  		makeDatePicker("grossDate","fromDate");
  	}
  	if($('#displayScreen').val()=="VEHICLE_QC"){
+ 		$('#dcNo').removeAttr("readonly");
+ 		$('#sendDate').attr("readonly","readonly");
+ 		$('#sendTime').attr("readonly","readonly");
  		makeDatePicker("testDate","fromDate");
  	}
  	if($('#displayScreen').val()=="VEHICLE_CIP"){
+ 		$('#dcNo').attr("readonly","readonly");	
  		makeDatePicker("cipDate","fromDate");
  	}
  	
@@ -151,9 +167,63 @@ $(document).ready(function() {
 	var mccCodeJson = ${StringUtil.wrapString(mccCodeJson)}
 	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
 	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+	$("#sendFat").blur(function() {
+		var action = "getSnfFromLactoReading";
+		var fat = $('[name=sendFat]').val();
+		var clr = $('[name=sendCLR]').val();
+		populateSnf(fat,clr,'sendSnf');
+	});
+	
+	$("#recdFat").blur(function() {
+		var action = "getSnfFromLactoReading";
+		var fat = $('[name=recdFat]').val();
+		var clr = $('[name=recdCLR]').val();
+		populateSnf(fat,clr,'recdSnf');
+	});
+	
+	function populateSnf(fat,lr,fieldName){
+		var snfQty = 0;
+		var dataString = {"fatQty": fat,
+						   "lactoReading":lr
+						 };
+		var action= 'getSnfFromLactoReading';
+		$.ajax({
+	         type: "POST",
+	         url: action,
+	         data: dataString,
+	         dataType: 'json',
+	         success: function(result) { 
+	       		snfQty = result['snfQty'];
+	       		$('[name='+fieldName+']').val(snfQty);
+	         },
+	         error: function(XMLHttpRequest, textStatus, errorThrown)
+	        {
+	        	$('[name='+fieldName+']').val('');
+	            alert('Net work failure . Please check network Conection');
+	
+	        }
+    	});
+	}
 	
 	$("input").keyup(function(e){
 	  		
+	  		if(e.target.name == "tareWeight"){
+	  			
+	  			var tareWeight = $('[name=tareWeight]').val();
+	  			
+	  			if(typeof(tareWeight)!= "undefined"){	
+	  				var netWeight = grossWeight-tareWeight ;
+					$('#netWeightToolTip').val(netWeight);
+					if(netWeight <0){
+						alert('Please check the tareWeight . ');
+						$('[name=tareWeight]').val('');
+						$('#netWeightToolTip').val(grossWeight);
+					}
+	  			}else{
+					$('#netWeightToolTip').val('0');
+	  			}
+	  			
+	  		}
 	  		if(e.target.name == "tankerName"){
 	  			
 	  			$('[name=tankerName]').val(($('[name=tankerName]').val()).toUpperCase());
@@ -193,6 +263,7 @@ $(document).ready(function() {
 	  		}
 	}); 
 });
+
 function populateProductSpan(){
 	var productJson = ${StringUtil.wrapString(productJson)}
 	var tempProductJson = productJson[$('[name=product]').val()];
@@ -267,17 +338,92 @@ function fetchTankerRecordNumber(){
          dataType: 'json',
          success: function(result) { 
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
+           			
+           			var displayScreen = $('[name=displayScreen]').val();
+           			if(displayScreen == "VEHICLE_IN"){
+           				$('#sendDate').val('');
+           				$('#sendTime').val('');
+           				$('#dcNo').val('');
+           				$('#productId').val('');
+           				$('#product').val('');	
+           				$('#partyId').val('');	
+           			}
+           			if(displayScreen == "VEHICLE_GRSWEIGHT"){
+           				$('#partyId').val('');
+           				$('#dcNo').val('');
+           			}
+           			if(displayScreen == "VEHICLE_IN"){
+           				$('#sendDate').val('');
+           				$('#sendTime').val('');
+           				$('#dcNo').val('');
+           				$('#productId').val('');
+           				$('#product').val('');	
+           				$('#partyId').val('');	
+           			}
+           			
+           			
            			$('span#tankerIdToolTip').removeClass("tooltip");
 	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
 	  				$('span#tankerIdToolTip').html('none');
-	  				
-	  				
 	  				$('span#partyIdFromToolTip').removeClass("tooltip");
 	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
 	  				$('span#partyIdFromToolTip').html('none');
 	  				           	   
            }else{
            		var  milkTransferId= result['milkTransferId'];
+           		var displayScreen = $('[name=displayScreen]').val();
+	   			if(displayScreen == "VEHICLE_TAREWEIGHT"){
+	   				grossWeight = result['grossWeight'];
+	   				$('#grossWeightToolTip').val(grossWeight);
+	   			}
+           
+           		if($('[name=sealCheck]').length !=0){
+           			if(displayScreen == "VEHICLE_GRSWEIGHT"){
+           				var isSealChecked = result['isSealChecked'];
+           				if(typeof(isSealChecked)!= "undefined"){
+           					if(isSealChecked == 'Y'){
+           						$('#sealCheckY').val('Y');
+           						$('#sealCheckY').attr('checked', true);
+           					}
+           					if(isSealChecked == 'N'){
+           						$('#sealCheckN').val('N');
+           						$('#sealCheckN').attr('checked', true);
+           					}
+           					
+           				}
+           			}
+           		
+           		}
+           		
+           		if($('[name=product]').length !=0){
+	           		var productId = result['productId'];
+	           		if(typeof(productId)!= "undefined"){
+	           			$('[name=product]').val(productId);
+	           			populateProductSpan();
+	           		}
+           		}
+           		if($('[name=dcNo]').length !=0){
+           			var dcNo = result['dcNo'];
+           			if(typeof(dcNo)!= "undefined"){
+           				$('[name=dcNo]').val(dcNo);
+           			}
+           		
+           		}
+           		if($('[name=sendDate]').length !=0){
+           			var sendDate = result['sendDateStr'];
+           			if(typeof(sendDate)!= "undefined"){
+           				$('[name=sendDate]').val(sendDate);
+           			}
+           		
+           		}
+           		if($('[name=sendTime]').length !=0){
+           			var sendTime = result['sendTimeStr'];
+           			if(typeof(sendTime)!= "undefined"){
+           				$('[name=sendTime]').val(sendTime);
+           			}
+           		
+           		}
+           		
            		var partyId = result['partyId'];
            		partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
            		var tempPartyJson = partyCodeJson[''+partyId];
@@ -300,6 +446,19 @@ function fetchTankerRecordNumber(){
 	  					$('span#partyIdFromToolTip').removeClass("tooltipWarning");
 	  					$('span#partyIdFromToolTip').html(partyName);
            			}
+           			var displayScreen = $('[name=displayScreen]').val();
+           			if(displayScreen == "VEHICLE_IN"){
+           				$('#sendDate').val('');
+           				$('#sendTime').val('');
+           				$('#dcNo').val('');
+           				$('#productId').val('');
+           				$('#product').val('');	
+           				$('#partyId').val('');
+           				alert('this tanker is already in process');
+           				$('#tankerName').val('');
+           				$('#tankerNo').val('');
+           				populateVehicleSpan();	
+           			}
 	  				
 	  				
 	  			}else{
@@ -311,11 +470,11 @@ function fetchTankerRecordNumber(){
 	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
 	  				$('span#partyIdFromToolTip').html('none');
 	  			}
-           		
            }
            
          },
           error: function() {
+        	 		
         	 		$('span#tankerIdToolTip').removeClass("tooltip");
 	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
 	  				$('span#tankerIdToolTip').html('none');
@@ -424,7 +583,7 @@ $( "#"+fromDateId ).datepicker({
 	<div class="screenlet-body">
 		<#assign setTime = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "HH:mm")).replace(':','')>
     	<form method="post" name="milkReceiptEntry"  id="milkReceiptEntry" >
-      	<table class="basic-table hover-bar h3" widht='80%' style="border-spacing: 0 10px;" border="1">     
+      	<table style="border-spacing: 0 10px;" border="1">     
 	        <tr>
 			  <td>&nbsp;</td>
 	          <td align='left' valign='middle' nowrap="nowrap">
@@ -432,89 +591,120 @@ $( "#"+fromDateId ).datepicker({
 	          		<tr>
 	          			<table>
 	          				<tr>
-					        	<td align='left'>Vehicle No </td><td>
+					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
 					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
 					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
 					        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
-					        	
 					        	</td>
-					        		<td id="displayRecord" align ="right">Record Number : <span class="tooltip h1" id ="tankerIdToolTip">none</span> </td>
 					        </tr>
-					        <#if displayScreen !="VEHICLE_IN">
-					        	<tr>
-					        			<td id="displayRecord" align ="left">Received From :</td><td> <span class="tooltip h1" id ="partyIdFromToolTip">none</span> </td>
-					        	</tr>		
-					        </#if>
-					        <#if displayScreen == "VEHICLE_IN">
-		                        <tr>
-	        						<td align='left' ><span class='h3'>Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" name="entryDate" autocomplete="off" required/></td>
-	        					</tr>
-	        					<tr>
-	        						<td align='left' >Entry Time(HHMM)[24 hour format] </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
-					        	</tr>
-		                         	<tr>
-			        					<td align='left' ><span class='h3'>Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
-			        					
-			        				</tr>
-			        				<tr>
-			        					<td align='left' >Dispatch Time(HHMM)[24 hour format] </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
-			        					</td>
-							        </tr>
-							        <tr>
-								       	<td align='left'>DC No </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
-								    </tr> 
-		                         	<tr>
-		                         		<td><span class='h3'>From:</span></td><td>
-		                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
-		                         		<input type="hidden" size="6" maxlength="6" name="partyId" required="required"/>
-		                   			</tr>
-		                   			<tr>
-		                   				<td><span class='h3'>To:</span></td><td> MOTHER DAIRY<input type="hidden" size="6" id="partyIdTo" maxlength="6" name="partyIdTo" autocomplete="off" value="MD" /></td>
-		                   			</tr>
-		                   			<tr>
-		                   				<td><span class='h3'>Seal check:</span></td><td> <input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
-		                   			</tr>
-		                   	</#if>		
-		                   	<#if displayScreen == "VEHICLE_OUT">
-							    
+					        <#if displayScreen == "VEHICLE_OUT">
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
 	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Exit Time(HHMM)[24 hour format] </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 					        </#if>
+					        <#if displayScreen !="VEHICLE_IN">
+					        	<tr>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h3">UNION/CHILLING CENTER :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
+					        	</tr>
+					        	<tr>
+								    <td align='left'><span class="h3">DC No </span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
+								</tr>		
+								<#if displayScreen == "VEHICLE_QC">
+									<tr>
+										<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off"/></td>
+									</tr> 
+									<tr>
+										<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+					        		</tr> 
+								</#if>
+					        </#if>
+					        	
+					        <#if displayScreen == "VEHICLE_IN">
+		                        <tr>
+	        						<td align='left' ><span class="h3">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" name="entryDate" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class="h3">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+					        	</tr>
+	                         	<tr>
+		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+		        					
+		        				</tr>
+		        				<tr>
+		        					<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+		        					</td>
+						        </tr>
+						        <tr>
+							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
+							    </tr>
+							    <tr>
+        							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
+						        		<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
+                     					<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
+									</td>
+				        		</tr> 
+	                         	<tr>
+	                         		<td><span class="h3">UNION/CHILLING CENTER :</span></td><td>
+	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
+	                         		<input type="hidden" size="6" maxlength="6" name="partyId" required="required"/>
+	                   			</tr>
+	                   			<tr>
+	                   				<td><span class='h3'>To:</span></td><td><span class='h3'> MOTHER DAIRY</span><input type="hidden" size="6" id="partyIdTo" maxlength="6" name="partyIdTo" autocomplete="off" value="MD" /></td>
+	                   			</tr>
+	                   			<tr>
+	                   				<td><span class='h3'>Seal check:</span></td><td> 
+	                   				<input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
+	                   			</tr>
+		                   	</#if>		
 					        <#if displayScreen == "VEHICLE_GRSWEIGHT">	
 							    
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_GRSWEIGHT" />
-	        						<td align='left' >Gross Weight Date</td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h3">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Gross Weight Time(HHMM)[24 hour format] </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
-	        						<td align='left' >Number of Compartments </td><td><input  name="numberOfCells"  size="10" class="onlyNumber" maxlength="1" type="text" id="compartments" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3"> Dispatch Weight(Kgs)</span></td><td><input  type="text" size="15pt" id="dispatchWeight" name="dispatchWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
 							    <tr>
-	        						<td align='left' >Dispatch Weight(Kgs)</td><td><input  type="text" size="15pt" id="dispatchWeight" name="dispatchWeight" autocomplete="off" required="required"/></td>
+	        						<td align='left' ><span class="h3"> Gross Weight(Kgs)</span> </td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
-							    <tr>
-	        						<td align='left' >Gross Weight(Kgs)</td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
+	        					<tr>
+	        						<td align='left' ><span class="h3">Number of compartments</span></td><td><input  type="text" size="15pt" id="numberOfCells" name="numberOfCells" autocomplete="off" required="required"/></td>
 	        					</tr>
+	        					<tr>
+							       	<td align='left'><span class="h3">Driver Name</span> </td><td><input  name="driverName" size="25" maxlength="20" id= "driverName" type="text" autocomplete="off"  required/><em>*<em></td>
+							    </tr>
+	        					<tr>
+	                   				<td><span class='h3'>Seal check:</span></td><td> <input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
+	                   			</tr>
 	        				</#if>	
 	        				<#if displayScreen == "VEHICLE_TAREWEIGHT">
 	        					<tr>
-	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_TARWEIGHT" />
-	        						<td align='left' ><span class='h3'>Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Gross Weight(Kgs)</span></td>
+	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Tare Time(HHMM)[24 hour format] </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_TARWEIGHT" />
+	        						<td align='left' ><span class="h3">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class="h3">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
-	        						<td align='left' ><span class='h3'>Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class="h3">Net Weight(Kgs)</span></td>
+	        						
+	        						<td><input  type="text" class="onlyNumber" size="15pt" id="netWeightToolTip" autocomplete="off" value="0"/></td>
 	        					</tr>
 	        				</#if>
 	        				<#if displayScreen == "VEHICLE_CIP">
@@ -523,94 +713,124 @@ $( "#"+fromDateId ).datepicker({
 	        						<td align='left' ><span class='h3'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >CIP Time(HHMM)[24 hour format] </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
-	        						<td align='left' ><span class='h3'>UN-LOADED TO SILO</span></td><td> <select name="silo" required="required" id="silo" allow-empty="true">
-					        					<option value="">SELECT</option>
-					        					<option value="RM1">RM1</option>
-            									<option value="RM2">RM2</option>
-            									<option value="RM2">RM3</option>
-          												</select></td>
+	        						<td align='left' ><span class='h3'>UN-LOADED TO SILO</span></td><td> 
+		        						<select name="silo" required="required" id="silo" allow-empty="false">
+						        					<option value="">SELECT</option>
+						        					<#if rawMilkSilosList?has_content>
+							        					<#list rawMilkSilosList as rawMilkSilo>
+							        						<option value="${rawMilkSilo.facilityId}">${rawMilkSilo.facilityId}</option>
+							        					</#list>
+						        					</#if>
+	          							</select>
+          						    </td>
 	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class='h3'>Milk Used For</span></td><td> 
+		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false">
+						        					<#if milkPurchasePurposeTypeList?has_content>
+							        					<#list milkPurchasePurposeTypeList as purposeType>
+							        						<option value="${purposeType.enumId}">${purposeType.enumCode}</option>
+							        					</#list>
+						        					</#if>
+	          							</select>
+          						    </td>
+	        					</tr>
+									        					
 	        				</#if>	
 	        				<#if displayScreen == "VEHICLE_QC">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_QC" />
-	        						<td align='left' ><span class='h3'>Testing Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Testing Time(HHMM)[24 hour format] </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
+	        						<td align='left' ><span class="h3">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
-	        						<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type</td><td>
+	        						<td align='left' ><span class="h3">Seal Number</span></td>
+	        						<td><input  name="sealNumber"  size="10" class="onlyNumber" maxlength="4" type="text" id="sealNumber" autocomplete="off" required/>
+			        					</td>
+					        	</tr>
+					        	<tr>
+	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
 							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
                          				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
 									</td>
 					        	</tr>
 	        					
 						        <tr>
-	        						<td align='left' ><span class="h2"> Dispatch Quality</span> </td>
+	        						<td align='left' ><span class="h1"> Dispatch Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' >Temp </td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
-					        		<td align='left' > Acidity </td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
-					        		<td align='right' > CLR </td><td><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
-					        		<td align='left' > Fat </td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
-					        		<td align='left' > Snf </td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3">Temp </span></td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3"> CLR </span></td><td><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' > COB(Y/N) </td>
+					        		<td align='right'><span class="h3"> COB</span> </td>
 					        			<td> <select name="sendCob" required="required" id="sendCob" allow-empty="true">
-					        					<option value="">SELECT</option>
-					        					<option value="N">NO</option>
-            									<option value="Y">YES</option>
-          												</select></td>
-					        		<td align='left' > Nutrilisers(+ve/-ve) </td>
-					        		<td><select name="sendNutriliser" required="required" id="sendNutriliser" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="N">NEGITIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
-          												
 					        	</tr>
-					        	
 					        	 <tr>
-	        						<td align='left'><span class="h2"> Received Quality</span> </td>
+	        						<td align='left'><span class="h1"> Received Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' >Temp </td><td><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
-					        		<td align='left' > Acidity </td><td><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
-					        		<td align='right' > CLR </td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
-					        		<td align='left' > Fat </td><td><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
-					        		<td align='left' > Snf </td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3">Temp</span> </td><td><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
+					        		<td align='left' > <span class="h3">Acidity% </span></td><td><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' > COB(Y/N) </td>
+					        		<td align='right' ><span class="h3"> COB(Y/N)</span> </td>
 					        		<td><select name="recdCob" required="required" id="recdCob" allow-empty="true">
 					        					<option value="">SELECT</option>
-					        					<option value="N">NO</option>
-            									<option value="Y">YES</option>
+					        					
+					        					<option value="N">NEGITIVE</option>
+            									<option value="Y">POSITIVE</option>
           												</select></td>
-					        		<td align='left' > Flavour </td>
+					        		<td align='left' ><span class="h3">OT</span> </td>
 					        		<td>
-					        		<select name="recdFlavour" required="required" id="recdSedimentTest" allow-empty="true">
+					        		<select name="recdOrganoLepticTest" required="required" id="recdOrganismTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="NORMAL">NORMAL</option>
             									<option value="ABNORMAL">ABNORMAL</option>
           												</select></td>
-					        		<td align='left' > SedimentTest(+ve/-ve) </td><td>
+					        		<td align='left' ><span class="h3"> SedimentTest(+ve/-ve)</span> </td><td>
 					        		<select name="recdSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="N">NEGITIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
-					        		<td align='left' > PH </td><td><input  name="recdPH" size="7pt" maxlength="5" type="text" id="recdPH" autocomplete="off" required/></td>
-					        		<td align='left' > MBRT </td><td><input  name="recdMBRT" size="7pt" maxlength="4" type="text" id="recdMBRT" autocomplete="off" required/></td>
 					        	</tr>
 						    </#if>
 	          		</table>
+	          		<#if displayScreen == "VEHICLE_QC">
+	          			<table>
+	          					<tr>
+	          						<td> &nbsp;&nbsp;<td>
+	          					</tr>
+	          					<tr>
+					        		<td valign = "middle" align="center"><span class="h1">Remarks</span></td>
+					        	</tr>
+					        	<tr>	
+					        			<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
+      								<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>	
+					        		<td valign = "middle" align="center">
+					        			<textarea cols="60" rows="3" name="qcComments" maxlength="200" id="qcComments"></textarea>
+					        		</td>
+					        	</tr>
+					    </table>    	
+	          		</#if>
+	          		
 	         	 </td>  
 	        </tr>
       </table>
