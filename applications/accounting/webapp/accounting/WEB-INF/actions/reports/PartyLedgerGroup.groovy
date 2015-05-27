@@ -422,6 +422,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	}else{
 		clsGrdCredit=-(balance);
 	}
+	
 	finalMap.partyId=partyId;
 	finalMap.debit=clsGrdDebit;
 	finalMap.credit=clsGrdCredit;

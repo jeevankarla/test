@@ -350,6 +350,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			tempTransMap.debit=debit;
 			partyLedgerCsv.add(tempTransMap);
 		}
+		
 		tempMap=[:];
 		tempMap.glAccDescription="TRANSACTION TOTAL  :";
 		totDebit=totDebit+openDebit;
