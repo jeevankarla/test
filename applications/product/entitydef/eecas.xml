@@ -73,7 +73,10 @@ under the License.
 <!--        <condition field-name="availableToPromiseDiff" operator="not-equals" value="0" type="BigDecimal"/>-->
 <!--        <action service="setLastInventoryCount" mode="sync"/>-->
 <!--    </eca>-->
- 
+ 	<!-- Just in case an ProductBatch is ever created, catch and create sequence for that -->
+    <eca entity="ProductBatch" operation="create" event="return">
+        <action service="createProductBatchSequence" mode="sync"/>
+    </eca>
  <eca entity="Shipment" operation="create" event="return">
         <condition field-name="statusId" operator="equals" value="GENERATED"/>
          <condition field-name="shipmentTypeId" operator="equals" value="MATERIAL_SHIPMENT"/>

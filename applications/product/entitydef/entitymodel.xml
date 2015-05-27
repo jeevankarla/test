@@ -2017,7 +2017,7 @@ under the License.
       <field name="lotId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="binNumber" type="id"></field>
-      <field name="batchNumber" type="id"></field>
+      <field name="productBatchId" type="id"></field>
       <field name="locationSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="quantityOnHandTotal" type="fixed-point"></field>
@@ -2042,6 +2042,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="INV_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_PBATCH" rel-entity-name="ProductBatch">
+        <key-map field-name="productBatchId"/>
       </relation>
       <relation type="one" fk-name="INV_ITEM_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -3245,6 +3248,64 @@ under the License.
         </relation>
     </entity>
     
+    <entity entity-name="ProductBatch"
+            package-name="org.ofbiz.product.product"
+            title="Product Batch Entity">
+      <field name="productBatchId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="manufacturedDate" type="date-time"></field>
+      <field name="expiryDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="productBatchId"/>
+      <relation type="one" fk-name="PROD_PBTCH" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PBTCH_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductBatchSequence"
+            package-name="org.ofbiz.product.product"
+            title="Product Batch Sequence Entity">
+      <field name="finYearId" type="id-ne"></field>
+      <field name="sequenceId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="productBatchId" type="id-ne"></field>
+      <prim-key field="productId"/>
+      <prim-key field="finYearId"/>
+      <prim-key field="sequenceId"/>
+      <relation type="one" fk-name="PROD_PBSEQ" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PBSEQ_PBTCH" rel-entity-name="ProductBatch">
+        <key-map field-name="productBatchId"/>
+      </relation>
+      <relation type="one" fk-name="PBSEQ_CTP" rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId" rel-field-name="customTimePeriodId" />
+	  </relation>
+    </entity>
+    
+    <view-entity entity-name="ProductBatchAndSequence"
+                 package-name="org.ofbiz.product.product"
+                 title="Product Batch and Product Batch Sequence View Entity">
+      <member-entity entity-alias="PB" entity-name="ProductBatch"/>
+      <member-entity entity-alias="PBS" entity-name="ProductBatchSequence"/>
+      <alias name="productId" entity-alias="PB"/>
+      <alias name="productBatchId" entity-alias="PB"/>     
+      <alias name="manufacturedDate" entity-alias="PB"/>
+      <alias name="expiryDate" entity-alias="PB"/>
+      <alias name="statusId" entity-alias="PB"/>
+      <alias name="finYearId" entity-alias="PBS"/>
+      <alias name="sequenceId" entity-alias="PBS"/>
+      <view-link entity-alias="PB" rel-entity-alias="PBS">
+        <key-map field-name="productBatchId"/>
+      </view-link>
+    </view-entity>
+    
     <entity entity-name="ProductCategoryAssoc"
             package-name="org.ofbiz.product.product"
             title="Product Category Association Entity">
@@ -3299,6 +3360,7 @@ under the License.
         <key-map field-name="productId"/>
       </view-link>
     </view-entity>
+    
     <entity entity-name="ProductAssocType"
             package-name="org.ofbiz.product.product"
             default-resource-name="ProductEntityLabels"

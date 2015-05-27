@@ -11,4 +11,11 @@
 	<StatusValidChange statusId="RTN_APPROVED" statusIdTo="RTN_ACCEPTED" transitionName="Accepted"/>
 	<StatusValidChange statusId="RTN_ACCEPTED" statusIdTo="RTN_CANCELLED" transitionName="Accepted And Dumped"/>
 	<StatusValidChange statusId="RTN_APPROVED" statusIdTo="RTN_CANCELLED" transitionName="Rejected"/>
+	
+	<StatusType description="Product Batch Status" statusTypeId="PROD_BATCH_STATUS"/>
+	<StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="PBTCH_CREATED" statusTypeId="PROD_BATCH_STATUS"/>
+	<StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="PBTCH_CANCELLED" statusTypeId="PROD_BATCH_STATUS"/>
+	
+	<StatusValidChange statusId="PBTCH_CREATED" statusIdTo="PBTCH_CANCELLED" transitionName="Cancelled"/>
+	
 </entity-engine-xml>

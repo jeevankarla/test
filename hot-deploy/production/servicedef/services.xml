@@ -29,4 +29,12 @@
     	<attribute name="statusId" mode="IN" type="String" optional="true"/>
     </service>
     
+    <service name="createBatchForRoutingTask" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createBatchForRoutingTask">
+    	<attribute name="productId" mode="IN" type="String" optional="false"/>
+    	<attribute name="workEffortId" mode="IN" type="String" optional="true"/>
+    	<attribute name="productBatchId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
+    	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
+    </service>
 </services>
