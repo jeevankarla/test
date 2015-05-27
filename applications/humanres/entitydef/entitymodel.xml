@@ -1566,6 +1566,7 @@ under the License.
 	  <field name="encashmentStatus" type="id" enable-audit-log="true"/>
 	  <field name="emplLeaveApplId" type="id"/>
 	  <field name="overrideReason" type="id"></field>
+	  <field name="weeklyOff" type="indicator"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
@@ -1597,6 +1598,24 @@ under the License.
             <key-map field-name="partyId"/>
       </relation>
     </entity>
+    <entity entity-name="EmployeeWeeklyOffCalendar" package-name="org.ofbiz.humanres.position"	title="Employee Weekly off calendar">
+	  <field name="partyId" type="id-ne"/>
+	  <field name="weeklyOffDay" type="id-ne"/>
+	  <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+	  <field name="comment" type="comment"></field>
+	  <field name="createdByUserLogin" type="id-vlong"></field>
+	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+	  <field name="createdDate" type="date-time"></field>      
+      <field name="lastModifiedDate" type="date-time"></field>
+	  <prim-key field="partyId"/>
+	  <prim-key field="weeklyOffDay"/>
+	  <prim-key field="fromDate"/>
+      <relation type="one" fk-name="EWF_EMPID"  rel-entity-name="EmployeeDetail">
+            <key-map field-name="partyId"/>
+      </relation>
+    </entity>
+    
      <!-- ==================NotificationAction=============================== -->
      <entity entity-name="NotificationCond"
             package-name="org.ofbiz.humanres.rule"

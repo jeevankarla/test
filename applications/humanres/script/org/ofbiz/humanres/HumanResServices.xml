@@ -777,6 +777,12 @@
     </simple-method>
 
 	<simple-method method-name="updatePreviousEmployment" short-description="Update Previous Employment Details">
+		<if-not-empty field="parameters.weeklyOff">
+			<set field="weeklyOffMap.weeklyOff" from-field="parameters.weeklyOff"/>
+			<set field="weeklyOffMap.partyId" from-field="parameters.partyId"/>
+			<call-service service-name="createOrUpdateWeeklyOffCalendar" in-map-name="weeklyOffMap">	
+			</call-service>
+		</if-not-empty>
 		<entity-one entity-name="EmployeeDetail" value-field="lookedUpValue" />
 		<if-empty field="lookedUpValue.partyId" >
             <call-service service-name="createPreviousEmployment" in-map-name="parameters">	

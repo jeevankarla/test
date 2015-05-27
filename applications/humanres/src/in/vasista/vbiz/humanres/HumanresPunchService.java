@@ -728,6 +728,9 @@ public class HumanresPunchService {
 				if(UtilValidate.isNotEmpty(employeeDetail.getString("canteenFacin")) && ("Y").equalsIgnoreCase(employeeDetail.getString("canteenFacin"))){
 					employeeDailyAttendance.set("availedCanteen","Y");
 				}
+				if(UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
+					employeeDailyAttendance.set("weeklyOff","Y");
+				}
 				delegator.store(employeeDailyAttendance);
 			}else{
 				Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin", userLogin);
@@ -737,6 +740,7 @@ public class HumanresPunchService {
 				employeeDailyAttendanceMap.put("lateMin",new BigDecimal(lateMin));
 				employeeDailyAttendanceMap.put("extraMin",new BigDecimal(extraMin));
 				employeeDailyAttendanceMap.put("totalWorkMin",new BigDecimal(totalWorkMin));
+				employeeDailyAttendanceMap.put("weeklyOff","Y");
 				result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
 			}
 			
@@ -844,6 +848,7 @@ public class HumanresPunchService {
       String partyId = (String) context.get("partyId");
       String availedVehicleAllowance = (String)context.get("availedVehicleAllowance");
       String availedCanteen = (String)context.get("availedCanteen");
+      String weeklyOff = (String)context.get("weeklyOff");
       String shiftType = (String)context.get("shiftType");
       Date date = (java.sql.Date)context.get("date");
       BigDecimal lateMin= (BigDecimal)context.get("lateMin");
@@ -868,6 +873,7 @@ public class HumanresPunchService {
 				newEntity.set("date", date);
 				newEntity.set("availedVehicleAllowance", availedVehicleAllowance);
 				newEntity.set("availedCanteen", availedCanteen);
+				newEntity.set("weeklyOff", weeklyOff);
 				newEntity.set("shiftType", shiftType);
 				newEntity.set("lateMin", lateMin);
 				newEntity.set("extraMin", extraMin);
@@ -888,6 +894,7 @@ public class HumanresPunchService {
 					employShiftDetails.set("partyId", employShiftDetails.getString("partyId"));
 					employShiftDetails.set("availedVehicleAllowance", availedVehicleAllowance);
 					employShiftDetails.set("availedCanteen", availedCanteen);
+					employShiftDetails.set("weeklyOff", weeklyOff);
 					employShiftDetails.set("shiftType", shiftType);
 					employShiftDetails.set("lateMin", lateMin);
 					employShiftDetails.set("extraMin", extraMin);
