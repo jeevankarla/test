@@ -86,7 +86,9 @@ fromDate = UtilDateTime.getDayStart(fromDateTs, timeZone, locale);
 thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
 
 List conditionList=FastList.newInstance();
-conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,purposeTypeId));
+if(purposeTypeId && purposeTypeId != 'All'){
+	conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,purposeTypeId));
+}
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
