@@ -263,19 +263,28 @@ public class HumanresService {
 			    		
 				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
 				        	emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
-				         }
-						
+				        }
 						Calendar c1=Calendar.getInstance();
 			    		c1.setTime(UtilDateTime.toSqlDate(fromDate));
 			    		Calendar c2=Calendar.getInstance();
 			    		c2.setTime(UtilDateTime.toSqlDate(thruDate));
 						while(c2.after(c1)){
 							Timestamp cTime = new Timestamp(c1.getTimeInMillis());
+							Timestamp cTimeStart = UtilDateTime.getDayStart(cTime);
 			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
-			    			String weekName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
+			    			String dayName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition("date",EntityOperator.EQUALS,UtilDateTime.toSqlDate(cTime)));
-			    			
-			    			if((weekName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList)) || (dayShiftList.size() >= 2)){
+							List weeklyCondList = FastList.newInstance();
+							weeklyCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+							weeklyCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,cTimeEnd));
+							weeklyCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, cTimeStart)));
+							EntityCondition weekCond = EntityCondition.makeCondition(weeklyCondList,EntityOperator.AND);   
+							List<GenericValue> activeEmpWeeklyOffCalList = delegator.findList("EmployeeWeeklyOffCalendar", weekCond, null, UtilMisc.toList("-fromDate"), null, false);
+							if(UtilValidate.isNotEmpty(activeEmpWeeklyOffCalList)){
+					            GenericValue activeEmpWeeklyOffCalendar = EntityUtil.getFirst(activeEmpWeeklyOffCalList);
+					            emplWeeklyOffDay = (String) activeEmpWeeklyOffCalendar.get("weeklyOffDay");
+							}
+							if((dayName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList)) || (dayShiftList.size() >= 2)){
 			    				for(int i=0 ;i<dayShiftList.size() ;i++){
 			    					GenericValue dayShift = dayShiftList.get(i);
 			    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
@@ -283,7 +292,6 @@ public class HumanresService {
 			    					GenericValue firstPunch = EntityUtil.getFirst(emplPunchList);
 			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("punchtime"));
 			    					GenericValue lastPunch = EntityUtil.getFirst(emplPunchList);
-			    					
 			    				}
 			    				holidays.add(UtilDateTime.toSqlDate(cTime));
 			    			}
@@ -1636,4 +1644,110 @@ public class HumanresService {
 	        result = ServiceUtil.returnSuccess("Party Resume created sucessfully...!");
 	        return result;
 	    }
+    public static Map<String, Object> createOrUpdateWeeklyOffCalendar(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String partyId = (String) context.get("partyId");
+    	String weeklyOff = (String) context.get("weeklyOff");
+    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+    	if(UtilValidate.isEmpty(fromDate)){
+    		fromDate = UtilDateTime.nowTimestamp();
+    	}
+    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		try {
+			GenericValue employeeDetail = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId",partyId),false);
+			if(UtilValidate.isNotEmpty(employeeDetail)){
+				String existingWeeklyOff = (String) employeeDetail.get("weeklyOff");
+				if(!weeklyOff.equals(existingWeeklyOff)){
+					List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+					conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS ,null));
+		            EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);   
+		            List<GenericValue> activeEmpWeeklyOffCalList = delegator.findList("EmployeeWeeklyOffCalendar", condition, null, UtilMisc.toList("-fromDate"), null, false);
+		            if(UtilValidate.isNotEmpty(activeEmpWeeklyOffCalList)){
+		            	GenericValue activeEmpWeeklyOffCalendar = EntityUtil.getFirst(activeEmpWeeklyOffCalList);
+	            		activeEmpWeeklyOffCalendar.set("thruDate", previousDayEnd);
+	            		activeEmpWeeklyOffCalendar.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	            		activeEmpWeeklyOffCalendar.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	            		activeEmpWeeklyOffCalendar.store();
+						GenericValue newEntity = delegator.makeValue("EmployeeWeeklyOffCalendar");
+						newEntity.set("partyId", partyId);
+						newEntity.set("weeklyOffDay", weeklyOff);
+						newEntity.set("fromDate", fromDateStart);
+						newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+						newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+						newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+						newEntity.create();
+					}else{
+						GenericValue newEntity = delegator.makeValue("EmployeeWeeklyOffCalendar");
+						newEntity.set("partyId", partyId);
+						newEntity.set("weeklyOffDay", weeklyOff);
+						newEntity.set("fromDate", fromDateStart);
+						newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+						newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+						newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+						newEntity.create();
+					}
+				}
+			}
+        }catch(GenericEntityException e){
+			Debug.logError("Error while populating employee weekly off calendar"+e.getMessage(), module);
+		}
+        result = ServiceUtil.returnSuccess("Employee weekly off calendar populated...!");
+        return result;
+    }
+    public static Map<String, Object> populateWeeklyOffCalendar(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String orgPartyId =  (String)context.get("orgPartyId");
+    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+    	if(UtilValidate.isEmpty(fromDate)){
+    		fromDate = UtilDateTime.nowTimestamp();
+    	}
+    	Timestamp thruDate = (Timestamp) context.get("thruDate");
+    	if(UtilValidate.isEmpty(thruDate)){
+    		thruDate = UtilDateTime.nowTimestamp();
+    	}
+    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+    	Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		try {
+			Map emplInputMap = FastMap.newInstance();
+			emplInputMap.put("userLogin", userLogin);
+			emplInputMap.put("orgPartyId", orgPartyId);
+			emplInputMap.put("fromDate", fromDateStart);
+			emplInputMap.put("thruDate", thruDateEnd);
+        	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+        	for (int i = 0; i < employementList.size(); ++i) {		
+        		GenericValue employment = employementList.get(i);
+        		String partyId = employment.getString("partyIdTo");
+        		GenericValue employeeDetail = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId",partyId),false);
+    			if(UtilValidate.isNotEmpty(employeeDetail)){
+    				String weeklyOff = (String) employeeDetail.get("weeklyOff");
+    				if(UtilValidate.isNotEmpty(weeklyOff)){
+    					GenericValue newEntity = delegator.makeValue("EmployeeWeeklyOffCalendar");
+    					newEntity.set("partyId", partyId);
+    					newEntity.set("weeklyOffDay", weeklyOff);
+    					newEntity.set("fromDate", fromDateStart);
+    					newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+    					newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+    					newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+    					newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+    					newEntity.create();
+    				}
+    			}
+        	}
+        }catch(GenericEntityException e){
+			Debug.logError("Error while populating employee weekly off calendar"+e.getMessage(), module);
+		}
+        result = ServiceUtil.returnSuccess("Employee weekly off calendar populated...!");
+        return result;
+    }
 }

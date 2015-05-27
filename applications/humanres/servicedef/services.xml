@@ -799,7 +799,6 @@ under the License.emplpunch
 		<auto-attributes mode="IN" include="pk" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />		
 	</service>
-
     <service name="createResponsibilityType" default-entity-name="ResponsibilityType" engine="simple"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createResponsibilityType" auth="true">
         <description>Create Valid ResponsibilityType</description>
@@ -1993,5 +1992,19 @@ under the License.emplpunch
          <attribute name="serviceName" mode="IN" type="String" optional="true"/>
          <attribute name="amount" mode="IN" type="BigDecimal" optional="true"/>
          <attribute name="payrollBenDedRuleId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="createOrUpdateWeeklyOffCalendar" engine="java"
+                location="in.vasista.vbiz.humanres.HumanresService" invoke="createOrUpdateWeeklyOffCalendar" 
+                 auth="true">
+         <description>create or update Weekly off record when changed</description>
+         <attribute name="partyId" mode="IN" type="String" optional="false"/>
+         <attribute name="weeklyOff" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="populateWeeklyOffCalendar" engine="java"
+                location="in.vasista.vbiz.humanres.HumanresService" invoke="populateWeeklyOffCalendar" 
+                 auth="true">
+         <description>Populate Weekly off record when changed</description>
+         <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+         <attribute name="orgPartyId" mode="IN" type="String" optional="false"/>
     </service>
 </services>
