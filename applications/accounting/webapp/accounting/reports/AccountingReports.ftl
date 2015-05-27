@@ -224,8 +224,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("invTmpSummFromDate","invTmpSummThruDate");
 	    makeDatePicker4("finSummFromDate","finSummThruDate");
 	    makeDatePicker4("GlLedgerFromDate","GlLedgerThruDate");
-	    makeDatePicker4("invAppFromDate","invAppFromDate");
-	    makeDatePicker4("invAppThruDate","invAppThruDate");
+	    makeDatePicker("invAppFromDate","invAppThruDate");
 	    makeDatePicker4("PartyLedgerFromDate","PartyLedgerThruDate");
 		makeDatePicker4("PartyLedgerCreditorFromDate","PartyLedgerCreditorThruDate");
 		makeDatePicker4("PartyWiseLedgerFromDate","PartyWiseLedgerThruDate");
@@ -966,15 +965,16 @@ function reportTypeChangeFunc() {
    <#if security.hasEntityPermission("ACCOUNTING", "_ADMIN", session)>
   <div class="screenlet">
     <div class="screenlet-title-bar">
-      <h3>Test Reports</h3>
+      <h3>Invoice Register</h3>
     </div>
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row"> 
       		<form id="invoiceAppReport" name="invoiceAppReport" method="post" action="<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>" target="_blank">	
-      		  	<td width="10%">AR/AP Invoice Application Details</td>
+      		  	<td width="10%">AR/AP Invoice Register Details</td>
 			  	<td width="25%">Purpose Type
-			  	  	<select name='purposeTypeId' id ="purposeTypeId">	
+			  	  	<select name='purposeTypeId' id ="purposeTypeId">
+			  	  		<option value="All">-- All --</option>	
 						<#list purposeTypeIdsList as purposeType>
 					        <option value="${purposeType.enumId}">${purposeType.description?if_exists}</option>
 					    </#list>
