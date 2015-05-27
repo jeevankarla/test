@@ -82,7 +82,7 @@ under the License.
 					<#assign invoiceTypeId = invoice.invoiceTypeId?if_exists>
 					<#assign invPartyIdFrom = invoice.partyIdFrom?if_exists>
 					<#assign invPartyId = invoice.partyId?if_exists>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company">DEBIT ADVICE <#else>CREDIT ADVICE</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBIT ADVICE ${invoiceTypeId} <#else>CREDIT ADVICE </#if><#else>CREDIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -197,7 +197,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company">DEBITED<#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBITED <#else>CREDITED </#if><#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -324,6 +324,7 @@ under the License.
 	                   			</fo:table-cell>
 	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
+	                   			<#if invoiceQtyInc?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
@@ -332,7 +333,13 @@ under the License.
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
 	                   			</fo:table-cell>
 	                   			</#if>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
+	                   			<#if invoiceQty?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQty?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
@@ -341,10 +348,21 @@ under the License.
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
 	                   			</fo:table-cell>
 	                   			</#if>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
+	                   			<#if prodUnitPriceInc?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
 	                   			<#else>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
@@ -478,7 +496,7 @@ under the License.
 					<#assign invPartyIdFrom = invoice.partyIdFrom?if_exists>
 					<#assign invPartyId = invoice.partyId?if_exists>
 					<#assign invoiceId = invoice.invoiceId?if_exists>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company">CREDIT ADVICE <#else>DEBIT ADVICE</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBIT ADVICE <#else>CREDIT ADVICE</#if><#else> CREDIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -593,7 +611,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company">CREDITED<#else>DEBITED</#if> with Rs: <@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/>       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBITED <#else>CREDITED </#if><#else>CREDITED</#if> with Rs: <@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/>       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
