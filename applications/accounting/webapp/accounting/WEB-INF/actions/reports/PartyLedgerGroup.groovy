@@ -306,7 +306,9 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		tempAbsMap.name=name;
 		openDebit=0;openCredit=0;
 		openBal=0;
+		if(UtilValidate.isNotEmpty(openingBalMap.get(partyId))){
 		openBal=openingBalMap.get(partyId);
+		}
 		if(openBal>=0){
 			openDebit=openBal;
 		}else{
@@ -386,7 +388,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		tempMap.glAccDescription="CLOSING TOTAL :";
 		bal=0;clsDebit=0;clsCredit=0;
 		bal=totDebit-totCredit;
-		if(bal>0){
+		if(bal>=0){
 			clsDebit=bal;
 		}else{
 			clsCredit=-(bal);
@@ -415,11 +417,12 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	balance=0;clsGrdDebit=0;clsGrdCredit=0;
 	finalMap.glAccDescription="CLOSING GRAND TOTAL :";
 	balance=grdDebit-grdCredit;
-	if(balance>0){
+	if(balance>=0){
 		clsGrdDebit=balance;
 	}else{
 		clsGrdCredit=-(balance);
 	}
+	
 	finalMap.partyId=partyId;
 	finalMap.debit=clsGrdDebit;
 	finalMap.credit=clsGrdCredit;
