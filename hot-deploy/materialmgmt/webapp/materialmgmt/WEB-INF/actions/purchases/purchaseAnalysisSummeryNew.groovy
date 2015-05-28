@@ -1314,10 +1314,10 @@ purchaseSumInvDetaildMap=[:];
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "COGS_FREIGHT"));
-			if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
+			/*if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
 				
 			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, otherPurchaseVatProducts));
-			}
+			}*/
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<String> orderBy = UtilMisc.toList("invoiceDate","invoiceId","partyId");
 			invoiceItemsIter = delegator.find("InvoiceAndItem", condition, null, null, orderBy, null);
