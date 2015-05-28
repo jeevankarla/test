@@ -401,6 +401,10 @@ public class PaymentWorker {
                 	if((payment.getString("paymentMethodTypeId")).contains("CHEQUE")){
                 		text += "cheque payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount")+"(subj to realisation)";
                 	}
+                	if((payment.getString("paymentMethodTypeId")).contains("AXIS_CDM_PAYIN")){
+                		text += "CDM payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount")+"(subj to realisation)";
+                	}
+                	
                 }
             text += ". Automated message from Mother Dairy.";
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
