@@ -279,7 +279,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker5("catYearSalesFromDateId","catYearSalesThruDateId");
 		makeDatePicker5("yearlySaleFromDateId","yearlySaleThruDateId");
 		makeDatePicker("ProductPriceFromDate","");
-		
+		makeDatePicker("prodPriceFromDate","prodPriceThruDate");
+
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -941,6 +942,23 @@ function reportTypeChangeFunc() {
 			      		 </td>
 			             <td width="15%"></td>
 			             <td width="15%">Product<@htmlTemplate.lookupField size="10" maxlength="22" formName="channelWiseProductWiseSales" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
+                    <tr class="alternate-row">
+			      	   <form id="ProductPriceRevisionReport" name="ProductPriceRevisionReport" method="post" action="<@ofbizUrl>productPriceRevisionReport.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Product Price Revision Report</td>
+			             <td width="15%">From <input  type="text" size="10pt" id="prodPriceFromDate" readonly  name="prodPriceFromDate"/></td>
+			             <td width="15%">Thru<input  type="text" size="10pt" id="prodPriceThruDate" readonly  name="prodPriceThruDate"/></td>
+			      		 <td width="15%">Product Category 
+			      		 			<select name="categoryType" class='h4'>
+			      		 			<option value=''></option>
+	            					<#list prodCatList as category>    
+	              	    				<option value='${category}'>${category}</option>
+	            					</#list>            
+								</select>
+			      		 </td>
+			      	     <td width="15%"><span class='h3'>Product <@htmlTemplate.lookupField size="10" maxlength="22" formName="ProductPriceRevisionReport" name="productId" id="productId" fieldFormName="LookupProduct"/>
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
