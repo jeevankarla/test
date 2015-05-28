@@ -108,32 +108,33 @@
 			    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				        
 				        <tr>
-				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Production Name:</div></td>
+				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Production Name</div></td>
 					      	<#if productionRunData?exists && productionRunData.workEffortName?has_content>
 			      				<input type="hidden" name="workEffortName" id="workEffortName" value="${productionRunData.workEffortName}">
-				      			<td align='left' style="color:#706B6B;text-align:left;">
+				      			<td align='left' style="color:#706B6B;text-align:left;"><b>:</b>
 				      				<div class='tabletext h3'>${productionRun.workEffortName?if_exists}</div>
 				      			</td>
 				      		<#else>
-				      			<td><input type="text" name="workEffortName" id="workEffortName" ></td>
+				      			<td><b>:</b><input type="text" name="workEffortName" id="workEffortName" required></td>
 					      	</#if>
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Plant:</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Plant</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.facilityId?has_content>
 			      				<#assign facility = delegator.findOne("Facility", {"facilityId" : productionRunData.facilityId}, false)>
 			      				<input type="hidden" name="facilityId" id="facilityId" value="${productionRunData.facilityId}">
-				      			<td style="color:#706B6B;text-align:left;">
+				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
 				      				<div class='tabletext h3'>${facility.facilityName?if_exists} [${productionRun.facilityId}]</div>
 				      			</td>
 				      		<#else>
-				      			<td>
-				      			<!-- <input type="text" name="facilityId" id="facilityId" > -->
-				      			 	<select name='facilityId'>
-				      			 		<#list storeList as store>
+				      			<td><b>:</b>
+				      			
+				      			 	<select name='facilityId' onchange="javascript:getWorkEffortList(this);" required>
+				      			 	    <option value=''></option>
+				      			 	 <#list facilityList as store>
 				      			 			<option value='${store.get("facilityId")}'>${store.get("facilityName")}</option>
-				      			 		</#list>
+				      			 		</#list> 
 				      			 	</select>
 				      			 
 				      			</td>
@@ -141,60 +142,71 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Routing:</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Routing</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.routingTaskId?has_content>
-			      				<input type="hidden" name="routingId" id="routingId" value="${productionRunData.routingTaskId?if_exists}">
+			      				<input type="hidden" name="routingId" id="routingId"  value="${productionRunData.routingTaskId?if_exists}"  >
 			      				<#assign routingTask = delegator.findOne("WorkEffort", {"workEffortId" : productionRunData.routingTaskId}, false)>
-				      			<td style="color:#706B6B;text-align:left;">
+				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
 				      				<div class='tabletext h3'>${routingTask.workEffortName?if_exists} [${productionRunData.routingTaskId?if_exists}]</div>
 				      			</td>
 				      		<#else>
-				      			<td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="productionRunEntryInit" name="routingId" id="routingId" fieldFormName="LookupRouting"/></td>
+				      			<td ><b>:</b>
+				      			 <select name='routingId' onchange="javascript:getProduct(this);" required>
+				      			           <option value=''></option>
+				      			 		<#list workEffortList as workEffort>
+				      			 			<option value='${workEffort.get("workEffortId")}'>${workEffort.get("description")}</option>
+				      			 		</#list> 
+				      			 	</select>
+                                </td>
 					      	</#if>
 					    </tr>
 					    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 					    <tr>
-				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Product:</div></td>
+				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Product</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.productId?has_content>
 					      		<#assign product = delegator.findOne("Product", {"productId" : productionRunData.productId}, false)>
 			      				<input type="hidden" name="productId" id="productId" value="${productionRunData.productId}">
-				      			<td style="color:#706B6B;text-align:left;">
+				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
 				      				<div class='tabletext h3'> ${product.productName?if_exists} [${productionRunData.productId}]</div>
 				      			</td>
 				      		<#else>
-				      			<td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="productionRunEntryInit" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+				      		<#--	<td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="productionRunEntryInit" name="productId" id="productId" fieldFormName="LookupProduct"/></td>  -->
+				      			<td><h2><b>:</b>&nbsp;<span style="font-weight:bold"  id ="productDescription">NONE</span></h2>
+				      			      <input type="hidden" name="productId" id="productId"/>
+				      			</td> 
+				      			
 					      	</#if>
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce:</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.quantity?has_content>
 			      				<input type="hidden" name="pRQuantity" id="pRQuantity" value="${productionRunData.quantity}">
-				      			<td style="color:#706B6B;text-align:left;">
+				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
 				      				<div class='tabletext h3'>${productionRunData.quantity?if_exists}</div>
 				      			</td>
 				      		<#else>
-				      			<td><input type="text" name="pRQuantity" id="pRQuantity" ></td>
+				      			<td><b>:</b><input type="text" name="pRQuantity" id="pRQuantity" required></td>
 					      	</#if>
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Start Date:</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Start Date</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.estimatedStartDate?has_content>
 			      				<input type="hidden" name="startDate" id="startDate" value="${productionRunData.estimatedStartDate}">
-				      			<td style="color:#706B6B;text-align:left;">
+				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
 				      				<div class='tabletext h3'>${productionRunData.estimatedStartDate?if_exists}</div>
 				      			</td>
 				      		<#else>
-				      			<td><input class='h3' type="text" name="startDate" id="startDate" onmouseover='datetimepick()' readOnly/></td>
+				      			<td><b>:</b><input class='h3' type="text" name="startDate"  id="startDate" onmouseover='datetimepick()'    required='required' /></td>
 					      	</#if>
 					      	
 					      	<#if productionRunId?exists>
 					      		<td> &nbsp;</td>
-						      	<td valign='middle' nowrap="nowrap"><div class='h3'>Status:</div></td>
+						      	<td valign='middle' nowrap="nowrap"><div class='h3'>Status</div></td>
 					      		<#if productionRunData.currentStatusId?has_content>
 					      			<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : productionRunData.currentStatusId}, true)>
-				      				<td style="color:#706B6B;text-align:left;">
+				      				<td style="color:#706B6B;text-align:left;"><b>:</b>
 				      					<div class='tabletext h3'>${statusItem.statusCode?if_exists}</div>
 				      				</td>
 				      			</#if>
@@ -494,4 +506,25 @@
       			$('#printRequiredMaterial').html(htmlStr);
       		}
       }
+      function getProduct(workEffort){
+      
+	      var workEffortId=workEffort.value;
+	      var productId=workEffortObj[workEffortId];
+	      $('#productId').val(productId);
+	      var productDesc=productNameObj[productId];
+	      $('#productDescription').html(''+productDesc);
+      }
+      function getWorkEffortList(facility){
+       	var facilityId=facility.value;
+       	var optionList = '';
+			optionList += "<option value = " + "" + " >" +" "+ "</option>";
+			var list= facilityWorkEffObj[facilityId];
+			if (list) {		       				        	
+	        	for(var i=0 ; i<list.length ; i++){
+					var innerList=list[i];	     
+	                optionList += "<option value = " + innerList['workEffortId'] + " >" +innerList['description']+" </option>";          			
+	      		}//end of main list for loop
+	      	}
+	      	jQuery("[name='"+"routingId"+"']").html(optionList);
+       }
 </script>
