@@ -299,7 +299,9 @@ public class ByProductServices {
             if(UtilValidate.isNotEmpty(tripId)){
             	conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
             }
+            if(UtilValidate.isNotEmpty(stopShipList)){
             conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));
+            }
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
             List<String> orderBy = UtilMisc.toList("subscriptionId", "productSubscriptionTypeId","-productId"); 
         	subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
