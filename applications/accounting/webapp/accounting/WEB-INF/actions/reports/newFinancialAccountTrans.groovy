@@ -238,11 +238,16 @@ if (organizationPartyId) {
 					
 					debitAmount = BigDecimal.ZERO;
 					creditAmount = BigDecimal.ZERO;
+					paymentGroupDebitAmount = BigDecimal.ZERO;
+					paymentGroupCreditAmount = BigDecimal.ZERO;
+					
+					paymentDebitAmount = BigDecimal.ZERO;
+					paymentCreditAmount = BigDecimal.ZERO;
 					
 					acctgTransEntry = acctgTransAndEntries[j];
-					if(newAcctgTransAndEntries.contains(acctgTransEntry)){
+					/*if(newAcctgTransAndEntries.contains(acctgTransEntry)){
 						continue;
-					}
+					}*/
 					openingBalance = closingBalance;
 					paymentId = acctgTransEntry.paymentId;
 					paymentGroupId = null;
@@ -263,7 +268,7 @@ if (organizationPartyId) {
 									   paymentGroupIds = EntityUtil.getFieldListFromEntityList(newPaymentGroupMemberList, "paymentId", true);
 									   groupPaymentList = EntityUtil.filterByAnd(acctgTransAndEntries, [EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentGroupIds)]);
 									   groupPaymentList.each { groupPayment ->
-										   if(groupPayment.debitCreditFlag == "D"){
+										   /*if(groupPayment.debitCreditFlag == "D"){
 											   groupDebitAmount = groupPayment.amount;
 											   totalDebitAmount = totalDebitAmount+groupDebitAmount;
 											   debitAmount = totalDebitAmount; 
@@ -272,7 +277,7 @@ if (organizationPartyId) {
 											   groupCreditAmount = groupPayment.amount;
 											   totalCreditAmount = totalCreditAmount+groupCreditAmount;
 											   creditAmount = totalCreditAmount;
-										   }
+										   }*/
 									   }
 									   newAcctgTransAndEntries.addAll(groupPaymentList);
 									   
@@ -294,7 +299,7 @@ if (organizationPartyId) {
 											   }
 										   }
 										   paymentGroupRefNum = paymentGroup.paymentRefNum;
-										  // paymentGroupAmount = paymentGroup.amount;
+										   paymentGroupAmount = paymentGroup.amount;
 										   paymentGroupComments = paymentGroup.inFavor;
 									   }
 								   }
@@ -421,14 +426,18 @@ if (organizationPartyId) {
 						}*/
 					//}
 					if(acctgTransEntry.debitCreditFlag == "D"){
-						if(UtilValidate.isEmpty(paymentGroupId)){
+						//if(UtilValidate.isEmpty(paymentGroupId)){
 							debitAmount = acctgTransEntry.amount;
-						}
+							paymentGroupDebitAmount = paymentGroupAmount;
+							paymentDebitAmount = debitAmount;
+						//}
 					}
 					if(acctgTransEntry.debitCreditFlag == "C"){
-						if(UtilValidate.isEmpty(paymentGroupId)){
+						//if(UtilValidate.isEmpty(paymentGroupId)){
 							creditAmount = acctgTransEntry.amount;
-						}
+							paymentGroupCreditAmount = paymentGroupAmount;
+							paymentCreditAmount = creditAmount;
+						//}
 					}
 					closingBalance = (openingBalance+debitAmount-creditAmount);
 					
@@ -481,27 +490,30 @@ if (organizationPartyId) {
 					acctgTransEntryMap["transactionDate"] = transactionDateStr;
 					acctgTransEntryMap["transactionDateStamp"] = transactionDate;
 					if(UtilValidate.isNotEmpty(paymentId)){
+						if(UtilValidate.isNotEmpty(paymentTransSequenceId)){
+							acctgTransEntryMap["paymentTransSequenceId"] = paymentTransSequenceId;
+						}
+						acctgTransEntryMap["paymentId"] = paymentId;
+						acctgTransEntryMap["partyId"] = partyId;
+						acctgTransEntryMap["partyName"] = partyName;
+						acctgTransEntryMap["description"] = paymentTypeDescription;
+						acctgTransEntryMap["comments"] = paymentComments;
+						acctgTransEntryMap["paymentMethodTypeDes"] = paymentMethodTypeDes;
+						acctgTransEntryMap["instrumentNum"] = instrumentNum;
+						acctgTransEntryMap["paymentDebitAmount"] = paymentDebitAmount;
+						acctgTransEntryMap["paymentCreditAmount"] = paymentCreditAmount;
 						if(UtilValidate.isNotEmpty(paymentGroupId)){
-							acctgTransEntryMap["paymentId"] = paymentGroupId;
-							acctgTransEntryMap["partyId"] = " ";
+							acctgTransEntryMap["paymentGroupId"] = paymentGroupId;
+							acctgTransEntryMap["paymentGroupPartyId"] = " ";
 							paymentgroup=delegator.findOne("PaymentGroup", ["paymentGroupId" :paymentGroupId], false);
 							paymentGroupType = delegator.findOne("PaymentGroupType", [paymentGroupTypeId : paymentGroupTypeId], false);
-							acctgTransEntryMap["partyName"] = paymentGroupType.description;
-							acctgTransEntryMap["description"] = paymentGroupType.description;
-							acctgTransEntryMap["comments"] = paymentGroupComments;
-							acctgTransEntryMap["paymentMethodTypeDes"] = paymentGroupMethodTypeDes;
-							acctgTransEntryMap["instrumentNum"] = paymentGroupRefNum;
-						}else{
-							if(UtilValidate.isNotEmpty(paymentTransSequenceId)){
-								acctgTransEntryMap["paymentTransSequenceId"] = paymentTransSequenceId;
-							}
-							acctgTransEntryMap["paymentId"] = paymentId;
-							acctgTransEntryMap["partyId"] = partyId;
-							acctgTransEntryMap["partyName"] = partyName;
-							acctgTransEntryMap["description"] = paymentTypeDescription;
-							acctgTransEntryMap["comments"] = paymentComments;
-							acctgTransEntryMap["paymentMethodTypeDes"] = paymentMethodTypeDes;
-							acctgTransEntryMap["instrumentNum"] = instrumentNum;
+							acctgTransEntryMap["paymentGroupPartyName"] = paymentGroupType.description;
+							acctgTransEntryMap["paymentGroupDescription"] = paymentGroupType.description;
+							acctgTransEntryMap["paymentGroupComments"] = paymentGroupComments;
+							acctgTransEntryMap["paymentGroupMethodTypeDes"] = paymentGroupMethodTypeDes;
+							acctgTransEntryMap["paymentGroupInstrumentNum"] = paymentGroupRefNum;
+							acctgTransEntryMap["paymentGroupDebitAmount"] = paymentGroupDebitAmount;
+							acctgTransEntryMap["paymentGroupCreditAmount"] = paymentGroupCreditAmount;
 						}
 					}else{
 						if(UtilValidate.isNotEmpty(transSequenceId)){
@@ -623,6 +635,19 @@ financialAcctgTransList.each{ dayFinAccount ->
 			//dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
+			//payment group here
+			dayFinAccountMap["paymentGroupId"] = dayFinAccount.paymentGroupId;
+			dayFinAccountMap["paymentGroupPartyId"] = dayFinAccount.paymentGroupPartyId;
+			dayFinAccountMap["paymentGroupPartyName"] = dayFinAccount.paymentGroupPartyName;
+			dayFinAccountMap["paymentGroupDescription"] = dayFinAccount.paymentGroupDescription;
+			dayFinAccountMap["paymentGroupComments"] = dayFinAccount.paymentGroupComments;
+			dayFinAccountMap["paymentGroupMethodTypeDes"] = dayFinAccount.paymentGroupMethodTypeDes;
+			dayFinAccountMap["paymentGroupInstrumentNum"] = dayFinAccount.paymentGroupInstrumentNum;
+			dayFinAccountMap["paymentGroupDebitAmount"] = dayFinAccount.paymentGroupDebitAmount;
+			dayFinAccountMap["paymentGroupCreditAmount"] = dayFinAccount.paymentGroupCreditAmount;
+			
+			dayFinAccountMap["paymentDebitAmount"] = dayFinAccount.paymentDebitAmount;
+			dayFinAccountMap["paymentCreditAmount"] = dayFinAccount.paymentCreditAmount;
 			//dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
 			tempDayTotalsMap = [:];
 			tempDayTotalsMap.putAll(dayFinAccountMap);
@@ -681,9 +706,6 @@ if(UtilValidate.isNotEmpty(dayFinAccountTransList)){
 	}
 }
 context.dayFinAccountTransList = finalFinAccntTransList;
-
-
-
 
 
 

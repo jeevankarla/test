@@ -23,10 +23,10 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-            margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".5in">
+            margin-top="0.2in" margin-bottom=".3in" margin-left=".2in" margin-right=".2in">
         <fo:region-body margin-top="1.4in"/>
-        <fo:region-before extent="1.5in"/>
-        <fo:region-after extent="1.5in"/>        
+        <fo:region-before extent="1in"/>
+        <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
@@ -39,32 +39,44 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<#assign finAccountId=parameters.finAccountId>
 		          <#assign finAccountDetails = delegator.findOne("FinAccount", {"finAccountId" : finAccountId}, true)>
-                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">${(finAccountDetails.finAccountName)?if_exists} Book From ${fromDateStr} To ${thruDateStr}	</fo:block>
+                    <fo:block text-align="center" font-size="11pt" keep-together="always"  white-space-collapse="false" font-weight="bold">${(finAccountDetails.finAccountName)?if_exists} Book From ${fromDateStr} To ${thruDateStr}	</fo:block>
               		<fo:block>
 	                 	<fo:table border-style="solid">
+                    	<fo:table-column column-width="85pt"/>
+                    	<fo:table-column column-width="120pt"/>
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="175pt"/>
-                    	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="100pt"/>
-               	    	<fo:table-column column-width="200pt"/>
-            			<fo:table-column column-width="125pt"/> 		
-            			<fo:table-column column-width="125pt"/>
+                    	<fo:table-column column-width="80pt"/>
+               	    	<fo:table-column column-width="60pt"/>
+            			<fo:table-column column-width="200pt"/> 		
+            			<fo:table-column column-width="80pt"/>
+            			<fo:table-column column-width="80pt"/>
+            			<fo:table-column column-width="120pt"/>
+            			<fo:table-column column-width="120pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Sequence Id</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
+                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">PartyName</fo:block> 
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Payment Details</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.MethodType</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.MethType</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Inst.No</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">PartyName</fo:block> 
+                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Description</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
+                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.Amnt</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
+                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Bat.Paymnt</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Debit Amount</fo:block>  
@@ -80,16 +92,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table border-style="solid">
+                    	<fo:table-column column-width="85pt"/>
+                    	<fo:table-column column-width="120pt"/>
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="175pt"/>
-                    	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="100pt"/>
-               	    	<fo:table-column column-width="200pt"/>
-            			<fo:table-column column-width="125pt"/> 		
-            			<fo:table-column column-width="125pt"/>
+                    	<fo:table-column column-width="80pt"/>
+               	    	<fo:table-column column-width="60pt"/>
+            			<fo:table-column column-width="200pt"/> 		
+            			<fo:table-column column-width="80pt"/>
+            			<fo:table-column column-width="80pt"/>
+            			<fo:table-column column-width="120pt"/>
+            			<fo:table-column column-width="120pt"/>
                     <fo:table-body>
                     	<#assign lineNo = 0>
                     	<#assign oldTransactionDate =  "nodate">
+                    	<#assign oldpaymentGroupId =  "no">
                     	<#list dayFinAccountTransList as finAcctngDetails>
                     		<#assign transactionDate = (finAcctngDetails.get("transactionDate")?if_exists)/>
                     		<#assign paymentTransSequenceId = (finAcctngDetails.get("paymentTransSequenceId")?if_exists)/>
@@ -110,12 +126,26 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign openingBal = (finAcctngDetails.get("openingBal")?if_exists)/>
 	                		<#assign closingBal = (finAcctngDetails.get("closingBal")?if_exists)/>
 	                		
+	                		<#assign paymentGroupId = (finAcctngDetails.get("paymentGroupId")?if_exists)/>
+	                		<#assign paymentGroupPartyId = (finAcctngDetails.get("paymentGroupPartyId")?if_exists)/>
+	                		<#assign paymentGroupPartyName = (finAcctngDetails.get("paymentGroupPartyName")?if_exists)/>
+	                		<#assign paymentGroupComments = (finAcctngDetails.get("paymentGroupComments")?if_exists)/>
+	                		<#assign paymentGroupMethodTypeDes = (finAcctngDetails.get("paymentGroupMethodTypeDes")?if_exists)/>
+	                		<#assign paymentGroupDescription = (finAcctngDetails.get("paymentGroupDescription")?if_exists)/>
+	                		<#assign paymentGroupDebitAmount = (finAcctngDetails.get("paymentGroupDebitAmount")?if_exists)/>
+	                		<#assign paymentGroupCreditAmount = (finAcctngDetails.get("paymentGroupCreditAmount")?if_exists)/>
+	                		<#assign paymentGroupInstrumentNum = (finAcctngDetails.get("paymentGroupInstrumentNum")?if_exists)/>
+	                		
+	                		<#assign paymentDebitAmount = (finAcctngDetails.get("paymentDebitAmount")?if_exists)/>
+	                		<#assign paymentCreditAmount = (finAcctngDetails.get("paymentCreditAmount")?if_exists)/>
+	                		
+	                		
 	                		<#if ((paymentId)?has_content)>
 								<#if (paymentId != "DAY TOTAL")>
 								<#if oldTransactionDate == "nodate" ||  oldTransactionDate != transactionDate>
 	                		<fo:table-row>
 									<fo:table-cell>
-	                            		<fo:block  text-align="left" keep-together="always" font-weight = "bold" font-size="13pt" white-space-collapse="false"> 
+	                            		<fo:block  text-align="left" keep-together="always" font-weight = "bold" font-size="12pt" white-space-collapse="false"> 
                                              Date: ${transactionDate?if_exists}
                                       </fo:block>  
 	                       			</fo:table-cell>
@@ -125,7 +155,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
-				       				
+				       				<fo:table-cell>
+	                                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                                </fo:table-cell>
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
@@ -133,12 +165,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
 				       				<fo:table-cell>
-	                                    <fo:block text-align="right" font-size="13pt" font-weight = "bold" keep-together="always"> 
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" font-weight = "bold" keep-together="always"> 
 	                                        Opening Balance:
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                       			<fo:table-cell>
-	                                    <fo:block text-align="right" font-size="13pt" font-weight = "bold" keep-together="always"> 
+	                                    <fo:block text-align="right" font-size="12pt" font-weight = "bold" keep-together="always"> 
 	                                         <#if openingBal?has_content>${(openingBal)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
@@ -146,14 +184,73 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                       	<#else>
 	                       		<fo:table-row>
 		                       		<fo:table-cell>
-		                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+		                            		<fo:block  text-align="left" keep-together="always" font-size="12pt" white-space-collapse="false"> 
 	                                      </fo:block>  
 		                       		</fo:table-cell>
 		                       	</fo:table-row>
 	                       	</#if>
 	                       	</#if>
 	                       	</#if>
-	                       		<fo:table-row>
+	                       	<fo:table-row>
+									<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+								</fo:table-row>
+	                       <#if oldpaymentGroupId == "no" ||  oldpaymentGroupId != paymentGroupId>
+                              <#if paymentGroupId?has_content>
+                              <fo:table-row>
+				       				<fo:table-cell  >
+	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">${paymentGroupMethodTypeDes?if_exists}
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">${paymentGroupInstrumentNum?if_exists}
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <#if paymentGroupDescription?has_content>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">${paymentGroupDescription?if_exists}(${paymentGroupId?if_exists})
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <#elseif paymentGroupComments?has_content>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">${paymentGroupComments?if_exists}
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                </#if>
+	                                <fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell>
+	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">Y
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell >
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">${paymentGroupDebitAmount?if_exists?string("##0.00")}
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">${paymentGroupCreditAmount?if_exists?string("##0.00")}
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <#assign oldpaymentGroupId = paymentGroupId> 
+                              </fo:table-row>
+                              </#if>
+                              </#if>
+                              	<fo:table-row>
 									<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
@@ -163,151 +260,193 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 										<#if (paymentId != "DAY TOTAL")>
 		                       			<#if paymentTransSequenceId?has_content>
 		                       			<fo:table-cell >
-		                            		<fo:block  text-align="left" font-size="11pt" white-space-collapse="false"> 
+		                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"> 
 	                                             ${paymentTransSequenceId?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>
 		                       			<#else>
 		                       			<fo:table-cell font-weight="bold">
-		                            		<fo:block  keep-together="always" text-align="left" font-size="13pt" white-space-collapse="false"> 
+		                            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> 
 	                                      </fo:block>  
 		                       			</fo:table-cell>
 		                       			</#if>
-		                       			<fo:table-cell >
-		                            		<fo:block  text-align="left" font-size="11pt" white-space-collapse="false"> 
-	                                             ${paymentId?if_exists}/${description?if_exists}
-	                                      </fo:block>  
-		                       			</fo:table-cell>
-		                       			
-		                       			</#if>
-	                       			<#else>
-	                       			<fo:table-cell >
-	                                    <fo:block text-align="center"></fo:block>
-	                                </fo:table-cell>
-	                                </#if>	
-                                	<#if ((paymentMethodTypeDes)?has_content)>
-                                	<fo:table-cell>
-	                                    <fo:block font-size="13pt" text-align="center">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
-	                                </fo:table-cell>
-                                 	<#else>
-                                 	<fo:table-cell >
-	                                    <fo:block text-align="center"></fo:block>
-	                                </fo:table-cell>
-                                	</#if>
-                                	<#if ((instrumentNum)?has_content)>
-                                	<fo:table-cell >
-	                                    <fo:block font-size="13pt" text-align="left">${(instrumentNum)}</fo:block>
-	                                </fo:table-cell>
-                                 	<#else>
-                                 	<fo:table-cell >
-	                                    <fo:block text-align="center"></fo:block>
-	                                </fo:table-cell>
-                                	</#if>
-                                	<#--> <#if ((partyId)?has_content)>
-                                	<fo:table-cell>
-	                                    <fo:block font-size="13pt" text-align="left">${(partyId)}</fo:block>
-	                                </fo:table-cell>
-                                 	<#else>
-                                 	<fo:table-cell >
-	                                    <fo:block text-align="left">${finAccountOwnerPartyId?if_exists}</fo:block>
-	                                </fo:table-cell>
-                                	</#if>  --> 
-                                	<#if (paymentId != "DAY TOTAL")>
+		                       			<#if (paymentId != "DAY TOTAL")>
                                 		<#if finAccountPartyName?has_content>
                                 		<fo:table-cell >
-                                    		<fo:block text-align="left" font-size="13pt">
+                                    		<fo:block text-align="left" font-size="12pt">
                                             	${partyName?if_exists}/${finAccountPartyName?if_exists}<#if ((partyId)?has_content)>(${(partyId)}) 	<#else>(${finAccountOwnerPartyId?if_exists})</#if>
                                             	
                                     		</fo:block>
 	                                	</fo:table-cell>
 	                                	 <#else>
 	                                	 <fo:table-cell >
-                                    		<fo:block text-align="left" font-size="13pt">
+                                    		<fo:block text-align="left" font-size="12pt">
                                             	${partyName?if_exists}<#if ((partyId)?has_content)>(${(partyId)}) 	<#else>(${finAccountOwnerPartyId?if_exists})</#if>
                                     		</fo:block>
 	                                	</fo:table-cell>
 	                                	</#if>
-	                                <#else>
-	                                	<fo:table-cell >
-                                    		<fo:block text-align="left" font-size="13pt">
-                                    		</fo:block>
-                                    	 </fo:table-cell>
-                                	</#if>
-                                	<#if (paymentId != "DAY TOTAL")>
-	                                <fo:table-cell >
-	                                    <fo:block text-align="right" font-size="13pt">
-	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell >
-	                                    <fo:block text-align="right" font-size="13pt">
-	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <#else>
-	                                <fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-				       				<fo:table-cell font-weight="bold">
-		                            		<fo:block  keep-together="always" text-align="right" font-size="13pt" white-space-collapse="false"> 
-	                                             ${paymentId?if_exists}
-	                                      </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell  font-weight="bold">
-	                                    <fo:block text-align="right" font-size="13pt">
-	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell  font-weight="bold">
-	                                    <fo:block text-align="right" font-size="13pt">
-	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
-	                                    </fo:block>
+		                                <#else>
+		                                	<fo:table-cell >
+	                                    		<fo:block text-align="left" font-size="12pt">
+	                                    		</fo:block>
+	                                    	 </fo:table-cell>
+	                                	</#if>
+		                       			<fo:table-cell >
+		                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"> 
+	                                             ${paymentId?if_exists}/${description?if_exists}
+	                                      </fo:block>  
+		                       			</fo:table-cell>
+		                       			</#if>
+	                       			<#else>
+	                       			<fo:table-cell >
+	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
 	                                </#if>
-                              </fo:table-row>
-                              
-									<#if ((comments)?has_content)>
-									<fo:table-row>
-                                	<fo:table-cell>
-	                                    <fo:block text-align="left"  font-size="12pt">Description:  ${(comments)}</fo:block>
+	                                <#if paymentGroupId?has_content>
+	                                <fo:table-cell >
+	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
-	                                </fo:table-row>
+	                                <#else>
+                                	<#if ((paymentMethodTypeDes)?has_content)>
+                                	<fo:table-cell>
+	                                    <fo:block font-size="12pt" text-align="center">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
+	                                </fo:table-cell>
                                  	<#else>
-                                 	<fo:table-row>
+                                 	<fo:table-cell >
+	                                    <fo:block text-align="center"></fo:block>
+	                                </fo:table-cell>
+                                	</#if>
+                                	</#if>
+                                	<#if ((instrumentNum)?has_content)>
+                                	<fo:table-cell >
+	                                    <fo:block font-size="12pt" text-align="left">${(instrumentNum)}</fo:block>
+	                                </fo:table-cell>
+                                 	<#else>
+                                 	<fo:table-cell >
+	                                    <fo:block text-align="center"></fo:block>
+	                                </fo:table-cell>
+                                	</#if>
+                                	<#if ((comments)?has_content)>
+                                	<fo:table-cell>
+	                                    <fo:block text-align="left"  font-size="11pt"> ${(comments)}</fo:block>
+	                                </fo:table-cell>
+                                 	<#else>
                                  	<fo:table-cell>
 	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
-	                                </fo:table-row>	
                                 	</#if>
-	                       		
+                                	<#if paymentGroupId?has_content>
+	                                	<#if (paymentId != "DAY TOTAL")>
+		                                	<#if paymentDebitAmount?has_content && paymentDebitAmount !=0>
+				                                <fo:table-cell >
+				                                    <fo:block text-align="right" font-size="12pt">
+				                                          <#if paymentDebitAmount?has_content>${(paymentDebitAmount)?string("##0.00")}<#else>0.00</#if>
+				                                    </fo:block>
+				                                </fo:table-cell>
+				                            <#else>
+				                            	<#if paymentCreditAmount?has_content && paymentCreditAmount !=0>
+					                                <fo:table-cell>
+					                                	<fo:block text-align="right" font-size="12pt">
+					                                  		 <#if paymentCreditAmount?has_content>${(paymentCreditAmount)?string("##0.00")}<#else>0.00</#if>
+					                                    </fo:block>
+					                                </fo:table-cell>
+			                                	</#if>
+			                          	 </#if>
+		                           	</#if>
+		                           </#if>
+		                            <fo:table-cell>
+	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <#if paymentGroupId?has_content>
+	                                <fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <#else>
+	                                	<#if (paymentId != "DAY TOTAL")>
+	                                	<fo:table-cell>
+					            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					       				</fo:table-cell>
+		                                <fo:table-cell >
+		                                    <fo:block text-align="right" font-size="12pt">
+		                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
+		                                    </fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell >
+		                                    <fo:block text-align="right" font-size="12pt">
+		                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
+		                                    </fo:block>
+		                                </fo:table-cell>
+		                                <#else>
+		                                <fo:table-cell>
+					            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					       				</fo:table-cell>
+					       				<fo:table-cell>
+				            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       					</fo:table-cell>
+					       				<fo:table-cell>
+					            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					       				</fo:table-cell>
+					       				<fo:table-cell font-weight="bold">
+			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"> 
+		                                             ${paymentId?if_exists}
+		                                      </fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell  font-weight="bold">
+		                                    <fo:block text-align="right" font-size="12pt">
+		                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
+		                                    </fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell  font-weight="bold">
+		                                    <fo:block text-align="right" font-size="12pt">
+		                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
+		                                    </fo:block>
+		                                </fo:table-cell>
+		                                </#if>
+	                                </#if>
+                              </fo:table-row>
                               <#if (paymentId == "DAY TOTAL")>
-                             
                               <fo:table-row>
 				       				<fo:table-cell  font-weight="bold">
-	                                    <fo:block text-align="right" font-size="13pt" keep-together = "always">
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
 	                                    </fo:block>
 	                                </fo:table-cell>
 				       				<fo:table-cell  font-weight="bold">
-	                                    <fo:block text-align="right" font-size="13pt" keep-together = "always">
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve"></fo:block>
 				       				</fo:table-cell>
 	                                <fo:table-cell  font-weight="bold">
-	                                    <fo:block text-align="right" font-size="13pt" keep-together = "always">
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve"></fo:block>
 				       				</fo:table-cell>
 				       				<fo:table-cell>
-	                                    <fo:block text-align="right" font-size="13pt" keep-together="always" font-weight = "bold"> 
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">
+	                                    </fo:block>
+	                                </fo:table-cell>
+				       				<fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together="always" font-weight = "bold"> 
 	                                        Closing Balance:
 	                                    </fo:block>
 	                                </fo:table-cell>
                               		<fo:table-cell>
-	                                    <fo:block text-align="right" font-size="13pt" keep-together="always" font-weight = "bold"> 
+	                                    <fo:block text-align="right" font-size="12pt" keep-together="always" font-weight = "bold"> 
 	                                      	<#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
