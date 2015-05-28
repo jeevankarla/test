@@ -26,7 +26,27 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.*;
+import javolution.util.FastMap;
+import javolution.util.FastList;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.EntityListIterator;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
+import javolution.util.FastMap;
+import javolution.util.FastList;
+
+import org.ofbiz.base.util.UtilMisc;
+dctx = dispatcher.getDispatchContext();
 productionRunId = parameters.productionRunId;
 if (productionRunId) {
     ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
@@ -79,3 +99,48 @@ if (productionRunId) {
         }
     }
 }
+List facilityList=FastList.newInstance();
+List facilityIds=FastList.newInstance();
+facilityList=context.get("facilityList");
+facilityIds=EntityUtil.getFieldListFromEntityList(facilityList,"facilityId", true);
+List condList=FastList.newInstance();
+List workEffortList=FastList.newInstance();
+List productIds=FastList.newInstance();
+List productList=FastList.newInstance();
+JSONObject productNameObj = new JSONObject();
+JSONObject workEffortObj = new JSONObject();
+JSONObject facilityWorkEffObj=new JSONObject();
+if(UtilValidate.isNotEmpty(facilityIds)){
+	condList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds));
+}
+condList.add(EntityCondition.makeCondition("workEffortTypeId",EntityOperator.EQUALS,"ROUTING"));
+EntityCondition con=EntityCondition.makeCondition(condList,EntityOperator.AND);
+
+workEffortList=delegator.findList("WorkEffortAndGoods",con,UtilMisc.toSet("workEffortId","description","productId","facilityId"),null,null,false);
+productIds=EntityUtil.getFieldListFromEntityList(workEffortList,"productId",true);
+productList=delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,productIds),UtilMisc.toSet("productId","description","internalName"),null,null,false);
+productIds.each{productId->
+	productNames=EntityUtil.filterByCondition(productList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+	productNameObj.put(productId, productNames.description);
+}
+workEffortList.each{workEffort->
+	workEffortObj.put(workEffort.workEffortId, workEffort.productId);
+}
+facilityIds.each{facilityId->
+	JSONArray arrayJSON = new JSONArray();
+	workEffort=EntityUtil.filterByCondition(workEffortList,EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,facilityId));
+	workEffort.each{effort->
+		JSONObject newObj=new JSONObject();
+		newObj.put("workEffortId",effort.workEffortId);
+		newObj.put("description", effort.description);
+		arrayJSON.add(newObj);
+	}
+	if(UtilValidate.isNotEmpty(arrayJSON)){
+	facilityWorkEffObj.put(facilityId, arrayJSON);
+	}
+}
+context.workEffortList=workEffortList;
+context.productNameObj=productNameObj;
+context.workEffortObj=workEffortObj;
+context.facilityWorkEffObj=facilityWorkEffObj;
+//Debug.log("facilityWorkEffObj#####################"+facilityWorkEffObj);

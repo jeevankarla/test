@@ -311,6 +311,8 @@ under the License.
                     <field-map field-name="workEffortId" from-field="productionRunId"/>
                 </entity-one>
                 <!-- <script location="component://production/webapp/production/WEB-INF/actions/productsForProductionRunJsons.groovy"/> -->
+                <set field="parameters.facilityTypeId" value="PLANT"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/ViewProductionRun.groovy"/>
                 <!-- Find all the work efforts that must be completed before this one. -->
                 <entity-condition entity-name="WorkEffortGoodStandard" list="taskAttributes">
@@ -318,9 +320,9 @@ under the License.
                         <condition-expr field-name="workEffortId" from-field="startTaskId"/>
                     </condition-list>
                 </entity-condition>
-                <entity-condition list="storeList" entity-name="Facility">
+                <!-- <entity-condition list="storeList" entity-name="Facility">
                 	<condition-expr field-name="facilityTypeId" value="PLANT"/>
-                </entity-condition>
+                </entity-condition> -->
             </actions>
             <widgets>
            		<decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -574,6 +576,8 @@ under the License.
                 <set field="tabButtonItem1" value="productionRun"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
+                <set field="facilityListFlag" value="${facilityListFlag}"/>
             </actions>
             <widgets>
                 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">

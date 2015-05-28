@@ -84,6 +84,9 @@
 	var availProdTagsGrid1;
 	var availFacilityTagsGrid1 = [];
 	var productDetails = [];
+	var productNameObj= ${StringUtil.wrapString(productNameObj)!'[]'};
+    var workEffortObj= ${StringUtil.wrapString(workEffortObj)!'[]'};
+    var facilityWorkEffObj=${StringUtil.wrapString(facilityWorkEffObj)!'[]'};
 	var data = [];
 	var taskEffortId;
 	var gridEditable = 'Y';
