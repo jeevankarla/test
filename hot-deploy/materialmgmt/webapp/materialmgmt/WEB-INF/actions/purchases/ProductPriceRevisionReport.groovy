@@ -25,9 +25,10 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
-fromDate=parameters.fromDateProduct;
-thruDate=parameters.thruDateProduct;
+fromDate=parameters.prodPriceFromDate;
+thruDate=parameters.prodPriceThruDate;
 categoryType=parameters.categoryType;
+productId = parameters.productId;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -43,6 +44,7 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
+
 totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
 if(totalDays > 32){
@@ -51,53 +53,68 @@ if(totalDays > 32){
 	return;
 }
 List conditionList = [];
+productPriceTypeIdList= ["DEFAULT_PRICE","MRP_PRICE","UTP_PRICE","MRP_IS","MRP_OS"];
+
 if(UtilValidate.isNotEmpty(categoryType)){
-	conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS , categoryType));
+	conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS , categoryType));
 }
-conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-				                                         EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-productCategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+if(UtilValidate.isNotEmpty(productId)){
+	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , productId));
+}
+conditionList.add(EntityCondition.makeCondition("productTypeId",EntityOperator.EQUALS,"FINISHED_GOOD"));
+conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId",EntityOperator.NOT_IN,UtilMisc.toList("BOX","CAN","CRATE")));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+	                  EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+productCatDetails = delegator.findList("Product", condition, null, null, null, false);
 ProductCatMap = [:];
-if(UtilValidate.isNotEmpty(productCategoryMember)){
-	productCatIds = EntityUtil.getFieldListFromEntityList(productCategoryMember, "productCategoryId", true);
-	productCatIds.each{eachProductCat->
-		
-		productDetails = EntityUtil.filterByCondition(productCategoryMember, EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, eachProductCat));
+if(UtilValidate.isNotEmpty(productCatDetails)){
+	productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails, "primaryProductCategoryId", true);
+	productCatIds.each{eachProductCat ->
+		productDetails = EntityUtil.filterByCondition(productCatDetails, EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, eachProductCat));
 		if(UtilValidate.isNotEmpty(productDetails)){
 			productIds = EntityUtil.getFieldListFromEntityList(productDetails, "productId", true);
 			ProductMap = [:];
 			productIds.each{eachProductId->
 				
-					ProductPriceMap = [:];
-					ProductPriceList = [];
-					conditionList.clear();
-					conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachProductId));
-					condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-					productPrice = delegator.findList("ProductPrice", condition, null, null, null, false);
-					if(UtilValidate.isNotEmpty(productPrice)){
-						productPriceTypeIdIds = EntityUtil.getFieldListFromEntityList(productPrice, "productPriceTypeId", true);
-						productPriceTypeIdIds.each{eachproductPriceTypeIdId->
-							
-							productPriceDetails = EntityUtil.filterByCondition(productPrice, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, eachproductPriceTypeIdId));
-							price = productPriceDetails.get(0).get("price");
-							if(UtilValidate.isNotEmpty(price) && price != null){
-								ProductPriceMap.put(eachproductPriceTypeIdId, price);
-							}	
-						}
-						ProductPriceList.add(ProductPriceMap);
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachProductId));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+										 EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+				cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				productPrice = delegator.findList("ProductPrice", cond, null, null, null, false);
+				if(UtilValidate.isNotEmpty(productPrice)){
+					finalMap=[:];
+					productPrice.each{eachProdPrice->
+						fromDate=eachProdPrice.fromDate;
+						if((fromDate >= dayBegin) && (fromDate <= dayEnd)){
+							prodDetails = EntityUtil.filterByCondition(productPrice, EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, fromDate));
+							productPriceTypeIds = EntityUtil.getFieldListFromEntityList(prodDetails, "productPriceTypeId", true);
+							tempMap=[:];
+							productPriceTypeIds.each{eachproductPriceTypeId->
+	                            if(productPriceTypeIdList.contains(eachproductPriceTypeId)){  						
+									productPriceDetails = EntityUtil.filterByCondition(prodDetails, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, eachproductPriceTypeId));
+									price = productPriceDetails.get(0).get("price");
+									if(UtilValidate.isNotEmpty(price)){
+										tempMap.put(eachproductPriceTypeId, price);
+									}
+								}
+							}
+							if(UtilValidate.isNotEmpty(tempMap)){
+							   finalMap.put(fromDate, tempMap);
+							} 
+					   }	 
 					}
-					if(UtilValidate.isNotEmpty(ProductPriceList)){
-					    ProductMap.put(eachProductId, ProductPriceList);
-					}	
-		     }
-	     }
+				   if(UtilValidate.isNotEmpty(finalMap)){
+					   ProductMap.put(eachProductId, finalMap);
+				   }
+			   } 	   
+		 }
 		 if(UtilValidate.isNotEmpty(ProductMap)){
 			 ProductCatMap.put(eachProductCat, ProductMap);
-		 }	 
-    }
+		 }	
+	  }	 
+	}
 }
 context.ProductCatMap = ProductCatMap;
-
-	

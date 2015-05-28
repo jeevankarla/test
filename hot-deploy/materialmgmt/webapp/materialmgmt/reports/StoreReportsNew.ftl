@@ -603,7 +603,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				  </table>
                 </form>
 		   </tr>
-		 <tr class="alternate-row">
+		<#-- <tr class="alternate-row">
 			<form id="ProductPriceRevisionReport" name="ProductPriceRevisionReport" method="post" action="<@ofbizUrl>productPriceRevisionReport.pdf</@ofbizUrl>" target="_blank">        
                <table class="basic-table" cellspacing="5">
 				  <tr class="alternate-row">
@@ -627,7 +627,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	 		     </tr>
 			 </table>
           </form>
-		</tr>   
+		</tr>  --> 
 	  </table>
     </div>
   </div>
