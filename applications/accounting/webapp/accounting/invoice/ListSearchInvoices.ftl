@@ -363,7 +363,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 </form>
   <div>
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
-    <#if invoiceList?has_content><span class="label">Displaying <#if lowIndex?has_content>${lowIndex?if_exists}<#else>1</#if>-<#if highIndex?has_content>${highIndex?if_exists}<#else>50</#if></span></#if> 
+    <#if invoiceList?has_content><span class="label">Displaying <#if lowIndex?has_content>${lowIndex?if_exists}<#else>1</#if>-<#if highIndex?has_content>${highIndex?if_exists}<#else>${totalSize?if_exists}</#if></span></#if> 
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
     <span class="label" id="showInvoiceRunningTotal"></span>
   </div>

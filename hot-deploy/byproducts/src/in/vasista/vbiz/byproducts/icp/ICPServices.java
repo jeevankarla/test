@@ -1345,6 +1345,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			Debug.logError("Error cancelling invoices adn shipment : "+ shipmentId, module);
 			return ServiceUtil.returnError("Error cancelling invoices adn shipment : "+shipmentId);
 		}
+		result = ServiceUtil.returnSuccess("Shipment: "+shipmentId+" Cancelled Successfully !");
 		return result;
     }
 	
