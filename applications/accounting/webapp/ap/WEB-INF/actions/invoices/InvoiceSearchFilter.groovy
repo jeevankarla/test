@@ -9,6 +9,12 @@ import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 
+if(UtilValidate.isNotEmpty(result.listIt) && UtilValidate.isEmpty(parameters.VIEW_INDEX_1) && UtilValidate.isEmpty(parameters.VIEW_SIZE_1)){
+	listItr = result.listIt;
+	Integer	totalSize = listItr.size();
+	context.totalSize = totalSize;
+}
+
 if(UtilValidate.isNotEmpty(parameters.VIEW_INDEX_1) && UtilValidate.isNotEmpty(parameters.VIEW_SIZE_1) && UtilValidate.isNotEmpty(result.listIt)){
 	nextFlag = "Y";
 	prevFlag = "Y";
@@ -33,7 +39,7 @@ Integer	totalSize = listItr.size();
 		if(lowIndex <= 1){
 			prevFlag = "N";
 			lowIndex = 1;
-			highIndex = 50;
+			highIndex = totalSize;
 		}
 	invoiceList = [];
 	invoiceList = listItr.getPartialList(lowIndex, highIndex);
