@@ -2132,6 +2132,29 @@ under the License.
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestPartyStatus"
+            package-name="org.ofbiz.order.request"
+            title="Customer Request and Status Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="statusId"/>
+      <relation type="one" fk-name="CUST_REQST_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CREQ_RL_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CREQ_RL_PROLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="CustRequestStatus"
             package-name="org.ofbiz.order.request"
             title="Customer Request Status Entity">
