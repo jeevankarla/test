@@ -1293,6 +1293,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmplPositionView"/>
     </request-map>
+    <request-map uri="updateEmployeePosition">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmployeePosition"/>
+        <response name="success" type="view" value="EmplPositionView"/>
+    </request-map>
     <request-map uri="globalHRSettings">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditSkillTypes"/>

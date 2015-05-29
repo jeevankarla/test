@@ -1750,4 +1750,78 @@ public class HumanresService {
         result = ServiceUtil.returnSuccess("Employee weekly off calendar populated...!");
         return result;
     }
+    public static Map<String, Object> updateEmployeePosition(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Map result = ServiceUtil.returnSuccess();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> inMap = FastMap.newInstance();
+        String emplPositionId = (String)context.get("emplPositionId");
+        String emplPositionTypeId = (String)context.get("emplPositionTypeId");
+        String partyId = (String)context.get("partyId");
+        String fromDate = (String) context.get("actualFromDate");
+        Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+		Timestamp fromDateStart = null;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");	
+		try {
+    		fromDateStart = UtilDateTime.toTimestamp(sdf.parse(fromDate));
+		} catch (ParseException e) {
+		}
+		
+		 Timestamp timePeriodStart = UtilDateTime.getDayStart(fromDateStart);
+		 Timestamp prevDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(timePeriodStart, -1));
+		 
+        try{
+			List designationconditionList = FastList.newInstance();
+			designationconditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+			//designationconditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"EMPL_POS_ACTIVE"));
+			designationconditionList.add(EntityCondition.makeCondition("emplPositionId",EntityOperator.EQUALS,emplPositionId));
+			EntityCondition designationcondition = EntityCondition.makeCondition(designationconditionList,EntityOperator.AND);
+	    	List<GenericValue> emplPositionAndFulfillments = delegator.findList("EmplPositionFulfillment", designationcondition, null, null, null, false);
+			
+        	if(UtilValidate.isNotEmpty(emplPositionAndFulfillments)){
+        		GenericValue emplPositionFulfillments = EntityUtil.getFirst(emplPositionAndFulfillments);
+    			emplPositionFulfillments.set("thruDate",prevDayEnd);
+    			emplPositionFulfillments.store();
+        		
+        		if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+        			input.put("userLogin", userLogin);
+    	            input.put("partyId", partyId);
+    	            input.put("actualFromDate",timePeriodStart);
+    	            input.put("emplPositionTypeId", emplPositionTypeId);
+    	            input.put("statusId", "EMPL_POS_ACTIVE");
+    	            outMap = dispatcher.runSync("createEmplPosition", input);
+    	            if(ServiceUtil.isError(outMap)){
+    	           	 	Debug.logError("faild service create Employee Position:"+ServiceUtil.getErrorMessage(outMap), module);
+    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    	            }
+    	            if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+    	            	String newEmplPositionId = (String)outMap.get("emplPositionId");
+    	            	if (UtilValidate.isNotEmpty(newEmplPositionId)){
+    	            		input.clear();
+    	            		input.put("userLogin", userLogin);
+    			            input.put("partyId", partyId);
+    			            input.put("fromDate",timePeriodStart);
+    			            input.put("emplPositionId", newEmplPositionId);
+    			            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
+    			            if(ServiceUtil.isError(outMap)){
+    			           	 	Debug.logError("faild service create Employee Position Fulfillment:"+ServiceUtil.getErrorMessage(outMap), module);
+    			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+    			            }
+    	            	}
+    	            }
+				}
+        		result = ServiceUtil.returnSuccess("Employee position Updated successfully.");
+        	}else{
+        		result = ServiceUtil.returnError("This Designation already exists for employee");
+        	}
+        }catch (Exception e) {
+			/*Debug.logError(e, module);
+			return ServiceUtil.returnError("Error while creating  EmployeeDetail" + e);	*/
+		}
+       return result;
+    }
 }
