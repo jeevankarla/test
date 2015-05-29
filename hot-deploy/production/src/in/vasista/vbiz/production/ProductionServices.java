@@ -209,6 +209,103 @@ public class ProductionServices {
         return result;
     }// End of the Service
     
+    public static Map<String, Object> getProductionDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String workEffortId = (String)context.get("workEffortId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = FastMap.newInstance();
+            EntityListIterator returnItems = null;
+            EntityListIterator eli = null;
+            List issuedProductsList = FastList.newInstance();
+            List declareProductsList = FastList.newInstance();
+            List returnProductsList = FastList.newInstance();
+            try {
+            	List<GenericValue> workEffort = delegator.findList("WorkEffort", EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, workEffortId), null, UtilMisc.toList("workEffortId"), null, false);
+            	if(UtilValidate.isNotEmpty(workEffort)){
+		        	List<String> workEffortIds = EntityUtil.getFieldListFromEntityList(workEffort, "workEffortId", true);
+		            eli = delegator.find("InventoryItemAndDetail", EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds), null, null, null, null);
+		            GenericValue productionTrans;
+		            while ((productionTrans = eli.next()) != null) {
+		                Map issuedProductsMap = FastMap.newInstance();
+		                Map declareProductsMap = FastMap.newInstance();
+		                BigDecimal fatPercent = BigDecimal.ZERO;
+		                BigDecimal snfPercent = BigDecimal.ZERO;
+		                String productId = productionTrans.getString("productId");
+		            	BigDecimal quantityOnHandDiff = productionTrans.getBigDecimal("quantityOnHandDiff");
+		            	if(UtilValidate.isNotEmpty(productionTrans.getBigDecimal("fatPercent"))){
+		            	fatPercent = productionTrans.getBigDecimal("fatPercent");
+		            	}
+		            	if(UtilValidate.isNotEmpty(productionTrans.getBigDecimal("snfPercent"))){
+		            	snfPercent = productionTrans.getBigDecimal("snfPercent");
+		            	}
+		            	String returnId = productionTrans.getString("returnId");
+		             	if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) <= 0) && (UtilValidate.isEmpty(returnId))){
+		             		issuedProductsMap.put("issuedProdId",productId);
+		             		issuedProductsMap.put("issuedQty",quantityOnHandDiff);
+		             		issuedProductsMap.put("fatPercent",fatPercent);
+		             		issuedProductsMap.put("snfPercent",snfPercent);
+		             		issuedProductsList.add(issuedProductsMap);
+		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(returnId))){
+		                    String productBatchId = productionTrans.getString("productBatchId");
+		                 	if(UtilValidate.isNotEmpty(productBatchId)){
+		                    	List<GenericValue> productBatchSequence = delegator.findList("ProductBatchSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, productBatchId), null, UtilMisc.toList("sequenceId"), null, false);
+		                     	if(UtilValidate.isNotEmpty(productBatchSequence)){
+		                     		String batchNo = (EntityUtil.getFirst(productBatchSequence)).getString("sequenceId");
+		                 		    declareProductsMap.put("batchNo",batchNo);
+		                     	}
+		                 	}
+		             		declareProductsMap.put("declareProdId",productId);
+		             		declareProductsMap.put("declareQty",quantityOnHandDiff);
+		             		declareProductsMap.put("fatPercent",fatPercent);
+		             		declareProductsMap.put("snfPercent",snfPercent);
+		             		declareProductsList.add(declareProductsMap);
+		             	} 
+		            }
+		            eli.close();
+		            
+		            //List<String> orderBy = UtilMisc.toList("returnId","returnItemSeqId");
+	            	returnItems = delegator.find("ReturnHeaderAndItem", EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds), null, null, null, null);
+	            	if(UtilValidate.isNotEmpty(returnItems)){
+			            GenericValue returnTrans;
+			            while ((returnTrans = returnItems.next()) != null) {
+			                Map returnProductsMap = FastMap.newInstance();
+			                BigDecimal fatPercent = BigDecimal.ZERO;
+			                BigDecimal snfPercent = BigDecimal.ZERO;
+			                String returnProdId = returnTrans.getString("productId");
+			            	BigDecimal returnQty = returnTrans.getBigDecimal("quantityOnHandDiff");
+			            	if(UtilValidate.isNotEmpty(returnTrans.getBigDecimal("fatPercent"))){
+			            	fatPercent = returnTrans.getBigDecimal("fatPercent");
+			            	}
+			            	if(UtilValidate.isNotEmpty(returnTrans.getBigDecimal("snfPercent"))){
+			            	snfPercent = returnTrans.getBigDecimal("snfPercent");
+			            	}
+			            	String returnId = returnTrans.getString("returnId");
+			            	if(UtilValidate.isNotEmpty(returnId)){
+			             		returnProductsMap.put("returnId",returnId);
+			             		returnProductsMap.put("returnProdId",returnProdId);
+			             		returnProductsMap.put("returnQty",returnQty);
+			             		returnProductsMap.put("fatPercent",fatPercent);
+			             		returnProductsMap.put("snfPercent",snfPercent);
+			             		returnProductsList.add(returnProductsMap);
+			             	}
+			            }
+	            	}
+	            	returnItems.close();
+
+            	}
+            }
+            catch(GenericEntityException e){
+            	Debug.logError(e, module);
+            	return ServiceUtil.returnError(e.toString());
+            }
+            result.put("issuedProductsList",issuedProductsList);
+            result.put("declareProductsList",declareProductsList);
+            result.put("returnProductsList",returnProductsList);
+        	
+        return result;
+    }// End of the Service
+    
     public static String issueRoutingTaskNeededMaterial(HttpServletRequest request, HttpServletResponse response) {
 	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
 	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
