@@ -2043,7 +2043,6 @@ public class PayrollService {
 		                }else{
 		                	allBenDedPriceRules = EntityUtil.filterByDate(allBenDedPriceRules, true);
 		                }
-	               
 	                    Map priceResultRuleCtx = FastMap.newInstance();
 	                    priceResultRuleCtx.putAll(context);
 	                    priceResultRuleCtx.put("payHeadPriceRules", allBenDedPriceRules);
@@ -2419,15 +2418,33 @@ public class PayrollService {
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
                          if(UtilValidate.isNotEmpty(condParms)){
-                        	 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,timePeriodId , condParms, context)) {
-     	                        allTrue = false;
-     	                        break;
-     	                    }
+                        	 if(UtilValidate.isNotEmpty(basicSalDate)){
+                        		Timestamp basicSalDateStart = UtilDateTime.getDayStart(basicSalDate);
+                        		Timestamp basicSalDateEnd = UtilDateTime.getDayEnd(basicSalDate);
+                        		if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, basicSalDateStart ,basicSalDateEnd ,timePeriodId , condParms, context)) {
+         	                        allTrue = false;
+         	                        break;
+         	                     }
+                        	 }else{
+                        		 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,timePeriodId , condParms, context)) {
+          	                        allTrue = false;
+          	                        break;
+          	                     }
+                        	 }
                          }else{
-                        	 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd, timePeriodId ,null ,context)) {
-     	                        allTrue = false;
-     	                        break;
-     	                    }
+                        	 if(UtilValidate.isNotEmpty(basicSalDate)){
+                         		Timestamp basicSalDateStart = UtilDateTime.getDayStart(basicSalDate);
+                        		Timestamp basicSalDateEnd = UtilDateTime.getDayEnd(basicSalDate);
+                         		if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, basicSalDateStart ,basicSalDateEnd, timePeriodId ,null ,context)) {
+         	                        allTrue = false;
+         	                        break;
+         	                     }
+                        	 }else{
+                        		 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd, timePeriodId ,null ,context)) {
+          	                        allTrue = false;
+          	                        break;
+          	                     }
+                        	 }
                          }
                          Debug.logInfo("###allTrue each#########"+allTrue+"==================="+payrollBenDedCond , module);
                          condsDescription.append("[");
@@ -2751,7 +2768,6 @@ public class PayrollService {
 	        	if(UtilValidate.isNotEmpty(payRollRateTypes)){
 	        		 supportedVaribules.addAll(EntityUtil.getFieldListFromEntityList(payRollRateTypes, "rateTypeId", true));
 	        	}
-		        
 				for(int i= 0;i<varibuleKeyList.size();i++){
 					String varibuleKey = (String)varibuleKeyList.get(i);
 					if(supportedVaribules.contains(varibuleKey)){
@@ -2791,7 +2807,6 @@ public class PayrollService {
 		        	if(UtilValidate.isNotEmpty(rateAmountMap.get("variables"))){
 		        		variables.putAll((Map)rateAmountMap.get("variables"));
 		        	}
-		        	
 					double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 					evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
 				}
