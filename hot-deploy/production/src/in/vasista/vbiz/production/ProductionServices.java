@@ -221,7 +221,12 @@ public class ProductionServices {
             List declareProductsList = FastList.newInstance();
             List returnProductsList = FastList.newInstance();
             try {
-            	List<GenericValue> workEffort = delegator.findList("WorkEffort", EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, workEffortId), null, UtilMisc.toList("workEffortId"), null, false);
+            	List conditionList = FastList.newInstance();
+	            conditionList.add(EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, workEffortId));
+	            conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_COMPLETED"));
+	            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	List<GenericValue> workEffort = delegator.findList("WorkEffort", condition, null, UtilMisc.toList("workEffortId"), null, false);
+            	
             	if(UtilValidate.isNotEmpty(workEffort)){
 		        	List<String> workEffortIds = EntityUtil.getFieldListFromEntityList(workEffort, "workEffortId", true);
 		            eli = delegator.find("InventoryItemAndDetail", EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds), null, null, null, null);
