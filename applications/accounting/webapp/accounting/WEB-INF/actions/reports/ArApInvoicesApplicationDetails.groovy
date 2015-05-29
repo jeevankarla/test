@@ -65,7 +65,7 @@ userLogin= context.userLogin;
 
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
-purposeTypeId = parameters.purposeTypeId;
+typeId = parameters.typeId;
 
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
@@ -85,27 +85,29 @@ if(thruDateStr){
 fromDate = UtilDateTime.getDayStart(fromDateTs, timeZone, locale);
 thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
 
+invoiceType = delegator.findList("InvoiceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, typeId), null, null, null, false);
+
+invoiceTypeIds = EntityUtil.getFieldListFromEntityList(invoiceType, "invoiceTypeId", true);
+
+
 List conditionList=FastList.newInstance();
-if(purposeTypeId && purposeTypeId != 'All'){
-	conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,purposeTypeId));
+if(invoiceTypeIds){
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.IN, invoiceTypeIds));
 }
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
-EntityListIterator<GenericValue> invoicesRefIter = delegator.find("Invoice", condition, null, null, null, null);
+EntityListIterator<GenericValue> invoicesIter = delegator.find("Invoice", condition, null, UtilMisc.toSet("invoiceId", "invoiceTypeId", "invoiceMessage", "invoiceDate", "paidDate", "partyId", "partyIdFrom", "statusId"), null, null);
 
-invoiceIds = EntityUtil.getFieldListFromEntityListIterator(invoicesRefIter,"invoiceId", true);
-
-invoicesRefIter.close();
-
-EntityListIterator<GenericValue> invoicesIter = delegator.find("Invoice", EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds), null, null, null, null);
-
-List<GenericValue> paymentApplications = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, null, null ,false);
+//List<GenericValue> paymentApplications = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), UtilMisc.toSet("invoiceId", "paymentDate", "amount", "amountApplied", "partyIdFrom", "partyIdTo"), null, null ,false);
 
 invoiceApplicationDetailList = [];
-
+distinctPartyIds = [];
+partyNamesMap = [:];
+invoiceIds = [];
+invoiceDetailList = [];
 invoicesIter.each{ eachItem ->
 	invoiceAmt= InvoiceWorker.getInvoiceTotal(delegator,eachItem.invoiceId);
 	invoiceId = eachItem.invoiceId;
@@ -113,33 +115,83 @@ invoicesIter.each{ eachItem ->
 	if(partyId.equalsIgnoreCase("Company")){
 		partyId = eachItem.partyIdFrom
 	}
-	invoiceApplications = EntityUtil.filterByCondition(paymentApplications, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-	
-	if(invoiceApplications){
-		invoiceApplications.each{ eachApp ->
-			tempMap = [:];
-			tempMap["invoiceId"] = invoiceId;
-			tempMap["invoiceDate"] = eachItem.invoiceDate;
-			tempMap["partyId"] = partyId;
-			tempMap["paidDate"] = eachItem.paidDate;
-			tempMap["invoiceAmount"] = invoiceAmt;
-			tempMap["paymentId"] = eachApp.paymentId;
-			tempMap["paymentAmount"] = eachApp.amount;
-			tempMap["applicationAmount"] = eachApp.amountApplied;
-			invoiceApplicationDetailList.add(tempMap);
-		}
-	}else{
-		tempMap = [:];
-		tempMap["invoiceId"] = invoiceId;
-		tempMap["invoiceDate"] = eachItem.invoiceDate;
-		tempMap["partyId"] = partyId;
-		tempMap["paidDate"] = eachItem.paidDate;
-		tempMap["invoiceAmount"] = invoiceAmt;
-		tempMap["paymentId"] = "";
-		tempMap["paymentAmount"] = "";
-		tempMap["applicationAmount"] = "";
-		invoiceApplicationDetailList.add(tempMap);
+	partyName = "";
+	if(!distinctPartyIds.contains(partyId)){
+		distinctPartyIds.add(partyId);
+		partyName=PartyHelper.getPartyName(delegator, partyId, false);
+		partyNamesMap.put(partyId, partyName);
 	}
+	else{
+		partyName = partyNamesMap.get(partyId);
+	}
+	invoiceIds.add(invoiceId);
+	
+	tempMap = [:];
+	tempMap["invoiceId"] = invoiceId;
+	tempMap["invoiceType"] = eachItem.invoiceTypeId;
+	tempMap["invoiceDate"] = eachItem.invoiceDate;
+	tempMap["partyId"] = partyId;
+	tempMap["partyName"] = partyName;
+	tempMap["paidDate"] = eachItem.paidDate;
+	tempMap["invoiceAmount"] = invoiceAmt;
+	tempMap["paymentId"] = "";
+	tempMap["paymentDate"] = "";
+	tempMap["paymentAmount"] = "";
+	tempMap["applicationAmount"] = "";
+	invoiceDetailList.add(tempMap);
+		
 }
 invoicesIter.close();
-context.invoiceApplicationDetailList=invoiceApplicationDetailList;
+EntityListIterator<GenericValue> invoicesApplicationIter = delegator.find("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, UtilMisc.toSet("invoiceId", "paymentDate", "amount", "amountApplied", "partyIdFrom", "partyIdTo"), null, null);
+applicationMap = [:];
+invoicesApplicationIter.each{ eachApp ->
+	invoiceId = eachApp.invoiceId;
+	
+	tempMap = [:];
+	tempMap.put("paymentId", eachApp.paymentId);
+	tempMap.put("paymentDate", eachApp.paymentDate);
+	tempMap.put("paymentAmount", eachApp.amount);
+	tempMap.put("applicationAmount", eachApp.amountApplied);
+	
+	if(applicationMap.get(invoiceId)){
+		tempResList = applicationMap.get(invoiceId);
+		tempResList.add(tempMap);
+		applicationMap.put(invoiceId, tempResList);
+	}
+	else{
+		tempList = [];
+		tempList.add(tempMap);
+		applicationMap.put(invoiceId, tempList);
+	}
+}
+finalInvoiceDetailList = [];
+invoiceDetailList.each{ eachInvoiceDetail ->
+	invoiceId = eachInvoiceDetail.get("invoiceId");
+	if(applicationMap.get(invoiceId)){
+		applicationList = applicationMap.get(invoiceId);
+		applicationList.each{ eachApp ->
+			tempMap = [:];
+			tempMap["invoiceId"] = invoiceId;
+			tempMap["invoiceType"] = eachInvoiceDetail.get("invoiceType");
+			tempMap["invoiceDate"] = UtilDateTime.toDateString(eachInvoiceDetail.get("invoiceDate"), "dd/MM/yyyy");
+			tempMap["partyId"] = eachInvoiceDetail.get("partyId");
+			tempMap["partyName"] = eachInvoiceDetail.get("partyName");
+			tempMap["paidDate"] = "";
+			if(eachInvoiceDetail.get("paidDate")){
+				tempMap["paidDate"] = UtilDateTime.toDateString(eachInvoiceDetail.get("paidDate"), "dd/MM/yyyy");
+			}
+			tempMap["invoiceAmount"] = eachInvoiceDetail.get("invoiceAmount");
+			tempMap["paymentId"] = eachApp.get("paymentId");
+			tempMap["paymentDate"] = UtilDateTime.toDateString(eachApp.get("paymentDate"), "dd/MM/yyyy");
+			tempMap["paymentAmount"] = eachApp.get("paymentAmount");
+			tempMap["applicationAmount"] =  eachApp.get("applicationAmount");
+			finalInvoiceDetailList.add(tempMap);
+		}
+	}
+	else{
+		finalInvoiceDetailList.add(eachInvoiceDetail);
+	}
+}
+
+invoicesApplicationIter.close();
+context.invoiceApplicationDetailList=finalInvoiceDetailList;
