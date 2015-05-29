@@ -43,15 +43,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
               		<fo:block>
 	                 	<fo:table border-style="solid">
                     	<fo:table-column column-width="85pt"/>
+                    	<fo:table-column column-width="130pt"/>
+                    	<fo:table-column column-width="175pt"/>
                     	<fo:table-column column-width="120pt"/>
-                    	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="80pt"/>
-               	    	<fo:table-column column-width="60pt"/>
-            			<fo:table-column column-width="200pt"/> 		
-            			<fo:table-column column-width="80pt"/>
-            			<fo:table-column column-width="80pt"/>
-            			<fo:table-column column-width="120pt"/>
-            			<fo:table-column column-width="120pt"/>
+               	    	<fo:table-column column-width="80pt"/>
+            			<fo:table-column column-width="150pt"/> 		
+            			<fo:table-column column-width="150pt"/>
+            			<fo:table-column column-width="150pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
@@ -64,25 +62,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                             		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Payment Details</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.MethType</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Payment.MethType</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Inst.No</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">Inst.No</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Description</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Payment Amount(Rs.)</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Pay.Amnt</fo:block>  
-                       			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Bat.Paymnt</fo:block>  
-                       			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Debit Amount</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Debit Amount(Rs.)</fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Credit Amount</fo:block>   
+                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Credit Amount(Rs.)</fo:block>   
                         		</fo:table-cell>
                 			</fo:table-row>
                     </fo:table-body>
@@ -93,15 +85,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             	<fo:block>
                  	<fo:table border-style="solid">
                     	<fo:table-column column-width="85pt"/>
+                    	<fo:table-column column-width="130pt"/>
+                    	<fo:table-column column-width="175pt"/>
                     	<fo:table-column column-width="120pt"/>
-                    	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="80pt"/>
-               	    	<fo:table-column column-width="60pt"/>
-            			<fo:table-column column-width="200pt"/> 		
-            			<fo:table-column column-width="80pt"/>
-            			<fo:table-column column-width="80pt"/>
-            			<fo:table-column column-width="120pt"/>
-            			<fo:table-column column-width="120pt"/>
+               	    	<fo:table-column column-width="80pt"/>
+            			<fo:table-column column-width="150pt"/> 		
+            			<fo:table-column column-width="150pt"/>
+            			<fo:table-column column-width="150pt"/>
                     <fo:table-body>
                     	<#assign lineNo = 0>
                     	<#assign oldTransactionDate =  "nodate">
@@ -149,18 +139,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                                              Date: ${transactionDate?if_exists}
                                       </fo:block>  
 	                       			</fo:table-cell>
-	                       			<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
 				       				<fo:table-cell>
 	                                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                                </fo:table-cell>
-				       				<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
@@ -199,27 +183,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                       <#if oldpaymentGroupId == "no" ||  oldpaymentGroupId != paymentGroupId>
                               <#if paymentGroupId?has_content>
                               <fo:table-row>
-				       				<fo:table-cell  >
-	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell  >
-	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell  >
-	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell  >
-	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">${paymentGroupMethodTypeDes?if_exists}
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell  >
-	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">${paymentGroupInstrumentNum?if_exists}
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <#if paymentGroupDescription?has_content>
+	                                <fo:table-cell>
+				            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+			       					<fo:table-cell>
+			            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       					</fo:table-cell>
+			       					<#if paymentGroupDescription?has_content>
 	                                <fo:table-cell  >
 	                                    <fo:block text-align="left" font-size="12pt" keep-together = "always">${paymentGroupDescription?if_exists}(${paymentGroupId?if_exists})
 	                                    </fo:block>
@@ -230,12 +200,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                </#if>
-	                                <fo:table-cell>
-	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">${paymentGroupMethodTypeDes?if_exists}
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                <fo:table-cell  >
+	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">${paymentGroupInstrumentNum?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
-	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">Y
+	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell >
@@ -292,7 +266,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                    	 </fo:table-cell>
 	                                	</#if>
 		                       			<fo:table-cell >
-		                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"> 
+		                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" keep-together = "always"> 
 	                                             ${paymentId?if_exists}/${description?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>
@@ -319,19 +293,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                                 	</#if>
                                 	<#if ((instrumentNum)?has_content)>
                                 	<fo:table-cell >
-	                                    <fo:block font-size="12pt" text-align="left">${(instrumentNum)}</fo:block>
+	                                    <fo:block font-size="12pt" text-align="center">${(instrumentNum)}</fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell >
-	                                    <fo:block text-align="center"></fo:block>
-	                                </fo:table-cell>
-                                	</#if>
-                                	<#if ((comments)?has_content)>
-                                	<fo:table-cell>
-	                                    <fo:block text-align="left"  font-size="11pt"> ${(comments)}</fo:block>
-	                                </fo:table-cell>
-                                 	<#else>
-                                 	<fo:table-cell>
 	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
                                 	</#if>
@@ -354,10 +319,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 			                          	 </#if>
 		                           	</#if>
 		                           </#if>
-		                            <fo:table-cell>
-	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">
-	                                    </fo:block>
-	                                </fo:table-cell>
 	                                <#if paymentGroupId?has_content>
 	                                <fo:table-cell>
 	                                    <fo:block text-align="right" font-size="12pt" keep-together = "always">
@@ -370,8 +331,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                <#else>
 	                                	<#if (paymentId != "DAY TOTAL")>
 	                                	<fo:table-cell>
-					            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       				</fo:table-cell>
+				            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       					</fo:table-cell>
 		                                <fo:table-cell >
 		                                    <fo:block text-align="right" font-size="12pt">
 		                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
@@ -383,15 +344,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 		                                    </fo:block>
 		                                </fo:table-cell>
 		                                <#else>
-		                                <fo:table-cell>
-					            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       				</fo:table-cell>
 					       				<fo:table-cell>
 				            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       					</fo:table-cell>
-					       				<fo:table-cell>
-					            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       				</fo:table-cell>
+				       					<fo:table-cell>
+				            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       					</fo:table-cell>
+				       					<fo:table-cell>
+				            				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       					</fo:table-cell>
 					       				<fo:table-cell font-weight="bold">
 			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"> 
 		                                             ${paymentId?if_exists}
@@ -410,6 +371,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 		                                </#if>
 	                                </#if>
                               </fo:table-row>
+                              <fo:table-row>
+                              <fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				</fo:table-row>
+                              <fo:table-row>
+                              <#if ((comments)?has_content)>
+                                	<fo:table-cell>
+	                                    <fo:block text-align="left" font-weight = "bold" keep-together="always" font-size="12pt">Description: ${(comments)}</fo:block>
+	                                </fo:table-cell>
+                                 	<#else>
+                                 	<fo:table-cell>
+	                                    <fo:block text-align="center"></fo:block>
+	                                </fo:table-cell>
+                                	</#if>
+                                	</fo:table-row>
                               <#if (paymentId == "DAY TOTAL")>
                               <fo:table-row>
 				       				<fo:table-cell  font-weight="bold">
@@ -431,12 +408,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				            			<fo:block linefeed-treatment="preserve"></fo:block>
 				       				</fo:table-cell>
 				       				<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-				       				<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-				       				<fo:table-cell>
 	                                    <fo:block text-align="center" font-size="12pt" keep-together = "always">
 	                                    </fo:block>
 	                                </fo:table-cell>
@@ -451,11 +422,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                           </fo:table-row>     
-	                           <fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
