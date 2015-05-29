@@ -395,12 +395,24 @@ public class PaymentWorker {
                 	if((payment.getString("paymentMethodTypeId")).contains("CHALLAN") || (payment.getString("paymentMethodTypeId")).contains("AXISHTOH_PAYIN")){
                 		text += "challan payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
                 	}
-                	if((payment.getString("paymentMethodTypeId")).contains("CASH")){
+                	else if((payment.getString("paymentMethodTypeId")).contains("CASH")){
                 		text += "cash payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
                 	}
-                	if((payment.getString("paymentMethodTypeId")).contains("CHEQUE")){
+                	else if((payment.getString("paymentMethodTypeId")).contains("CHEQUE")){
                 		text += "cheque payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount")+"(subj to realisation)";
                 	}
+                	else if((payment.getString("paymentMethodTypeId")).contains("AXIS_CDM_PAYIN")){
+                		text += "CDM payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
+                	}
+                	else{
+                		GenericValue paymentMethodType = delegator.findOne("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", payment.getString("paymentMethodTypeId")), false);
+                		String description = "";
+                		if(UtilValidate.isNotEmpty(paymentMethodType.getString("description"))){
+                			description = paymentMethodType.getString("description");
+                		}
+                		text += description+" payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
+                	}
+                	
                 }
             text += ". Automated message from Mother Dairy.";
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
