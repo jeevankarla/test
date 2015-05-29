@@ -270,23 +270,15 @@ public class ProductionServices {
 			            GenericValue returnTrans;
 			            while ((returnTrans = returnItems.next()) != null) {
 			                Map returnProductsMap = FastMap.newInstance();
-			                BigDecimal fatPercent = BigDecimal.ZERO;
-			                BigDecimal snfPercent = BigDecimal.ZERO;
-			                String returnProdId = returnTrans.getString("productId");
-			            	BigDecimal returnQty = returnTrans.getBigDecimal("quantityOnHandDiff");
-			            	if(UtilValidate.isNotEmpty(returnTrans.getBigDecimal("fatPercent"))){
-			            	fatPercent = returnTrans.getBigDecimal("fatPercent");
-			            	}
-			            	if(UtilValidate.isNotEmpty(returnTrans.getBigDecimal("snfPercent"))){
-			            	snfPercent = returnTrans.getBigDecimal("snfPercent");
-			            	}
 			            	String returnId = returnTrans.getString("returnId");
+			            	String returnItemSeqId = returnTrans.getString("returnItemSeqId");
+			                String returnProdId = returnTrans.getString("productId");
+			            	BigDecimal returnQty = returnTrans.getBigDecimal("returnQuantity");
 			            	if(UtilValidate.isNotEmpty(returnId)){
 			             		returnProductsMap.put("returnId",returnId);
+			             		returnProductsMap.put("returnItemSeqId",returnItemSeqId);
 			             		returnProductsMap.put("returnProdId",returnProdId);
 			             		returnProductsMap.put("returnQty",returnQty);
-			             		returnProductsMap.put("fatPercent",fatPercent);
-			             		returnProductsMap.put("snfPercent",snfPercent);
 			             		returnProductsList.add(returnProductsMap);
 			             	}
 			            }
