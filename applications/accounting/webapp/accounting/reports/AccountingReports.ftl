@@ -971,22 +971,18 @@ function reportTypeChangeFunc() {
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row"> 
       		<form id="invoiceAppReport" name="invoiceAppReport" method="post" action="<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>" target="_blank">	
-      		  	<td width="10%">AR/AP Invoice Register Details</td>
-			  	<td width="25%">Purpose Type
-			  	  	<select name='purposeTypeId' id ="purposeTypeId">
-			  	  		<option value="All">-- All --</option>	
-						<#list purposeTypeIdsList as purposeType>
-					        <option value="${purposeType.enumId}">${purposeType.description?if_exists}</option>
-					    </#list>
-						<#-- <option value='INTUNIT_TR_CHANNEL'>Inter Unit Sale</option>
-						<option value='INTER_PRCHSE_CHANNEL'>Inter Unit Purchase</option> -->
+      		  	<td width="20%">Invoice Register Abstract</td>
+			  	<td width="20%">Type
+			  	  	<select name='typeId' id ="typeId">
+			  	  		<option value='PURCHASE_INVOICE'>AP Invoices</option>
+			  	  		<option value="SALES_INVOICE"> AR Invoices</option>	
 				 	</select>
 			  	</td>
 			  	
 				<td width="15%">From<input  type="text" size="18pt" id="invAppFromDate" readonly  name="fromDate"/></td>
 				<td width="15%">To<input  type="text" size="18pt" id="invAppThruDate" readonly  name="thruDate"/></td>
           		<td width="5%">&#160;</td>
-			  	<td width="25%">
+			  	<td width="5%">
       		  		&#160;
 			  	</td>
 			  	<td width="20%">
