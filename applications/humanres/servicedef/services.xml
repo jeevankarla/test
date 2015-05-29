@@ -2007,4 +2007,12 @@ under the License.emplpunch
          <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
          <attribute name="orgPartyId" mode="IN" type="String" optional="false"/>
     </service>
+    <service name="updateEmployeePosition" engine="java" invoke="updateEmployeePosition" auth="true" 
+       		location="in.vasista.vbiz.humanres.HumanresService">
+            <description>create Employee Position</description>
+            <attribute name="partyId" type="String" mode="IN" optional="true"/>
+            <attribute name="emplPositionTypeId" type="String" mode="IN" optional="true"/>
+            <attribute name="emplPositionId" type="String" mode="IN" optional="true"/>
+            <attribute name="actualFromDate" type="String" mode="IN" optional="true"/>
+    </service>
 </services>

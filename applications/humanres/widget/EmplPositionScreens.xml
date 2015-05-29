@@ -359,53 +359,49 @@
         </section>
     </screen>
     <screen name="EmplPositionView">
-        <section>
-            <actions>
-                <set field="titleProperty" value="HumanResEmplPositionSummary"/>
-                <set field="tabButtonItem" value="EmplPositionView"/>
-                <set field="emplPositionId" from-field="parameters.emplPositionId"/>
-                <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="EMPLOYEEPOS_VIEW"/>
-                </service>
-                <set field="hasEmployeePosViewPermission" from-field="permResult.hasPermission"/>                 
-            </actions>
-            <widgets>
-                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
-					<decorator-section name="body">
-                    	<section>
-                    	    <condition>
-                            	<if-compare field="hasEmployeePosViewPermission" operator="equals" value="true" type="Boolean"/>
-                            </condition>
-		                    <widgets>                      
-		                        <section>
-		                            <widgets>
-		                                <container style="lefthalf">
-		                                    <screenlet title="${uiLabelMap.HumanResEmployeePosition} ${uiLabelMap.CommonInformation}">
-		                                        <section>
-		                                            <widgets>
-		                                                <include-form name="EmplPositionInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-		                                            </widgets>
-		                                        </section>
-		                                    </screenlet>
-		                                    <include-screen name="EmplPositionFulfilmentView"/>
-		                                    <include-screen name="EmplPositionResponsibilityView"/>
-		                                </container>
-		                                <container style="righthalf">
-		                                    <include-screen name="EmplPositionReportsToView"/>
-		                                    <include-screen name="EmplPositionReportedToView"/>
-		                                </container>
-		                            </widgets>
-		                        </section>
-		                    </widgets>		
-		                    <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
-		                    </fail-widgets>
-		            	</section>				                        
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
+            <section>
+                <actions>
+                    <set field="titleProperty" value="HumanResEmplPositionSummary"/>
+                    <set field="tabButtonItem" value="EmplPositionView"/>
+                    <set field="emplPositionId" from-field="parameters.emplPositionId"/>
+                    <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/emplPositionTypeIdsList.groovy"/>  
+    				<set field="partyId" from-field="parameters.partyId"/>	
+    				<entity-condition entity-name="EmplPosition" list="EmplPositionList">
+                        <condition-expr field-name="emplPositionId" from-field="emplPositionId"/>
+                    </entity-condition>
+                    <entity-condition entity-name="EmplPositionAndFulfillment" list="EmplPositionAndFulfillmentList">
+                        <condition-expr field-name="emplPositionId" from-field="emplPositionId"/>
+                    </entity-condition>
+                    <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
+                    <service service-name="humanResManagerPermission" result-map="permResult">
+                        <field-map field-name="mainAction" value="EMPLOYEEPOS_VIEW"/>
+                    </service>
+                    <set field="hasEmployeePosViewPermission" from-field="permResult.hasPermission"/>                 
+                </actions>
+                <widgets>
+                    <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    					<decorator-section name="body">
+                        	<section>
+                        	    <condition>
+                                	<if-compare field="hasEmployeePosViewPermission" operator="equals" value="true" type="Boolean"/>
+                                </condition>
+    		                    <widgets>                      
+    		                        <section>
+    		                            <widgets>
+    		                                <container style="lefthalf">
+    		                                    <include-screen name="EmplPositionUpdate"/>
+    		                                </container>
+    		                            </widgets>
+    		                        </section>
+    		                    </widgets>		
+    		                    <fail-widgets>
+                                    <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+    		                    </fail-widgets>
+    		            	</section>				                        
+                        </decorator-section>
+                    </decorator-screen>
+                </widgets>
+            </section>
     </screen>
     <screen name="EmplPositionFulfilmentView">
         <section>
@@ -482,5 +478,17 @@
                 </screenlet>
             </widgets>
         </section>
+    </screen>
+    <screen name="EmplPositionUpdate">
+            <section>
+                <actions>
+    				<set field="ajaxUrl" value="EmployeeAttendanceInternal" type="String"/>
+                </actions>            
+                <widgets>
+                     <platform-specific>
+    					<html><html-template location="component://humanres/webapp/humanres/humanres/updateEmplPosition.ftl"></html-template></html>                         
+                    </platform-specific>   
+                </widgets>
+            </section>
     </screen>
 </screens>
