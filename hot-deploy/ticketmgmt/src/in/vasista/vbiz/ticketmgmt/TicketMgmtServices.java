@@ -71,7 +71,7 @@ public class TicketMgmtServices {
         	module);
         	}
         }
-		String statusId = "OPEN_NEW";
+		String statusId = "ASSIGNED";
 		String productId = (String)context.get("productId");
 		String salesChannelEnumId = (String)context.get("salesChannelEnumId");
 		String custRequestTypeId = (String)context.get("custRequestTypeId");
@@ -127,7 +127,6 @@ public class TicketMgmtServices {
 		        attr.set("attrName","PRODUCT_CATEGORY_ID");
 		        attr.set("attrValue",PRODUCT_CATEGORY_ID);
 		        delegator.create(attr);
-		        
 		     
 		        
 		        attr.set("attrName","EMAIL");
@@ -172,6 +171,51 @@ public class TicketMgmtServices {
 					resultMap = ServiceUtil.returnError("Error While creating Ticket Attributes");
 					return resultMap;
 				}catch(GenericServiceException e){
+					Debug.logError("Error While creating Ticket Item =====>"+e,module);
+					resultMap = ServiceUtil.returnError("Error While creating Ticket Item");
+					return resultMap;
+				}
+				try{
+					String roleTypeId = "REQ_TAKER";
+					String partyId = null;
+					List condList = FastList.newInstance();
+		        	condList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, statusId));
+		        	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS ,roleTypeId));
+		        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+		        	try{
+		        		List<GenericValue> custRequestPartyStatusList = delegator.findList("CustRequestPartyStatus", cond, null, null, null, false);
+			        	GenericValue custRequestPartyStatus = EntityUtil.getFirst(custRequestPartyStatusList);
+			        	if(UtilValidate.isNotEmpty(custRequestPartyStatus)){
+			        		partyId = (String) custRequestPartyStatus.getString("partyId");
+			        	}
+		        		if(UtilValidate.isNotEmpty(partyId)){
+					        GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+							if(UtilValidate.isEmpty(partyRole)){
+								Debug.logError("No party role found", module);
+								resultMap = ServiceUtil.returnError("Error While creating Complaint, No party role found!");
+						  		return resultMap;
+							}
+						}
+		        	}catch(Exception e){
+						Debug.logError("Error While creating Ticket Item =====>"+e,module);
+						resultMap = ServiceUtil.returnError("Error While creating Ticket Item");
+						return resultMap;
+					}
+	        		Map inputCtx = FastMap.newInstance();
+					if(UtilValidate.isNotEmpty(partyId)){
+						inputCtx.put("partyId", partyId);
+					}else{
+						inputCtx.put("partyId", userLogin.getString("partyId"));
+					}
+					inputCtx.put("custRequestId", custRequestId);
+					inputCtx.put("roleTypeId",roleTypeId);
+					inputCtx.put("userLogin", userLogin);
+					Map resultCtx = dispatcher.runSync("createCustRequestParty", inputCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
+						return ServiceUtil.returnError("Error occuring while calling createCustRequestParty service:");
+					}
+	        	}catch(GenericServiceException e){
 					Debug.logError("Error While creating Ticket Item =====>"+e,module);
 					resultMap = ServiceUtil.returnError("Error While creating Ticket Item");
 					return resultMap;
