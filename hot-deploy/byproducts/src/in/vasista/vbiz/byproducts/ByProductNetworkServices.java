@@ -7899,10 +7899,12 @@ public class ByProductNetworkServices {
 		Delegator delegator = ctx.getDelegator();
 		String paymentChannel = (String) context.get("paymentChannel");
 		String transactionId = (String) context.get("transactionId");
+		String paymentDateStr = (String) context.get("paymentDate");
 		String paymentLocationId = (String) context.get("paymentLocationId");
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		List paymentList = FastList.newInstance();
+		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 		List<Map<String, Object>> boothPayments = (List<Map<String, Object>>) context.get("boothPayments");
 		String infoString = "makeBoothPayments:: " + "paymentChannel=" + paymentChannel 
 				+";transactionId=" + transactionId + ";paymentLocationId=" + paymentLocationId 
@@ -7912,38 +7914,76 @@ public class ByProductNetworkServices {
 			Debug.logError("No payment amounts found; " + infoString, module);
 			return ServiceUtil.returnError("No payment amounts found; "	+ infoString);
 		}
+		Timestamp paymentDate = null;
+		try{
+			if (UtilValidate.isNotEmpty(paymentDateStr)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+				try {
+					paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError("Cannot parse date string: " + paymentDateStr,module);
+					return ServiceUtil.returnError("Cannot parse date string");
+				} catch (NullPointerException e) {
+					Debug.logError("Cannot parse date string: " + paymentDateStr, module);
+					return ServiceUtil.returnError("Cannot parse date string");
+				}
+			}
+			else{
+				paymentDate = UtilDateTime.getDayStart(nowTimestamp);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		List conditionList = FastList.newInstance();
 		for (Map boothPayment : boothPayments) {
 			Map boothResult = getBoothDues(ctx,UtilMisc.<String, Object>toMap("boothId", 
 					(String)boothPayment.get("boothId"), "userLogin", userLogin));
 			Map boothDues = (Map) boothResult.get("boothDues");
 			BigDecimal amount = new BigDecimal(boothDues.get("amount").toString());
-			if (amount.compareTo(new BigDecimal(((Double) boothPayment.get("amount")).toString())) > 0) {
+			/*if (amount.compareTo(new BigDecimal(((Double) boothPayment.get("amount")).toString())) > 0) {
 				Debug.logError(	"received partial payment or no dues for booth :"+ (String) boothPayment.get("boothId"), module);
 				return ServiceUtil.returnError("received partial payment or no dues for booth :"+ (String) boothPayment.get("boothId"));
-			}
+			}*/
 			Map<String, Object> paymentCtx = UtilMisc.<String, Object> toMap("paymentMethodTypeId", paymentChannel);
 			paymentCtx.put("userLogin", context.get("userLogin"));
 			paymentCtx.put("facilityId",((String) boothPayment.get("boothId")).toUpperCase());
 			paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+			if(UtilValidate.isNotEmpty(paymentDate)){
+				String instrumentDate = UtilDateTime.toDateString(paymentDate, "dd MMMMM, yyyy");
+				paymentCtx.put("instrumentDate", instrumentDate);
+			}
 			paymentCtx.put("paymentLocationId", paymentLocationId);
 			paymentCtx.put("paymentRefNum", transactionId);
 			paymentCtx.put("amount",((Double) boothPayment.get("amount")).toString());
 			if(UtilValidate.isNotEmpty(boothPayment.get("cardNumber"))){
 				paymentCtx.put("cardNumber",((String) boothPayment.get("cardNumber")));
 			}
+			String payeeFacilityId = (String) boothPayment.get("boothId");
+			Timestamp instrumentStrtDate = UtilDateTime.getDayStart(paymentDate);
+			Timestamp instrumentEndDate = UtilDateTime.getDayEnd(paymentDate);
 			
-
-			Map<String, Object> paidPaymentCtx = UtilMisc.<String, Object> toMap("paymentMethodTypeId",paymentChannel);
-			paidPaymentCtx.put("paymentDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
-			paidPaymentCtx.put("facilityId",(String) boothPayment.get("boothId"));
-
-			Map boothsPaymentsDetail = getBoothPaidPayments(ctx, paidPaymentCtx);
-			List boothPaymentsList = (List) boothsPaymentsDetail.get("boothPaymentsList");
-			if (boothPaymentsList.size() > 0) {
-				Debug.logError("Already received payment for booth "+ (String) boothPayment.get("boothId") + " from ,"+ paymentChannel+ "hence skipping... Existing payment details:"+ boothPaymentsList.get(0)	+ "; Current payment details:" + paymentCtx, module);
-				return ServiceUtil.returnError("Already received payment for booth "+ (String) boothPayment.get("boothId")+ " from ," + paymentChannel
-								+ "hence skipping... Existing payment details:"+ boothPaymentsList.get(0)+ "; Current payment details:" + paymentCtx);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("paymentRefNum", EntityOperator.EQUALS, transactionId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID", "PMNT_CANCELLED")));
+			conditionList.add(EntityCondition.makeCondition("instrumentDate", EntityOperator.GREATER_THAN_EQUAL_TO, instrumentStrtDate));
+			conditionList.add(EntityCondition.makeCondition("instrumentDate", EntityOperator.LESS_THAN_EQUAL_TO, instrumentEndDate));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> paymentsList = FastList.newInstance();
+			try{
+				paymentsList = delegator.findList("Payment", condition, null, null, null, false);
+			} catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e.toString(), module);
+				return ServiceUtil.returnError(e.toString());
 			}
+			if (paymentsList.size() > 0) {
+				GenericValue payList = (GenericValue)paymentsList.get(0);
+				Debug.logError("Duplicate payment transaction received for booth "+ (String) boothPayment.get("boothId") + " ["+ paymentChannel+ ", "+payList.getString("paymentRefNum")+", "+payList.getTimestamp("paymentDate")+"] hence skipping... Existing payment Id:"+ payList.getString("paymentId"), module);
+				return ServiceUtil.returnError("Duplicate payment transaction received for booth "+ (String) boothPayment.get("boothId") + " ["+ paymentChannel+ ", "+payList.getString("paymentRefNum")+", "+payList.getTimestamp("paymentDate")+"] hence skipping... Existing payment Id:"+ payList.getString("paymentId"));
+			}
+			
 			try {
 				Map<String, Object> paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
 				if (ServiceUtil.isError(paymentResult)) {
