@@ -3190,6 +3190,27 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
+          <menu-item name="Hyderabad" title="Hyderabad Expenses">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="HYD_OUT" />
+             	<parameter param-name="subTabButtonValue" value="Hyderabad" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="MilkPurchasesYelahanka" title="Milk Purchases Yelahanka">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="MILK_OUT" />
+             	<parameter param-name="subTabButtonValue" value="MilkPurchasesYelahanka" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
+          <menu-item name="MilkPurchasesHyd" title="Milk Purchases Hyderabad">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="MILK_OUT_HYD" />
+             	<parameter param-name="subTabButtonValue" value="MilkPurchasesHyd" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item>
     </menu>
     
     <menu name="APInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
