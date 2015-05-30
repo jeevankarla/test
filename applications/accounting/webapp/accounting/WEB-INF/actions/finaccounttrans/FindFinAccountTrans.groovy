@@ -168,6 +168,19 @@ def getmultipleFinAccountList(finAccountId, finAccountTransList){
 			if(UtilValidate.isNotEmpty(contraFinTransEntry)){
 				contraFinAccountTrans = delegator.findOne("FinAccountTrans", ["finAccountTransId" : contraFinTransEntry.finAccountTransId], false);
 				if(UtilValidate.isNotEmpty(contraFinTransEntry)){
+					if(UtilValidate.isNotEmpty(contraFinAccountTrans.finAccountTransTypeId)){						
+						if( contraFinAccountTrans.finAccountTransTypeId=="WITHDRAWAL"){
+							//if deposit for partyLedger it is Cr
+							innerMap["creditValue"]=contraFinAccountTrans.amount;
+							partyTotalCredits+=contraFinAccountTrans.amount;							
+							innerMap["crOrDbId"]="C";
+						}else if(contraFinAccountTrans.finAccountTransTypeId=="DEPOSIT"){
+							//if deposit for partyLedger it is Dr
+							innerMap["debitValue"]=contraFinAccountTrans.amount;							
+							partyTotalDebits+=contraFinAccountTrans.amount;
+							innerMap["crOrDbId"]="D";
+						}
+					}
 					contraFinAccount= delegator.findOne("FinAccount", ["finAccountId" :contraFinAccountTrans.finAccountId], false);
 					tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, contraFinAccount.ownerPartyId, false);
 					tempFinAccountTransMap["paymentPartyId"] = contraFinAccount.ownerPartyId;
