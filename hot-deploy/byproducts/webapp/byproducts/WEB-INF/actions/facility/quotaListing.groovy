@@ -61,6 +61,7 @@ if(parameters.facilityId){
 }
 
 hideSearch ="Y";
+subscriptionTypeId="";
 if(parameters.hideSearch){
 	hideSearch = parameters.hideSearch;
 }
