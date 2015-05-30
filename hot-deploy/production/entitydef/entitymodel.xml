@@ -9,4 +9,73 @@
     <copyright></copyright>
     <version></version>
 
+	<entity entity-name="ProductTestComponent" package-name="in.vasista.vbiz.production.qcTest">
+		<field name="productId" type="id-ne"></field>
+		<field name="productCategoryId" type="id-ne"></field>
+		<field name="testComponent" type="id-ne"></field>
+		<field name="minimamValue" type="fixed-point"></field>
+		<field name="maximamValue" type="fixed-point"></field>
+		<field name="standardValue" type="fixed-point"></field>
+		<field name="fromDate" type="date-time"></field>
+		<field name="thruDate" type="date-time"></field>
+		<prim-key field="productCategoryId"/>
+		<prim-key field="productId"/>
+		<prim-key field="testComponent"/>
+		
+		<relation rel-entity-name="Product" type="one" fk-name="PTC_product">
+		</relation>
+		<relation rel-entity-name="ProductCategory" type="one" fk-name="PTC_productCategory">
+		</relation>
+		
+	</entity>
+	
+	<entity entity-name="ProductQcTest" package-name="in.vasista.vbiz.production.qcTest">
+			<field name="qcTestId" type="id-ne"></field>
+			<field name="testDate" type="date-time"></field>
+			<field name="productId" type="id"></field>
+			<field name="statusId" type="id"></field>
+			<field name="productBatchId" type="id"></field>
+			<field name="shipmentId" type="id"></field>
+			<field name="shipmentReceiptId" type="id"></field>
+			<field name="inventoryTransferId" type="id"></field>
+			<field name="custRequestId" type="id"></field>
+			<field name="workEffortId" type="id"></field>
+			<field name="returnId" type="id"></field>
+			<field name="comments" type="long-varchar"></field>
+			
+			<prim-key field="qcTestId"/>
+			
+			<relation rel-entity-name="Product" type="one" fk-name="PQT_product">
+			</relation>
+			<relation rel-entity-name="ProductBatch" type="one" fk-name="PQT_PB">
+			</relation>
+			<relation rel-entity-name="Shipment" type="one" fk-name="PQT_Shipment">
+			</relation>
+			<relation rel-entity-name="ShipmentReceipt" type="one" fk-name="PQT_SRT">
+			</relation>
+			<relation rel-entity-name="InventoryTransfer" type="one" fk-name="PQT_IT">
+			</relation>
+			<relation rel-entity-name="CustRequest" type="one" fk-name="PQT_CR">
+			</relation>
+			<relation rel-entity-name="WorkEffort" type="one" fk-name="PQT_WE">
+			</relation>
+			<relation rel-entity-name="ReturnHeader" type="one" fk-name="PQT_RH">
+			</relation>
+			
+			
+			
+			
+			
+			
+			
+	</entity>
+	
+	<entity entity-name="ProductQcTestDetails" package-name="in.vasista.vbiz.production.qcTest">
+		<field name="qcTestId" type="id-ne"></field>
+		<field name="sequenceNumber" type="id-ne"></field>
+		<field name="testComponent" type="id"></field>
+		<field name="value" type="id"></field>
+	</entity>
+
+
 </entitymodel>
