@@ -87,6 +87,19 @@ $(document).ready(function() {
 	} );				
 	datatable5.fnSort( [ [0,'desc'] ] );		 	
 
+	
+	  var elEncashmentTable = ${StringUtil.wrapString(elEncashmentJSON!'[]')};	 
+	$('#elEncashmentTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable6"></table>' );
+	var datatable6 = $('#datatable6').dataTable( {
+	
+		"data": elEncashmentTable,
+		"columns": [
+			{ "title": "Month" },
+			{ "title": "Days" }],	
+		"columnDefs": [{ targets: [0] }],
+       	"iDisplayLength" : 100
+	} );	
+	datatable6.fnSort( [ [0,'desc'] ] ); 
 } );
 
 </script>
@@ -137,6 +150,14 @@ $(document).ready(function() {
      	</div>
 	    <div class="screenlet-body">
     		<div id="missedTable"/>  
+    	</div>  	
+    </div>  
+    <div class="screenlet">  
+    	<div class="screenlet-title-bar">
+      		<h3>EL Encashment Details</h3>	
+     	</div>
+	    <div class="screenlet-body">
+    		<div id="elEncashmentTable"/>  
     	</div>  	
     </div>          
 </div>

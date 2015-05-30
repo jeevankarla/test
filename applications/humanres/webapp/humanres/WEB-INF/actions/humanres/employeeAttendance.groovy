@@ -271,6 +271,60 @@ while(c2.after(c1)){
 	c1.add(Calendar.DATE,1);
 }
 
+timePeiodIdsList = [];
+Timestamp fromMonthStart=UtilDateTime.getMonthStart(fromDate);
+fromMonthEnd = UtilDateTime.getMonthEnd(fromMonthStart, timeZone, locale);
+i = 0;
+
+while(i <= 1){
+	List fromDateConList=[];
+	fromDateConList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "HR_MONTH"));
+	fromDateConList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromMonthStart)));
+	fromDateConList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromMonthEnd)));
+	fromMonthCond=EntityCondition.makeCondition(fromDateConList,EntityOperator.AND);
+	fromMonthsList = delegator.findList("CustomTimePeriod", fromMonthCond , null, null, null, false );
+	if(UtilValidate.isNotEmpty(fromMonthsList)){
+		fromMonthsList = EntityUtil.getFirst(fromMonthsList);
+		timePeriodId = fromMonthsList.get("customTimePeriodId");
+		timePeiodIdsList.add(timePeriodId);
+	}
+	
+	Timestamp thruMonthStart=UtilDateTime.getMonthStart(thruDate);
+	thruMonthEnd = UtilDateTime.getMonthEnd(thruMonthStart, timeZone, locale);
+	
+	fromMonthStart = thruMonthStart;
+	fromMonthEnd = thruMonthEnd;
+	i=i+1;
+}
+
+
+JSONArray elEncashmentJSON = new JSONArray();
+if(UtilValidate.isNotEmpty(timePeiodIdsList)) {
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
+	conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, "EL"));
+	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, timePeiodIdsList));
+	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	emplLeaveELDetails = delegator.findList("EmplLeaveBalanceStatus", condition , null, null, null, false );
+	if(UtilValidate.isNotEmpty(emplLeaveELDetails)){
+		emplLeaveELDetails.each { eachItem->
+			JSONArray elJSON = new JSONArray();
+			customTimePeriodId = eachItem.get("customTimePeriodId");
+			encashedDays = eachItem.get("encashedDays");
+
+			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : customTimePeriodId], false);
+			fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+			String monthName = UtilDateTime.toDateString(fromDateStart, "MMM");
+			
+			elJSON.add(monthName);
+			if(UtilValidate.isNotEmpty(encashedDays)){
+				elJSON.add(encashedDays);
+			}
+			elEncashmentJSON.add(elJSON);
+		}
+	}
+}
+
 //Debug.logError("punchListJSON="+punchListJSON,"");
 //Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
 //Debug.logError("leaveListJSON="+leaveListJSON,"");
@@ -289,3 +343,4 @@ context.oodPunchListJSON = oodPunchListJSON;
 context.leaveListJSON = leaveListJSON;
 context.holidaysListJSON = holidaysListJSON;
 context.missedListJSON = missingListJSON;
+context.elEncashmentJSON = elEncashmentJSON;
