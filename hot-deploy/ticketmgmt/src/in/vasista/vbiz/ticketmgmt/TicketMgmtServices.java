@@ -56,21 +56,7 @@ public class TicketMgmtServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String dateStr = (String)context.get("custRequestDate");
-        Timestamp custRequestDate=null;
-        if (UtilValidate.isNotEmpty(dateStr)) {
-        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        	try {
-        		custRequestDate = new java.sql.Timestamp(sdf.parse(dateStr)
-        	.getTime());
-        	} catch (ParseException e) {
-        	Debug.logError(e, "Cannot parse date string: " + dateStr,
-        	module);
-        	// effectiveDate = UtilDateTime.nowTimestamp();
-        	} catch (NullPointerException e) {
-        	Debug.logError(e, "Cannot parse date string: " + dateStr,
-        	module);
-        	}
-        }
+        Timestamp custRequestDate = UtilDateTime.nowTimestamp();;
 		String statusId = "ASSIGNED";
 		String productId = (String)context.get("productId");
 		String salesChannelEnumId = (String)context.get("salesChannelEnumId");
@@ -94,13 +80,44 @@ public class TicketMgmtServices {
 		String SLA = (String)context.get("SLA");
 		String REMARKS = (String)context.get("remarks");
 
-
+		String roleTypeId = "REQ_TAKER";
+		String partyId = null;
+		List condList = FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, statusId));
+    	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS ,roleTypeId));
+    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+    	try{
+    		List<GenericValue> custRequestPartyStatusList = delegator.findList("CustRequestPartyStatus", cond, null, null, null, false);
+        	GenericValue custRequestPartyStatus = EntityUtil.getFirst(custRequestPartyStatusList);
+        	if(UtilValidate.isNotEmpty(custRequestPartyStatus)){
+        		partyId = (String) custRequestPartyStatus.getString("partyId");
+        	}
+    		if(UtilValidate.isNotEmpty(partyId)){
+		        GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+				if(UtilValidate.isEmpty(partyRole)){
+					Debug.logError("No party role found", module);
+					resultMap = ServiceUtil.returnError("Error While creating Complaint, No party role found!");
+			  		return resultMap;
+				}
+			}
+    	}catch(Exception e){
+			Debug.logError("Error While creating Ticket Item =====>"+e,module);
+			resultMap = ServiceUtil.returnError("Error While creating Ticket Item");
+			return resultMap;
+		}
+		
 		Map<String,Object> inMap = FastMap.newInstance();
 		inMap.put("custRequestDate",custRequestDate);
 		inMap.put("statusId",statusId);
 		inMap.put("custRequestTypeId",custRequestTypeId);
 		inMap.put("salesChannelEnumId",salesChannelEnumId);
 		inMap.put("severity",severity);
+		if(UtilValidate.isEmpty(partyId)){
+			inMap.put("partyId",userLogin.getString("partyId"));
+		}else{
+			inMap.put("partyId",partyId);
+		}
+		
 		inMap.put("userLogin",userLogin);
 		inMap.put("description",description);
 		Map<String,Object> custRequest = FastMap.newInstance();
@@ -176,31 +193,6 @@ public class TicketMgmtServices {
 					return resultMap;
 				}
 				try{
-					String roleTypeId = "REQ_TAKER";
-					String partyId = null;
-					List condList = FastList.newInstance();
-		        	condList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, statusId));
-		        	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS ,roleTypeId));
-		        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-		        	try{
-		        		List<GenericValue> custRequestPartyStatusList = delegator.findList("CustRequestPartyStatus", cond, null, null, null, false);
-			        	GenericValue custRequestPartyStatus = EntityUtil.getFirst(custRequestPartyStatusList);
-			        	if(UtilValidate.isNotEmpty(custRequestPartyStatus)){
-			        		partyId = (String) custRequestPartyStatus.getString("partyId");
-			        	}
-		        		if(UtilValidate.isNotEmpty(partyId)){
-					        GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
-							if(UtilValidate.isEmpty(partyRole)){
-								Debug.logError("No party role found", module);
-								resultMap = ServiceUtil.returnError("Error While creating Complaint, No party role found!");
-						  		return resultMap;
-							}
-						}
-		        	}catch(Exception e){
-						Debug.logError("Error While creating Ticket Item =====>"+e,module);
-						resultMap = ServiceUtil.returnError("Error While creating Ticket Item");
-						return resultMap;
-					}
 	        		Map inputCtx = FastMap.newInstance();
 					if(UtilValidate.isNotEmpty(partyId)){
 						inputCtx.put("partyId", partyId);
