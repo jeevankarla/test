@@ -81,6 +81,7 @@
         <attribute name="custRequestId" mode="OUT" type="String" optional="false"/>
         <attribute name="severity" mode="IN" type="String" optional="true"/>   
         <attribute name="description" mode="IN" type="String" optional="true"/>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/> 
     </service>
     <service name="deleteCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
             location="component://ticketmgmt/script/TicketMgmtServices.xml" invoke="deleteCustRequestParty" auth="true">
