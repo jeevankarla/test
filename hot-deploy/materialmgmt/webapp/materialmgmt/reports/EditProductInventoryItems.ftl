@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign externalKeyParam = "&amp;externalLoginKey=" + requestAttributes.externalLoginKey?if_exists>
 <div class="screenlet">
-  <#if product?exists>
+  <#if product?exists && productInventoryItems?exists && productInventoryItems?has_content>
     <div class="screenlet-title-bar">
         <h3>${uiLabelMap.ProductInventoryItems} ${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</h3>
     </div>
