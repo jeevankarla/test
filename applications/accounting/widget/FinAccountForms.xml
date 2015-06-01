@@ -237,13 +237,20 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-         <field name="contraFinAccountId" title="${uiLabelMap.AccountingFinAccount}" use-when="&quot;${entryType}&quot;==&quot;Contra&quot;">
+         <field name="contraFinAccountTypeId" title="FinAccountType" use-when="&quot;${entryType}&quot;==&quot;Contra&quot;" action="javascript:setFinAccountType(this,'${finAccountTypeMap}');" event="onChange">
             <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
+                <entity-options entity-name="FinAccountType" description="${description}[${finAccountTypeId}]" key-field-name="finAccountTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>     
+         <field name="contraFinAccountId" id-name="contraFinAccountId" title="${uiLabelMap.AccountingFinAccount}" use-when="&quot;${entryType}&quot;==&quot;Contra&quot;">
+            <drop-down>
+              <!--   <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                     <entity-constraint name="organizationPartyId" value="${finAccount.organizationPartyId}"/>
                     <entity-constraint name="ownerPartyId" value="Company"/>
                     <entity-order-by field-name="finAccountName"/>
-                </entity-options>
+                </entity-options> -->
             </drop-down>
         </field>        
         <field name="comments"><text/></field>
