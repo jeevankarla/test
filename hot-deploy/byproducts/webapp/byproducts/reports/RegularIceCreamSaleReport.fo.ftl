@@ -422,7 +422,7 @@ under the License.
 							            	</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
-	                     <#if prodTempMap?has_content>  
+	                     <#if productDetailsList?has_content>  
 	                          <fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -452,20 +452,61 @@ under the License.
 									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						  </fo:table-row> 
-							 <#assign productDetails = prodTempMap.entrySet()>
-	                	      <#list productDetails as prodTotals>
+					<#--		 <#assign productDetails = productDetailsMap.entrySet()>  -->
+								<#assign productType = "">		
+								<#assign category = "">			
+	                	      <#list productDetailsList as prodTotals>
+	                	      
+	                	      	<#if !(productType == prodTotals.get("productType"))>
+	                	      		<#assign productType = prodTotals.get("productType")>
+	                	     		<#assign productTypeName = delegator.findOne("ProductType", {"productTypeId" : productType}, true)>
+	                	     		<fo:table-row>
+                    				<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="15pt" font-weight="bold" white-space-collapse="false">${productTypeName.description.toUpperCase()?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       		</fo:table-row>
+	                       		</#if>
+	                	     		
+	                	      	<#if !(category == prodTotals.get("productCategory"))>
+	                	      		<#assign category = prodTotals.get("productCategory")>
+	                	      		<#assign categoryName = delegator.findOne("ProductCategory", {"productCategoryId" : category}, true)>
+	                	      	
+	                	      <fo:table-row>
+                    				<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" font-weight="bold" white-space-collapse="false">${categoryName.description?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       		</fo:table-row>
+	                       		</#if>
 		                       <fo:table-row>
                     				<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${prodTotals.getKey()}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${prodTotals.brandName?if_exists}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">&#160;</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false"></fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue().get("qtyLtrs")?string("#0.00")}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.qtyLtrs?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue().get("amount")?string("#0.00")}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.amount?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
 	                       		</fo:table-row>
 		                    </#list>
