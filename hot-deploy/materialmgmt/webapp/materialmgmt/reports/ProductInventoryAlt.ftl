@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div class="screenlet">
-  <#if product?exists>
+  <#if (product?exists && quantitySummaryByFacility?exists && quantitySummaryByFacility?has_content) >
     <div class="screenlet-body">
                    <#-->     <#assign rowClass = "2">   -->
                  <#assign sNo=1>     

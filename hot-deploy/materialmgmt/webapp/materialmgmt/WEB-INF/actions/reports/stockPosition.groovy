@@ -81,6 +81,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  
  dctx = dispatcher.getDispatchContext();
  conditionList = [];
+ condList =[];
  
  
  if(UtilValidate.isNotEmpty(parameters.productId)){
@@ -254,7 +255,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 incomingShipmentAndItems = delegator.findList("ShipmentAndItem", findIncomingShipmentsStatusCondition, null, ['-estimatedArrivalDate'], null, false);
 		 //Receipts
 		 shipmentIds=EntityUtil.getFieldListFromEntityList(incomingShipmentAndItems,"shipmentId", true);
-		 condList =[];
+		condList.clear();
 		 condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 		 condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SR_CANCELLED"));
 		 condList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.IN,shipmentIds));
