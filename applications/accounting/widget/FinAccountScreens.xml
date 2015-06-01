@@ -193,6 +193,12 @@ under the License.
                 <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
                 <set field="entryType" from-field="parameters.entryType"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <entity-condition entity-name="FinAccountType" list="finAccountTypelist">
+	                <select-field field-name="finAccountTypeId"/>
+	                <select-field field-name="description"/>
+	                <order-by field-name="description"/>
+                </entity-condition>
+                <script location="component://accounting/webapp/ar/WEB-INF/actions/finTypeFinaccounts.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
             </actions>
@@ -201,6 +207,9 @@ under the License.
                     <decorator-section name="body">
                         <label style="h1" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/>
                         <screenlet id="FinAccountTransPanel" collapsible="true">
+                         <platform-specific>
+                                  <html><html-template location="component://accounting/webapp/accounting/ledger/finAccountTypeIds.ftl"/></html>
+                          </platform-specific>
                             <include-form name="AddFinAccountTrans" location="component://accounting/widget/FinAccountForms.xml"/>
                         </screenlet>
                     </decorator-section>
