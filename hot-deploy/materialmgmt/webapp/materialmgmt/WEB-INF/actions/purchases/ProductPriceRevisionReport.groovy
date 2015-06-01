@@ -45,15 +45,15 @@ dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
 
-totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
+/*totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
 if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
-}
+}*/
 List conditionList = [];
-productPriceTypeIdList= ["DEFAULT_PRICE","MRP_PRICE","UTP_PRICE","MRP_IS","MRP_OS"];
+//productPriceTypeIdList= ["DEFAULT_PRICE","MRP_PRICE","UTP_PRICE","MRP_IS","MRP_OS"];
 
 if(UtilValidate.isNotEmpty(categoryType)){
 	conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS , categoryType));
@@ -80,8 +80,8 @@ if(UtilValidate.isNotEmpty(productCatDetails)){
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachProductId));
 				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-										 EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd), EntityOperator.OR,
+										 EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
 				cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				productPrice = delegator.findList("ProductPrice", cond, null, null, null, false);
 				if(UtilValidate.isNotEmpty(productPrice)){
@@ -93,11 +93,15 @@ if(UtilValidate.isNotEmpty(productCatDetails)){
 							productPriceTypeIds = EntityUtil.getFieldListFromEntityList(prodDetails, "productPriceTypeId", true);
 							tempMap=[:];
 							productPriceTypeIds.each{eachproductPriceTypeId->
-	                            if(productPriceTypeIdList.contains(eachproductPriceTypeId)){  						
+	                            if(eachproductPriceTypeId == "DEFAULT_PRICE"){  						
 									productPriceDetails = EntityUtil.filterByCondition(prodDetails, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, eachproductPriceTypeId));
 									price = productPriceDetails.get(0).get("price");
+									thruDate = eachProdPrice.thruDate;
 									if(UtilValidate.isNotEmpty(price)){
 										tempMap.put(eachproductPriceTypeId, price);
+									}
+									if(UtilValidate.isNotEmpty(thruDate)){
+										tempMap.put("thruDate",thruDate);
 									}
 								}
 							}
@@ -118,3 +122,34 @@ if(UtilValidate.isNotEmpty(productCatDetails)){
 	}
 }
 context.ProductCatMap = ProductCatMap;
+//get productPrices for Revision
+CatMap=[:];
+for(Map.Entry entryCat : ProductCatMap.entrySet()){
+	cat=entryCat.getKey();
+	catDetails = entryCat.getValue();
+	productsMap=[:];
+	finalList=[];
+	for(eachentry in catDetails){
+		productId = eachentry.getKey();
+		prodDetails = eachentry.getValue();
+		if(prodDetails.size()>1){
+			int s=0;
+			tempList=[];
+			for(eachprod in prodDetails){
+				if(s>0){
+					tempMap=[:];
+					tempList.add(eachprod);
+				}
+				s=s+1;
+			}
+			tempMap.put(productId,tempList);
+			productsMap.putAll(tempMap);
+		}	
+	}
+	if(UtilValidate.isNotEmpty(productsMap)){
+	   CatMap.put(cat, productsMap);
+	}  
+}
+context.CatMap = CatMap;
+
+
