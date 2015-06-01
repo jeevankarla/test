@@ -181,6 +181,9 @@ vatMap=[:];
 															  temp =[:]
 															  temp.put("qtyLtrs", productValue.getValue().get("total"));
 															  temp.put("amount" , productValue.getValue().get("totalRevenue"));
+															  temp.put("productType", product.productTypeId);
+															  temp.put("productCategory", product.primaryProductCategoryId);
+															  temp.put("brandName", product.brandName);
 															  prodTempMap.put(product.brandName, temp);
 															}else{
 																totProd =0;
@@ -193,7 +196,8 @@ vatMap=[:];
 															if(product.brandName){
 																virtualProductId = product.brandName;
 															}
-															context.prodTempMap=prodTempMap;
+															productDetailsList = UtilMisc.sortMaps(prodTempMap.values().asList(), UtilMisc.toList("productCategory"));
+															context.productDetailsList=productDetailsList;
 														}
 														if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 															quantity =productValue.getValue().get("total");
