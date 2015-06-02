@@ -147,6 +147,7 @@
 		<#assign index = 1>
  		 <#list categoryList as eachSilo>
  		 		<div class="full">
+ 		 		
 					<div class="screenlet">
 						<div class="screenlet-title-bar">
 			         		<div class="grid-header" style="width:100%">

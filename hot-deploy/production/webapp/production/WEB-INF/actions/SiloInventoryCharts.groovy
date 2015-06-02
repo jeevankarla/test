@@ -73,6 +73,7 @@ if(facilityId){
 			newObj.put("capacity", capacity);
 			categorySiloData.add(newObj);
 			i++;
+			
 		}
 		categorySiloJSON.put(eachType, categorySiloData);
 	}

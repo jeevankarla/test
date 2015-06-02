@@ -73,7 +73,6 @@ productIds = EntityUtil.getFieldListFromEntityList(productionDetails, "productId
 
 products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), UtilMisc.toSet("productId", "productName"), null, null, false);
 
-
 JSONArray productionRunData = new JSONArray();
 productIds.each{ eachProdId ->
 	JSONObject newObj = new JSONObject();
