@@ -113,6 +113,11 @@ under the License.
         <field name="actualCompletionDate" title="${uiLabelMap.ManufacturingActualCompletionDate}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="facilityId" title="Plant"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
+        <field use-when="&quot;${currentStatusId}&quot;.equals(&quot;PRUN_COMPLETED&quot;)" name="Report" widget-style="buttontext">
+           <hyperlink target="productionRunCompletedReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="productionRunId" from-field="workEffortId"/>
+            </hyperlink>
+        </field>
     </form>
 
      <form name="UpdateProductionRun" type="single" target="updateProductionRun" title="" default-map-name="productionRunData"

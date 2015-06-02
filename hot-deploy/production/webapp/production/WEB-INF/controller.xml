@@ -197,6 +197,11 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MaterialBalanceReportPDF"/>        
     </request-map>
+    <request-map uri="productionRunCompletedReport.pdf">
+       <security https="true" auth="true"/>                        
+       <response name="success" type="view" value="productionRunCompletedReportPDF"/>        
+    </request-map>
+    
     <!-- RequestMaps -->
     <request-map uri="productionIndent">
         <security https="true" auth="true"/>                        
@@ -307,6 +312,8 @@
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="productionRunCompletedReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#productionRunCompletedReportPDF" content-type="application/pdf" encoding="none"/>
+   
     <!-- INDENT VIEW MAPPINGS -->
   	<view-map name="ProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionIndent"/> 
   	<view-map name="findProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#findProductionIndent"/>
