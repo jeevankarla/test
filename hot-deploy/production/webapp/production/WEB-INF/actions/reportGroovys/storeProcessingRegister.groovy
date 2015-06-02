@@ -55,8 +55,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
    EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
    milkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", cond, null,null, null, false);
 
-   if(UtilValidate.isNotEmpty(siloIds)){
-	  siloIds.each {eachSiloId->
+   siloIds.each {eachSiloId->
 		allDetailsMap=[:];
 		closingBalSiloMap=[:];
 		openingBalSiloMap=[:];
@@ -75,7 +74,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 			openingQty = invCountMapData.get("quantityKgs");
 			openingFat=invCountMapData.get("kgFat");
 			openingSnf=invCountMapData.get("kgSnf");
-    	    openingBalSiloMap.put("openingQty", openingQty);
+		    openingBalSiloMap.put("openingQty", openingQty);
 		    openingBalSiloMap.put("openingFat", openingFat);
 		    openingBalSiloMap.put("openingSnf", openingSnf);
 			//openingBalSiloMap.put("siloId", eachSiloId);
@@ -123,9 +122,9 @@ if(UtilValidate.isNotEmpty(siloIds)){
 		  }
 		 }
 	     totInventoryQty=totInventoryQty+ReceiptTotQty;
-         totFatQty=totFatQty+ReceiptTotFat;
+	     totFatQty=totFatQty+ReceiptTotFat;
 	     totSnfQty=totSnfQty+ReceiptTotSnf;
-       }
+	   }
 	 allDetailsMap.put("receiptSiloMap",receiptSiloMap);
 	 allDetailsMap.put("totInventoryQty",totInventoryQty);
 	
@@ -135,15 +134,15 @@ if(UtilValidate.isNotEmpty(siloIds)){
 	
 	 inventoryItemDetails=EntityUtil.filterByCondition(InventoryItemAndDetailList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,eachSiloId));
 	 //	issuSiloIds=EntityUtil.getFieldListFromEntityList(workEffortList, "facilityId", true);
-	 if(UtilValidate.isNotEmpty(inventoryItemDetails)){
+	 Map qtyDetMap = FastMap.newInstance();
+	  if(UtilValidate.isNotEmpty(inventoryItemDetails)){
 		inventoryItemDetails.each{eachinventoryItemDetail->
 			BigDecimal issuedQty=BigDecimal.ZERO;
 	     issuedQty = (BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff");
-    	workEffortId=eachinventoryItemDetail.workEffortId;
+		workEffortId=eachinventoryItemDetail.workEffortId;
 		siloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,workEffortId));
 	 	if(UtilValidate.isNotEmpty(siloWorkList)){
 	        String receivedFacilityId = siloWorkList[0].get("facilityId");
-			Map qtyDetMap = FastMap.newInstance();
 			if(UtilValidate.isEmpty(IssuedSiloMap) || (UtilValidate.isNotEmpty(IssuedSiloMap) && UtilValidate.isEmpty(IssuedSiloMap.get(receivedFacilityId)))){
 				qtyDetMap.put("qty",issuedQty);
 				issuedTotQty=issuedTotQty+issuedQty;
@@ -152,27 +151,23 @@ if(UtilValidate.isNotEmpty(siloIds)){
 				Map tempQtyMap = FastMap.newInstance();
 				tempQtyMap.putAll(IssuedSiloMap.get(receivedFacilityId));
 				tempQtyMap.putAt("qty", tempQtyMap.get("qty") + issuedQty);
-				issuedTotQty=(issuedTotQty+tempQtyMap.get("qty") + issuedQty);
+				issuedTotQty=(issuedTotQty+ issuedQty);
 				
-				IssuedSiloMap.put(receivedFacilityId, qtyDetMap);
+				IssuedSiloMap.put(receivedFacilityId, tempQtyMap);
+				}
+						
 			}
+		   }
+		 }
+	   closingBalSiloMap.put("dayCloseBal",totInventoryQty+issuedTotQty);
+	   closingBalSiloMap.put("totFatQty",totFatQty);
+	   closingBalSiloMap.put("totSnfQty",totSnfQty);
+	   
+	  allDetailsMap.put("IssuedSiloMap",IssuedSiloMap);
+	  allDetailsMap.put("closingBalance",closingBalSiloMap);
 					
-					
-		}
-	   }
-	 }
-   closingBalSiloMap.put("dayCloseBal",totInventoryQty+issuedTotQty);
-   closingBalSiloMap.put("totFatQty",totFatQty);
-   closingBalSiloMap.put("totSnfQty",totSnfQty);
-		
-  allDetailsMap.put("IssuedSiloMap",IssuedSiloMap);
-  allDetailsMap.put("closingBalance",closingBalSiloMap);
-				
- allDetailsRegisterMap.put(eachSiloId,allDetailsMap);
-  }
- }
+	 allDetailsRegisterMap.put(eachSiloId,allDetailsMap);
+   }
 }
 context.allDetailsRegisterMap=allDetailsRegisterMap;
 //Debug.log("===========allDetailsRegisterMap==========================="+allDetailsRegisterMap);
-
-

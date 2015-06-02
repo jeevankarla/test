@@ -176,7 +176,7 @@
 		                          <#if openingBalSiloDetails?has_content>
 									   <fo:table-row>
 								           <fo:table-cell >
-											  <fo:block text-align="right" font-size="10pt">${openingBalSiloDetails.openingQty?if_exists}</fo:block>  
+											  <fo:block text-align="right" font-size="10pt">${openingBalSiloDetails.openingQty?if_exists?string("##0.00")}</fo:block>  
 										   </fo:table-cell>
 										   <fo:table-cell >
 											  <fo:block text-align="right" font-size="10pt">${openingBalSiloDetails.openingFat?if_exists}</fo:block>
@@ -215,7 +215,7 @@
 											  <fo:block text-align="center" font-size="10pt">${receiptSiloData.getValue().get("containerId")?if_exists}</fo:block>
 										   </fo:table-cell >
 										    <fo:table-cell >
-											  <fo:block text-align="right" font-size="10pt">${receiptSiloData.getValue().get("receivedQuantity")?if_exists}</fo:block>
+											  <fo:block text-align="right" font-size="10pt">${receiptSiloData.getValue().get("receivedQuantity")?if_exists?string("##0.00")}</fo:block>
 										   </fo:table-cell >
 										   <fo:table-cell >
 											  <fo:block text-align="right" font-size="10pt">${receiptSiloData.getValue().get("receivedKgFat")?if_exists}</fo:block>
@@ -237,7 +237,7 @@
 	                      <fo:table-body>
 						   <fo:table-row>
 					           <fo:table-cell >
-								   <fo:block text-align="right" font-size="10pt"> ${totInventoryQty?if_exists} </fo:block>
+								   <fo:block text-align="right" font-size="10pt"> ${totInventoryQty?if_exists?string("##0.00")} </fo:block>
 							   </fo:table-cell>
 	                          </fo:table-row>
 						</fo:table-body>   
@@ -253,12 +253,11 @@
 	   <fo:table-column column-width="40pt"/>
                   <fo:table-body>
                      <#if IssuedSiloDetails?has_content>
-                     <#assign IssuedSiloDetail = IssuedSiloDetails.entrySet()?if_exists>												
-					  <#list IssuedSiloDetail as IssuedSiloData>
-                              		                                                   
+                    <#assign IssuedSiloDetail = IssuedSiloDetails.entrySet()?if_exists>											
+  					  <#list IssuedSiloDetail as IssuedSiloData>
 					   <fo:table-row>
 				           <fo:table-cell >
-							  <fo:block text-align="right" font-size="10pt">${-IssuedSiloData.getValue().get("qty")?if_exists}</fo:block>
+							  <fo:block text-align="right" font-size="10pt"> <#if IssuedSiloData.getValue().get("qty")?has_content>${-IssuedSiloData.getValue().get("qty")?if_exists}<#else>0</#if></fo:block>
 						   </fo:table-cell >
 						    <fo:table-cell >
 							  <fo:block text-align="right" font-size="10pt"></fo:block>
@@ -287,7 +286,7 @@
                   <#if closingBalance?has_content>
 					   <fo:table-row>
 				           <fo:table-cell  >
-							  <fo:block text-align="right" font-size="10pt">${closingBalance.dayCloseBal?if_exists}</fo:block>
+							  <fo:block text-align="right" font-size="10pt">${closingBalance.dayCloseBal?if_exists?string("##0.00")}</fo:block>
 						   </fo:table-cell >
 						    <fo:table-cell >
 						      <fo:block text-align="right" font-size="10pt"></fo:block>

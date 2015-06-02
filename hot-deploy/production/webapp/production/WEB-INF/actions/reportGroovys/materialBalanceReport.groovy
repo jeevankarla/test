@@ -66,21 +66,22 @@ if(UtilValidate.isNotEmpty(siloIds)){
 			openingSnfKg=invCountMapData.get("kgSnf");
 			openingFatPers=invCountMapData.get("fat");
 			openingSnfPers=invCountMapData.get("snf");
-
-            facilityNames = delegator.findOne("Facility",["facilityId":eachSiloId],false);
-            siloName=facilityNames.get("facilityName");
-			openingBalSiloMap.put("description", siloName);
-			openingBalSiloMap.put("quantity", openingQty);
-			openingBalSiloMap.put("fatKg", openingFatKg);
-			openingBalSiloMap.put("snfKg", openingSnfKg);
-			openingBalSiloMap.put("fatPers", openingFatPers);
-			openingBalSiloMap.put("snfPers", openingSnfPers);
-			
-			allSiloOpeningList.addAll(openingBalSiloMap)
-			
-			totInventoryQty=totInventoryQty+openingQty;
-			totOpenFatQtyKg=totOpenFatQtyKg+openingFatKg;
-			totOpenSnfQtyKg=totOpenSnfQtyKg+openingSnfKg;
+			if(UtilValidate.isNotEmpty(openingQty) && "0".equals(openingQty)){
+		        facilityNames = delegator.findOne("Facility",["facilityId":eachSiloId],false);
+		        siloName=facilityNames.get("facilityName");
+				openingBalSiloMap.put("description", siloName);
+				openingBalSiloMap.put("quantity", openingQty);
+				openingBalSiloMap.put("fatKg", openingFatKg);
+				openingBalSiloMap.put("snfKg", openingSnfKg);
+				openingBalSiloMap.put("fatPers", openingFatPers);
+				openingBalSiloMap.put("snfPers", openingSnfPers);
+				
+				allSiloOpeningList.addAll(openingBalSiloMap)
+				
+				totInventoryQty=totInventoryQty+openingQty;
+				totOpenFatQtyKg=totOpenFatQtyKg+openingFatKg;
+				totOpenSnfQtyKg=totOpenSnfQtyKg+openingSnfKg;
+			}
 		}
 	}
 	openTotBalSiloMap.put("description", "Total");
