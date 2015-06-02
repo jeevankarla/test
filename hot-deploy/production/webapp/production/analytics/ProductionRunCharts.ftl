@@ -17,10 +17,11 @@
                 // PIE CHART
                 chart = new AmCharts.AmPieChart();
                 chart.dataProvider = chartData;
-                chart.titleField = "product";
+                chart.titleField = "productName";
                 chart.valueField = "quantity";
 				chart.depth3D = 20;
             	chart.angle = 20;
+            	
                 
                 // LEGEND
                 legend = new AmCharts.AmLegend();

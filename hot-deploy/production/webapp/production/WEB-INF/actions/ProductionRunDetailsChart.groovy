@@ -70,15 +70,24 @@ cond2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 productionDetails = delegator.findList("InventoryItemAndDetail", cond2, null, null, null, false);
 
 productIds = EntityUtil.getFieldListFromEntityList(productionDetails, "productId", true);
+
+products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), UtilMisc.toSet("productId", "productName"), null, null, false);
+
 JSONArray productionRunData = new JSONArray();
 productIds.each{ eachProdId ->
 	JSONObject newObj = new JSONObject();
 	prodDetails = EntityUtil.filterByCondition(productionDetails, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
+	prodName = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
 	qoh = BigDecimal.ZERO;
 	prodDetails.each{ eachDetail ->
 		qoh = qoh.add(eachDetail.quantityOnHandDiff);
 	}
+	productName = "";
+	if(prodName){
+		productName = (EntityUtil.getFirst(prodName)).productName;
+	}
 	newObj.put("product", eachProdId);
+	newObj.put("productName", productName);
 	newObj.put("quantity", qoh);
 	productionRunData.add(newObj);
 }
