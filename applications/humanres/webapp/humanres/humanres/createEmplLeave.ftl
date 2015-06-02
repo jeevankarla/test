@@ -48,8 +48,6 @@ $(function() {
 									onSelect: function( selectedDate ) {
 									var leaveTypeId = $('select[name=leaveTypeId]').val();
 									$('[name=leaveTypeId]').val( '' );
-									$('#chghss').remove();
-									$('#ghssDropDown').hide();
      								if(leaveTypeId){
 										if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
 	     									return viewGHandSS();
@@ -247,7 +245,7 @@ function viewGHandSS(){
             	 if(leaveBalance == undefined || leaveBalance<0){
             	    leaveBalance =0;
             	 }
-            	 $('#leaveBalance').html('<span class="tooltip" style="color:green; font-size:11pt; font-stlye:bold">Balance as on '+result["leaveBalanceDateStr"]+" is : "+ leaveBalance +'   </span>');
+            	 $('#leaveBalance').html('<span id = "leaveSpan" class="tooltip" style="color:green; font-size:11pt; font-stlye:bold">Balance as on '+result["leaveBalanceDateStr"]+" is : "+ leaveBalance +'   </span>');
             	   
             	 },
             error: function() {

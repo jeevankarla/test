@@ -4,11 +4,14 @@ jQuery(document).ready(function() {
 
 function picker(){
 	jQuery("#fromDate").datepicker({
-			$('[name=leaveTypeId]').val( '' );
 			dateFormat:'dd-mm-yy',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function(selectedDate) {
+				$('[name=leaveTypeId]').val( '' );
+				$('#leaveSpan').remove();
+				$('#chghss').remove();
+				$('#ghssDropDown').hide();
 				$("#thruDate").datepicker( "option", {minDate: selectedDate}).datepicker();
 			}
 	});
