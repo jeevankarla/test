@@ -79,7 +79,7 @@
 		                var ${graph} = new AmCharts.AmGraph();
 		                ${graph}.valueField = "quantity";
 		                ${graph}.colorField = "color";
-		                ${graph}.balloonText = "<b>Silo: [[category]] </br>Qty: [[value]]</br> Product: [[product]] </br>Capacity: [[capacity]] </b>";
+		                ${graph}.balloonText = "<b>Silo: [[category]] </br>Qty: [[value]]</br> Product: [[productName]] </br>Capacity: [[capacity]] </b>";
 		                ${graph}.type = "column";
 		                ${graph}.lineAlpha = 0.5;
 		                ${graph}.lineColor = "#FFFFFF";

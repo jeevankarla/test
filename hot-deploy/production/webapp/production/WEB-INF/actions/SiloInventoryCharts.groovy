@@ -31,6 +31,9 @@ if(facilityId){
 		facilityIds = EntityUtil.getFieldListFromEntityList(categorySiloFacility, "facilityId", true);
 		JSONArray categorySiloData = new JSONArray();
 		inventoryItems = delegator.findList("InventoryItem", EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds), null, null, null, false);
+		
+		invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItems, "productId", true);
+		products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, invProductIds), UtilMisc.toSet("productId", "productName"), null, null, false);
 		i = 0;
 		catTypeMap = [:];
 		enumeration = delegator.findOne("Enumeration", UtilMisc.toMap("enumId", eachType), false);
@@ -48,6 +51,7 @@ if(facilityId){
 			prodIds = EntityUtil.getFieldListFromEntityList(facilityInventory, "productId", true);
 			productId = "";
 			qoh = BigDecimal.ZERO;
+			productNames = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.IN, prodIds));
 			
 			if(prodIds){
 				productId = prodIds.get(0);
@@ -56,11 +60,16 @@ if(facilityId){
 					qoh = qoh.add(eachItem.quantityOnHandTotal);
 				}
 			}
+			productName = "";
+			if(productNames){
+				productName = (EntityUtil.getFirst(productNames)).productName
+			}
 			color = colorList.getAt(i);
 			newObj.put("facility", eachFacilityId);
 			newObj.put("quantity", qoh);
 			newObj.put("color", color);
 			newObj.put("product", productId);
+			newObj.putAt("productName", productName);
 			newObj.put("capacity", capacity);
 			categorySiloData.add(newObj);
 			i++;
