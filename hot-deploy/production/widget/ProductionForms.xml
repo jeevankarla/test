@@ -91,5 +91,181 @@
         	<display />
         </field>
     </form>
+    
+    <form name="FindProductionRequest" target="FindProductionRequest" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+          <set field="fromPartyId" from-field="partyId"/>
+        </actions>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+        <field name="custRequestTypeId"><hidden value="parameters.custRequestTypeId"/></field>
+        <field name="statusId" title="Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="CUSTREQ_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
+        <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="partyIdFrom" title="${uiLabelMap.MaterialMangement_CustRequestToPartyId}">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="toDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+ 		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>   
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>  
+    <form name="ListProductionRequests" type="list" extends="ListProductionRequestList" list-name="listIt">
+        <actions>
+        <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/ListRequestsPerformFind.groovy"/>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
+            <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+          <script location="component://production/webapp/production/WEB-INF/actions/ProductionRequestToPartyPerformFind.groovy"/>
+        </actions>
+    </form>
+
+    <form name="ListProductionRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="custRequestId"  title="${uiLabelMap.MaterialMangement_CustRequestId}" widget-style="buttontext">
+            <hyperlink description="${custRequestId}" target="ViewProductionRequest">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+        <field name="custRequestDate"  title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+        <field name="fromPartyId"  title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="fromPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="partyIdFrom"  title="${uiLabelMap.MaterialMangement_CustRequestToPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${partyIdFrom}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyIdFrom"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
+        <field name="statusId"  title="Status">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
+        <field name="lastModifiedDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastModifiedDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="createdByUserLogin" ><display/></field>
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_SUBMITTED&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CLOSE_INDENT&quot;, session)))}" name="close" title="Close Indent" widget-style="button" >
+        	<hyperlink target="setRequestStatus" description="Close">
+        		<parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="CRQ_COMPLETED"/>
+        	</hyperlink>
+        </field>
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot; &amp;&amp;((${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_INDENT&quot;, session)))}) || (createdByUserLogin.equals(&quot;${userLogin.userLoginId}&quot;)))" name="cancel" widget-style="buttontext">
+            <hyperlink target="setRequestStatus" description="Cancel">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="CRQ_CANCELLED"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="ProductionRequestsToApprove" type="single" target="findProductionRequestsToApprove">
+     <actions>
+     </actions>
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+   		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+   		  <field name="fromPartyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="partyIdFromDept" title="To Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="toDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+   		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListProductionRequestsToApprove" type="list" extends="ProductionRequestsToApproveList" list-name="listIt">
+        <actions>
+        <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/ListRequestsToApprovePerformFind.groovy"/>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <!-- <field-map field-name="inputFields.custRequestTypeId" value="INTERNAL_INDENT"/> -->
+            <field-map field-name="inputFields.itemStatusId" value="CRQ_DRAFT"/>
+            <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
+            <field-map field-name="orderBy" value="-custRequestId"/>  
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+          <script location="component://production/webapp/production/WEB-INF/actions/ProductionRequestToPartyPerformFind.groovy"/>
+        </actions>
+    </form>
+    <form name="ProductionRequestsToApproveList" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
+        odd-row-style="alternate-row"  default-table-style="basic-table hover-bar"  separate-columns="true">
+        <row-actions>
+			<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+		</row-actions>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
+        <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
+        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="partyIdFrom"  title="${uiLabelMap.MaterialMangement_CustRequestToPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+            </display-entity>
+        </field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
+        </field>
+        <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
+        <field name="tempQty" title="Accepted Qty"><text default-value="${quantity}"></text></field>
+        <field name="description" title="Description"  widget-style="required" required-field="false"  ><text size="25" /></field>
+        <field name="rejectButton" widget-style="buttontext" event="onclick" action="javascript:rejectMaterialRequest(this);" >
+        <submit/>
+            <!-- <hyperlink target="rejectMaterialRequest" description="Reject">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="description"/>
+                <parameter param-name="statusId" value="CRQ_REJECTED"/>
+            </hyperlink> -->
+        </field>
+        <field  name="acceptButton" event="onclick" action="javascript:approveRequestByHOD(this);" widget-style="buttontext" >
+         <!-- <hyperlink target="" description="Accept">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="Tempquantity" />
+                <parameter param-name="description"/>
+                <parameter param-name="statusId" value="CRQ_SUBMITTED"/>
+         </hyperlink> -->
+         <submit />
+        </field>
+        <field name="IndentHeadApproval"  title="Select" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${description}" description=" "  ></option></check> </field>
+    </form> 
      
 </forms>

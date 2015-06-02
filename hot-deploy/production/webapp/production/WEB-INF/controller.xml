@@ -197,6 +197,95 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MaterialBalanceReportPDF"/>        
     </request-map>
+    <!-- RequestMaps -->
+    <request-map uri="productionIndent">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ProductionIndent"/>
+        <response name="error" type="view" value="ProductionIndent"/>         
+    </request-map>
+    <request-map uri="processProductionIndentItems">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.production.ProductionServices" invoke="processProductionIndentItems" global-transaction="true"/>
+       <response name="success" type="view" value="ProductionIndent"/>
+       <response name="error" type="view" value="ProductionIndent"/>
+     </request-map>
+     <request-map uri="findProductionIndent">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="findProductionIndent"/>
+     	<response name="error" type="view" value="findProductionIndent"/>
+     </request-map>
+     <request-map uri="FindProductionRequest">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="findProductionIndent"/>
+     	<response name="error" type="view" value="findProductionIndent"/>
+     </request-map>
+     <request-map uri="ViewProductionRequest">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ViewProductionRequest"/>
+       <response name="error" type="view" value="ViewProductionRequest"/>
+     </request-map>
+     <request-map uri="productionDeptIndentApproval">
+      <security auth="true" https="true"/>
+      <response name="success" type="view" value="productionDeptIndentApproval"/>
+      <response name="error" type="view" value="productionDeptIndentApproval"/>
+     </request-map>
+     <request-map uri="findProductionRequestsToApprove">
+      <security auth="true" https="true"/>
+      <response name="success" type="view" value="productionDeptIndentApproval"/>
+      <response name="error" type="view" value="productionDeptIndentApproval"/>
+     </request-map>
+     <request-map uri="setRequestStatus">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="setRequestStatus"></event>
+       <response name="success" type="view" value="findProductionIndent"/>
+       <response name="error" type="view" value="findProductionIndent"/>
+     </request-map>
+     <request-map uri="approveRequestByHOD">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="approveRequestByHOD"></event>
+       <response name="success" type="request-redirect-noparam" value="productionDeptIndentApproval"/>
+       <response name="error" type="request-redirect-noparam" value="productionDeptIndentApproval"/>
+     </request-map>
+     <request-map uri="makeMassApproval">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="makeMassApproval" global-transaction="true"/>
+       <response name="success" type="view" value="productionDeptIndentApproval"/>
+       <response name="error" type="view" value="productionDeptIndentApproval"/>
+   </request-map>
+    <request-map uri="makeMassReject">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="makeMassReject" global-transaction="true"/>
+       <response name="success" type="view" value="productionDeptIndentApproval"/>
+       <response name="error" type="view" value="productionDeptIndentApproval"/>
+   </request-map>
+    <request-map uri="rejectMaterialRequest">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="setCustRequestItemStatus"></event>
+       <response name="success" type="request-redirect-noparam" value="productionDeptIndentApproval"/>
+       <response name="error" type="request-redirect-noparam" value="productionDeptIndentApproval"/>
+     </request-map>
+     <request-map uri="createCustRequestNote">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestNote"/>
+        <response name="success" type="request-redirect" value="ViewProductionRequest">
+      	<redirect-parameter name="custRequestId"/>
+      	</response>
+        <response name="error" type="view" value="ViewProductionRequest"/>
+    </request-map>
+     <request-map uri="createIndentContent">
+       <security https="true" auth="true"/>
+       <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createRequestContentDocument" type="simple"/>
+       <response name="success" type="view" value="ViewProductionRequest"/>
+       <response name="error" type="view" value="ViewProductionRequest"/>
+     </request-map>
+     
+     <request-map uri="deleteIndentContent">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="deleteCustRequestContent" />
+       <response name="success" type="view" value="ViewProductionRequest"/>
+       <response name="error" type="view" value="ViewProductionRequest"/>
+     </request-map>
+    
     <!-- View Mappings -->
     
     <view-map name="ProductionRunTrends" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionRunTrends"/>
@@ -218,5 +307,10 @@
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
+    <!-- INDENT VIEW MAPPINGS -->
+  	<view-map name="ProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionIndent"/> 
+  	<view-map name="findProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#findProductionIndent"/>
+  	<view-map name="ViewProductionRequest" type="screen" page="component://production/widget/ProductionScreens.xml#ViewProductionRequest"/>
+    <view-map name="productionDeptIndentApproval" type="screen" page="component://production/widget/ProductionScreens.xml#productionDeptIndentApproval"/>
     
 </site-conf>

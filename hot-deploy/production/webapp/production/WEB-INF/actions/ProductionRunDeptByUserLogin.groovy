@@ -15,31 +15,43 @@ import java.math.RoundingMode;
 import javolution.util.FastList;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.product.inventory.InventoryWorker;
-
+import org.ofbiz.party.party.PartyHelper;
 userLogin=parameters.userLogin;
 partyIdTo=userLogin.partyId;
 List employmentList=FastList.newInstance();
 List facilityList=FastList.newInstance();
+partyIdFrom="";
+condition=EntityCondition.makeCondition([EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyIdTo),
+										 EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null)],EntityOperator.AND);
+employmentList=delegator.findList("Employment",condition,null,null,null,false);
+employment=EntityUtil.getFirst(employmentList);
  partyRole=delegator.findOne("PartyRole",[partyId:partyIdTo,roleTypeId:"PRODUCTION_RUN"],false);
  if(UtilValidate.isNotEmpty(partyRole)){
-	condition=EntityCondition.makeCondition([EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyIdTo),
-		                                     EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null)],EntityOperator.AND);
-	employmentList=delegator.findList("Employment",condition,null,null,null,false);
-	employment=EntityUtil.getFirst(employmentList);
-	partyIdFrom="";
 	if(UtilValidate.isNotEmpty(employment)){
 		partyIdFrom=employment.partyIdFrom;
 	}
 	
 	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
-				                                                                      EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND),null,null,null,false);
+																					  EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND),null,null,null,false);
 //	if(UtilValidate.isNotEmpty(facilityList)){
 //	facility=EntityUtil.getFirst(facilityList);
 //	context.facilityId=facility.facilityId;
 //	}
-   context.facilityListFlag="Yes";																				  
+   context.facilityListFlag="Yes";
  }else{
 		 facilityList=delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT"),null,null,null,false);
  }
  
  context.facilityList=facilityList;
+ deptName=PartyHelper.getPartyName(delegator, partyIdFrom, false);
+if(UtilValidate.isNotEmpty(partyIdFrom)){
+	
+	context.partyIdFrom=partyIdFrom;
+}else{
+	
+	if(UtilValidate.isNotEmpty(employment)){
+		partyIdFrom=employment.partyIdFrom;
+	}
+	context.partyIdFrom=partyIdFrom;
+}
+context.deptName=deptName;

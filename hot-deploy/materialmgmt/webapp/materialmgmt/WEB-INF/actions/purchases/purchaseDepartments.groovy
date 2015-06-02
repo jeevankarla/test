@@ -57,6 +57,7 @@ if(UtilValidate.isNotEmpty(departmentList)){
 	finalDepartmentList.addAll(departmentList);
 }
 context.put("finalDepartmentList",finalDepartmentList);
+context.put("toDepartmentList", finalDepartmentList);
 
 List<String> orderBy = UtilMisc.toList("attrValue");
 ledgerFolioList = delegator.findList("ProductAttribute",EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "LEDGERFOLIONO")  , null, orderBy, null, false );
@@ -75,6 +76,14 @@ if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
 	context.put("finalDepartmentList",newDepatmentList);
 	context.partyId=resultMap.get("deptId");
 }
+if(UtilValidate.isNotEmpty(parameters.custRequestTypeId) && parameters.custRequestTypeId=="INTERNAL_INDENT"){
+	if(!(security.hasEntityPermission("PRODUCTION","_ADMIN", session))){
+		newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,context.get("partyIdFrom")));
+		context.put("finalDepartmentList",newDepatmentList);
+		context.partyId=context.get("partyIdFrom");
+	}
+}
+
 //Debug.log("finalDepartmentList================="+finalDepartmentList);
 	
 

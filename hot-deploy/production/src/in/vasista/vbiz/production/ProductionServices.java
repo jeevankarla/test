@@ -1016,4 +1016,208 @@ public class ProductionServices {
 		return "success";  
      }
      
+
+     public static String processProductionIndentItems(HttpServletRequest request, HttpServletResponse response) {
+     		
+     		Delegator delegator = (Delegator) request.getAttribute("delegator");
+     		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+     		DispatchContext dctx =  dispatcher.getDispatchContext();
+     		Locale locale = UtilHttp.getLocale(request);
+     		Map<String, Object> result = ServiceUtil.returnSuccess();
+     	    String requestDateStr = (String) request.getParameter("requestDate");
+     	    String responseDateStr = (String) request.getParameter("responseDate");
+     	    String requestName = (String) request.getParameter("custRequestName");
+     	    String custRequestId="";
+     	    HttpSession session = request.getSession();
+     	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+     	    String partyId = (String) request.getParameter("partyIdFrom");
+     	  	String custRequestTypeId = (String) request.getParameter("custRequestTypeId");
+     	  	String partyIdFrom = (String) request.getParameter("partyId"); 
+     		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+     		if (UtilValidate.isEmpty(partyId)) {
+     			Debug.logError("Cannot create request without partyId: "+ partyId, module);
+     			return "error";
+     		}
+     		if(UtilValidate.isEmpty(requestName)){
+     			requestName = "_NA_";
+     		}
+     		Timestamp requestDate = null;
+     		Timestamp responseDate = null;
+     		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+     		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+     		if (rowCount < 1) {
+     			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+     			return "error";
+     		}
+     		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+     	  	if(UtilValidate.isNotEmpty(requestDateStr)){
+     	  		try {
+     	  			requestDate = new java.sql.Timestamp(sdf.parse(requestDateStr).getTime());
+     		  	} catch (ParseException e) {
+     		  		Debug.logError(e, "Cannot parse date string: " + requestDateStr, module);
+     		  	} catch (NullPointerException e) {
+     	  			Debug.logError(e, "Cannot parse date string: " + requestDateStr, module);
+     		  	}
+     	  	}
+     	  	else{
+     	  		requestDate = UtilDateTime.nowTimestamp();
+     	  	}
+     	  	if(UtilValidate.isNotEmpty(responseDateStr)){
+     	  		try {
+     	  			responseDate = new java.sql.Timestamp(sdf.parse(responseDateStr).getTime());
+     		  	} catch (ParseException e) {
+     		  		Debug.logError(e, "Cannot parse date string: " + responseDateStr, module);
+     		  	} catch (NullPointerException e) {
+     	  			Debug.logError(e, "Cannot parse date string: " + responseDateStr, module);
+     		  	}
+     	  	}else{
+     	  		responseDate = UtilDateTime.nowTimestamp();
+     	  	}
+     		boolean beganTransaction = false;
+     		try{
+     			beganTransaction = TransactionUtil.begin(7200);
+     			String roleTypeId = null;
+     			if(partyId.contains("SUB")){
+     				roleTypeId = "DIVISION";
+     			}else{
+     				roleTypeId = "INTERNAL_ORGANIZATIO";
+     			}
+     			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+     			if(UtilValidate.isEmpty(party)){
+     				Debug.logError("Request can only made by departments", module);
+     				request.setAttribute("_ERROR_MESSAGE_", "Request can only made by departments");
+     				TransactionUtil.rollback();
+     		  		return "error";
+     			}
+     			
+     			Map<String,Object> custRequestInMap = FastMap.newInstance();
+     			custRequestInMap.put("custRequestTypeId",custRequestTypeId);
+     			custRequestInMap.put("userLogin",userLogin);
+     			custRequestInMap.put("currencyUomId","INR");
+     			custRequestInMap.put("maximumAmountUomId","INR");
+     			custRequestInMap.put("fromPartyId",partyId);
+     			custRequestInMap.put("custRequestName",requestName);
+     			custRequestInMap.put("custRequestDate",requestDate);
+     			custRequestInMap.put("responseRequiredDate",responseDate);
+     	        Map resultMap = dispatcher.runSync("createCustRequest",custRequestInMap);
+     	        
+     	        if (ServiceUtil.isError(resultMap)) {
+     	        	Debug.logError("Problem Filing Request for party :"+partyId, module);
+     				request.setAttribute("_ERROR_MESSAGE_", "Problem Filing Request for party :"+partyId);	
+     				TransactionUtil.rollback();
+     		  		return "error";
+     	        }
+     	         custRequestId = (String)resultMap.get("custRequestId");
+     	        
+     	        String productId = "";
+     	        String quantityStr = "";
+     			BigDecimal quantity = BigDecimal.ZERO;
+     			for (int i = 0; i < rowCount; i++) {
+     				  
+     				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+     				if (paramMap.containsKey("productId" + thisSuffix)) {
+     					productId = (String) paramMap.get("productId" + thisSuffix);
+     				}
+     				else {
+     					request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+     					return "error";			  
+     				}
+     			  
+     				if (paramMap.containsKey("quantity" + thisSuffix)) {
+     					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+     				}
+     				else {
+     					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+     					return "error";			  
+     				}		  
+     				if(UtilValidate.isNotEmpty(quantityStr)){
+     					quantity = new BigDecimal(quantityStr);
+     				}
+     			    List conditionList = FastList.newInstance();
+     			    conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+     			    conditionList.add(EntityCondition.makeCondition("fromPartyId",EntityOperator.EQUALS,partyId));
+     			    conditionList.add(EntityCondition.makeCondition("itemStatusId",EntityOperator.IN,UtilMisc.toList("CRQ_DRAFT","CRQ_SUBMITTED","CRQ_ACCEPTED","CRQ_ISSUED")));
+     			    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+     				List<GenericValue> custRequestItemList = delegator.findList("CustRequestAndItemAndAttribute",condition, null, null, null, false);
+     				
+     				if(UtilValidate.isNotEmpty(custRequestItemList)){
+     					Debug.logError(productId +" is aleady in process.", module);
+     	 				request.setAttribute("_ERROR_MESSAGE_", productId +" is aleady in process.");
+     	 				TransactionUtil.rollback();
+     	 		  		return "error";
+     				}
+     				
+     				Map<String,Object> itemInMap = FastMap.newInstance();
+     		        itemInMap.put("custRequestId",custRequestId);
+     		        itemInMap.put("statusId","CRQ_DRAFT");
+     		        itemInMap.put("userLogin",userLogin);
+     		        itemInMap.put("productId",productId);
+     		        itemInMap.put("description","");
+     		        itemInMap.put("quantity",quantity);
+     		        itemInMap.put("origQuantity",quantity);
+     		        resultMap = dispatcher.runSync("createCustRequestItem",itemInMap);
+     		        
+     		        if (ServiceUtil.isError(resultMap)) {
+     		        	Debug.logError("Problem creating Request Item for party :"+partyId, module);
+     					request.setAttribute("_ERROR_MESSAGE_", "Problem creating Request Item for party :"+partyId);	
+     					TransactionUtil.rollback();
+     			  		return "error";
+     		        }
+     			}
+     			
+     			roleTypeId = null;
+     			if(partyIdFrom.contains("SUB")){
+     				roleTypeId = "DIVISION";
+     			}else{
+     				roleTypeId = "INTERNAL_ORGANIZATIO";
+     			}
+     			GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyIdFrom, "roleTypeId", roleTypeId), false);
+     			if(UtilValidate.isEmpty(partyRole)){
+     				Debug.logError("Request can only made to departments", module);
+     				request.setAttribute("_ERROR_MESSAGE_", "Request can only made to departments");
+     				TransactionUtil.rollback();
+     		  		return "error";
+     			}
+     			
+     			Map<String,Object> inputCtxMap = FastMap.newInstance();  
+     			inputCtxMap.put("custRequestId", custRequestId);
+     			inputCtxMap.put("partyId", partyIdFrom);
+     			inputCtxMap.put("roleTypeId",roleTypeId);
+     			inputCtxMap.put("userLogin", userLogin);
+     			
+     			resultMap = dispatcher.runSync("createCustRequestParty", inputCtxMap);
+    			if (ServiceUtil.isError(resultMap)) {
+    				Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+partyIdFrom, module);
+    				request.setAttribute("_ERROR_MESSAGE_", "Error occuring while calling createCustRequestParty service:");
+    				TransactionUtil.rollback();
+     		  		return "error";
+    			}
+     			
+     		}
+     		catch (GenericEntityException e) {
+     			try {
+     				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+     	  		} catch (GenericEntityException e2) {
+     	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+     	  		}
+     	  		Debug.logError("An entity engine error occurred while fetching data", module);
+     	  	}
+       	  	catch (GenericServiceException e) {
+       	  		try {
+       			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+       	  		} catch (GenericEntityException e2) {
+       			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+       	  		}
+       	  		Debug.logError("An entity engine error occurred while calling services", module);
+       	  	}
+     	  	finally {
+     	  		try {
+     	  			TransactionUtil.commit(beganTransaction);
+     	  		} catch (GenericEntityException e) {
+     	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+     	  		}
+     	  	}
+     		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ...!IndentNo:"+custRequestId );
+     		return "success";
+     	}
 }
