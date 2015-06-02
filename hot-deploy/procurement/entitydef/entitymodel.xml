@@ -683,6 +683,7 @@
 	    <member-entity entity-alias="MTI" entity-name="MilkTransferItem"/>	
 		<alias-all entity-alias="MTI" />    
 		<alias name="dcNo" entity-alias="MT"/>
+	    <alias name="purposeTypeId" entity-alias="MT"/>
 		<alias name="statusId" entity-alias="MT"/>
 		<alias name="facilityId" entity-alias="MT"/>
 		<alias name="facilityIdTo" entity-alias="MT"/>

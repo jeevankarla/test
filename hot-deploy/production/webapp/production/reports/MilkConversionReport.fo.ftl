@@ -29,8 +29,8 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
-<#-- <#if milkTransferMap?has_content> -->
+${setRequestAttribute("OUTPUT_FILENAME", "MilkConversionReport.pdf")}
+ <#if milkConversionMap?has_content>
 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
 		<#assign pageNumber = 0>				
@@ -88,45 +88,51 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  ></fo:block></fo:table-cell>       			
 				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  ></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  >TANKERS</fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >EXPECTED QTY</fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >RECEIVED QTY</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >EXPECTED QTY(kg)</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >RECEIVED QTY(kg)</fo:block></fo:table-cell>       		
    				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >EXPECTED QTY</fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >RECEIVED QTY</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >EXPECTED QTY(kg)</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >RECEIVED QTY(kg)</fo:block></fo:table-cell>       		
   				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >EXPECTED QTY</fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >RECEIVED QTY</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >EXPECTED QTY(kg)</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >RECEIVED QTY(kg)</fo:block></fo:table-cell>       		
                                   </fo:table-row>
                                 <fo:table-row>
                                 <fo:table-cell>  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >------------------------------------------------------------------------------------------------------------------ </fo:block>  </fo:table-cell>
 				                 </fo:table-row>
+				                 <#assign SNO=1>
+				                 <#assign milkConversionMapDetails = milkConversionMap.entrySet()>
+                              <#list milkConversionMapDetails as milkConversionMapDetail>
                                   <fo:table-row>
-				                     <fo:table-cell  ><fo:block text-align="center" font-size="12pt"  ></fo:block></fo:table-cell>       			
-				                     <fo:table-cell  ><fo:block text-align="left"   font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="center" font-size="12pt"  >${SNO?if_exists}</fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="left"   font-size="12pt"  >${milkConversionMapDetail.getKey()}</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  >${milkConversionMapDetail.getValue().get("unionTankers")}</fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ><#if milkConversionMapDetail.getValue().get("receivedSkimQty")?has_content>${milkConversionMapDetail.getValue().get("receivedSkimQty")?if_exists?string("##0.00")}<#else>0.00 </#if></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt" ></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ><#if milkConversionMapDetail.getValue().get("receivedRawQty")?has_content>${milkConversionMapDetail.getValue().get("receivedRawQty")?if_exists?string("##0.00")}<#else>0.00 </#if></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt" ></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ><#if milkConversionMapDetail.getValue().get("receivedUnionQty")?has_content>${milkConversionMapDetail.getValue().get("receivedUnionQty")?if_exists?string("##0.00")}<#else>0.00 </#if></fo:block></fo:table-cell>       		
                                   </fo:table-row>
+                                  <#assign SNO=SNO+1>
+                                  </#list>
                                   <fo:table-row>
                                 <fo:table-cell>  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >------------------------------------------------------------------------------------------------------------------ </fo:block>  </fo:table-cell>
 				                 </fo:table-row>
+  				                 <#assign receivedtotalsMapDetails = receivedtotalsMap.entrySet()>
 				                 <fo:table-row>
 				                     <fo:table-cell  number-columns-spanned="2"><fo:block text-align="left" font-size="12pt"  >TOTAL           :</fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt"  >${receivedtotalsMap.get("totalTankers")}</fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >${receivedtotalsMap.get("totReceivedSkimQty")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
    				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt" ></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >${receivedtotalsMap.get("totReceivedRawQty")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+   				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
 				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-   				                     <fo:table-cell  ><fo:block text-align="center"  font-size="12pt" ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
-				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  ></fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >${receivedtotalsMap.get("totReceivedQty")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                                   </fo:table-row>
                                   
 				                <fo:table-row>
@@ -140,7 +146,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 			 </fo:flow>  
 			 </fo:page-sequence>
 			 
-		<#-->  <#else>
+		     <#else>
 				<fo:page-sequence master-reference="main">
     			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
        		 		<fo:block font-size="14pt">
@@ -148,7 +154,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
        		 		</fo:block>
     			</fo:flow>
 			</fo:page-sequence>
-			</#if>    -->  
+			</#if>  
 </fo:root>
 </#escape>
 

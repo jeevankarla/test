@@ -146,7 +146,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						</tr>
 						
 						<tr>
-							<td class="label">VAT Purchase Category :</td>
+							<td class="label">VAT Purchase(Others) Category :</td>
 							<td><input type="checkbox" id="vatPurCategory"  name="vatPurCategory" value="VATPUR_OTHERS"/></td>
 						</tr>
 				<#--
