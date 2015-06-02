@@ -66,7 +66,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 			openingSnfKg=invCountMapData.get("kgSnf");
 			openingFatPers=invCountMapData.get("fat");
 			openingSnfPers=invCountMapData.get("snf");
-			if(UtilValidate.isNotEmpty(openingQty) && "0".equals(openingQty)){
+			if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
 		        facilityNames = delegator.findOne("Facility",["facilityId":eachSiloId],false);
 		        siloName=facilityNames.get("facilityName");
 				openingBalSiloMap.put("description", siloName);
