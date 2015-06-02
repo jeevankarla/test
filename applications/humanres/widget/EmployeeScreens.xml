@@ -717,6 +717,7 @@ under the License.
 					<field-map field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
 					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
 				</entity-and> -->
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
 				<entity-condition list="EditAccountDetailsList" entity-name="FinAccount">
 					<condition-list combine="and">
 						<condition-expr field-name="finAccountTypeId"  operator="equals" value="BANK_ACCOUNT"/>
