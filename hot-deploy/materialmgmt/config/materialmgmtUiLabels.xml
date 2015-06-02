@@ -43,6 +43,9 @@
     <property key="MaterialMangement_CustRequestFromPartyId">
         <value xml:lang="en">From Department</value>
     </property>
+    <property key="MaterialMangement_CustRequestToPartyId">
+        <value xml:lang="en">To Department</value>
+    </property>
     <property key="MaterialMangement_FindMaterialIssuance">
         <value xml:lang="en">Find Material Issuance</value>
     </property>
