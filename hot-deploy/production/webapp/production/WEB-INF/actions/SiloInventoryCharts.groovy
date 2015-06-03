@@ -81,3 +81,4 @@ if(facilityId){
 }
 context.categorySiloJSON = categorySiloJSON;
 context.categoryList = categoryList;
+context.facilityFloorId = facilityId;
