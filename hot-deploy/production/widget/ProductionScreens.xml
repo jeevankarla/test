@@ -73,15 +73,17 @@
 		     	<set field="facilityId" from-field="parameters.facilityId"/>
 		     	<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
         		<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/> 
+        		<script location="component://production/webapp/production/WEB-INF/actions/InitiateTransferFind.groovy"/>
 		     	<script location="component://production/webapp/production/WEB-INF/actions/StoreInventoryForXfer.groovy"/>
 		     </actions>
 		     <widgets>
 	     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
 	     		 	<decorator-section name="body">
 	     		 	<include-menu location="component://production/widget/ProductionMenus.xml" name="InventoryTransferTabBar"/>
-	     		 	<screenlet title="Find Product Inventory">
+	     		 	<!-- <screenlet title="Find Product Inventory">
 	     		 		<include-form location="component://production/widget/ProductionForms.xml" name="FindFacilityProducts"/>
-	     		 	</screenlet>
+	     		 	</screenlet> -->
+	     		 	<platform-specific><html><html-template location="component://production/webapp/production/production/InitiateTransferFind.ftl"/></html></platform-specific>
 	     		 	<screenlet title="Product Listing">
 	     		 		<platform-specific><html><html-template location="component://production/webapp/production/production/stockXferForm.ftl"/></html></platform-specific>
 	     		 		<include-form location="component://production/widget/ProductionForms.xml" name="ListFacilityProducts"/> 
