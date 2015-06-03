@@ -209,9 +209,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								 <fo:table-row> 
-									 <fo:table-cell> 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" keep-together="always">&#160;</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+									 <fo:table-cell  border-style="solid" > 
+									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" keep-together="always">&#160;OrderMessage</fo:block>
+									      <fo:block linefeed-treatment="preserve" font-weight="bold">${orderMsg?if_exists}</fo:block> 
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								 <fo:table-row> 

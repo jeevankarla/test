@@ -71,13 +71,22 @@ finalProdIdsList.each{ eachProdId ->
 
 invoiceSlipsMap = [:];
 totVatsPercesntMap = [:];
-
+orderMsg="";
 shipmentId = parameters.shipmentId;
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId", "salesChannelEnumId"), null, null, false);
+orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId", "salesChannelEnumId","orderMessage"), null, null, false);
+if(orderHeaders){
+	orderMessage = orderHeaders.orderMessage;
+	orderMessage.each{ eachorderMSg ->
+		if(UtilValidate.isNotEmpty(eachorderMSg)){
+		orderMsg=eachorderMSg;
+		}
+	}
+}
+context.orderMsg=orderMsg;
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
 
 taxLabelFlag = "otherChannel";

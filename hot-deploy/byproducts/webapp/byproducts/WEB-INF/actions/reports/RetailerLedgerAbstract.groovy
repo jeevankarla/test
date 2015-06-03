@@ -178,6 +178,32 @@ allDaySaleMap=[:];
 obAmount=BigDecimal.ZERO;
 closingBal=BigDecimal.ZERO;
 		
+exprList=[];
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"SHOPEE_RENT"));
+exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,boothId));
+exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayStart));
+exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+allInvoiceList = delegator.findList("Invoice", conditionInvRole , null, null, null, false );
+if(allInvoiceList){
+	shopeeInvoiceList=[];
+allInvoiceList.each{ eachinvoice ->
+	Map invoicePaymentInfoMap =FastMap.newInstance();
+	//BigDecimal outstandingAmount =BigDecimal.ZERO;
+	invoicePaymentInfoMap.put("invoiceId", eachinvoice.invoiceId);
+	invoicePaymentInfoMap.put("userLogin",userLogin);
+		Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
+		Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+		if(invoicePaymentInfo){
+		shopeeInvoiceList.add(invoicePaymentInfo);
+		}
+		//outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");
+	
+}
+context.shopeeInvoiceList=shopeeInvoiceList;
+}
 for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 	Timestamp saleDate = UtilDateTime.addDaysToTimestamp(dayStart, j);
 	Timestamp saleDate1 = UtilDateTime.addDaysToTimestamp(dayStart, j);
@@ -222,6 +248,19 @@ for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 		boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId, isByParty:Boolean.TRUE]);
 		if(UtilValidate.isNotEmpty(boothPaidDetail)){
 			reciepts = boothPaidDetail.get("invoicesTotalAmount");
+			if(UtilValidate.isNotEmpty(boothPaidDetail.get("boothPaymentsList"))){
+				boothPaymentsList=boothPaidDetail.get("boothPaymentsList")
+				
+				boothPaymentsList.each{ eachpayment ->
+				tempMap=[:];
+				tempMap.put("partyIdFrom", eachpayment.get("partyIdFrom"));
+				tempMap.put("paymentMethodTypeId", eachpayment.get("paymentMethodTypeId"));
+				tempMap.put("paymentId", eachpayment.get("paymentId"));
+				tempMap.put("amount", eachpayment.get("amount"));
+				
+				curntDaySalesMap["paymentDetails"] = tempMap;
+				}
+			}
 		}
 		curntDaySalesMap["PaidAmt"] = ((new BigDecimal(reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		if(j==0){//Opeinig Balance called only  for firstDay  in whole period
