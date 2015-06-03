@@ -599,7 +599,7 @@ under the License.
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>                                              
     </service>
     <service name="sendPaymentSms" engine="java"
-        location="org.ofbiz.accounting.payment.PaymentWorker" invoke="sendPaymentSms">
+        location="org.ofbiz.accounting.payment.PaymentWorker" invoke="sendPaymentSms" max-retry="3">
         <description>Send an payment sms</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>                                              
     </service>      
