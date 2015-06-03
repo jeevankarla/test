@@ -72,10 +72,18 @@ if(UtilValidate.isNotEmpty(payrollBenDedRuleList)){
 						payHeadPriceActionTypeId = PayHeadAction.get("payHeadPriceActionTypeId");
 						customPriceCalcService = PayHeadAction.get("customPriceCalcService");
 						acctgFormulaId = PayHeadAction.get("acctgFormulaId");
+						
+						acctgFormula = delegator.findOne("AcctgFormula", [acctgFormulaId : acctgFormulaId], false);
+						formula = "";
+						if(UtilValidate.isNotEmpty(acctgFormula)){
+							formula = acctgFormula.get("formula");
+						}
+						
 						amount = PayHeadAction.get("amount");
 						benDedRuleMap["payHeadPriceActionTypeId"] = payHeadPriceActionTypeId;
 						benDedRuleMap["customPriceCalcService"] = customPriceCalcService;
 						benDedRuleMap["acctgFormulaId"] = acctgFormulaId;
+						benDedRuleMap["formula"] = formula;
 						benDedRuleMap["amount"] = amount;
 						tempMap1 = [:];
 						tempMap1.putAll(benDedRuleMap);
