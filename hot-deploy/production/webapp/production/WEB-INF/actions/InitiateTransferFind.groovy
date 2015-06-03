@@ -52,14 +52,46 @@ List facilityList = FastList.newInstance();
 List productFacility = FastList.newInstance(); 
 List productIds = FastList.newInstance();
 List productList = FastList.newInstance();
-
+List conditionList = FastList.newInstance();
+List userFacilityList = FastList.newInstance();
+List userFacilityIds = FastList.newInstance();
 JSONObject facilityJSON = new JSONObject();
 JSONObject productNameJSON = new JSONObject();
+JSONObject facilityNameJSON = new JSONObject();
+JSONArray productJSON = new JSONArray();
+JSONArray facilityJson = new JSONArray();
 facilityTypeIds.add("PLANT");
 facilityTypeIds.add("SILO");
 
-facilityList = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds),UtilMisc.toSet("facilityId"),null,null,false);
+
+userLogin=parameters.userLogin;
+partyIdTo=userLogin.partyId;
+List employmentList=FastList.newInstance();
+partyIdFrom="";
+condition=EntityCondition.makeCondition([EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyIdTo),
+										 EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null)],EntityOperator.AND);
+employmentList=delegator.findList("Employment",condition,null,null,null,false);
+employment=EntityUtil.getFirst(employmentList);
+ partyRole=delegator.findOne("PartyRole",[partyId:partyIdTo,roleTypeId:"PRODUCTION_RUN"],false);
+ if(UtilValidate.isNotEmpty(partyRole)){
+	if(UtilValidate.isNotEmpty(employment)){
+		partyIdFrom=employment.partyIdFrom;
+	}
+	
+	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
+																					  EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds)],EntityOperator.AND),UtilMisc.toSet("facilityId","facilityName"),null,null,false);
+ }else{
+		 facilityList=delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds),UtilMisc.toSet("facilityId","facilityName"),null,null,false);
+ }
+//facilityList = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds),UtilMisc.toSet("facilityId"),null,null,false);
 facilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId",true);
+facilityList.each{facility->
+	JSONObject newObj = new JSONObject();
+	newObj.put("value", facility.facilityId);
+	newObj.put("label", facility.facilityName);
+	facilityJson.add(newObj);
+	facilityNameJSON.put(facility.facilityId, facility.facilityName);
+}
 
 productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),UtilMisc.toSet("productId","facilityId","capacity"),null,null,false);
 productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
@@ -76,6 +108,7 @@ if(productFacility){
 			newObj.put("value", prFacility.productId);
 			newObj.put("label", prodName.description);
 			facilityArray.add(newObj);
+			productJSON.add(newObj);
 			productNameJSON.put(prFacility.productId, prodName.description);
 		}
 		if(UtilValidate.isNotEmpty(facilityArray)){
@@ -85,5 +118,7 @@ if(productFacility){
 }
 context.facilityJSON=facilityJSON;
 context.productNameJSON=productNameJSON;
-
+context.facilityJson=facilityJson;
+context.facilityNameJSON=facilityNameJSON;
+//context.productJSON=productJSON;
 
