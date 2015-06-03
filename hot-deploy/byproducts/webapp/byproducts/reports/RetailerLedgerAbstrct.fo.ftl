@@ -34,6 +34,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 <#assign lineNumber = 5>
 <#assign numberOfLines = 60>
 <#assign facilityNumberInPage = 0>
+<#assign sno = 0>
 <#if boothSalesMap?has_content>	
    <#assign boothsSaleList= boothSalesMap.entrySet()>
     <#list boothsSaleList as boothSaleEntry>
@@ -47,10 +48,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
             	 <fo:block text-align="center" font-size="12pt">
             	 <fo:table  table-layout="fixed"   font-size="12pt">                
 				                 <fo:table-column column-width="70pt"/>
- 						  		<fo:table-column column-width="70pt"/>
+ 						  		<fo:table-column column-width="100pt"/>
  						  		<fo:table-column column-width="50pt"/>
  						   	    <fo:table-column column-width="90pt"/>
- 						   	    <fo:table-column column-width="150pt"/>
+ 						   	    <fo:table-column column-width="140pt"/>
  						   	    <fo:table-column column-width="70pt"/>
  						   	     <fo:table-column column-width="70pt"/>
 				                <fo:table-body>
@@ -86,7 +87,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			<fo:block>	
             				 <fo:table  table-layout="fixed">                
 				                <fo:table-column column-width="70pt"/>
- 						  		<fo:table-column column-width="72pt"/>
+ 						  		<fo:table-column column-width="100pt"/>
  						  		<fo:table-column column-width="50pt"/>
  						   	    <fo:table-column column-width="70pt"/>
  						   	    <fo:table-column column-width="150pt"/>
@@ -101,18 +102,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                        </fo:table-cell>
 			                         <#assign dealerName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, boothSaleEntry.getKey(), false)>
 			                        <fo:table-cell>
-			                          <fo:block text-align="center"  white-space-collapse="false" >${boothSaleEntry.getKey()}</fo:block>
+			                          <fo:block text-align="right" white-space-collapse="false" >${boothSaleEntry.getKey()?if_exists?upper_case}</fo:block>
 			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="right" white-space-collapse="false" >[${dealerName?if_exists}]</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+									<fo:table-cell  number-columns-spanned="4">
+			                          <fo:block text-align="left" white-space-collapse="false" >[${dealerName?if_exists}]</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
+			                     
 				               <#assign boothDaySaleList= boothSaleEntry.getValue().entrySet()>
  								<#assign j=0>
 				               <#list boothDaySaleList as daySaleEntry>
@@ -134,13 +130,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right" white-space-collapse="false" ></fo:block>
+			                          <fo:block text-align="right" white-space-collapse="true" >OpeningBalance: </fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell >
-			                          <fo:block text-align="right" text-indent="4pt" keep-together="always">OpeningBalance:</fo:block>
+			                          <fo:block text-align="right" text-indent="4pt" keep-together="always">${daySaleEntry.getValue().get("OpeningBal")}</fo:block>
 			                        </fo:table-cell>
 									<fo:table-cell >
-			                          <fo:block text-align="left"  white-space-collapse="false" > ${daySaleEntry.getValue().get("OpeningBal")}</fo:block>
+			                          <fo:block text-align="left"  white-space-collapse="false" ></fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
 			                       <#list bootDetilsList as eachDayDeatils>
@@ -148,24 +144,24 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 					                       <#assign  productWiseEntryList=eachDayDeatils.getValue().entrySet()>
 					                       <#list productWiseEntryList as productEntry>
 						                       <#assign productDeatils = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)>
-						                       <fo:table-row >
-						                        <fo:table-cell>
-						                          <fo:block text-align="right" >${daySaleEntry.getKey()}</fo:block>
-						                        </fo:table-cell>
-						                        <#assign routeId = "">
+												 <#assign routeId = "">
+						                        <#if eachDayDeatils.getKey() == "PM">
+						                        	<#assign routeId =daySaleEntry.getValue().get("PMroutes")>
+						                        <#else>
+						                        	<#assign routeId =daySaleEntry.getValue().get("AMroutes")>
+						                        </#if> <#assign routeId = "">
 						                        <#if eachDayDeatils.getKey() == "PM">
 						                        	<#assign routeId =daySaleEntry.getValue().get("PMroutes")>
 						                        <#else>
 						                        	<#assign routeId =daySaleEntry.getValue().get("AMroutes")>
 						                        </#if>
-													
+						                       <fo:table-row >
 						                        <fo:table-cell>
-												<#list routeId as route>
-						                          <fo:block text-align="center"  >${route?if_exists}</fo:block>
-													</#list>		
-
+						                          <fo:block text-align="right" >${daySaleEntry.getKey()}</fo:block>
 						                        </fo:table-cell>
-													
+						                        <fo:table-cell>
+						                          <fo:block text-align="center"  ><#list routeId as route>${route?if_exists}  </#list></fo:block>
+						                        </fo:table-cell>
 						                        <fo:table-cell>
 						                          <fo:block text-align="left"   keep-together="always">${eachDayDeatils.getKey()}</fo:block>
 						                        </fo:table-cell>
@@ -185,6 +181,72 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 					                       </#list>
 				                       </#if>
 			                      </#list>
+			                        <#assign totalRevenue=  daySaleEntry.getValue().get("totalRevenue")>
+									 <#if shopeeInvoiceList?has_content>
+									 <#if sno == 0>
+								<fo:table-row>
+			                        <fo:table-cell>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always">&#160;</fo:block>
+			                        </fo:table-cell>
+			                     </fo:table-row> 
+			                      <#list shopeeInvoiceList as shopeerent>
+			                       <fo:table-row>
+			                        <fo:table-cell>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always">Shopee Rent:</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" >InvoiceId: </fo:block>
+			                        </fo:table-cell>
+									<fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" >${shopeerent.get("invoiceId")?if_exists}</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell number-columns-spanned="2" >
+			                          <fo:block text-align="center" white-space-collapse="false" >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shopeerent.get("dueDate"), "dd/MM/yy")}</fo:block>
+			                        </fo:table-cell>
+									<fo:table-cell>
+			                          <fo:block text-align="right" white-space-collapse="false" >${shopeerent.get("amount")?string("##0.00")}</fo:block>
+			                        </fo:table-cell>
+			                        <#assign totalRevenue = daySaleEntry.getValue().get("totalRevenue") + shopeerent.get("amount")>
+									 <fo:table-cell>
+			                          <fo:block text-align="right" ></fo:block>
+			                        </fo:table-cell>
+			                      </fo:table-row>
+								</#list>
+									</#if>
+								</#if>
+								<#if daySaleEntry.getValue().get("paymentDetails")?has_content>
+ 								<fo:table-row  >
+			                        <fo:table-cell>
+			                          <fo:block text-align="right"  ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >	<#if daySaleEntry.getValue().get("paymentDetails")?has_content> PaymentId :</#if></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>			
+			                          <#if  daySaleEntry.getValue().get("paymentDetails")?has_content>
+			                          <fo:block text-align="left"  keep-together="always">${daySaleEntry.getValue().get("paymentDetails").get("paymentId")?if_exists}</fo:block>
+										 <#else>
+			                          <fo:block text-align="right" >&#160;</fo:block>
+									</#if>		
+  			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >&#160; </fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                        <#if daySaleEntry.getValue().get("paymentDetails")?has_content>
+			                          <fo:block text-align="center" ><#if daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId")?has_content && (daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CHEQUE_PAYIN" || daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CHEQUE_PAYOUT")>CHEQUE</#if><#if daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId")?has_content && (daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CASH_PAYIN" || daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CASH_PAYOUT")>CASH</#if></fo:block>
+			                          <#else>
+			                          <fo:block text-align="right" >&#160;</fo:block>
+									</#if>
+			                        </fo:table-cell>
+		                        	 <fo:table-cell>
+			                          <fo:block text-align="right" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("PaidAmt")?string("##0.00")}</fo:block>
+			                        </fo:table-cell>
+			                      </fo:table-row>
+									</#if>
 			                       <fo:table-row>
 			                         <fo:table-cell>
 			                       <fo:block font-family="Courier,monospace" font-size="12pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -207,7 +269,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="right" ></fo:block>
 			                        </fo:table-cell>
 			                         <fo:table-cell>
-			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("totalRevenue")?string("##0.00")}</fo:block>
+			                          <fo:block text-align="right" >${totalRevenue?string("##0.00")}</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("PaidAmt")?string("##0.00")}</fo:block>
@@ -246,6 +308,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                       <fo:block font-family="Courier,monospace" font-size="12pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
  				                      </fo:table-cell>
 			                      </fo:table-row>
+			                      <#assign sno =sno+1>
  				           </#list> 
 	                     </fo:table-body>
                       </fo:table>
