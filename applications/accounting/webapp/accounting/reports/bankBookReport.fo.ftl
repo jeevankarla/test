@@ -224,11 +224,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                               </fo:table-row>
                               </#if>
                               </#if>
-                              	<fo:table-row>
-									<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-								</fo:table-row>
 								<fo:table-row>
 									<#if ((paymentId)?has_content)>
 										<#if (paymentId != "DAY TOTAL")>
@@ -371,11 +366,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 		                                </#if>
 	                                </#if>
                               </fo:table-row>
-                              <fo:table-row>
-                              <fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-				       				</fo:table-row>
                               <fo:table-row>
                               <#if ((comments)?has_content)>
                                 	<fo:table-cell>
