@@ -310,7 +310,7 @@ public class PayrollService {
 		  	    		String attendanceTimePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
 		  	    		List billingConList = FastList.newInstance();
 			            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,attendanceTimePeriodId));
-			            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+			            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
 			            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_HR_ATTN_FINAL"));
 			            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
 			            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBilling", billingCond, null, null, null, false);   
