@@ -98,7 +98,13 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>
-                
+                <entity-condition list="productPrices" entity-name="ProductPriceType" use-cache="true">
+                    <condition-list combine="and">
+                        <condition-expr field-name="productPriceTypeId" operator="not-equals" value="TAX" /> 
+                        <condition-expr field-name="parentTypeId" operator="not-equals" value="TAX" /> 
+                	</condition-list>
+                    <order-by field-name="productPriceTypeId" /> 
+               </entity-condition>
                  <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
                 	<condition-list combine="or">
                 		<!-- <condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/> -->

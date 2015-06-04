@@ -29,6 +29,8 @@ fromDate=parameters.prodPriceFromDate;
 thruDate=parameters.prodPriceThruDate;
 categoryType=parameters.categoryType;
 productId = parameters.productId;
+priceType = parameters.productPriceType;
+context.priceType = priceType;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -79,7 +81,9 @@ if(UtilValidate.isNotEmpty(productCatDetails)){
 				
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachProductId));
+				conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS , priceType));
 				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd), EntityOperator.OR,
 										 EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
 				cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -88,27 +92,23 @@ if(UtilValidate.isNotEmpty(productCatDetails)){
 					finalMap=[:];
 					productPrice.each{eachProdPrice->
 						fromDate=eachProdPrice.fromDate;
-						if((fromDate >= dayBegin) && (fromDate <= dayEnd)){
 							prodDetails = EntityUtil.filterByCondition(productPrice, EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, fromDate));
 							productPriceTypeIds = EntityUtil.getFieldListFromEntityList(prodDetails, "productPriceTypeId", true);
 							tempMap=[:];
 							productPriceTypeIds.each{eachproductPriceTypeId->
-	                            if(eachproductPriceTypeId == "DEFAULT_PRICE"){  						
 									productPriceDetails = EntityUtil.filterByCondition(prodDetails, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, eachproductPriceTypeId));
 									price = productPriceDetails.get(0).get("price");
-									thruDate = eachProdPrice.thruDate;
+									thruDate = productPriceDetails.get(0).get("thruDate");
 									if(UtilValidate.isNotEmpty(price)){
 										tempMap.put(eachproductPriceTypeId, price);
 									}
 									if(UtilValidate.isNotEmpty(thruDate)){
 										tempMap.put("thruDate",thruDate);
 									}
-								}
 							}
 							if(UtilValidate.isNotEmpty(tempMap)){
 							   finalMap.put(fromDate, tempMap);
 							} 
-					   }	 
 					}
 				   if(UtilValidate.isNotEmpty(finalMap)){
 					   ProductMap.put(eachProductId, finalMap);
@@ -123,7 +123,7 @@ if(UtilValidate.isNotEmpty(productCatDetails)){
 }
 context.ProductCatMap = ProductCatMap;
 //get productPrices for Revision
-CatMap=[:];
+/*CatMap=[:];
 for(Map.Entry entryCat : ProductCatMap.entrySet()){
 	cat=entryCat.getKey();
 	catDetails = entryCat.getValue();
@@ -150,6 +150,6 @@ for(Map.Entry entryCat : ProductCatMap.entrySet()){
 	   CatMap.put(cat, productsMap);
 	}  
 }
-context.CatMap = CatMap;
+context.CatMap = CatMap;*/
 
 
