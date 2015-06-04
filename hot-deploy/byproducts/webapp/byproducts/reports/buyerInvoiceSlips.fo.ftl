@@ -379,7 +379,7 @@ under the License.
 							            					</fo:table-cell>
 							            					<#assign text = "">
 							            					<#if eachTax.getKey()=="BED_SALE">
-							            						<#assign text = "Excise Duty (Deposit) Including CESS [${vatsData.get('bedPercent')}%]">
+							            						<#assign text = "Excise Duty (Deposit)[${vatsData.get('bedPercent')}%]">
 							            						<#assign exduty = "Y">
 							            						<#assign totWithBedSale = totWithBedSale+totalAmt+eachTax.getValue()>
 							            					<#elseif eachTax.getKey()=="CST_SALE">
