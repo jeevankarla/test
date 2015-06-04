@@ -262,11 +262,14 @@ public class PayrollService {
 			public static Map<String, Object> generatePayrollBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
 				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
+				TimeZone timeZone = TimeZone.getDefault();
+				Locale locale = Locale.getDefault();
 				String periodBillingId = (String) context.get("periodBillingId");
 				String geoId = (String) context.get("geoId");
 				String partyIdFrom = (String) context.get("partyIdFrom");
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				GenericValue periodBilling = null;
+				GenericValue customTimePeriod = null;
 				Map result = ServiceUtil.returnSuccess();
 				result.put("periodBillingId", periodBillingId);
 				boolean beganTransaction = false;
@@ -275,6 +278,53 @@ public class PayrollService {
 					beganTransaction = TransactionUtil.begin(72000);
 					//Debug.log("beganTransaction====="+beganTransaction);
 					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+					
+					String customTimePeriodId = periodBilling.getString("customTimePeriodId");
+					
+					try {
+						customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+					} catch (GenericEntityException e1) {
+						 TransactionUtil.rollback();
+						Debug.logError(e1,"Error While Finding Customtime Period");
+						return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+					}
+					
+					Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+					Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+					
+					Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+					Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+					
+					Map input = FastMap.newInstance();
+		        	input.put("timePeriodId", customTimePeriodId);
+		        	input.put("timePeriodStart", monthBegin);
+		        	input.put("timePeriodEnd", monthEnd);
+		        	
+		        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
+		  	    	if(ServiceUtil.isError(resultMap)){
+		 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
+		 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
+		 	 	    }
+		  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
+		  	    		GenericValue lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
+		  	    		String attendanceTimePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
+		  	    		List billingConList = FastList.newInstance();
+			            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,attendanceTimePeriodId));
+			            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
+			            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_HR_ATTN_FINAL"));
+			            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
+			            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBilling", billingCond, null, null, null, false);   
+			            if(UtilValidate.isEmpty(custBillingIdsList)){
+			            	Debug.logError("Attendance Not Finalized", module); 
+			            	result = ServiceUtil.returnError("Attendance Not Finalized");
+							periodBilling.set("statusId", "GENERATION_FAIL");
+							periodBilling.store();
+							result = ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+						    result.put("periodBillingId", periodBillingId);
+							return result;
+			        	} 
+		  	    	}
+					
 					String customPayrollCalcService = "generatePayrollBillingInternal";
 					GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", periodBilling.getString("billingTypeId")), false);
 					if(UtilValidate.isNotEmpty(payrollType) && UtilValidate.isNotEmpty(payrollType.getString("serviceName"))){
