@@ -31,14 +31,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
      <#if ProductCatMap?has_content> 
     <fo:page-sequence master-reference="main">
         <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
+            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                              ${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block> 
         </fo:static-content>
            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 			   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160; UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                  ${uiLabelMap.KMFDairyHeader}       Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;               ${uiLabelMap.KMFDairySubHeader}            ${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block> 
+			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;               ${uiLabelMap.KMFDairySubHeader}             </fo:block> 
 	           <fo:block text-align="center" keep-together="always"  >---------------------------------------------------------------</fo:block>
 	           <fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >PRICE HISTORY  BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
-	           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
+	           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------</fo:block>
 	           <fo:block>
 	              <fo:table text-align="center" >
 	                 <fo:table-column column-width="40pt"/>
@@ -46,7 +47,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
 				     <fo:table-column column-width="200pt"/>
 					 <fo:table-column column-width="60pt"/>
 					 <fo:table-column column-width="120pt"/>
-					 <fo:table-column column-width="90pt"/>
+					 <fo:table-column column-width="120pt"/>
 	                 <fo:table-body>
 	            	    <fo:table-row height="20pt">
 	            		   <fo:table-cell>
@@ -64,21 +65,23 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
 	        			   <fo:table-cell>
 	            			   <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">THRU DATE</fo:block>  
 	        			   </fo:table-cell>
+	        			   <#assign ProductPriceType = delegator.findOne("ProductPriceType", {"productPriceTypeId" : priceType}, true)?if_exists/>
 	        			   <fo:table-cell>
-	        			       <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">DEFAULT PRICE</fo:block> 
+	        			       <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">${ProductPriceType.description.toUpperCase()}</fo:block> 
 	        			   </fo:table-cell>
 	        		   </fo:table-row>
 	               </fo:table-body>
 	           </fo:table>
 	       </fo:block>
-	       <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
+	       <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------</fo:block>
             <#assign productCatList = ProductCatMap.entrySet()>
             <#list productCatList as category>
+               <#assign sno=1>
+               <#assign lno = 0> 
             <#assign productDetails=category.getValue()>  
-            <#assign sno=1>
             <#assign productPriceList = productDetails.entrySet()> 
 		    <fo:block  keep-together="always" text-align="center"  font-weight="bold" font-size="11pt" white-space-collapse="false">${category.getKey()}</fo:block>
-            <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
+            <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------</fo:block>
             <fo:block>
                <fo:table text-align="center">
 	              <fo:table-column column-width="40pt"/>
@@ -86,7 +89,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
 				  <fo:table-column column-width="180pt"/>
 				  <fo:table-column column-width="80pt"/>
 				  <fo:table-column column-width="100pt"/>
-				  <fo:table-column column-width="100pt"/>
+				  <fo:table-column column-width="120pt"/>
                       <fo:table-body>
 	                    <#list productPriceList as productList>
                         <#assign productId = productList.getKey()?if_exists>
@@ -95,11 +98,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
                         <#assign prodPriceList = prodDetails.entrySet()> 
                         <#list prodPriceList as eachProdPrice>
                         <#assign startDate= eachProdPrice.getKey()?if_exists> 
-                           <fo:table-row>
+                         <fo:table-row>
                             <fo:table-cell>
-	            			   <fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${sno}</fo:block>  
+	        			     <#if lno != sno >
+	            			   <fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${sno}</fo:block> 
+	            			   <#else> 
+	            			   <fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">&#160;</fo:block> 
+	            			   </#if> 
 	        			    </fo:table-cell>
-	        			    <fo:table-cell>
+                       		 <#assign lno = sno> 
+                       		<fo:table-cell>
 	            			   <fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${product.internalName?if_exists}</fo:block>  
 	        			    </fo:table-cell>
                             <fo:table-cell>
@@ -119,113 +127,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
 	        			     </fo:table-cell>
 	        			    </#if>
                              <fo:table-cell>
-	            			  <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachProdPrice.getValue().get("DEFAULT_PRICE")?if_exists?string("##0.00")}</fo:block>  
+	            			  <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachProdPrice.getValue().get(priceType)?if_exists?string("##0.00")}</fo:block>  
 	        			    </fo:table-cell>
 	        			</fo:table-row>
-	        			 <#assign sno=sno+1>
 	        			</#list>
+                         <#assign sno = sno+1> 
                       </#list>
                     </fo:table-body>
                </fo:table>
            </fo:block> 
-           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
+           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------</fo:block>
            </#list>
-           <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-           <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>   
-           <#if CatMap?has_content>
-           <fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >PRICE REVISION BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
-           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
-           <fo:block>
-              <fo:table text-align="center">
-                 <fo:table-column column-width="40pt"/>
-			     <fo:table-column column-width="60pt"/>
-			     <fo:table-column column-width="200pt"/>
-				 <fo:table-column column-width="60pt"/>
-				 <fo:table-column column-width="120pt"/>
-				 <fo:table-column column-width="90pt"/>
-                 <fo:table-body>
-            	    <fo:table-row height="20pt">
-            		   <fo:table-cell>
-            			   <fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">S.NO</fo:block>  
-        			   </fo:table-cell>
-            	       <fo:table-cell>
-            			   <fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">PRODUCT ID</fo:block>  
-        			   </fo:table-cell>
-        			   <fo:table-cell>
-            			   <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">DESCRIPTION</fo:block>  
-        			   </fo:table-cell>
-        			   <fo:table-cell>
-            			   <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">FROM DATE</fo:block>  
-        			   </fo:table-cell>
-        			   <fo:table-cell>
-            			   <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">THRU DATE</fo:block>  
-        			   </fo:table-cell>
-        			   <fo:table-cell>
-        			       <fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="10pt" white-space-collapse="false">DEFAULT PRICE</fo:block> 
-        			   </fo:table-cell>
-        		   </fo:table-row>
-               </fo:table-body>
-           </fo:table>
-       </fo:block>
-       <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
-       <#assign CatList = CatMap.entrySet()>
-            <#list CatList as eachCategory>
-            <#assign eachCategoryDetails=eachCategory.getValue()>  
-            <#assign sno=1>
-            <#assign prodPricesList = eachCategoryDetails.entrySet()> 
-		    <fo:block  keep-together="always" text-align="center"  font-weight="bold" font-size="11pt" white-space-collapse="false">${eachCategory.getKey()}</fo:block>
-            <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
-             <fo:block>
-               <fo:table text-align="center">
-	              <fo:table-column column-width="40pt"/>
-				  <fo:table-column column-width="70pt"/>
-				  <fo:table-column column-width="180pt"/>
-				  <fo:table-column column-width="80pt"/>
-				  <fo:table-column column-width="100pt"/>
-				  <fo:table-column column-width="100pt"/>
-                      <fo:table-body>
-	                    <#list prodPricesList as proList>
-                           <#assign prodId = proList.getKey()?if_exists>
-                           <#assign products = delegator.findOne("Product", {"productId" : prodId}, true)?if_exists/> 
-                            <#assign prodDet = proList.getValue()>
-                             <#list prodDet as eachProdPrices>
-                              <#assign dayBegin = eachProdPrices.getKey()?if_exists>     
-                            <fo:table-row>
-	                            <fo:table-cell>
-		            			   <fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${sno}</fo:block>  
-		        			    </fo:table-cell>
-		        			    <fo:table-cell>
-		            			   <fo:block  keep-together="always" text-align="left"  font-size="10pt" white-space-collapse="false">${products.internalName?if_exists}</fo:block>  
-		        			    </fo:table-cell>
-	                             <fo:table-cell>
-		            			   <fo:block  text-align="left"  font-size="10pt" >${products.description?if_exists}</fo:block>  
-		        			    </fo:table-cell>
-                                <fo:table-cell>
-	            			       <fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")?if_exists}</fo:block> 
-	        			       </fo:table-cell>
-                                <#if eachProdPrices.getValue().get("thruDate")?has_content>
- 	        			    	<#assign dayEnd = eachProdPrices.getValue().get("thruDate")>
-		        			    <fo:table-cell>
-		            			   <fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")?if_exists}</fo:block> 
-		        			    </fo:table-cell>
-	                            <#else>
-	                              <fo:table-cell>
-		            			   <fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"></fo:block> 
-		        			     </fo:table-cell>
-		        			    </#if>
-                                <fo:table-cell>
-	            			       <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachProdPrices.getValue().get("DEFAULT_PRICE")?if_exists?string("##0.00")}</fo:block>  
-	        			        </fo:table-cell>  
-	        			     </fo:table-row> 
-	        			     <#assign sno=sno+1>
-                           </#list>
-                      </#list>
-                    </fo:table-body>
-               </fo:table>
-           </fo:block> 
-           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------</fo:block>
-          </#list>  
-       </#if>
 	   </fo:flow>	
 </fo:page-sequence>	
 	<#else>

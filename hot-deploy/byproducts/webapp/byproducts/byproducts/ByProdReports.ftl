@@ -950,7 +950,7 @@ function reportTypeChangeFunc() {
 			             <td width="30%">Product Price Revision Report</td>
 			             <td width="15%">From <input  type="text" size="10pt" id="prodPriceFromDate" readonly  name="prodPriceFromDate"/></td>
 			             <td width="15%">Thru<input  type="text" size="10pt" id="prodPriceThruDate" readonly  name="prodPriceThruDate"/></td>
-			      		 <td width="15%">Product Category 
+			      		 <td width="10%">Product Category 
 			      		 			<select name="categoryType" class='h4'>
 			      		 			<option value=''></option>
 	            					<#list prodCatList as category>    
@@ -958,7 +958,14 @@ function reportTypeChangeFunc() {
 	            					</#list>            
 								</select>
 			      		 </td>
-			      	     <td width="15%"><span class='h3'>Product <@htmlTemplate.lookupField size="10" maxlength="22" formName="ProductPriceRevisionReport" name="productId" id="productId" fieldFormName="LookupProduct"/>
+                          <td width="10%">Price Type 
+			      		 			<select name="productPriceType" class='h4'>
+	            					<#list productPrices as prodPrice>    
+	              	    				<option value='${prodPrice.productPriceTypeId}'>${prodPrice.description}</option>
+	            					</#list>            
+								</select>
+			      		 </td>
+			      	     <td width="10%"><span class='h3'>Product <@htmlTemplate.lookupField size="10" maxlength="22" formName="ProductPriceRevisionReport" name="productId" id="productId" fieldFormName="LookupProduct"/>
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr> 
