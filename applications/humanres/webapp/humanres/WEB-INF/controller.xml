@@ -802,6 +802,16 @@ under the License.
         <response name="success" type="view" value="BenefitDeductionCalculator"/>
         <response name="error" type="view" value="BenefitDeductionCalculator"/>
     </request-map>
+    <request-map uri="EmployeeSubsidyGhee">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EmployeeSubsidyGhee"></response>
+    </request-map>
+    <request-map uri="updateEmployeeSubsidyGhee">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateEmployeeSubsidyGhee"/>
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+   </request-map>
     <request-map uri="EmployeeDailyAttendance">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeDailyAttendance"/>
@@ -2708,6 +2718,7 @@ under the License.
 	 <view-map name="NewVariable" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewVariable"/>
 	 <view-map name="EmployeeWisePayrollAnalysisInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysisInternal"/>
 	 <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
+	 <view-map name="EmployeeSubsidyGhee" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeSubsidyGhee"></view-map>
 	 <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
 	 <view-map name="createEmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createEmployeeDailyAttendance"/>
 	 <view-map name="EmplMonthAttendanceDetailsPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmplMonthAttendanceDetailsPDF" content-type="application/pdf" encoding="none"/>

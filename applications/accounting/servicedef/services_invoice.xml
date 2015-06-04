@@ -87,6 +87,11 @@ under the License.
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>
         <attribute name="invoices" type="List" mode="OUT" optional="true"/>  
     </service> 
+    <service name="createInvoiceAndPaymentForSubsidyGhee" engine="java" auth="true" invoke="createInvoiceAndPaymentForSubsidyGhee" 
+        location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="600">
+        <description>Create payroll invoice from period billing</description>
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>
+    </service>
      <service name="createPayrolTaxInvoices" engine="java" auth="true" invoke="createPayrolTaxInvoices" 
         location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="1000">
         <description>Create payroll invoice from period billing</description>

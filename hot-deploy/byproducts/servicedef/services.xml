@@ -386,6 +386,7 @@
             location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="getByProductPricesForFacility" auth="true">
         <description>Get ByProduct Prices For Facility</description>
         <attribute name="facilityId" type="String" optional="true" mode="IN" />
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
         <attribute name="priceDate" type="Timestamp" optional="true" mode="IN" />
         <attribute name="partyClassificationId" type="String" optional="true" mode="IN" />
         <attribute name="productsPrice" type="Map" optional="true" mode="OUT"/>

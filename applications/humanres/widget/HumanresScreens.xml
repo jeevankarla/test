@@ -1332,4 +1332,44 @@
             </widgets>
         </section>
     </screen>   
+    <screen name="EmployeeSubsidyGhee">
+           <section>
+               <actions>
+                   <set field="titleProperty" value="HumanResFindEmployment"/>
+                   <set field="headerItem" value="EmployeeSubsidyGhee"/>
+   				<set field="tabButtonItem" value="benefitOrDeduction" />
+   				<set field="tabButtonItem2" value="EmployeeSubsidyGhee" />
+   				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/date.js" global="true"/>
+   				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+   				<!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeMilkCards.groovy" /> --> 
+   				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeSubsidyGhee.groovy" /> 
+               </actions>
+               <widgets>
+   				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                       <decorator-section name="body">
+                       <include-menu location="component://humanres/widget/HumanresMenus.xml" name="BenDedTabBar"/>
+                       	<section>
+   		                    <widgets>                       
+   		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+   		                            <decorator-section name="search-options">
+   		                                <include-form name="FindEmployeeSubsidyGhee" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+   		                            </decorator-section>		                           	 
+   		                            <decorator-section name="search-results">
+   		                               <section>
+   		                               		 <widgets>
+   				                                 <platform-specific>
+   				                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/EmployeeSubsidyGhee.ftl"/></html>
+   				                                 </platform-specific>
+   				                             </widgets>
+   		                               </section>
+   		                            </decorator-section>
+   		                        </decorator-screen>
+   		                    </widgets>                    
+                                 		                   
+   		            	</section>				                        
+                       </decorator-section>
+                   </decorator-screen>
+               </widgets>
+           </section>
+    </screen>
 </screens>
