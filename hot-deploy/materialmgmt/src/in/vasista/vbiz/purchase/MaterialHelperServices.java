@@ -113,7 +113,7 @@ public class MaterialHelperServices{
 				 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 			 }		
 			 //condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			 //condList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
+			 condList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
 			 if(UtilValidate.isNotEmpty(facilityId)){
 				 condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 			 }
