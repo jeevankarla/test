@@ -295,21 +295,10 @@ public class PayrollService {
 					Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 					Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 					
-					Map input = FastMap.newInstance();
-		        	input.put("timePeriodId", customTimePeriodId);
-		        	input.put("timePeriodStart", monthBegin);
-		        	input.put("timePeriodEnd", monthEnd);
-		        	
-		        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
-		  	    	if(ServiceUtil.isError(resultMap)){
-		 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
-		 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
-		 	 	    }
-		  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
-		  	    		GenericValue lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
-		  	    		String attendanceTimePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
+					
+		  	    	if(UtilValidate.isNotEmpty(customTimePeriodId)){
 		  	    		List billingConList = FastList.newInstance();
-			            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,attendanceTimePeriodId));
+			            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
 			            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
 			            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_HR_ATTN_FINAL"));
 			            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
