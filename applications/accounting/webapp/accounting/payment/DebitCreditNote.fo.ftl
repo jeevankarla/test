@@ -82,7 +82,7 @@ under the License.
 					<#assign invoiceTypeId = invoice.invoiceTypeId?if_exists>
 					<#assign invPartyIdFrom = invoice.partyIdFrom?if_exists>
 					<#assign invPartyId = invoice.partyId?if_exists>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBIT ADVICE ${invoiceTypeId} <#else>CREDIT ADVICE </#if><#else>CREDIT ADVICE</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBIT ADVICE  <#else>CREDIT ADVICE </#if><#else>CREDIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
