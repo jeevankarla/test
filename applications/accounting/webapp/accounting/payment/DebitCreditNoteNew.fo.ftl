@@ -75,6 +75,8 @@ under the License.
 	     	<#assign comments = paymentDetails.comments?if_exists>
           	<#assign paymentMethodType = paymentDetails.paymentMethodTypeId?if_exists>
         </#if>
+		<#else>
+	     	<#assign comments = invoice.description?if_exists>
         </#if>   	
           	
 	        
@@ -90,7 +92,8 @@ under the License.
 					<#assign invoiceTypeId = invoice.invoiceTypeId?if_exists>
 					<#assign invPartyIdFrom = invoice.partyIdFrom?if_exists>
 					<#assign invPartyId = invoice.partyId?if_exists>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBIT ADVICE <#else>CREDIT ADVICE </#if><#else>CREDIT ADVICE</#if></fo:block>
+				    <#assign invoiceTypedetails = delegator.findOne("InvoiceAndType", {"invoiceId" :invoice.invoiceId}, true)>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company"><#if invoiceTypedetails.parentTypeId == "SALES_INVOICE">DEBIT ADVICE <#else>CREDIT ADVICE </#if><#else>CREDIT ADVICE</#if></fo:block>
         	
         	</fo:static-content>
         
@@ -229,7 +232,7 @@ under the License.
 								 <#if paymentId?has_content>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBITED <#else>CREDITED </#if><#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company"><#if invoiceTypedetails.parentTypeId == "SALES_INVOICE">DEBITED <#else>CREDITED </#if><#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -256,7 +259,7 @@ under the License.
 							<#else>
 								<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company"><#if invoiceTypeId == "SALES_INVOICE">DEBITED <#else>CREDITED </#if><#else>CREDITED</#if> with Rs: ${invoiceTotal?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company"><#if invoiceTypedetails.parentTypeId == "SALES_INVOICE">DEBITED <#else>CREDITED </#if><#else>CREDITED</#if> with Rs: ${invoiceTotal?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
