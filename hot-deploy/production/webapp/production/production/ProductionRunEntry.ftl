@@ -179,7 +179,7 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce<span style="font-weight:bold"  id ="uomDescription"></span></div></td>
 					      	<#if productionRunData?exists &&  productionRunData.quantity?has_content>
 			      				<input type="hidden" name="pRQuantity" id="pRQuantity" value="${productionRunData.quantity}">
 				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
@@ -500,7 +500,7 @@
       			htmlStr += "<table cellspacing='10px' cellpadding='10px' border='2px'><tr><td width='10%'><h2>Sl</h2></td><td width='60%' align='left'><h2>Material</h2></td><td width='20%' align='center'><h2>Qty Per UOM</h2></td></tr>";
       			for(var i=0;i<neededProducts.length;i++){
       				var eachProd = neededProducts[i];
-  					htmlStr += "<tr><td>"+(i+1)+"</td><td align='left'>"+eachProd['productName']+" ["+eachProd['productId']+" ]</td><td align='center'>&nbsp;</td></tr>";    			
+  					htmlStr += "<tr><td>"+(i+1)+"</td><td align='left'>"+eachProd['productName']+" ["+eachProd['productId']+" ]</td><td align='center'>"+eachProd['uomId']+"</td></tr>";    			
       			}
       			htmlStr += "</table>";
       			$('#printRequiredMaterial').html(htmlStr);
@@ -511,8 +511,25 @@
 	      var workEffortId=workEffort.value;
 	      var productId=workEffortObj[workEffortId];
 	      $('#productId').val(productId);
-	      var productDesc=productNameObj[productId];
-	      $('#productDescription').html(''+productDesc);
+	      var productDetObj=productNameObj[productId];
+	      if(typeof(productDetObj)!= "undefined"){
+	      	var productDesc = productDetObj['description'];
+	      	var uomDesc = productDetObj['uomId'];
+	      	$('#productDescription').html(''+productDesc);
+	      	if(typeof(uomDesc)!= "undefined" && uomDesc!=''){
+	      		$('#uomDescription').html('  ['+uomDesc+']');
+	      	}else{
+	      		$('#uomDescription').html('');
+	      	}
+	      	
+	      }else{
+	      	
+	      	$('#productDescription').html('NONE');
+	      	$('#uomDescription').html('');
+	      
+	      }
+	      
+	      
       }
       function getWorkEffortList(facility){
        	var facilityId=facility.value;

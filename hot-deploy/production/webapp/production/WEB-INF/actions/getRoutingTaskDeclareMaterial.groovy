@@ -69,6 +69,17 @@ if (workEffortId) {
 			newObj.put("description", description);
 			returnDispBtn = 'N';
 		}
+		String uomId = eachProd.get("quantityUomId");
+		uomDetails = delegator.findOne("Uom",["uomId":uomId],false);
+		
+		if(UtilValidate.isNotEmpty(uomDetails) ){
+			newObj.put("returnUom",uomDetails.description);
+		}else{
+			newObj.put("returnUom"," ");
+		}
+		
+		
+		
 		returnProductItemsJSON.add(newObj);
 	}
 	request.setAttribute("returnProductItemsJSON", returnProductItemsJSON);
@@ -103,6 +114,15 @@ if (workEffortId) {
 		newObj.put("cDeclareProductId",eachProd.productId);
 		newObj.put("cDeclareProductName", eachProd.brandName+" [ "+eachProd.description+"]");
 		newObj.put("declareQuantity", "");
+		
+		String uomId = eachProd.get("quantityUomId");
+		uomDetails = delegator.findOne("Uom",["uomId":uomId],false);
+		
+		if(UtilValidate.isNotEmpty(uomDetails) ){
+			newObj.put("declareUom",uomDetails.description);
+		}else{
+			newObj.put("declareUom"," ");
+		}
 		if(declaredMaterial){
 			qty = ((EntityUtil.getFirst(declaredMaterial)).quantityOnHandDiff);
 			newObj.put("declareQuantity", qty);

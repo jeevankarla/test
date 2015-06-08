@@ -113,16 +113,28 @@ JSONObject facilityWorkEffObj=new JSONObject();
 if(UtilValidate.isNotEmpty(facilityIds)){
 	condList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds));
 }
-condList.add(EntityCondition.makeCondition("workEffortTypeId",EntityOperator.EQUALS,"ROUTING"));
+//condList.add(EntityCondition.makeCondition("workEffortTypeId",EntityOperator.EQUALS,"ROUTING"));
 EntityCondition con=EntityCondition.makeCondition(condList,EntityOperator.AND);
 
-workEffortList=delegator.findList("WorkEffortAndGoods",con,UtilMisc.toSet("workEffortId","description","productId","facilityId"),null,null,false);
+workEffortList=delegator.findList("WorkEffortAndGoods",con,UtilMisc.toSet("workEffortId","description","productId","facilityId","workEffortTypeId"),null,null,false);
 productIds=EntityUtil.getFieldListFromEntityList(workEffortList,"productId",true);
-productList=delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,productIds),UtilMisc.toSet("productId","description","internalName"),null,null,false);
+productList=delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,productIds),UtilMisc.toSet("productId","description","internalName","quantityUomId"),null,null,false);
 productIds.each{productId->
 	productNames=EntityUtil.filterByCondition(productList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
-	productNameObj.put(productId, productNames.description);
+	JSONObject productDetObj = new JSONObject();
+	productDetObj.put("description",productNames.description);
+	String uomId = productNames[0].get("quantityUomId");
+	uomDetails = delegator.findOne("Uom",["uomId":uomId],false);
+	if(UtilValidate.isNotEmpty(uomDetails) ){
+		productDetObj.put("uomId",uomDetails.description);
+	}else{
+		productDetObj.put("uomId"," ");
+	}
+	productNameObj.put(productId, productDetObj);
 }
+
+workEffortList = EntityUtil.filterByCondition(workEffortList,EntityCondition.makeCondition("workEffortTypeId",EntityOperator.EQUALS,"ROUTING"));
+
 workEffortList.each{workEffort->
 	workEffortObj.put(workEffort.workEffortId, workEffort.productId);
 }

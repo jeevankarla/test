@@ -71,11 +71,29 @@ if (workEffortId) {
 		} 	
 		tempMap.putAt("productId", eachProd.productId);
 		tempMap.putAt("productName", eachProd.productName);
+		
+		
+		String uomId = eachProd.get("quantityUomId");
+		uomDetails = delegator.findOne("Uom",["uomId":uomId],false);
+		if(UtilValidate.isNotEmpty(uomDetails) ){
+			tempMap.put("uomId",uomDetails.description);
+		}else{
+			tempMap.put("uomId"," ");
+		}
+		
 		rawMaterialNeededList.add(tempMap);
 		JSONObject newObj = new JSONObject();
 		newObj.put("cIssueProductId",eachProd.productId);
 		newObj.put("cIssueProductName", eachProd.productId);
 		newObj.put("issueQuantity", qty);
+		
+		
+		if(UtilValidate.isNotEmpty(uomDetails) ){
+			newObj.put("uomDescription",uomDetails.description);
+		}else{
+			newObj.put("uomDescription"," ");
+		}
+		
 		if(qty > 0){
 			displayButton = 'N';
 			newObj.put("issueQuantity", qty);

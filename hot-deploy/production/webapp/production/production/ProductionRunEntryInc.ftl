@@ -423,6 +423,15 @@
       		var productLabel = item['cIssueProductName'];
       		item['cIssueProductName'] = productLabelIdGrid1[productLabel];
       		item['cIssueProductId'] = productLabelIdGrid1[productLabel];
+      		if(typeof(productNameObj)!= "undefined"){
+      				var productId = productLabelIdGrid1[productLabel]; 
+					var productDetObj=productNameObj[productId];
+	      			if(typeof(productDetObj)!= "undefined"){	
+						item['uomDescription'] =productDetObj['uomId'];
+					}
+				}
+      		
+      		
       		grid.invalidateRow(data.length);
       		data.push(item);
       		grid.updateRowCount();
@@ -440,6 +449,7 @@
 					setData[3].availableTags = availFacilityTagsGrid1;
 					grid.setColumns(setData);
 				}
+				
 				grid.updateRow(args.row);
 			}
 			if(args.cell == 3){
@@ -486,7 +496,7 @@
 		   var columns = [
 		   			{id:"cDeclareProductName", name:"Product", field:"cDeclareProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor, sortable:false, toolTip:""},
 					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
-					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
+					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false,toolTip:""}
 			];
 		
 			var options = {
