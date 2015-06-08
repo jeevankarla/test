@@ -150,7 +150,6 @@
 			$("#xferQty").prop("readonly", false);
 			$("#xferQty").css("background-color", '#FFFFFF');
 		}
-		alert("###"+invItem);
 	}
 	
 	function showXferForm(facilityId, productId) {

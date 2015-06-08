@@ -68,4 +68,6 @@
       <Facility  defaultDaysToShip="25" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" description="ICE CREAM PLANT" facilityId="ICP" facilityName="ICE CREAM PLANT" facilityTypeId="PLANT" geoPointId="9000"  ownerPartyId="Company" sequenceNum="1"/>
        <RoleType  description="Production Run"  roleTypeId="PRODUCTION_RUN"/>
        
+       <ReturnHeaderType description="Return From Production" returnHeaderTypeId="PRODUCTION_RETURN"/>
+       
 </entity-engine-xml>
