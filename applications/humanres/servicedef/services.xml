@@ -1403,7 +1403,8 @@ under the License.emplpunch
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
-        <attribute name="employeeId" mode="IN" type="String"/> 
+        <attribute name="employeeId" mode="IN" type="String"/>
+        <attribute name="screenFlag" mode="IN" type="String" optional="true"/> 
         <attribute name="proportionalFlag" mode="IN" type="String" optional="true"/> 
         <attribute name="customTimePeriodId" mode="IN" type="String"/>
         <attribute name="attendanceTimePeriodId" mode="IN" type="String" optional="true"/>
