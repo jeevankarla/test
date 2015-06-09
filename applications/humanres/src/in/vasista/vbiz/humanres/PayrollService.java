@@ -1882,6 +1882,7 @@ public class PayrollService {
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
 		        String payHeadTypeId = (String) context.get("payHeadTypeId");
 		        String employeeId = (String) context.get("employeeId");
+		        String screenFlag=(String)context.get("screenFlag");
 		        String orgPartyId = (String) context.get("orgPartyId");
 		        String timePeriodId = (String)context.get("customTimePeriodId");
 		        String periodBillingId = (String)context.get("periodBillingId");
@@ -1962,6 +1963,9 @@ public class PayrollService {
                     payheadAmtCtx.put("periodBillingId", periodBillingId);
                     payheadAmtCtx.put("attendanceTimePeriodId", attendanceTimePeriodId);
                     payheadAmtCtx.put("basicSalDate", basicSalDate);
+                    if(UtilValidate.isNotEmpty(screenFlag)){
+                    	payheadAmtCtx.put("screenFlag", screenFlag);
+                    }
                     GenericValue deductionTypeRow = delegator.findOne("DeductionType", UtilMisc.toMap(
 		        			"deductionTypeId", payHeadTypeId), false);
                     if(UtilValidate.isNotEmpty(deductionTypeRow)){
@@ -2056,6 +2060,7 @@ public class PayrollService {
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
 		        String payHeadTypeId = (String) context.get("payHeadTypeId");
 		        String employeeId = (String) context.get("employeeId");
+		        String screenFlag=(String)context.get("screenFlag");
 		        String orgPartyId = (String) context.get("orgPartyId");
 		        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
@@ -2085,6 +2090,9 @@ public class PayrollService {
 	                    Map priceResultRuleCtx = FastMap.newInstance();
 	                    priceResultRuleCtx.putAll(context);
 	                    priceResultRuleCtx.put("payHeadPriceRules", allBenDedPriceRules);
+	                    if(UtilValidate.isNotEmpty(screenFlag)){
+	                    	priceResultRuleCtx.put("screenFlag", screenFlag);
+	                    }
 	                   // Debug.log("priceResultRuleCtx ####################### ######"+priceResultRuleCtx);
 	                    Map<String, Object> calcResults = calcPriceResultFromRules(dctx,priceResultRuleCtx);
 	                    Debug.logInfo("calcResults ######"+calcResults , module);
@@ -2430,6 +2438,7 @@ public class PayrollService {
 				Locale locale = (Locale) context.get("locale");
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				String employeeId= (String) context.get("employeeId");
+				String screenFlag=(String)context.get("screenFlag");
 				Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
 				String timePeriodId = (String) context.get("timePeriodId");
@@ -2453,6 +2462,13 @@ public class PayrollService {
 	              //this is to support rule with no condition 
 	                if(UtilValidate.isNotEmpty(condParms) && UtilValidate.isEmpty(payrollBenDedCondList)){
 	                	allTrue = false; 
+	                }
+	                if(UtilValidate.isNotEmpty(payrollBenDedCondList)){
+		                GenericValue payrollBenDedConditionList = EntityUtil.getFirst(payrollBenDedCondList);
+			        	if(UtilValidate.isNotEmpty(payrollBenDedConditionList)){
+			        		GenericValue inputParamEnum = payrollBenDedConditionList.getRelatedOneCache("InputParamEnumeration");
+	     	                condsDescription.append(inputParamEnum.getString("description"));
+			        	}
 	                }
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
@@ -2487,15 +2503,13 @@ public class PayrollService {
                          }
                          Debug.logInfo("###allTrue each#########"+allTrue+"==================="+payrollBenDedCond , module);
                          condsDescription.append("[");
-     	                GenericValue inputParamEnum = payrollBenDedCond.getRelatedOneCache("InputParamEnumeration");
 
-     	                condsDescription.append(inputParamEnum.getString("enumCode"));
      	                condsDescription.append(" ");
-     	                GenericValue operatorEnum = payrollBenDedCond.getRelatedOneCache("OperatorEnumeration");
-     	                condsDescription.append(operatorEnum.getString("description"));
-     	                condsDescription.append(" ");
-     	                condsDescription.append(payrollBenDedCond.getString("condValue"));
-     	                condsDescription.append("] ");
+    	                GenericValue operatorEnum = payrollBenDedCond.getRelatedOneCache("OperatorEnumeration");
+    	                condsDescription.append(operatorEnum.getString("description"));
+    	                condsDescription.append(" ");
+    	                condsDescription.append(payrollBenDedCond.getString("condValue"));
+    	                condsDescription.append("] ");
 	                    
 	                }
 	                //Debug.log("allTrue #############################################"+allTrue);
@@ -2525,6 +2539,10 @@ public class PayrollService {
 	                            formulaCtx.putAll(context);
 	                            formulaCtx.put("formulaId",formulaId);
 	                            formulaCtx.put("BASIC", (Double)fetchBasicSalaryAndGradeMap.get("amount"));
+	                            if(UtilValidate.isNotEmpty(screenFlag)){
+	                            	formulaCtx.put("screenFlag", screenFlag);
+	    	                    }
+	                            formulaCtx.put("payHeadTypeId",context.get("payHeadTypeId"));
 	                            Map formulaResult = evaluatePayrollAcctgFormula(dctx ,formulaCtx);
 	                            if(ServiceUtil.isError(formulaResult)){
 	                            	Debug.logError(ServiceUtil.getErrorMessage(formulaResult)+"  :::: employee Id ::"+employeeId, module);
@@ -2749,6 +2767,8 @@ public class PayrollService {
 		  Locale locale = (Locale) context.get("locale");
 		  GenericValue userLogin = (GenericValue) context.get("userLogin");
 		  String employeeId= (String) context.get("employeeId");
+		  String screenFlag=(String)context.get("screenFlag");
+		  String payHeadTypeId=(String)context.get("payHeadTypeId");
 		  Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 		  Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
 		  String timePeriodId = (String) context.get("timePeriodId");
@@ -2774,6 +2794,7 @@ public class PayrollService {
       		//Debug.log("*********** formulaId ================"+formulaId);
       		evltr.setFormulaIdAndSlabAmount(formulaId, modifyAmount.doubleValue());
 				HashMap<String, Double> variables = new HashMap<String, Double>();
+				HashMap<String, Double> variablesMap = new HashMap<String, Double>();
 				Map formulaVaribules = evltr.getVariableValues();
 				double attendance = 1;
 				Set<String> varibuleKeySet = formulaVaribules.keySet();
@@ -2827,12 +2848,17 @@ public class PayrollService {
 					variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
 					variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
 					variables.put("NOOFARREARDAYS", (Double)attendanceMap.get("noOfArrearDays"));
+					
+					variablesMap.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
 					//here populate all PayrollAttencdance field's as variables
 					Iterator tempIter = attendanceMap.entrySet().iterator();
 		        	while (tempIter.hasNext()) {
 							Map.Entry tempEntry = (Entry) tempIter.next();
 							String variableName = (String)tempEntry.getKey();
 							if(UtilValidate.isNotEmpty(tempEntry.getValue()) && (tempEntry.getValue() instanceof Double)){
+								if(variableName.equals("noOfPayableDays")){
+									variablesMap.put(variableName, (Double)tempEntry.getValue());
+								}
 								variables.put(variableName, (Double)tempEntry.getValue());
 							}
 							
@@ -2843,8 +2869,49 @@ public class PayrollService {
 		        		 Debug.logError(ServiceUtil.getErrorMessage(rateAmountMap), module);
 		            	 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rateAmountMap));
 		        	}
+		        	String rateTypeId = null;
 		        	if(UtilValidate.isNotEmpty(rateAmountMap.get("variables"))){
+		        		if(UtilValidate.isNotEmpty(screenFlag)){
+				        	if(screenFlag.equals("BenDedCalculator")){
+				        		Map emplDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd ,"userLogin",userLogin));
+					        	if(ServiceUtil.isError(emplDetails)){
+					            	Debug.logError(ServiceUtil.getErrorMessage(emplDetails), module);
+					                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(emplDetails));
+						        }
+				        	    String locationGeoId = (String)emplDetails.get("geoId");
+								if(UtilValidate.isNotEmpty(locationGeoId)){
+									if(locationGeoId.equals("BAGALKOT")){
+										rateTypeId = "DA_BAGALKOT_RATE";
+									}
+									if(locationGeoId.equals("BELL")){
+										rateTypeId = "DA_BELL_RATE";
+									}
+									if(locationGeoId.equals("BGLR")){
+										rateTypeId = "DA_BGLR_RATE";
+									}
+									if(locationGeoId.equals("DRWD")){
+										rateTypeId = "DA_DRWD_RATE";
+									}
+									if(locationGeoId.equals("GULB")){
+										rateTypeId = "DA_GULB_RATE";
+									}
+								}
+				        	}
+			        	}
 		        		variables.putAll((Map)rateAmountMap.get("variables"));
+		        		if(payHeadTypeId.equals("PAYROL_BEN_DA") || payHeadTypeId.equals("PAYROL_BEN_HRA")){
+		        			Map rateAmountVariableMap = (Map)rateAmountMap.get("variables");
+		        			Iterator rateAmountVariableMapIter = rateAmountVariableMap.entrySet().iterator();
+		    	        	while (rateAmountVariableMapIter.hasNext()) {
+	    						Map.Entry rateAmountVariableMapEntry = (Entry) rateAmountVariableMapIter.next();
+	    						String variableName = (String)rateAmountVariableMapEntry.getKey();
+	    						if(variableName.equals(rateTypeId)){
+	    							Map resultMap = FastMap.newInstance();
+	    							resultMap.put(variableName,rateAmountVariableMapEntry.getValue());
+	    							variablesMap.putAll(resultMap);
+	    						}
+	    					}
+		        		}
 		        	}
 					double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 					evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
@@ -2868,6 +2935,7 @@ public class PayrollService {
 	                   // Debug.log("in dependent flag"+payheadAmtCtx);
 		                Map<String, Object> innerCalcResults = getPayHeadAmount(dctx,payheadAmtCtx);
 						variables.put(varibuleKey, ((BigDecimal)innerCalcResults.get("amount")).doubleValue());
+						variablesMap.put(varibuleKey, ((BigDecimal)innerCalcResults.get("amount")).doubleValue());
 					}
 					// this to support GROSSSALARY 
 					if(varibuleKeySet.contains("GROSSSALARY") ){
@@ -2879,12 +2947,14 @@ public class PayrollService {
 	                    grossAmtCtx.put("timePeriodId", timePeriodId);
 						Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,grossAmtCtx);
 						variables.put(varibuleKey, ((BigDecimal)grossSalaryMap.get("amount")).doubleValue());
+						variablesMap.put(varibuleKey, ((BigDecimal)grossSalaryMap.get("amount")).doubleValue());
 					}
 					
 				}
 				//double basicSalary = ((Double)fetchBasicSalaryAndGradeMap.get("amount")).doubleValue();
 				variables.put("BASIC", basicSalary);
-				evltr.addVariableValues(variables);   
+				variablesMap.put("BASIC", basicSalary);
+				evltr.addVariableValues(variables);  
 				modifyAmount = new BigDecimal( evltr.evaluate());
 				//amount info 
 				priceInfoDescription.append("[");
@@ -2894,7 +2964,7 @@ public class PayrollService {
                GenericValue formula = delegator.findOne("AcctgFormula", UtilMisc.toMap("acctgFormulaId",formulaId),false);
                priceInfoDescription.append(formula.getString("formula"));
                priceInfoDescription.append("\n ,variables values:");
-               priceInfoDescription.append(variables);
+               priceInfoDescription.append(variablesMap);
                priceInfoDescription.append("]\n");
                result.put("amount", modifyAmount);
      		   result.put("priceInfoDescription", priceInfoDescription);
@@ -2933,7 +3003,7 @@ public class PayrollService {
 	        	}
 	        	conditionList.clear();
 	        	conditionList = UtilMisc.toList(
-						EntityCondition.makeCondition("rateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(payRollRateTypes, "rateTypeId", true)));
+	        			EntityCondition.makeCondition("rateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(payRollRateTypes, "rateTypeId", true)));
 				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
@@ -3539,8 +3609,8 @@ public class PayrollService {
 	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
 	        	//int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
 	        	
-	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
-				priceInfoDescription.append("  ]\n \n ");
+	        	//priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
+				//priceInfoDescription.append("  ]\n \n ");
 	        	if(payHeadTypeId.equals("PAYROL_BEN_SHIFT") && UtilValidate.isNotEmpty(shiftDetailMap)){
 	        		Iterator tempIter = shiftDetailMap.entrySet().iterator();
 		        	String shiftTypeId = "";

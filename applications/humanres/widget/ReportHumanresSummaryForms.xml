@@ -791,6 +791,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="screenFlag"><hidden value="BenDedCalculator" /></field>
        <field name="submit" title="calculate"><submit/></field>
     </form>
    <form name="ListBenefitDedutions" type="list"

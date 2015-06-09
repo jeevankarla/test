@@ -24,6 +24,7 @@ import org.ofbiz.entity.condition.EntityConditionBuilder;
 employeeId=parameters.employeeId;
 customTimePeriodId = parameters.customTimePeriodId;
 payHeadTypeId = parameters.payHeadTypeId;
+screenFlag = parameters.screenFlag;
 amount = "";
 benefitTypeDescription= null;
 deductionTypeDescription = null;
@@ -41,7 +42,7 @@ if (UtilValidate.isNotEmpty(employeeId)) {
 		deductionTypeDescription = deductionType.description;
 	}
 	if(UtilValidate.isNotEmpty(payHeadTypeId)){
-		payHeadAmount = dispatcher.runSync("getPayHeadAmount", [employeeId: employeeId, customTimePeriodId: customTimePeriodId,payHeadTypeId: payHeadTypeId,userLogin: userLogin]);
+		payHeadAmount = dispatcher.runSync("getPayHeadAmount", [employeeId: employeeId, customTimePeriodId: customTimePeriodId,payHeadTypeId: payHeadTypeId,screenFlag: screenFlag,userLogin: userLogin]);
 		Debug.log("payHeadTypeId ######################"+payHeadTypeId+"payHeadAmount ######"+payHeadAmount);
 		amount = payHeadAmount.amount;
 	}
