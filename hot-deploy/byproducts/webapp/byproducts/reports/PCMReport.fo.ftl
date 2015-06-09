@@ -20,7 +20,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".8in" margin-bottom="0.5in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".3in" margin-top=".8in" margin-bottom="0.5in">
                 <fo:region-body margin-top="0.5in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
