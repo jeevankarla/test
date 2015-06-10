@@ -45,11 +45,13 @@ for(int i=0; i <totalDays; i++){
 }
 context.putAt("currentDateKeysList", currentDateKeysList);
 
-EmplPunchinMap =[:];
-EmplPunchoutMap=[:];
+finalEmplPunchMap =[:];
 TwoPunchEmployeesList = delegator.findList("EmployeeDetail",EntityCondition.makeCondition("punchType", EntityOperator.EQUALS, "AA") , null, null, null, false);
 if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 	TwoPunchEmployeesList.each{ employee ->
+		emplPunchInOutMap = [:];
+		EmplPunchinDateWiseMap = [:];
+		EmplPunchOutDateWiseMap = [:];
 		currentDateKeysList.each{ date ->
 			List inConditionList=[];
 			inConditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(date)));
@@ -71,7 +73,7 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 						if(UtilValidate.isNotEmpty(departmentDetails)){
 							departmentId=departmentDetails[0].get("partyIdFrom");
 							punchMap.put("departmentId",departmentId);
-							EmplPunchinMap.put(partyId,punchMap);
+							EmplPunchinDateWiseMap.put(date,punchMap);
 						}
 					}
 					if((emplpunch.get("InOut")).equals("OUT")){
@@ -84,14 +86,16 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 						if(UtilValidate.isNotEmpty(departmentDetails)){
 							departmentId=departmentDetails[0].get("partyIdFrom");
 							outPunchMap.put("departmentId",departmentId);
-							EmplPunchoutMap.put(partyId,outPunchMap);
+							EmplPunchOutDateWiseMap.put(date,outPunchMap);
 						}
 					}
 				}
 			}
 		}
+		emplPunchInOutMap.put("IN", EmplPunchinDateWiseMap);
+		emplPunchInOutMap.put("OUT", EmplPunchOutDateWiseMap);
+		finalEmplPunchMap.put(employee.get("partyId"), emplPunchInOutMap);
 	}
 }
-context.put("EmplPunchinMap",EmplPunchinMap);
-context.put("EmplPunchoutMap",EmplPunchoutMap);
+context.put("finalEmplPunchMap",finalEmplPunchMap);
 

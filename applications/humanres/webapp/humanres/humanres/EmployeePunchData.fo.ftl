@@ -8,7 +8,7 @@
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-		<#if EmplPunchinMap?has_content>
+		<#if finalEmplPunchMap?has_content>
 			<#assign noofLines=1>
 			<fo:page-sequence master-reference="main">
         		<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">        
@@ -53,69 +53,77 @@
 	                            	</fo:table-cell>
 	                            </fo:table-row>
 	                            <#list currentDateKeysList as date>
-	                            	<#assign emplPunchMap=EmplPunchinMap.entrySet()>
+	                            	<#assign emplPunchMap=finalEmplPunchMap.entrySet()>
 		                   			<#list emplPunchMap as emplPunchValues>
-		                   				<#if (emplPunchValues.getValue().get("date"))==date>
-		                   					<fo:table-row >
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchValues.getValue().get("departmentId")?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchValues.getKey()?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchValues.getValue().get("partyName")?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(emplPunchValues.getValue().get("date"), "dd-MMM-yyyy")?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchValues.getValue().get("inTime")?if_exists?string("HH:mm")}</fo:block>
-					                            </fo:table-cell>
-					                      	</fo:table-row>
-					                      	<#assign noofLines=noofLines+1>
-					                      	<#if (noofLines >= 31)>
-					                     		<#assign noofLines=1>
-						                     	<fo:table-row>
-					                            	<fo:table-cell >	
-					                            		<fo:block page-break-after="always"></fo:block>
-					                            	</fo:table-cell>
-					                            </fo:table-row>
-					                        </#if>
-					                   	</#if>
-						               	<#assign emplPunchout=EmplPunchoutMap.entrySet()>
-			                   			<#list emplPunchout as emplPunchoutValues>
-			                   				<#if (emplPunchoutValues.getValue().get("date"))==date>
-			                   					<#if emplPunchoutValues.getKey()==emplPunchValues.getKey()>
-			                   						<fo:table-row >
-							                            <fo:table-cell >	
-							                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchoutValues.getValue().get("departmentId")?if_exists}</fo:block>
-							                            </fo:table-cell>
-							                            <fo:table-cell >	
-							                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchoutValues.getKey()?if_exists}</fo:block>
-							                            </fo:table-cell>
-							                            <fo:table-cell >	
-							                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchoutValues.getValue().get("partyName")?if_exists}</fo:block>
-							                            </fo:table-cell>
-							                            <fo:table-cell >	
-							                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(emplPunchoutValues.getValue().get("date"), "dd-MMM-yyyy")}</fo:block>
-							                            </fo:table-cell>
-							                            <fo:table-cell >	
-							                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchoutValues.getValue().get("outTime")?if_exists?string("HH:mm")}</fo:block>
-							                            </fo:table-cell>
-							                      	</fo:table-row>
-							                      	<#assign noofLines=noofLines+1>
-							                      	<#if (noofLines >= 31)>
-							                     		<#assign noofLines=1>
-								                     	<fo:table-row>
-							                            	<fo:table-cell >	
-							                            		<fo:block page-break-after="always"></fo:block>
-							                            	</fo:table-cell>
-							                            </fo:table-row>
-							                        </#if>
-			                   					</#if>
-			                   				</#if>
-			                   			</#list>
+		                   				<#assign emplPunchDetails = emplPunchValues.getValue().entrySet()>
+		                   				<#list emplPunchDetails as emplPunch>
+		                   					<#if emplPunch.getKey() == "IN">
+		                   						<#assign emplPunchInDateWiseDetails = emplPunch.getValue().entrySet()>
+		                   						<#list emplPunchInDateWiseDetails as emplPunchDate>
+		                   							<#if emplPunchDate.getKey() == date>
+					                   					<fo:table-row >
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchDate.getValue().get("departmentId")?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchValues.getKey()?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchDate.getValue().get("partyName")?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(emplPunchDate.getValue().get("date"), "dd-MMM-yyyy")?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchDate.getValue().get("inTime")?if_exists?string("HH:mm")}</fo:block>
+								                            </fo:table-cell>
+								                      	</fo:table-row>
+								                      	<#assign noofLines=noofLines+1>
+								                      	<#if (noofLines >= 31)>
+								                     		<#assign noofLines=1>
+									                     	<fo:table-row>
+								                            	<fo:table-cell >	
+								                            		<fo:block page-break-after="always"></fo:block>
+								                            	</fo:table-cell>
+								                            </fo:table-row>
+								                        </#if>
+						                   			</#if>
+						                   		</#list>
+						                   	</#if>
+						                   	<#if emplPunch.getKey() == "OUT">
+		                   						<#assign emplPunchOutDateWiseDetails = emplPunch.getValue().entrySet()>
+		                   						<#list emplPunchOutDateWiseDetails as emplPunchDate>
+		                   							<#if emplPunchDate.getKey() == date>
+					                   					<fo:table-row >
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchDate.getValue().get("departmentId")?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchValues.getKey()?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchDate.getValue().get("partyName")?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(emplPunchDate.getValue().get("date"), "dd-MMM-yyyy")?if_exists}</fo:block>
+								                            </fo:table-cell>
+								                            <fo:table-cell >	
+								                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplPunchDate.getValue().get("outTime")?if_exists?string("HH:mm")}</fo:block>
+								                            </fo:table-cell>
+								                      	</fo:table-row>
+								                      	<#assign noofLines=noofLines+1>
+								                      	<#if (noofLines >= 31)>
+								                     		<#assign noofLines=1>
+									                     	<fo:table-row>
+								                            	<fo:table-cell >	
+								                            		<fo:block page-break-after="always"></fo:block>
+								                            	</fo:table-cell>
+								                            </fo:table-row>
+								                        </#if>
+						                   			</#if>
+						                   		</#list>
+						                   	</#if>
+					                   	</#list>
 			                   		</#list>
 					           	</#list>
 					           	<fo:table-row >
