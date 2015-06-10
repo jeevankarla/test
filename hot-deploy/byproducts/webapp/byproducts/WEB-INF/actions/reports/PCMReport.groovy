@@ -183,7 +183,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
    if(parameters.customTimePeriodId){
 	   curntCatAbsMap=[:];
 	   categorysList.each{categoryType->
-		
+		if(!("PRLR_RTLR".equals(categoryType))){
 		curFacList=[];
 		curFacList=categoryTotalMap.get(categoryType);
 		prvFacList=facilityPrevSaleMap.get(categoryType);
@@ -249,7 +249,60 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
 			}
 		}
 		curntCatAbsMap[categoryType]=pcmAbstractMap;
+	}else{
+	curFacList=[];
+	curFacList=categoryTotalMap.get(categoryType);
+	prvFacList=facilityPrevSaleMap.get(categoryType);
+	curRetailerCount=0;
+	prvRetailerCount=0;
+	if(UtilValidate.isNotEmpty(curFacList)){
+	  curRetailerCount=curFacList.size();
 	}
+	if(UtilValidate.isNotEmpty(prvFacList)){
+	  prvRetailerCount=prvFacList.size();
+	}
+	curFacList.each{ curFacilityMap->
+		boothId=curFacilityMap.get("facilityId");
+		milkAvgTotal=curFacilityMap.get("milkAvgTotal");
+		milkRtlAvgTotal=curFacilityMap.get("milkAvgTotal")/curRetailerCount;
+		preFacilityMap=facilityPrevSaleMap.get(boothId);
+		preAvgTot=0;
+		diff=0;
+		if(UtilValidate.isNotEmpty(preFacilityMap)){
+			preAvgTot=preFacilityMap.get("milkAvgTotal");
+			if(preFacilityMap.get("milkAvgTotal")>0 && prvRetailerCount>0){
+			 preRtlAvgTot=preFacilityMap.get("milkAvgTotal")/prvRetailerCount;
+			}else{
+			 preRtlAvgTot=preFacilityMap.get("milkAvgTotal");
+			}
+		}
+		diff=milkAvgTotal-preAvgTot;
+		if(diff==0){
+			curntCatAbsMap.get("SHP_RTLR").sameQty +=1;
+		}else if(diff<0){
+			curntCatAbsMap.get("SHP_RTLR").descQty +=1;
+		}else if(diff>0){
+			curntCatAbsMap.get("SHP_RTLR").incQty +=1;
+		}
+		//updating count
+	curntCatAbsMap.get("SHP_RTLR").catSize +=1;
+		curntCatAbsMap.get("SHP_RTLR").milkAvgTot +=milkRtlAvgTotal;
+		if(milkAvgTotal<=100){
+			curntCatAbsMap.get("SHP_RTLR").less100 +=1;
+		}else if(milkAvgTotal>=101&&milkAvgTotal<=250){
+			curntCatAbsMap.get("SHP_RTLR").bwt101To250 +=1;
+		}else if(milkAvgTotal>=251&&milkAvgTotal<=500){
+			curntCatAbsMap.get("SHP_RTLR").bwt251To500 +=1;
+		}else if(milkAvgTotal>=501&&milkAvgTotal<=750){
+			curntCatAbsMap.get("SHP_RTLR").bwt501To750 +=1;
+		}else if(milkAvgTotal>=751&&milkAvgTotal<=1000){
+			curntCatAbsMap.get("SHP_RTLR").bwt751To1000 +=1;
+		}else if(milkAvgTotal>=1001){
+			curntCatAbsMap.get("SHP_RTLR").above1000 +=1;
+		}
+	 }
+	}
+	   }
    }
 if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)){
 	conditionList=[];
@@ -265,6 +318,9 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 			categoryType=facilityList.get(i).get("categoryTypeEnum");
 			facilityId=facilityList.get(i).get("facilityId");
 			if(UtilValidate.isNotEmpty(categoryType)){
+					if(("PRLR_RTLR".equals(categoryType))){
+						categoryType="SHP_RTLR";
+					}					
 				if(UtilValidate.isEmpty(curNewFacilityMap[categoryType])){
 						curNewFacilityMap.put(categoryType,curCount+1);
 				 }else{
@@ -284,6 +340,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 	//prevoius abstract map
 		prvCatAbsMap=[:];
 		categorysList.each{categoryType->
+			if(!("PRLR_RTLR".equals(categoryType))){				
 			prvFacList=[];
 			prvFacList=prevCategoryTotalMap.get(categoryType);
 			prvPcmAbstractMap=[:];
@@ -328,6 +385,41 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 				}
 			}
 			prvCatAbsMap[categoryType]=prvPcmAbstractMap;
+			}else{
+			prvFacList=[];
+			prvFacList=prevCategoryTotalMap.get(categoryType);
+			prvRetailerCount=0;
+			if(UtilValidate.isNotEmpty(prvFacList)){
+			 prvRetailerCount=prvFacList.size();
+			}
+			prvFacList.each{ prvFacilityMap->
+				boothId=prvFacilityMap.get("facilityId");
+				prvMilkAvgTotal=prvFacilityMap.get("milkAvgTotal");
+				 if(prvFacilityMap.get("milkSaleTotal")>0 && prvRetailerCount>0){
+				   prvMilkRtlAvgTotal=prvFacilityMap.get("milkAvgTotal")/prvRetailerCount;
+				 }else{
+				   prvMilkRtlAvgTotal=prvFacilityMap.get("milkAvgTotal");
+				 }
+				//updating count
+				
+				 prvCatAbsMap.get("SHP_RTLR").catSize +=1;
+				 prvCatAbsMap.get("SHP_RTLR").milkAvgTot += prvMilkRtlAvgTotal;
+				if(prvMilkAvgTotal<=100){
+					 prvCatAbsMap.get("SHP_RTLR").less100 +=1;
+				}else if(prvMilkAvgTotal>=101&&prvMilkAvgTotal<=250){
+					 prvCatAbsMap.get("SHP_RTLR").bwt101To250 +=1;
+				}else if(prvMilkAvgTotal>=251&&prvMilkAvgTotal<=500){
+					 prvCatAbsMap.get("SHP_RTLR").bwt251To500 +=1;
+				}else if(prvMilkAvgTotal>=501&&prvMilkAvgTotal<=750){
+					 prvCatAbsMap.get("SHP_RTLR").bwt501To750 +=1;
+				}else if(prvMilkAvgTotal>=751&&prvMilkAvgTotal<=1000){
+					 prvCatAbsMap.get("SHP_RTLR").bwt751To1000 +=1;
+				}else if(prvMilkAvgTotal>=1001){
+					 prvCatAbsMap.get("SHP_RTLR").above1000 +=1;
+				}
+			}
+			
+			}
 		}
 		//Debug.log("prvCatAbsMap====="+prvCatAbsMap);
 	if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)){
@@ -344,6 +436,9 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 				categoryType=prvfacilityList.get(i).get("categoryTypeEnum");
 				facilityId=prvfacilityList.get(i).get("facilityId");
 				if(UtilValidate.isNotEmpty(categoryType)){
+					if(("PRLR_RTLR".equals(categoryType))){
+						categoryType="SHP_RTLR";
+					}
 					if(UtilValidate.isEmpty(prvNewFacilityMap[categoryType])){
 							prvNewFacilityMap.put(categoryType,prvCount+1);
 					 }else{

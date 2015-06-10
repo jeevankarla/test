@@ -642,13 +642,6 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 		apOpeningBalance=apOpeningBalanceRes.get("openingBalance");
     }
 }
-
-//party finHistory OB
-finAccntsOpeningBalance=BigDecimal.ZERO;
-if(UtilValidate.isNotEmpty(context.partyFinAccntOB)){
-finAccntsOpeningBalance=finAccntsOpeningBalance.add(context.partyFinAccntOB);
-}
-Debug.log("===finAccntsOpeningBalance================>"+finAccntsOpeningBalance);
 	
 partyTrTotalMap=[:];
 partyTrTotalMap["debitValue"]=BigDecimal.ZERO;
@@ -676,13 +669,13 @@ partyOBMap=[:];
 partyOBMap["debitValue"]=BigDecimal.ZERO;
 partyOBMap["creditValue"]=BigDecimal.ZERO;
 
-oB=finAccntsOpeningBalance+arOpeningBalance-apOpeningBalance;
+oB=arOpeningBalance-apOpeningBalance;
 if(oB>0){
 	partyOBMap["debitValue"]=oB;
-	partyTrTotalMap["debitValue"]+=(oB);
+	partyTotalMap["debitValue"]+=(oB);
 }else{
   partyOBMap["creditValue"]=(-1*oB);
-  partyTrTotalMap["creditValue"]+=(-1*oB) ;
+  partyTotalMap["creditValue"]+=(-1*oB) ;
 }
 partyTotalMap["debitValue"]+=(partyTrTotalMap["debitValue"]) ;
 partyTotalMap["creditValue"]+=(partyTrTotalMap["creditValue"]) ;
@@ -756,3 +749,46 @@ context.partyCBMap=partyCBMap;
 //transferAmount = totalInvSaApplied.add(totalInvSaNotApplied).subtract(totalInvPuApplied.add(totalInvPuNotApplied)).subtract(totalPayInApplied.add(totalPayInNotApplied).add(totalPayOutApplied.add(totalPayOutNotApplied)));
 
 
+	//for finAccountTrans
+	localtotalPartyDayWiseFinHistryOpeningBal=[:];
+	if(UtilValidate.isNotEmpty(context.totalPartyDayWiseFinHistryOpeningBal)){
+		localtotalPartyDayWiseFinHistryOpeningBal=context.totalPartyDayWiseFinHistryOpeningBal;
+	}
+	//Debug.log("totalPartyDayWiseFinHistryOpeningBal===================************************"+localtotalPartyDayWiseFinHistryOpeningBal);
+	FinTotalMap=[:];
+	FinTotalMap["debitValue"]=BigDecimal.ZERO;
+	FinTotalMap["creditValue"]=BigDecimal.ZERO;
+	Debug.log("localtotalPartyDayWiseFinHistryOpeningBal=========================="+localtotalPartyDayWiseFinHistryOpeningBal);
+	for(Map.Entry entry : localtotalPartyDayWiseFinHistryOpeningBal.entrySet()){
+		finTransactions=entry.getValue();
+				FinTotalMap["debitValue"]+=finTransactions.get("FinTransMap").get("debitValue");
+				FinTotalMap["creditValue"]+=finTransactions.get("FinTransMap").get("creditValue");
+	}
+	partyTotalTrasnsMap=[:];
+	partyTotalTrasnsMap["debitValue"]=BigDecimal.ZERO;
+	partyTotalTrasnsMap["creditValue"]=BigDecimal.ZERO;
+	partyTotalTrasnsMap["debitValue"]=partyTrTotalMap["debitValue"]-FinTotalMap["debitValue"];
+	partyTotalTrasnsMap["creditValue"]=partyTrTotalMap["creditValue"]-FinTotalMap["creditValue"];
+	partyTotalTrsMap=[:];
+	partyTotalTrsMap["debitValue"]=BigDecimal.ZERO;
+	partyTotalTrsMap["creditValue"]=BigDecimal.ZERO;
+	partyTotalTrsMap["debitValue"]+=partyTotalTrasnsMap["debitValue"];
+	partyTotalTrsMap["creditValue"]+=partyTotalTrasnsMap["creditValue"];
+	if(oB>0){
+		partyTotalTrsMap["debitValue"]+=(oB);
+		
+	}else{
+	  partyTotalTrsMap["creditValue"]+=(-1*oB) ;
+	}
+	partyTotalCBMap=[:];
+	partyTotalCBMap["debitValue"]=BigDecimal.ZERO;
+	partyTotalCBMap["creditValue"]=BigDecimal.ZERO;
+	tcB=partyTotalTrsMap["debitValue"]-partyTotalTrsMap["creditValue"];
+	if(tcB>0){
+		partyTotalCBMap["debitValue"]=tcB;
+	}else{
+	  partyTotalCBMap["creditValue"]= (-1*tcB);
+	}
+	context.partyTotalTrasnsMap=partyTotalTrasnsMap;	
+	context.partyTotalCBMap=partyTotalCBMap;	
+	context.FinTotalMap=FinTotalMap;

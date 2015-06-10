@@ -58,44 +58,78 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.accounting.finaccount.FinAccountServices;
+
 
 dctx = dispatcher.getDispatchContext();
 reportTypeFlag = parameters.reportTypeFlag;
-finAccountReconciliationList=[];
-finAccountReconciliationListMap=[:];
-partyFinAccountTransList=[];
-partyFinAccountTransListMap=[:];
-partyDayWiseFinHistryMap=[:];
-finalpartyDayWiseFinHistryMap=[:];
 partyTotalDebits=0;
 partyTotalCredits=0;
-partyFinAccntOB=0;
+//finalpartyDayWiseFinHistryMap=[:];
+totalPartyDayWiseFinHistryOpeningBal=[:];
+dummyMap=[:];
 
 localMultipleFinAccountHistoryMap=[:];
 
 if(UtilValidate.isNotEmpty(context.multipleFinAccountHistoryMap)){
-	localMultipleFinAccountHistoryMap=context.multipleFinAccountHistoryMap;
-}
+		localMultipleFinAccountHistoryMap=context.multipleFinAccountHistoryMap;
+	}
 if(parameters.multifinAccount == "Y"){
-	localMultipleFinAccountHistoryMap.each{ eachFinAccount ->
-		getmultipleFinAccountList(eachFinAccount.getKey(),eachFinAccount.getValue());
-	}
-}else{
-	getmultipleFinAccountList("",finAccountTransList);
-	//get OB of FinAccount
-	if(UtilValidate.isNotEmpty(parameters.interUnitFinObDate) && UtilValidate.isNotEmpty(context.finAccountId)){
-		Map finAccObResMap =org.ofbiz.accounting.finaccount.FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",context.finAccountId,"transactionDate",parameters.interUnitFinObDate));
-		if(UtilValidate.isNotEmpty(finAccObResMap)){
-			if(UtilValidate.isNotEmpty(finAccObResMap.get("openingBalance"))){
-				partyFinAccntOB=partyFinAccntOB+finAccObResMap.get("openingBalance");
+		localMultipleFinAccountHistoryMap.each{ eachFinAccount ->
+			getmultipleFinAccountList(eachFinAccount.getKey(),eachFinAccount.getValue());
 			}
-		}
-	}
-	context.partyFinAccntOB=partyFinAccntOB;
-	//end of OB
+}else{
+//	Debug.log("===finAccountTransList==IN==FindFinAccntttt======"+finAccountTransList);
+	finAccountIdList= EntityUtil.getFieldListFromEntityList(finAccountTransList,"finAccountId", true);
+getmultipleFinAccountList("",finAccountTransList);
 }
 
 def getmultipleFinAccountList(finAccountId, finAccountTransList){
+	partyDayWiseFinHistryMap=[:];
+	finopeningBalMap=[:];
+	FinTotalMap=[:];
+	FinTotalObMap=[:];
+	finCBMap=[:];
+	openingBal=[:];
+	totalOpenigbal=[:];
+	finAccountReconciliationList=[];
+	finAccountReconciliationListMap=[:];
+	partyFinAccountTransList=[];
+	partyFinAccountTransListMap=[:];
+	finAccountopeningBal= delegator.findOne("FinAccount", ["finAccountId" :finAccountId], false);
+	fromDateTime = null;
+	if(UtilValidate.isNotEmpty(parameters.partyfromDate)&& UtilValidate.isNotEmpty(parameters.partythruDate)){
+		def sdf = new SimpleDateFormat("yyyy, MMM dd");
+		try {
+			fromDateTime = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
+			thruDateTime = new java.sql.Timestamp(sdf.parse(parameters.partythruDate).getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: "+fromDate, "");
+		}
+		}
+	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime));
+	if(finAccTransMap){
+	oB=finAccTransMap.get("openingBalance");
+	}else{
+	oB= finAccountopeningBal.actualBalance;
+	}
+	finopeningBalMap["debitValue"]=BigDecimal.ZERO;
+	finopeningBalMap["creditValue"]=BigDecimal.ZERO;
+	FinTotalMap["debitValue"]=BigDecimal.ZERO;
+	FinTotalMap["creditValue"]=BigDecimal.ZERO;
+	FinTotalObMap["debitValue"]=BigDecimal.ZERO;
+	FinTotalObMap["creditValue"]=BigDecimal.ZERO;
+	finCBMap["debitValue"]=BigDecimal.ZERO;
+	finCBMap["creditValue"]=BigDecimal.ZERO;
+	if(oB>0){
+		finopeningBalMap["debitValue"]=oB;
+		FinTotalObMap["debitValue"]+=oB;
+	}else{
+	  finopeningBalMap["creditValue"]= (-1*oB);
+	  FinTotalObMap["creditValue"]+=(-1*oB);
+	}
+	openingBal.put("openingBal", finopeningBalMap);
+
 	finAccountTransList.eachWithIndex {finAccountTrans, idx ->
 		tempFinAccountTransMap=[:];
 		tempFinAccountTransMap["sNo"]=idx+1;
@@ -153,94 +187,105 @@ def getmultipleFinAccountList(finAccountId, finAccountTransList){
 					tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, payment.partyIdFrom, false);
 					tempFinAccountTransMap["paymentPartyId"] = payment.partyIdFrom;
 					//if deposit for partyLedger it is Dr
-					innerMap["debitValue"]=finAccountTrans.amount;
-					partyTotalDebits+=finAccountTrans.amount;
-					innerMap["crOrDbId"]="D";
-				}
-			}
-			tempFinAccountTransMap["instrumentNo"]=payment.paymentRefNum;
-			paymentMethodType = delegator.findOne("PaymentMethodType", ["paymentMethodTypeId" : payment.paymentMethodTypeId], true);
-			if(UtilValidate.isNotEmpty(paymentMethodType)){
-				tempFinAccountTransMap["paymentMethodTypeId"]=paymentMethodType.description;
-			}
-		}else if(UtilValidate.isNotEmpty(finAccountTrans.reasonEnumId) &&(finAccountTrans.reasonEnumId=="FATR_CONTRA")){
-			contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"], true);
-			if(UtilValidate.isNotEmpty(contraFinTransEntry)){
-				contraFinAccountTrans = delegator.findOne("FinAccountTrans", ["finAccountTransId" : contraFinTransEntry.finAccountTransId], false);
-				if(UtilValidate.isNotEmpty(contraFinTransEntry)){
-					if(UtilValidate.isNotEmpty(contraFinAccountTrans.finAccountTransTypeId)){						
-						if( contraFinAccountTrans.finAccountTransTypeId=="WITHDRAWAL"){
-							//if deposit for partyLedger it is Cr
-							innerMap["creditValue"]=contraFinAccountTrans.amount;
-							partyTotalCredits+=contraFinAccountTrans.amount;							
-							innerMap["crOrDbId"]="C";
-						}else if(contraFinAccountTrans.finAccountTransTypeId=="DEPOSIT"){
-							//if deposit for partyLedger it is Dr
-							innerMap["debitValue"]=contraFinAccountTrans.amount;							
-							partyTotalDebits+=contraFinAccountTrans.amount;
-							innerMap["crOrDbId"]="D";
-						}
-					}
-					contraFinAccount= delegator.findOne("FinAccount", ["finAccountId" :contraFinAccountTrans.finAccountId], false);
-					tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, contraFinAccount.ownerPartyId, false);
-					tempFinAccountTransMap["paymentPartyId"] = contraFinAccount.ownerPartyId;
-				}
-			}
-			tempFinAccountTransMap["instrumentNo"]=finAccountTrans.contraRefNum;
-
-		}else if(finAccountTrans.finAccountTransTypeId=="ADJUSTMENT"){
-			//if minus value then for partyLedger it is CR otherwise DR
-			if(UtilValidate.isNotEmpty(finAccountTrans.amount) &&  finAccountTrans.amount>0){
 				innerMap["debitValue"]=finAccountTrans.amount;
 				partyTotalDebits+=finAccountTrans.amount;
 				innerMap["crOrDbId"]="D";
-			}else if(UtilValidate.isNotEmpty(finAccountTrans.amount) &&  finAccountTrans.amount<0){
-				innerMap["creditValue"]=finAccountTrans.amount*(-1);
-				partyTotalDebits+=finAccountTrans.amount*(-1);
-				innerMap["crOrDbId"]="C";
 			}
-			tempFinAccountTransMap["paymentMethodTypeId"]= " Adjustment  ";
-		}
-		//adding required fields to partyLedgerInnerMap
-		innerMap["instrumentNo"]=tempFinAccountTransMap["instrumentNo"];
-		innerMap["partyId"]=tempFinAccountTransMap["paymentPartyId"];
-		innerMap["description"]=tempFinAccountTransMap["paymentMethodTypeId"];
-		partyFinAccountTransList.addAll(innerMap);
-		//partyFinAccountTransListMap.put(finAccountId, partyFinAccountTransList);
-		//preparing Map here
-		dayPaymentList=[];
-		dayPaymentList=partyDayWiseFinHistryMap[curntDay];
-		//Debug.log("=curntDay=="+curntDay+"==dayInvoiceList=="+dayPaymentList);
-		if(UtilValidate.isEmpty(dayPaymentList)){
-			dayTempPaymentList=[];
-			dayTempPaymentList.addAll(innerMap);
-			dayPaymentList=dayTempPaymentList;
-			partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
-		}else{
-			dayPaymentList.addAll(innerMap);
-			partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
-		}
-		finalpartyDayWiseFinHistryMap.put(finAccountId, partyDayWiseFinHistryMap)
-		finAccountReconciliationList.addAll(tempFinAccountTransMap);
+			}
+			tempFinAccountTransMap["instrumentNo"]=payment.paymentRefNum;
+	        paymentMethodType = delegator.findOne("PaymentMethodType", ["paymentMethodTypeId" : payment.paymentMethodTypeId], true);
+	          if(UtilValidate.isNotEmpty(paymentMethodType)){
+	            tempFinAccountTransMap["paymentMethodTypeId"]=paymentMethodType.description;
+	          }
+		   }else if(UtilValidate.isNotEmpty(finAccountTrans.reasonEnumId) &&(finAccountTrans.reasonEnumId=="FATR_CONTRA")){
+		          contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"], true);
+		          if(UtilValidate.isNotEmpty(contraFinTransEntry)){
+						contraFinAccountTrans = delegator.findOne("FinAccountTrans", ["finAccountTransId" : contraFinTransEntry.finAccountTransId], false);
+						if(UtilValidate.isNotEmpty(contraFinTransEntry)){
+							if(UtilValidate.isNotEmpty(contraFinAccountTrans.finAccountTransTypeId)){						
+								if( contraFinAccountTrans.finAccountTransTypeId=="WITHDRAWAL"){
+									//if deposit for partyLedger it is Cr
+									innerMap["creditValue"]=contraFinAccountTrans.amount;
+									partyTotalCredits+=contraFinAccountTrans.amount;							
+									innerMap["crOrDbId"]="C";
+								}else if(contraFinAccountTrans.finAccountTransTypeId=="DEPOSIT"){
+									//if deposit for partyLedger it is Dr
+									innerMap["debitValue"]=contraFinAccountTrans.amount;							
+									partyTotalDebits+=contraFinAccountTrans.amount;
+									innerMap["crOrDbId"]="D";
+								}
+							}
+							contraFinAccount= delegator.findOne("FinAccount", ["finAccountId" :contraFinAccountTrans.finAccountId], false);
+							tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, contraFinAccount.ownerPartyId, false);
+							tempFinAccountTransMap["paymentPartyId"] = contraFinAccount.ownerPartyId;
+						}
+					}
+		        tempFinAccountTransMap["instrumentNo"]=finAccountTrans.contraRefNum;
+	    }
+		   //adding required fields to partyLedgerInnerMap
+		   innerMap["instrumentNo"]=tempFinAccountTransMap["instrumentNo"];
+		   innerMap["partyId"]=tempFinAccountTransMap["paymentPartyId"];
+		   innerMap["description"]=tempFinAccountTransMap["paymentMethodTypeId"];
+		   FinTotalMap["debitValue"]+=innerMap["debitValue"];
+		   FinTotalMap["creditValue"]+=innerMap["creditValue"];
+		   
+		   partyFinAccountTransList.addAll(innerMap);
+		   //partyFinAccountTransListMap.put(finAccountId, partyFinAccountTransList);
+		   //preparing Map here
+		   dayPaymentList=[];
+		   dayPaymentList=partyDayWiseFinHistryMap[curntDay];
+		   //Debug.log("=curntDay=="+curntDay+"==dayInvoiceList=="+dayPaymentList);
+		   if(UtilValidate.isEmpty(dayPaymentList)){
+			   dayTempPaymentList=[];
+			   dayTempPaymentList.addAll(innerMap);
+			   dayPaymentList=dayTempPaymentList;
+			   partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
+		   }else{
+				dayPaymentList.addAll(innerMap);
+			   partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
+		   }
+		  
+		   //finalpartyDayWiseFinHistryMap.put(finAccountId,partyDayWiseFinHistryMap);
+		   finAccountReconciliationList.addAll(tempFinAccountTransMap);
 	}
-	//finAccountReconciliationListMap.put(finAccountId,finAccountReconciliationList);
+	//Debug.log("partyDayWiseFinHistryMap====================="+partyDayWiseFinHistryMap);
+	FinTotalObMap["debitValue"]+= FinTotalMap["debitValue"];
+	FinTotalObMap["creditValue"]+=FinTotalMap["creditValue"];
+	fcB=FinTotalObMap["debitValue"]-FinTotalObMap["creditValue"];
+	if(fcB>0){
+		finCBMap["debitValue"]=fcB;
+	}else{
+	  finCBMap["creditValue"]= (-1*fcB);
+	}
+	openingBal.put("FinTransMap", FinTotalMap);
+	openingBal.put("FinClsBalMap", finCBMap);
+	openingBal.put("partyDayWiseFinHistryMap", partyDayWiseFinHistryMap);
+	totalPartyDayWiseFinHistryOpeningBal.put(finAccountId, openingBal);
 	
 	context.finAccountReconciliationList=finAccountReconciliationList;
 	//result for PartyLedger
 	context.partyFinAccountTransList=partyFinAccountTransList;
-	context.partyTotalDebits=partyTotalDebits;
-	context.partyTotalCredits=partyTotalCredits;
-	if(parameters.multifinAccount != "Y"){
-		context.partyDayWiseFinHistryMap=partyDayWiseFinHistryMap;
+		if(parameters.multifinAccount != "Y"){
+			context.partyDayWiseFinHistryMap=partyDayWiseFinHistryMap;
+			context.partyTotalDebits=partyTotalDebits;
+			context.partyTotalCredits=partyTotalCredits;
+		}
 	}
-
-}
-/*if(parameters.multifinAccount != "Y"){
- context.finalpartyDayWiseFinHistryMap=finalpartyDayWiseFinHistryMap;
- }*/
+		if(parameters.multifinAccount == "Y"){
+			if(parameters.financialTransactions == "Y"){
+				context.totalPartyDayWiseFinHistryOpeningBal=totalPartyDayWiseFinHistryOpeningBal;
+				
+				context.partyTotalDebits=partyTotalDebits;
+				context.partyTotalCredits=partyTotalCredits;
+			}
+		}else{
+		totalPartyDayWiseFinHistryOpeningBal=[:];
+		context.totalPartyDayWiseFinHistryOpeningBal=totalPartyDayWiseFinHistryOpeningBal;
+		
+		}
+		
 //Debug.log("==finAccountReconciliationList=="+finAccountReconciliationList);
 //Debug.log("==partyFinAccountTransList=="+partyFinAccountTransList);
-
 
 
 

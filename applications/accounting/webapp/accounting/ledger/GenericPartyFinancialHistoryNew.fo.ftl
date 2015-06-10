@@ -55,7 +55,9 @@ under the License.
             			<fo:block text-align="left" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160; PARTY CODE: ${parameters.partyId?if_exists}                  PARTY NAME:  ${partyName?if_exists}                  </fo:block>
               			<fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>  
             			<#--><fo:block text-align="left" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">&#160;                INVOICE-INFO                          PAYMENT-INFO       </fo:block> -->
-		        	<fo:block>
+		        	</fo:static-content>
+		            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
+					<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="230pt"/> 	
@@ -71,7 +73,7 @@ under the License.
 				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DATE</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Particulars</fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Business Transactions</fo:block> 
 				            </fo:table-cell>
 				             <fo:table-cell>
 				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice</fo:block> 
@@ -95,9 +97,7 @@ under the License.
                        </fo:table-body>
                 </fo:table>
               </fo:block> 
-              <fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>	
-		        	</fo:static-content>	        	
-		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
+              <fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>		        	
             	<fo:block>
                  	<fo:table>
                      <fo:table-column column-width="90pt"/>
@@ -188,59 +188,7 @@ under the License.
                         </#if>
                        
                         </#list>
-					 <#if finalpartyDayWiseFinHistryMap?has_content>
-						<fo:table-row>
-		                    <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">===============FinAccountTransDetails============</fo:block>  
-				            </fo:table-cell>
-						</fo:table-row>
-						<#assign partyDayWiseFin = finalpartyDayWiseFinHistryMap.entrySet()>
-						<#list partyDayWiseFin as partyDayWiseFinTrans>
-						<fo:table-row>
-		                    <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Fin Account Id : ${partyDayWiseFinTrans.getKey()?if_exists}</fo:block>  
-				            	<fo:block   text-align="left"  ></fo:block>  
-				            </fo:table-cell>
-						</fo:table-row>	
-						<#assign partyDayWiseFinHistry = partyDayWiseFinTrans.getValue().entrySet()>
-						<#list partyDayWiseFinHistry as finTransList>
-							<#assign finTransValues = finTransList.getValue()>
-							 <#list finTransValues as finTrans>	
-                        	<fo:table-row>
-		                    <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${finTransList.getKey()?if_exists}</fo:block>  
-				            </fo:table-cell>
-				             <fo:table-cell>
-				            	<fo:block   text-align="left"  >${finTrans.description?if_exists}</fo:block>  
-				            </fo:table-cell>
-				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${finTrans.instrumentNo?if_exists}</fo:block>  
-				            </fo:table-cell>
-				            <#-->
-				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("vchrCode")?if_exists}</fo:block>  
-				            </fo:table-cell> -->
-		                    <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${finTrans.paymentId?if_exists}</fo:block>  
-				            </fo:table-cell>
-				              <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${finTrans.debitValue?if_exists}</fo:block>  
-		                    </fo:table-cell>
-		                     <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${finTrans.creditValue?if_exists}</fo:block>  
-		                    </fo:table-cell>
-                        </fo:table-row>
-                        		</#list>
-							</#list>
- 						</#list>
-                        </#if>
-                        <#--
-                        <fo:table-row>
-	                    	<fo:table-cell>
-	                    	   <fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block>
-		                	</fo:table-cell>
-						</fo:table-row> -->
-						 <fo:table-row>
+ 						<fo:table-row>
 	                    	<fo:table-cell>
 	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
 		                	</fo:table-cell>
@@ -248,6 +196,258 @@ under the License.
                         <fo:table-row>
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Transaction Total:</fo:block>  
+		                    </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            </fo:table-cell>
+				            <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    </fo:table-cell>
+                         </fo:table-row>
+                          <fo:table-row>
+	                    	<fo:table-cell>
+	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+                         <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Closing Balance:</fo:block>  
+		                    </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalCBMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            </fo:table-cell>
+				            <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalCBMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    </fo:table-cell>
+                         </fo:table-row>
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						
+					 <#if totalPartyDayWiseFinHistryOpeningBal?has_content>	
+						<fo:table-row>
+                            <fo:table-cell >        
+                                     <fo:block page-break-after="always"></fo:block>
+                             </fo:table-cell>
+                        </fo:table-row>
+					 <#-- <fo:table-row>
+							  <fo:table-cell>
+									 <fo:block text-align="center"  keep-together="always"  font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Financial Account Transaction Details</fo:block>  
+							  </fo:table-cell>
+					</fo:table-row> -->	
+					 <fo:table-row>
+                            <fo:table-cell >
+											<fo:block>
+											<fo:table>
+						                    <fo:table-column column-width="90pt"/>
+						            		<fo:table-column column-width="230pt"/> 	
+						            		<fo:table-column column-width="70pt"/>
+						            		<fo:table-column column-width="70pt"/>
+						            		<fo:table-column column-width="100pt"/>
+						            		<fo:table-column column-width="100pt"/>
+						            		<fo:table-column column-width="90pt"/>	
+						            		<fo:table-column column-width="90pt"/>	
+						                    <fo:table-body>
+						                    <fo:table-row>
+								                    <fo:table-cell>
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DATE</fo:block>  
+										            </fo:table-cell>
+										            <fo:table-cell>
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Financial Transactions</fo:block>  
+										            </fo:table-cell>
+										             <fo:table-cell>
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice</fo:block> 
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;Id</fo:block>   
+										            </fo:table-cell>
+										            <#-->
+									            <fo:table-cell>
+							                    	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Type</fo:block>  
+							                    </fo:table-cell> -->
+									             <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Payment</fo:block> 
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;Id</fo:block>  
+									            </fo:table-cell>
+									             <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Debit</fo:block>  
+									            </fo:table-cell>
+									            <fo:table-cell>
+							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Credit</fo:block>  
+							                    </fo:table-cell>
+					                        </fo:table-row>
+					                       </fo:table-body>
+					                </fo:table>
+					              </fo:block> 
+					              	  </fo:table-cell>
+					</fo:table-row>
+					<fo:table-row>
+                            <fo:table-cell>
+					
+					              <fo:block font-size="11pt" text-align="left">-------------------------------------------------------------------------------------------------------</fo:block>		        	
+					            	<fo:block>
+					                 	<fo:table>
+					                     <fo:table-column column-width="90pt"/>
+					            		<fo:table-column column-width="230pt"/> 	
+					            		<fo:table-column column-width="70pt"/>
+					            		<fo:table-column column-width="70pt"/>
+					            		<fo:table-column column-width="100pt"/>
+					            		<fo:table-column column-width="100pt"/>
+					            		<fo:table-column column-width="90pt"/>	
+					            		<fo:table-column column-width="90pt"/>
+					                    <fo:table-body>		
+					                    	<#assign partyDayWiseFin = totalPartyDayWiseFinHistryOpeningBal.entrySet()>
+											<#list partyDayWiseFin as partyDayWiseFinTrans>
+											<#assign FinOpenBal = partyDayWiseFinTrans.getValue().get("openingBal")>
+											<#assign FinCloseBal = partyDayWiseFinTrans.getValue().get("FinClsBalMap")>	
+											<#assign FinTransTotal = partyDayWiseFinTrans.getValue().get("FinTransMap")>	
+											<#assign FinDayWiseTrans = partyDayWiseFinTrans.getValue().get("partyDayWiseFinHistryMap").entrySet()>
+												
+										
+					                     <fo:table-row>
+							                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Opening Balance:</fo:block>  
+							                    </fo:table-cell>
+									             <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinOpenBal.debitValue?if_exists?string("#0.00")} </fo:block></fo:table-cell>
+									            <fo:table-cell>
+							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinOpenBal.creditValue?if_exists?string("#0.00")} </fo:block>  
+							                    </fo:table-cell>
+					                      </fo:table-row>
+					                      <fo:table-row>
+						                    	<fo:table-cell>
+						                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
+							                	</fo:table-cell>
+										  </fo:table-row>
+											
+											<#assign finAccount = delegator.findOne("FinAccount", {"finAccountId" : partyDayWiseFinTrans.getKey()}, true)?if_exists/> 
+											<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" : finAccount.finAccountTypeId}, true)?if_exists/> 
+											<fo:table-row>
+							                    <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"> ${finAccountType.description?if_exists}[${partyDayWiseFinTrans.getKey()}]</fo:block>  
+									            	<fo:block   text-align="left"  ></fo:block>  
+									            </fo:table-cell>
+											</fo:table-row>	
+												<#list FinDayWiseTrans as FinTransDaywise>
+												<#assign FinAccTrans = FinTransDaywise.getValue()>
+										<#list FinAccTrans as FinTransDay>
+					                        	<fo:table-row>
+							                    <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${FinTransDaywise.getKey()}</fo:block>  
+									            </fo:table-cell>
+									             <fo:table-cell>
+									            	<fo:block   text-align="left"  >${FinTransDay.get("description")?if_exists}</fo:block>  
+									            </fo:table-cell>
+									             <fo:table-cell>
+									            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${FinTransDay.get("instrumentNo")?if_exists}</fo:block>  
+									            </fo:table-cell>
+									            <#-->
+									            <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("vchrCode")?if_exists}</fo:block>  
+									            </fo:table-cell> -->
+							                    <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${FinTransDay.get("paymentId")?if_exists}</fo:block>  
+									            </fo:table-cell>
+									              <fo:table-cell>
+							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransDay.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+							                    </fo:table-cell>
+							                     <fo:table-cell>
+							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransDay.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+							                    </fo:table-cell>
+					                        </fo:table-row>
+											</#list>
+										</#list>
+					 <fo:table-row>
+	                    	<fo:table-cell>
+	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+                        <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Financial Transaction Total:</fo:block>  
+		                    </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransTotal.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            </fo:table-cell>
+				            <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransTotal.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    </fo:table-cell>
+                         </fo:table-row>
+                          <fo:table-row>
+	                    	<fo:table-cell>
+	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+                         <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Closing Balance:</fo:block>  
+		                    </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinCloseBal.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            </fo:table-cell>
+				            <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinCloseBal.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    </fo:table-cell>
+                         </fo:table-row>
+						 <fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block>
+		                	</fo:table-cell>
+						 </fo:table-row>
+							</#list>
+					    </fo:table-body>
+					    </fo:table>
+					 </fo:block>
+             	  </fo:table-cell>
+                </fo:table-row>
+                        
+                        <#--
+                        <fo:table-row>
+	                    	<fo:table-cell>
+	                    	   <fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row> -->
+
+						 <fo:table-row>
+	                    	<fo:table-cell>
+	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+                        <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Total Business Transaction Total:</fo:block>  
+		                    </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            </fo:table-cell>
+				            <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    </fo:table-cell>
+                         </fo:table-row>
+						 <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Total Financial Transaction Total:</fo:block>  
+		                    </fo:table-cell>
+				             <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTotalMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            </fo:table-cell>
+				            <fo:table-cell>
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTotalMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    </fo:table-cell>
+                         </fo:table-row>
+                          <fo:table-row>
+	                    	<fo:table-cell>
+	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row> 
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="left">------------------------------------------------------------------------------------------------------</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+                          <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Total Transaction Total:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
 				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTrTotalMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
@@ -263,7 +463,7 @@ under the License.
 						</fo:table-row>
                          <fo:table-row>
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Closing Balance:</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***ToTal Closing Balance:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
 				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCBMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
@@ -277,6 +477,7 @@ under the License.
 	                    	    <fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block>
 		                	</fo:table-cell>
 						</fo:table-row>
+    					</#if>
                     </fo:table-body>
                 </fo:table>
               </fo:block> 		
