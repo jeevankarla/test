@@ -337,6 +337,12 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_VIEW"/>
      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
+     
+     <!-- DTC Billing Time Period View permissions -->
+     <SecurityPermission description="Byproducts DTC Billing Timeperiod" permissionId="BYPRODUCTS_DTCPRD"/>
+     <SecurityGroup description="Viewing the DTC Billing Time Period ! " groupId="BYPRODUCTS_TMPERIOD"/>
+     <SecurityGroupPermission groupId="BYPRODUCTS_TMPERIOD" permissionId="BYPRODUCTS_TMPERIOD"/>
+     <SecurityGroupPermission groupId="FULLADMIN" permissionId="BYPRODUCTS_TMPERIOD"/>
 
    <!-- EMPLOY SUBSIDY  View permissions -->
      <SecurityGroup description="View Employee Subsidy Milk" groupId="SUBSIDYVIEW"/>    

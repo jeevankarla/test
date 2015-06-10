@@ -935,6 +935,11 @@
         	<link target="Transporters"/>
         </menu-item>
         <menu-item name="DtcBillingTimePeriod" title="Time Period">
+            <condition>
+	        	<or>
+	        		<if-has-permission permission="BYPRODUCTS"  action="_TMPERIOD"/>
+	        	</or>        		
+	        </condition> 
         	<link target="DtcBillingTimePeriod"/>
         </menu-item> 	    
         <menu-item name="TransporterMargins" title="TransporterBilling">
