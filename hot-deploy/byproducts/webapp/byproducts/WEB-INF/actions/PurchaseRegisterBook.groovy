@@ -53,11 +53,11 @@ context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
 totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
-if(totalDays > 32){
+/*if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
-}
+}*/
 /*partyIds=[];
 if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
    nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");

@@ -133,11 +133,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	    makeDatePicker("fromDateProduct","thruDateProduct");
 		
 		
-		oldMenumakeDatePicker("purchaseFromDate","purchaseThruDate");
-	    oldMenumakeDatePicker("purchaseFDate","purchaseTDate");
-		oldMenumakeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
+	//	oldMenumakeDatePicker("purchaseFromDate","purchaseThruDate");
+		makeDatePicker("purchaseFromDate","purchaseThruDate");
+	//    oldMenumakeDatePicker("purchaseFDate","purchaseTDate");
+	   makeDatePicker("purchaseFDate","purchaseTDate");
+	//	oldMenumakeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
+		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
 		oldMenumakeDatePicker("purchaseTaxProdFDate","purchaseTaxProdTDate");
-		oldMenumakeDatePicker("purchaseSumFDate","purchaseSumTDate");
+	//	oldMenumakeDatePicker("purchaseSumFDate","purchaseSumTDate");
+		makeDatePicker("purchaseSumFDate","purchaseSumTDate");
 		oldMenumakeDatePicker("purchaseSumFDateNew","purchaseSumTDateNew");
 	//	makeDatePicker3("purchaseSumFDateNew","purchaseSumTDateNew");
 		oldMenumakeDatePicker("cwsFDate","cwsTDate");
