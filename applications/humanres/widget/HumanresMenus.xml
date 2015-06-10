@@ -713,7 +713,7 @@
         	</link>
         </menu-item>
         
-        <menu-item name="PreviousEmployementProfile" title="${uiLabelMap.PreviousEmployementProfile}">
+        <!-- <menu-item name="PreviousEmployementProfile" title="${uiLabelMap.PreviousEmployementProfile}">
             <condition>
                   <or>
                     <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
@@ -724,7 +724,7 @@
             <link target="PreviousEmployementProfile">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
              
         <menu-item name="ListEmployment" title="${uiLabelMap.HumanResEmployment}">
             <condition>
