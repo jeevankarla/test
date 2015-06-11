@@ -273,6 +273,7 @@ public class PayrollService {
 				Map result = ServiceUtil.returnSuccess();
 				result.put("periodBillingId", periodBillingId);
 				boolean beganTransaction = false;
+				String billingTypeId = "";
 		        
 				try {
 					beganTransaction = TransactionUtil.begin(72000);
@@ -280,6 +281,10 @@ public class PayrollService {
 					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 					
 					String customTimePeriodId = periodBilling.getString("customTimePeriodId");
+					
+					if(UtilValidate.isNotEmpty(periodBilling)){
+						billingTypeId = periodBilling.getString("billingTypeId");
+					}
 					
 					try {
 						customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
@@ -295,24 +300,25 @@ public class PayrollService {
 					Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 					Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 					
-					
-		  	    	if(UtilValidate.isNotEmpty(customTimePeriodId)){
-		  	    		List billingConList = FastList.newInstance();
-			            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
-			            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
-			            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PAYROLL_BILL"));
-			            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
-			            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBilling", billingCond, null, null, null, false);   
-			            if(UtilValidate.isEmpty(custBillingIdsList)){
-			            	Debug.logError("Attendance Not Finalized", module); 
-			            	result = ServiceUtil.returnError("Attendance Not Finalized");
-							periodBilling.set("statusId", "GENERATION_FAIL");
-							periodBilling.store();
-							result = ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
-						    result.put("periodBillingId", periodBillingId);
-							return result;
-			        	} 
-		  	    	}
+					if(billingTypeId.equals("PAYROLL_BILL")){
+			  	    	if(UtilValidate.isNotEmpty(customTimePeriodId)){
+			  	    		List billingConList = FastList.newInstance();
+				            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
+				            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
+				            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_HR_ATTN_FINAL"));
+				            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
+				            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBilling", billingCond, null, null, null, false);   
+				            if(UtilValidate.isEmpty(custBillingIdsList)){
+				            	Debug.logError("Attendance Not Finalized", module); 
+				            	result = ServiceUtil.returnError("Attendance Not Finalized");
+								periodBilling.set("statusId", "GENERATION_FAIL");
+								periodBilling.store();
+								result = ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+							    result.put("periodBillingId", periodBillingId);
+								return result;
+				        	} 
+			  	    	}
+					}
 					
 					String customPayrollCalcService = "generatePayrollBillingInternal";
 					GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", periodBilling.getString("billingTypeId")), false);
