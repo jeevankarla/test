@@ -316,11 +316,13 @@ if(UtilValidate.isNotEmpty(timePeiodIdsList)) {
 			fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 			String monthName = UtilDateTime.toDateString(fromDateStart, "MMM");
 			
-			elJSON.add(monthName);
 			if(UtilValidate.isNotEmpty(encashedDays)){
+				elJSON.add(monthName);
 				elJSON.add(encashedDays);
 			}
-			elEncashmentJSON.add(elJSON);
+			if(UtilValidate.isNotEmpty(elJSON)){
+				elEncashmentJSON.add(elJSON);
+			}
 		}
 	}
 }
