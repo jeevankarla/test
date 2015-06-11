@@ -300,7 +300,7 @@ public class PayrollService {
 		  	    		List billingConList = FastList.newInstance();
 			            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
 			            billingConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
-			            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_HR_ATTN_FINAL"));
+			            billingConList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PAYROLL_BILL"));
 			            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
 			            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBilling", billingCond, null, null, null, false);   
 			            if(UtilValidate.isEmpty(custBillingIdsList)){
