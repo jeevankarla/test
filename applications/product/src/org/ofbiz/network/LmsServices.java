@@ -1655,7 +1655,7 @@ public class LmsServices {
 				 "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 	
 		 if(isSeqNumNumeric){		 
-			 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "openedDate",openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", 
+			 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "openedDate",openedDate,"closedDate",closedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", 
 					 "categoryTypeEnum", categoryTypeEnum,"sequenceNum", facilityId,"facilityName", (String)context.get("facilityName"),"useEcs", (String)context.get("useEcs"),
 					 "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 		 }
