@@ -3879,6 +3879,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ArApInvoiceApplicationCSV"/>
     </request-map>
+    <request-map uri="ArApInvoiceApplication.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ArApInvoiceApplicationPDF"/>
+    </request-map>
     <request-map uri="GlLedgerReconciliation.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlLedgerReconciliationCSV"/>
@@ -4342,6 +4346,7 @@ under the License.
   	<view-map name="GroupPaymentCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GroupPaymentCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="FinAccountTransDetailsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountTransDetailsCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="ArApInvoiceApplicationCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ArApInvoiceApplicationCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="ArApInvoiceApplicationPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ArApInvoiceApplicationPDF" content-type="application/pdf" encoding="none"/>
   	<view-map name="GlLedgerReconciliationCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlLedgerReconciliationCSV" content-type="text/csv" encoding="none"/>
     <!-- Assignment Mappings -->
     <view-map name="EditPartyFixedAssetAssignments" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditPartyFixedAssetAssignments"/>
