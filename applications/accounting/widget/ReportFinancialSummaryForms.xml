@@ -1254,7 +1254,7 @@ under the License.
     	<field name="closingBalance"><display></display></field>
     	<field name="deducteePartyId"><display></display></field>
     </form>
-    <form name="ArApInvoiceApplicationCSV" list-name="invoiceApplicationDetailList" type="list">
+    <form name="ArApInvoiceApplicationCSV" list-name="invoiceApplicationDetailList" type="list" paginate="false">
     	<field name="invoiceId"><display/></field>
     	<field name="sequenceId"><display/></field>
     	<field name="sequenceType"><display/></field>

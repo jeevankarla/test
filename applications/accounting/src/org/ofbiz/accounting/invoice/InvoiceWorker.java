@@ -138,7 +138,58 @@ public class InvoiceWorker {
         }
         return quantity.multiply(amount).setScale(decimals, rounding);
     }
-
+    
+    public static Map<String, Object> getInvoiceIdsTotal(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    	Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    String errorMsg = "getInvoiceIdsTotal failed ";
+	    Map<String, Object> serviceResults = ServiceUtil.returnError(errorMsg, null, null, null);  
+		List<String> invoiceIds = (List) context.get("invoiceIds");
+		BigDecimal totalValue = BigDecimal.ZERO;
+    	Map invoiceTotalMap = FastMap.newInstance();
+		BigDecimal invoiceTotal = BigDecimal.ZERO;
+		BigDecimal itemTotal = BigDecimal.ZERO;
+		try {
+        	EntityListIterator invoiceItemIter = delegator.find("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, UtilMisc.toSet("invoiceId", "quantity", "amount"), UtilMisc.toList("invoiceId"), null);
+        	
+        	GenericValue itemValue;
+        	
+			String previousInvId = "";
+			String lastInvoiceId = "";
+        	while( invoiceItemIter != null && (itemValue = invoiceItemIter.next()) != null) {
+				String invoiceId = itemValue.getString("invoiceId");
+				lastInvoiceId = invoiceId;
+				if (previousInvId == "") {
+					previousInvId = invoiceId;
+               	}
+				BigDecimal qty = BigDecimal.ONE;
+				if(UtilValidate.isNotEmpty(itemValue.get("quantity"))){
+					qty = itemValue.getBigDecimal("quantity");
+				}
+				itemTotal = (qty.multiply(itemValue.getBigDecimal("amount"))).setScale(decimals,rounding);
+				invoiceTotal = (invoiceTotal.add(itemTotal)).setScale(decimals,rounding);
+				if(!invoiceId.equals(previousInvId)){
+					BigDecimal actualTot = invoiceTotal.subtract(itemTotal);
+					invoiceTotalMap.put(previousInvId, actualTot);
+					totalValue = totalValue.add(actualTot);
+					invoiceTotal = itemTotal;
+					previousInvId = invoiceId;
+				}
+			}
+        	if(UtilValidate.isNotEmpty(lastInvoiceId)){
+        		BigDecimal currInvAmt = getInvoiceTotal(delegator, lastInvoiceId);
+        		invoiceTotalMap.put(lastInvoiceId, currInvAmt);
+				totalValue = totalValue.add(currInvAmt);
+        	}
+        	
+        }catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError("Unable to calculate invoice amount");
+		}
+		serviceResults.put("invoicesTotal", invoiceTotalMap);
+		serviceResults.put("totalAmount", totalValue);
+		return serviceResults;
+    }
     /** Method to get the taxable invoice item types as a List of invoiceItemTypeIds.  These are identified in Enumeration with enumTypeId TAXABLE_INV_ITM_TY. */
     public static List<String> getTaxableInvoiceItemTypeIds(Delegator delegator) throws GenericEntityException {
         List<String> typeIds = FastList.newInstance();
