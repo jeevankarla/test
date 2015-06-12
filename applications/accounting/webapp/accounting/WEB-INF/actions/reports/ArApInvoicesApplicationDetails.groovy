@@ -109,7 +109,7 @@ partyNamesMap = [:];
 invoiceIds = [];
 invoiceDetailList = [];
 invoicesIter.each{ eachItem ->
-	invoiceAmt= InvoiceWorker.getInvoiceTotal(delegator,eachItem.invoiceId);
+	//invoiceAmt= InvoiceWorker.getInvoiceTotal(delegator,eachItem.invoiceId);
 	invoiceId = eachItem.invoiceId;
 	partyId = eachItem.partyId;
 	if(partyId.equalsIgnoreCase("Company")){
@@ -132,7 +132,7 @@ invoicesIter.each{ eachItem ->
 	tempMap["partyId"] = partyId;
 	tempMap["partyName"] = partyName;
 	tempMap["paidDate"] = eachItem.paidDate;
-	tempMap["invoiceAmount"] = invoiceAmt;
+	//tempMap["invoiceAmount"] = invoiceAmt;
 	tempMap["paymentId"] = "";
 	tempMap["paymentDate"] = "";
 	tempMap["paymentAmount"] = "";
@@ -141,6 +141,9 @@ invoicesIter.each{ eachItem ->
 		
 }
 invoicesIter.close();
+
+resultCtx = InvoiceWorker.getInvoiceIdsTotal(dctx, UtilMisc.toMap("invoiceIds", invoiceIds, "userLogin", userLogin));
+invoiceTotalMap = resultCtx.get("invoicesTotal");
 EntityListIterator<GenericValue> invoiceSequenceIter = delegator.find("BillOfSaleInvoiceSequence", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, UtilMisc.toSet("invoiceId", "billOfSaleTypeId", "sequenceId"), null, null);
 sequenceMap = [:];
 vatInvoices = [];
@@ -193,7 +196,10 @@ invoiceDetailList.each{ eachInvoiceDetail ->
 	if(exciseInvoices.contains(invoiceId)){
 		seqType = "EXCISE"
 	}
-	
+	invoiceAmt = 0;
+	if(invoiceTotalMap.get(invoiceId)){
+		invoiceAmt = invoiceTotalMap.get(invoiceId);
+	}
 	if(applicationMap.get(invoiceId)){
 		applicationList = applicationMap.get(invoiceId);
 		applicationList.each{ eachApp ->
@@ -209,7 +215,8 @@ invoiceDetailList.each{ eachInvoiceDetail ->
 			if(eachInvoiceDetail.get("paidDate")){
 				tempMap["paidDate"] = UtilDateTime.toDateString(eachInvoiceDetail.get("paidDate"), "dd/MM/yyyy");
 			}
-			tempMap["invoiceAmount"] = eachInvoiceDetail.get("invoiceAmount");
+			//tempMap["invoiceAmount"] = eachInvoiceDetail.get("invoiceAmount");
+			tempMap["invoiceAmount"] = invoiceAmt;
 			tempMap["paymentId"] = eachApp.get("paymentId");
 			tempMap["paymentDate"] = UtilDateTime.toDateString(eachApp.get("paymentDate"), "dd/MM/yyyy");
 			tempMap["paymentAmount"] = eachApp.get("paymentAmount");
@@ -220,6 +227,7 @@ invoiceDetailList.each{ eachInvoiceDetail ->
 	else{
 		eachInvoiceDetail.put("sequenceId", seqId);
 		eachInvoiceDetail.put("sequenceType", seqType);
+		eachInvoiceDetail.put("invoiceAmount", invoiceAmt);
 		eachInvoiceDetail.put("invoiceDate", UtilDateTime.toDateString(eachInvoiceDetail.get("invoiceDate"), "dd/MM/yyyy"));
 		finalInvoiceDetailList.add(eachInvoiceDetail);
 	}
