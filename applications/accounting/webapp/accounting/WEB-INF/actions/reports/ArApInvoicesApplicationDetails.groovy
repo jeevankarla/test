@@ -66,7 +66,7 @@ userLogin= context.userLogin;
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 typeId = parameters.typeId;
-
+dctx = dispatcher.getDispatchContext();
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
 if(fromDateStr){
@@ -82,9 +82,11 @@ if(thruDateStr){
 	} catch (ParseException e) {
 	}
 }
+
 fromDate = UtilDateTime.getDayStart(fromDateTs, timeZone, locale);
 thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
-
+context.dateFrom = UtilDateTime.toDateString(fromDate, "MMM dd, yyyy");
+context.dateThru = UtilDateTime.toDateString(thruDate, "MMM dd, yyyy");
 invoiceType = delegator.findList("InvoiceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, typeId), null, null, null, false);
 
 invoiceTypeIds = EntityUtil.getFieldListFromEntityList(invoiceType, "invoiceTypeId", true);
@@ -100,8 +102,6 @@ conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQ
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 EntityListIterator<GenericValue> invoicesIter = delegator.find("Invoice", condition, null, UtilMisc.toSet("invoiceId", "invoiceTypeId", "invoiceMessage", "invoiceDate", "paidDate", "partyId", "partyIdFrom", "statusId"), null, null);
-
-//List<GenericValue> paymentApplications = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), UtilMisc.toSet("invoiceId", "paymentDate", "amount", "amountApplied", "partyIdFrom", "partyIdTo"), null, null ,false);
 
 invoiceApplicationDetailList = [];
 distinctPartyIds = [];
@@ -125,7 +125,6 @@ invoicesIter.each{ eachItem ->
 		partyName = partyNamesMap.get(partyId);
 	}
 	invoiceIds.add(invoiceId);
-	
 	tempMap = [:];
 	tempMap["invoiceId"] = invoiceId;
 	tempMap["invoiceType"] = eachItem.invoiceTypeId;
@@ -142,7 +141,21 @@ invoicesIter.each{ eachItem ->
 		
 }
 invoicesIter.close();
-EntityListIterator<GenericValue> invoicesApplicationIter = delegator.find("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, UtilMisc.toSet("invoiceId", "paymentDate", "amount", "amountApplied", "partyIdFrom", "partyIdTo"), null, null);
+EntityListIterator<GenericValue> invoiceSequenceIter = delegator.find("BillOfSaleInvoiceSequence", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, UtilMisc.toSet("invoiceId", "billOfSaleTypeId", "sequenceId"), null, null);
+sequenceMap = [:];
+vatInvoices = [];
+exciseInvoices = [];
+invoiceSequenceIter.each{ eachSeq ->
+	if(eachSeq.billOfSaleTypeId == "VAT_INV"){
+		vatInvoices.add(eachSeq.invoiceId);
+	}else{
+		exciseInvoices.add(eachSeq.invoiceId);
+	}
+	sequenceMap.put(eachSeq.invoiceId, eachSeq.sequenceId);
+}
+invoiceSequenceIter.close();
+
+EntityListIterator<GenericValue> invoicesApplicationIter = delegator.find("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, null, null, null);
 applicationMap = [:];
 invoicesApplicationIter.each{ eachApp ->
 	invoiceId = eachApp.invoiceId;
@@ -167,11 +180,27 @@ invoicesApplicationIter.each{ eachApp ->
 finalInvoiceDetailList = [];
 invoiceDetailList.each{ eachInvoiceDetail ->
 	invoiceId = eachInvoiceDetail.get("invoiceId");
+	seqMap = [:];
+	seqId = "";
+	seqType = "";
+	if(sequenceMap.get(invoiceId)){
+		seqId = sequenceMap.get(invoiceId);
+	}
+	
+	if(vatInvoices.contains(invoiceId)){
+		seqType = "VAT"
+	}
+	if(exciseInvoices.contains(invoiceId)){
+		seqType = "EXCISE"
+	}
+	
 	if(applicationMap.get(invoiceId)){
 		applicationList = applicationMap.get(invoiceId);
 		applicationList.each{ eachApp ->
 			tempMap = [:];
 			tempMap["invoiceId"] = invoiceId;
+			tempMap["sequenceId"] = seqId;
+			tempMap["sequenceType"] = seqType;
 			tempMap["invoiceType"] = eachInvoiceDetail.get("invoiceType");
 			tempMap["invoiceDate"] = UtilDateTime.toDateString(eachInvoiceDetail.get("invoiceDate"), "dd/MM/yyyy");
 			tempMap["partyId"] = eachInvoiceDetail.get("partyId");
@@ -189,6 +218,9 @@ invoiceDetailList.each{ eachInvoiceDetail ->
 		}
 	}
 	else{
+		eachInvoiceDetail.put("sequenceId", seqId);
+		eachInvoiceDetail.put("sequenceType", seqType);
+		eachInvoiceDetail.put("invoiceDate", UtilDateTime.toDateString(eachInvoiceDetail.get("invoiceDate"), "dd/MM/yyyy"));
 		finalInvoiceDetailList.add(eachInvoiceDetail);
 	}
 }

@@ -997,7 +997,8 @@ function reportTypeChangeFunc() {
 			  	</td>
 			  	<td width="20%">
 					<table>
-					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>');" class="buttontext"/></td>
+					<td><input type="submit" value="PDF" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
 					</table>   
 			 	</td>
       		</form>
