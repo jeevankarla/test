@@ -2117,4 +2117,33 @@ under the License.
   	        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
   	    </relation> 
 	</entity>
+	<entity entity-name="EmployeeSubsidyProductIssue"
+            package-name="org.ofbiz.humanres"
+            title="Employee Subsidy Proudct Issue Entity">
+      	<field name="partyId" type="id-ne"></field>
+      	<field name="customTimePeriodId" type="id-ne"/>
+      	<field name="facilityId" type="id-ne"></field>
+      	<field name="productId" type="id-ne"></field>
+      	<field name="quantity" type="fixed-point" />
+      	<field name="amount" type="fixed-point" />      	
+      	<field name="createdDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <prim-key field="partyId"/>
+      	<prim-key field="customTimePeriodId"/>
+      	<prim-key field="productId"/>      	
+		<relation type="one" fk-name="EMS_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+      	<relation type="one" fk-name="EMS_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+      	</relation>
+      	<relation type="one" fk-name="EMS_FAC" rel-entity-name="Facility">
+	        <key-map field-name="facilityId" rel-field-name="facilityId"/>
+	  	</relation>
+	  	<relation type="one" fk-name="EMS_PROD" rel-entity-name="Product">
+	        <key-map field-name="productId" rel-field-name="productId"/>
+	  	</relation>
+ 	</entity>
 </entitymodel>

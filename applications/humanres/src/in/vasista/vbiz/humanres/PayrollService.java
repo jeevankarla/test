@@ -940,6 +940,13 @@ public class PayrollService {
     			 Debug.logError("Error while calculating price service:"+result, module);
     			 periodBilling.set("statusId", "GENERATED");
     		}
+    		
+    		/*result = dispatcher.runSync("createInvoiceAndPaymentForSubsidyGhee", UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
+ 	    	if(ServiceUtil.isError(result)){
+ 				TransactionUtil.rollback();
+ 				Debug.logError("Error while creating invoice for Subsidy Ghee:"+result, module);
+ 				periodBilling.set("statusId", "GENERATED");
+			}*/
 			delegator.store(periodBilling);
     	}catch (Exception e) {
     		try{
@@ -9231,4 +9238,204 @@ public class PayrollService {
         
 		return result;
 	}
+  	
+  	public static String updateEmployeeSubsidyGhee(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+  	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  	    
+  	    Locale locale = UtilHttp.getLocale(request);
+  	    TimeZone timeZone = TimeZone.getDefault();
+  	    Map<String, Object> result = ServiceUtil.returnSuccess();
+  	    HttpSession session = request.getSession();
+  	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
+  	    String partyId = (String) request.getParameter("partyId");	
+  	    String boothId = (String) request.getParameter("boothId");
+  	    Map paramMap = UtilHttp.getParameterMap(request);
+  	    String customTimePeriodId = (String) request.getParameter("periodId");
+  	    GenericValue facilityDetails =null;
+	  	Timestamp fromDateTime  = null;
+	  	Timestamp thruDateTime  = null;
+	  	Timestamp previousDayEnd = null;
+	  	Timestamp fromDateStart  = null;
+	  	Timestamp thruDateEnd  = null;
+  	    
+  	    
+  		try {
+  			  
+			facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId),false);
+			if(UtilValidate.isEmpty(facilityDetails)){	    			
+				request.setAttribute("_ERROR_MESSAGE_", "Booth Id does not exists");
+				return "error";
+			}
+  			
+			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+			if (UtilValidate.isNotEmpty(customTimePeriod)) {
+        		fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+        		thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+        		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+        		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
+        	}
+			List prodList=FastList.newInstance();
+  			prodList = UtilMisc.toList("83");
+  			BigDecimal totalAmount=BigDecimal.ZERO;
+  			if(UtilValidate.isNotEmpty(prodList)){
+  		    	for(int j=0;j<prodList.size();j++){
+  		    		String prodId= (String)prodList.get(j);
+  		    		if(UtilValidate.isNotEmpty(paramMap.get(prodId))){
+  		    			Map<String, Object> payItemMap=FastMap.newInstance();
+  		    			String qtyStr=(String)paramMap.get(prodId);
+  		    			if((!" ".equals(qtyStr))){
+  		        			BigDecimal qty= BigDecimal.ZERO;
+  		        			BigDecimal amount= BigDecimal.ZERO;
+  		    				if (UtilValidate.isNotEmpty(qtyStr)) {	
+  		    					qty = new BigDecimal(qtyStr);
+  		    				}
+  		    				payItemMap.put("userLogin",userLogin);
+  		    				payItemMap.put("customTimePeriodId",customTimePeriodId);
+  		    				payItemMap.put("qty",qty);
+  		    				payItemMap.put("partyId",partyId);
+  		    				payItemMap.put("boothId",boothId);
+  		    				payItemMap.put("productId",prodId);
+  		    				
+  		    				String productStoreId=null;
+  		    				try{
+  		    					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",prodId),false);
+  		    					List<GenericValue> prodCatalogCategoryList = delegator.findList("ProdCatalogCategory", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,product.getString("primaryProductCategoryId")),null, null, null, false);
+  		    					List<GenericValue> productStoreCatalogList = delegator.findList("ProductStoreCatalog", EntityCondition.makeCondition("prodCatalogId",EntityOperator.EQUALS,(String) prodCatalogCategoryList.get(0).getString("prodCatalogId")), null, null, null, false);
+  		    					productStoreId = (String) productStoreCatalogList.get(0).getString("productStoreId");
+  		    				}catch (GenericEntityException e) {
+  		    					 Debug.logError(e, module);             
+  		    				}
+  		    				
+  		                    try {
+  		    					if(qty.compareTo(BigDecimal.ZERO) >=0){
+  			  		  				Map<String, Object> priceContext = FastMap.newInstance();
+  			  		  				priceContext.put("userLogin", userLogin);
+  			  		  				//priceContext.put("productStoreId", productStoreId);
+  			  		  				priceContext.put("productId", prodId);
+  			  		  				priceContext.put("priceDate", fromDateStart);
+  			  		  				priceContext.put("facilityId", facilityDetails.getString("ownerPartyId"));
+  			  		  				//priceContext.put("partyId", partyId);
+  			  		  				//priceContext.put("facilityCategory", facilityDetails.getString("categoryTypeEnum"));
+  			  		  				Map priceResult = dispatcher.runSync("getByProductPricesForFacility", priceContext);
+	    							if( ServiceUtil.isError(priceResult)) {
+	    								String errMsg =  ServiceUtil.getErrorMessage(priceResult);
+	    								Debug.logWarning(errMsg , module);
+	    								request.setAttribute("_ERROR_MESSAGE_",errMsg);    								
+	    								return "error";
+	    							}
+	    							Map priceMap = (Map)priceResult.get("productsPrice");
+	    							if(UtilValidate.isNotEmpty(priceMap)){
+		    							Map productPrice = (Map)priceMap.get(prodId);
+		    		    				if(UtilValidate.isNotEmpty(productPrice.get("totalAmount"))){
+		    		    					BigDecimal price = (BigDecimal)productPrice.get("totalAmount");
+		    		    					amount= (qty.multiply((price).setScale(0,BigDecimal.ROUND_HALF_UP)));
+		    		    					totalAmount=totalAmount.add(amount);
+		    		    				}
+	    							}
+  		    					}
+  		    					
+  		    				} catch (GenericServiceException e) {
+  		    					e.printStackTrace();
+  		    				} 
+  		                    payItemMap.put("amount",amount);
+  		    				try {
+  		    					if(qty.compareTo(BigDecimal.ZERO) >=0){			
+  		    						Map resultValue = dispatcher.runSync("createOrUpdateSubsidyProduct", payItemMap);
+  		    						if( ServiceUtil.isError(resultValue)) {
+  		    							String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+  		    							Debug.logWarning(errMsg , module);
+  		    							request.setAttribute("_ERROR_MESSAGE_",errMsg);
+  		    							
+  		    							return "error";
+  		    						}
+  		    					}
+  		    					
+  		    				} catch (GenericServiceException s) {
+  		    					s.printStackTrace();
+  		    				} 
+  		    			}
+  		    		}
+  		    	}
+  		    	
+  		    	Map<String, Object> payHeadItemMap=FastMap.newInstance();
+  					String payheadTypeId = "PAYROL_DD_GH_DED";
+  					payHeadItemMap.put("userLogin",userLogin);
+  					payHeadItemMap.put("customTimePeriodId", customTimePeriodId);
+  					payHeadItemMap.put("amount", totalAmount);
+  					payHeadItemMap.put("partyId",partyId);
+  					payHeadItemMap.put("payHeadTypeId",payheadTypeId);	  
+  					try {
+  						if(totalAmount.compareTo(BigDecimal.ZERO) >=0){
+  							Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payHeadItemMap);
+  							if( ServiceUtil.isError(resultValue)) {
+  								String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+  								Debug.logWarning(errMsg , module);
+  								request.setAttribute("_ERROR_MESSAGE_",errMsg);
+  								return "error";
+  							}
+  						}
+  						
+  					} catch (GenericServiceException s) {
+  						s.printStackTrace();
+  					} 
+  		    	
+  		    }
+  		}catch(Exception e){
+  			 Debug.logError(e, module);    
+  		}
+  		
+  	  	 return "success";
+  	}
+  	
+  	public static Map<String, Object> createOrUpdateSubsidyProduct(DispatchContext dctx, Map<String, ? extends Object> context){
+  		Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    String partyId = (String) context.get("partyId");
+  	    String boothId = (String) context.get("boothId");
+  	    String productId = (String) context.get("productId");
+  	    String customTimePeriodId = (String)context.get("customTimePeriodId");
+  	    BigDecimal quantity = (BigDecimal)context.get("qty");
+  	    BigDecimal amount = (BigDecimal)context.get("amount");
+  	    Locale locale = (Locale) context.get("locale");
+  	    Map result = ServiceUtil.returnSuccess();
+  		try {
+  			
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+			conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+			List<GenericValue> employeeSubsidyProductIssue = delegator.findList("EmployeeSubsidyProductIssue", condition, null, null, null, false);
+			if(UtilValidate.isEmpty(employeeSubsidyProductIssue) && (quantity.compareTo(BigDecimal.ZERO)!=0)){				
+				GenericValue newEntity = delegator.makeValue("EmployeeSubsidyProductIssue");
+				newEntity.set("partyId", partyId);
+				newEntity.set("customTimePeriodId", customTimePeriodId);
+				newEntity.set("productId", productId);
+				newEntity.set("facilityId", boothId);
+				newEntity.set("quantity", quantity);
+				newEntity.set("amount", amount);
+				newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+				newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+		        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+				newEntity.create();
+				 result = ServiceUtil.returnSuccess("Successfully Created!!");
+			}else{	
+				GenericValue emplSubsidyProdIssue = employeeSubsidyProductIssue.get(0);
+				emplSubsidyProdIssue.set("quantity", quantity);
+				emplSubsidyProdIssue.set("facilityId", boothId);
+				emplSubsidyProdIssue.set("amount", amount);
+				emplSubsidyProdIssue.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+				emplSubsidyProdIssue.store();
+				result = ServiceUtil.returnSuccess("Successfully Updated!!");
+			}
+  				
+  		} catch (GenericEntityException e) {
+  			Debug.logError(e, module);
+  			return ServiceUtil.returnError(e.toString());
+  		}
+  	   
+  	    return result;
+  	}
 }//end of class

@@ -421,6 +421,172 @@ public class InvoicePayrolWorkerNew {
 		return serviceResults;   	
 	}
  
+ 	public static Map<String, Object> createInvoiceAndPaymentForSubsidyGhee(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    String periodBillingId = (String) context.get("periodBillingId");
+	    String errorMsg = "createPayrolInvoice failed"; 		
+		GenericValue userLogin = (GenericValue)context.get("userLogin");
+		
+	    Map<String, Object> serviceResults = ServiceUtil.returnError(errorMsg, null, null, null);    
+	    
+	    Boolean enablePayrollInvAcctg = Boolean.TRUE;
+	    GenericValue facilityDetails =null;
+	     
+		try {   
+			
+			GenericValue periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId",periodBillingId), false);
+			if(UtilValidate.isEmpty(periodBilling)){
+				Debug.logError(errorMsg, module);
+				return serviceResults;
+			}
+			String timePeriodId = periodBilling.getString("customTimePeriodId");
+			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",timePeriodId), false);
+	        Timestamp timePeriodStart = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	        Timestamp timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
+	        
+	        // check Accounting tenant configration for payroll invoice here
+			  
+			 List conditionList = UtilMisc.toList(
+			 EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+			 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+			 List<GenericValue> payrollHeaders = delegator.findList("PayrollHeader", condition, null, null, null, false);
+			 Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+			 int emplCounter =0;
+			 double elapsedSeconds;
+			 for (int i = 0; i < payrollHeaders.size(); ++i) {		
+				 GenericValue payrollHeader = payrollHeaders.get(i);
+				 String partyId = payrollHeader.getString("partyIdFrom");
+	        		
+				 List conditionList1 = FastList.newInstance();
+				 conditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+				 conditionList1.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
+				 conditionList1.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "83"));
+				 EntityCondition condition1=EntityCondition.makeCondition(conditionList1,EntityOperator.AND); 		
+				 List<GenericValue> employeeSubsidyProductIssue = delegator.findList("EmployeeSubsidyProductIssue", condition1, null, null, null, false);
+				 if(UtilValidate.isNotEmpty(employeeSubsidyProductIssue)){
+					 GenericValue employeeSubsidyProductValue = EntityUtil.getFirst(employeeSubsidyProductIssue);
+					 BigDecimal totalAmount = employeeSubsidyProductValue.getBigDecimal("amount");
+					 String boothId = employeeSubsidyProductValue.getString("facilityId");
+					 
+					 facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId),false);
+					 if(UtilValidate.isEmpty(facilityDetails)){	    			
+						 return ServiceUtil.returnError("Booth Id does not exists");
+					 }
+	    				
+					 Timestamp invoiceDate = UtilDateTime.getDayStart(timePeriodStart);
+					 String partyIdFrom = "Company";
+					 Map<String, Object> createInvoiceContext = FastMap.newInstance();
+					 createInvoiceContext.put("partyId", partyId);
+					 createInvoiceContext.put("partyIdFrom", partyIdFrom);
+					 createInvoiceContext.put("invoiceDate", invoiceDate);
+	    	  		 createInvoiceContext.put("facilityId", facilityDetails.getString("ownerPartyId"));
+	    	  		 createInvoiceContext.put("invoiceTypeId", "MIS_INCOME_IN");
+	    	  		 createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+	    	  		 createInvoiceContext.put(""+ "userLogin", userLogin);
+	    	  		 createInvoiceContext.put("periodBillingId",periodBillingId);
+	    	  		 createInvoiceContext.put("timePeriodId", timePeriodId);
+	    	  		 createInvoiceContext.put("invoiceAttrValue", timePeriodId);
+	    	  		 createInvoiceContext.put("invoiceAttrName", "TIME_PERIOD_ID");
+	    	  		 createInvoiceContext.put("referenceNumber",periodBilling.getString("billingTypeId")+"_"+periodBillingId);
+	    		     SimpleDateFormat sd = new SimpleDateFormat("dd/MM/yyyy");	        
+	    		     createInvoiceContext.put("description", "Payroll [" + sd.format(UtilDateTime.toCalendar(timePeriodStart).getTime()) 
+	    		        		+ " - " + sd.format(UtilDateTime.toCalendar(timePeriodEnd).getTime()) + "]");	
+
+	    	  		 GenericValue tenantConfigEnablePayrollInvAcctg = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","ACCOUNT_INVOICE", "propertyName","enablePayrollInvAcctg"), true);
+	    	  		 if (UtilValidate.isNotEmpty(tenantConfigEnablePayrollInvAcctg) && (tenantConfigEnablePayrollInvAcctg.getString("propertyValue")).equals("N")) {
+	    	  			 enablePayrollInvAcctg = Boolean.FALSE;
+	    	  		 }
+	    	  		 if(!enablePayrollInvAcctg){
+	    	  			 createInvoiceContext.put("isEnableAcctg", "N");
+	    	  		 }
+	    	  		 
+	    			
+	    	  		 String invoiceId = null;
+	    	  		 try {
+	    	  			 serviceResults = dispatcher.runSync("createInvoice",createInvoiceContext);
+	    	  			 if (ServiceUtil.isError(serviceResults)) {
+	    	  				 return ServiceUtil.returnError("There was an error while creating Invoice"+ ServiceUtil.getErrorMessage(serviceResults));
+	    	  			 }
+	    	  			 invoiceId = (String) serviceResults.get("invoiceId");
+	    	  		 } catch (GenericServiceException e) {
+	    	  			 Debug.logError(e, module);
+	    	  			 return ServiceUtil.returnError("Unable to create payroll Invoice record");	
+	    	  		 }
+	      			
+	    	  		 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+	      			
+	    	  		 Map inputItemCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	  		 inputItemCtx.put("amount", totalAmount);
+	    	  		 inputItemCtx.put("invoiceId", invoiceId);
+	    	  		 inputItemCtx.put("invoiceItemTypeId", "PAYROL_DD_GH_DED");
+	    	  		 
+	    	  		 try {
+	    	  			 serviceResults = dispatcher.runSync("createInvoiceItem", inputItemCtx);
+	    	  			 if (ServiceUtil.isError(serviceResults)) {
+	    	  				 return ServiceUtil.returnError("Unable to create Invoice Item");
+	    	  			 }
+	    	  		 } catch (GenericServiceException e) {
+	    	  			 Debug.logError(e, e.toString(), module);
+	    	  			 return ServiceUtil.returnError(e.toString());
+	    	  		 }
+	    	  		 
+	    	  		 
+	    	  		 try {
+	    	  			 serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId",	"INVOICE_APPROVED", "userLogin", userLogin));
+	    	  			 if (ServiceUtil.isError(serviceResults)) {
+	    	  				 return ServiceUtil.returnError("Unable to set Invoice Status",null, null, serviceResults);
+	    	  			 }
+	    	  			 serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId","INVOICE_READY", "userLogin", userLogin));
+	    	  			 if (ServiceUtil.isError(serviceResults)) {
+	    	  				 return ServiceUtil.returnError("Unable to set Invoice Status",null, null, serviceResults);
+	    	  			 }
+	    	  		 } catch (GenericServiceException e) {
+	    	  			 Debug.logError(e, e.toString(), module);
+	    	  			 return ServiceUtil.returnError(e.toString());
+	    	  		 }
+	                
+	    	  		 Map newp = UtilMisc.toMap("userLogin",userLogin);
+	    	  		 newp.put("partyIdFrom", invoice.getString("partyId"));
+	    	  		 newp.put("partyIdTo", invoice.getString("partyIdFrom"));
+	    	  		 newp.put("paymentMethodId", "DEBITNOTE");
+	    	  		 newp.put("paymentTypeId", "MIS_INCOME_PAYIN");
+	    	  		 newp.put("statusId", "PMNT_NOT_PAID");
+	    	  		 newp.put("paymentRefNum", invoice.getString("referenceNumber"));
+	    	  		 newp.put("amount", totalAmount);
+	    	  		 Map<String, Object> paymentResult = dispatcher.runSync("createPayment",newp);
+	    	  		 //Debug.log("paymentResult================="+paymentResult);
+	    	  		 if (ServiceUtil.isError(paymentResult)) {
+	    	       		return ServiceUtil.returnError("Unable to Create Payment");
+	    	  		 }
+	                
+	    	  		 Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+	    	  		 setPaymentStatusMap.put("paymentId", paymentResult.get("paymentId"));
+	    	  		 setPaymentStatusMap.put("statusId", "PMNT_RECEIVED");
+	    	  		 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+	    	       	
+	    	  		 Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
+	    	  		 newPayappl.put("invoiceId", invoiceId);
+	    	  		 newPayappl.put("paymentId", paymentResult.get("paymentId"));
+	    	  		 newPayappl.put("amountApplied", totalAmount);
+	    	  		 Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+	    	  		 if (ServiceUtil.isError(paymentApplResult)) {
+	    	  			 return ServiceUtil.returnError("Unable to Create Payment Application");
+	    	  		 }
+				 }
+			}
+		}catch(GenericEntityException e) {
+			Debug.logError(e, module);
+	        return ServiceUtil.returnError("Unable to create payroll Invoice record");			
+		}		
+		catch (GenericServiceException e) {
+			Debug.logError(e, errorMsg + e.getMessage(), module);
+	        return ServiceUtil.returnError(errorMsg + e.getMessage());
+	    }
+		//serviceResults.put("invoices", invoiceList);
+		return ServiceUtil.returnSuccess();      
+	}
+ 
 }
 
 

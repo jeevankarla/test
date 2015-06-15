@@ -1013,9 +1013,17 @@ public class ByProductReportServices {
     		if (UtilValidate.isNotEmpty(productCategoryId)) {
     			productsContext.put("productCategoryId", productCategoryId);
     		}
+	        
+	        String subsidyProductId = (String) context.get("productId");
 	        List<GenericValue> products = ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), productsContext);
-	        List<String> productList = EntityUtil.getFieldListFromEntityList(products, "productId", true);
+	        List<String> productList = FastList.newInstance();
 	        Map<String, Map> productsPrice = FastMap.newInstance();
+	        if(UtilValidate.isNotEmpty(subsidyProductId)){
+    			productList.add(subsidyProductId);
+    		}else{
+    			productList = EntityUtil.getFieldListFromEntityList(products, "productId", true);
+    		}
+	        
 	        if(UtilValidate.isNotEmpty(productList)){
 	        	for(int j = 0; j < productList.size(); ++j){
 	        		String eachProd = productList.get(j);

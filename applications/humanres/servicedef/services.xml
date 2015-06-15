@@ -2016,4 +2016,23 @@ under the License.emplpunch
             <attribute name="emplPositionId" type="String" mode="IN" optional="true"/>
             <attribute name="actualFromDate" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="createOrUpdateSubsidyProduct"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdateSubsidyProduct" auth="true" transaction-timeout="5000">
+        <description>MilkCards Create or Update</description>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="boothId" mode="IN" type="String" optional="true"/>
+        <attribute name="qty" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
+    </service>
+    <service name="getByProductPricesForFacility" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="getByProductPricesForFacility" auth="true">
+        <description>Get ByProduct Prices For Facility</description>
+        <attribute name="facilityId" type="String" optional="true" mode="IN" />
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="priceDate" type="Timestamp" optional="true" mode="IN" />
+        <attribute name="partyClassificationId" type="String" optional="true" mode="IN" />
+        <attribute name="productsPrice" type="Map" optional="true" mode="OUT"/>
+    </service>
 </services>
