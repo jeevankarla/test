@@ -458,7 +458,12 @@
 				<option key="SaturDay" />
 			</drop-down>
 		</field>
-		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><text /></field>
+		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>		
+		</field>
 		<field name="paymentMode" title="${uiLabelMap.PaymentMode}">
 			<drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethodType" description="${description}" key-field-name="paymentMethodTypeId">
