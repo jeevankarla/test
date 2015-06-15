@@ -668,11 +668,17 @@ public class PunchService {
 			List<GenericValue> finalPunchIN = delegator.findList("EmplPunch",
 					condition1, null, null, null, false);
 			
-			//GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
-		   GenericValue finalPunchINValue =  (GenericValue) finalPunchIN.get(finalPunchIN.size()-1);
-           if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
-        	   selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
-           }
+			GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
+			GenericValue finalPunchINValueLatest =  (GenericValue) finalPunchIN.get(finalPunchIN.size()-1);
+			
+			if(UtilValidate.isNotEmpty(finalPunchINValueLatest) && UtilValidate.isNotEmpty(finalPunchINValueLatest.getString("shiftType")) && (finalPunchINValueLatest.getString("shiftType").equals("SHIFT_NIGHT"))){
+				finalPunchINValue = finalPunchINValueLatest;
+			}else{
+				finalPunchINValue = finalPunchINValue;
+			}
+			if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
+				selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
+			}
 			List conditionList2 = UtilMisc.toList(EntityCondition
 					.makeCondition("punchdate", EntityOperator.EQUALS,
 							selectedDate));
