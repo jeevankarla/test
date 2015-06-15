@@ -284,17 +284,19 @@ public class HumanresService {
 					            GenericValue activeEmpWeeklyOffCalendar = EntityUtil.getFirst(activeEmpWeeklyOffCalList);
 					            emplWeeklyOffDay = (String) activeEmpWeeklyOffCalendar.get("weeklyOffDay");
 							}
-							if((dayName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList)) || (dayShiftList.size() >= 2)){
-			    				for(int i=0 ;i<dayShiftList.size() ;i++){
-			    					GenericValue dayShift = dayShiftList.get(i);
-			    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
-			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("-punchtime"));
-			    					GenericValue firstPunch = EntityUtil.getFirst(emplPunchList);
-			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("punchtime"));
-			    					GenericValue lastPunch = EntityUtil.getFirst(emplPunchList);
-			    				}
-			    				holidays.add(UtilDateTime.toSqlDate(cTime));
-			    			}
+							if(dayName.equalsIgnoreCase(emplWeeklyOffDay)){
+								if(UtilValidate.isNotEmpty(dayShiftList) || (dayShiftList.size() >= 2)){
+									for(int i=0 ;i<dayShiftList.size() ;i++){
+				    					GenericValue dayShift = dayShiftList.get(i);
+				    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
+				    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("-punchtime"));
+				    					GenericValue firstPunch = EntityUtil.getFirst(emplPunchList);
+				    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("punchtime"));
+				    					GenericValue lastPunch = EntityUtil.getFirst(emplPunchList);
+				    				}
+				    				holidays.add(UtilDateTime.toSqlDate(cTime));
+				    			}
+							}
 			    			c1.add(Calendar.DATE,1);
 						}	
 					}
