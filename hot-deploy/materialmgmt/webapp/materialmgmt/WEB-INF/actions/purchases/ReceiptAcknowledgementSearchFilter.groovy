@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 productId=parameters.productId;
 custRequestId = parameters.custRequestId;
 custRequestDate = parameters.custRequestDate;
+custRequestTypeId=parameters.custRequestTypeId;
+context.custRequestTypeId=custRequestTypeId;
 partyId = parameters.partyId;
 fromPartyId=context.get("partyId");
 conditionList=[];
@@ -40,6 +42,7 @@ if(UtilValidate.isNotEmpty(custRequestDate)){
 }
 orderBy = UtilMisc.toList("lastModifiedDate");	
 conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.EQUALS, "CRQ_ISSUED"));
+conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, custRequestTypeId));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 CustRequestAndItemAndAttribute = delegator.findList("CustRequestAndItemAndAttribute", condition, null, orderBy, null, false);
 if(UtilValidate.isNotEmpty(CustRequestAndItemAndAttribute)){

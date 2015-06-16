@@ -801,6 +801,7 @@ public class MaterialRequestServices {
         String facilityId = (String)context.get("facilityId");
         BigDecimal toBeIssuedQty =(BigDecimal)context.get("toBeIssuedQty");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String shipmentTypeId = (String) context.get("shipmentTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
         	 if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)==0)){
@@ -837,7 +838,7 @@ public class MaterialRequestServices {
             try{
     			
     			GenericValue newEntity = delegator.makeValue("Shipment");
-    	        newEntity.set("shipmentTypeId", "ISSUANCE_SHIPMENT");
+    	        newEntity.set("shipmentTypeId", shipmentTypeId);	
     	        newEntity.set("statusId", "GENERATED");
     	        newEntity.set("estimatedShipDate", UtilDateTime.nowTimestamp());
     	        newEntity.set("createdByUserLogin", userLogin.getString("userLoginId"));
@@ -1265,76 +1266,132 @@ public class MaterialRequestServices {
 		DispatchContext dctx =  dispatcher.getDispatchContext();
 		Locale locale = UtilHttp.getLocale(request);
 		Map<String, Object> result = ServiceUtil.returnSuccess();
-	    HttpSession session = request.getSession();
-	    String custRequestItemStatusId = (String) request.getParameter("custRequestItemStatusId");
-	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		HttpSession session = request.getSession();
+		String custRequestItemStatusId = (String) request.getParameter("custRequestItemStatusId");
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
-			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
-			return "error";
+		Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+		return "error";
 		}
-	  	
-	  	
+		 	
 		boolean beganTransaction = false;
 		try{
-			
-	        String custRequestId = "";
-	        String custRequestItemSeqId = "";
-	        Map statusCtx = FastMap.newInstance();
-			for (int i = 0; i < rowCount; i++) {
-				  
-				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
-				
-				if (paramMap.containsKey("custRequestId" + thisSuffix)) {
-					custRequestId = (String) paramMap.get("custRequestId" + thisSuffix);
-				}
-				else {
-					request.setAttribute("_ERROR_MESSAGE_", "Missing custRequeset Id");
-				}
-				
-				if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
-					custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId" + thisSuffix);
-				}
-				else {
-					request.setAttribute("_ERROR_MESSAGE_", "Missing custRequestItemSeqId");
-				}
-				
-				statusCtx.clear();
-				statusCtx.put("statusId", custRequestItemStatusId);
-				statusCtx.put("custRequestId", custRequestId);
-				statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
-				statusCtx.put("userLogin", userLogin);
-				statusCtx.put("description", "");
-				Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
-				if (ServiceUtil.isError(resultCtx)) {
-					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custRequestItemSeqId, module);
-					request.setAttribute("_ERROR_MESSAGE_", "Problem changing request status :"+custRequestId+":"+custRequestItemSeqId);	
-					TransactionUtil.rollback();
-					return "error";
+		       String custRequestId = "";
+		       String custRequestItemSeqId = "";
+		       String fromPartyId = "";
+		       String productId = "";
+		       String quantityStr="";
+		   BigDecimal quantity = BigDecimal.ZERO;
+
+		       Map statusCtx = FastMap.newInstance();
+		for (int i = 0; i < rowCount; i++) {
+			 
+			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+			custRequestId = (String) paramMap.get("custRequestId" + thisSuffix);
+			}else {
+			request.setAttribute("_ERROR_MESSAGE_", "Missing custRequeset Id");
+			}
+			if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+			custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId" + thisSuffix);
+			}else {
+			request.setAttribute("_ERROR_MESSAGE_", "Missing custRequestItemSeqId");
+			}
+			if (paramMap.containsKey("fromPartyId" + thisSuffix)) {
+			fromPartyId = (String) paramMap.get("fromPartyId" + thisSuffix);
+			}else {
+			request.setAttribute("_ERROR_MESSAGE_", "Missing fromPartyId");
+			}
+			if (paramMap.containsKey("productId" + thisSuffix)) {
+			productId = (String) paramMap.get("productId" + thisSuffix);
+			}else {
+			request.setAttribute("_ERROR_MESSAGE_", "Missing productId");
+			}
+			if (paramMap.containsKey("quantity" + thisSuffix)) {
+			quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+			}else {
+			request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+			return "error";	 
+			}	 
+			if(UtilValidate.isNotEmpty(quantityStr)){
+			quantity = new BigDecimal(quantityStr);
+			}
+			statusCtx.clear();
+			statusCtx.put("statusId", custRequestItemStatusId);
+			statusCtx.put("custRequestId", custRequestId);
+			statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+			statusCtx.put("userLogin", userLogin);
+			statusCtx.put("description", "");
+			Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custRequestItemSeqId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problem changing request status :"+custRequestId+":"+custRequestItemSeqId);	
+				TransactionUtil.rollback();
+				return "error";
+			}
+			List<GenericValue> tenantConfigCheck = FastList.newInstance();
+			List condList=FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("propertyName", EntityOperator.EQUALS, "enableDeptInvTrack"));
+			condList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS, "DEPT_INV_TRACK"));
+			condList.add(EntityCondition.makeCondition("propertyValue", EntityOperator.EQUALS, "Y"));
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			tenantConfigCheck = delegator.findList("TenantConfiguration",cond, null , null, null, false);
+			if(UtilValidate.isNotEmpty(tenantConfigCheck)){
+				condList.clear();
+				EntityCondition condition=null;
+				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, fromPartyId));
+				condList.add(EntityCondition.makeCondition("enableDeptInvCheck", EntityOperator.EQUALS, "Y"));
+				condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				        GenericValue facilityCheckParty= null;
+				List<GenericValue> facilityCheckParties = delegator.findList("Facility",condition, null , null, null, false);
+				String facilityId="";
+				if(UtilValidate.isNotEmpty(facilityCheckParties)){
+				   facilityCheckParty = EntityUtil.getFirst(facilityCheckParties);
+				   facilityId=facilityCheckParty.getString("facilityId");
+				   try {
+			               Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", productId,
+			                       "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+			               serviceContext.put("facilityId", facilityId);
+			               serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+			               serviceContext.put("userLogin", userLogin);
+			               Map<String, Object> resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+			               String inventoryItemId = (String)resultService.get("inventoryItemId");
+			               serviceContext.clear();
+			               serviceContext.put("inventoryItemId", inventoryItemId);
+			               serviceContext.put("custRequestId", custRequestId);
+			               serviceContext.put("custRequestItemSeqId", custRequestItemSeqId);
+			               serviceContext.put("availableToPromiseDiff", quantity);
+			               serviceContext.put("quantityOnHandDiff", quantity);
+			               serviceContext.put("userLogin", userLogin);
+			               resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+			           }catch (Exception e) {
+			        	   Debug.logError(e, "Canot add inventory to dept: " + e.toString(), module);
+			           } 
 				}
 			}
-			
-	        request.setAttribute("_EVENT_MESSAGE_", "User Department acknowledgement successful");
-			
+			                     	
+		}
+		       request.setAttribute("_EVENT_MESSAGE_", "User Department acknowledgement successful");
 		}catch (GenericEntityException e) {
-			try {
+		try {
 				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
-	  		} catch (GenericEntityException e2) {
-	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-	  		}
-	  		Debug.logError("An entity engine error occurred while fetching data", module);
-	  	}
-  	  	catch (GenericServiceException e) {
-  	  		try {
-  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
-  	  		} catch (GenericEntityException e2) {
-  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-  	  		}
-  	  		Debug.logError("An entity engine error occurred while calling services", module);
-  	  	}
+		 	} catch (GenericEntityException e2) {
+		 		Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		 	}
+		 		Debug.logError("An entity engine error occurred while fetching data", module);
+		 	}
+		   	catch (GenericServiceException e) {
+		   	try {
+		   		TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+		   	} catch (GenericEntityException e2) {
+		   		Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		   	}
+		   		Debug.logError("An entity engine error occurred while calling services", module);
+		   	}
 		return "success";
-    }
+		    }
 	
 	
 	public static Map<String, Object> draftEnquiryForApprovedRequirements(DispatchContext ctx,Map<String, ? extends Object> context) {
@@ -1718,9 +1775,14 @@ public class MaterialRequestServices {
 		  	  BigDecimal toBeIssuedQty = BigDecimal.ZERO;
 		  	  String qty="";
 		  	  String facilityId = "";
+		  	  String shipmentTypeId = "";
 		  	
 				  	for (int i = 0; i < rowCount; i++){
 			  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			  		  
+			  		  if(paramMap.containsKey("shipmentTypeId" + thisSuffix)){
+			  			shipmentTypeId = (String) paramMap.get("shipmentTypeId" + thisSuffix);
+			  		  }
 			  		  
 			  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {
 			  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
@@ -1754,6 +1816,7 @@ public class MaterialRequestServices {
 						issuanceMapCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 						issuanceMapCtx.put("toBeIssuedQty", toBeIssuedQty);
 						issuanceMapCtx.put("facilityId", facilityId);
+						issuanceMapCtx.put("shipmentTypeId", shipmentTypeId);
 						issuanceMapCtx.put("userLogin", userLogin);
 						issuanceMapCtx.put("locale", locale);
 						resultCtx = dispatcher.runSync("issueProductForRequest", issuanceMapCtx);

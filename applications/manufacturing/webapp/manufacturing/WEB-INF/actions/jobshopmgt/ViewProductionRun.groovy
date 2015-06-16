@@ -123,7 +123,10 @@ productIds.each{productId->
 	productNames=EntityUtil.filterByCondition(productList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 	JSONObject productDetObj = new JSONObject();
 	productDetObj.put("description",productNames.description);
-	String uomId = productNames[0].get("quantityUomId");
+	String uomId="";
+	if(UtilValidate.isNotEmpty(productNames)){
+	uomId = productNames[0].get("quantityUomId");
+	}
 	uomDetails = delegator.findOne("Uom",["uomId":uomId],false);
 	if(UtilValidate.isNotEmpty(uomDetails) ){
 		productDetObj.put("uomId",uomDetails.description);

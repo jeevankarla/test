@@ -1053,6 +1053,7 @@ under the License.
       	<field name="district" type="name"></field>
       	<field name="useEcs" type="indicator"><description>If this facility wants ecs then check this flag.</description></field>      	       	         	    	   
         <field name="closedReason" type="id"><description>If this facility wants close permanently then check this flag.</description></field>      	       	         	    	   
+        <field name="enableDeptInvCheck" type="value"/>
         
         <prim-key field="facilityId"/>
         <relation type="one" fk-name="FACILITY_FCTYP" rel-entity-name="FacilityType">

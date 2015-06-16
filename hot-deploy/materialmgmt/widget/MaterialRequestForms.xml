@@ -208,7 +208,7 @@
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
  		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
  		<field name="shipmentTypeId" ><hidden value="ISSUANCE_SHIPMENT"/> </field>
- 		<field name="statusId" ><hidden value="GENERATED"/> </field>
+ 		<!-- <field name="statusId" ><hidden value="GENERATED"/> </field> -->
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -221,6 +221,8 @@
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" value="IssuanceAndShipmentAndCustRequest"/>
             <field-map field-name="orderBy" value="-issueDate"/>
+            <field-map field-name="inputFields.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
+            <field-map field-name="inputFields.statusId" value="GENERATED"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -482,6 +484,7 @@
 			</entity-one>
 			<set field="dec" from-field="uom.description"/>
         </row-actions>
+        <field name="shipmentTypeId"><hidden value="ISSUANCE_SHIPMENT"/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
@@ -496,7 +499,7 @@
           <field name="issuedQty" title="IssuedQty" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>  
          <field name="QOH" title="InventoryAvailable" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
         <field name="tempQty" title="QtyToIssue" widget-style="tabletextright"  widget-area-style="align-text"><text size="5"  default-value="${toBeIssuedQty}"> </text></field>
-        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}" description=" " ></option></check> </field>
+        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
         
         <!-- <field name="UpdateCrates" title="Issue ${uiLabelMap.MaterialMangement_Product}"  use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" event="onclick" action="javascript:issueProductForRequest(this);"   widget-style="buttontext"> 
            <submit button-type="button" />

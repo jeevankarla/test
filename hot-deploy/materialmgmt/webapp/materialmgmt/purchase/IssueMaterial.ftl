@@ -56,12 +56,15 @@ function issueSelected(){
  	 var formId = form.attr('id');
  	 var str = "#"+formId;
  	 var tempQtyObj=$(varform).find("[name='"+"tempQty"+"']");
+ 	 var shipmentTypeObj = $(varform).find("[name='"+"shipmentTypeId"+"']");
+ 	 var shipmentTypeId = $(shipmentTypeObj).val();
  	 var tempQty=$(tempQtyObj).val();
    	 var issuance=$(this).val();
      var inputElementIdSplit = issuance.split('_');
    	 var appendStr = "<input type=hidden name=custRequestId_o_"+index+" value="+inputElementIdSplit[0]+" />";
   		 appendStr += "<input type=hidden name=custRequestItemSeqId_o_"+index+"  value="+inputElementIdSplit[1]+" />";
          appendStr += "<input type=hidden name=toBeIssuedQty_o_"+index+"  value="+tempQty+" />";
+         appendStr += "<input type=hidden name=shipmentTypeId_o_"+index+" value="+shipmentTypeId+" />";
  	$("#submitIssuance").append(appendStr);
  	index = index+1;
     });

@@ -429,4 +429,88 @@
             </widgets>
         </section>
     </screen>	
+    <screen name="ProductionIssuance">
+        <section>
+            <actions>
+               <set field="headerItem" value="ProductionIssuance"/>
+		       <set field="tabButtonItem1" value="ProductionIssuance"/>
+		       <set field="tabButtonItem2" value="ProductionIssuance"/>
+		       <set field="titleProperty" value="Find Issuance"/>
+		       <set field="parameters.custRequestTypeId" value="INTERNAL_INDENT"/>
+			    <property-map resource="materialmgmtUiLabels" map-name="uiLabelMap" global="true"/>
+			    <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+            </actions>
+            <widgets>
+            <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	<decorator-section name="body">   
+                	<include-menu name="ProductionIssuanceTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                	<screenlet title="Search Options">
+                		<include-form location="component://production/widget/ProductionForms.xml" name="FindProductionIssuance"/>
+                	</screenlet>
+                	<screenlet title="Search Result">
+                		<include-form location="component://production/widget/ProductionForms.xml" name="ListProductionIssuance"/>
+                	</screenlet>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProductionIssuanceRequest">
+        <section>
+            <actions>
+               <set field="headerItem" value="ProductionIssuance"/>
+		       <set field="tabButtonItem1" value="ProductionIssuance"/>
+		       <set field="tabButtonItem2" value="ProductionIssuanceRequest"/>
+		       <set field="titleProperty" value="Issuance Requests"/>
+		       <set field="parameters.custRequestTypeId" value="INTERNAL_INDENT"/>
+			    <property-map resource="materialmgmtUiLabels" map-name="uiLabelMap" global="true"/>
+			    <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/InternalRequestAvailableProducts.groovy"/>
+            </actions>
+            <widgets>
+            <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	<decorator-section name="body">   
+                	<include-menu name="ProductionIssuanceTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                	<screenlet title="Search Options">
+                	<include-form location="component://production/widget/ProductionForms.xml" name="FindProductionIssueRequests"/>
+                	</screenlet>
+                	<screenlet title="Search Result">
+                	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/IssueMaterial.ftl"></html-template></html></platform-specific>
+                	<include-form location="component://production/widget/ProductionForms.xml" name="ListProductionIssueRequests"/>
+                	</screenlet>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProductionReceiptAcknowledgements">
+    	<section>
+    		<actions>
+    			<set field="headerItem" value="productionIndent"/>
+		       <set field="tabButtonItem1" value="productionIndent"/>
+		       <set field="tabButtonItem2" value="ProductionReceiptAcknowledgements"/>
+		       <set field="titleProperty" value="Receipt Acknowledgement"/>
+		       <set field="parameters.custRequestTypeId" value="INTERNAL_INDENT"/>
+			    <property-map resource="materialmgmtUiLabels" map-name="uiLabelMap" global="true"/>
+			    <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
+			    <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ReceiptAcknowledgementSearchFilter.groovy"/>
+    		</actions>
+    		<widgets>
+    			<decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	<decorator-section name="body">   
+                	<include-menu name="ProductionIndentTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                	 <screenlet title="Search-Options">
+                     			<include-form location="component://production/widget/ProductionForms.xml" name="SearchReceiptAcknowledgement"/>
+                     </screenlet>
+                     <screenlet title="Acknowledge Receipts">
+                                <platform-specific><html> <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListIndentForAcceptance.ftl"/></html></platform-specific>
+                        </screenlet> 
+                </decorator-section>
+                </decorator-screen>	
+    		</widgets>
+    	</section>
+    </screen>
 </screens>

@@ -139,6 +139,7 @@ under the License.
         <alias entity-alias="SH" name="issueDate" field="estimatedShipDate" group-by="true"/>
         <alias entity-alias="CR" name="fromPartyId" group-by="true"/>
         <alias entity-alias="CR" name="custRequestDate" group-by="true"/>
+        <alias entity-alias="CR" name="custRequestTypeId" group-by="true"/>
         <alias entity-alias="CR" name="custRequestName" group-by="true"/>
         <view-link entity-alias="IIS" rel-entity-alias="SH">
         	<key-map field-name="shipmentId" />

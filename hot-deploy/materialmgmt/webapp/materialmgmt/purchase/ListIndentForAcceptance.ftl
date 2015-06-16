@@ -39,10 +39,23 @@ under the License.
             	var indentId = $(custRequestObj).val();
             	var custRequestItemObj = $(domObj).find("[name='custRequestItemSeqId']");
             	var indentItemId = $(custRequestItemObj).val();
+            	var fromPartyIdObj = $(domObj).find("[name='fromPartyId']");
+            	var fromParty = $(fromPartyIdObj).val();
+            	var productIdObj = $(domObj).find("[name='productId']");
+            	var productNo = $(productIdObj).val();
+            	var quantityObj = $(domObj).find("[name='quantity']");
+            	var quantityRcvd = $(quantityObj).val();
+            	
             	var appendStr = "<input type=hidden name=custRequestId_o_"+index+" value="+indentId+" />";
             	$("#updateRequestStatusForm").append(appendStr);
             	var appendStr1 = "<input type=hidden name=custRequestItemSeqId_o_"+index+" value="+indentItemId+" />";
             	$("#updateRequestStatusForm").append(appendStr1);
+            	var appendStr2 = "<input type=hidden name=fromPartyId_o_"+index+" value="+fromParty+" />";
+            	$("#updateRequestStatusForm").append(appendStr2);
+            	var appendStr3 = "<input type=hidden name=productId_o_"+index+" value="+productNo+" />";
+            	$("#updateRequestStatusForm").append(appendStr3);
+            	var appendStr4 = "<input type=hidden name=quantity_o_"+index+" value="+quantityRcvd+" />";
+            	$("#updateRequestStatusForm").append(appendStr4);
             	index = index+1;
             }
             
@@ -91,7 +104,14 @@ under the License.
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             	<input type=hidden name=custRequestId value='${eachItem.custRequestId?if_exists}'>
             	<input type=hidden name=custRequestItemSeqId value='${eachItem.custRequestItemSeqId?if_exists}'>
+				<input type=hidden name=fromPartyId value='${eachItem.fromPartyId?if_exists}'>
+            	<input type=hidden name=productId value='${eachItem.productId?if_exists}'>
+            	<input type=hidden name=quantity value='${eachItem.quantity?if_exists}'>
+            	<#if custRequestTypeId == "PRODUCT_REQUIREMENT">
             	<td><h2><a class="buttontext" href="<@ofbizUrl>ViewMaterialRequest?custRequestId=${eachItem.custRequestId?if_exists}</@ofbizUrl>" target="_blank"/>${eachItem.custRequestId?if_exists}</h2></td>
+            	<#elseif custRequestTypeId == "INTERNAL_INDENT">
+                <td><h2><a class="buttontext" href="<@ofbizUrl>ViewProductionRequest?custRequestId=${eachItem.custRequestId?if_exists}</@ofbizUrl>" target="_blank"/>${eachItem.custRequestId?if_exists}</h2></td>
+                </#if>  
               	<td>${eachItem.custRequestItemSeqId?if_exists}</td>
               	<td>${eachItem.custRequestName?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.custRequestDate, "dd/MM/yyyy")}</td>
