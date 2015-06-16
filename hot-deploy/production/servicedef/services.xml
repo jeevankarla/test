@@ -11,6 +11,12 @@
     	<attribute name="productId" mode="IN" type="String" optional="true"/>
     	<attribute name="openingBalance" mode="OUT" type="Map"  optional="true"/>
     </service>
+    <service name="getProductTestComponents" engine="groovy" location="component://production/webapp/production/WEB-INF/actions/getProductTestComponents.groovy" invoke="" transaction-timeout="12000">
+        <description>Production Test  Components</description>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>     
+         <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
+         <attribute name="productTestComponentDetails" type="Map" mode="OUT" optional="true"/>
+    </service> 
     <service name="confirmProductionRunStatus" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="confirmProductionRunStatus">
     	<attribute name="productionRunId" mode="INOUT" type="String" optional="false"/>
     </service>
