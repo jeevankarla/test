@@ -298,7 +298,55 @@
        <response name="success" type="view" value="ViewProductionRequest"/>
        <response name="error" type="view" value="ViewProductionRequest"/>
      </request-map>
+     <request-map uri="ProductionIssuance">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="ProductionIssuance"/>
+     	<response name="error" type="view" value="ProductionIssuance"/>
+     </request-map>
+    <request-map uri="ProductionIssuanceRequest">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="ProductionIssuanceRequest"/>
+    	<response name="error" type="view" value="ProductionIssuanceRequest"/>
+    </request-map>
+    <request-map uri="issueSelectedRequests">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="issueSelectedRequests"/>
+       <response name="success" type="request-redirect-noparam" value="ProductionIssuanceRequest"/>
+       <response name="error" type="view" value="ProductionIssuanceRequest"/>
+     </request-map>
+     <request-map uri="ProductionReceiptAcknowledgements">
+      <security auth="true" https="true"/>
+      <response name="success" type="view" value="ProductionReceiptAcknowledgements"/>
+      <response name="error" type="view" value="ProductionReceiptAcknowledgements"/>
+     </request-map>
+     <request-map uri="updateRequestAcknowledgmentStatus">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="updateRequestAcknowledgmentStatus"/>        
+        <response name="success" type="view" value="ProductionReceiptAcknowledgements"/>
+        <response name="error" type="view" value="ProductionReceiptAcknowledgements"/>
+    </request-map>
     
+    <request-map uri="cancelProductionIssuenceForCustRequest">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="cancelIssuenceForCustRequest" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="ProductionIssuance"/>
+       <response name="error" type="view" value="ProductionIssuance"/>
+     </request-map>
+     <request-map uri="findProductionIssuance">
+     	<security https="true" auth="true"/>
+     	<response name="success" type="view" value="ProductionIssuance"/>
+     	<response name="error" type="view" value="ProductionIssuance"/>
+     </request-map>
+     <request-map uri="findProductionIssueRequests">
+     	<security https="true" auth="true"/>
+     	<response name="success" type="view" value="ProductionIssuanceRequest"/>
+     	<response name="error" type="view" value="ProductionIssuanceRequest"/>
+     </request-map>
+     <request-map uri="searchReceiptAcknowledgement">
+     	<security https="true" auth="true"/>
+     	<response name="success" type="view" value="ProductionReceiptAcknowledgements"/>
+     	<response name="error" type="view" value="ProductionReceiptAcknowledgements"/>
+     </request-map>
     <!-- View Mappings -->
     
     <view-map name="ProductionRunTrends" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionRunTrends"/>
@@ -327,5 +375,8 @@
   	<view-map name="findProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#findProductionIndent"/>
   	<view-map name="ViewProductionRequest" type="screen" page="component://production/widget/ProductionScreens.xml#ViewProductionRequest"/>
     <view-map name="productionDeptIndentApproval" type="screen" page="component://production/widget/ProductionScreens.xml#productionDeptIndentApproval"/>
+	<view-map name="ProductionIssuance" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionIssuance"/>
+    <view-map name="ProductionIssuanceRequest" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionIssuanceRequest"/>
+    <view-map name="ProductionReceiptAcknowledgements" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionReceiptAcknowledgements"/>
     
 </site-conf>
