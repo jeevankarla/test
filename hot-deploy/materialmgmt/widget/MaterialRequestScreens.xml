@@ -748,6 +748,7 @@
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
                 <set field="parameters.flag" value="DEPT_HEADAPPROVE"/>
+                <set field="parameters.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
                 <!--  <entity-condition list="indentItems" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_ISSUED"/>
                 	<order-by field-name="fromPartyId"/>

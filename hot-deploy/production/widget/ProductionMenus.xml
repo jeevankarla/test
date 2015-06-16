@@ -27,16 +27,19 @@
       	<menu-item name="productionReports" title="Reports">
 	        <link target="ProductionReports"></link>
 	    </menu-item>	
-	    <!--   <menu-item name="productionIndent" title="Indent">
+	      <menu-item name="productionIndent" title="Indent">
 	        <link target="productionIndent"></link>
-	    </menu-item> -->	
-	   <!--  <menu-item name="ProductionIssuance" title="Issuance">
+	    </menu-item>	
+	    <menu-item name="ProductionIssuance" title="Issuance">
 	    	<link target="ProductionIssuance"></link>
-	    </menu-item> -->
+	    </menu-item>
 	</menu>
    <menu name="ProductionIssuanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
     <menu-item name="ProductionIssuance" title="Find Issuance">
       <link target="ProductionIssuance"></link>
+    </menu-item>
+    <menu-item name="ProductionIssuanceRequest" title="Issuance Request">
+    	<link target="ProductionIssuanceRequest"/>
     </menu-item>
    </menu>
    <menu name="ProductionIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -57,6 +60,9 @@
       			<parameter param-name="parameters.custRequestId"/>
       		</link>
       	</menu-item>
+      	<menu-item name="ProductionReceiptAcknowledgements" title="Receipt Acknowledgement">
+    	<link target="ProductionReceiptAcknowledgements"></link>
+       </menu-item>
 	</menu>
    
    <menu name="InventoryTransferTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

@@ -267,5 +267,175 @@
         </field>
         <field name="IndentHeadApproval"  title="Select" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${description}" description=" "  ></option></check> </field>
     </form> 
-     
+     <form name="FindProductionIssuance" target="findProductionIssuance" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        </actions>
+        <field name="itemIssuanceId" title="Issuance Id"><text-find/></field>
+        <!-- <field name="shipmentId" title="Shipment Id"><text-find/></field> -->
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
+        <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+ 		<field name="fromPartyId" title="Requested Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="toDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="partyFrom" title="Issue Department">
+			<drop-down allow-empty="false" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+ 		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
+ 		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
+ 		<field name="shipmentTypeId" ><hidden value="ISSUANCE_SHIPMENT"/> </field>
+ 		<!-- <field name="statusId" ><hidden value="GENERATED"/> </field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+    <form name="ListProductionIssuance" type="list" extends="ProductionIssuanceList" list-name="listIt">
+    	<actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="IssuanceAndShipmentAndCustRequest"/>
+            <field-map field-name="orderBy" value="-issueDate"/>
+            <field-map field-name="inputFields.custRequestTypeId" value="INTERNAL_INDENT"/>
+            <field-map field-name="inputFields.statusId" value="GENERATED"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+          <script location="component://production/webapp/production/WEB-INF/actions/ProductionIssuanceToPartyPerformFind.groovy"/>
+        </actions>
+    </form>
+    <form name="ProductionIssuanceList" type="list"  list-name="listIt" title="List of customer requests" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <row-actions>
+          <entity-one entity-name="CustRequestItem" auto-field-map="true">
+       		<select-field field-name="statusId"/>
+       	  </entity-one>
+        	<set field="crqItemstatusId" from-field="statusId"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+       </row-actions>
+        <field name="itemIssuanceId" title="Issuance Id"><display/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
+			<display/>
+        </field>
+        <field name="custRequestItemSeqId" title="Indent Item No">
+			<display/>
+        </field>
+        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="Requested Department">
+        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="partyIdFrom" title="Issue Department">
+        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+        	<display-entity entity-name="Product" description="${productId} - ${description} [${dec}]"/>
+        </field>
+        <field name="quantity" title="Issued Quantity"><display/></field>
+        <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
+        <field name="issuedByUserLoginId" title="Issued By"><display/></field>
+        <!--  <field name="crqItemstatusId" title="crqItemstatusId-"><display/></field>  -->
+        <field  use-when="&quot;${crqItemstatusId}&quot; != &quot;CRQ_COMPLETED&quot;" name="cancelIssue" widget-style="buttontext">
+            <hyperlink target="cancelProductionIssuenceForCustRequest" description="CancelIssue" confirmation-message="Are you sure to Cancel Issuance..?">
+                <parameter param-name="custRequestId"/>
+                 <parameter param-name="custRequestItemSeqId"/>
+                 <parameter param-name="itemIssuanceId"/>
+                   <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+        <!-- <field name="report" title="Report" widget-style="buttontext">
+        	<hyperlink target="ItemIssuanceReport.pdf" description="Report" target-window="_blank">
+        		<parameter param-name="custRequestId"/>
+        		<parameter param-name="custRequestItemSeqId"/>
+        		<parameter param-name="itemIssuanceId"/>
+        		<parameter param-name="flag" value="itemIssuance"/>
+        	</hyperlink>
+        </field> -->
+    </form>
+    <form name="FindProductionIssueRequests" type="single" target="findProductionIssueRequests">
+        <actions>
+          <set field="partyFrom" from-field="partyId"/>
+        </actions>
+   		<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+   		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+		<field name="fromPartyId" title="Requested Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="toDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="partyFrom" title="Issue Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+   		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+   </form>
+   <form name="ListProductionIssueRequests" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList" separate-columns="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  paginate-target="StoreProductIssue">
+        <row-actions>
+        	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
+        	<set field="custmQuantity" value="${quantity-(QOH+issuedQty)}"/>
+        	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+        <field name="shipmentTypeId"><hidden value="PRODUCTION_SHIPMENT"/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
+        <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
+        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="Requested Department">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="partyIdFrom" title="Issue Department">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
+        </field>
+        <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
+         <field name="quantity" title="Req. Qty"><display/></field>
+          <field name="issuedQty" title="IssuedQty" ><display/></field>  
+         <field name="QOH" title="InventoryAvailable" ><display/></field>
+        <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="${toBeIssuedQty}"> </text></field>
+        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
+    </form>
+    <form name="SearchReceiptAcknowledgement" type="single" target="searchReceiptAcknowledgement">
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+   		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+   		  <field name="partyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+   		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>
