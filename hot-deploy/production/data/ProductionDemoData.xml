@@ -18,4 +18,25 @@
 	
 	<StatusValidChange statusId="PBTCH_CREATED" statusIdTo="PBTCH_CANCELLED" transitionName="Cancelled"/>
 	
+	
+	<!-- Product test Components for Ice cream -->
+	<ProductCategory productCategoryId="_NA_" productCategoryTypeId="" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+	
+	
+	<ProductCategory  productCategoryId="QC_ICECREAM"/>
+	 
+	<ProductCategoryMember productCategoryId="QC_ICECREAM" productId="194"/> 
+	<ProductCategoryMember productCategoryId="QC_ICECREAM" productId="ICECREAMMIX"/> 
+	
+	
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="1" testComponent="temp" testDescription="TEMPARATURE"/>
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="2" testComponent="organoLepticTest" testDescription="ORGANOLEPTIC TEST"/> 
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="3" testComponent="colour" testDescription="COLOUR"/>
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="4" testComponent="fat" testDescription="FAT %" minimamValue="4.0" maximamValue="6.0"/>
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="5" testComponent="acidity" testDescription="ACIDITY %" minimamValue="0.001" maximamValue="1.0"/>
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="6" testComponent="protein" testDescription="PROTEIN % BY FORMAL TITRATION" minimamValue="1.0" maximamValue="4.0"/>
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="7" testComponent="solids" testDescription="TOTAL SOLIDS"/> 
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="8" testComponent="coliform" testDescription="COLIFORM COUNT PER 0.1 GM/ML"/>
+	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="9" testComponent="plateCount" testDescription="STANDARD PLATE COUNT"/>
+	
 </entity-engine-xml>

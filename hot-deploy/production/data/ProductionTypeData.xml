@@ -74,5 +74,7 @@
      <ShipmentType  description="Production Shipment"  shipmentTypeId="PRODUCTION_SHIPMENT"/>
      <TenantConfiguration  description="Enable Department Inventory Check"  propertyName="enableDeptInvTrack" propertyTypeEnumId="DEPT_INV_TRACK" propertyValue="Y"/>  
        
-       
+    <StatusType statusTypeId="QC_STATUS"/>
+    <StatusItem description="Accepted" sequenceId="1" statusCode="QC ACCEPTED" statusId="QC_ACCEPT" statusTypeId="QC_STATUS"/>
+    <StatusItem description="Rejected" sequenceId="2" statusCode="QC REJECTED" statusId="QC_REJECT" statusTypeId="QC_STATUS"/>
 </entity-engine-xml>
