@@ -2287,6 +2287,7 @@ public class MilkReceiptServices {
 				resultMap.put("sequenceNum", transferRecord.get("sequenceNum"));
 				resultMap.put("partyId", transferRecord.get("partyId"));
 				resultMap.put("isSealChecked",transferRecord.get("isSealChecked"));
+				resultMap.put("isCipChecked",transferRecord.get("isCipChecked"));
 				java.sql.Date sendDateFormat = new java.sql.Date(((Timestamp)transferRecord.get("sendDate")).getTime());
 				String sendDateStr = UtilDateTime.toDateString(sendDateFormat,"dd-MM-yyyy");
 				String sendTimeStr = UtilDateTime.toDateString(sendDateFormat,"HHmm");
@@ -2783,6 +2784,17 @@ public class MilkReceiptServices {
 	 	        	return resultMap;
 	 	        }
 	 			
+	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIPNEW")){
+	 			String isCipChecked = (String) context.get("isCipChecked");
+	 			try{
+	 				milkTransfer.set("isCipChecked",isCipChecked);
+		 			milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	 	        	milkTransfer.store();
+		 	   }catch(Exception e){
+					Debug.logError("Exception while updating the Cip Check  :"+e,module);
+					resultMap = ServiceUtil.returnError("Exception while updating Cip Check :"+e.getMessage());
+		 			return resultMap;
+				}
 	 		}
 	 		milkTransfer.store();
 	 	}catch(GenericEntityException e){

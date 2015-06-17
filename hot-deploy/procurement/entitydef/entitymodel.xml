@@ -364,6 +364,7 @@
       <field name="partyIdTo" type="id"></field> 
       <field name="numberOfCells" type="numeric"/>
       <field name="isSealChecked" type="indicator"/>
+      <field name="isCipChecked" type="indicator"/>
       <field name="productId" type="id-ne"></field>
       <field name="quantity" type="fixed-point"></field>
       <field name="quantityLtrs" type="fixed-point"></field>
