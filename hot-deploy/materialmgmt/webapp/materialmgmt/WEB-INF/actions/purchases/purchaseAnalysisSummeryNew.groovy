@@ -684,10 +684,10 @@ purchaseSumInvDetaildMap=[:];
 			exprList.add(EntityCondition.makeCondition("invoiceRolePartyId",EntityOperator.NOT_EQUAL, "S943"));
 			exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-			/*exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId",EntityOperator.EQUALS, "ISSUE_TO_DEPT"));*/
-			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.NOT_EQUAL, null),EntityOperator.OR,
+			exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId",EntityOperator.EQUALS, "ISSUE_TO_DEPT"));
+			/*exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.NOT_EQUAL, null),EntityOperator.OR,
 				EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT")));
-			
+			*/
 			conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 			issueDeptRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
 			issueDeptInvRoleList = EntityUtil.getFieldListFromEntityList(issueDeptRoleList, "invoiceId", true);
@@ -702,7 +702,7 @@ purchaseSumInvDetaildMap=[:];
 				conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, kmfUnitPartyIdsList));
 			}
 			if (UtilValidate.isNotEmpty(issueDeptInvRoleList)) {
-				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN, issueDeptInvRoleList));
+				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, issueDeptInvRoleList));
 			}
 			/*conditionList.add(EntityCondition.makeCondition("cstPercent", EntityOperator.NOT_EQUAL,null));
 			conditionList.add(EntityCondition.makeCondition("cstAmount", EntityOperator.NOT_EQUAL,null));
