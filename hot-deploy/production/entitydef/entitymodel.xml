@@ -85,6 +85,9 @@
 		<field name="sequenceNumber" type="id-ne"></field>
 		<field name="testComponent" type="id"></field>
 		<field name="value" type="id"></field>
+		
+		<prim-key field="qcTestId"/>
+		<prim-key field="sequenceNumber"/>
 	</entity>
 
 
