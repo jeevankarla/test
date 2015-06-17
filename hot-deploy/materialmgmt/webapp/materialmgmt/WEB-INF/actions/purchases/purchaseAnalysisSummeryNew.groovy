@@ -702,7 +702,7 @@ purchaseSumInvDetaildMap=[:];
 				conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, kmfUnitPartyIdsList));
 			}
 			if (UtilValidate.isNotEmpty(issueDeptInvRoleList)) {
-				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, issueDeptInvRoleList));
+				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN, issueDeptInvRoleList));
 			}
 			/*conditionList.add(EntityCondition.makeCondition("cstPercent", EntityOperator.NOT_EQUAL,null));
 			conditionList.add(EntityCondition.makeCondition("cstAmount", EntityOperator.NOT_EQUAL,null));
