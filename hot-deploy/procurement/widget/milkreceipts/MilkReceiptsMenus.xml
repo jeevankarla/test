@@ -142,8 +142,12 @@
 			<link target="MilkReceiptsQCEntry">
 			</link>
 		</menu-item>
-		<menu-item name="MilkReceiptsVehicleCip" title="CIP DETAILS">
+		<menu-item name="MilkReceiptsVehicleCip" title="Un-Load Details">
 			<link target="MilkReceiptsTankerCip">
+			</link>
+		</menu-item>
+		<menu-item name="MilkReceiptsVehicleCipNew" title="CIP Details">
+			<link target="MilkReceiptsVehicleCipNew">
 			</link>
 		</menu-item>
 		<menu-item name="MilkReceiptsTareWeightEntry" title="Tare Weight Entry">

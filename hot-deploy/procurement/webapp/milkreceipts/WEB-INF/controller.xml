@@ -411,6 +411,13 @@
     	<response name="success" type="view" value="MilkReceiptsTankerCip">
     	</response>
     </request-map>
+    
+    <request-map uri="MilkReceiptsVehicleCipNew">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="MilkReceiptsVehicleCipNew"/>
+    	<response name="error" type="view" value="MilkReceiptsVehicleCipNew"/>
+    </request-map>
+    
 	<request-map uri="MilkReceiptsTankerEntry">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="MilkReceiptsTankerEntry">
@@ -472,7 +479,13 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
     </request-map>
-   
+   <request-map uri="updateMilkReceiptsVehicleCipNew">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkReceiptsVehicleCipNew"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
     <request-map uri="updateMilkTankerReceiptEntryOut">
         <security https="true" auth="true"/>
         <event type="service"  invoke="updateMilkTankerReceiptEntryOut"/>        
@@ -675,6 +688,7 @@
     <view-map name="MilkReceiptsTankerWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerWeightEntry"/>
     <view-map name="MilkReceiptsTankerTareWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerTareWeightEntry"/>
     <view-map name="MilkReceiptsTankerCip" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerCip"/>
+    <view-map name="MilkReceiptsVehicleCipNew" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsVehicleCipNew"/>
     
     
     

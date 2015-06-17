@@ -132,6 +132,11 @@ $(function() {
         		   cipDate:"" ,cipTime:"" , milkTransferId:"" , tankerName:"",silo:""
         	   }}).form()) return;
      		action = "updateMilkTankerReceiptEntryCIP";
+     	}else if(displayScreen == "VEHICLE_CIPNEW"){
+     		if(!$("#milkReceiptEntry").validate({messages:{
+     			milkTransferId:"" , tankerName:"",isCipChecked:""
+     		}}).form()) return;
+     		action = "updateMilkReceiptsVehicleCipNew";
      	}else{
     		if(!$("#milkReceiptEntry").validate({messages:{
         		   entryDate:"" ,entryTime:"" , tankerName:"",sendDate:"" ,sendTime:"" ,

@@ -373,7 +373,17 @@ function fetchTankerRecordNumber(){
            		var  milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
 	   			if(displayScreen == "VEHICLE_TAREWEIGHT"){
+	   				
 	   				grossWeight = result['grossWeight'];
+	   				 var isCipCheckedVal = result['isCipChecked'];
+	   				 if(isCipCheckedVal == 'Y' && isCipCheckedVal != 'undefined'){
+	   				 	$('#isCipChecked').val(isCipCheckedVal);
+	   				 	$('#isCipCheckedDes').html("");
+	   				 }else{
+	   				 	$('#isCipChecked').val('');
+	   				    $('#isCipCheckedDes').html("CIP Not Done Please Contact QC Department");
+	   				 }
+	   				 
 	   				$('#grossWeightToolTip').val(grossWeight);
 	   			}
            
@@ -575,7 +585,10 @@ $( "#"+fromDateId ).datepicker({
       				<#assign velhicleStatus = "QUALITY CONTROL DETAILS">
       			</#if>
       			<#if displayScreen == "VEHICLE_CIP">
-      				<#assign velhicleStatus = "CIP AND SILO DETAILS">
+      				<#assign velhicleStatus = "UN-LOAD AND SILO DETAILS">
+      			</#if>
+                 <#if displayScreen == "VEHICLE_CIPNEW">
+      				<#assign velhicleStatus = "CIP DETAILS">
       			</#if>
 				<label>${velhicleStatus}</label>
 	  		</div>
@@ -687,6 +700,10 @@ $( "#"+fromDateId ).datepicker({
 	                   			</tr>
 	        				</#if>	
 	        				<#if displayScreen == "VEHICLE_TAREWEIGHT">
+                                <tr>
+	        						<td align='left' ><span class="h3">Is Cip Checked</span></td>
+	        						<td align='left'><input type="text" readOnly size="3pt" id="isCipChecked" name="isCipChecked" required/><em>*<em><span class="h4" id="isCipCheckedDes" name="isCipCheckedDes"/></td>
+	        					</tr> 
 	        					<tr>
 	        						<td align='left' ><span class="h3">Gross Weight(Kgs)</span></td>
 	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
@@ -710,10 +727,10 @@ $( "#"+fromDateId ).datepicker({
 	        				<#if displayScreen == "VEHICLE_CIP">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
-	        						<td align='left' ><span class='h3'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h3'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
 	        						<td align='left' ><span class='h3'>UN-LOADED TO SILO</span></td><td> 
@@ -812,6 +829,20 @@ $( "#"+fromDateId ).datepicker({
           												</select></td>
 					        	</tr>
 						    </#if>
+                            <#if displayScreen == "VEHICLE_CIPNEW">
+                                <tr>
+                                    <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIPNEW" />
+		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+		        					
+		        				</tr>
+		        				<tr>
+		        					<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+		        					</td>
+						        </tr>
+                                <tr>
+                                 <td align='left' ><span class="h3"> Is CIP Checked</span></td><td><input type="checkbox" name="isCipChecked" id="isCipChecked" style="width:20px;height:20px;" value="Y" required/><em>*<em></td>
+                                </tr>
+                             </#if>
 	          		</table>
 	          		<#if displayScreen == "VEHICLE_QC">
 	          			<table>
