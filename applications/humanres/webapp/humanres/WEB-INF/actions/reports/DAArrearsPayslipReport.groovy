@@ -41,15 +41,77 @@ employments=EmploymentsMap.get("employementList");
 if(UtilValidate.isNotEmpty(employments)){
 	employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
 }
+
+
+totalNetMap = [:];
+Timestamp startMonth = null;
+Timestamp endMonth = null;
+GenericValue basicSalPeriod1 = null;
+Timestamp oldDADate = null;
+geoId = "";
+
+daArrearsData = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
+if(UtilValidate.isNotEmpty(daArrearsData)){
+	geoId = daArrearsData[0].geoId;
+}
+List pastPeriodCondList = FastList.newInstance();
+pastPeriodCondList.add(EntityCondition.makeCondition("geoId", EntityOperator.EQUALS ,geoId));
+EntityCondition pastPeriodCond = EntityCondition.makeCondition(pastPeriodCondList,EntityOperator.AND);
+pastDAPeriodList = delegator.findList("EmployeeDAArrears", pastPeriodCond, null, null, null, false);
+
+if(UtilValidate.isNotEmpty(pastDAPeriodList)){
+	pastDAPeriod = EntityUtil.getFirst(pastDAPeriodList);
+	oldDADate = (Timestamp) pastDAPeriod.get("DADate");
+	String oldPeriodBillingId = pastDAPeriod.get("periodBillingId");
+	if(UtilValidate.isNotEmpty(oldPeriodBillingId)){
+		List oldPeriodBillCondList = FastList.newInstance();
+		oldPeriodBillCondList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.EQUALS ,oldPeriodBillingId));
+		oldPeriodBillCondList.add(EntityCondition.makeCondition("billingTypeId" ,EntityOperator.EQUALS , "SP_DA_ARREARS"));
+		oldPeriodBillCondList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS ,"APPROVED"));
+		EntityCondition oldPeriodBillCond = EntityCondition.makeCondition(oldPeriodBillCondList,EntityOperator.AND);
+		List<GenericValue> oldPeriodBillCTList = delegator.findList("PeriodBillingAndCustomTimePeriod", oldPeriodBillCond, null, null, null, false);
+		if(UtilValidate.isNotEmpty(oldPeriodBillCTList)){
+			GenericValue oldPeriodBillCTP = EntityUtil.getFirst(oldPeriodBillCTList);
+			String oldCTPId = oldPeriodBillCTP.get("customTimePeriodId");
+			GenericValue oldCustomTimePeriod;
+			if(UtilValidate.isNotEmpty(oldCTPId)){
+				oldCustomTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : oldCTPId] , false);
+				Timestamp oldFromDateTime = UtilDateTime.toTimestamp(oldCustomTimePeriod.getDate("fromDate"));
+				Timestamp oldThruDateTime = UtilDateTime.toTimestamp(oldCustomTimePeriod.getDate("thruDate"));
+				
+				startMonth = UtilDateTime.getDayStart(oldFromDateTime, timeZone, locale);
+				endMonth = UtilDateTime.getDayEnd(oldThruDateTime, timeZone, locale);
+				
+			  //getting old BasicSalDate period
+				List condBasicSalPeriodList1 = FastList.newInstance();
+				condBasicSalPeriodList1.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+				condBasicSalPeriodList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayEnd(oldDADate))));
+				condBasicSalPeriodList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(oldDADate))));
+				EntityCondition basicSalPeriodCond1 = EntityCondition.makeCondition(condBasicSalPeriodList1,EntityOperator.AND);
+				List<GenericValue> basicSalPeriodList1 = delegator.findList("CustomTimePeriod", basicSalPeriodCond1, null, null, null, false);
+				if(UtilValidate.isNotEmpty(basicSalPeriodList1)){
+						basicSalPeriod1 = EntityUtil.getFirst(basicSalPeriodList1);
+				}
+			}
+		}
+	}
+}
+
+
+
 DAArrearMap = [:];
 DAArrearLEMap = [:];
 employmentsList.each{ employeeId ->
+	BigDecimal totalNetAmt = BigDecimal.ZERO;
 	periodMap = [:];
 	leaveEncashMap = [:];
 	customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodId] , false);
 	if(UtilValidate.isNotEmpty(customTimePeriod)){
 		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		
+		Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+		Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 		
 		periodBillingBasic = delegator.findOne("PeriodBilling",[periodBillingId : periodBillingIdParam] , false);
 		basicSalDate = periodBillingBasic.basicSalDate;
@@ -81,7 +143,7 @@ employmentsList.each{ employeeId ->
 				BigDecimal netDAAmount = BigDecimal.ZERO;
 				
 				
-				List payHeadCondList = FastList.newInstance();
+				/*List payHeadCondList = FastList.newInstance();
 				payHeadCondList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.EQUALS , periodBillingId));
 				payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
 				payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
@@ -90,8 +152,20 @@ employmentsList.each{ employeeId ->
 				if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter)){
 					GenericValue payrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter);
 					oldDAAmount = (BigDecimal)payrollItems.get("amount");
+				}*/
+				
+				GenericValue basicSalPeriod = null; 
+				
+				List basicSalPeriodcondList = FastList.newInstance();
+				basicSalPeriodcondList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+				basicSalPeriodcondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayEnd(basicSalDate))));
+				basicSalPeriodcondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(basicSalDate))));
+				basicSalCond = EntityCondition.makeCondition(basicSalPeriodcondList,EntityOperator.AND);
+				basicSalPeriodDetails = delegator.findList("CustomTimePeriod", basicSalCond, null, null, null, false);
+				if(UtilValidate.isNotEmpty(basicSalPeriodDetails)){
+					basicSalPeriod = EntityUtil.getFirst(basicSalPeriodDetails);
 				}
-				payHeadCondList.clear();
+				List payHeadCondList = FastList.newInstance();
 				payHeadCondList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.EQUALS , periodBillingId));
 				payHeadCondList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_SALARY"));
 				payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
@@ -109,6 +183,7 @@ employmentsList.each{ employeeId ->
 							  geoId = daArrearsData[0].geoId;
 							  if(geoId.equals(activeGeoId)){
 								  String rateTypeId = null;
+								  BigDecimal oldRateDaAmount = BigDecimal.ZERO;
 								  if(UtilValidate.isNotEmpty(activeGeoId)){
 									  if(activeGeoId.equals("BAGALKOT")){
 										  rateTypeId = "DA_BAGALKOT_RATE";
@@ -128,21 +203,59 @@ employmentsList.each{ employeeId ->
 									  if(UtilValidate.isNotEmpty(rateTypeId)){
 										  List rateAmountCondList = FastList.newInstance();
 										  rateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
-										  rateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate))));
-										  rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate)))));
+										  rateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
+										  rateAmountCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(basicSalPeriod.getDate("thruDate"))))));
 										  EntityCondition rateAmountCond = EntityCondition.makeCondition(rateAmountCondList,EntityOperator.AND);
 										  List<GenericValue> rateAmountList = delegator.findList("RateAmount", rateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
 										  if(UtilValidate.isNotEmpty(rateAmountList)){
 											  GenericValue rateAmountGen = EntityUtil.getFirst(rateAmountList);
 											  rateAmount = (BigDecimal) rateAmountGen.get("rateAmount");
 											  if(UtilValidate.isNotEmpty(rateAmount)){
-												  newDAAmount = (rateAmount*basicAmount);
+												  if(UtilValidate.isNotEmpty(basicAmount)){
+													  newDAAmount = (rateAmount*basicAmount);
+												  }
+												  if(ctpFromDate.compareTo(startMonth) > 0 && ctpFromDate.compareTo(endMonth) < 0){
+													  List oldRateAmountCondList = FastList.newInstance();
+													  oldRateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
+													  oldRateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
+													  oldRateAmountCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
+													  EntityCondition oldRateAmountCond = EntityCondition.makeCondition(oldRateAmountCondList,EntityOperator.AND);
+													  List<GenericValue> oldRateAmountList = delegator.findList("RateAmount", oldRateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
+													  BigDecimal oldRateAmount = BigDecimal.ZERO;
+													  if(UtilValidate.isNotEmpty(oldRateAmountList)){
+														  GenericValue rateAmountOldGen = EntityUtil.getFirst(oldRateAmountList);
+														  oldRateAmount = (BigDecimal) rateAmountOldGen.get("rateAmount");
+													  }
+													  if(UtilValidate.isNotEmpty(basicAmount)){
+														  oldDAAmount = (oldRateAmount*basicAmount);
+													  }
+												  }
+												  
+												  BigDecimal payAmt = BigDecimal.ZERO;
+												  if(ctpFromDate.compareTo(startMonth) > 0 && ctpFromDate.compareTo(endMonth) < 0){
+													  payAmt = oldDAAmount;
+												  }else{
+												   		List payHeadConditionList = FastList.newInstance();
+														payHeadConditionList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.EQUALS , periodBillingId));
+														payHeadConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_DA"));
+														payHeadConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+														EntityCondition payHeadCondition = EntityCondition.makeCondition(payHeadConditionList,EntityOperator.AND);
+														List<GenericValue> payrollHeaderAndHeaderItemIter = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCondition, null, null, null, false);
+														//Debug.log("payrollHeaderAndHeaderItemIter====="+payrollHeaderAndHeaderItemIter);
+														//BigDecimal payAmt=BigDecimal.ZERO;
+														if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter)){
+														  GenericValue payrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter);
+														  payAmt = (BigDecimal)payrollItems.get("amount");
+													  }
+												  }
+												  
 												  if(UtilValidate.isNotEmpty(newDAAmount)){
-													  netDAAmount  = newDAAmount - oldDAAmount;
+													  netDAAmount  = newDAAmount - payAmt;
+													  totalNetAmt = totalNetAmt + netDAAmount;
 												  }
 												  tempMap = [:];
 												  tempMap.put("Basic",basicAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap.put("oldDA",oldDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap.put("oldDA",payAmt.setScale(0,BigDecimal.ROUND_HALF_UP));
 												  tempMap.put("newDA",newDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
 												  tempMap.put("netDA",netDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
 												  fromDateStart = basicSalDate;
@@ -174,7 +287,7 @@ employmentsList.each{ employeeId ->
 									  }
 								  }
 							  }
-						  }
+						   }
 						}
 					}
 				}
@@ -200,7 +313,18 @@ employmentsList.each{ employeeId ->
 				Timestamp ctpFromDate1=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(ctpDA1.getDate("fromDate")));
 				Timestamp ctpThruDate1=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(ctpDA1.getDate("thruDate")));
 				
+				GenericValue LEbasicSalPeriod = null;
+				List basicSalPeriodcondList1 = FastList.newInstance();
+				basicSalPeriodcondList1.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+				basicSalPeriodcondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayEnd(basicSalDate))));
+				basicSalPeriodcondList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(basicSalDate))));
+				basicSalCond1 = EntityCondition.makeCondition(basicSalPeriodcondList1,EntityOperator.AND);
+				LEbasicSalPeriodDetails = delegator.findList("CustomTimePeriod", basicSalCond1, null, null, null, false);
+				if(UtilValidate.isNotEmpty(LEbasicSalPeriodDetails)){
+					LEbasicSalPeriod = EntityUtil.getFirst(LEbasicSalPeriodDetails);
+				}
 				
+				BigDecimal LEpayAmt=BigDecimal.ZERO;
 				basicLEDate = periodBillingEach1.basicSalDate;
 				
 				BigDecimal oldDAAmount1 = BigDecimal.ZERO;
@@ -255,27 +379,53 @@ employmentsList.each{ employeeId ->
 									  if(UtilValidate.isNotEmpty(rateTypeId1)){
 										  List rateAmountCondList1 = FastList.newInstance();
 										  rateAmountCondList1.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId1));
-										  rateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate))));
-										  rateAmountCondList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalDate)))));
+										  rateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("fromDate")))));
+										  rateAmountCondList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("thruDate"))))));
 										  EntityCondition rateAmountCond1 = EntityCondition.makeCondition(rateAmountCondList1,EntityOperator.AND);
 										  List<GenericValue> rateAmountList1 = delegator.findList("RateAmount", rateAmountCond1,null, UtilMisc.toList("fromDate"), null, false);
 										  if(UtilValidate.isNotEmpty(rateAmountList1)){
 											  GenericValue rateAmountGen1 = EntityUtil.getFirst(rateAmountList1);
 											  rateAmount1 = (BigDecimal) rateAmountGen1.get("rateAmount");
-											  
 											  if(UtilValidate.isNotEmpty(rateAmount1)){
 												  newDAAmount1 = (rateAmount1*basicAmount1);
-												  if(UtilValidate.isNotEmpty(newDAAmount1 )){
-													  netDAAmount1  = newDAAmount1 - oldDAAmount1;
+											  }
+											  if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
+												  List oldRateAmountCondList1 = FastList.newInstance();
+												  oldRateAmountCondList1.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId1));
+												  oldRateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
+												  oldRateAmountCondList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("fromDate")))));
+												  EntityCondition oldRateAmountCond1 = EntityCondition.makeCondition(oldRateAmountCondList1,EntityOperator.AND);
+												  List<GenericValue> oldRateAmountList1 = delegator.findList("RateAmount", oldRateAmountCond1,null, UtilMisc.toList("fromDate"), null, false);
+												  BigDecimal oldRateAmount1 = BigDecimal.ZERO;
+												  if(UtilValidate.isNotEmpty(oldRateAmountList1)){
+													  GenericValue rateAmountOldGen1 = EntityUtil.getFirst(oldRateAmountList1);
+													  oldRateAmount1 = (BigDecimal) rateAmountOldGen1.get("rateAmount");
 												  }
-												  tempMap1 = [:];
-												  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap1.put("oldDA1",oldDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  if(UtilValidate.isNotEmpty(tempMap1)){
-													  leaveEncashMap.putAt(basicLEDate, tempMap1);
+												  if(UtilValidate.isNotEmpty(basicAmount1)){
+													  oldDAAmount1 = (oldRateAmount1*basicAmount1);
 												  }
+											  }
+											  if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
+													  LEpayAmt = oldDAAmount1;
+											  }else{
+												  if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter3)){
+													  GenericValue LEpayrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter3);
+													  LEpayAmt = (BigDecimal)LEpayrollItems.get("amount");
+												  }
+											  }
+												  
+											  if(UtilValidate.isNotEmpty(newDAAmount1 )){
+												  netDAAmount1  = newDAAmount1 - LEpayAmt;
+												  totalNetAmt = totalNetAmt + netDAAmount1;
+											  }
+											  
+											  tempMap1 = [:];
+											  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+											  tempMap1.put("oldDA1",LEpayAmt.setScale(0,BigDecimal.ROUND_HALF_UP));
+											  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+											  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+											  if(UtilValidate.isNotEmpty(tempMap1)){
+												  leaveEncashMap.putAt(basicLEDate, tempMap1);
 											  }
 										  }
 									  }
@@ -288,6 +438,9 @@ employmentsList.each{ employeeId ->
 			}
 		}
 	}
+	if(UtilValidate.isNotEmpty(totalNetAmt)){
+		totalNetMap.put(employeeId, totalNetAmt.setScale(0,BigDecimal.ROUND_HALF_UP));
+	}
 	if(UtilValidate.isNotEmpty(periodMap)){
 		DAArrearMap.put(employeeId,periodMap);
 	}
@@ -295,12 +448,10 @@ employmentsList.each{ employeeId ->
 		DAArrearLEMap.put(employeeId,leaveEncashMap);
 	}
 }
+
+context.totalNetMap=totalNetMap;
 context.DAArrearMap=DAArrearMap;
 context.DAArrearLEMap = DAArrearLEMap;
-
-
-
-
 
 
 
