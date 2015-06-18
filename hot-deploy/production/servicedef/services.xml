@@ -43,4 +43,30 @@
     <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
     	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
     </service>
+    <service name="createProductQcDetails" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductQcDetails">
+    	<auto-attributes mode="IN" entity-name="ProductQcTest" optional="true">
+    		<exclude field-name="productId"/>
+    	</auto-attributes>
+    	<attribute name="productId" mode="IN" type="String" optional="false"/>
+    	<attribute name="statusId" mode="IN" type="String" optional="false"/>
+    	<attribute name="testDate" mode="IN" type="Timestamp" optional="false"></attribute>
+    	<attribute name="comments" mode="IN" type="String" optional="false"/>
+    	<attribute name="temp_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="organoLepticTest_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="colour_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="fat_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="acidity_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="protein_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="solids_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="coliform_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="plateCount_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="productionOverRun_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="weight_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="sugar_testComponent" mode="IN" type="String"  optional="true"/>
+    	
+    	<attribute name="qcTestId" mode="OUT" type="String"  optional="true"/>
+    </service>
+    
+    
+    
 </services>

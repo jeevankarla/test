@@ -83,6 +83,10 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -103,6 +107,7 @@ import com.linuxense.javadbf.DBFReader;
 import org.xml.sax.SAXException;
 
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
+
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
@@ -1220,4 +1225,167 @@ public class ProductionServices {
      		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ...!IndentNo:"+custRequestId );
      		return "success";
      	}
+     
+     /**
+      * 
+      * @param dctx
+      * @param context
+      * @return
+      */
+     public static Map<String,Object> createProductQcDetails(DispatchContext dctx,Map<String,? extends Object> context){
+    	 LocalDispatcher dispatcher = dctx.getDispatcher();
+    	 Delegator delegator = dctx.getDelegator();
+    	 Map resultMap = ServiceUtil.returnSuccess();
+    	 String productId = (String) context.get("productId");
+    	 String statusId  = (String) context.get("statusId");
+    	 //Timestamp testDateStr = (Timestamp) context.get("testDate");
+    	 GenericValue userLogin = (GenericValue)context.get("userLogin");
+    	 Timestamp testDateTime = (Timestamp) context.get("testDate");
+    	 List<String> productQcTestFieldsList = FastList.newInstance();  
+    	 Map<String,String> testFieldTypes = FastMap.newInstance();
+    	 try{
+    		 ModelReader reader = delegator.getModelReader();
+    		 ModelEntity entity = reader.getModelEntity("ProductQcTest");
+    		 Iterator fieldIterator = entity.getFieldsIterator();
+    		 while( fieldIterator != null && ( fieldIterator.hasNext())) {
+    			 ModelField fieldDet = (ModelField)fieldIterator.next();
+    			 
+    			 String fieldName = (String)fieldDet.getName();
+    			 String fieldType = (String)fieldDet.getType();
+    			 ModelFieldType type = delegator.getEntityFieldType(entity, fieldType);
+    			 testFieldTypes.put(fieldName, (type.getJavaType()).toString());
+    			 productQcTestFieldsList.add(fieldName);
+    		 }//end of the loop
+    	 }catch(Exception e){
+    		Debug.logError("Error while getting the fields of ProductQcTest :"+e,module);
+    		resultMap = ServiceUtil.returnError("Error while getting the fields of ProductQcTest :");
+    	 }
+    	 Map createQcTestInMap = FastMap.newInstance();
+    	 Map createQcTestItemsInMap = FastMap.newInstance();
+    	 for(String key : context.keySet()){
+    		 if(key.contains("_testComponent")){
+    			 createQcTestItemsInMap.put(key, (String)context.get(key));
+    		 }else{
+    			 if(productQcTestFieldsList.contains(key)){
+	    			createQcTestInMap.put(key, context.get(key));
+    			 }
+    		 }
+    	 }
+    	 if(UtilValidate.isNotEmpty(createQcTestInMap)){
+    		 createQcTestInMap.put("userLogin",userLogin );
+    		 createQcTestInMap.put("productQcTestFieldsList",productQcTestFieldsList );
+    		 createQcTestInMap.put("testFieldTypes", testFieldTypes);
+    		 createQcTestInMap.put("testDate", testDateTime);
+    	 }
+    	 if(UtilValidate.isNotEmpty(createQcTestItemsInMap)){
+    		 createQcTestItemsInMap.put("userLogin",userLogin );
+    	 }
+    	 Map createQcTestResult = createProductQcTest(dctx,createQcTestInMap);
+    	 String qcTestId = "";
+    	 if(ServiceUtil.isSuccess(createQcTestResult)){
+    		 qcTestId = (String)createQcTestResult.get("qcTestId");
+    		 resultMap = ServiceUtil.returnSuccess("Successfully Created the Qc Details ");
+    	 }else{
+    		 Debug.logError("Error ::"+ServiceUtil.getErrorMessage(createQcTestResult), module);
+    		 resultMap = ServiceUtil.returnError("Error ::"+ServiceUtil.getErrorMessage(createQcTestResult));
+    	 }
+    	 if(UtilValidate.isNotEmpty(qcTestId)){
+    		 createQcTestItemsInMap.put("qcTestId", qcTestId);
+    		 Map createProductQcTestDetailsResult = createProductQcTestDetails(dctx,createQcTestItemsInMap);
+    		 if(ServiceUtil.isError(createProductQcTestDetailsResult) || ServiceUtil.isFailure(createProductQcTestDetailsResult)){
+    			 Debug.logError("Error :: "+ServiceUtil.getErrorMessage(createProductQcTestDetailsResult),module);
+    			 resultMap = ServiceUtil.returnError("Error :: "+ServiceUtil.getErrorMessage(createProductQcTestDetailsResult));
+    		 }
+    	 }
+    	 resultMap.put("qcTestId",qcTestId);
+    	 return resultMap;
+     }// end of the service
+     
+     /**
+      * 
+      * @param dctx
+      * @param context
+      * @return
+      */
+     
+     private static Map<String, Object> createProductQcTest(DispatchContext dctx,Map<String,Object> context) {
+    	 LocalDispatcher dispatcher = dctx.getDispatcher();
+    	 Delegator delegator = dctx.getDelegator();
+    	 GenericValue userLogin = (GenericValue)context.get("userLogin");
+    	 Map resultMap = ServiceUtil.returnSuccess();
+    	 List<String> productQcTestFieldsList = (List)context.get("productQcTestFieldsList");
+    	 GenericValue ProductQcTest = delegator.makeValue("ProductQcTest");
+    	 Map<String,String> testFieldTypes = (Map)context.get("testFieldTypes");
+    	 
+    	 if(UtilValidate.isNotEmpty(productQcTestFieldsList)){
+	    	 try{
+		    	 for(String key : context.keySet()){
+		    		 if(productQcTestFieldsList.contains(key)){
+		    			 String fieldType = (String)testFieldTypes.get(key);
+		    			 if(UtilValidate.isNotEmpty(fieldType)){
+		    				 if(fieldType.equalsIgnoreCase("String")){
+		    					 ProductQcTest.set(key,(String)context.get(key));
+		    				 }
+		    				 if(fieldType.equalsIgnoreCase("java.sql.Timestamp")){
+		    					 ProductQcTest.set(key,(Timestamp)context.get(key));
+		    				 }
+		    				 if(fieldType.equalsIgnoreCase("java.math.BigDecimal")){
+		    					 ProductQcTest.set(key,(BigDecimal)context.get(key));
+		    				 }
+		    			 }
+		    		 }
+		    	 }
+		    	 ProductQcTest.set("createdByUserLogin", userLogin.getString("userLoginId"));
+		    	 ProductQcTest.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		    	 ProductQcTest.set("createdDate", UtilDateTime.nowTimestamp());
+		    	 ProductQcTest.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    	 ProductQcTest.setNextSeqId();
+		    	 ProductQcTest.create();
+		    	 
+		    	 
+	    	 }catch(Exception e){
+	    		 Debug.logError("Error while creating productQcTest ::"+e,module);
+	    		 resultMap = ServiceUtil.returnError("Error while creating productQcTest ::");
+	    	 }
+    	 }
+    	 String qcTestId = "";
+    	 if(UtilValidate.isNotEmpty(ProductQcTest)){
+    		 qcTestId = (String) ProductQcTest.get("qcTestId");
+    	 }
+    	 resultMap.put("qcTestId",qcTestId);
+    	 return resultMap;
+     }//End of the service
+     /**
+      * 
+      * @param dctx
+      * @param context
+      * @return
+      */
+     private static Map<String, Object> createProductQcTestDetails(DispatchContext dctx,Map<String,Object> context) {
+    	 LocalDispatcher dispatcher = dctx.getDispatcher();
+    	 Delegator delegator = dctx.getDelegator();
+    	 Map resultMap = ServiceUtil.returnSuccess();
+    	 String qcTestId = (String)context.get("qcTestId");
+    	 try{
+	    	 for(String key : context.keySet()){
+	    		 if(key.contains("_testComponent")){
+	    			 GenericValue ProductQcTestDetails = delegator.makeValue("ProductQcTestDetails");
+	    			 String testComponent = (String)key.replace("_testComponent", "");
+	    			 ProductQcTestDetails.put("testComponent", testComponent);
+	    			 ProductQcTestDetails.put("value", (String)context.get(key));
+	    			 ProductQcTestDetails.set("qcTestId", qcTestId);
+	    			 delegator.setNextSubSeqId(ProductQcTestDetails,"sequenceNumber", 5, 1);
+	    			 delegator.create(ProductQcTestDetails);
+	    		 }
+	    	 }
+    	 }catch(GenericEntityException e){
+    		 Debug.logError("Error while storing Product QC Test Details ::"+e,module);
+    		 resultMap = ServiceUtil.returnError("Error while storing Product QC Test Details ::"+e);
+    	 }
+    	 return resultMap;
+     }//End of the service
+     
+     
+     
+     
 }
