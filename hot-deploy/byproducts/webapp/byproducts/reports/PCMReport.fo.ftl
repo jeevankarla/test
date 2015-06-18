@@ -204,6 +204,7 @@ under the License.
                        		</fo:table-cell>
                        	
                        	<#list categorysList as eachCat>
+		            	  		<#if eachCat != "PRLR_RTLR">
                        	 	<#assign catValue = prvNewFacilityMap.get(eachCat)?if_exists>
                        		<#if catValue?has_content>
                        			<fo:table-cell>
@@ -214,8 +215,10 @@ under the License.
 	                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false"></fo:block>  
 	                       		</fo:table-cell>
                        		</#if>
+						   </#if>
                        	</#list>
                        		<#list categorysList as eachCat>
+		            	  	<#if eachCat != "PRLR_RTLR">
                        	 	<#assign catValue = curNewFacilityMap.get(eachCat)?if_exists>
                        		<#if catValue?has_content>
                        			<fo:table-cell>
@@ -226,6 +229,7 @@ under the License.
 	                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false"></fo:block>  
 	                       		</fo:table-cell>
                        		</#if>
+ 						  </#if>
                        	</#list>
                        	
                        	<#--<#assign previousMonthfacLst=prvFacilityMap.entrySet()>	
