@@ -2445,6 +2445,28 @@ under the License.
         <response name="error" type="request-redirect" value="loan">
         </response>
     </request-map>
+    <request-map uri="ExcludeSalaryDisbursement">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="ExcludeSalaryDisbursement"></response>
+    </request-map>
+    <request-map uri="populatePayrollEmployeesAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="populatePayrollEmployees"/>	
+        <response name="success" type="request" value="json">
+        </response> 
+    </request-map>
+    <request-map uri="ExcludeSalaryDisbursementInit">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="ExcludeSalaryDisbursement"></response>
+    </request-map>
+    <request-map uri="updateExcludeSalaryDisbursement">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.humanres.PayrollService"  invoke="updateExcludeSalaryDisbursement" global-transaction="true"/>
+        <event type="service" invoke=""/>	
+        <response name="success" type="request" value="json">
+        </response> 
+    </request-map>
+    
     
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
@@ -2820,4 +2842,8 @@ under the License.
 	<view-map name="AddEmployeeNote" type="screen" page="component://humanres/widget/EmployeeScreens.xml#AddEmployeeNote"/>
 	<!-- text Reports -->
 	 <view-map name="DepartmentTotalsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DepartmentTotalsReport" content-type="text/plain" encoding="none"/>
+	<!-- SalaryDisbursement --> 
+	<view-map name="ExcludeSalaryDisbursement" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursement"></view-map>
+	<view-map name="ExcludeSalaryDisbursementInit" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursementInit"></view-map>
+	 
 </site-conf>
