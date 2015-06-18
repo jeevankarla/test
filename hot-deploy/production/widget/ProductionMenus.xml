@@ -16,9 +16,15 @@
        		<link target="productionDashboardMain" ></link>
       	</menu-item>
       	<menu-item name="productionRun" title="Find Production Run">
+      	<condition>
+			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
+		</condition>
        		<link target="FindNgProductionRun" ></link>
       	</menu-item>
       	<menu-item name="productionRunEntry" title="Production Run Entry">
+      	<condition>
+			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
+		</condition>
        		<link target="ProductionRunEntry" ></link>
       	</menu-item>
       	<menu-item name="productionStockXfers" title="Material Transfers">
@@ -31,6 +37,9 @@
 	        <link target="ProductionReports"></link>
 	    </menu-item>	
 	      <menu-item name="productionIndent" title="Indent">
+	      <condition>
+			<if-has-permission permission="PRO" action="_INDENT_ENTRY"/>
+		</condition>
 	        <link target="productionIndent"></link>
 	    </menu-item>	
 	    <menu-item name="ProductionIssuance" title="Issuance">
