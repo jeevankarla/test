@@ -42,7 +42,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
     	<#assign fromDateHead = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(headCTP.fromDate, "dd/MM/yyyy")/>
 		<#assign thruDateHead = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(headCTP.thruDate, "dd/MM/yyyy")/>
     </#if>
-<fo:page-sequence master-reference="main" font-family="Courier,monospace"  force-page-count="no-force">					
+	<fo:page-sequence master-reference="main" font-family="Courier,monospace"  force-page-count="no-force">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> 
 			<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="12pt" white-space-collapse="false">${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
     		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace"  white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
@@ -184,7 +184,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 						                          <fo:block text-align="right"   keep-together="always">${newDATotal?if_exists?string("#0.00")}</fo:block>
 						                        </fo:table-cell>
 						                        <fo:table-cell>
-						                          <fo:block text-align="right"  >${netDATotal1?if_exists?string("#0.00")}</fo:block>
+						                          <fo:block text-align="right"  >${totalNetMap.get(partyBenefitsMap.getKey())?if_exists?string("#0.00")}</fo:block>
 						                        </fo:table-cell>
 						                         <fo:table-cell>
 						                          <fo:block text-align="right"  >0.00</fo:block>
@@ -210,7 +210,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="right" ></fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
-			                      <#assign net = netDATotal1-epf>
+			                      <#assign net = totalNetMap.get(partyBenefitsMap.getKey())-epf>
 			                      <fo:table-row>
 			                       <fo:table-cell>
 						                   <fo:block text-align="right"  ></fo:block>
@@ -264,15 +264,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 							 	   <fo:table-cell >   						
 							 	         <fo:block text-align="right" white-space-collapse="false" font-size="12pt"  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Signature(PRE AUDIT)</fo:block>
 							 	   </fo:table-cell>
-							 </fo:table-row>
-	                     </fo:table-body>
-                      </fo:table>
-       </fo:block>
-
-  </fo:flow>	
-				        	
-</fo:page-sequence>
-</#list>
+							</fo:table-row>
+	               		</fo:table-body>
+                   	</fo:table>
+       			</fo:block>
+  			</fo:flow>	
+		</fo:page-sequence>
+	</#list>
  	<#else>
 	<fo:page-sequence master-reference="main">
     	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
