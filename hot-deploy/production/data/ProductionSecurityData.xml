@@ -12,4 +12,26 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PRODUCTION_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PRODUCTION_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="PRODUCTION_ADMIN"/>
+    
+    
+    <SecurityPermission description="Permission for Production Material Transfer" permissionId="PRO_MATERIAL_TRNSFER"/>
+    <SecurityGroup  description="Permission for Production Material Transfer" groupId="PRO_MATERIAL_TRNSFER"/>
+    <SecurityGroupPermission groupId="PRO_MATERIAL_TRNSFER" permissionId="PRO_MATERIAL_TRNSFER" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_MATERIAL_TRNSFER"/>
+    
+    <SecurityPermission description="Permission for Production Material Issuance" permissionId="PRO_INDENT_ISSUANCE"/>
+    <SecurityGroup description="Permission for Production Material Issuance" groupId="PRO_INDENT_ISSUANCE"/>
+    <SecurityGroupPermission groupId="PRO_INDENT_ISSUANCE" permissionId="PRO_INDENT_ISSUANCE" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_INDENT_ISSUANCE"/>
+    
+    <SecurityPermission description="Permission for Production Material Department Head Approval" permissionId="PRO_DEPTHEAD_APPROVE"/>
+    <SecurityGroup description="Permission for Production Material Department Head Approval" groupId="PRO_DEPTHEAD_APPROVE"/>
+    <SecurityGroupPermission groupId="PRO_DEPTHEAD_APPROVE" permissionId="PRO_DEPTHEAD_APPROVE" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_DEPTHEAD_APPROVE"/>
+    
+    <SecurityPermission description="Permission for Production Material Receipt Acknowledgement" permissionId="PRO_RECEIPT_AKNOWL"/>
+    <SecurityGroup description="Permission for Production Material Receipt Acknowledgement" groupId="PRO_RECEIPT_AKNOWL"/>
+    <SecurityGroupPermission groupId="PRO_RECEIPT_AKNOWL" permissionId="PRO_RECEIPT_AKNOWL" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_RECEIPT_AKNOWL"/>
+    
 </entity-engine-xml>
