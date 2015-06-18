@@ -669,25 +669,22 @@ purchaseSumInvDetaildMap=[:];
 				Debug.logWarning(e, module);
 			}
 		}
-		//Purchase Inter Unit Transfer
-		purchaseInterUnitStTrMap=[:];
-		purchaseInterUnitStTrMap["DR"]=BigDecimal.ZERO;
-		purchaseInterUnitStTrMap["CR"]=BigDecimal.ZERO;
-		purchaseInterUnitStTrMap["total"]=BigDecimal.ZERO;
 		
+		//INTER UNIT PURCHASE DEPO
+		purchaseUnionWsdMap=[:];
+		purchaseUnionWsdMap["DR"]=BigDecimal.ZERO;
+		purchaseUnionWsdMap["CR"]=BigDecimal.ZERO;
+		purchaseUnionWsdMap["total"]=BigDecimal.ZERO;
+		issueDeptInvRoleList=[];
 		
 		try {
-			//filtering OUT KMF DEPO (S943)
 			exprList.clear();
 			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
 			exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-			exprList.add(EntityCondition.makeCondition("invoiceRolePartyId",EntityOperator.NOT_EQUAL, "S943"));
+			exprList.add(EntityCondition.makeCondition("invoiceRolePartyId",EntityOperator.EQUALS, "S943"));
 			exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId",EntityOperator.EQUALS, "ISSUE_TO_DEPT"));
-			/*exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.NOT_EQUAL, null),EntityOperator.OR,
-				EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT")));
-			*/
 			conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 			issueDeptRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
 			issueDeptInvRoleList = EntityUtil.getFieldListFromEntityList(issueDeptRoleList, "invoiceId", true);
@@ -703,12 +700,161 @@ purchaseSumInvDetaildMap=[:];
 			}
 			if (UtilValidate.isNotEmpty(issueDeptInvRoleList)) {
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, issueDeptInvRoleList));
+			}else{
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, null));
 			}
 			/*conditionList.add(EntityCondition.makeCondition("cstPercent", EntityOperator.NOT_EQUAL,null));
 			conditionList.add(EntityCondition.makeCondition("cstAmount", EntityOperator.NOT_EQUAL,null));
 			*/
 			if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
 				
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, otherPurchaseVatProducts));
+			}
+			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<String> orderBy = UtilMisc.toList("invoiceDate","invoiceId","partyId");
+			invoiceItemsIter = delegator.find("InvoiceAndItem", condition, null, null, orderBy, null);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+		purchaseUnionProdCatMap=[:];
+		purchaseUnionProdCatMap["discount"]=BigDecimal.ZERO;
+		purchaseUnionInvList=[];
+		invoiceItemsIter.each{invoiceItem->
+			//if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
+				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
+				//preparing Another Map here for Category
+				productId=invoiceItem.productId;
+				innerItemMap=[:];
+				innerItemMap["invoiceDate"]=invoiceItem.invoiceDate;
+				innerItemMap["invoiceId"]=invoiceItem.invoiceId;
+				innerItemMap["partyId"]=invoiceItem.partyIdFrom;
+				innerItemMap["productId"]=invoiceItem.productId;
+				innerItemMap["tinNumber"]="";
+				innerItemMap["vchrType"]="Purchase";
+				innerItemMap["crOrDbId"]="D";
+				innerItemMap["invTotalVal"]=invTotalVal;
+				innerItemMap["taxAmount"]=0;
+				purchaseUnionInvList.addAll(innerItemMap);
+				// get category
+				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
+					prodCategoryId=productCatMap.get(productId);
+					prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+					if(UtilValidate.isEmpty(purchaseUnionProdCatMap[prodPrimaryCategoryId])){
+						innerTaxCatMap=[:];
+						innerTaxCatMap["totalValue"]=invTotalVal;
+						innerTaxCatMap["taxAmount"]=0;
+						invoiceList=[];
+						invoiceList.addAll(innerItemMap);
+						innerTaxCatMap["invoiceList"]=invoiceList;
+						
+						//inside category ProductWise starts
+						productMap=[:];
+						if(UtilValidate.isEmpty(productMap[prodCategoryId])){
+							innerProdMap=[:];
+							innerProdMap["totalValue"]=invTotalVal;
+							innerProdMap["taxAmount"]=0;
+							prodInvItemList=[];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							productMap[prodCategoryId]=innerProdMap;
+						}
+						innerTaxCatMap["productDetailMap"]=productMap;
+						
+						purchaseUnionProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+					}else if(UtilValidate.isNotEmpty(purchaseUnionProdCatMap[prodPrimaryCategoryId])){
+						Map innerTaxCatMap=purchaseUnionProdCatMap[prodPrimaryCategoryId];
+						innerTaxCatMap["totalValue"]+=invTotalVal;
+						innerTaxCatMap["taxAmount"]+=0;
+						invoiceList=innerTaxCatMap["invoiceList"];
+						invoiceList.addAll(innerItemMap);
+						innerTaxCatMap["invoiceList"]=invoiceList;
+						//update proddetailsMap
+						updateProductMap=innerTaxCatMap["productDetailMap"];
+						if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
+							innerProdMap=[:];
+							innerProdMap["totalValue"]=invTotalVal;
+							innerProdMap["taxAmount"]=0;
+							prodInvItemList=[];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							updateProductMap[prodCategoryId]=innerProdMap;
+						}else{
+						innerProdMap=updateProductMap[prodCategoryId];
+						innerProdMap["totalValue"]+=invTotalVal;
+						innerProdMap["taxAmount"]+=0;
+						prodInvItemList=innerProdMap["prodInvItemList"];
+						prodInvItemList.addAll(innerItemMap);
+						innerProdMap["prodInvItemList"]=prodInvItemList;
+						updateProductMap[prodCategoryId]=innerProdMap;
+						}
+						innerTaxCatMap["productDetailMap"]=updateProductMap;
+					   //productWise update ends
+						purchaseUnionProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
+					}
+				}
+				//category ends here
+				purchaseUnionWsdMap["DR"]+=invTotalVal;
+				purchaseUnionWsdMap["total"]+=invTotalVal;
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
+			//}
+			//Debug.log("=invoiceItem=="+invoiceItem);
+		}
+		purchaseSumInvDetaildMap["Purchase-InterUnitStkTransfer-Depo"]=purchaseUnionInvList;
+		purchaseSumCatDetaildMap["Purchase-InterUnitStkTransfer-Depo"]=purchaseUnionProdCatMap;
+		prchaseCategorySummeryMap["Purchase-InterUnitStkTransfer-Depo"]=purchaseUnionWsdMap;
+		if (invoiceItemsIter != null) {
+			try {
+				invoiceItemsIter.close();
+			} catch (GenericEntityException e) {
+				Debug.logWarning(e, module);
+			}
+		}
+		
+		//Purchase Inter Unit Transfer
+		purchaseInterUnitStTrMap=[:];
+		purchaseInterUnitStTrMap["DR"]=BigDecimal.ZERO;
+		purchaseInterUnitStTrMap["CR"]=BigDecimal.ZERO;
+		purchaseInterUnitStTrMap["total"]=BigDecimal.ZERO;
+		
+		
+		try {
+			//filtering OUT KMF DEPO (S943)
+			/*exprList.clear();
+			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+			exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			exprList.add(EntityCondition.makeCondition("invoiceRolePartyId",EntityOperator.NOT_EQUAL, "S943"));
+			exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+			exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+			//exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId",EntityOperator.NOT_EQUAL, null));
+			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.NOT_EQUAL, null),EntityOperator.OR,
+				EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT")));
+			
+			conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+			issueDeptRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
+			issueDeptAllInvRoleList = EntityUtil.getFieldListFromEntityList(issueDeptRoleList, "invoiceId", true);*/
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_EQUAL, null));//want to skip other than product items
+			//conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN, dieselAndFurnceProdList));//want to skip other than product items
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
+			if (UtilValidate.isNotEmpty(kmfUnitPartyIdsList)) {
+				conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, kmfUnitPartyIdsList));
+			}
+			/*if (UtilValidate.isNotEmpty(issueDeptAllInvRoleList)) {
+				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, issueDeptAllInvRoleList));
+			}*/
+			if (UtilValidate.isNotEmpty(issueDeptInvRoleList)) {
+				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN, issueDeptInvRoleList));
+			}
+			/*conditionList.add(EntityCondition.makeCondition("cstPercent", EntityOperator.NOT_EQUAL,null));
+			conditionList.add(EntityCondition.makeCondition("cstAmount", EntityOperator.NOT_EQUAL,null));
+			*/
+			if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
 			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, otherPurchaseVatProducts));
 			}
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
@@ -939,149 +1085,7 @@ purchaseSumInvDetaildMap=[:];
 				Debug.logWarning(e, module);
 			}
 		}*/
-		//INTER UNIT PURCHASE DEPO 
-		purchaseUnionWsdMap=[:];
-		purchaseUnionWsdMap["DR"]=BigDecimal.ZERO;
-		purchaseUnionWsdMap["CR"]=BigDecimal.ZERO;
-		purchaseUnionWsdMap["total"]=BigDecimal.ZERO;
 		
-		
-		try {
-			exprList.clear();
-			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
-			exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-			exprList.add(EntityCondition.makeCondition("invoiceRolePartyId",EntityOperator.EQUALS, "S943"));
-			exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-			exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-			exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId",EntityOperator.EQUALS, "ISSUE_TO_DEPT"));
-			conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-			issueDeptRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
-			issueDeptInvRoleList = EntityUtil.getFieldListFromEntityList(issueDeptRoleList, "invoiceId", true);
-			
-			List conditionList = FastList.newInstance();
-			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_EQUAL, null));//want to skip other than product items
-			//conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN, dieselAndFurnceProdList));//want to skip other than product items
-			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
-			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
-			if (UtilValidate.isNotEmpty(kmfUnitPartyIdsList)) {
-				conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, kmfUnitPartyIdsList));
-			}
-			if (UtilValidate.isNotEmpty(issueDeptInvRoleList)) {
-				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, issueDeptInvRoleList));
-			}else{
-			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, null));
-			}
-			/*conditionList.add(EntityCondition.makeCondition("cstPercent", EntityOperator.NOT_EQUAL,null));
-			conditionList.add(EntityCondition.makeCondition("cstAmount", EntityOperator.NOT_EQUAL,null));
-			*/
-			if (UtilValidate.isNotEmpty(otherPurchaseVatProducts)) {
-				
-			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, otherPurchaseVatProducts));
-			}
-			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<String> orderBy = UtilMisc.toList("invoiceDate","invoiceId","partyId");
-			invoiceItemsIter = delegator.find("InvoiceAndItem", condition, null, null, orderBy, null);
-		} catch (GenericEntityException e) {
-			Debug.logError(e, module);
-		}
-		purchaseUnionProdCatMap=[:];
-		purchaseUnionProdCatMap["discount"]=BigDecimal.ZERO;
-		purchaseUnionInvList=[];
-		invoiceItemsIter.each{invoiceItem->
-			//if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
-				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
-				//preparing Another Map here for Category
-				productId=invoiceItem.productId;
-				innerItemMap=[:];
-				innerItemMap["invoiceDate"]=invoiceItem.invoiceDate;
-				innerItemMap["invoiceId"]=invoiceItem.invoiceId;
-				innerItemMap["partyId"]=invoiceItem.partyIdFrom;
-				innerItemMap["productId"]=invoiceItem.productId;
-				innerItemMap["tinNumber"]="";
-				innerItemMap["vchrType"]="Purchase";
-				innerItemMap["crOrDbId"]="D";
-				innerItemMap["invTotalVal"]=invTotalVal;
-				innerItemMap["taxAmount"]=0;
-				purchaseUnionInvList.addAll(innerItemMap);
-				// get category
-				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
-					prodCategoryId=productCatMap.get(productId);
-					prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
-					if(UtilValidate.isEmpty(purchaseUnionProdCatMap[prodPrimaryCategoryId])){
-						innerTaxCatMap=[:];
-						innerTaxCatMap["totalValue"]=invTotalVal;
-						innerTaxCatMap["taxAmount"]=0;
-						invoiceList=[];
-						invoiceList.addAll(innerItemMap);
-						innerTaxCatMap["invoiceList"]=invoiceList;
-						
-						//inside category ProductWise starts
-						productMap=[:];
-						if(UtilValidate.isEmpty(productMap[prodCategoryId])){
-							innerProdMap=[:];
-							innerProdMap["totalValue"]=invTotalVal;
-							innerProdMap["taxAmount"]=0;
-							prodInvItemList=[];
-							prodInvItemList.addAll(innerItemMap);
-							innerProdMap["prodInvItemList"]=prodInvItemList;
-							productMap[prodCategoryId]=innerProdMap;
-						}
-						innerTaxCatMap["productDetailMap"]=productMap;
-						
-						purchaseUnionProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
-					}else if(UtilValidate.isNotEmpty(purchaseUnionProdCatMap[prodPrimaryCategoryId])){
-						Map innerTaxCatMap=purchaseUnionProdCatMap[prodPrimaryCategoryId];
-						innerTaxCatMap["totalValue"]+=invTotalVal;
-						innerTaxCatMap["taxAmount"]+=0;
-						invoiceList=innerTaxCatMap["invoiceList"];
-						invoiceList.addAll(innerItemMap);
-						innerTaxCatMap["invoiceList"]=invoiceList;
-						//update proddetailsMap
-						updateProductMap=innerTaxCatMap["productDetailMap"];
-						if(UtilValidate.isEmpty(updateProductMap[prodCategoryId])){
-							innerProdMap=[:];
-							innerProdMap["totalValue"]=invTotalVal;
-							innerProdMap["taxAmount"]=0;
-							prodInvItemList=[];
-							prodInvItemList.addAll(innerItemMap);
-							innerProdMap["prodInvItemList"]=prodInvItemList;
-							updateProductMap[prodCategoryId]=innerProdMap;
-						}else{
-						innerProdMap=updateProductMap[prodCategoryId];
-						innerProdMap["totalValue"]+=invTotalVal;
-						innerProdMap["taxAmount"]+=0;
-						prodInvItemList=innerProdMap["prodInvItemList"];
-						prodInvItemList.addAll(innerItemMap);
-						innerProdMap["prodInvItemList"]=prodInvItemList;
-						updateProductMap[prodCategoryId]=innerProdMap;
-						}
-						innerTaxCatMap["productDetailMap"]=updateProductMap;
-					   //productWise update ends
-						purchaseUnionProdCatMap[prodPrimaryCategoryId]=innerTaxCatMap;
-					}
-				}
-				//category ends here
-				purchaseUnionWsdMap["DR"]+=invTotalVal;
-				purchaseUnionWsdMap["total"]+=invTotalVal;
-				
-				purchaseGrandTotMap["DR"]+=invTotalVal;
-				purchaseGrandTotMap["total"]+=invTotalVal;
-			//}
-			//Debug.log("=invoiceItem=="+invoiceItem);
-		}
-		purchaseSumInvDetaildMap["Purchase-InterUnitStkTransfer-Depo"]=purchaseUnionInvList;
-		purchaseSumCatDetaildMap["Purchase-InterUnitStkTransfer-Depo"]=purchaseUnionProdCatMap;
-		prchaseCategorySummeryMap["Purchase-InterUnitStkTransfer-Depo"]=purchaseUnionWsdMap;
-		if (invoiceItemsIter != null) {
-			try {
-				invoiceItemsIter.close();
-			} catch (GenericEntityException e) {
-				Debug.logWarning(e, module);
-			}
-		}
 		//Vat classfication
 		purchaseAt14pt5Map=[:];
 		purchaseAt14pt5Map["DR"]=BigDecimal.ZERO;
