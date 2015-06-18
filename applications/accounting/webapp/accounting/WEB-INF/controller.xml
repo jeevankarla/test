@@ -2870,7 +2870,6 @@ under the License.
     <request-map uri="LookupTaxAuthPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthPartyName"/></request-map>
     <request-map uri="LookupInternalOrganization"><security auth="true" https="true"/><response name="success" type="view" value="LookupInternalOrganization"/></request-map>
     <request-map uri="LookupEmployeeName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
-	<view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
 
     <request-map uri="LookupPayment" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
@@ -3967,6 +3966,8 @@ under the License.
         <response name="success" type="view" value="PortalPaymentOverview"/>
     </request-map>
     
+    
+    <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
     
     <view-map name="BankGuaranteeReceipt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankGuaranteeReceipt"/>
