@@ -1342,6 +1342,7 @@ public class MaterialRequestServices {
 				condList.clear();
 				EntityCondition condition=null;
 				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, fromPartyId));
+				condList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT"));
 				condList.add(EntityCondition.makeCondition("enableDeptInvCheck", EntityOperator.EQUALS, "Y"));
 				condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
 				        GenericValue facilityCheckParty= null;

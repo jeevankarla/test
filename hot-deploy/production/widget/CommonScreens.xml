@@ -46,4 +46,28 @@
             </widgets>
         </section>
     </screen>
+    <screen name="productionDashboardMain">
+    	<section>
+		     <actions>
+		     	<set field="headerItem" value="Dashboard"/>
+		     	<set field="tabButtonItem1" value="productionDashboard"/>
+		     	<set field="tabButtonItem2" value="inventoryCheck"/>
+		     	<set field="titleProperty" value="Dashboard"/>
+		     	<entity-condition list="facilityList" entity-name="Facility">
+		     		<condition-expr field-name="facilityTypeId" operator="equals" value="PLANT"/>
+		     	</entity-condition>
+		     	<script location="component://production/webapp/production/WEB-INF/actions/SiloInventoryCharts.groovy"/>
+		     </actions>
+		     <widgets>
+	     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+	     		 	<decorator-section name="body">
+	     		 		<include-menu name="AnalyticsMenusTabBar" location="component://production/widget/ProductionMenus.xml"/>
+		     		 	<screenlet title="Inventory Charts">
+		     		 		<platform-specific><html><html-template location="component://production/webapp/production/analytics/ProductionInventoryCharts.ftl"/></html></platform-specific>
+		     		 	</screenlet>	  
+	     		 	</decorator-section>
+	     		 </decorator-screen>
+	     	</widgets>
+		</section>
+    </screen>
 </screens>
