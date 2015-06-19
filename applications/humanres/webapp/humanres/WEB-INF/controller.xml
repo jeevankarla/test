@@ -2467,7 +2467,6 @@ under the License.
         </response> 
     </request-map>
     
-    
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>

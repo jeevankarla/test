@@ -310,7 +310,7 @@ function setUpItemList(emptyData) {
 		    <tr><td></td><td></td></tr>
 		    <tr><td></td><td></td></tr>
 		    <tr><td>  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Save" onclick="javascript:processIndentEntry('EmpSalaryDisbursement','<@ofbizUrl>updateExcludeSalaryDisbursement</@ofbizUrl>');" /></td>
-		    <td><input type="button" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('EmpSalaryDisbursement','<@ofbizUrl>ExcludeSalaryDisbursement</@ofbizUrl>');"/>  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</td></tr>
+		    <td><input type="button" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:cleanUpGrid('EmpSalaryDisbursement');"/>  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</td></tr>
 		 </table>
 	</div>    
 	

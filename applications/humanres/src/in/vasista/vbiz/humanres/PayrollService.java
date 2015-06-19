@@ -9589,63 +9589,6 @@ public class PayrollService {
   	   
   	    return result;
   	}
-  	public static Map<String, Object> populatePayrollEmployees(DispatchContext dctx, Map<String, ? extends Object> context){
-  		
-		Delegator delegator = dctx.getDelegator();
-  	    LocalDispatcher dispatcher = dctx.getDispatcher();
-  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
-  	    Locale locale = (Locale) context.get("locale");
-  	    Map result = ServiceUtil.returnSuccess();
-  	    
-  	    String customTimePeriodId = (String)context.get("customTimePeriodId");
-  	    
-  	    List periodBillingIds = FastList.newInstance();
-  	    
-  	    List conditionList = FastList.newInstance();
-		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-		conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PAYROLL_BILL"));
-  	    EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 	
-  	    try{
-  	    	List<GenericValue> periodBilling = delegator.findList("PeriodBilling", condition, null, null, null, false);
-  	    	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBilling, "periodBillingId", true);
-  	    }catch (GenericEntityException e) {
-  			Debug.logError(e, module);
-  			return ServiceUtil.returnError(e.toString());
-  		}
-  	    
-  	    List partyIds = FastList.newInstance();
-  	    conditionList.clear();
-  	    conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN, periodBillingIds));
-  	    conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-  	    EntityCondition payrollHeaderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 	
-	  	try{
-		    List<GenericValue> payrollHeader = delegator.findList("PayrollHeader", payrollHeaderCondition, null, null, null, false);
-		    partyIds = EntityUtil.getFieldListFromEntityList(payrollHeader, "partyIdFrom", true);
-		}catch (GenericEntityException e) {
-			Debug.logError(e, module);
-			return ServiceUtil.returnError(e.toString());
-		}
-  	    
-	  	List payrollEmployeeList = FastList.newInstance();
-	  	for(int j=0; j<partyIds.size();j++){
-			
-			String partyId = (String) partyIds.get(j);
-			String employeeName = PartyHelper.getPartyName(delegator,partyId, false);
-			
-			Map partyMap = FastMap.newInstance();
-			partyMap.put("partyId", partyId);
-			partyMap.put("employeeName", employeeName);
-    		
-    		Map tempMap = FastMap.newInstance();
-    		tempMap.putAll(partyMap);
-    		payrollEmployeeList.add(tempMap);
-		}
-	  	
-	  	result.put("payrollEmployeeList", payrollEmployeeList);
-        return result;
-  	    
-  	}
 
   	public static String updateExcludeSalaryDisbursement(HttpServletRequest request, HttpServletResponse response) {
   		Delegator delegator = (Delegator) request.getAttribute("delegator");

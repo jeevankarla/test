@@ -39,7 +39,7 @@ import org.ofbiz.party.party.PartyHelper;
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN, periodBillingId));
-	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, UtilMisc.toList("1537","1941")));
+	/*conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, UtilMisc.toList("1537","1941")));*/
 	Condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	payrollHeaderList = delegator.findList("PayrollHeader", Condition, null, null, null, false);
 	

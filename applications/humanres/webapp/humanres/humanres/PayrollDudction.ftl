@@ -80,7 +80,7 @@
 		      			<select name="customTimePeriodId" id="customTimePeriodId">
 		      				<option value=''>Select</option>
 					        <#list customTimeList as eachCustomTime>
-					            <option value='${eachCustomTime.customTimePeriodId}'>${eachCustomTime.get("periodName")}</option>
+					            <option value='${eachCustomTime.customTimePeriodId}'>${eachCustomTime.get("periodName")?if_exists}</option>
 					        </#list>
 	      				</select>
 		    		</td>			  	

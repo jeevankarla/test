@@ -2146,19 +2146,16 @@ under the License.
 	        <key-map field-name="productId" rel-field-name="productId"/>
 	  	</relation>
  	</entity>
- 	
  	<entity entity-name="PayrollDeduction"
             package-name="org.ofbiz.humanres"
             title="Payroll Deduction">
       	<field name="employeeId" type="id-ne"></field>
       	<field name="payrollHeaderId" type="id-ne"/>
       	<field name="comments" type="comment"></field>
-      	
       	<field name="createdDate" type="date-time"></field>
 		<field name="createdByUserLogin" type="id-vlong"></field>
         <field name="lastModifiedDate" type="date-time"></field>
         <field name="lastModifiedByUserLogin" type="id-vlong"></field>
-        
         <prim-key field="employeeId"/>
       	<prim-key field="payrollHeaderId"/>
       	<relation type="one" fk-name="PRT"  rel-entity-name="Party">
@@ -2180,10 +2177,5 @@ under the License.
       </view-link>
        
     </view-entity>
- 	
- 	
- 	
- 	
- 	
  	
 </entitymodel>

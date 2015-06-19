@@ -2035,11 +2035,5 @@ under the License.emplpunch
         <attribute name="partyClassificationId" type="String" optional="true" mode="IN" />
         <attribute name="productsPrice" type="Map" optional="true" mode="OUT"/>
     </service>
-    <service name="populatePayrollEmployees"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="populatePayrollEmployees" auth="true" transaction-timeout="5000">
-        <description>MilkCards Create or Update</description>
-        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
-        <attribute name="payrollEmployeeList" mode="OUT" type="List" optional="true"/>
-    </service>
     
 </services>
