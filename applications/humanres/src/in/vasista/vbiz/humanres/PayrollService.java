@@ -9641,7 +9641,7 @@ public class PayrollService {
 	  			
 	  			 List<GenericValue> payrollDeduction = null;
 	             try {
-	            	 payrollDeduction = delegator.findList("PayrollDeduction", pdCondition, null, null, null, false);
+	            	 payrollDeduction = delegator.findList("PayrollRetention", pdCondition, null, null, null, false);
 	             } catch (GenericEntityException e) {
 		         		Debug.logError(e, e.toString(), module);
 				        return "error";
@@ -9663,7 +9663,7 @@ public class PayrollService {
 				         return "error";
 			         }
 	  			 }else{
-			  		 GenericValue newEntity = delegator.makeValue("PayrollDeduction");
+			  		 GenericValue newEntity = delegator.makeValue("PayrollRetention");
 					 if(UtilValidate.isNotEmpty(eachPayrollHeaderId)){
 			        	newEntity.set("payrollHeaderId", eachPayrollHeaderId);
 			         }

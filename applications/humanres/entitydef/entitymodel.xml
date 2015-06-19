@@ -2146,9 +2146,9 @@ under the License.
 	        <key-map field-name="productId" rel-field-name="productId"/>
 	  	</relation>
  	</entity>
- 	<entity entity-name="PayrollDeduction"
+ 	<entity entity-name="PayrollRetention"
             package-name="org.ofbiz.humanres"
-            title="Payroll Deduction">
+            title="Payroll Retention">
       	<field name="employeeId" type="id-ne"></field>
       	<field name="payrollHeaderId" type="id-ne"/>
       	<field name="comments" type="comment"></field>
@@ -2165,14 +2165,14 @@ under the License.
         	<key-map field-name="payrollHeaderId"/>
         </relation>
  	</entity>
- 	<view-entity entity-name="PayrollHeaderAndPayrollDeduction"
+ 	<view-entity entity-name="PayrollHeaderAndPayrollRetention"
       package-name="org.ofbiz.humanres"
-      title="PayrollHeader And PayrollDeduction">
+      title="PayrollHeader And PayrollRetention">
       <member-entity entity-alias="PH" entity-name="PayrollHeader"/>
-      <member-entity entity-alias="PD" entity-name="PayrollDeduction"/>
+      <member-entity entity-alias="PR" entity-name="PayrollRetention"/>
       <alias-all entity-alias="PH"/>
-      <alias-all entity-alias="PD"/>
-      <view-link entity-alias="PD" rel-entity-alias="PH">
+      <alias-all entity-alias="PR"/>
+      <view-link entity-alias="PR" rel-entity-alias="PH">
         <key-map field-name="payrollHeaderId"/>
       </view-link>
        

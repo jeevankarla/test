@@ -127,7 +127,7 @@ periodBillIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "period
 conList = [];
 conList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillIds));
 payrollDeductionCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
-payrollHeaderDeductionList = delegator.findList("PayrollHeaderAndPayrollDeduction", payrollDeductionCond, null, null, null, false);
+payrollHeaderDeductionList = delegator.findList("PayrollHeaderAndPayrollRetention", payrollDeductionCond, null, null, null, false);
 deductPayrollHeaderIdList = [];
 if(payrollHeaderDeductionList){
 	deductPayrollHeaderIdList = EntityUtil.getFieldListFromEntityList(payrollHeaderDeductionList, "payrollHeaderId", true);
