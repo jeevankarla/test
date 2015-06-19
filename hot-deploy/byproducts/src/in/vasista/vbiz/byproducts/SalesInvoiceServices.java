@@ -661,6 +661,7 @@ public class SalesInvoiceServices {
 	    List<String> partyIds = (List<String>) context.get("partyIds");
 	    String categoryType = (String) context.get("categoryType");
 	    String IcpStocktrnsflag =(String) context.get("IcpStocktrnsflag");
+	    String includeBellarySales=(String) context.get("includeBellarySales");
 		Map<String, String>  shipInvoicePartyMap = FastMap.newInstance();
 
 		//List<String> shipmentIds = (List<String>) context.get("shipmentIds");
@@ -850,7 +851,11 @@ public class SalesInvoiceServices {
 				conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.NOT_EQUAL, "ICP_TRANS_CHANNEL"));
 			}
 			if(UtilValidate.isNotEmpty(categoryType) && (categoryType.equals("ICE_CREAM_NANDINI")|| categoryType.equals("ICP_NANDINI_CHANNEL"))){
-				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
+				if(UtilValidate.isNotEmpty(includeBellarySales) && (includeBellarySales.equals("Y"))){
+				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("ICP_NANDINI_CHANNEL","ICP_BELLARY_CHANNEL")));	
+				}else{
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
+				}
 			}
 			if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICP_AMUL_CHANNEL")){
 				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_AMUL_CHANNEL"));
