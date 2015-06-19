@@ -63,7 +63,7 @@ if (productionRunId) {
 	}
 }
 
-productionDetails = ProductionServices.getProductionDetails(dctx, [ workEffortId: productionRunId, userLogin: userLogin,]);
+productionDetails = ProductionServices.getProductionRunDetails(dctx, [ workEffortId: productionRunId, userLogin: userLogin,]);
 
 issuedProductsList=productionDetails.get("issuedProductsList");
 declareProductsList=productionDetails.get("declareProductsList");

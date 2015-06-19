@@ -601,6 +601,7 @@ under the License.
                                         <include-form name="findProductionRun" location="component://production/widget/ProductionRunNgForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    	<platform-specific><html><html-template location="component://production/webapp/production/production/ProductQualityAnalysis.ftl"/></html></platform-specific>
                                         <include-form name="listFindProductionRun" location="component://production/widget/ProductionRunNgForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
