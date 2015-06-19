@@ -10,6 +10,7 @@ import org.ofbiz.entity.condition.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.ofbiz.entity.util.EntityUtil;
 
 facilityId = parameters.facilityId;
 productId = parameters.productId;
@@ -25,8 +26,29 @@ if(facilityId){
 	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "IXF_EN_ROUTE"));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	incommingTransfer = delegator.findList("InventoryTransferGroupAndMemberSum", condition, null, null, null, false);
+	incommingTransferDetails = delegator.findList("InventoryTransferGroupAndMemberSum", condition, null, null, null, false);
 	
+	if(incommingTransferDetails){
+		incommingTransferDetails.each {eachIncommingTransfer->
+			inventoryTransMap=[:];
+			inventoryTransMap.put("transferGroupId", eachIncommingTransfer.transferGroupId);
+			inventoryTransMap.put("xferQtySum", eachIncommingTransfer.xferQtySum);
+			inventoryTransMap.put("fromFacilityId", eachIncommingTransfer.fromFacilityId);
+			inventoryTransMap.put("toFacilityId", eachIncommingTransfer.toFacilityId);
+			inventoryTransMap.put("statusId", eachIncommingTransfer.statusId);
+			inventoryTransMap.put("productId", eachIncommingTransfer.productId);
+			productQcTest = delegator.findList("ProductQcTest", EntityCondition.makeCondition([transferGroupId : eachIncommingTransfer.transferGroupId]), null, null, null, false);
+			   if(UtilValidate.isNotEmpty(productQcTest)){
+				 productQcTest = EntityUtil.getFirst(productQcTest);
+				 statusId=productQcTest.statusId;
+				 inventoryTransMap.put("qcStatusId",statusId);
+			}else{
+				inventoryTransMap.put("qcStatusId","QC_NOT_ACCEPT");
+			}
+			incommingTransfer.add(inventoryTransMap);
+		}
+	}
+
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("fromFacilityId", EntityOperator.EQUALS, facilityId));
 	if(productId){

@@ -153,6 +153,13 @@
         </response>
     </request-map>
     
+    <request-map uri="CreateProductionRunQcDetails">
+	    <security https="true" auth="true"/>
+	    <event type="service" path=""  invoke="createProductQcDetails" global-transaction="true"/>
+	    <response name="success" type="request-redirect-noparam" value="FindNgProductionRun">
+        </response>
+    </request-map>
+    
     <request-map uri="productionDashboardMain">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="ProductionDashboardMain"/>
@@ -173,6 +180,12 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="InOutStockXfers"/>
         <response name="error" type="view" value="InOutStockXfers"/>         
+    </request-map>
+     <request-map uri="CreateIncomingInvTransQcDetails">
+	    <security https="true" auth="true"/>
+	    <event type="service" path=""  invoke="createProductQcDetails" global-transaction="true"/>
+	    <response name="success" type="request-redirect-noparam" value="InOutStockXfers">
+        </response>
     </request-map>
     <request-map uri="findStockXfer">
         <security https="true" auth="true"/>                        

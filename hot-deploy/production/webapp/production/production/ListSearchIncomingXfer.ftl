@@ -94,6 +94,7 @@ under the License.
           <td>Product</td>
           <td>Status</td>
           <td>Quantity</td>
+          <td>QC Details</td>
           <td align='center'>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllTransfers" name="checkAllTransfers" onchange="javascript:toggleTransferGroupId(this);"/></td>
         </tr>
       </thead>
@@ -112,7 +113,12 @@ under the License.
               	<td>${(product.productName)?if_exists} [${eachXfer.productId}]</td>
               	<td>${status.description?if_exists}</td>
               	<td>${eachXfer.xferQtySum?if_exists}</td>
+              	<#if eachXfer.qcStatusId=="QC_NOT_ACCEPT"> 
+              	<td><input type="button" name="QCDetails" onclick="javascript:showQcForm('${eachXfer.productId}', 'CreateIncomingInvTransQcDetails', 'transferGroupId', '${eachXfer.transferGroupId}');" style="buttontext" value="QCDetails" /></td>
+              	<#else> 
+              	<td>&#160;</td>
               	<td align='center'><input type="checkbox" id="transferGroupIds" name="transferGroupIds" value="${xfer.transferGroupId}"/></td>
+              	</#if>
             </tr>
             <#assign alt_row = !alt_row>
         </#list>

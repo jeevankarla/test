@@ -97,6 +97,11 @@ under the License.
                 <field-map field-name="orderBy" value="-estimatedStartDate"/>
             </service>
         </actions>
+       <row-actions>
+            <set field="workEffortId" from-field="workEffortId"/>
+            <script location="component://production/webapp/production/WEB-INF/actions/qcCheckForProductionRun.groovy"/>
+            <set field="qcCheck" default-value="${context.qcCheck}"/>
+        </row-actions> 
         <field name="workEffortId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
             <hyperlink target="ShowNgProductionRun" description="${workEffortId}" also-hidden="false">
                 <parameter param-name="productionRunId" from-field="workEffortId"/>
@@ -113,6 +118,9 @@ under the License.
         <field name="actualCompletionDate" title="${uiLabelMap.ManufacturingActualCompletionDate}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="facilityId" title="Plant"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
+             <field use-when="&quot;${currentStatusId}&quot;.equals(&quot;PRUN_COMPLETED&quot;) &amp;&amp; &quot;${qcCheck}&quot;.equals(&quot;INCOMPLETE&quot;)" name="QC Details" widget-style="buttontext">
+           <hyperlink  target-type="plain" description="QC Details"  target="javascript: showQcForm('${productId}', 'CreateProductionRunQcDetails', 'workEffortId', '${workEffortId}');" ></hyperlink>
+        </field>
         <field use-when="&quot;${currentStatusId}&quot;.equals(&quot;PRUN_COMPLETED&quot;)" name="Report" widget-style="buttontext">
            <hyperlink target="productionRunCompletedReport.pdf" description="Report" target-window="_blank">
                 <parameter param-name="productionRunId" from-field="workEffortId"/>
