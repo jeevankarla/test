@@ -57,7 +57,7 @@ context.thruDate = thruDateTime;
 //totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 
 
-salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd, categoryType:categoryType]);
+salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isQuantityLtrs:true,includeBellarySales:"Y",fromDate:dayBegin, thruDate:dayEnd, categoryType:categoryType]);
 prodTotals=salesInvoiceTotals.get("productTotals");
 productCategoryMap = [:];
 	if(UtilValidate.isNotEmpty(prodTotals)){
