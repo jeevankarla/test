@@ -340,6 +340,29 @@
             </widgets>
         </section>
     </screen>
+     <screen name="PTCReports">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="PTC Reports"/>	
+        		 <set field="tabButtonItem" value="MilkReceiptReports"/> 
+        		 <set field="tabButtonItem3" value="PTCReports"/>
+        		 <set field="reportFrequencyFlag" value="PTCReports"/>
+        		 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>
+                	<order-by field-name="-fromDate"/>
+                </entity-condition> 
+            	 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkreceiptReportsTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/ptcReports.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
      <screen name="FindMilkReceiptsBilling">
         <section>
         	<actions>

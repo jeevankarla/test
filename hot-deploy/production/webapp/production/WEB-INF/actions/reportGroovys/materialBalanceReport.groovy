@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import in.vasista.vbiz.production.ProductionServices;
+import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import org.ofbiz.party.party.PartyHelper;
 
 fromDate=parameters.mateBalanceFromDate;
@@ -64,8 +65,8 @@ if(UtilValidate.isNotEmpty(siloIds)){
 			openingQty = invCountMapData.get("quantityKgs");
 			openingFatKg=invCountMapData.get("kgFat");
 			openingSnfKg=invCountMapData.get("kgSnf");
-			openingFatPers=invCountMapData.get("fat");
-			openingSnfPers=invCountMapData.get("snf");
+			openingFatPers = ProcurementNetworkServices.calculateFatOrSnf(openingFatKg, openingQty);
+			openingSnfPers = ProcurementNetworkServices.calculateFatOrSnf(openingSnfKg, openingQty);
 			if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
 		        facilityNames = delegator.findOne("Facility",["facilityId":eachSiloId],false);
 		        siloName=facilityNames.get("facilityName");
@@ -97,6 +98,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 
 // CONVERSION REPORT======================>
 conditionList =[];
+conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS,"CONVERSION"));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["MXF_RECD","MXF_APPROVED"]));
@@ -124,16 +126,24 @@ if(UtilValidate.isNotEmpty(unions)){
 		BigDecimal conversionFatPers = BigDecimal.ZERO;
 		BigDecimal conversionSnfPers = BigDecimal.ZERO;
 		
-		unionList=EntityUtil.filterByCondition(MilkTransferList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, union));
+	    conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS,"CONVERSION"));
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, union));
+		EntityCondition convCondition = EntityCondition.makeCondition(conditionList);
+		unionList=EntityUtil.filterByCondition(MilkTransferList, convCondition);
 		if(UtilValidate.isNotEmpty(unionList)){
 			unionList.each {unionData->
 				if(UtilValidate.isNotEmpty(unionData)){
 					// && unionData.get("receivedQuantity") >0
+					BigDecimal fatPercentConv = BigDecimal.ZERO;
+					BigDecimal snfPercentConv = BigDecimal.ZERO;
 				conversionQty=conversionQty+unionData.receivedQuantity;
 				conversionFatKg=conversionFatKg+unionData.receivedKgFat;
 				conversionSnfKg=conversionSnfKg+unionData.receivedKgSnf;
-				conversionFatPers=conversionFatPers+unionData.receivedFat;
-				conversionSnfPers=conversionSnfPers+unionData.receivedSnf;
+				fatPercentConv = ProcurementNetworkServices.calculateFatOrSnf(unionData.receivedKgFat, unionData.receivedQuantity);
+				fatPercentConv = ProcurementNetworkServices.calculateFatOrSnf(unionData.receivedKgSnf, unionData.receivedQuantity);
+				conversionFatPers=conversionFatPers+fatPercentConv;
+				conversionSnfPers=conversionSnfPers+fatPercentConv;
 				}
 			}
 			unionName =  PartyHelper.getPartyName(delegator, union, false);
@@ -183,8 +193,11 @@ if(UtilValidate.isNotEmpty(unionsIDR)){
 		BigDecimal idrSnfKg = BigDecimal.ZERO;
 		BigDecimal idrFatPers = BigDecimal.ZERO;
 		BigDecimal idrSnfPers = BigDecimal.ZERO;
-		
-		unionIDRList=EntityUtil.filterByCondition(MilkTransferList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, unionIDR));
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.NOT_EQUAL,"CONVERSION"));
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, unionIDR));
+		EntityCondition condIDR = EntityCondition.makeCondition(conditionList);
+		unionIDRList=EntityUtil.filterByCondition(MilkTransferList, condIDR);
 		if(UtilValidate.isNotEmpty(unionIDRList)){
 			unionIDRList.each {unionIDRData->
 				if(UtilValidate.isNotEmpty(unionIDRData)){
@@ -192,8 +205,12 @@ if(UtilValidate.isNotEmpty(unionsIDR)){
 				idrQty=idrQty+unionIDRData.receivedQuantity;
 				idrFatKg=idrFatKg+unionIDRData.receivedKgFat;
 				idrSnfKg=idrSnfKg+unionIDRData.receivedKgSnf;
-				idrFatPers=idrFatPers+unionIDRData.receivedFat;
-				idrSnfPers=idrSnfPers+unionIDRData.receivedSnf;
+				BigDecimal fatPercentPur = BigDecimal.ZERO;
+				BigDecimal snfPercentPur = BigDecimal.ZERO;
+			    fatPercentPur = ProcurementNetworkServices.calculateFatOrSnf(unionIDRData.receivedKgFat, unionIDRData.receivedQuantity);
+			    snfPercentPur = ProcurementNetworkServices.calculateFatOrSnf(unionIDRData.receivedKgSnf, unionIDRData.receivedQuantity);
+			    idrFatPers=idrFatPers+fatPercentPur;
+			    idrSnfPers=idrSnfPers+snfPercentPur;
 				}
 			}
 			unionIDRName =  PartyHelper.getPartyName(delegator, unionIDR, false);

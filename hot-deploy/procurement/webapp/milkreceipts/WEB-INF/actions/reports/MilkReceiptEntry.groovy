@@ -150,7 +150,7 @@ vehCondList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS
 vehCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate)));
 EntityCondition vehCondition = EntityCondition.makeCondition(vehCondList);
 List vehicleRoleList = delegator.findList("VehicleRole",vehCondition, null, null, null, true);
-
+context.put("vehicleRoleList",vehicleRoleList);
 Set vehicleIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(vehicleRoleList, "vehicleId", false));
 List<GenericValue> vehiclesList = delegator.findList("Vehicle",EntityCondition.makeCondition("vehicleId",EntityOperator.IN,vehicleIdsSet), null, null, null, true);
 

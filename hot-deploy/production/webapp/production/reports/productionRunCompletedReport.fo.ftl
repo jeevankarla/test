@@ -64,7 +64,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
               <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt" >Qty To Produce</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">&#160;&#160;&#160;: ${productionRunData.get("quantityToProduce")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt"></fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">Produced Qty</fo:block></fo:table-cell>       		
+        <#--> <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">Produced Qty</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">&#160;&#160;&#160;: ${productionRunData.get("quantityProduced")?if_exists}</fo:block></fo:table-cell>       		
              </fo:table-row>
               <fo:table-row>
@@ -73,6 +73,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt"></fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt"> Rejected Qty</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">&#160;&#160;&#160;: ${productionRunData.get("quantityRejected")?if_exists}</fo:block></fo:table-cell>       		
+           -->
               </fo:table-row>
 	          <fo:table-row>
 	          <fo:table-cell ><fo:block text-align="left" font-size="5pt">&#160;&#160;</fo:block></fo:table-cell>       		
@@ -179,7 +180,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
             <fo:table-column column-width="80pt"/>
            	<fo:table-body>
            <#list returnProductsList as returnProducts>
-           <#assign productId= returnProducts.declareProdId?if_exists >
+           <#assign productId= returnProducts.returnProdId?if_exists >
 		   <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
              <fo:table-row >
               <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt">${returnProducts.returnId?if_exists}</fo:block></fo:table-cell>       		
