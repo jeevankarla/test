@@ -108,10 +108,10 @@
 			    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				        
 				        <tr>
-				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Production Name</div></td>
+				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Production Name : </div></td>
 					      	<#if productionRunData?exists && productionRunData.workEffortName?has_content>
 			      				<input type="hidden" name="workEffortName" id="workEffortName" value="${productionRunData.workEffortName}">
-				      			<td align='left' style="color:#706B6B;text-align:left;"><b>:</b>
+				      			<td align='left' style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${productionRun.workEffortName?if_exists}</div>
 				      			</td>
 				      		<#else>
@@ -120,11 +120,11 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Plant</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Plant : </div></td>
 					      	<#if productionRunData?exists &&  productionRunData.facilityId?has_content>
 			      				<#assign facility = delegator.findOne("Facility", {"facilityId" : productionRunData.facilityId}, false)>
 			      				<input type="hidden" name="facilityId" id="facilityId" value="${productionRunData.facilityId}">
-				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${facility.facilityName?if_exists} [${productionRun.facilityId}]</div>
 				      			</td>
 				      		<#else>
@@ -142,11 +142,11 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Routing</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Routing : </div></td>
 					      	<#if productionRunData?exists &&  productionRunData.routingTaskId?has_content>
 			      				<input type="hidden" name="routingId" id="routingId"  value="${productionRunData.routingTaskId?if_exists}"  >
 			      				<#assign routingTask = delegator.findOne("WorkEffort", {"workEffortId" : productionRunData.routingTaskId}, false)>
-				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${routingTask.workEffortName?if_exists} [${productionRunData.routingTaskId?if_exists}]</div>
 				      			</td>
 				      		<#else>
@@ -162,11 +162,11 @@
 					    </tr>
 					    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 					    <tr>
-				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Product</div></td>
+				        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Product : </div></td>
 					      	<#if productionRunData?exists &&  productionRunData.productId?has_content>
 					      		<#assign product = delegator.findOne("Product", {"productId" : productionRunData.productId}, false)>
 			      				<input type="hidden" name="productId" id="productId" value="${productionRunData.productId}">
-				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'> ${product.productName?if_exists} [${productionRunData.productId}]</div>
 				      			</td>
 				      		<#else>
@@ -179,10 +179,10 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce<span style="font-weight:bold"  id ="uomDescription"></span></div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Qty to Produce <span style="font-weight:bold"  id ="uomDescription"></span> </div></td>
 					      	<#if productionRunData?exists &&  productionRunData.quantity?has_content>
 			      				<input type="hidden" name="pRQuantity" id="pRQuantity" value="${productionRunData.quantity}">
-				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${productionRunData.quantity?if_exists}</div>
 				      			</td>
 				      		<#else>
@@ -191,10 +191,10 @@
 					      	
 					      	<td> &nbsp;</td>
 					      	
-					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Start Date</div></td>
+					      	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Start Date :</div></td>
 					      	<#if productionRunData?exists &&  productionRunData.estimatedStartDate?has_content>
 			      				<input type="hidden" name="startDate" id="startDate" value="${productionRunData.estimatedStartDate}">
-				      			<td style="color:#706B6B;text-align:left;"><b>:</b>
+				      			<td style="color:#706B6B;text-align:left;">
 				      				<div class='tabletext h3'>${productionRunData.estimatedStartDate?if_exists}</div>
 				      			</td>
 				      		<#else>
@@ -203,10 +203,10 @@
 					      	
 					      	<#if productionRunId?exists>
 					      		<td> &nbsp;</td>
-						      	<td valign='middle' nowrap="nowrap"><div class='h3'>Status</div></td>
+						      	<td valign='middle' nowrap="nowrap"><div class='h3'>Status :</div></td>
 					      		<#if productionRunData.currentStatusId?has_content>
 					      			<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : productionRunData.currentStatusId}, true)>
-				      				<td style="color:#706B6B;text-align:left;"><b>:</b>
+				      				<td style="color:#706B6B;text-align:left;">
 				      					<div class='tabletext h3'>${statusItem.statusCode?if_exists}</div>
 				      				</td>
 				      			</#if>
@@ -429,7 +429,7 @@
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
-						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
 						$('#displayMessage').html(formattedMsg);
               	    	$('div#displayMessage').delay(8000).fadeOut('slow');
 					}else{
@@ -468,22 +468,21 @@
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
-						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h2>"+msg+"</h2></font></div>";
+						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
 						$('div#displayDeclareMessage').html(formattedMsg);
               	    	$('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 					}else{
-						var returnProductJSON = result['returnProductItemsJSON'];
 						var returnBtn = result['returnDisplayButton'];
 						if(returnBtn && returnBtn == 'N'){
 							$("#returnMaterialSave").hide();
 						}
-						prepareReturnGrid(returnProductJSON, effortId, returnBtn);
-						var declareProductJSON = result['declareProductItemsJSON'];
+						prepareReturnGrid(result, effortId, returnBtn);
+						//var declareProductJSON = result['declareProductItemsJSON'];
 						var declareBtn = result['declareDisplayButton'];
 						if(declareBtn && declareBtn == 'N'){
 							$("#declareSave").hide();
 						}
-						prepareDeclareGrid(declareProductJSON, effortId, declareBtn);
+						prepareDeclareGrid(result, effortId, declareBtn);
 						
 					}					
 				},
@@ -500,7 +499,7 @@
       			htmlStr += "<table cellspacing='10px' cellpadding='10px' border='2px'><tr><td width='10%'><h2>Sl</h2></td><td width='60%' align='left'><h2>Material</h2></td><td width='20%' align='center'><h2>Qty Per UOM</h2></td></tr>";
       			for(var i=0;i<neededProducts.length;i++){
       				var eachProd = neededProducts[i];
-  					htmlStr += "<tr><td>"+(i+1)+"</td><td align='left'>"+eachProd['productName']+" ["+eachProd['productId']+" ]</td><td align='center'>"+eachProd['uomId']+"</td></tr>";    			
+  					htmlStr += "<tr><td>"+(i+1)+"</td><td align='left'>"+eachProd['productName']+" ["+eachProd['productId']+" ]</td><td align='center'>&nbsp;</td></tr>";    			
       			}
       			htmlStr += "</table>";
       			$('#printRequiredMaterial').html(htmlStr);
