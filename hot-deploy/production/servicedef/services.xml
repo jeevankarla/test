@@ -33,6 +33,9 @@
     	<attribute name="productId" mode="IN" type="String" optional="false"/>
     	<attribute name="inventoryItemId" mode="IN" type="String" optional="true"/>
     	<attribute name="statusId" mode="IN" type="String" optional="true"/>
+    	<attribute name="transferGroupTypeId" mode="IN" type="String" optional="true"/>
+    	<attribute name="comments" mode="IN" type="String" optional="true"/>
+    	<attribute name="workEffortId" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="createBatchForRoutingTask" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createBatchForRoutingTask">

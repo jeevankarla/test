@@ -2536,9 +2536,14 @@ under the License.
       <field name="transferGroupId" type="id-ne"></field>
       <field name="transferGroupTypeId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
+      <field name="workEffortId" type="id-ne"></field>
+      <field name="comments" type="comment"></field>
       <prim-key field="transferGroupId"/>
       <relation type="one" fk-name="XFR_GRP_TYP" rel-entity-name="Enumeration">
         	<key-map field-name="transferGroupTypeId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="XFR_GRP_WF" rel-entity-name="WorkEffort">
+        	<key-map field-name="workEffortId"/>
       </relation>
     </entity>
 	<entity entity-name="InventoryTransferGroupMember"
@@ -2679,6 +2684,9 @@ under the License.
       <alias entity-alias="IT" name="toFacilityId" field="facilityIdTo" group-by="true"/>
       <alias entity-alias="ITG" name="statusId" group-by="true"/>
       <alias entity-alias="ITGM" name="productId" group-by="true"/>
+	  <alias entity-alias="ITG" name="transferGroupTypeId" group-by="true"/>
+	  <alias entity-alias="ITG" name="workEffortId" group-by="true"/>
+	  <alias entity-alias="ITG" name="comments"/>	
       <view-link entity-alias="ITGM" rel-entity-alias="ITG">
         	<key-map field-name="transferGroupId"/>
       </view-link>
