@@ -214,7 +214,7 @@ public class ProductionServices {
         return result;
     }// End of the Service
     
-    public static Map<String, Object> getProductionDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getProductionRunDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String workEffortId = (String)context.get("workEffortId");

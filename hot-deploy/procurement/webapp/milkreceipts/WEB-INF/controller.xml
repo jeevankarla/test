@@ -277,6 +277,11 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="ShiftWiseReportTxt"/>
     </request-map>
+    <request-map uri="PTCReports">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="PTCReports"/>
+        <response name="error" type="view" value="PTCReports"/>
+    </request-map>
     <request-map uri="MilkAnalysisReport.txt">
 	        <security auth="true" https="true"/>
 	        <response name="success" type="view" value="MilkAnalysisReportTxt"/>
@@ -522,8 +527,14 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkIncommingReportPDF"/> 
     </request-map>  
-    
-    
+    <request-map uri="ptcVehicleContractorWiseReport.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="ptcVehicleContractorWiseReportPDF"/> 
+    </request-map> 
+    <request-map uri="ptcVehicleWiseReport.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="ptcVehicleWiseReportPDF"/> 
+    </request-map> 
     <request-map uri="createMRTransporterMarginReport">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="populateMRPeriodBilling"/>
@@ -643,6 +654,7 @@
     
     <view-map name="ShiftWiseReportTxt" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ShiftWiseReportTxt" content-type="text/plain"/>
     <view-map name="ShiftWiseReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ShiftWiseReport"/>
+    <view-map name="PTCReports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PTCReports"/>
     <view-map name="MilkAnalysisReportTxt" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkAnalysisReportTxt" content-type="text/plain"/>    
 	<view-map name="Reports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#Reports"/>	  
 	<view-map name="UnitMilkReceiptReports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#UnitMilkReceiptReports"/>
@@ -697,6 +709,7 @@
     <view-map name="mrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporterBilling"/>
     <view-map name="GenerateMRTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRTransporterMarginReport"/>
     <view-map name="MilkIncommingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkIncommingReportPDF" content-type="application/pdf"/> 
-    
-    
+    <view-map name="ptcVehicleContractorWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleContractorWiseReportPDF" content-type="application/pdf"/> 
+    <view-map name="ptcVehicleWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleWiseReportPDF" content-type="application/pdf"/> 
+
 </site-conf>
