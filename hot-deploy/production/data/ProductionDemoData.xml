@@ -39,4 +39,7 @@
 	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="8" testComponent="coliform" testDescription="COLIFORM COUNT PER 0.1 GM/ML"/>
 	<ProductTestComponent  productCategoryId="QC_ICECREAM" productId="_NA_" sequenceId="9" testComponent="plateCount" testDescription="STANDARD PLATE COUNT"/>
 	
+	<EnumerationType description="Inventory Transfer Group" enumTypeId="INV_XFER" hasTable="N" />
+	<Enumeration description="Internal Transfers" enumCode="INTERNAL XFER" enumId="INTERNAL_XFER" enumTypeId="INV_XFER" sequenceId="01"/>
+	<Enumeration description="Return Transfers" enumCode="RETURN TRANSFER" enumId="RETURN_XFER" enumTypeId="INV_XFER" sequenceId="02"/>
 </entity-engine-xml>
