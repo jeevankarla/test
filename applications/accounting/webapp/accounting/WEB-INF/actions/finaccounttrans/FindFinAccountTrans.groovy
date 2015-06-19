@@ -96,6 +96,8 @@ def getmultipleFinAccountList(finAccountId, finAccountTransList){
 	finAccountReconciliationListMap=[:];
 	partyFinAccountTransList=[];
 	partyFinAccountTransListMap=[:];
+	finAccTransMap=[:];
+if(UtilValidate.isEmpty(parameters.reconsilationCsvReport)){
 	finAccountopeningBal= delegator.findOne("FinAccount", ["finAccountId" :finAccountId], false);
 	fromDateTime = null;
 	if(UtilValidate.isNotEmpty(parameters.partyfromDate)&& UtilValidate.isNotEmpty(parameters.partythruDate)){
@@ -107,11 +109,15 @@ def getmultipleFinAccountList(finAccountId, finAccountTransList){
 			Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 		}
 		}
-	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime));
+	finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime));
+	}
+	oB=0;
 	if(finAccTransMap){
 	oB=finAccTransMap.get("openingBalance");
 	}else{
+	if(UtilValidate.isEmpty(parameters.reconsilationCsvReport)){
 	oB= finAccountopeningBal.actualBalance;
+	}
 	}
 	finopeningBalMap["debitValue"]=BigDecimal.ZERO;
 	finopeningBalMap["creditValue"]=BigDecimal.ZERO;
@@ -244,7 +250,6 @@ def getmultipleFinAccountList(finAccountId, finAccountTransList){
 				dayPaymentList.addAll(innerMap);
 			   partyDayWiseFinHistryMap.put(curntDay, dayPaymentList);
 		   }
-		  
 		   //finalpartyDayWiseFinHistryMap.put(finAccountId,partyDayWiseFinHistryMap);
 		   finAccountReconciliationList.addAll(tempFinAccountTransMap);
 	}

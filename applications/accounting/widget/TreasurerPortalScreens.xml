@@ -3544,6 +3544,7 @@
                     <field-map field-name="mainAction" value="FINACCOUNTTX_EDIT"/>
                 </service>
                 <set field="hasFinTxEditPermission" from-field="permResult.hasPermission"/> 
+                <set field="parameters.reconsilationCsvReport" value="Y"/> 
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
 			</actions>
 			<widgets>
