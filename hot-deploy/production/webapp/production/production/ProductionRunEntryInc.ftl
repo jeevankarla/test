@@ -16,6 +16,18 @@
 		background: #F3F3F3;
 	}
 	
+	#errorSpan {
+		color: red;
+		font-size: 1.7em;
+		font-weight: bold;
+	}
+	
+	#successSpan {
+		color: green;
+		font-size: 1.7em;
+		font-weight: bold;
+	}
+	
 	.btn {
 	    color:#08233e;
 	    font:8em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
@@ -172,14 +184,15 @@
 					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
-					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
-					$('#displayMessage').html(formattedMsg);
+					var formattedMsg = "<div style='background-color:#E7E5E5'><span id='errorSpan'>"+msg+"</span></div>";
+					$('div#displayDeclareMessage').html(formattedMsg);
               	    $('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 				}else{
 					$('#declareMaterialDiv').hide();
 					$("#declareSave").hide();
-					$('div#displayDeclareMessage').html("<div style='background-color:#E7E5E5'><font color='green'><h1>Successfully Updated</h1></font></div>"); 
+					$('div#displayDeclareMessage').html("<div style='background-color:#E7E5E5'><span id='successSpan'>Successfully Updated</span></div>"); 
 					$('div#displayDeclareMessage').delay(8000).fadeOut('slow');
+					$('#declareTask').trigger("click");
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){
@@ -224,15 +237,16 @@
 					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
-					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
+					var formattedMsg = "<div style='background-color:#E7E5E5'><span id='errorSpan'>"+msg+"</span></div>";
 					$('div#displayDeclareMessage').html(formattedMsg);
               	    $('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 				}else{
 					//$('#returnMaterialDiv').hide();
 					$('#returnMaterialSave').hide();
-					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='green'><h1>Successfully Updated</h1></font></div>";
+					var formattedMsg = "<div style='background-color:#E7E5E5'><span id='successSpan'>Successfully Updated</span></div>";
 					$('div#displayDeclareMessage').html(formattedMsg);
               	    $('div#displayDeclareMessage').delay(8000).fadeOut('slow');
+              	    $('#declareTask').trigger("click");
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){
@@ -274,15 +288,14 @@
 					if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
-					var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
+					var formattedMsg = "<div style='background-color:#E7E5E5'><span id='errorSpan'>"+msg+"</span></div>";
 					$('#displayMessage').html(formattedMsg);
               	    $('div#displayMessage').delay(8000).fadeOut('slow');
 				}else{
-					$('div#displayMessage').html("<div style='background-color:#E7E5E5'><font color='green'><h1>Successfully Updated</h1></font></div>"); 
+					$('div#displayMessage').html("<div style='background-color:#E7E5E5'><span id='successSpan'>Successfully Updated</span></div>"); 
 					$('div#displayMessage').delay(8000).fadeOut('slow');
 					$('#addMaterialDiv').hide();
 					$('#issueMaterialBtn').hide();
-					//button hide
 				}					
 			},
 			error: function (xhr, textStatus, thrownError){

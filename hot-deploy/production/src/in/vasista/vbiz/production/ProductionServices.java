@@ -351,6 +351,7 @@ public class ProductionServices {
 			  		GenericValue productFacility = delegator.findOne("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId), false);
 	                if(UtilValidate.isEmpty(productFacility)){
 	                	Debug.logError("Material not associated to the Plant/Silo: "+facilityId, module);
+	                	request.setAttribute("_ERROR_MESSAGE_", "Material not associated to the Plant/Silo: "+facilityId);
 	                	TransactionUtil.rollback();
 	            		return "error";
 	                }
@@ -364,6 +365,7 @@ public class ProductionServices {
 	                Map resultCtx = dispatcher.runSync("issueProductionRunTaskComponent", inputCtx);
 	                if(ServiceUtil.isError(resultCtx)){
 	                	Debug.logError("Error issuing material for routing task : "+workEffortId, module);
+	                	request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
 	                	TransactionUtil.rollback();
 	            		return "error";
 	                }
@@ -374,6 +376,7 @@ public class ProductionServices {
 				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
 	  		} catch (GenericEntityException e2) {
 	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
 	  		}
 	  		Debug.logError("An entity engine error occurred while fetching data", module);
 	  	}
@@ -382,6 +385,7 @@ public class ProductionServices {
   			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
   	  		} catch (GenericEntityException e2) {
   			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  			  request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
   	  		}
   	  		Debug.logError("An entity engine error occurred while calling services", module);
   	  	}
@@ -390,6 +394,7 @@ public class ProductionServices {
 	  			TransactionUtil.commit(beginTransaction);
 	  		} catch (GenericEntityException e) {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
 	  		}
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);
@@ -421,6 +426,7 @@ public class ProductionServices {
 	  		  GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
 	  		  if(UtilValidate.isEmpty(workEffort)){
 	  			  Debug.logError("Not a valid production run : "+workEffortId, module);
+	  			  request.setAttribute("_ERROR_MESSAGE_", "Not a valid production run : "+workEffortId);
 	  			  TransactionUtil.rollback();
 	  			  return "error";
 	  		  }
@@ -493,7 +499,7 @@ public class ProductionServices {
 		  		  Map resultCtx = dispatcher.runSync("createStockXferRequest", inputCtx);
 		  		  if(ServiceUtil.isError(resultCtx)){
 		  			  Debug.logError("Error create transfer request for routing task : "+workEffortId, module);
-		  			  request.setAttribute("_ERROR_MESSAGE_", "Error create transfer request for routing task : "+workEffortId);
+		  			  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
 		  			  TransactionUtil.rollback();
 		  			  return "error";
 		  		  }
@@ -600,7 +606,7 @@ public class ProductionServices {
 		  		  Map resultCtx = dispatcher.runSync("productionRunTaskProduce", inputCtx);
 		  		  if(ServiceUtil.isError(resultCtx)){
 		  			  Debug.logError("Error in declaring material of routing task : "+workEffortId, module);
-		  			  request.setAttribute("_ERROR_MESSAGE_", "Error in declaring material of routing task : "+workEffortId);
+		  			  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
 		  			  TransactionUtil.rollback();
 		  			  return "error";
 		  		  }
@@ -633,6 +639,7 @@ public class ProductionServices {
 				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
 	  		} catch (GenericEntityException e2) {
 	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
 	  		}
 	  		Debug.logError("An entity engine error occurred while fetching data", module);
 	  	}
@@ -641,6 +648,7 @@ public class ProductionServices {
 			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
 	  		} catch (GenericEntityException e2) {
 			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+			  request.setAttribute("_ERROR_MESSAGE_", e2.toString());
 	  		}
 	  		Debug.logError("An entity engine error occurred while calling services", module);
 	  	}
@@ -649,6 +657,7 @@ public class ProductionServices {
 	  			TransactionUtil.commit(beginTransaction);
 	  		} catch (GenericEntityException e) {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
 	  		}
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made issue of material for Task :"+workEffortId);

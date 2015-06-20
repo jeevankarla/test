@@ -429,7 +429,7 @@
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
-						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
+						var formattedMsg = "<div style='background-color:#E7E5E5'><span id='errorSpan'>"+msg+"</span></div>";
 						$('#displayMessage').html(formattedMsg);
               	    	$('div#displayMessage').delay(8000).fadeOut('slow');
 					}else{
@@ -468,7 +468,7 @@
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
-						var formattedMsg = "<div style='background-color:#E7E5E5'><font color='red'><h1>"+msg+"</h1></font></div>";
+						var formattedMsg = "<div style='background-color:#E7E5E5'><span	id='errorSpan'>"+msg+"</span></div>";
 						$('div#displayDeclareMessage').html(formattedMsg);
               	    	$('div#displayDeclareMessage').delay(8000).fadeOut('slow');
 					}else{
