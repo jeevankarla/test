@@ -22,6 +22,7 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.party.party.PartyHelper;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import java.util.concurrent.TimeUnit;
 
 
 dctx = dispatcher.getDispatchContext();
@@ -30,18 +31,45 @@ periodBillingIdParam = parameters.periodBillingId;
 customTimePeriodId = parameters.customTimePeriodId;
 context.putAt("customTimePeriodId", customTimePeriodId);
 
+Timestamp fromDateMonthBegin = null;
+Timestamp thruDateMonthEnd = null;
+customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodId] , false);
+if(UtilValidate.isNotEmpty(customTimePeriod)){
+	Timestamp fromDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	Timestamp thruDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	
+	fromDateMonthBegin = UtilDateTime.getDayStart(fromDate, timeZone, locale);
+	thruDateMonthEnd = UtilDateTime.getDayEnd(thruDate, timeZone, locale);
+}
+
 
 employmentsList = [];
 emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
-emplInputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-60)));
+emplInputMap.put("fromDate", fromDateMonthBegin);
+emplInputMap.put("thruDate", thruDateMonthEnd);
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
 if(UtilValidate.isNotEmpty(employments)){
 	employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
 }
 
+
+List retireEmplList = FastList.newInstance();
+List retireCondList = FastList.newInstance();
+/*retireCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateMonthBegin), EntityOperator.AND,
+	EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateMonthEnd)));*/
+retireCondList.add(EntityCondition.makeCondition("terminationTypeId" ,EntityOperator.IN ,UtilMisc.toList("RETIRE","DEATH")));
+retireCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDateMonthBegin),EntityOperator.AND,
+	EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDateMonthEnd),EntityOperator.AND,
+																EntityCondition.makeCondition("thruDate",EntityOperator.NOT_EQUAL,null))));
+retireCond = EntityCondition.makeCondition(retireCondList,EntityOperator.AND);
+List<GenericValue> retireEmplDetails = delegator.findList("Employment", retireCond, null, null, null, false);
+
+if(UtilValidate.isNotEmpty(retireEmplDetails)){
+	retireEmplList = EntityUtil.getFieldListFromEntityList(retireEmplDetails, "partyIdTo", true);
+}
 
 totalNetMap = [:];
 Timestamp startMonth = null;
@@ -96,8 +124,6 @@ if(UtilValidate.isNotEmpty(pastDAPeriodList)){
 		}
 	}
 }
-
-
 
 DAArrearMap = [:];
 DAArrearLEMap = [:];
@@ -179,6 +205,7 @@ employmentsList.each{ employeeId ->
 						if(UtilValidate.isNotEmpty(activeEmployeeDetails)){
 						String activeGeoId = (String)activeEmployeeDetails.get("geoId");
 						daArrearsData = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
+						if(UtilValidate.isNotEmpty(daArrearsData)){
 						  if(UtilValidate.isNotEmpty(daArrearsData[0].geoId)){
 							  geoId = daArrearsData[0].geoId;
 							  if(geoId.equals(activeGeoId)){
@@ -214,14 +241,17 @@ employmentsList.each{ employeeId ->
 												  if(UtilValidate.isNotEmpty(basicAmount)){
 													  newDAAmount = (rateAmount*basicAmount);
 												  }
-												  if(ctpFromDate.compareTo(startMonth) > 0 && ctpFromDate.compareTo(endMonth) < 0){
+												  
+												  //if(ctpFromDate.compareTo(startMonth) > 0 && ctpFromDate.compareTo(endMonth) < 0){
 													  List oldRateAmountCondList = FastList.newInstance();
 													  oldRateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
-													  oldRateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
+													  oldRateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin));
 													  oldRateAmountCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
 													  EntityCondition oldRateAmountCond = EntityCondition.makeCondition(oldRateAmountCondList,EntityOperator.AND);
+													  
 													  List<GenericValue> oldRateAmountList = delegator.findList("RateAmount", oldRateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
 													  BigDecimal oldRateAmount = BigDecimal.ZERO;
+													  
 													  if(UtilValidate.isNotEmpty(oldRateAmountList)){
 														  GenericValue rateAmountOldGen = EntityUtil.getFirst(oldRateAmountList);
 														  oldRateAmount = (BigDecimal) rateAmountOldGen.get("rateAmount");
@@ -229,10 +259,11 @@ employmentsList.each{ employeeId ->
 													  if(UtilValidate.isNotEmpty(basicAmount)){
 														  oldDAAmount = (oldRateAmount*basicAmount);
 													  }
-												  }
-												  
+												  //}
+													  
 												  BigDecimal payAmt = BigDecimal.ZERO;
-												  if(ctpFromDate.compareTo(startMonth) > 0 && ctpFromDate.compareTo(endMonth) < 0){
+												  payAmt = oldDAAmount;
+												  /*if(ctpFromDate.compareTo(startMonth) > 0 && ctpFromDate.compareTo(endMonth) < 0){
 													  payAmt = oldDAAmount;
 												  }else{
 												   		List payHeadConditionList = FastList.newInstance();
@@ -247,27 +278,51 @@ employmentsList.each{ employeeId ->
 														  GenericValue payrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter);
 														  payAmt = (BigDecimal)payrollItems.get("amount");
 													  }
-												  }
+												  }*/
+												  BigDecimal roundedPayAmt = BigDecimal.ZERO;
+												  roundedPayAmt = payAmt.setScale(0,BigDecimal.ROUND_HALF_DOWN);
+												  
+												  BigDecimal roundedNewDAAmount = BigDecimal.ZERO;
+												  roundedNewDAAmount = newDAAmount.setScale(0,BigDecimal.ROUND_HALF_DOWN);
 												  
 												  if(UtilValidate.isNotEmpty(newDAAmount)){
-													  netDAAmount  = newDAAmount - payAmt;
+													  netDAAmount  = roundedNewDAAmount - roundedPayAmt;
 													  totalNetAmt = totalNetAmt + netDAAmount;
 												  }
+												  
 												  tempMap = [:];
-												  tempMap.put("Basic",basicAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap.put("oldDA",payAmt.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap.put("newDA",newDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
-												  tempMap.put("netDA",netDAAmount.setScale(0,BigDecimal.ROUND_HALF_UP));
+												  tempMap.put("Basic",basicAmount.setScale(0,BigDecimal.ROUND_HALF_DOWN));
+												  tempMap.put("oldDA",payAmt.setScale(0,BigDecimal.ROUND_HALF_DOWN));
+												  tempMap.put("newDA",newDAAmount.setScale(0,BigDecimal.ROUND_HALF_DOWN));
+												  tempMap.put("netDA",netDAAmount.setScale(0,BigDecimal.ROUND_HALF_DOWN));
 												  fromDateStart = basicSalDate;
 												  thruDateEnd = UtilDateTime.getDayEnd(basicSalDate);
 												  BigDecimal EpfAmount = BigDecimal.ZERO;
+												  
+												  /*person = delegator.findOne("Person", [partyId : employeeId], false);
+												  String age = "";
+												  if(UtilValidate.isNotEmpty(person)){
+													  if(UtilValidate.isNotEmpty(person.getDate("birthDate"))){
+														  ageTime = (UtilDateTime.toSqlDate(monthEnd)).getTime()- (person.getDate("birthDate")).getTime();
+														  age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_DOWN)).toString());
+													  }
+												  }
+												  
+												  BigDecimal emplAge = new BigDecimal(age);*/
+												  
+												  //if((emplAge.compareTo(new BigDecimal(58))) <= 0){
 												  if(UtilValidate.isNotEmpty(periodBillingIdParam)){
 													  List payHeadCondListEpf = FastList.newInstance();
 													  payHeadCondListEpf.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingIdParam));
-													  payHeadCondListEpf.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+													  if(UtilValidate.isNotEmpty(retireEmplList)){
+														  payHeadCondListEpf.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId), EntityOperator.AND,
+															  EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_IN, retireEmplList)));
+													  }else{
+													  	payHeadCondListEpf.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+													  }
 													  payHeadCondListEpf.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_PF"));
-													  EntityCondition payHeadCondEpf = EntityCondition.makeCondition(payHeadCondListEpf,EntityOperator.AND);
-													  List<GenericValue> EpfPayHeadList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCondEpf, null, null, null, false);
+													  payHeadCondEpf = EntityCondition.makeCondition(payHeadCondListEpf,EntityOperator.AND);
+													  EpfPayHeadList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCondEpf, null, null, null, false);
 													  if(UtilValidate.isNotEmpty(EpfPayHeadList)){
 														  EpfHead = EntityUtil.getFirst(EpfPayHeadList);
 														  if(UtilValidate.isNotEmpty(EpfHead)){
@@ -278,9 +333,10 @@ employmentsList.each{ employeeId ->
 														  }
 													  }
 													  tempMap.putAt("EpfAmount", -(EpfAmount.setScale(0,BigDecimal.ROUND_HALF_UP)));
-													  if(UtilValidate.isNotEmpty(tempMap)){
-														  periodMap.putAt(ctpId, tempMap);
-													  }
+												  }
+												  //}
+												  if(UtilValidate.isNotEmpty(tempMap)){
+													  periodMap.putAt(ctpId, tempMap);
 												  }
 											  }
 										  }
@@ -288,6 +344,9 @@ employmentsList.each{ employeeId ->
 								  }
 							  }
 						   }
+						  
+						}
+						  
 						}
 					}
 				}
@@ -356,6 +415,7 @@ employmentsList.each{ employeeId ->
 						if(UtilValidate.isNotEmpty(activeEmployeeDetails)){
 						String activeGeoId1 = (String)activeEmployeeDetails.get("geoId");
 						daArrearsData1 = delegator.findByAnd("EmployeeDAArrears", [periodBillingId: periodBillingIdParam]);
+						if(UtilValidate.isNotEmpty(daArrearsData1)){
 						  if(UtilValidate.isNotEmpty(daArrearsData1[0].geoId)){
 							  geoId1 = daArrearsData1[0].geoId;
 							  if(geoId1.equals(activeGeoId1)){
@@ -405,25 +465,32 @@ employmentsList.each{ employeeId ->
 													  oldDAAmount1 = (oldRateAmount1*basicAmount1);
 												  }
 											  }
-											  if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
+											  /*if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
 													  LEpayAmt = oldDAAmount1;
 											  }else{
 												  if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter3)){
 													  GenericValue LEpayrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter3);
 													  LEpayAmt = (BigDecimal)LEpayrollItems.get("amount");
 												  }
-											  }
-												  
-											  if(UtilValidate.isNotEmpty(newDAAmount1 )){
-												  netDAAmount1  = newDAAmount1 - LEpayAmt;
+											  }*/
+											  
+											  LEpayAmt = oldDAAmount1;
+											  
+											  BigDecimal roundedLEpayAmt = BigDecimal.ZERO;
+											  roundedLEpayAmt = LEpayAmt.setScale(0,BigDecimal.ROUND_HALF_DOWN);
+											  
+											  BigDecimal roundedNewDAAmount1 = BigDecimal.ZERO;
+											  roundedNewDAAmount1 = newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_DOWN);
+											  
+											  if(UtilValidate.isNotEmpty(roundedNewDAAmount1 )){
+												  netDAAmount1  = roundedNewDAAmount1 - roundedLEpayAmt;
 												  totalNetAmt = totalNetAmt + netDAAmount1;
 											  }
-											  
 											  tempMap1 = [:];
-											  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-											  tempMap1.put("oldDA1",LEpayAmt.setScale(0,BigDecimal.ROUND_HALF_UP));
-											  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
-											  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_UP));
+											  tempMap1.put("Basic1",basicAmount1.setScale(0,BigDecimal.ROUND_HALF_DOWN));
+											  tempMap1.put("oldDA1",LEpayAmt.setScale(0,BigDecimal.ROUND_HALF_DOWN));
+											  tempMap1.put("newDA1",newDAAmount1.setScale(0,BigDecimal.ROUND_HALF_DOWN));
+											  tempMap1.put("netDA1",netDAAmount1.setScale(0,BigDecimal.ROUND_HALF_DOWN));
 											  if(UtilValidate.isNotEmpty(tempMap1)){
 												  leaveEncashMap.putAt(basicLEDate, tempMap1);
 											  }
@@ -432,6 +499,7 @@ employmentsList.each{ employeeId ->
 								  }
 							  }
 						  }
+						} 
 					  }
 					}
 				}
