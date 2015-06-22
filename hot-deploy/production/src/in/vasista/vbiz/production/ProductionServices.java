@@ -961,10 +961,8 @@ public class ProductionServices {
      	  		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.EQUALS, xferQuantity.negate()));
      	  		conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
      	  		conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-     	  		
      	  		EntityCondition invDetailCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
      	  		inventoryItemDetail = delegator.findList("InventoryItemDetail", invDetailCond, null, UtilMisc.toList("-effectiveDate"), null, false);
-     	  		
      	  		if(UtilValidate.isNotEmpty(inventoryItemDetail)){
      	  			GenericValue invItemDet = EntityUtil.getFirst(inventoryItemDetail);
      	  			invItemDet.set("inventoryTransferId", inventoryTransferId);
@@ -991,6 +989,8 @@ public class ProductionServices {
          	Debug.logError(e, module);
          	return ServiceUtil.returnError(e.toString());
          }
+         
+         result = ServiceUtil.returnSuccess("Sucessfully initated transfer");
          return result;
      }
      public static String updateTransferGroupStatus(HttpServletRequest request, HttpServletResponse response) {
@@ -1020,6 +1020,7 @@ public class ProductionServices {
 		  			  transferGroupId = (String) paramMap.get("transferGroupId" + thisSuffix);
 		  		  }else{
 		  			Debug.logError("Transfer Group Id cannot be empty", module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "Transfer Id cannot be empty");
                 	TransactionUtil.rollback();
             		return "error";
 		  		  }
@@ -1029,6 +1030,7 @@ public class ProductionServices {
 		  		  }
 		  		  else{
 		  			Debug.logError("status cannot be empty", module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "status cannot be empty");
                 	TransactionUtil.rollback();
             		return "error";
 		  		  }
@@ -1041,6 +1043,7 @@ public class ProductionServices {
 		  		  
 		  		  if(UtilValidate.isEmpty(statusItem)){
 		  			  Debug.logError("Not a valid status change", module);
+		  			  request.setAttribute("_ERROR_MESSAGE_", "Not a valid status change");
 		  			  TransactionUtil.rollback();
 		  			  return "error";
 		  		  }
@@ -1063,6 +1066,7 @@ public class ProductionServices {
 		              Map resultCtx = dispatcher.runSync("updateInventoryTransfer", inputCtx);
 		              if(ServiceUtil.isError(resultCtx)){
 		            	  Debug.logError("Error updating inventory transfer status : "+eachTransfer.getString("inventoryTransferId"), module);
+		            	  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
 		            	  TransactionUtil.rollback();
 		            	  return "error";
 		              }
@@ -1074,6 +1078,7 @@ public class ProductionServices {
 				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
 	  		} catch (GenericEntityException e2) {
 	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
 	  		}
 	  		Debug.logError("An entity engine error occurred while fetching data", module);
 	  	}
@@ -1082,6 +1087,7 @@ public class ProductionServices {
  			  TransactionUtil.rollback(beginTransaction, "Error while calling services", e);
  	  		} catch (GenericEntityException e2) {
  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+ 			  request.setAttribute("_ERROR_MESSAGE_", e2.toString());
  	  		}
  	  		Debug.logError("An entity engine error occurred while calling services", module);
  	  	}
@@ -1090,6 +1096,7 @@ public class ProductionServices {
 	  			TransactionUtil.commit(beginTransaction);
 	  		} catch (GenericEntityException e) {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
 	  		}
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "Entry Successfully");

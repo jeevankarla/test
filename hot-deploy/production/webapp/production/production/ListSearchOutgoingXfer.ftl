@@ -58,8 +58,8 @@ under the License.
             	appendStr += "<input type=hidden name=transferGroupId_o_"+index+" value="+transId+" />";
             	appendStr += "<input type=hidden name=statusId_o_"+index+" value="+statusId+" />";
    				$("#updateTransferGroupForm").append(appendStr);
+   				index = index+1;
             }
-            index = index+1;
         });
        	jQuery('#updateTransferGroupForm').submit();
     }
@@ -112,7 +112,7 @@ under the License.
               	<td>${(product.productName)?if_exists} [${eachXfer.productId}]</td>
               	<td>${status.description?if_exists}</td>
               	<td>${eachXfer.xferQtySum?if_exists}</td>
-              	<td align='center'><input type="checkbox" id="transferGroupIds" name="transferGroupIds" value="${xfer.transferGroupId}"/></td>
+              	<td align='center'><input type="checkbox" id="transferGroupIds" name="transferGroupIds" value="${eachXfer.transferGroupId?if_exists}"/></td>
             </tr>
             <#assign alt_row = !alt_row>
         </#list>
