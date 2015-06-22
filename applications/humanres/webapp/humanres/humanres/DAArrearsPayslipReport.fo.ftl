@@ -184,7 +184,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 						                          <fo:block text-align="right"   keep-together="always">${newDATotal?if_exists?string("#0.00")}</fo:block>
 						                        </fo:table-cell>
 						                        <fo:table-cell>
-						                          <fo:block text-align="right"  >${totalNetMap.get(partyBenefitsMap.getKey())?if_exists?string("#0.00")}</fo:block>
+						                          <fo:block text-align="right"  >${netDATotal1?if_exists?string("#0.00")}</fo:block>
 						                        </fo:table-cell>
 						                         <fo:table-cell>
 						                          <fo:block text-align="right"  >0.00</fo:block>
@@ -196,39 +196,41 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                       			<fo:block>---------------------------------------------------------------------------------------------</fo:block>
  				                      </fo:table-cell>
 			                      </fo:table-row>
-			                       <fo:table-row>
-			                       <#if epf?has_content>
-			                       <fo:table-cell>
+			                       	<fo:table-row>
+			                       		<fo:table-cell>
 						                          <fo:block text-align="right"  ></fo:block>
-						                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="right"  font-weight="bold" >PTAX  = 0.00 </fo:block>
-			                          <fo:block text-align="right"  font-weight="bold" >ESI   = 0.00</fo:block>
-			                          <fo:block text-align="right"  font-weight="bold" >		EPP    = ${epf?if_exists?string("#0.00")}</fo:block>
-			                          <fo:block text-align="right"  font-weight="bold" >NSC   = 0.00 </fo:block>
-			                          <fo:block text-align="right"  ></fo:block>
-			                          <fo:block text-align="right" ></fo:block>
-			                        </fo:table-cell>
-			                      </fo:table-row>
-			                      <#assign net = totalNetMap.get(partyBenefitsMap.getKey())-epf>
-			                      <fo:table-row>
-			                       <fo:table-cell>
+						              	</fo:table-cell>
+			                        	<fo:table-cell>
+			                          		<fo:block text-align="right"  font-weight="bold" >PTAX  = 0.00 </fo:block>
+			                          		<fo:block text-align="right"  font-weight="bold" >ESI   = 0.00</fo:block>
+			                          		<fo:block text-align="right"  font-weight="bold" ><#if epf?has_content>EPF    = ${epf?if_exists?string("#0.00")}<#else>EPF    = 0.00</#if></fo:block>
+			                          		<fo:block text-align="right"  font-weight="bold" >NSC   = 0.00 </fo:block>
+			                          		<fo:block text-align="right"  ></fo:block>
+			                          		<fo:block text-align="right" ></fo:block>
+			                        	</fo:table-cell>
+			                      	</fo:table-row>
+			                      	<#if epf?has_content>
+			                      		<#assign net = netDATotal1-epf>
+			                      	<#else>
+			                      		<#assign net = netDATotal1>
+			                      	</#if>
+			                      	<fo:table-row>
+			                       	<fo:table-cell>
 						                   <fo:block text-align="right"  ></fo:block>
-						          </fo:table-cell>
-						          <fo:table-cell>
+						          	</fo:table-cell>
+						          	<fo:table-cell>
 						                   <fo:block text-align="right"  ></fo:block>
-						          </fo:table-cell>
-						          <fo:table-cell>
+						          	</fo:table-cell>
+						          	<fo:table-cell>
 						                   <fo:block text-align="right"  ></fo:block>
-						          </fo:table-cell>
-						          <fo:table-cell>
+						          	</fo:table-cell>
+						          	<fo:table-cell>
 						                   <fo:block text-align="right"  ></fo:block>
-						          </fo:table-cell>
+						          	</fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="center"  keep-together= "always" font-weight="bold" >Net Amount = ${net?if_exists?string("#0.00")}</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
-			                      </#if>
 			                      <fo:table-row>
 			                         <fo:table-cell>
 			                       <fo:block>---------------------------------------------------------------------------------------------</fo:block>

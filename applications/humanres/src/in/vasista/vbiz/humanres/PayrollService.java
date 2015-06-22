@@ -7356,6 +7356,19 @@ public class PayrollService {
 	    		double elapsedSeconds;
 	    	    Timestamp startTimestamp = UtilDateTime.nowTimestamp();
 	    	    
+	    	    //getting Retirement Employee List
+	    	    List retireEmplList = FastList.newInstance();
+	    	    List retireCondList = FastList.newInstance();
+	    	    retireCondList.add(EntityCondition.makeCondition("terminationTypeId" ,EntityOperator.IN ,UtilMisc.toList("RETIRE","DEATH")));
+	    	    retireCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin),EntityOperator.AND,
+	    	    	EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,monthEnd),EntityOperator.AND,
+	    	    																EntityCondition.makeCondition("thruDate",EntityOperator.NOT_EQUAL,null))));
+	    	    EntityCondition retireCond = EntityCondition.makeCondition(retireCondList,EntityOperator.AND);
+	    	    List<GenericValue> retireEmplDetails = delegator.findList("Employment", retireCond, null, null, null, false);
+	    	    if(UtilValidate.isNotEmpty(retireEmplDetails)){
+	    	    	retireEmplList = EntityUtil.getFieldListFromEntityList(retireEmplDetails, "partyIdTo", true);
+	    	    }
+	    	    //Debug.log("retireEmplList==================="+retireEmplList);
 	    	    //getting BasicSalDate period
 	    	    List condBasicSalPeriodList = FastList.newInstance();
 	    	    condBasicSalPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
@@ -7488,12 +7501,12 @@ public class PayrollService {
 														evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
 														evltr.addVariableValues(variables);
 														currentDAamt = new BigDecimal( evltr.evaluate());
-														currentDAamt = currentDAamt.setScale(2, BigDecimal.ROUND_HALF_UP);
+														currentDAamt = currentDAamt.setScale(0, BigDecimal.ROUND_HALF_DOWN);
 													}
-										            if(timePeriodStart.compareTo(startMonth) > 0 && timePeriodStart.compareTo(endMonth) < 0){
+										            //if(timePeriodStart.compareTo(startMonth) > 0 && timePeriodStart.compareTo(endMonth) < 0){
 										            	List oldRateAmountCondList = FastList.newInstance();
 											            oldRateAmountCondList.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
-											            oldRateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
+											            oldRateAmountCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin));
 											            oldRateAmountCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
 									  					EntityCondition oldRateAmountCond = EntityCondition.makeCondition(oldRateAmountCondList,EntityOperator.AND);
 									  					List<GenericValue> oldRateAmountList = delegator.findList("RateAmount", oldRateAmountCond,null, UtilMisc.toList("fromDate"), null, false);
@@ -7534,13 +7547,14 @@ public class PayrollService {
 															evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
 															evltr.addVariableValues(variables1);
 															oldRateDaAmount = new BigDecimal( evltr.evaluate());
-															oldRateDaAmount = oldRateDaAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+															oldRateDaAmount = oldRateDaAmount.setScale(0, BigDecimal.ROUND_HALF_DOWN);
 														}
-										            }
+										            //}
 						  						}
 						  					}
 				  							BigDecimal payAmt = BigDecimal.ZERO;
-				  	  	        			if(timePeriodStart.compareTo(startMonth) > 0 && timePeriodStart.compareTo(endMonth) < 0){
+				  							payAmt = oldRateDaAmount;
+				  	  	        			/*if(timePeriodStart.compareTo(startMonth) > 0 && timePeriodStart.compareTo(endMonth) < 0){
 				  	  	        				payAmt = oldRateDaAmount;
 				  	  	        			}else{
 				  	  	        				List payHeadCondList = FastList.newInstance();
@@ -7555,7 +7569,7 @@ public class PayrollService {
 													GenericValue payrollItems = EntityUtil.getFirst(payrollHeaderAndHeaderItemIter);
 													payAmt = (BigDecimal)payrollItems.get("amount");
 												}
-				  	  	        			}
+				  	  	        			}*/
 						  					diffAmt=currentDAamt.subtract(payAmt);
 						  					if(UtilValidate.isNotEmpty(currentDAamt) && ((currentDAamt).compareTo(BigDecimal.ZERO) !=0)){
 						  						if(UtilValidate.isEmpty(EmployeeDAArrearsMap.get(emplId))){
@@ -7698,7 +7712,7 @@ public class PayrollService {
 																evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
 																evltr.addVariableValues(variables);
 																currentLEDAamt = new BigDecimal( evltr.evaluate());
-																currentLEDAamt = currentLEDAamt.setScale(2, BigDecimal.ROUND_HALF_UP);
+																currentLEDAamt = currentLEDAamt.setScale(0, BigDecimal.ROUND_HALF_DOWN);
 																
 																if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
 													            	List oldRateAmountCondList1 = FastList.newInstance();
@@ -7744,18 +7758,18 @@ public class PayrollService {
 																		evltr1.setFormulaIdAndSlabAmount(formulaId1,0.0);
 																		evltr1.addVariableValues(variables1);
 																		oldRateDaAmount1 = new BigDecimal( evltr1.evaluate());
-																		oldRateDaAmount1 = oldRateDaAmount1.setScale(2, BigDecimal.ROUND_HALF_UP);
+																		oldRateDaAmount1 = oldRateDaAmount1.setScale(0, BigDecimal.ROUND_HALF_DOWN);
 																	}
 													            }
-																if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
+																/*if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
 																		LEpayAmt = oldRateDaAmount1;
 																}else{
 																	if(UtilValidate.isNotEmpty(LEpayrollHeaderAndHeaderItemIter)){
 																		GenericValue LEpayrollItems = EntityUtil.getFirst(LEpayrollHeaderAndHeaderItemIter);
 																		LEpayAmt = (BigDecimal)LEpayrollItems.get("amount");
 																	}
-																}
-																
+																}*/
+																LEpayAmt = oldRateDaAmount1;
 													            if(UtilValidate.isNotEmpty(currentLEDAamt) && ((currentLEDAamt).compareTo(BigDecimal.ZERO) !=0)){
 													            	diffLEAmt=currentLEDAamt.subtract(LEpayAmt);
 												  					if(UtilValidate.isEmpty(EmployeeLEDAArrearsMap.get(LEemplId))){
@@ -7780,6 +7794,7 @@ public class PayrollService {
 				if(UtilValidate.isEmpty(partyId)){
 					partyId = "Company";
 				}
+				String employeeId = "";
 				input.put("userLogin", userLogin);
 				input.put("partyId", partyId);
 				input.put("partyIdFrom", partyIdFrom); 
@@ -7790,7 +7805,7 @@ public class PayrollService {
 		        	Iterator emplIter = EmployeeDAArrearsMap.entrySet().iterator();
 		        	while (emplIter.hasNext()) {
 						Map.Entry emplMapEntry = (Entry) emplIter.next();
-						String employeeId = (String)emplMapEntry.getKey();
+						employeeId = (String)emplMapEntry.getKey();
 						if(UtilValidate.isNotEmpty(emplMapEntry.getValue()) && (((BigDecimal)emplMapEntry.getValue()).compareTo(BigDecimal.ZERO) !=0)){
 							context.put("employeeId", employeeId);
 			        		input.put("partyIdFrom", employeeId);
@@ -7852,17 +7867,19 @@ public class PayrollService {
 							epfAmount = epfAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
 							epfAmountNet = epfAmount.multiply(new BigDecimal(-1));
 							if(UtilValidate.isNotEmpty(epfAmountNet)){
-								GenericValue payHeaderItem1 = delegator.makeValue("PayrollHeaderItem");
-								payHeaderItem1.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
-								payHeaderItem1.set("payrollHeaderItemTypeId","PAYROL_DD_PF");
-								payHeaderItem1.set("amount",(epfAmountNet).setScale(0, BigDecimal.ROUND_HALF_UP));
-			   				    delegator.setNextSubSeqId(payHeaderItem1, "payrollItemSeqId", 5, 1);
-					            delegator.create(payHeaderItem1);
-					            
-					            Timestamp timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+								if (!retireEmplList.contains(payHeaderValue.get("partyIdFrom"))) {
+									GenericValue payHeaderItem1 = delegator.makeValue("PayrollHeaderItem");
+									payHeaderItem1.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+									payHeaderItem1.set("payrollHeaderItemTypeId","PAYROL_DD_PF");
+									payHeaderItem1.set("amount",(epfAmountNet).setScale(0, BigDecimal.ROUND_HALF_UP));
+				   				    delegator.setNextSubSeqId(payHeaderItem1, "payrollItemSeqId", 5, 1);
+						            delegator.create(payHeaderItem1);
+			                    }
+								
+					            //Timestamp timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 					            GenericValue person = delegator.findOne("Person", UtilMisc.toMap("partyId",payHeaderValue.get("partyIdFrom")), false);
 					            if(UtilValidate.isNotEmpty(person) && UtilValidate.isNotEmpty(person.getDate("birthDate"))){
-					            	long ageTime = (UtilDateTime.toSqlDate(timePeriodEnd)).getTime()- (person.getDate("birthDate")).getTime();
+					            	long ageTime = (UtilDateTime.toSqlDate(monthEnd)).getTime()- (person.getDate("birthDate")).getTime();
 					            	Long age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_UP)).toString());
 					            	BigDecimal employeeAge = new BigDecimal(age);
 					            	
@@ -7875,8 +7892,8 @@ public class PayrollService {
 									BigDecimal employerPf = BigDecimal.ZERO;
 									employerPf = epfAmount.subtract(epfPensionAmount);
 					            	
-					            	
 					            	if((employeeAge.compareTo(new BigDecimal(58))) <=0){
+					            		
 					            		//Employer PF Here 
 										if(UtilValidate.isNotEmpty(epfPensionAmount)){
 											GenericValue payHeaderItemEC1 = delegator.makeValue("PayrollHeaderItemEc");
