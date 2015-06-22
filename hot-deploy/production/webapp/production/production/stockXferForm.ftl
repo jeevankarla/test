@@ -88,7 +88,8 @@
 			
 			var prodId = product["productId"];
 			var prodName = product["productName"];
-			message += "<form name='xferForm' id='xferForm' method='post' action='createStockXferRequest'><table cellspacing=10 cellpadding=10 style='background-repeat:no-repeat; width:450px;margin:0;'>" ;
+			message += "<form name='xferForm' id='xferForm' method='post' action='createStockXferRequest'><input type='hidden' name='transferGroupTypeId' value='INTERNAL_XFER'>";
+			message += "<table cellspacing=10 cellpadding=10 style='background-repeat:no-repeat; width:450px;margin:0;'>" ;
 			message += "<tr><td align='left'><h2>Product</h2></td><td>&nbsp;</td><td align='left'><input type='hidden' name='productId' id='productId' value='"+prodId+"'><input type='hidden' name='statusId' id='statusId' value='IXF_REQUESTED'><h3>"+prodName+"</h3></td></tr>";
 			message += "<tr><td align='left'><h2>Date</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='text' name='transferDate' id='transferDate' onmouseover='datepick()'></h3></td></tr>";
 			message += "<tr><td align='left'><h2>From Plant/Silo</h2></td><td>&nbsp;</td><td align='left'><h3><select style='width:150px;' id='fromFacilityId' name='fromFacilityId'>";
@@ -114,9 +115,8 @@
 				message += "<option value='"+invId+"'>"+batchNo+" - [ "+qoh+" ]</option>";
 			}
 			message += "</select></h3></td></tr>";
-			
 			message += "<tr><td align='left'><h2>Xfer Qty</h2><sub>(in Kg/Ltr)</sub></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='text' name='xferQty' id='xferQty'></h3></td></tr>";
-			message += "<tr><td align='left'><h2>Comment</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='textarea' name='comment' id='comment'></h3></td></tr><tr></tr>";
+			message += "<tr><td align='left'><h2>Comment</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='textarea' name='comments' id='comments'></h3></td></tr><tr></tr>";
 			message += "<tr class='h3'><td>&nbsp;</td><td align='right'><button onclick='javascript: submitTransferForm();' class='submit'>Submit</button></td><td class='h3' align='left'><button onclick='return cancelForm();'>Close</button></td></tr>";
 			title = "<center><h2>Stock Transfer</h2></center>";
 			message += "</table></form>";

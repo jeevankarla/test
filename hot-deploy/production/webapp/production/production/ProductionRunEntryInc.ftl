@@ -340,7 +340,7 @@
     }
 	
 	function returnQuantityValidator(value ,item) {
-		for (var rowCount=0; rowCount < data3.length; ++rowCount)
+		for (var rowCount=0; rowCount < data2.length; ++rowCount)
   		{ 
 			if (data2[rowCount]['declareQuantity'] != null && data2[rowCount]['declareQuantity'] != undefined) {
 				
