@@ -1372,4 +1372,44 @@
                </widgets>
            </section>
     </screen>
+    <screen name="ExcludeSalaryDisbursement">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Exclude salary disbursement"/>
+                <set field="headerItem" value="PayrollDeduction"/>
+				<set field="tabButtonItem" value="PayrollDeduction" />
+				<set field="tabButtonItem2" value="PayrollDeduction"/>
+				<entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
+					<condition-list combine="and">
+			  			<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+			  		</condition-list>
+			  		<order-by field-name="-fromDate"/>
+		  		    <order-by field-name="periodNum"/> 
+				</entity-condition>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/SalaryDisbursementEmployees.groovy" />
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>
+                    	<screenlet title="Select Employee Details">
+                    		<platform-specific>
+                                <html><html-template location="component:///humanres/webapp/humanres/humanres/PayrollDudction.ftl"/></html>
+                            </platform-specific>
+                        </screenlet> 
+                        <screenlet title="Search Results For The Month ----> ${customTimePeriodId}" >
+                               <section>
+                               		 <widgets>
+		                                <platform-specific>
+			                                <html><html-template location="component:///humanres/webapp/humanres/humanres/PayrollDudctionInit.ftl"/></html>
+			                            </platform-specific>
+		                             </widgets>
+                               </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    
 </screens>

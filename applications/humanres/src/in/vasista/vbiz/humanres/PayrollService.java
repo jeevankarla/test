@@ -9589,4 +9589,107 @@ public class PayrollService {
   	   
   	    return result;
   	}
+
+  	public static String updateExcludeSalaryDisbursement(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	Locale locale = UtilHttp.getLocale(request);
+	  	String payrollHeaderId = null;
+	  	String employeeId = null;
+	  	String comment = null;
+	  	  
+        Timestamp effectiveDate = UtilDateTime.nowTimestamp();
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	HttpSession session = request.getSession();
+	  	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	      
+	  	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	List<Map>salaryDisbursementDetailList =FastList.newInstance();
+	  	  
+	  	for (int i = 0; i < rowCount; i++) {
+	  		Map<String  ,Object> disbursementMap = FastMap.newInstance();
+	  		String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  		if (paramMap.containsKey("payrollHeaderId" + thisSuffix)) {
+	  			payrollHeaderId = (String) paramMap.get("payrollHeaderId" + thisSuffix);
+	  		}
+	  		if (paramMap.containsKey("employeeId" + thisSuffix)) {
+	  			employeeId = (String) paramMap.get("employeeId" + thisSuffix);
+	  		}
+	  		if (paramMap.containsKey("comment" + thisSuffix)) {
+	  			comment = (String) paramMap.get("comment" + thisSuffix);
+	  		}
+	  		  
+	  		disbursementMap.put("payrollHeaderId", payrollHeaderId);
+	  		disbursementMap.put("employeeId", employeeId);
+	  		disbursementMap.put("comment", comment);
+	  		salaryDisbursementDetailList.add(disbursementMap);
+        }
+	  	 
+	  	for(int j=0; j< salaryDisbursementDetailList.size() ; j++){
+	  		Map disbursementMap = salaryDisbursementDetailList.get(j);
+	  		
+	  		String eachPayrollHeaderId = (String)disbursementMap.get("payrollHeaderId");
+	  		String eachEmployeeId = (String)disbursementMap.get("employeeId");
+	  		String eachComment = (String)disbursementMap.get("comment");
+	  		
+	  		if(UtilValidate.isNotEmpty(eachPayrollHeaderId)){
+	  			List conditionList = FastList.newInstance();
+	  	  	    conditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, eachPayrollHeaderId));
+	  	  	    conditionList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, eachEmployeeId));
+	  	  	    EntityCondition pdCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 
+	  			
+	  			 List<GenericValue> payrollDeduction = null;
+	             try {
+	            	 payrollDeduction = delegator.findList("PayrollRetention", pdCondition, null, null, null, false);
+	             } catch (GenericEntityException e) {
+		         		Debug.logError(e, e.toString(), module);
+				        return "error";
+			     }
+	             if(UtilValidate.isNotEmpty(payrollDeduction)){
+	            	 GenericValue eachPayrollDeduction = EntityUtil.getFirst(payrollDeduction);
+		             if(UtilValidate.isNotEmpty(eachComment)){
+		            	 eachPayrollDeduction.set("comments", eachComment);
+			         }
+		             eachPayrollDeduction.set("createdDate", UtilDateTime.nowTimestamp());
+		             eachPayrollDeduction.set("createdByUserLogin", userLogin.get("userLoginId"));
+		             eachPayrollDeduction.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		             eachPayrollDeduction.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			         try{
+			        	 eachPayrollDeduction.store();
+		         	 }
+		         	 catch (GenericEntityException e) {
+		         		 Debug.logError(e, e.toString(), module);
+				         return "error";
+			         }
+	  			 }else{
+			  		 GenericValue newEntity = delegator.makeValue("PayrollRetention");
+					 if(UtilValidate.isNotEmpty(eachPayrollHeaderId)){
+			        	newEntity.set("payrollHeaderId", eachPayrollHeaderId);
+			         }
+					 if(UtilValidate.isNotEmpty(eachEmployeeId)){
+			        	newEntity.set("employeeId", eachEmployeeId);
+			         }
+			         if(UtilValidate.isNotEmpty(eachComment)){
+			        	newEntity.set("comments", eachComment);
+			         }
+			         newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+			         newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+			         newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			         newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			         try{
+			        	 delegator.create(newEntity);
+		         	 }
+		         	 catch (GenericEntityException e) {
+		         		 Debug.logError(e, e.toString(), module);
+				         return "error";
+			         }
+	  			}
+	  		}
+	  	}
+	  	  
+	  	request.setAttribute("_EVENT_MESSAGE_", "Succesfully added ");
+	 	return "success";
+	
+	}
 }//end of class

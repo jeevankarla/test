@@ -1063,6 +1063,9 @@
             </condition>
             <link target="EditVariables"/>
         </menu-item>
+        <menu-item name="PayrollRetention" title="Exclude Salary Disbursement">
+            <link target="ExcludeSalaryDisbursement"/>
+        </menu-item>
     </menu>    
 
 </menus>

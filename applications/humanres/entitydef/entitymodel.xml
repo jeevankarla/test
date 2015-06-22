@@ -2146,4 +2146,36 @@ under the License.
 	        <key-map field-name="productId" rel-field-name="productId"/>
 	  	</relation>
  	</entity>
+ 	<entity entity-name="PayrollRetention"
+            package-name="org.ofbiz.humanres"
+            title="Payroll Retention">
+      	<field name="employeeId" type="id-ne"></field>
+      	<field name="payrollHeaderId" type="id-ne"/>
+      	<field name="comments" type="comment"></field>
+      	<field name="createdDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <prim-key field="employeeId"/>
+      	<prim-key field="payrollHeaderId"/>
+      	<relation type="one" fk-name="PRT"  rel-entity-name="Party">
+            <key-map field-name="employeeId" rel-field-name="partyId"/>
+        </relation>
+		<relation type="one" fk-name="PRH" rel-entity-name="PayrollHeader">
+        	<key-map field-name="payrollHeaderId"/>
+        </relation>
+ 	</entity>
+ 	<view-entity entity-name="PayrollHeaderAndPayrollRetention"
+      package-name="org.ofbiz.humanres"
+      title="PayrollHeader And PayrollRetention">
+      <member-entity entity-alias="PH" entity-name="PayrollHeader"/>
+      <member-entity entity-alias="PR" entity-name="PayrollRetention"/>
+      <alias-all entity-alias="PH"/>
+      <alias-all entity-alias="PR"/>
+      <view-link entity-alias="PR" rel-entity-alias="PH">
+        <key-map field-name="payrollHeaderId"/>
+      </view-link>
+       
+    </view-entity>
+ 	
 </entitymodel>

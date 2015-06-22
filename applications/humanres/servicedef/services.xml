@@ -2035,4 +2035,5 @@ under the License.emplpunch
         <attribute name="partyClassificationId" type="String" optional="true" mode="IN" />
         <attribute name="productsPrice" type="Map" optional="true" mode="OUT"/>
     </service>
+    
 </services>

@@ -123,6 +123,16 @@ List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("emp
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 
+periodBillIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
+conList = [];
+conList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillIds));
+payrollDeductionCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
+payrollHeaderDeductionList = delegator.findList("PayrollHeaderAndPayrollRetention", payrollDeductionCond, null, null, null, false);
+deductPayrollHeaderIdList = [];
+if(payrollHeaderDeductionList){
+	deductPayrollHeaderIdList = EntityUtil.getFieldListFromEntityList(payrollHeaderDeductionList, "payrollHeaderId", true);
+}
+
 Map loanBalancesMap=FastMap.newInstance();
 Map payRateMap=FastMap.newInstance();
 Map unitIdMap=FastMap.newInstance();
@@ -153,6 +163,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	}*/
 	if(UtilValidate.isNotEmpty(bankAdvise_deptId)){
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+	}
+	if(UtilValidate.isNotEmpty(deductPayrollHeaderIdList)){
+		payConList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.NOT_IN ,deductPayrollHeaderIdList));
 	}
 	payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
