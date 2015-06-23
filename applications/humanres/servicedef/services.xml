@@ -1028,6 +1028,13 @@ under the License.emplpunch
         <attribute name="emplPositionRateType" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="emplPositionRateAmount" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
     </service>
+    <service name="updateEmployeeJoiningDate" engine="java" default-entity-name="Employment"
+             location="in.vasista.vbiz.humanres.HumanresService" invoke="updateEmployeeJoiningDate" auth="true">
+        <description>Update Employee Joining Date</description>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="oldJoiningDate" mode="IN" type="String" optional="true"/>
+        <attribute name="newJoiningDate" mode="IN" type="String" optional="true"/>
+    </service>
 
     <service name="createJobRequisition" engine="simple" default-entity-name="JobRequisition"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createJobRequisition" auth="true">

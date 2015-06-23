@@ -35,6 +35,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
@@ -1439,6 +1440,13 @@ public class HumanresService {
 				}else{
 					employmentDateStart =  UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 				}
+				Timestamp dateOfJoiningStart = null;
+				if (UtilValidate.isNotEmpty(dateOfJoining)){
+					dateOfJoiningStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(dateOfJoining));
+				}else{
+					dateOfJoiningStart =  UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+				}
+				
 				// Create Employement
 				if (UtilValidate.isNotEmpty(ownerPartyId)){
 		            input.clear();
@@ -1448,7 +1456,7 @@ public class HumanresService {
 		            input.put("roleTypeIdTo", "EMPLOYEE");
 		            input.put("fromDate", employmentDateStart);
 		            input.put("partyIdFrom", partyIdFrom);
-		            input.put("appointmentDate", dateOfJoining);
+		            input.put("appointmentDate", dateOfJoiningStart);
 		            input.put("locationGeoId", locationGeoId);
 		            outMap = dispatcher.runSync("createEmployment", input);
 		            if(ServiceUtil.isError(outMap)){
@@ -1826,4 +1834,104 @@ public class HumanresService {
 		}
        return result;
     }
+    public static Map<String, Object> updateEmployeeJoiningDate(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Map result = ServiceUtil.returnSuccess();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> inMap = FastMap.newInstance();
+        
+        String partyId = (String)context.get("partyId");
+        String oldJoiningDate = (String)context.get("oldJoiningDate");
+        String newJoiningDate = (String) context.get("newJoiningDate");
+        
+        Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+		
+		Timestamp fromDateStart = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");	
+		try {
+    		fromDateStart = UtilDateTime.toTimestamp(sdf.parse(newJoiningDate));
+		} catch (ParseException e) {
+		}
+		
+		Timestamp oldJoiningDateTs = null;
+		SimpleDateFormat   sdformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+		try {
+			oldJoiningDateTs = (Timestamp)UtilDateTime.toTimestamp(sdformat.parse(oldJoiningDate));
+		} catch (ParseException e) {
+		}
+		
+		List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, oldJoiningDateTs));
+        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        GenericValue employment = null;
+        try {
+        	 List<GenericValue> availableEmployment = delegator.findList("Employment", condition, null, null, null, false);
+        	 employment = EntityUtil.getFirst(availableEmployment);
+		} catch (GenericEntityException e) {
+			Debug.logError("Unable to Fetch Employment"+e, module);
+    		return ServiceUtil.returnError("Unable to Fetch Employment"); 
+		}
+        
+        String roleTypeIdFrom = (String) employment.get("roleTypeIdFrom");
+        String roleTypeIdTo = (String) employment.get("roleTypeIdTo");
+        String partyIdFrom = (String) employment.get("partyIdFrom");
+        Timestamp appointmentDate = (Timestamp) employment.get("appointmentDate");
+        String locationGeoId = (String) employment.get("locationGeoId");
+        String stateGeoId = (String) employment.get("stateGeoId");
+        Timestamp reportingDate = (Timestamp) employment.get("reportingDate");
+        Timestamp resignationDate = (Timestamp) employment.get("resignationDate");
+        String terminationReasonId = (String) employment.get("terminationReasonId");
+        String terminationTypeId = (String) employment.get("terminationTypeId");
+        
+        Map deleteEmploymentMap = FastMap.newInstance();
+        deleteEmploymentMap.put("userLogin",userLogin);
+        deleteEmploymentMap.put("roleTypeIdFrom",roleTypeIdFrom);
+        deleteEmploymentMap.put("partyIdTo",partyId);
+        deleteEmploymentMap.put("partyIdFrom",partyIdFrom);
+        deleteEmploymentMap.put("roleTypeIdTo",roleTypeIdTo);
+        deleteEmploymentMap.put("appointmentDate",appointmentDate);
+        deleteEmploymentMap.put("fromDate",oldJoiningDate);
+		try {
+			Map resultValue = dispatcher.runSync("deleteEmployment", deleteEmploymentMap);
+			if(ServiceUtil.isError(result)){
+				Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
+				return result;
+			}
+		} catch (GenericServiceException s) {
+			Debug.logError("Error while deleting Employment"+s.getMessage(), module);
+		} 
+        
+        Map createEmploymentMap = FastMap.newInstance();
+        createEmploymentMap.put("userLogin",userLogin);
+        createEmploymentMap.put("roleTypeIdFrom",roleTypeIdFrom);
+        createEmploymentMap.put("partyIdTo",partyId);
+        createEmploymentMap.put("partyIdFrom",partyIdFrom);
+        createEmploymentMap.put("roleTypeIdTo",roleTypeIdTo);
+        createEmploymentMap.put("appointmentDate",appointmentDate);
+        createEmploymentMap.put("fromDate",fromDateStart);
+        
+        createEmploymentMap.put("locationGeoId",locationGeoId);
+        createEmploymentMap.put("stateGeoId",stateGeoId);
+        createEmploymentMap.put("reportingDate",reportingDate);
+        createEmploymentMap.put("resignationDate",resignationDate);
+        createEmploymentMap.put("terminationReasonId",terminationReasonId);
+        createEmploymentMap.put("terminationTypeId",terminationTypeId);
+        
+        try {
+			Map resultValue = dispatcher.runSync("createEmployment", createEmploymentMap);
+			if(ServiceUtil.isError(result)){
+				Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
+				return result;
+			}
+		} catch (GenericServiceException s) {
+			Debug.logError("Error while creating Employment"+s.getMessage(), module);
+		} 
+        
+		return result;
+    }
+     
 }
