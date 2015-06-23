@@ -206,7 +206,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 									<fo:table-cell>
 			                          <fo:block text-align="right" white-space-collapse="false" >${shopeerent.get("amount")?string("##0.00")}</fo:block>
 			                        </fo:table-cell>
-			                        <#assign totalRevenue = daySaleEntry.getValue().get("totalRevenue") + shopeerent.get("amount")>
 									 <fo:table-cell>
 			                          <fo:block text-align="right" ></fo:block>
 			                        </fo:table-cell>
