@@ -830,6 +830,128 @@ public class ProductionServices {
         result.put("productionRunId",productionRunId);
         return result;
     }// End of the Service
+    
+      
+    public static Map<String, ? extends Object> checkAndManageBlendedProductInventory(DispatchContext dctx, Map context) {
+         Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();
+         String facilityId = (String)context.get("facilityId");
+         String productId = (String)context.get("productId");
+         BigDecimal incomingQty = (BigDecimal)context.get("quantityOnHandTotal");
+         Map<String, ? extends Object> result = ServiceUtil.returnSuccess();
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+         try {
+        	 
+        	 GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+        	 
+        	 String facilityTypeId = "";
+        	 if(UtilValidate.isNotEmpty(facility) && UtilValidate.isNotEmpty(facility.get("facilityTypeId"))){
+        		 facilityTypeId = facility.getString("facilityTypeId");
+        	 }
+        	 
+        	 BigDecimal facilitySize = BigDecimal.ZERO;
+        	 
+        	 if(UtilValidate.isNotEmpty(facility.get("facilitySize"))){
+        		 facilitySize = facility.getBigDecimal("facilitySize");
+        	 }
+        	 
+        	 if(facilitySize.compareTo(BigDecimal.ZERO) >0){
+        		 Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", facilityId);
+        		 Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+                 if (ServiceUtil.isError(resultCtx)) {
+                	 Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
+                     return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
+                 }
+                 Object qohObj = resultCtx.get("quantityOnHandTotal");
+                 BigDecimal qoh = BigDecimal.ZERO;
+                 if (qohObj != null) {
+                 	qoh = new BigDecimal(qohObj.toString());
+                 }
+                 if (UtilValidate.isEmpty(incomingQty)) {
+                	 incomingQty = BigDecimal.ZERO;
+                 }
+                 BigDecimal totalQtyInc = facilitySize.subtract(qoh.add(incomingQty));
+                 if(totalQtyInc.compareTo(BigDecimal.ZERO) < 0){
+                	 Debug.logError("Facility capacity exceeded..!", module);
+                     return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
+                 }
+        	 }
+        	 if(facilityTypeId.equals("SILO")){
+        		 
+        		 boolean allowFacilityBlend = Boolean.FALSE;
+        		 if(UtilValidate.isNotEmpty(facility.get("allowProductBlend")) && (facility.getString("allowProductBlend").equals("Y"))){
+            		 allowFacilityBlend = Boolean.TRUE;
+            	 }
+        		 
+            	 List conditionList = FastList.newInstance();
+            	 if(allowFacilityBlend){
+            		 
+            		 List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
+                	 
+                	 List<String> productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
+                	 if(!productIds.contains(productId)){
+                		 Debug.logError("This product with Id ["+productId+"] is not mapped to facility :"+facilityId, module);
+                         return ServiceUtil.returnError("This product with Id ["+productId+"] is not mapped to facility :"+facilityId);
+                	 }
+                	 
+                	 conditionList.clear();
+                	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+                	 conditionList.add(EntityCondition.makeCondition("productAssocTypeId", EntityOperator.EQUALS, "SILO_PROD_BLEND"));
+                	 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+                	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
+                	 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	 List<GenericValue> prodAssoc = delegator.findList("ProductAssoc", condition, null, null, null, false);
+                	 String blendedProductId = "";
+                	 
+                	 if(UtilValidate.isNotEmpty(prodAssoc)){
+                		 GenericValue blendedProduct = EntityUtil.getFirst(prodAssoc);
+                		 blendedProductId = blendedProduct.getString("productIdTo");
+                		 if(UtilValidate.isNotEmpty(blendedProduct.get("quantity"))){
+                			 Object qty = blendedProduct.get("quantity");
+                			 context.put("quantityOnHandTotal", qty);
+                			 context.put("availableToPromiseTotal", qty);
+                		 }
+                		 Object blendProdId = blendedProductId;
+                		 context.put("productId", blendProdId);
+                	 }
+                	 else{
+                		 Debug.logError("Blending of product with Id ["+productId+"] is not allowed fpr facility :"+facilityId, module);
+                         return ServiceUtil.returnError("Blending of product with Id ["+productId+"] is not allowed fpr facility :"+facilityId);
+                	 }
+            	 }
+            	 else{
+            		 conditionList.clear();
+                	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+                	 conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+                	 EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	 List<GenericValue> inventoryProducts = delegator.findList("InventoryItem", invCond, UtilMisc.toSet("productId"), null, null, false);
+                	 
+                	 List<String> extProdIds = EntityUtil.getFieldListFromEntityList(inventoryProducts, "productId", true);
+                	 
+                	 String extProd = "";
+                	 for(String prodId : extProdIds){
+                		 if(!prodId.equals(productId)){
+                			 extProd = prodId;
+                    	 }
+                	 }
+                	 if(!extProdIds.contains(productId)){
+                		 extProdIds.add(productId);
+                	 }
+                	 
+            		 if(extProdIds.size() > 1){
+            			 Debug.logError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+productId, module);
+                         return ServiceUtil.returnError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+productId);
+            		 }
+            		 
+            	 }
+        	 }
+         }
+         catch(Exception e){
+         	Debug.logError(e, module);
+         	return ServiceUtil.returnError(e.toString());
+         }
+         return context;
+     }
      
      public static Map<String, Object> createStockXferRequest(DispatchContext dctx, Map<String, ? extends Object> context) {
          Delegator delegator = dctx.getDelegator();
