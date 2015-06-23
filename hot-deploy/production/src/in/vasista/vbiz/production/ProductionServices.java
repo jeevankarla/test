@@ -914,6 +914,10 @@ public class ProductionServices {
                 		 Object blendProdId = blendedProductId;
                 		 context.put("productId", blendProdId);
                 	 }
+                	 else{
+                		 Debug.logError("Blending of product with Id ["+productId+"] is not allowed fpr facility :"+facilityId, module);
+                         return ServiceUtil.returnError("Blending of product with Id ["+productId+"] is not allowed fpr facility :"+facilityId);
+                	 }
             	 }
             	 else{
             		 conditionList.clear();
