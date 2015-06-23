@@ -43,6 +43,11 @@
     	<attribute name="workEffortId" mode="IN" type="String" optional="true"/>
     	<attribute name="productBatchId" mode="OUT" type="String" optional="false"/>
     </service>
+    <service name="checkAndManageBlendedProductInventory" default-entity-name="InventoryItem" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="checkAndManageBlendedProductInventory">
+    	<description>Check and Manage Blended Product Inventory</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="INOUT" optional="true"/>
+    </service>
     <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
     	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
     </service>

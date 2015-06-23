@@ -42,4 +42,7 @@
 	<EnumerationType description="Inventory Transfer Group" enumTypeId="INV_XFER" hasTable="N" />
 	<Enumeration description="Internal Transfers" enumCode="INTERNAL XFER" enumId="INTERNAL_XFER" enumTypeId="INV_XFER" sequenceId="01"/>
 	<Enumeration description="Return Transfers" enumCode="RETURN TRANSFER" enumId="RETURN_XFER" enumTypeId="INV_XFER" sequenceId="02"/>
+	
+	<ProductAssocType description="Silo Product Blending" hasTable="N" productAssocTypeId="SILO_PROD_BLEND"/>
+	 
 </entity-engine-xml>
