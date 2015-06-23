@@ -20,6 +20,39 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+   <form name="productionLookupFacility" target="ProductionLookupFacility" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <!--<auto-fields-entity entity-name="Facility" default-field-type="hidden"/> -->
+        <field name="facilityId"><text-find/></field>
+        <field name="facilityName"><text-find/></field>
+        <field name="facilityTypeId_0" title="FacilityTypeId">
+            <drop-down allow-empty="true" >
+                <option key="SILO" description="SILO"/>
+                <option key="PLANT" description="Plant"/>
+                <option key="FLOOR" description="Floor"/>
+                <option key="STORAGE" description="STORAGE"/>
+            </drop-down>
+        </field>
+        <field name="ownerPartyId" title="${uiLabelMap.ProductFacilityOwner}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+ 	</form>
+    <form name="listProductionLookupFacility" list-name="listIt" title="" type="list"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ProductionLookupFacility">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Facility"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="facilityId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${facilityId}" target="javascript:set_values('${facilityId}', '${facilityName}')"/>
+        </field>
+        <field name="facilityName" ><display/></field>
+        <field name="facilityTypeId"><display/></field>
+ 	</form>   
     <form name="CreateNgProductionRun" target="createNgProductionRun" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct" size="16"/></field>
@@ -99,8 +132,8 @@ under the License.
         </actions>
        <row-actions>
             <set field="workEffortId" from-field="workEffortId"/>
-            <script location="component://production/webapp/production/WEB-INF/actions/qcCheckForProductionRun.groovy"/>
-            <set field="qcCheck" default-value="${context.qcCheck}"/>
+            <script location="component://production/webapp/production/WEB-INF/actions/qcCheckForWorkEffortId.groovy"/>
+            <set field="qcCheckForProdRun" default-value="${context.qcCheckForProdRun}"/>
         </row-actions> 
         <field name="workEffortId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
             <hyperlink target="ShowNgProductionRun" description="${workEffortId}" also-hidden="false">
@@ -118,16 +151,37 @@ under the License.
         <field name="actualCompletionDate" title="${uiLabelMap.ManufacturingActualCompletionDate}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="facilityId" title="Plant"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
-             <field use-when="&quot;${currentStatusId}&quot;.equals(&quot;PRUN_COMPLETED&quot;) &amp;&amp; &quot;${qcCheck}&quot;.equals(&quot;INCOMPLETE&quot;)" name="QC Details" widget-style="buttontext">
-           <hyperlink  target-type="plain" description="QC Details"  target="javascript: showQcForm('${productId}', 'CreateProductionRunQcDetails', 'workEffortId', '${workEffortId}');" ></hyperlink>
-        </field>
+        <field use-when="&quot;${currentStatusId}&quot;.equals(&quot;PRUN_COMPLETED&quot;)  &amp;&amp; &quot;${qcCheckForProdRun}&quot;.equals(&quot;INCOMPLETE&quot;)" name="QC Products" widget-style="buttontext">
+           <hyperlink target="qcProducts" description="QCProducts" target-window="_blank">
+               	<parameter param-name="workEffortId"/>
+           </hyperlink>  
+         </field>
         <field use-when="&quot;${currentStatusId}&quot;.equals(&quot;PRUN_COMPLETED&quot;)" name="Report" widget-style="buttontext">
            <hyperlink target="productionRunCompletedReport.pdf" description="Report" target-window="_blank">
                 <parameter param-name="productionRunId" from-field="workEffortId"/>
             </hyperlink>
         </field>
     </form>
-
+   <form name="listOfQcProducts" list-name="qcProductsList" title="" type="list" paginate-target="/FindNgProductionRun"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <row-actions>
+            <set field="workEffortId" from-field="workEffortId"/>
+            <set field="productId" from-field="productId"/>
+            <script location="component://production/webapp/production/WEB-INF/actions/qcCheckForProductionRun.groovy"/>
+            <set field="qcCheck" default-value="${context.qcCheck}"/>
+        </row-actions> 
+        <field name="workEffortId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="ShowNgProductionRun" description="${workEffortId}" also-hidden="false">
+                <parameter param-name="productionRunId" from-field="workEffortId"/>
+            </hyperlink>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductName}"><display-entity entity-name="Product" key-field-name="productId" description="${productName} [${internalName}]"/></field>
+        <field name="quantity" title="${uiLabelMap.Quantity}"><display/></field>
+              
+        <field use-when="&quot;${qcCheck}&quot;.equals(&quot;INCOMPLETE&quot;)" name="QC Details" widget-style="buttontext">
+           <hyperlink  target-type="plain" description="QC Details"  target="javascript: showQcForm('${productId}', 'CreateProductionRunQcDetails', 'workEffortId', '${workEffortId}');" ></hyperlink>
+        </field>
+    </form>
      <form name="UpdateProductionRun" type="single" target="updateProductionRun" title="" default-map-name="productionRunData"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="productionRunId"><hidden/></field>

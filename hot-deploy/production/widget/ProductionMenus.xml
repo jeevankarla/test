@@ -49,6 +49,19 @@
 	    	<link target="ProductionIssuance"></link>
 	    </menu-item>
 	</menu>
+	<menu name="FindProductionTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+      	<menu-item name="productionRun" title="Find Production Run">
+            <link target="FindNgProductionRun"></link>
+        </menu-item>
+		<menu-item name="QcProducts" title="QC Details">
+		<condition>
+        		<not>
+					<if-empty  field="parameters.workEffortId"/>
+				</not>
+        	</condition>
+       		<link target="qcProducts" ><parameter param-name="workEffortId" from-field="parameters.workEffortId" /> </link>
+      	</menu-item>
+   	</menu>	
    <menu name="ProductionIssuanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
     <menu-item name="ProductionIssuance" title="Find Issuance">
       <link target="ProductionIssuance"></link>

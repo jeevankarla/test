@@ -18,7 +18,13 @@ dctx = dispatcher.getDispatchContext();
 qcCheck=null;
 if(UtilValidate.isNotEmpty(context.get("workEffortId"))){
 	workEffortId=context.get("workEffortId");
-    productQcTest = delegator.findList("ProductQcTest",EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS , workEffortId)  , null, null, null, false );
+	productId=context.get("productId");
+	
+	List conlist=[];
+	conlist.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, workEffortId));
+	conlist.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS ,productId));
+	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
+	productQcTest = delegator.findList("ProductQcTest", cond , null, null, null, false );
 	if(UtilValidate.isNotEmpty(productQcTest)){
 		//String statusId = (EntityUtil.getFirst(productQcTest)).getString("statusId");
 		//statusId="QC_ACCEPT"

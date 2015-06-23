@@ -222,9 +222,12 @@ public class ProductionServices {
         Map<String, Object> result = FastMap.newInstance();
             EntityListIterator returnItems = null;
             EntityListIterator eli = null;
+            EntityListIterator eliForQc = null;
+
             List issuedProductsList = FastList.newInstance();
             List declareProductsList = FastList.newInstance();
             List returnProductsList = FastList.newInstance();
+            List qcComponentsList = FastList.newInstance();
             try {
             	List conditionList = FastList.newInstance();
 	            conditionList.add(EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, workEffortId));
@@ -259,7 +262,7 @@ public class ProductionServices {
 		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(returnId))){
 		                    String productBatchId = productionTrans.getString("productBatchId");
 		                 	if(UtilValidate.isNotEmpty(productBatchId)){
-		                    	List<GenericValue> productBatchSequence = delegator.findList("ProductBatchSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, productBatchId), null, UtilMisc.toList("sequenceId"), null, false);
+		                    	List<GenericValue> productBatchSequence = delegator.findList("ProductBatchAndSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, productBatchId), null, UtilMisc.toList("sequenceId"), null, false);
 		                     	if(UtilValidate.isNotEmpty(productBatchSequence)){
 		                     		String batchNo = (EntityUtil.getFirst(productBatchSequence)).getString("sequenceId");
 		                 		    declareProductsMap.put("batchNo",batchNo);
@@ -274,27 +277,62 @@ public class ProductionServices {
 		            }
 		            eli.close();
 		            
-		            //List<String> orderBy = UtilMisc.toList("returnId","returnItemSeqId");
-	            	returnItems = delegator.find("ReturnHeaderAndItem", EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds), null, null, null, null);
-	            	if(UtilValidate.isNotEmpty(returnItems)){
-			            GenericValue returnTrans;
-			            while ((returnTrans = returnItems.next()) != null) {
-			                Map returnProductsMap = FastMap.newInstance();
-			            	String returnId = returnTrans.getString("returnId");
-			            	String returnItemSeqId = returnTrans.getString("returnItemSeqId");
-			                String returnProdId = returnTrans.getString("productId");
-			            	BigDecimal returnQty = returnTrans.getBigDecimal("returnQuantity");
-			            	if(UtilValidate.isNotEmpty(returnId)){
-			             		returnProductsMap.put("returnId",returnId);
-			             		returnProductsMap.put("returnItemSeqId",returnItemSeqId);
-			             		returnProductsMap.put("returnProdId",returnProdId);
-			             		returnProductsMap.put("returnQty",returnQty);
-			             		returnProductsList.add(returnProductsMap);
-			             	}
-			            }
+		          //production run Return Products Details
+	            	conditionList.clear();
+		            conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds));
+		            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "RETURN_XFER"));
+		            EntityCondition conditionForReturn = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	            	List<GenericValue> inventoryTransferGroup = delegator.findList("InventoryTransferGroup", conditionForReturn, null, null, null, false);
+	            	if(UtilValidate.isNotEmpty(inventoryTransferGroup)){
+                 		String transferGroupId = (EntityUtil.getFirst(inventoryTransferGroup)).getString("transferGroupId");
+    	            	returnItems = delegator.find("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, null);
+		            	if(UtilValidate.isNotEmpty(returnItems)){
+				            GenericValue returnTrans;
+				            while ((returnTrans = returnItems.next()) != null) {
+				                Map returnProductsMap = FastMap.newInstance();
+				            	String returnTransferGroupId = returnTrans.getString("transferGroupId");
+				            	String returnInventoryTransferId = returnTrans.getString("inventoryTransferId");
+				                String returnProdId = returnTrans.getString("productId");
+				            	BigDecimal returnQty = returnTrans.getBigDecimal("xferQty");
+				            	if(UtilValidate.isNotEmpty(returnTransferGroupId)){
+				             		returnProductsMap.put("returnId",returnTransferGroupId);
+				             		returnProductsMap.put("returnItemSeqId",returnInventoryTransferId);
+				             		returnProductsMap.put("returnProdId",returnProdId);
+				             		returnProductsMap.put("returnQty",returnQty);
+				             		returnProductsList.add(returnProductsMap);
+				             	}
+				            }
+		            	}
+		            	returnItems.close();
 	            	}
-	            	returnItems.close();
+		            // QC Details for Production Run
+		            conditionList.clear();
+		            conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, workEffortId));
+		            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "QC_ACCEPT"));
+		            EntityCondition conditionForQc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	            	List<GenericValue> productQcTest = delegator.findList("ProductQcTest", conditionForQc, null, null, null, false);
+	            	if(UtilValidate.isNotEmpty(productQcTest)){
+                 		String qcTestId = (EntityUtil.getFirst(productQcTest)).getString("qcTestId");
+                 		String pRunProductId = (EntityUtil.getFirst(productQcTest)).getString("productId");
 
+			            eliForQc = delegator.find("ProductQcTestDetails", EntityCondition.makeCondition("qcTestId", EntityOperator.EQUALS, qcTestId), null, null, null, null);
+		            	if(UtilValidate.isNotEmpty(eliForQc)){
+				            GenericValue qcTrans;
+				            while ((qcTrans = eliForQc.next()) != null) {
+				                Map qcComponentsMap = FastMap.newInstance();
+				            	String sequenceNumber = qcTrans.getString("sequenceNumber");
+				            	String testComponent = qcTrans.getString("testComponent");
+				                String testValue = qcTrans.getString("value");
+				            		qcComponentsMap.put("qcTestId",qcTestId);
+				            		qcComponentsMap.put("sequenceNumber",sequenceNumber);
+				            		qcComponentsMap.put("testComponent",testComponent);
+				            		qcComponentsMap.put("testValue",testValue);
+				            		qcComponentsList.add(qcComponentsMap);
+				            }
+		            	}
+		            	eliForQc.close();
+	            	}
+		            
             	}
             }
             catch(GenericEntityException e){
@@ -304,6 +342,7 @@ public class ProductionServices {
             result.put("issuedProductsList",issuedProductsList);
             result.put("declareProductsList",declareProductsList);
             result.put("returnProductsList",returnProductsList);
+            result.put("qcComponentsList",qcComponentsList);
         	
         return result;
     }// End of the Service
