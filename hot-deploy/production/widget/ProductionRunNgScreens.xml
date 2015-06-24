@@ -601,7 +601,8 @@ under the License.
                                         <include-form name="findProductionRun" location="component://production/widget/ProductionRunNgForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
-                                    	<platform-specific><html><html-template location="component://production/webapp/production/production/ProductQualityAnalysis.ftl"/></html></platform-specific>
+                            	<!--<platform-specific><html><html-template location="component://production/webapp/production/production/ProductQualityAnalysis.ftl"/></html></platform-specific>
+                                    <platform-specific><html><html-template location="component://production/webapp/production/production/produtionRunQcProducts.ftl"/></html></platform-specific> -->
                                         <include-form name="listFindProductionRun" location="component://production/widget/ProductionRunNgForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
@@ -611,6 +612,29 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    <screen name="productionRunQcProducts">
+           	<section>
+           		<actions>
+           			<set field="titleProperty" value="QC Products- ${parameters.workEffortId}"/> 
+           			<set field="tabButtonItem1" value="productionRun" />	
+       			      <set field="tabButtonItem2" value="QcProducts"/>
+                       <script location="component://production/webapp/production/WEB-INF/actions/getQcProducts.groovy"/>
+                   </actions>
+       	    	<widgets>
+                <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+       	            	<decorator-section name="body"> 
+       	            	<include-menu name="FindProductionTabBar" location="component://production/widget/ProductionMenus.xml"/>
+       	            		<section>
+       	            			<widgets>
+                                	<platform-specific><html><html-template location="component://production/webapp/production/production/ProductQualityAnalysis.ftl"/></html></platform-specific>
+                                    <include-form name="listOfQcProducts" location="component://production/widget/ProductionRunNgForms.xml"/>
+       	                    	</widgets>
+       	            		</section>
+       	                </decorator-section> 
+       	    		</decorator-screen>
+       	    	</widgets>
+           	</section>
     </screen>
     <screen name="WorkWithShipmentPlans">
         <section>

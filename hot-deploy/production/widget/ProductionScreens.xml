@@ -15,7 +15,32 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="ProductionLookupFacility">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.displayParentFacilityId" value="N" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupFacility}"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="entityName" value="Facility"/>
+                <set field="searchFields" value="[facilityId, facilityName, description]"/>
+           <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConditionFacilityLookup.groovy"/> -->
+                <script location="component://production/webapp/production/WEB-INF/actions/productionLookupFacilityCond.groovy"/> 
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="productionLookupFacility" location="component://production/widget/ProductionForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listProductionLookupFacility" location="component://production/widget/ProductionForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+	</screen> 
     <screen name="PowderPlant">
         <section>
             <actions>

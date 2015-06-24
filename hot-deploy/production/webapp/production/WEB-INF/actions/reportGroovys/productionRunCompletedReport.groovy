@@ -68,9 +68,11 @@ productionDetails = ProductionServices.getProductionRunDetails(dctx, [ workEffor
 issuedProductsList=productionDetails.get("issuedProductsList");
 declareProductsList=productionDetails.get("declareProductsList");
 returnProductsList=productionDetails.get("returnProductsList");
+qcComponentsList=productionDetails.get("qcComponentsList");
 context.issuedProductsList=issuedProductsList; 
 context.declareProductsList=declareProductsList;
 context.returnProductsList=returnProductsList;
+context.qcComponentsList=qcComponentsList;
 
 
 

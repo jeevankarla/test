@@ -38,6 +38,11 @@
 	    <security https="true" auth="true"/>
 	    <response name="success" type="view" value="FindNgProductionRun"/>
     </request-map>
+    <request-map uri="qcProducts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="productionRunQcProducts"/>
+       <response name="error" type="view" value="productionRunQcProducts"/>
+     </request-map>
     <request-map uri="ProductionRunEntry">
 	    <security https="true" auth="true"/>
 	    <response name="success" type="view" value="ProductionRunEntry"/>
@@ -63,6 +68,12 @@
         <response name="success" type="view" value="EditNgProductionRun"/>
         <response name="error" type="view" value="CreateNgProductionRun"/>
     </request-map>
+   <request-map uri="getQcProductIds">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/"  invoke="getQcProducts.groovy"/>
+       <response name="success" type="request" value="json"/>    
+    </request-map>
+        
     <request-map uri="getProductTestComponents">
         <security https="true" auth="true"/>
         <event type="service"  invoke="getProductTestComponents"/>        
@@ -360,6 +371,8 @@
      	<response name="success" type="view" value="ProductionReceiptAcknowledgements"/>
      	<response name="error" type="view" value="ProductionReceiptAcknowledgements"/>
      </request-map>
+     <request-map uri="ProductionLookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="ProductionLookupFacility"/></request-map>
+     
     <!-- View Mappings -->
     
     <view-map name="ProductionRunTrends" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionRunTrends"/>
@@ -368,6 +381,7 @@
     <view-map name="powderShiftStart" type="screen" page="component://production/widget/ProductionScreens.xml#PowderPlant"/>
     <view-map name="prePacking" type="screen" page="component://production/widget/ProductionScreens.xml#prePacking"></view-map>
     <view-map name="FindNgProductionRun" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#FindNgProductionRun"></view-map>
+    <view-map name="productionRunQcProducts" type="screen" page="component://production/widget/ProductionRunNgScreens.xml#productionRunQcProducts"></view-map>
     <view-map name="CreateNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#CreateNgProductionRun" type="screen"/>
     <view-map name="EditNgProductionRun" page="component://production/widget/ProductionRunNgScreens.xml#EditNgProductionRun" type="screen"/>
     <view-map name="ProductionRunNgDeclaration" page="component://production/widget/ProductionRunNgScreens.xml#ProductionRunNgDeclaration" type="screen"/>
@@ -376,6 +390,7 @@
     <view-map name="productionStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#productionStockXfers"></view-map>
     <view-map name="InOutStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#InOutStockXfers"></view-map>
     <view-map name="findStockXfer" type="screen" page="component://production/widget/ProductionScreens.xml#FindStockXfer"></view-map>
+    <view-map name="ProductionLookupFacility" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionLookupFacility"/>
   
     <!-- View Mappings for Production Reports-->
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
