@@ -53,6 +53,15 @@
       	<menu-item name="FindMilkReceiptEntry" title="Find Milk Receipts" >
             <link target="FindMilkReceiptsTankerEntry">
 			</link>
+      	</menu-item>
+      	
+      	<menu-item name="MilkTankerIssues" title="Milk Tanker Issues" >
+            <link target="milkTankerIssues">
+			</link>
+      	</menu-item> 
+      	<menu-item name="MilkTankerReturns" title="Internal Tanker Returns" >
+            <link target="MilkTankerRetunrQC">
+			</link>
       	</menu-item> 
       	
       	<menu-item name="MRTransporterMargins" title="Transporters">
@@ -79,6 +88,59 @@
 			<link target="FindPtcAdjustment"></link>
 		</menu-item>		
 	</menu>
+	<menu name="MilkTransferIssuesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		
+		<menu-item name="MilkIssues" title="Cip Details" >
+            <link target="milkTankerIssues">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesTareWeight" title="TareWeight Details" >
+            <link target="MilkTankerIssuesTareWeight">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesQC" title="QC Details" >
+            <link target="MilkTankerIssuesQC">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesGrossWeight" title="Gross weight Details" >
+            <link target="MilkTankerIssuesGrossWeight">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesAQC" title="Ack QC" >
+            <link target="MilkTankerIssuesAQC">
+			</link>
+      	</menu-item>				
+	</menu>
+	<menu name="MilkTransferReturnsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		
+		<menu-item name="MilkTankerReturnQC" title="QC Details" >
+            <link target="MilkTankerRetunrQC">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerReturnGrossWeight" title="Gross weight Details" >
+            <link target="MilkTankerReturnGrossWeight">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerReturnAQC" title="Ack QC" >
+            <link target="MilkTankerReturnAQC">
+			</link>
+      	</menu-item>
+		<menu-item name="MilkReturnUnloading" title="unloading Details" >
+            <link target="MilkTankerReturnUnloading">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkReturnCIP" title="Cip Details" >
+            <link target="MilkReturnCIP">
+			</link>
+      	</menu-item>
+      	
+      	<menu-item name="MilkTankerReturnTareWeight" title="TareWeight Details" >
+            <link target="MilkTankerReturnTareWeight">
+			</link>
+      	</menu-item>
+	</menu>
+	
+	
 	<menu name="FindMilkReceiptsTankerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="SearchMilkReceiptsTankerEntry" title="Search Milk Receipts ">
 			<link target="FindMilkReceiptsTankerEntry"></link>
