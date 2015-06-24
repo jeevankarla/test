@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.product.product.ProductWorker;
-
+import org.ofbiz.accounting.invoice.*;
 dctx = dispatcher.getDispatchContext();
 
 userLogin= context.userLogin;
@@ -190,7 +190,14 @@ allInvoiceList = delegator.findList("Invoice", conditionInvRole , null, null, nu
 if(allInvoiceList){
 	shopeeInvoiceList=[];
 allInvoiceList.each{ eachinvoice ->
-	Map invoicePaymentInfoMap =FastMap.newInstance();
+	tempMap=[:];
+	totalAmount = InvoiceWorker.getInvoiceTotal(eachinvoice);
+	tempMap.put("invoiceId", eachinvoice.invoiceId);
+	tempMap.put("amount", totalAmount);
+	tempMap.put("dueDate", eachinvoice.invoiceDate);
+	
+	shopeeInvoiceList.addAll(tempMap);
+	/*Map invoicePaymentInfoMap =FastMap.newInstance();
 	//BigDecimal outstandingAmount =BigDecimal.ZERO;
 	invoicePaymentInfoMap.put("invoiceId", eachinvoice.invoiceId);
 	invoicePaymentInfoMap.put("userLogin",userLogin);
@@ -200,7 +207,7 @@ allInvoiceList.each{ eachinvoice ->
 		shopeeInvoiceList.add(invoicePaymentInfo);
 		}
 		//outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");
-	
+*/	
 }
 context.shopeeInvoiceList=shopeeInvoiceList;
 }
@@ -234,6 +241,11 @@ for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 		curntDaySalesMap["PM"]=pmBoothDayTotals.getAt(curntDay).get("productTotals");
 		dayTotalRevenue=dayTotalRevenue.add(pmBoothDayTotals.getAt(curntDay).get("totalRevenue"));
 	}
+	if(j==0){
+		if(shopeeInvoiceList){
+		dayTotalRevenue +=shopeeInvoiceList.amount;
+		}
+	}	
 //	if(UtilValidate.isNotEmpty(BoothRoutes)){
 //		boothRouteIdsMap=(Map)BoothRoutes.get("boothRouteIdsMap");//to get routeIds
 //	}
