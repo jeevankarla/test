@@ -31,7 +31,7 @@ import org.ofbiz.party.party.PartyHelper;
 	
 	List conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("GENERATED","APPROVED")));
 	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PAYROLL_BILL"));
 	custTimeCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	periodBillingList = delegator.findList("PeriodBilling", custTimeCondition, null, null, null, false);
