@@ -849,7 +849,7 @@ public class ProductionServices {
         		 facilityTypeId = facility.getString("facilityTypeId");
         	 }
         	 
-        	 if(facilityTypeId.equals("SILO")){
+        	 if(UtilValidate.isNotEmpty(facilityTypeId) && facilityTypeId.equals("SILO")){
         		 
         		 boolean allowFacilityBlend = Boolean.FALSE;
         		 if(UtilValidate.isNotEmpty(facility.get("allowProductBlend")) && (facility.getString("allowProductBlend").equals("Y"))){
