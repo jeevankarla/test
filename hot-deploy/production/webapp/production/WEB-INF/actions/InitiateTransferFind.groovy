@@ -21,7 +21,7 @@
 // The "actionForm" parameter triggers actions (see "ProductionRunSimpleEvents.xml").
 
 import org.ofbiz.entity.util.EntityUtil;
-import org.eclipse.emf.ecore.impl.EPackageRegistryImpl.Delegator;
+/*import org.eclipse.emf.ecore.impl.EPackageRegistryImpl.Delegator;*/
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -92,10 +92,8 @@ facilityList.each{facility->
 	facilityJson.add(newObj);
 	facilityNameJSON.put(facility.facilityId, facility.facilityName);
 }
-
 productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),UtilMisc.toSet("productId","facilityId","capacity"),null,null,false);
 productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
-
 productList = delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,productIds),null,null,null,false);
 if(productFacility){
 	facilityIds.each{ facilityId->
@@ -105,11 +103,13 @@ if(productFacility){
 		prodFacility.each{prFacility->
 			productName = EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,prFacility.productId));
 			prodName = EntityUtil.getFirst(productName);
-			newObj.put("value", prFacility.productId);
-			newObj.put("label", prodName.description);
-			facilityArray.add(newObj);
-			productJSON.add(newObj);
-			productNameJSON.put(prFacility.productId, prodName.description);
+			if(prodName){
+				newObj.put("value", prFacility.productId);
+				newObj.put("label", prodName.productName);
+				facilityArray.add(newObj);
+				productJSON.add(newObj);
+				productNameJSON.put(prFacility.productId, prodName.productName);
+			}
 		}
 		if(UtilValidate.isNotEmpty(facilityArray)){
 		facilityJSON.put(facilityId, facilityArray);
@@ -121,4 +121,3 @@ context.productNameJSON=productNameJSON;
 context.facilityJson=facilityJson;
 context.facilityNameJSON=facilityNameJSON;
 //context.productJSON=productJSON;
-

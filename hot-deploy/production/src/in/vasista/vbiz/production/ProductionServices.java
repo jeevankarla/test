@@ -849,100 +849,123 @@ public class ProductionServices {
         		 facilityTypeId = facility.getString("facilityTypeId");
         	 }
         	 
-        	 BigDecimal facilitySize = BigDecimal.ZERO;
-        	 
-        	 if(UtilValidate.isNotEmpty(facility.get("facilitySize"))){
-        		 facilitySize = facility.getBigDecimal("facilitySize");
-        	 }
-        	 
-        	 if(facilitySize.compareTo(BigDecimal.ZERO) >0){
-        		 Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", facilityId);
-        		 Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
-                 if (ServiceUtil.isError(resultCtx)) {
-                	 Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
-                     return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
-                 }
-                 Object qohObj = resultCtx.get("quantityOnHandTotal");
-                 BigDecimal qoh = BigDecimal.ZERO;
-                 if (qohObj != null) {
-                 	qoh = new BigDecimal(qohObj.toString());
-                 }
-                 if (UtilValidate.isEmpty(incomingQty)) {
-                	 incomingQty = BigDecimal.ZERO;
-                 }
-                 BigDecimal totalQtyInc = facilitySize.subtract(qoh.add(incomingQty));
-                 if(totalQtyInc.compareTo(BigDecimal.ZERO) < 0){
-                	 Debug.logError("Facility capacity exceeded..!", module);
-                     return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
-                 }
-        	 }
         	 if(facilityTypeId.equals("SILO")){
         		 
         		 boolean allowFacilityBlend = Boolean.FALSE;
         		 if(UtilValidate.isNotEmpty(facility.get("allowProductBlend")) && (facility.getString("allowProductBlend").equals("Y"))){
             		 allowFacilityBlend = Boolean.TRUE;
             	 }
-        		 
             	 List conditionList = FastList.newInstance();
+            	 
+            	 conditionList.clear();
+            	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+            	 conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+            	 EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	 List<GenericValue> inventoryProducts = delegator.findList("InventoryItem", invCond, UtilMisc.toSet("productId"), null, null, false);
+            	 
+            	 String blendedProductId = "";
+            	 BigDecimal blendQty = null;
+            	 
             	 if(allowFacilityBlend){
-            		 
-            		 List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
-                	 
-                	 List<String> productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
-                	 if(!productIds.contains(productId)){
-                		 Debug.logError("This product with Id ["+productId+"] is not mapped to facility :"+facilityId, module);
-                         return ServiceUtil.returnError("This product with Id ["+productId+"] is not mapped to facility :"+facilityId);
-                	 }
-                	 
-                	 conditionList.clear();
+            		 conditionList.clear();
                 	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
                 	 conditionList.add(EntityCondition.makeCondition("productAssocTypeId", EntityOperator.EQUALS, "SILO_PROD_BLEND"));
                 	 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
                 	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
                 	 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 	 List<GenericValue> prodAssoc = delegator.findList("ProductAssoc", condition, null, null, null, false);
-                	 String blendedProductId = "";
                 	 
                 	 if(UtilValidate.isNotEmpty(prodAssoc)){
                 		 GenericValue blendedProduct = EntityUtil.getFirst(prodAssoc);
                 		 blendedProductId = blendedProduct.getString("productIdTo");
                 		 if(UtilValidate.isNotEmpty(blendedProduct.get("quantity"))){
-                			 Object qty = blendedProduct.get("quantity");
+                			 blendQty = blendedProduct.getBigDecimal("quantity");
+                		 }
+                	 }
+            	 }
+        		 BigDecimal facilitySize = BigDecimal.ZERO;
+            	 
+            	 if(UtilValidate.isNotEmpty(facility.get("facilitySize"))){
+            		 facilitySize = facility.getBigDecimal("facilitySize");
+            	 }
+            	 
+            	 String invProductId = productId;
+        		 if(UtilValidate.isNotEmpty(blendedProductId)){
+        			 invProductId = blendedProductId;
+        		 }
+            	 
+        		 // facility capacity check
+            	 if(facilitySize.compareTo(BigDecimal.ZERO) >0){
+            		 Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", invProductId, "facilityId", facilityId);
+            		 Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+                     if (ServiceUtil.isError(resultCtx)) {
+                    	 Debug.logError("Problem getting inventory level of the request for product Id :"+invProductId, module);
+                         return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+invProductId);
+                     }
+                     Object qohObj = resultCtx.get("quantityOnHandTotal");
+                     BigDecimal qoh = BigDecimal.ZERO;
+                     if (qohObj != null) {
+                     	qoh = new BigDecimal(qohObj.toString());
+                     }
+                     if (UtilValidate.isEmpty(incomingQty)) {
+                    	 incomingQty = BigDecimal.ZERO;
+                     }
+                     BigDecimal totalQtyInc = facilitySize.subtract(qoh.add(incomingQty));
+                     if(totalQtyInc.compareTo(BigDecimal.ZERO) < 0){
+                    	 Debug.logError("Facility capacity exceeded..!", module);
+                         return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
+                     }
+            	 }
+            	 
+            	 // productFacility check
+            	 List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
+            	 List<String> productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
+            	 if(!productIds.contains(invProductId)){
+            		 Debug.logError("This product with Id ["+invProductId+"] is not mapped to facility :"+facilityId, module);
+                     return ServiceUtil.returnError("This product with Id ["+invProductId+"] is not mapped to facility :"+facilityId);
+            	 }
+
+            	 
+            	 List<String> extProdIds = EntityUtil.getFieldListFromEntityList(inventoryProducts, "productId", true);
+            	 String extProd = "";
+            	 for(String prodId : extProdIds){
+            		 if(!prodId.equals(invProductId)){
+            			 extProd = prodId;
+                	 }
+            	 }
+            	 extProdIds.add(invProductId);
+            	// Raw Milk Silo Check
+            	 if(allowFacilityBlend){
+            		 
+                	 if(extProdIds.size() == 0){
+            			 if(UtilValidate.isNotEmpty(blendedProductId)){
+            				 if(UtilValidate.isNotEmpty(blendQty)){
+                    			 Object qty = blendQty;
+                    			 context.put("quantityOnHandTotal", qty);
+                    			 context.put("availableToPromiseTotal", qty);
+                    		 }
+                    		 Object blendProdId = blendedProductId;
+                    		 context.put("productId", blendProdId);
+            			 }
+            		 }else{
+            			 String prodToCompare = (String)extProdIds.get(0);
+            			 if(!prodToCompare.equals(invProductId)){
+            				 Debug.logError("Already product with Id :["+prodToCompare+"] exists. Empty it, before storing new product :"+invProductId, module);
+                             return ServiceUtil.returnError("Already product with Id :["+prodToCompare+"] exists. Empty it, before storing new product :"+invProductId);
+            			 }
+            			 if(UtilValidate.isNotEmpty(blendQty)){
+                			 Object qty = blendQty;
                 			 context.put("quantityOnHandTotal", qty);
                 			 context.put("availableToPromiseTotal", qty);
                 		 }
-                		 Object blendProdId = blendedProductId;
-                		 context.put("productId", blendProdId);
-                	 }
-                	 else{
-                		 Debug.logError("Blending of product with Id ["+productId+"] is not allowed fpr facility :"+facilityId, module);
-                         return ServiceUtil.returnError("Blending of product with Id ["+productId+"] is not allowed fpr facility :"+facilityId);
-                	 }
+            			 context.put("productId", invProductId);
+            		 }
             	 }
             	 else{
-            		 conditionList.clear();
-                	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-                	 conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
-                	 EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-                	 List<GenericValue> inventoryProducts = delegator.findList("InventoryItem", invCond, UtilMisc.toSet("productId"), null, null, false);
-                	 
-                	 List<String> extProdIds = EntityUtil.getFieldListFromEntityList(inventoryProducts, "productId", true);
-                	 
-                	 String extProd = "";
-                	 for(String prodId : extProdIds){
-                		 if(!prodId.equals(productId)){
-                			 extProd = prodId;
-                    	 }
-                	 }
-                	 if(!extProdIds.contains(productId)){
-                		 extProdIds.add(productId);
-                	 }
-                	 
             		 if(extProdIds.size() > 1){
-            			 Debug.logError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+productId, module);
-                         return ServiceUtil.returnError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+productId);
+            			 Debug.logError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+invProductId, module);
+                         return ServiceUtil.returnError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+invProductId);
             		 }
-            		 
             	 }
         	 }
          }
@@ -1011,7 +1034,7 @@ public class ProductionServices {
              	Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
                  return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
              }
-             Object qohObj = resultCtx.get("quantityOnHandTotal");
+             Object qohObj = resultCtx.get("availableToPromiseTotal");
              BigDecimal qoh = BigDecimal.ZERO;
              if (qohObj != null) {
              	qoh = new BigDecimal(qohObj.toString());
