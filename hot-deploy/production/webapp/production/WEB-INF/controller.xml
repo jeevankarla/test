@@ -201,7 +201,7 @@
     <request-map uri="updateTransferGroupStatus">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="updateTransferGroupStatus" global-transaction="true"/>
-        <response name="success" type="request" value="InOutStockXfers"/>
+        <response name="success" type="request-redirect-noparam" value="InOutStockXfers"/>
     </request-map>
     <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
     
