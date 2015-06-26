@@ -108,6 +108,7 @@
 	var facIdLabelGrid3;
 	var facLabelIdGrid3;
 	var data = [];
+	var conversionData ={};
 	var taskEffortId;
 	var gridEditable = 'Y';
 	var gridReturnEditable='Y';
@@ -143,6 +144,7 @@
 	
 	function prepareDeclareGrid(resultDate, workEffortId, displayBtn){
 		data2 = resultDate['declareProductItemsJSON'];
+		conversionData = resultDate['conversionJSON'];
 		availFacTagsGrid2 = resultDate['moveToFacilityJSON'];
 		facIdLabelGrid2 = resultDate['moveToFacilityIdLabelJSON'];
 		facLabelIdGrid2 = resultDate['moveToFacilityLabelIdJSON'];
@@ -338,6 +340,13 @@
 		}
         return  value;
     }
+    //crates validator
+	function cratesFormatter(row, cell, value, columnDef, dataContext) { 
+		if(value == null){
+			return "";
+		}
+        return  value;
+    }
 	
 	function returnQuantityValidator(value ,item) {
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
@@ -354,6 +363,17 @@
 	
 	
 	function quantityValidator(value ,item) {
+		var quarterVal = value*4;
+		var floorValue = Math.floor(quarterVal);
+		var remainder = quarterVal - floorValue;
+		var remainderVal =  Math.floor(value) - value;
+		 if(parseInt(value) <0 ){
+			return {valid: false, msg: "required quantity Should not be less than or equals to zero" + value};
+		 }
+	     
+      return {valid: true, msg: null};
+    }
+   function cratesValidator(value ,item) {
 		var quarterVal = value*4;
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
@@ -556,6 +576,7 @@
 		   var declareColumn = [
 		   			{id:"cDeclareProductName", name:"Product", field:"cDeclareProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor, sortable:false, toolTip:""},
 					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
+					{id:"declareCrates", name:"Crates", field:"declareCrates", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: cratesFormatter, validator: cratesValidator, sortable:false},
 					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"toFacilityId", name:"Move To", field:"toFacilityId", width:120, minWidth:120, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacTagsGrid2, editor: AutoCompleteEditor, formatter: facilityFormatter, sortable:false}
 			];
@@ -563,6 +584,7 @@
 			var declaredColumn = [
 		   			{id:"cDeclareProductName", name:"Product", field:"cDeclareProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor, sortable:false, toolTip:""},
 					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"readOnlyColumnClass", focusable :false, sortable:false},
+					{id:"declareCrates", name:"Crates", field:"declareCrates", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"readOnlyColumnClass", focusable :false, sortable:false},
 					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"toFacilityId", name:"Move To", field:"toFacilityId", width:120, minWidth:120, cssClass:"readOnlyColumnClass", focusable :false, sortable:false}
 			];
@@ -668,6 +690,52 @@
       		grid2.render();
     	});
         grid2.onCellChange.subscribe(function(e,args) {
+        
+        if (args.cell == 0 || args.cell == 1) {
+				var prod = data2[args.row]["cDeclareProductId"];
+				var prodConversionData = conversionData[prod];
+				var calcQty = 0;
+					calcQty = parseFloat(data2[args.row]["declareQuantity"]);
+				var convValue = 1;
+				if(prodConversionData != 'undefined' && prodConversionData != null && isNaN(prodConversionData)){
+					convValue = prodConversionData['CRATE'];
+                }	
+				var calculateQty = 0;
+				if(convValue != 'undefined' && convValue != null && calcQty>0){
+					declareCrates = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
+					data2[args.row]["declareCrates"] = declareCrates;
+				}
+				if(isNaN(declareCrates)){
+					declareCrates = 0;
+				}
+				grid2.updateRow(args.row);
+
+			} 
+        if (args.cell == 2) {
+				var prod = data2[args.row]["cDeclareProductId"];
+                var prodConversionData = conversionData[prod];
+
+				var calcQty = 0;
+					calcQty = parseFloat(data2[args.row]["declareCrates"]);
+				var convValue = 1;
+                if(prodConversionData != 'undefined' && prodConversionData != null && isNaN(prodConversionData)){
+					convValue = prodConversionData['CRATE'];
+					if(prodConversionData['BOX']){
+						var box = prodConversionData['BOX'];
+						convValue = parseInt(box*convValue);
+					}
+                }								
+				var calculateQty = 0;
+				if(convValue != 'undefined' && convValue != null && calcQty>0){
+					calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
+					data2[args.row]["declareQuantity"] = calculateQty;
+				}
+				if(isNaN(calculateQty)){
+					calculateQty = 0;
+				}
+				grid2.updateRow(args.row);
+
+			} 
 			if(args.cell == 3){
 				var facValue = data2[args.row]["toFacilityId"];
 				if(facValue){

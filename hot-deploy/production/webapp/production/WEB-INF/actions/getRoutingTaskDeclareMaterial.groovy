@@ -17,6 +17,7 @@ import java.text.ParseException;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
+dctx = dispatcher.getDispatchContext();
 
 workEffortId = parameters.workEffortId;
 productionRunId = parameters.productionRunId;
@@ -208,10 +209,37 @@ if (workEffortId) {
 		}
 		declareProductItemsJSON.add(newObj);
 	}
+	JSONObject conversionJSON = new JSONObject();
+    conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", declareProducts, "userLogin", userLogin));
+	if(conversionResult){
+		conversionMap = conversionResult.get("productConversionDetails");
+		if(conversionMap){
+			Iterator prodConvIter = conversionMap.entrySet().iterator();
+			while (prodConvIter.hasNext()) {
+				Map.Entry entry = prodConvIter.next();
+				productId = entry.getKey();
+				convDetail = entry.getValue();
+				
+				Iterator detailIter = convDetail.entrySet().iterator();
+				JSONObject conversionDetailJSON = new JSONObject();
+				while (detailIter.hasNext()) {
+					Map.Entry entry1 = detailIter.next();
+					attrName = entry1.getKey();
+					attrValue = entry1.getValue();
+					conversionDetailJSON.put(attrName,attrValue);
+				}
+				conversionJSON.put(productId, conversionDetailJSON);
+			}
+		}
+	}
+	context.conversionJSON = conversionJSON;
+	
 	if(statusId && (statusId == "PRUN_COMPLETED")){
 		declareDispBtn = 'N';
 	}
 	request.setAttribute("declareProductItemsJSON", declareProductItemsJSON);
 	request.setAttribute("declareDisplayButton", declareDispBtn);
+	request.setAttribute("conversionJSON", conversionJSON);
+	
 }
 return "success";
