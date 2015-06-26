@@ -122,6 +122,7 @@ import com.linuxense.javadbf.DBFReader;
 
 
 
+
 import in.vasista.vbiz.procurement.PriceServices;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementReports;
@@ -4115,5 +4116,114 @@ public class MilkReceiptServices {
 	 	return resultMap;
 	}
 	
+	public static String finalizeTankerReceipts(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+		    String milkTransferId = "";
+		    String productId = "";
+		    String partyId = "";
+		    String purposeTypeId = "";
+		  boolean beginTransaction = false;
+		try{
+  		  	beginTransaction = TransactionUtil.begin();
+		  	for (int i = 0; i < rowCount; i++){
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				
+				if (paramMap.containsKey("milkTransferId" + thisSuffix)) {
+					milkTransferId = (String) paramMap.get("milkTransferId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing milkTransferId");
+				}
+				if (paramMap.containsKey("productId" + thisSuffix)) {
+					productId = (String) paramMap.get("productId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing productId");
+				}
+				if (paramMap.containsKey("purposeTypeId" + thisSuffix)) {
+					purposeTypeId = (String) paramMap.get("purposeTypeId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing purposeTypeId");
+				}
+				if (paramMap.containsKey("partyId" + thisSuffix)) {
+					partyId = (String) paramMap.get("partyId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing partyId");
+				}
+				GenericValue milkTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId", milkTransferId),false);
+				
+				if(UtilValidate.isEmpty(milkTransfer)){
+					Debug.logError("No Record Found For :"+milkTransferId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "No Record Found For :"+milkTransferId);	
+			  		return "error";
+				}
+				
+				if(!productId.equals(milkTransfer.getString("productId"))){
+					milkTransfer.set("productId", productId);
+					
+					List<GenericValue> milkTransferItemList = delegator.findList("MilkTransferItem",EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId),null,null,null,false);
+					GenericValue milkTransferItem = EntityUtil.getFirst(milkTransferItemList);
+					if(UtilValidate.isEmpty(milkTransferItem)){
+						Debug.logError("No Record Found For :"+milkTransferId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "No Record Found For :"+milkTransferId);	
+				  		return "error";
+					}
+					milkTransferItem.set("sendProductId", productId);
+					milkTransferItem.set("receivedProductId", productId);
+					delegator.store(milkTransferItem);
+				}
+				if(!partyId.equals(milkTransfer.getString("partyId"))){
+					milkTransfer.set("partyId", partyId);
+				}
+				if(!purposeTypeId.equals(milkTransfer.getString("purposeTypeId"))){
+					milkTransfer.set("purposeTypeId", purposeTypeId);
+				}
+				milkTransfer.store();
+		  	}
+  	  	}
+	  	catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+		catch (Exception e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beginTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
+	  		}
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "Finalization Successfully Completed.!");
+		return "success"; 
+		
+    }// End of the service
 	
 }

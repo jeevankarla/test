@@ -628,7 +628,22 @@
         <response name="success" type="view" value="FindPtcAdjustment"/>
         <response name="error" type="view" value="FindPtcAdjustment"/>
     </request-map>
-    
+    <request-map uri="MilkFinalization">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkFinalization"/>
+    	<response name="error" type="view" value="MilkFinalization"/>
+    </request-map>
+    <request-map uri="MilkReceiptFinalization">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkFinalization"/>
+    	<response name="error" type="view" value="MilkFinalization"/>
+    </request-map>
+    <request-map uri="FinalizeTankerReceipts">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="finalizeTankerReceipts" global-transaction="true"/>        
+        <response name="success" type="view" value="MilkFinalization"/>
+        <response name="error" type="view" value="MilkFinalization"/>
+    </request-map>
     <!-- milkIssues Requests -->
     <request-map uri="milkTankerIssues">
     	<security auth="true" https="true"/>
@@ -799,6 +814,7 @@
 	<view-map name="PtcAdjustmentDeductions" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PtcAdjustmentDeductions"/>
 	<view-map name="PtcAdjustmentAdditions" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PtcAdjustmentAdditions"/>
 	<view-map name="FindPtcAdjustment" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindPtcAdjustment"/>
+	<view-map name="MilkFinalization" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkFinalization"/>
 	<!-- Report View Mappings -->
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>
 	<view-map name="GenerateMlkRecptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#GenerateMlkRecptsBilling"/>

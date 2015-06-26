@@ -164,7 +164,9 @@ function deleteTransferEntry(thisValue,milkTransferId){
     <div class="screenlet-body">
     	<#if parameters.flag?has_content && parameters.flag=="APPROVE_RECEIPTS"> 
         <form method="post" name="findMilkReceipts" id="findMilkReceipts" action="<@ofbizUrl>MilkReceiptsToApprove</@ofbizUrl>">
-    	<#else>
+    	<#elseif parameters.flag?has_content && parameters.flag == "FINALIZATION">
+        <form method="post" name="findMilkReceipts" id="findMilkReceipts" action="<@ofbizUrl>MilkReceiptFinalization</@ofbizUrl>">
+        <#else>
  		<form method="post" name="findMilkReceipts" id="findMilkReceipts" action="<@ofbizUrl>FindMilkReceipt</@ofbizUrl>">  
  		</#if>
       		<table width="60%" border="0" cellspacing="0" cellpadding="0">     
