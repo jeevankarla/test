@@ -26,6 +26,9 @@
     <SecurityGroupPermission groupId="PRO_INDENT_ISSUANCE" permissionId="PRO_INDENT_ISSUANCE" />
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_INDENT_ISSUANCE"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_INDENT_ISSUANCE"/>
+    <SecurityGroupPermission groupId="PRO_INDENT_ISSUANCE"  permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="PRO_INDENT_ISSUANCE"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="PRO_INDENT_ISSUANCE"  permissionId="CATALOG_UPDATE"/>
     
     <SecurityPermission description="Permission for Production Material Department Head Approval" permissionId="PRO_DEPTHEAD_APPROVE"/>
     <SecurityGroup description="Permission for Production Material Department Head Approval" groupId="PRO_DEPTHEAD_APPROVE"/>
@@ -50,5 +53,20 @@
     <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="PRO_INDENT_ENTRY" />
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_INDENT_ENTRY"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_INDENT_ENTRY"/>
+    <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="ORDERMGR_CRQ_ADMIN"/>
+	 <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="ORDERMGR_CRQ_CREATE"/>
+    
+     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="ORDERMGR_CRQ_ADMIN"/>
+	 <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="ORDERMGR_CRQ_CREATE"/>
+	 <SecurityGroupPermission groupId="PRODUCTION_ADMIN"  permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN"  permissionId="CATALOG_UPDATE"/>
+    
+	 <SecurityPermission description="Permission for Production Temperature Entry" permissionId="PRO_TEMPE_ENTRY"/>
+    <SecurityGroup description="Permission for Production Temperature Entry" groupId="PRO_TEMPE_ENTRY"/>
+    <SecurityGroupPermission groupId="PRO_TEMPE_ENTRY" permissionId="PRO_TEMPE_ENTRY" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_TEMPE_ENTRY"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_TEMPE_ENTRY"/>
+	 
     
 </entity-engine-xml>

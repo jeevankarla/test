@@ -25,8 +25,10 @@
 		<prim-key field="testComponent"/>
 		
 		<relation rel-entity-name="Product" type="one" fk-name="PTC_product">
+		<key-map field-name="productId"/>
 		</relation>
 		<relation rel-entity-name="ProductCategory" type="one" fk-name="PTC_productCategory">
+		<key-map field-name="productCategoryId"/>
 		</relation>
 		
 	</entity>
@@ -54,22 +56,31 @@
 			<prim-key field="qcTestId"/>
 			
 			<relation rel-entity-name="InventoryTransferGroup" type="one" fk-name="PQT_ITG">
+				<key-map field-name="transferGroupId"/>
 			</relation>
 			<relation rel-entity-name="Product" type="one" fk-name="PQT_product">
+				<key-map field-name="productId"/>
 			</relation>
 			<relation rel-entity-name="ProductBatch" type="one" fk-name="PQT_PB">
+				<key-map field-name="productBatchId"/>
 			</relation>
 			<relation rel-entity-name="Shipment" type="one" fk-name="PQT_Shipment">
+				<key-map field-name="shipmentId"/>
 			</relation>
 			<relation rel-entity-name="ShipmentReceipt" type="one" fk-name="PQT_SRT">
+				<key-map field-name="shipmentReceiptId"/>
 			</relation>
 			<relation rel-entity-name="InventoryTransfer" type="one" fk-name="PQT_IT">
+				<key-map field-name="inventoryTransferId"/>
 			</relation>
 			<relation rel-entity-name="CustRequest" type="one" fk-name="PQT_CR">
+				<key-map field-name="custRequestId"/>
 			</relation>
 			<relation rel-entity-name="WorkEffort" type="one" fk-name="PQT_WE">
+				<key-map field-name="workEffortId"/>
 			</relation>
 			<relation rel-entity-name="ReturnHeader" type="one" fk-name="PQT_RH">
+				<key-map field-name="returnId"/>
 			</relation>
 			<relation type="one" fk-name="PQT_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
   			    <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
@@ -88,7 +99,36 @@
 		
 		<prim-key field="qcTestId"/>
 		<prim-key field="sequenceNumber"/>
+		<relation rel-entity-name="ProductQcTest" type="one" fk-name="PQTD_PQT">
+			<key-map field-name="qcTestId"/>
+		</relation>
 	</entity>
-
+	
+	<!-- ========================================================= -->
+  <!-- in.vasista.vbiz.production.FacilityTemp -->
+  <!-- ========================================================= -->
+   <entity entity-name="FacilityTemperature" package-name="in.vasista.vbiz.production.FacilityTemp">
+   		<field name="facilityId" type="id-ne"></field>
+   		<field name="recordDateTime" type="date-time"></field>
+   		<field name="temperature" type="id-ne"></field>
+        <field name="comments" type="long-varchar"></field>
+		<field name="createdDate" type="date-time"></field>
+   		<field name="createdByUserLogin" type="id-vlong"></field>
+   		<field name="lastModifiedDate" type="date-time"></field>
+   		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+   		
+   		<prim-key field="facilityId"/>
+   		<prim-key field="recordDateTime"/>
+   		
+   		<relation rel-entity-name="Facility" type="one" fk-name="FTE_FACILITY">
+   			<key-map field-name="facilityId"/>
+   		</relation>
+   		<relation type="one" fk-name="FTE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+  			    <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+		</relation>
+	    <relation type="one" fk-name="FTE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+	    	<key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+	    </relation>
+   </entity>	
 
 </entitymodel>

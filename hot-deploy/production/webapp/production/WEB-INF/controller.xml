@@ -215,8 +215,40 @@
         <response name="success" type="request-redirect-noparam" value="InOutStockXfers"/>
     </request-map>
     <request-map uri="prePacking"><security https="true" auth="true"/><response name="success" type="view" value="prePacking"></response></request-map>
-    
+
+     <request-map uri="ProductionTempRecord">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="ProductionTempRecord"/>
+     	<response name="error" type="view" value="ProductionTempRecord"/>
+     </request-map>
+     <request-map uri="findProductionTempRecord">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="findProductionTempRecord"/>
+     	<response name="error" type="view" value="findProductionTempRecord"/>
+     </request-map>
+     <request-map uri="processFacilityTemperature">
+     	<security auth="true" https="true"/>
+     	<event type="java" path="in.vasista.vbiz.production.ProductionServices" invoke="processFacilityTemperature" global-transaction="true"/>
+       <response name="success" type="view" value="ProductionTempRecord"/>
+       <response name="error" type="view" value="ProductionTempRecord"/>
+     </request-map>
+     <request-map uri="deleteFacilityTemperature">
+     	<security auth="true" https="true"/>
+     	<event type="service" path="" invoke="deleteFacilityTemperature" global-transaction="true"/>
+       <response name="success" type="view" value="findProductionTempRecord"/>
+       <response name="error" type="view" value="findProductionTempRecord"/>
+     </request-map>
+     <request-map uri="FindProductionTempRecord">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="findProductionTempRecord"/>
+     	<response name="error" type="view" value="findProductionTempRecord"/>
+     </request-map>
+      
     <!--Production Reports  -->
+    <request-map uri="TemperatureRecordReport.pdf">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="TemperatureRecordReportPDF"/>
+     </request-map>
     <request-map uri="MilkConversionReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MilkConversionReportPDF"/>        
@@ -391,12 +423,17 @@
     <view-map name="InOutStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#InOutStockXfers"></view-map>
     <view-map name="findStockXfer" type="screen" page="component://production/widget/ProductionScreens.xml#FindStockXfer"></view-map>
     <view-map name="ProductionLookupFacility" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionLookupFacility"/>
-  
+  	<view-map name="ProductionTempRecord" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionTempRecord"/>
+     <view-map name="findProductionTempRecord" type="screen" page="component://production/widget/ProductionScreens.xml#findProductionTempRecord"/>
+
+
+  	
     <!-- View Mappings for Production Reports-->
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="productionRunCompletedReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#productionRunCompletedReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="TemperatureRecordReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#TemperatureRecordReportPDF" content-type="application/pdf" encoding="none"/>
    
     <!-- INDENT VIEW MAPPINGS -->
   	<view-map name="ProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionIndent"/> 
