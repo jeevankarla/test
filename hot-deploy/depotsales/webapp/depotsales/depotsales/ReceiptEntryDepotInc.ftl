@@ -108,8 +108,9 @@
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			
 			if( (qty==0) || (isNaN(qty))) {
-			alert("please enter received quantity");
+				alert("please enter received quantity");
 			 }
+			 
 	 		if (!isNaN(qty) && qty>0 ) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCountIndex).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCountIndex).val(qty);
@@ -117,7 +118,11 @@
 				jQuery(formId).append(jQuery(inputQty));
 				
 				var dcQty = parseFloat(data[rowCount]["deliveryChallanQty"]);
-		 		if (!isNaN(dcQty) && dcQty>0 ) {	 		
+		 		if (!isNaN(dcQty) && dcQty>0 ) {	 	
+		 			if( ((!isNaN(qty)) && (qty>dcQty) )){
+			 			alert("Received Quantity should be less than Delivery Challan Quantity");
+			 			return false;
+			 		}	
 					var inputDCQty = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanQty_o_" + rowCountIndex).val(dcQty);
 					jQuery(formId).append(jQuery(inputDCQty));
 	   			}
@@ -290,16 +295,16 @@
 		    var columns = [
 					{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", editor: AutoCompleteEditor,availableTags:availableTags,regexMatcher:"contains", validator: productValidator, sortable:false, toolTip:""},
 					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator},
+					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
 			];
 			<#else>
 				var columns = [
 					{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, validator: productValidator, toolTip:""},
 					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator},
+					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"oldRecvdQty", name:"Old Recvd Qty", field:"oldRecvdQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
 				];
@@ -358,7 +363,7 @@
 				cell && (cell.cell == cellNav) && 
 				cell.row != data.length) {
 				grid.getEditController().commitCurrentEdit();	
-				$(grid.getCellNode(cell.row+1, 0)).click();
+				$(grid.getCellNode(cell.row+2, 0)).click();
 				e.stopPropagation();	
 			}
 			else if (e.which == $.ui.keyCode.LEFT &&
