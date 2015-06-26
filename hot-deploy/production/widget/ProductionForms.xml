@@ -474,4 +474,44 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="SearchProductionTempRecord" type="single" target="FindProductionTempRecord">
+      <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+      <field name="facilityId">
+      	<drop-down allow-empty="true">
+      	  <list-options key-name="facilityId" list-name="facilityGroupAndMemberAndFacility" description="${description}"/>
+      	</drop-down>
+      </field>
+      <field name="recordDateTime" > <date-find/></field>
+      <!-- <field name="date"><date-time type="date"/></field> -->
+      <field name="shiftTypeId" title="Shift"><drop-down allow-empty="true"><entity-options description="${description}" key-field-name="shiftTypeId" entity-name="WorkShiftType">
+      	<entity-constraint name="parentTypeId" operator="equals" value="PROD_SHIFT"/>
+      </entity-options></drop-down></field>
+      <field name="temperature"><text-find></text-find></field>
+      <field name="comments"><text-find></text-find></field>
+      <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListProductionTempRecords" type="list" use-row-submit="true"  title="" list-name="listIt" separate-columns="true" target="deleteFacilityTemperature"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  >
+    	<actions>
+    		<service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="FacilityTemperature"/>
+            <field-map field-name="orderBy" value="-recordDateTime"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+          <script location="component://production/webapp/production/WEB-INF/actions/ProductionFacilityTempPerformFind.groovy"/>
+    	</actions>
+    	<field name="facilityId"><display-entity entity-name="Facility" ></display-entity></field>
+    	<field name="temperature"><display></display></field>
+    	<field name="recordDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(recordDateTime,&quot;dd:MM:yyyy HH:mm&quot;)}"/></field>
+    	<field name="shiftTypeId" title="Shift"><display-entity entity-name="WorkShiftType" description="${description}"></display-entity></field>
+    	<field name="comments"><display></display></field>
+    	<field name="deleteRecode" title="Delete"  widget-style="smallSubmit">
+    	 <submit/>
+    	</field>
+    </form>
+    
 </forms>

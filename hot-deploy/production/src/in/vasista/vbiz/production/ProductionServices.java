@@ -1651,7 +1651,145 @@ public class ProductionServices {
     	 return resultMap;
      }//End of the service
      
+     public static String processFacilityTemperature(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+  		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  		DispatchContext dctx =  dispatcher.getDispatchContext();
+  		Locale locale = UtilHttp.getLocale(request);
+  		Map<String, Object> result = ServiceUtil.returnSuccess();
+  		HttpSession session = request.getSession();
+  		String recordDateTimeStr = (String) request.getParameter("recordDateTime");
+  		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+  		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+  		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+  		if (rowCount < 1) {
+  		Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+  		return "error";
+  		}
+  		Timestamp recordDateTime = null;
+         SimpleDateFormat SimpleDF = new SimpleDateFormat("dd:MM:yyyy hh:mm");
+ 	  	if(UtilValidate.isNotEmpty(recordDateTimeStr)){
+ 	  		try {
+ 	  			recordDateTime = new java.sql.Timestamp(SimpleDF.parse(recordDateTimeStr).getTime());
+ 		  	} catch (ParseException e) {
+ 		  		Debug.logError(e, "Cannot parse date string: " + recordDateTimeStr, module);
+ 		  	} catch (NullPointerException e) {
+ 	  			Debug.logError(e, "Cannot parse date string: " + recordDateTimeStr, module);
+ 		  	}
+ 	  	}
+  		boolean beganTransaction = false;
+  		try{
+  		       String facilityId = "";
+  		       String temperature = "";
+  		       String comments="";
+
+  		Map inputCtx = FastMap.newInstance();
+  		for (int i = 0; i < rowCount; i++) {
+  			 
+  			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+  			if (paramMap.containsKey("facilityId" + thisSuffix)) {
+  				facilityId = (String) paramMap.get("facilityId" + thisSuffix);
+  			}else {
+  			   request.setAttribute("_ERROR_MESSAGE_", "Missing facilityId");
+  			}
+  			if (paramMap.containsKey("temperature" + thisSuffix)) {
+  				temperature = (String) paramMap.get("temperature" + thisSuffix);
+  			}else {
+  			   request.setAttribute("_ERROR_MESSAGE_", "Missing temperature");
+  			}
+  			if (paramMap.containsKey("comments" + thisSuffix)) {
+  				comments = (String) paramMap.get("comments" + thisSuffix);
+  			}else {
+  				request.setAttribute("_ERROR_MESSAGE_", "Missing comments");
+  			}
+  			
+  			inputCtx.clear();
+  			inputCtx.put("facilityId", facilityId);
+  			inputCtx.put("temperature", temperature);
+  			inputCtx.put("comments", comments);
+  			inputCtx.put("userLogin", userLogin);
+  			inputCtx.put("recordDateTime", recordDateTime);
+  			Map resultCtx = dispatcher.runSync("createFacilityTemperature", inputCtx);
+  			if (ServiceUtil.isError(resultCtx)) {
+  				Debug.logError("Record Adding Failed For : " + facilityId, module);
+  				request.setAttribute("_ERROR_MESSAGE_", "Record Adding Failed for :"+facilityId);	
+  				TransactionUtil.rollback();
+  				return "error";
+  			}
+  			                     	
+  		}
+  		request.setAttribute("_EVENT_MESSAGE_", "Record(s) Successfully Added.!");
+  		}catch (GenericEntityException e) {
+  		try {
+  				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+  		 	} catch (GenericEntityException e2) {
+  		 		Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  		 	}
+  		 		Debug.logError("An entity engine error occurred while fetching data", module);
+  		 	}
+  		   	catch (GenericServiceException e) {
+  		   	try {
+  		   		TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+  		   	} catch (GenericEntityException e2) {
+  		   		Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  		   	}
+  		   		Debug.logError("An entity engine error occurred while calling services", module);
+  		   	}
+  		return "success";
+  	}
      
+     public static Map<String, Object> createFacilityTemperature(DispatchContext dctx, Map<String, ? extends Object> context) {
+         Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();
+         String facilityId = (String) context.get("facilityId");
+         String temperature = (String) context.get("temperature");
+         Timestamp recordDateTime = (Timestamp)context.get("recordDateTime");
+         String comments = (String)context.get("comments");
+         Map<String, Object> result = ServiceUtil.returnSuccess();
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+         try {
+         	GenericValue facilityTemperature = delegator.makeValue("FacilityTemperature");
+         	facilityTemperature.set("facilityId",facilityId);
+         	facilityTemperature.set("temperature",temperature);
+         	facilityTemperature.set("recordDateTime",recordDateTime);
+         	if(UtilValidate.isNotEmpty(comments)){
+         		facilityTemperature.set("comments",comments);
+         	}
+         	facilityTemperature.set("createdDate",UtilDateTime.nowTimestamp());
+         	facilityTemperature.set("createdByUserLogin", userLogin.getString("userLoginId"));
+         	facilityTemperature.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+         	facilityTemperature.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+         	facilityTemperature.create();
+         }
+         catch(Exception e){
+         	Debug.logError(e, module);
+         	return ServiceUtil.returnError(e.toString());
+         }
+         result = ServiceUtil.returnSuccess("Record Seccessfully Added.!");
+         return result;
+     }
+     public static Map<String, Object> deleteFacilityTemperature(DispatchContext dctx, Map<String, ? extends Object> context) {
+     	Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();
+         String facilityId = (String) context.get("facilityId");
+         Timestamp recordDateTime = (Timestamp)context.get("recordDateTime");
+         Map<String, Object> result = ServiceUtil.returnSuccess();
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+         try {
+         	GenericValue facilityTemperature = delegator.findOne("FacilityTemperature", UtilMisc.toMap("facilityId", facilityId, "recordDateTime", recordDateTime), false);
+         	if(UtilValidate.isEmpty(facilityTemperature)){
+ 	  			Debug.logError("No Record Found To Delete.", module);
+ 				return ServiceUtil.returnError("No Record Found To Delete.");
+ 	  		}
+         	facilityTemperature.remove();
+         }
+         catch(Exception e){
+         	Debug.logError("Error While Deleting the Recorde.", module);
+         	return ServiceUtil.returnError("Error While Deleting the Recorde.");
+         }
+         result = ServiceUtil.returnSuccess("Record Deleted Seccessfully.!");
+         return result;
+     }
      
      
 }

@@ -749,8 +749,12 @@ under the License.
             package-name="org.ofbiz.humanres"
             title="Work Shift Type Entity">
         <field name="shiftTypeId" type="id-ne"/>
+        <field name="parentTypeId" type="id-ne"/>
         <field name="description" type="description"/>
         <prim-key field="shiftTypeId"/>
+        <relation rel-entity-name="Enumeration" fk-name="WST_ENUM" type="one">
+          <key-map field-name="enumId"/>
+        </relation>
     </entity>
     <entity entity-name="WorkShiftPeriod"
             package-name="org.ofbiz.humanres"

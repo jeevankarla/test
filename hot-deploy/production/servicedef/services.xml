@@ -74,7 +74,18 @@
     	
     	<attribute name="qcTestId" mode="OUT" type="String"  optional="true"/>
     </service>
-    
+	 <service name="createFacilityTemperature" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createFacilityTemperature">
+		 <description>Create Facility Temperature</description>
+		 <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+		 <attribute name="temperature" mode="IN" type="String" optional="true"/>
+		 <attribute name="recordDateTime" mode="IN" type="Timestamp" optional="false"/>
+		 <attribute name="comments" mode="IN" type="String" optional="true"/>
+	 </service>
+	 <service name="deleteFacilityTemperature" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="deleteFacilityTemperature">
+		 <description>Delete Facility Temperature</description>
+		 <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+		 <attribute name="recordDateTime" mode="IN" type="Timestamp" optional="false"/>
+	 </service>
     
     
 </services>

@@ -97,6 +97,7 @@
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("convFromDate","convThruDate");
 		makeDatePicker("milkProcessRegDate","");
+		makeDatePicker("temperatureDate","");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -163,6 +164,22 @@
 					</table>
 				</form>
 			</tr>
+			<tr class="alternate-row">
+				 <form id="TemperatureRecord" name="TemperatureRecord" mothed="post" action="<@ofbizUrl>TemperatureRecordReport.pdf</@ofbizUrl>" target="_blank">
+					 <table class="basic-table" cellspacing="5">
+						 <tr class="alternate-row">
+						 <td width="20%"><span class='h3'>Temperature Record </span></td>
+						 <td width="25%">
+						 <span class='h3'>
+						 Date <input type="text" size="18pt" id="temperatureDate" name="temperatureDate"/>
+						 </span>
+						 </td>
+						 <td width="30%"><span class='h3'></span></td>
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						 </tr>
+					 </table>
+				 </form>
+			 </tr>
 	  </table>
     </div>
   </div>
