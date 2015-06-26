@@ -578,6 +578,7 @@ $( "#"+fromDateId ).datepicker({
 	  		</div>
     </div>
 	<div class="screenlet-body">
+	    <#assign setDate = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "dd-MM-yyyy")).replace(':','')>
 		<#assign setTime = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "HH:mm")).replace(':','')>
     	<form method="post" name="milkReceiptEntry"  id="milkReceiptEntry" >
       	<table style="border-spacing: 0 10px;" border="1">     
@@ -598,7 +599,7 @@ $( "#"+fromDateId ).datepicker({
 					        <#if displayScreen == "VEHICLE_OUT">
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
-	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" value="${setDate}" name="exitDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
@@ -624,7 +625,7 @@ $( "#"+fromDateId ).datepicker({
 					        <#if displayScreen == "ISSUE_CIP">
 		                        <tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_CIP" />
-	        						<td align='left' ><span class="h3">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" name="entryDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" name="entryDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
@@ -666,7 +667,7 @@ $( "#"+fromDateId ).datepicker({
 							    
 							    <tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_GRWEIGHT" />
-	        						<td align='left' ><span class="h3">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h3">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" value="${setDate}" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
@@ -700,7 +701,7 @@ $( "#"+fromDateId ).datepicker({
 	        					</tr> 
 	        					<tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="vehicleStatusId" value="MR_ISSUE_TARWEIGHT" />
-	        						<td align='left' ><span class="h3">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
@@ -712,7 +713,7 @@ $( "#"+fromDateId ).datepicker({
 	        				<#if displayScreen == "VEHICLE_CIP">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
-	        						<td align='left' ><span class='h3'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h3'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
@@ -745,7 +746,7 @@ $( "#"+fromDateId ).datepicker({
 	        				<#if displayScreen == "ISSUE_QC">
 	        					<tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_QC" />
-	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
@@ -799,7 +800,7 @@ $( "#"+fromDateId ).datepicker({
 						    <#if displayScreen == "ISSUE_AQC">
 	        					<tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_AQC" />
-	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
@@ -856,7 +857,7 @@ $( "#"+fromDateId ).datepicker({
                             <#if displayScreen == "VEHICLE_CIPNEW">
                                 <tr>
                                     <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIPNEW" />
-		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" value="${setDate}" autocomplete="off" required/></td>
 		        					
 		        				</tr>
 		        				<tr>

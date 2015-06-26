@@ -162,6 +162,8 @@ $(function() {
              	   $('div#milkReceiptEntry_spinner').html('<label>succesfully updated.</label>'); 
              	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
              	   $('input[name=submitButton]').removeAttr("disabled");
+             	   
+             	   clearFields();
                 }
               },
               error: function(result) {
@@ -182,6 +184,10 @@ function populateError(msg){
 	
 }
 	
+function clearFields(){
+	   var frm = document.getElementsByName('milkReceiptEntry')[0];
+	   frm.reset();
+}
 
 
 
