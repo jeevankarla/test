@@ -1537,6 +1537,9 @@ public class ProductionServices {
     			 }
     		 }
     	 }
+    	 Debug.logInfo("context=======##########=========="+context, module);
+    	 Debug.logInfo("createQcTestItemsInMap=======##########=========="+createQcTestItemsInMap,module);
+    	 Debug.logInfo("createQcTestInMap=======##########=========="+createQcTestInMap,module);
     	 if(UtilValidate.isNotEmpty(createQcTestInMap)){
     		 createQcTestInMap.put("userLogin",userLogin );
     		 createQcTestInMap.put("productQcTestFieldsList",productQcTestFieldsList );
@@ -1632,6 +1635,7 @@ public class ProductionServices {
     	 Delegator delegator = dctx.getDelegator();
     	 Map resultMap = ServiceUtil.returnSuccess();
     	 String qcTestId = (String)context.get("qcTestId");
+    	 Debug.logInfo("createProductQcTestDetails===============#####=========="+context,module);
     	 try{
 	    	 for(String key : context.keySet()){
 	    		 if(key.contains("_testComponent")){
