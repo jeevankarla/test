@@ -64,6 +64,9 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyId));
 	}
+	if(UtilValidate.isNotEmpty(parameters.siloId)){
+		conditionList.add(EntityCondition.makeCondition("siloId", EntityOperator.EQUALS , parameters.siloId));
+	}
 	if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
 		conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
 	}
