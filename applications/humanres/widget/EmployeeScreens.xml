@@ -404,6 +404,8 @@ under the License.
                 <entity-one entity-name="PartyPersonAndEmployeeDetail" value-field="lookupPersonPartyAndEmployeeDetail">
 					<field-map field-name="partyId" from-field="parameters.partyId" />
 				</entity-one>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeInfo.groovy"/>
+				<set field="passportExpiryDate" value="${passportExpiryDate}"></set>
             </actions>
             <widgets>
     	    <section>
