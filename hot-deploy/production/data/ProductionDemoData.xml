@@ -44,5 +44,20 @@
 	<Enumeration description="Return Transfers" enumCode="RETURN TRANSFER" enumId="RETURN_XFER" enumTypeId="INV_XFER" sequenceId="02"/>
 	
 	<ProductAssocType description="Silo Product Blending" hasTable="N" productAssocTypeId="SILO_PROD_BLEND"/>
-	 
+	<EnumerationType description="Variance Type" enumTypeId="VARIANCE_TYPE" hasTable="N"/> 
+	<Enumeration description="Loss Variance" enumCode="LOSS" enumId="LOSS_VARIANCE" enumTypeId="VARIANCE_TYPE" sequenceId="01"/>
+	<Enumeration description="Gain Variance" enumCode="GAIN" enumId="GAIN_VARIANCE" enumTypeId="VARIANCE_TYPE" sequenceId="02"/>
+	<Enumeration description="Leakage" enumCode="VAR_LEAKAGE" enumId="VAR_LEAKAGE" enumTypeId="IID_REASON" sequenceId="10"/>
+	<Enumeration description="Blend" enumCode="VAR_BLEND" enumId="VAR_BLEND" enumTypeId="IID_REASON" sequenceId="09"/>
+	
+	<VarianceReason varianceReasonId="VAR_BLEND" varianceTypeId="GAIN_VARIANCE" description="Blend" />
+    <VarianceReason varianceReasonId="VAR_DAMAGED" varianceTypeId="LOSS_VARIANCE" description="Damaged" />
+    <VarianceReason varianceReasonId="VAR_FOUND" varianceTypeId="GAIN_VARIANCE" description="Found" />
+    <VarianceReason varianceReasonId="VAR_INTEGR" varianceTypeId="LOSS_VARIANCE" description="Integration" />
+    <VarianceReason varianceReasonId="VAR_LEAKAGE" varianceTypeId="LOSS_VARIANCE" description="Leakage" />
+    <VarianceReason varianceReasonId="VAR_LOST" varianceTypeId="LOSS_VARIANCE" description="Lost" />
+    <VarianceReason varianceReasonId="VAR_MISSHIP_ORDERED" varianceTypeId="GAIN_VARIANCE" description="Mis-shipped Item Ordered (+)" />
+    <VarianceReason varianceReasonId="VAR_MISSHIP_SHIPPED" varianceTypeId="LOSS_VARIANCE" description="Mis-shipped Item Shipped (-)" />
+    <VarianceReason varianceReasonId="VAR_SAMPLE" varianceTypeId="LOSS_VARIANCE" description="Sample (Giveaway)" />
+    <VarianceReason varianceReasonId="VAR_STOLEN" varianceTypeId="LOSS_VARIANCE" description="Stolen"/>
 </entity-engine-xml>

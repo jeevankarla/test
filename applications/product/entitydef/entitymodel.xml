@@ -2732,8 +2732,12 @@ under the License.
             default-resource-name="ProductEntityLabels"
             title="Variance Reason Entity">
       <field name="varianceReasonId" type="id-ne"></field>
+      <field name="varianceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="varianceReasonId"/>
+      <relation type="one" fk-name="VAR_ENUM" rel-entity-name="Enumeration">
+        	<key-map field-name="varianceTypeId" rel-field-name="enumId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->

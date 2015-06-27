@@ -74,7 +74,7 @@
      <form name="FindFacilityProducts" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
     	<field name="hideSearch"><hidden value="N"/></field>
-        <field name="facilityId" title="Plant/Silo"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
+        <field name="facilityId" title="Plant/Silo"><lookup target-form-name="LookupFacility"></lookup></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
@@ -86,6 +86,14 @@
         <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="Stock Xfer"  target="javascript: showXferForm('${facilityId}', '${productId}');" ></hyperlink></field>
         <!-- <field name="Override" widget-style="buttontext"> 
         </field>-->
+    </form>
+    
+    <form name="FindFacilityInventory" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
+    	<field name="hideSearch"><hidden value="Y"/></field>
+        <field name="facilityId" title="Plant/Silo" required-field="true"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     <form name="FindInventoryTransfers" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
