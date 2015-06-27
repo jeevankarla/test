@@ -751,6 +751,161 @@ public class ProductionServices {
 	  	return result;
     }
     
+    public static Map<String, Object> createProductVarianceForFacility(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+	  	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	  	String productId = (String) context.get("productId");
+	  	String batchId = (String) context.get("inventoryItemId");
+	  	String facilityId = (String) context.get("facilityId");
+	  	BigDecimal variance = (BigDecimal) context.get("variance");
+	  	String varianceTypeId = (String) context.get("varianceTypeId");
+	  	String comment = (String) context.get("comment");
+	  	String varianceReasonId = (String) context.get("varianceReasonId");
+	  	Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	  	String inventoryItemId = "";
+	  	try{
+	  		
+	  		if(UtilValidate.isEmpty(variance)){
+	  			Debug.logError("variance cannot be empty ", module);
+				return ServiceUtil.returnError("variance cannot be empty");
+	  		}
+	  		
+	  		if(variance.compareTo(BigDecimal.ZERO)<1){
+	  			Debug.logError("variance cannot be empty or negative value", module);
+				return ServiceUtil.returnError("variance cannot be empty or negative value");
+	  		}
+	  		
+	  		if(UtilValidate.isEmpty(batchId)){
+	  			batchId = "FIFO";
+	  		}
+	  		if(UtilValidate.isEmpty(varianceTypeId)){
+	  			varianceTypeId = "LOSS_VARIANCE";
+	  		}
+	  			
+	  		List conditionList = FastList.newInstance();
+	  		conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal",EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+	  		conditionList.add(EntityCondition.makeCondition("availableToPromiseTotal",EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
+			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, facilityId));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> inventoryItems = null;
+	  		if(batchId.equals("FIFO")){
+				inventoryItems = delegator.findList("InventoryItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
+				
+	  		}else if(batchId.equals("LIFO")){
+	  			inventoryItems = delegator.findList("InventoryItem", condition, null, UtilMisc.toList("-datetimeReceived"), null, false);
+	  		}else{
+	  			inventoryItemId = batchId;
+	  			inventoryItems = delegator.findList("InventoryItem", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId), null, null, null, false);
+	  		}
+	  		
+	  		if(UtilValidate.isEmpty(inventoryItems)){
+	  			Debug.logError("No Inventory for the product exists, to create variance", module);
+				return ServiceUtil.returnError("No Inventory for the product exists, to create variance");
+	  		}
+	  		
+	  		if(varianceTypeId.equals("GAIN_VARIANCE")){
+	  			GenericValue invItem = EntityUtil.getFirst(inventoryItems);
+	  			
+	  			Map inputCtx = FastMap.newInstance();
+	  			inputCtx.put("userLogin", userLogin);
+	  			inputCtx.put("physicalInventoryDate", nowTimestamp);
+	  			inputCtx.put("generalComments", comment);
+	  			try{
+	  				result = dispatcher.runSync("createPhysicalInventory", inputCtx);
+					if(ServiceUtil.isError(result)){
+						Debug.logError("Error while creating variance", module);
+						return ServiceUtil.returnError("Error while creating variance");
+					}
+				}catch(GenericServiceException e){
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				}
+	  			
+	  			String physicalInventoryId = (String)result.get("physicalInventoryId");
+	  			
+	  			inputCtx.clear();
+	  			inputCtx.put("userLogin", userLogin);
+	  			inputCtx.put("availableToPromiseVar", variance);
+	  			inputCtx.put("inventoryItemId", invItem.getString("inventoryItemId"));
+	  			inputCtx.put("comments", comment);
+	  			inputCtx.put("physicalInventoryId", physicalInventoryId);
+	  			inputCtx.put("quantityOnHandVar", variance);
+	  			inputCtx.put("varianceReasonId", varianceReasonId);
+	  			try{
+	  				result = dispatcher.runSync("createInventoryItemVariance", inputCtx);
+					if(ServiceUtil.isError(result)){
+						Debug.logError("Error while creating Itemvariance", module);
+						return ServiceUtil.returnError("Error while creating Itemvariance");
+					}
+				}catch(GenericServiceException e){
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				}
+	  			
+	  		}else{
+	  			BigDecimal varQty = variance;
+	  			BigDecimal atpQty = BigDecimal.ZERO;
+	  			Iterator<GenericValue> itr = inventoryItems.iterator();
+	            while ((variance.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
+	                GenericValue invItem = itr.next();
+	                atpQty = invItem.getBigDecimal("availableToPromiseTotal");
+	                BigDecimal requestedQty = null;
+	                if (variance.compareTo(atpQty) >= 0) {	
+	                	requestedQty = atpQty;
+	                } else {
+	                	requestedQty = variance;
+	                }
+	                
+	                Map inputCtx = FastMap.newInstance();
+		  			inputCtx.put("userLogin", userLogin);
+		  			inputCtx.put("physicalInventoryDate", nowTimestamp);
+		  			inputCtx.put("generalComments", comment);
+		  			try{
+		  				result = dispatcher.runSync("createPhysicalInventory", inputCtx);
+						if(ServiceUtil.isError(result)){
+							Debug.logError("Error while creating variance", module);
+							return ServiceUtil.returnError("Error while creating variance");
+						}
+					}catch(GenericServiceException e){
+						Debug.logError(e, module);
+						return ServiceUtil.returnError(e.getMessage());
+					}
+		  			
+		  			String physicalInventoryId = (String)result.get("physicalInventoryId");
+		  			
+		  			inputCtx.clear();
+		  			inputCtx.put("userLogin", userLogin);
+		  			inputCtx.put("availableToPromiseVar", requestedQty.negate());
+		  			inputCtx.put("inventoryItemId", invItem.getString("inventoryItemId"));
+		  			inputCtx.put("comments", comment);
+		  			inputCtx.put("physicalInventoryId", physicalInventoryId);
+		  			inputCtx.put("quantityOnHandVar", requestedQty.negate());
+		  			inputCtx.put("varianceReasonId", varianceReasonId);
+		  			try{
+		  				result = dispatcher.runSync("createInventoryItemVariance", inputCtx);
+						if(ServiceUtil.isError(result)){
+							Debug.logError("Error while creating Itemvariance", module);
+							return ServiceUtil.returnError("Error while creating Itemvariance");
+						}
+					}catch(GenericServiceException e){
+						Debug.logError(e, module);
+						return ServiceUtil.returnError(e.getMessage());
+					}
+	                variance = variance.subtract(requestedQty);
+	            }
+	  		}
+	  		
+	  	}catch(Exception e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+	  	}
+	  	result = ServiceUtil.returnSuccess("Successfully create variance..!");
+	  	return result;
+    }
+    
     public static Map<String, Object> createProductBatchSequence(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1635,7 +1790,6 @@ public class ProductionServices {
     	 Delegator delegator = dctx.getDelegator();
     	 Map resultMap = ServiceUtil.returnSuccess();
     	 String qcTestId = (String)context.get("qcTestId");
-    	 Debug.logInfo("createProductQcTestDetails===============#####=========="+context,module);
     	 try{
 	    	 for(String key : context.keySet()){
 	    		 if(key.contains("_testComponent")){

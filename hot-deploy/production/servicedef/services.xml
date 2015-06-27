@@ -51,6 +51,15 @@
     <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
     	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
     </service>
+    <service name="createProductVarianceForFacility" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductVarianceForFacility">
+    	 <attribute name="productId" mode="IN" type="String" optional="false"/>
+    	 <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+    	 <attribute name="variance" mode="IN" type="BigDecimal" optional="false"/>
+    	 <attribute name="inventoryItemId" mode="IN" type="String" optional="true"/>
+    	 <attribute name="varianceTypeId" mode="IN" type="String" optional="false"/>
+    	 <attribute name="varianceReasonId" mode="IN" type="String" optional="false"/>
+    	 <attribute name="comment" mode="IN" type="String" optional="true"/>
+    </service>
     <service name="createProductQcDetails" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductQcDetails">
     	<auto-attributes mode="IN" entity-name="ProductQcTest" optional="true">
     		<exclude field-name="productId"/>

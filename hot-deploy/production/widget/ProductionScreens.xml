@@ -142,6 +142,55 @@
 	     	</widgets>
 		</section>
     </screen>
+    <screen name="FindProductVariance">
+    	<section>
+		     <actions>
+		     	<set field="headerItem" value="Find Variance"/>
+		     	<set field="tabButtonItem1" value="ProductionVariance"/>
+		     	<set field="tabButtonItem2" value="ProductionVariance"/>
+		     	<set field="titleProperty" value="Find Variance"/>
+		     </actions>
+		     <widgets>
+	     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+	     		 	<decorator-section name="body">
+	     		 		<include-menu location="component://production/widget/ProductionMenus.xml" name="ProductionVarianceTabBar"/>
+		     		 	<!-- <screenlet title="Find Variance">
+		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="FindInventoryTransfers"/>
+		     		 	</screenlet>
+		     		 	<screenlet title="List Variance">
+		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="ListInventoryTransfers"/>
+		     		 	</screenlet> -->
+	     		 	</decorator-section>
+	     		 </decorator-screen>
+	     	</widgets>
+		</section>
+    </screen>
+    
+    <screen name="ProductionVarianceForFacility">
+    	<section>
+		     <actions>
+		     	<set field="headerItem" value="Variance"/>
+		     	<set field="tabButtonItem1" value="ProductionVariance"/>
+		     	<set field="tabButtonItem2" value="CreateProductionVariance"/>
+		     	<set field="titleProperty" value="Create Variance"/>
+		     	<script location="component://production/webapp/production/WEB-INF/actions/ListFacilityInventoryVariance.groovy"/>
+		     </actions>
+		     <widgets>
+	     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
+	     		 	<decorator-section name="body">
+	     		 		<include-menu location="component://production/widget/ProductionMenus.xml" name="ProductionVarianceTabBar"/>
+		     		 	<screenlet title="Find Facility Inventory">
+		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="FindFacilityInventory"/>
+		     		 	</screenlet>
+		     		 	<screenlet title="List Products For Variance">
+		     		 		<platform-specific><html><html-template location="component://production/webapp/production/production/ListInventoryForVariance.ftl"/></html></platform-specific>
+		     		 		<!-- <include-form location="component://production/widget/ProductionForms.xml" name="ListInventoryForVariance.ftl"/> -->
+		     		 	</screenlet>
+	     		 	</decorator-section>
+	     		 </decorator-screen>
+	     	</widgets>
+		</section>
+    </screen>
     <screen name="InOutStockXfers">
     	<section>
 		     <actions>

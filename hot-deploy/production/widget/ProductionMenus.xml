@@ -48,7 +48,10 @@
       	</condition>
 	    	<link target="ProductionIssuance"></link>
 	    </menu-item>
-	    <menu-item name="ProductionTempRecord" title="Record Temperature">
+	    <menu-item name="ProductionVariance" title="Variance (Loss/Gain)">
+	    	<link target="findProductVariance"></link>
+	    </menu-item>
+		<menu-item name="ProductionTempRecord" title="Record Temperature">
 	    <condition>
       		<if-has-permission permission="PRO" action="_TEMPE_ENTRY"/>
       	</condition>
@@ -63,6 +66,14 @@
 	      <link target="ProductionTempRecord"></link>
 	    </menu-item>
    </menu>
+	<menu name="ProductionVarianceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+	    <menu-item name="ProductionVariance" title="Find Variance">
+	      <link target="findProductVariance"></link>
+	    </menu-item>
+	    <menu-item name="CreateProductionVariance" title="Create Variance">
+	    	<link target="productionVarianceForFacility"/>
+	    </menu-item>
+    </menu>
 	<menu name="FindProductionTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
       	<menu-item name="productionRun" title="Find Production Run">
             <link target="FindNgProductionRun"></link>
