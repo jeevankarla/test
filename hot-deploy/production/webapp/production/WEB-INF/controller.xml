@@ -182,6 +182,22 @@
         <response name="error" type="view" value="ProductionRunTrends"/>         
     </request-map>
     
+    <request-map uri="findProductVariance">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="FindProductVariance"/>
+        <response name="error" type="view" value="FindProductVariance"/>         
+    </request-map>
+    <request-map uri="productionVarianceForFacility">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ProductionVarianceForFacility"/>
+        <response name="error" type="view" value="ProductionVarianceForFacility"/>         
+    </request-map>
+    <request-map uri="createProductVarianceForFacility">
+        <security https="true" auth="true"/>     
+        <event type="service" path="" invoke="createProductVarianceForFacility"></event>                   
+        <response name="success" type="view" value="ProductionVarianceForFacility"/>
+        <response name="error" type="view" value="ProductionVarianceForFacility"/>         
+    </request-map>
     <request-map uri="productionStockXfers">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="productionStockXfers"/>
@@ -422,6 +438,8 @@
     <view-map name="productionStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#productionStockXfers"></view-map>
     <view-map name="InOutStockXfers" type="screen" page="component://production/widget/ProductionScreens.xml#InOutStockXfers"></view-map>
     <view-map name="findStockXfer" type="screen" page="component://production/widget/ProductionScreens.xml#FindStockXfer"></view-map>
+    <view-map name="ProductionVarianceForFacility" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionVarianceForFacility"></view-map>
+    <view-map name="FindProductVariance" type="screen" page="component://production/widget/ProductionScreens.xml#FindProductVariance"></view-map>
     <view-map name="ProductionLookupFacility" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionLookupFacility"/>
   	<view-map name="ProductionTempRecord" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionTempRecord"/>
      <view-map name="findProductionTempRecord" type="screen" page="component://production/widget/ProductionScreens.xml#findProductionTempRecord"/>
