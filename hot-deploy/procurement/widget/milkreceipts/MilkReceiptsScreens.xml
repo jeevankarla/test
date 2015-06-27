@@ -622,9 +622,16 @@
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    <include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    <section>
+                    	<condition>
+                    		<if-has-permission permission="MR" action="_TANKER_INOUT"/>
+                    	</condition>
+                    	<widgets>
                     	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerEntry.ftl"></html-template></html></platform-specific> 
                     	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    	</widgets>
+                    	</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -995,6 +1002,7 @@
 				<set field="tabButtonItem" value="MilkReceiptsDashboard"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/facility/ListVehicleTripStatus.groovy"/>
 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/vehicleTripStatus.js" global="true"/>
+				 <set field="parameters.shiftDate" value="${groovy: return org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(),&quot;yyyy-MM-dd&quot;)}"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="MilkReceiptsCommonDecorator"

@@ -87,7 +87,7 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 		conditionList.add(EntityCondition.makeCondition("createdByUserLogin", EntityOperator.EQUALS ,parameters.createdByUserLogin));
 	}
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	milkDetailslist = delegator.findList("MilkTransfer",condition,null,UtilMisc.toList("-createdStamp"),null,false);
+	milkDetailslist = delegator.findList("MilkTransferAndMilkTransferItem",condition,null,UtilMisc.toList("-createdStamp"),null,false);
 }
 context.milkDetailslist=milkDetailslist;
 

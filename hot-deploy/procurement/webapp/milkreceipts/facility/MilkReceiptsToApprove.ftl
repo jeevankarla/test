@@ -104,6 +104,7 @@ under the License.
           <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
           <td>Milk Used For</td>
           </#if>
+          <td>Silo</td>
           <td>Received Qty(Kgs)</td>
           <td>Received Qty(Ltrs)</td>
           <td>Received Fat</td>
@@ -168,6 +169,7 @@ under the License.
 				</select>
                 </td>
                 </#if>
+                <td>${eachItem.siloId?if_exists}</td>
               	<td>${eachItem.receivedQuantity?if_exists}</td>
 				<td>${eachItem.receivedQuantityLtrs?if_exists}</td>
 				<td>${eachItem.receivedFat?if_exists}</td>

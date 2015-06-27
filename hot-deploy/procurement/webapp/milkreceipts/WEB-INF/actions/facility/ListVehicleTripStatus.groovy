@@ -39,17 +39,18 @@ import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 
 
-String hideSearch = "Y";
-hideSearch = parameters.hideSearch ;
+
+String hideSearch = parameters.hideSearch ;
+if(UtilValidate.isEmpty(hideSearch) ){
+	 hideSearch = "N";
+}
 List listTripStatus = FastList.newInstance();
 if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 
 	shiftDate = parameters.shiftDate;
 	
 	if(UtilValidate.isEmpty(shiftDate)){
-		Debug.logError("shiftDate Cannot Be Empty","");
-		context.errorMessage = "shiftDate Cannot Be Empty";
-		return;
+		shiftDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(),"yyyy-MM-dd");
 	}
 	sdf = new SimpleDateFormat("yyyy-MM-dd");
 	shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
@@ -95,6 +96,15 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 			GenericValue vehicleTrip = delegator.findOne("VehicleTrip", UtilMisc.toMap("vehicleId" ,vehicleId,"sequenceNum",sequenceNum), true);
 			if(UtilValidate.isNotEmpty(vehicleTrip) ){
 				String partyId = vehicleTrip.get("partyId");
+				if(statusId == "MR_VEHICLE_CIP"){ 
+					List milkTransferList = delegator.findList("MilkTransfer",EntityCondition.makeCondition([EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId),
+					                                                                                        EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum)],EntityOperator.AND),UtilMisc.toSet("isCipChecked"),null,null,false);
+					GenericValue milkTransfer = EntityUtil.getFirst(milkTransferList);
+					String isCipChecked = milkTransfer.getString("isCipChecked") 
+					if(UtilValidate.isEmpty(isCipChecked)){
+						statusId = "MR_VEHICLE_UNLOAD";
+					}
+				}																							
 				vehicleTripMap.put("vehicleId",vehicleId);
 				vehicleTripMap.put("partyId",partyId);
 				vehicleTripMap.put("statusId",statusId);

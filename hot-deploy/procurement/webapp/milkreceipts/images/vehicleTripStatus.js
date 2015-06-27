@@ -25,10 +25,15 @@ function changeRowColor() {
 		if (compTextQc == ("VEHICLE AT QUALITY CONTROL")) {
 			$(this).css("background-color", "#FF7F50");
 		}
+		var resultCip = $(this).find("td:contains('VEHICLE AT UN-LOAD')");
+		var compTextCip = $.trim($(resultCip).text());
+		if (compTextCip == ("VEHICLE AT UN-LOAD")) {
+			$(this).css("background-color", "#6495ED");
+		}
 		var resultCip = $(this).find("td:contains('VEHICLE AT CIP')");
 		var compTextCip = $.trim($(resultCip).text());
 		if (compTextCip == ("VEHICLE AT CIP")) {
-			$(this).css("background-color", "#6495ED");
+			$(this).css("background-color", "#88FAFA");
 		}
 		var resultTw = $(this).find("td:contains('VEHICLE AT TAREWEIGHT')");
 		var compTextTw = $.trim($(resultTw).text());
