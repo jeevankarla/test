@@ -63,6 +63,7 @@
     	<attribute name="organoLepticTest_testComponent" mode="IN" type="String" optional="true"/>
     	<attribute name="colour_testComponent" mode="IN" type="String" optional="true"/>
     	<attribute name="fat_testComponent" mode="IN" type="String" optional="true"/>
+    	<attribute name="snf_testComponent" mode="IN" type="String" optional="true"/>
     	<attribute name="acidity_testComponent" mode="IN" type="String" optional="true"/>
     	<attribute name="protein_testComponent" mode="IN" type="String" optional="true"/>
     	<attribute name="solids_testComponent" mode="IN" type="String" optional="true"/>
