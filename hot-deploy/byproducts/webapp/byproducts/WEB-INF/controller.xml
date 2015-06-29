@@ -1406,6 +1406,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="PartywiseBalanceAbstractPDF"/>
     </request-map>
+    <request-map uri="PartywiseBalanceAbstract.csv">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="PartywiseBalanceAbstractCSV"/>
+    </request-map>
     <request-map uri="productPriceReport.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ProductPriceReportPDF"/>
@@ -1807,6 +1811,8 @@
 	<view-map name="TimePeriod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TimePeriod"/>
 	<view-map name="createInstBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createInstBillingConfig"/>
 	<view-map name="PartywiseBalanceAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractPDF" content-type="application/pdf"/>
+	<view-map name="PartywiseBalanceAbstractCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractCSV" content-type="text/csv"/>
+	
 	<view-map name="DealerBankChallanTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanTXT" content-type="text/plain"  />
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="text/plain"/>
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>

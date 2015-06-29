@@ -119,6 +119,23 @@
         <field name="issuingAuthority" title="BankName"><display/></field>  
         <field name="amount" title="AMOUNT"><display/></field>        
      </form>
+     <form name="PartywiseBalanceAbstractCSV" type="list" list-name="boothListCsv" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="eachBooth" title="Retailer"><display/></field> 	
+    	<field name="stDate" title="Date"><display /></field>
+	   	<field name="openingBalance" title="openingBalance"><display/></field> 
+	   	<field name="invoiceId" title="invoiceId"><display/></field>   	
+	   	<field name="saleAmount" title="saleAmount"><display/></field>   	
+	   	<field name="receipts" title="receipts"><display/></field>   	
+	   	<field name="prodReturnAmt" title="prodReturnAmt"><display/></field>   	
+	   	<field name="chequeDate" title="chequeDate"><display/></field>   	
+	   	<field name="chequeNo" title="chequeNo"><display/></field>   	
+	   	<field name="chequeReturn" title="chequeReturn"><display/></field>   	
+	   	<field name="penaltyAmt" title="penaltyAmt"><display/></field>   	
+	   	<field name="returnAmt" title="returnAmt"><display/></field>   	
+	   	<field name="closingBalance" title="closingBalance"><display/></field>   	
+     </form>
+     
      <form name="IndentTrendForProductionPlanXLS" type="list" list-name="indentTrendList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
     	<field name="productId" title="Product Code"><display/></field>

@@ -90,6 +90,7 @@ context.facilityDesc = facilityDesc;
 boothSummary = [:];
 partyWiseLedger = [:];
 boothOBMap = new TreeMap();
+boothListCsv = [];
 
 shipmentIds = [];
 amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
@@ -120,6 +121,7 @@ if(boothIdsList){
 			boothFacility = partyFacilities.get(0);
 		}
 		grandTotalMap = [:];
+		boothTotMap=[:];
 		skipCounter = 0;
 		testFlag = 0;
 		openingBalance = 0;
@@ -356,6 +358,7 @@ if(boothIdsList){
 			if(balCounter == 0){
 				openBal = OB;
 				grandTotalMap.put("periodOB", openBal);
+				boothTotMap.put("openingBalance",openBal)
 			}
 			else{
 				openBal = closeBal;
@@ -424,6 +427,8 @@ if(boothIdsList){
 						tempMap.put("returnAmt", returnAmt);
 						tempMap.put("closingBalance", closeBal);
 						tempPaymentDetailList.addAll(tempMap);
+						tempMap.put("eachBooth", eachBooth);
+						boothListCsv.add(tempMap);
 					}
 					else {
 						closeBal = tempCloseBal+returnAmt+penaltyAmount;
@@ -442,6 +447,8 @@ if(boothIdsList){
 						newTempMap.put("returnAmt", returnAmt);
 						newTempMap.put("closingBalance", closeBal);
 						tempPaymentDetailList.addAll(newTempMap);
+						newTempMap.put("eachBooth", eachBooth);
+						boothListCsv.add(newTempMap);
 					}
 					counterFlag++;
 				}
@@ -455,6 +462,8 @@ if(boothIdsList){
 					tempMap.put("returnAmt", retAmt);
 					tempMap.put("closingBalance", closeBal);
 					tempPaymentDetailList.addAll(tempMap);
+					tempMap.put("eachBooth", eachBooth);
+					boothListCsv.add(tempMap);
 				}
 				else{
 					closeBal = tempOpenBal-payment;
@@ -472,6 +481,9 @@ if(boothIdsList){
 					newTempMap.put("returnAmt", retAmt);
 					newTempMap.put("closingBalance", closeBal);
 					tempPaymentDetailList.addAll(newTempMap);
+					newTempMap.put("eachBooth", eachBooth);
+					boothListCsv.add(newTempMap);
+					
 				}
 				counterFlag++;
 			}
@@ -487,8 +499,20 @@ if(boothIdsList){
 			boothOBMap.put(eachBooth, tempPaymentDetailList);
 			boothSummary.put(eachBooth, grandTotalMap);
 		}
+		
+		
+		boothTotMap.put("stDate", "Total");
+		boothTotMap.put("eachBooth", eachBooth);
+		boothTotMap.put("saleAmount", total_Sale);
+		boothTotMap.put("receipts", total_Receipt);
+		boothTotMap.put("prodReturnAmount", total_ProdReturn);
+		boothTotMap.put("closingBalance", closeBal);
+		boothTotMap.put("returnAmt", total_returnAmt);
+		boothTotMap.put("penaltyAmt", total_Penalty);
+		boothListCsv.add(boothTotMap);
 	}
 }
 context.put("partyWiseLedger", boothOBMap);
 context.put("boothSummary", boothSummary);
+context.put("boothListCsv", boothListCsv);
 
