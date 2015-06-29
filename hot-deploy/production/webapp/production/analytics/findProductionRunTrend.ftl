@@ -45,14 +45,27 @@ $(document).ready(function(){
 		<table class="basic-table" cellspacing="0">
 			<tr>
         		<td align="right" width="10%"><span class='h3'>From: </span></td>
-            	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate"/></td>
+        		<#if froDate?exists>
+        			<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate" value='${froDate?if_exists}'/></td>
+        		<#else>
+        			<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate"/></td>
+        		</#if>
 				<td width="2%"><span class='h3'>To: </span></td>
-				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
+				<#if toDate?exists>
+        			<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate" value='${toDate?if_exists}'/></td>
+        		<#else>
+        			<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
+        		</#if>
 				<td align="right" width="10%"><span class='h3'>Plant/Unit: </span></td>
 				<td align="left" width="10%">
 					<select name="facilityId" class='h3'>
 						<#list facilityList  as eachFac>
-							<option value='${eachFac.facilityId}'>${eachFac.facilityName?if_exists}</option>
+							<#if facId?exists && eachFac.facilityId == facId>
+								<option value='${eachFac.facilityId}' selected='selected'>${eachFac.facilityName?if_exists}</option>
+							<#else>
+								<option value='${eachFac.facilityId}'>${eachFac.facilityName?if_exists}</option>
+							</#if>
+							
 						</#list>
 					</select>
 				</td>

@@ -131,7 +131,11 @@
 				<td align="left" width="10%">
 					<select name="facilityId" class='h3'>
 						<#list facilityList  as eachFac>
+							<#if extFacilityId?exists && eachFac.facilityId == extFacilityId>
+								<option value='${eachFac.facilityId}' selected='selected'>${eachFac.facilityName?if_exists}</option>
+							<#else>
 								<option value='${eachFac.facilityId}'>${eachFac.facilityName?if_exists}</option>
+							</#if>
 						</#list>
 					</select>
 				</td>
