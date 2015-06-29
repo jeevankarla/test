@@ -136,6 +136,50 @@
         </field>
     </form>
     
+    <form name="FindProductVariance" target="findProductVariance" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<entity-condition entity-name="VarianceReason" list="varianceReason"></entity-condition>
+        </actions>
+        <field name="facilityId" title="Plant/Silo"><text-find/></field>
+        <field name="productId" title="Product"><text-find/></field>
+ 		<field name="varianceReasonId" title="Reason">
+			<drop-down allow-empty="true" >
+				<list-options key-name="varianceReasonId" list-entry-name="reason" list-name="varianceReason" description="${reason.description}"/>
+			</drop-down>
+		</field>
+		<field name="physicalInventoryDate" title="Entry Date"><date-find/></field>   
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+    
+    <form name="ListProductVariance" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       	<actions>
+       		<service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="PhysicalInventoryItemAndVariance"/>
+            <field-map field-name="orderBy" value="-physicalInventoryDate"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+       	</actions>
+        <field name="physicalInventoryId"  title="Variance Id" widget-style="buttontext"><display/></field>
+        <field name="physicalInventoryDate"  title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(physicalInventoryDate,&quot;dd-MM-yyyy&quot;)}"/></field>
+        <field name="partyId"  title="Entry By">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]">
+            </display-entity>
+        </field>
+        <field name="facilityId" title="Plant/Silo"><display/></field>
+        <field name="productId"  title="Product">
+            <display-entity key-field-name="productId" entity-name="Product" description="${productName} [${internalName}]"/>
+        </field>
+        <field name="varianceReasonId" title="Reason"><display-entity description="${description}" entity-name="VarianceReason" key-field-name="varianceReasonId"/></field>
+        <field name="quantityOnHandVar" title="Variance"><display/></field>
+        <field name="comments" title="Comments"><display/></field>
+    </form>
     <form name="FindProductionRequest" target="FindProductionRequest" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>

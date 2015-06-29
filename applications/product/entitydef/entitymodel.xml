@@ -2727,6 +2727,45 @@ under the License.
         <key-map field-name="partyId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="PhysicalInventoryItemAndVariance"
+            package-name="org.ofbiz.product.inventory"
+            title="PhysicalInventory and InventoryItemVariance View Entity">
+      <member-entity entity-alias="PHINV" entity-name="PhysicalInventory"/>
+      <member-entity entity-alias="IIV" entity-name="InventoryItemVariance"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <alias entity-alias="PHINV" name="physicalInventoryId"/>
+      <alias entity-alias="PHINV" name="physicalInventoryDate"/>
+      <alias entity-alias="PHINV" name="partyId"/>
+      <alias entity-alias="PHINV" name="generalComments"/>
+      <alias entity-alias="II" name="facilityId"/>
+      <alias entity-alias="II" name="productId"/>
+      <alias entity-alias="IIV" name="inventoryItemId"/>
+      <alias entity-alias="IIV" name="varianceReasonId"/>
+      <alias entity-alias="IIV" name="availableToPromiseVar"/>
+      <alias entity-alias="IIV" name="quantityOnHandVar"/>
+      <alias entity-alias="IIV" name="comments"/>
+      <view-link entity-alias="IIV" rel-entity-alias="PHINV">
+        <key-map field-name="physicalInventoryId"/>
+      </view-link>
+      <view-link entity-alias="IIV" rel-entity-alias="II">
+        <key-map field-name="inventoryItemId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="VarianceReason">
+        <key-map field-name="varianceReasonId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="VarianceReason"
             package-name="org.ofbiz.product.inventory"
             default-resource-name="ProductEntityLabels"
