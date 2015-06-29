@@ -154,12 +154,12 @@
 	     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
 	     		 	<decorator-section name="body">
 	     		 		<include-menu location="component://production/widget/ProductionMenus.xml" name="ProductionVarianceTabBar"/>
-		     		 	<!-- <screenlet title="Find Variance">
-		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="FindInventoryTransfers"/>
+		     		 	<screenlet title="Find Variance">
+		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="FindProductVariance"/>
 		     		 	</screenlet>
 		     		 	<screenlet title="List Variance">
-		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="ListInventoryTransfers"/>
-		     		 	</screenlet> -->
+		     		 		<include-form location="component://production/widget/ProductionForms.xml" name="ListProductVariance"/>
+		     		 	</screenlet>
 	     		 	</decorator-section>
 	     		 </decorator-screen>
 	     	</widgets>
