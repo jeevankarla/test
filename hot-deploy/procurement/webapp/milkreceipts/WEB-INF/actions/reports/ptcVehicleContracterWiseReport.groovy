@@ -62,7 +62,7 @@ totalsForRecoveryMap=[:];
 partyNames=[:];
 
 containerIds=null;
-Contractors=null;
+contractors=null;
 recoveryTypeIds=null;
 contractorVehicleIds=null;
 conditionList =[];
@@ -91,7 +91,7 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 		context.partyIds=partyIds;
 		
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "ROUTE_VEHICLE"));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "PTC_VEHICLE"));
 		conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.IN , containerIds));
 		EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		vehicleRoleList = delegator.findList("VehicleRole", cond, null,null, null, false);
@@ -185,7 +185,7 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 								if(UtilValidate.isNotEmpty(vehicleRate) && UtilValidate.isNotEmpty(partyDistance) && UtilValidate.isNotEmpty(receivedQuantity) && vehicleCapacity>0){
 									//amount = ((partyDistance.multiply(rateAmount)).multiply((receivedQuantity.divide(vehicleCapacity,2,BigDecimal.ROUND_HALF_UP)))).setScale(2,BigDecimal.ROUND_HALF_UP);
 									amount = ((partyDistance*vehicleRate)*receivedQuantity)/(vehicleCapacity);
-									amount=amount.setScale(0, BigDecimal.ROUND_HALF_UP);
+									amount=amount.setScale(2, BigDecimal.ROUND_HALF_UP);
 									//partyIdsMap.put("amount",amount);
 									totAmount=totAmount+amount;
 								}

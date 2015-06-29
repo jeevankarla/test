@@ -697,9 +697,9 @@
 				var calcQty = 0;
 					calcQty = parseFloat(data2[args.row]["declareQuantity"]);
 				var convValue = 1;
-				if(prodConversionData != 'undefined' && prodConversionData != null && isNaN(prodConversionData)){
-					convValue = prodConversionData['CRATE'];
-                }	
+				if(prodConversionData['CRATE']){
+                 	convValue = prodConversionData['CRATE'];
+				}
 				var calculateQty = 0;
 				if(convValue != 'undefined' && convValue != null && calcQty>0){
 					declareCrates = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
@@ -714,11 +714,11 @@
         if (args.cell == 2) {
 				var prod = data2[args.row]["cDeclareProductId"];
                 var prodConversionData = conversionData[prod];
-
+				
 				var calcQty = 0;
 					calcQty = parseFloat(data2[args.row]["declareCrates"]);
 				var convValue = 1;
-                if(prodConversionData != 'undefined' && prodConversionData != null && isNaN(prodConversionData)){
+				if(prodConversionData['CRATE']){
 					convValue = prodConversionData['CRATE'];
 					if(prodConversionData['BOX']){
 						var box = prodConversionData['BOX'];
