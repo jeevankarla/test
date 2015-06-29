@@ -718,7 +718,7 @@
 			<entity-and entity-name="Employment" list="employmentList">
 				<field-map field-name="partyIdTo" value="${partyId}"/>
 			</entity-and>	
-			<set field="doj" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentList[0].appointmentDate, &quot;dd/MM/yyyy&quot;);}"/>
+			<set field="doj" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentList[0].fromDate, &quot;dd/MM/yyyy&quot;);}"/>
      	</actions>
      	
         <field name="partyId"><display/></field>
@@ -1107,6 +1107,13 @@
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field> -->
         <field name="appointmentDate" entry-name="employment.appointmentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="joiningDate" entry-name="employment.fromDate">
+            <hyperlink target="editJoiningDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.fromDate, &quot;dd/MM/yyyy&quot;);}">
+                <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
+                <parameter param-name="joiningDate" from-field="employmentData.employment.fromDate"/>
+                <parameter param-name="appointmentDate" from-field="employmentData.employment.appointmentDate"/>
+            </hyperlink>
+        </field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     	<field name="location" title="Current Location"><display description="${location}"/></field>
         <field name="locationGeoId" title="New Location">
