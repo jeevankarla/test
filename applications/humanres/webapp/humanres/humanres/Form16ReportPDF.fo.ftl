@@ -132,7 +132,7 @@
 	                           		<fo:table-cell border-style = "solid"> 
 	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt" font-weight = "bold">CIT(TDS)</fo:block>
 	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">The Commissioner Income Tax</fo:block>
-	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">Room No : 59, HMT Bhavan, Bollaram rd</fo:block>
+	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">Room No : 59, HMT Bhavan, Bellary Road</fo:block>
 	                           			<fo:block text-align="center" keep-together="always" font-size="11pt" line-height = "18pt">Ganganagar,Bangalore.</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell> 
