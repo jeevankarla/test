@@ -69,7 +69,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 		$('#MR_VIn').css("background-color", "#A9A9A9");
 		$('#MR_VGw').css("background-color", "#F0E68C");
 		$('#MR_VQc').css("background-color", "#FF7F50");
-		$('#MR_VCip').css("background-color", "#6495ED");
+		$('#MR_Vunload').css("background-color", "#6495ED");
+		$('#MR_VCip').css("background-color","#88FAFA");
 		$('#MR_VTw').css("background-color", "#FFEBCD");
 		$('#MR_Vout').css("background-color", "#90EE90");
 		
@@ -117,6 +118,7 @@ function makeDatePicker(fromDateId ,thruDateId){
     		<td ><input type="text" size="1" readOnly="readOnly" id="MR_VIn"/>VEHICLE IN</td>
     		<td ><input type="text" size="1" readOnly="readOnly" id="MR_VGw"/>VEHICLE AT GROSS WEIGHT</td>
     		<td ><input type="text" size="1" readOnly="readOnly" id="MR_VQc"/>VEHICLE AT QC </td>
+    		<td ><input type="text" size="1" readOnly="readOnly" id="MR_Vunload"/>VEHICLE AT UN-LOAD </td>
     	</tr>
     	<tr>	
     		<td ><input type="text" size="1" readOnly="readOnly" id="MR_VCip"/>VEHICLE AT CIP </td>

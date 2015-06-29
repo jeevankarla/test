@@ -198,7 +198,19 @@ function deleteTransferEntry(thisValue,milkTransferId){
 			                		</#list>            
 								</select>
 								</td>
-        					</tr> 
+        					</tr>
+        					<tr>
+	        					<td align='left' ><span class='h3'> Silo</span></td><td> 
+		        						<select name="siloId"  id="siloId" >
+						        					<option value=""></option>
+						        					<#if rawMilkSilosList?has_content>
+							        					<#list rawMilkSilosList as rawMilkSilo>
+							        						<option value="${rawMilkSilo.facilityId}">${rawMilkSilo.facilityId}</option>
+							        					</#list>
+						        					</#if>
+	          							</select>
+          						    </td>
+	        					</tr> 
 	        				<tr>
 	        					<td><span class='h3'>From Date: </span></td><td><input  size="12" type="text" id="findFromDate" name="fromDate"/></td>
 	        				</tr>

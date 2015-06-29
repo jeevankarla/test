@@ -251,8 +251,8 @@
      <request-map uri="deleteFacilityTemperature">
      	<security auth="true" https="true"/>
      	<event type="service" path="" invoke="deleteFacilityTemperature" global-transaction="true"/>
-       <response name="success" type="view" value="findProductionTempRecord"/>
-       <response name="error" type="view" value="findProductionTempRecord"/>
+       <response name="success" type="request-redirect-noparam" value="findProductionTempRecord"/>
+       <response name="error" type="request-redirect-noparam" value="findProductionTempRecord"/>
      </request-map>
      <request-map uri="FindProductionTempRecord">
      	<security auth="true" https="true"/>

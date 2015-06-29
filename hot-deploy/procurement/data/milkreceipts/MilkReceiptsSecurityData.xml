@@ -13,6 +13,7 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MILKRECEIPT_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="MILKRECEIPT_ADMIN"/>
     
+    
 <!--Receipts Data Entry Operator -->
          
     <SecurityGroup groupId="MILKRECEIPT_ENTRY" description="Receipt Data Entry operator Group Permission"/>
@@ -20,5 +21,71 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_CREATE"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_UPDATE"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_DELETE"/>
-    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_ADMIN"/>  
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_ADMIN"/> 
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="OFBTOOLS_VIEW"/>
+    
+    <SecurityPermission description="Milk Receipts DashBoard View." permissionId="MR_DASHBORD_VIEW"/>
+    <SecurityPermission description="Milk Receipts Entry View."  permissionId="MR_ENTRY_VIEW"/>
+    <SecurityPermission description="Find Milk Receipts View." permissionId="MR_FIND_VIEW"/>
+    <SecurityPermission description="Milk Tanker Issues View." permissionId="MR_TANKERISSUE_VIEW"/>
+    <SecurityPermission description="Tanker Returns View." permissionId="MR_TANKERRETURN_VIEW"/>
+    <SecurityPermission description="Transporters View." permissionId="MR_TRANSPORTERS_VIEW"/> 
+    <SecurityPermission description="Milk Receipts Reports View..!" permissionId="MR_REPORTS_VIEW"/>
+    <SecurityPermission description="Tanker In/Out Entry Permission.!" permissionId="MR_TANKER_INOUT"/> 
+    <SecurityPermission description="Gross And Tare Weight Entry Permission.!" permissionId="MR_WEIGHT_ENTRY"/> 
+    <SecurityPermission description="Quality And CIP Details Entry Permission.!" permissionId="MR_QCCIP_ENTRY"/>
+    <SecurityPermission description="Un-Load Details Entry Permission.!" permissionId="MR_UNLOAD_ENTRY"/>
+    
+    <SecurityGroup description="Milk Receipts DashBoard View." groupId="MR_DASHBORD_VIEW"/>
+    <SecurityGroup description="Milk Receipts Entry View."  groupId="MR_ENTRY_VIEW"/>
+    <SecurityGroup description="Find Milk Receipts View." groupId="MR_FIND_VIEW"/>
+    <SecurityGroup description="Milk Tanker Issues View." groupId="MR_TANKERISSUE_VIEW"/>
+    <SecurityGroup description="Tanker Returns View." groupId="MR_TANKERRETURN_VIEW"/>
+    <SecurityGroup description="Transporters View." groupId="MR_TRANSPORTERS_VIEW"/> 
+    <SecurityGroup description="Milk Receipts Reports View>" groupId="MR_REPORTS_VIEW"/>
+    <SecurityGroup description="ALL operations in the MilkReceipts Component." groupId="MILKRECEIPT_ADMIN"/>
+    <SecurityGroup description="Tanker In/Out Entry Permission.!" groupId="MR_TANKER_INOUT"/> 
+    <SecurityGroup description="Gross And Tare Weight Entry Permission.!" groupId="MR_WEIGHT_ENTRY"/> 
+    <SecurityGroup description="Quality And CIP Details Entry Permission.!" groupId="MR_QCCIP_ENTRY"/>
+    <SecurityGroup description="Un-Load Details Entry Permission.!" groupId="MR_UNLOAD_ENTRY"/>
+    
+    <SecurityGroupPermission groupId="MR_DASHBORD_VIEW" permissionId="MR_DASHBORD_VIEW"/>
+    <SecurityGroupPermission groupId="MR_ENTRY_VIEW" permissionId="MR_ENTRY_VIEW"/>
+    <SecurityGroupPermission groupId="MR_FIND_VIEW" permissionId="MR_FIND_VIEW"/>
+    <SecurityGroupPermission groupId="MR_TANKERISSUE_VIEW" permissionId="MR_TANKERISSUE_VIEW"/>
+    <SecurityGroupPermission groupId="MR_TANKERRETURN_VIEW" permissionId="MR_TANKERRETURN_VIEW"/>
+    <SecurityGroupPermission groupId="MR_TRANSPORTERS_VIEW" permissionId="MR_TRANSPORTERS_VIEW"/>
+    <SecurityGroupPermission groupId="MR_REPORTS_VIEW" permissionId="MR_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="MR_TANKER_INOUT" permissionId="MR_TANKER_INOUT"/>
+    <SecurityGroupPermission groupId="MR_WEIGHT_ENTRY" permissionId="MR_WEIGHT_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_QCCIP_ENTRY" permissionId="MR_QCCIP_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_UNLOAD_ENTRY" permissionId="MR_UNLOAD_ENTRY"/>
+    
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MILKRECEIPT_ADMIN"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_DASHBORD_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_ENTRY_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FIND_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TANKERISSUE_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TANKERRETURN_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRANSPORTERS_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TANKER_INOUT"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_WEIGHT_ENTRY"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_QCCIP_ENTRY"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_UNLOAD_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TANKER_INOUT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_WEIGHT_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_QCCIP_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_UNLOAD_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MILKRECEIPT_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_DASHBORD_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_ENTRY_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FIND_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TANKERISSUE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TANKERRETURN_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRANSPORTERS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_REPORTS_VIEW"/>
+    
+    
+    
 </entity-engine-xml>

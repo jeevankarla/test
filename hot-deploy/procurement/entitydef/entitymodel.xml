@@ -688,6 +688,7 @@
 		<alias name="statusId" entity-alias="MT"/>
 		<alias name="facilityId" entity-alias="MT"/>
 		<alias name="facilityIdTo" entity-alias="MT"/>
+		<alias name="productId" entity-alias="MT"/>
 		<alias name="partyId" entity-alias="MT"/>
 		<alias name="partyIdTo" entity-alias="MT"/>
 		<alias name="receiveDate" entity-alias="MT"/>
@@ -695,7 +696,7 @@
 		<alias name="grossWeight" entity-alias="MT"/>
 		<alias name="tareWeight" entity-alias="MT"/>
 		<alias name="sendDate" entity-alias="MT"/>
-		
+		<alias name="createdStamp" entity-alias="MT"/>
       	<view-link entity-alias="MTI" rel-entity-alias="MT">
         	<key-map field-name="milkTransferId"/>
       	</view-link>

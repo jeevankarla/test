@@ -484,6 +484,7 @@
        <field name="partyIdTo" separate-column="true" title="To"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
        <field name="receiveDate" title="RecDate"><display type="date"/></field>
        <field name="productId" title="Milktype"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
+       <field name="siloId" title="Silo"><display></display></field>
        <field name="receivedQuantity" title="Recquantity(Kgs)"><display/></field>
        <field name="receivedQuantityLtrs" title="Recquantity(Ltrs)"><display default-value="${quantity/1.03}"/></field>
        <field name="receivedFat" ><display/></field>
@@ -507,6 +508,7 @@
 	        <sort-field name="partyId"/>
 	        <sort-field name="partyIdTo"/>
 	        <sort-field name="productId"/>
+	        <sort-field name="siloId"/>
 	        <sort-field name="receivedQuantity"/>
 	        <sort-field name="receivedQuantityLtrs"/>
 	        <sort-field name="receivedFat"/>
@@ -700,7 +702,7 @@
        <field name="vehicleId" title="Tanker"><display/></field>
        <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
        <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" key-field-name="statusId" description="${groovy: description.toUpperCase()}"></display-entity></field>
-       <field name="userLogin" title="Last Modified By">d<display/></field>
+       <field name="userLogin" title="Last Modified By"><display/></field>
        
     </form>
     
