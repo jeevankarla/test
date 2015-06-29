@@ -231,6 +231,7 @@
 		     	<set field="tabButtonItem1" value="productionDashboard"/>
 		     	<set field="tabButtonItem2" value="inventoryCheck"/>
 		     	<set field="titleProperty" value="Dashboard"/>
+		     	<set field="extFacilityId" from-field="parameters.facilityId"/>
 		     	<entity-condition list="facilityList" entity-name="Facility">
 		     		<condition-expr field-name="facilityTypeId" operator="equals" value="PLANT"/>
 		     	</entity-condition>
