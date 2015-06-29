@@ -120,7 +120,7 @@ if (workEffortId) {
 		facilities.each{ eachFac ->
 			JSONObject newObj1 = new JSONObject();
 			newObj1.put("value",eachFac.facilityId);
-			newObj1.put("label", eachFac.facilityId);
+			newObj1.put("label", eachFac.facilityName);
 			productFacilityJSON.add(newObj1);
 			facilityIdLabelJSON.put(eachFac.facilityId,  eachFac.facilityName);
 			facilityLabelIdJSON.put(eachFac.facilityName, eachFac.facilityId);

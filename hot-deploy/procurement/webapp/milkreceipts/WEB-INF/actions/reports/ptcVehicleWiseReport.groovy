@@ -89,7 +89,7 @@ if(UtilValidate.isNotEmpty(vehicleIds)){
 		BigDecimal totReceivedQty= BigDecimal.ZERO;
 		BigDecimal totAmount= BigDecimal.ZERO;
 		vehicleDetails = delegator.findOne("Vehicle",["vehicleId":eachvehicleId],false);
-		
+		//milkTransferList = UtilMisc.sortMaps(milkTransferList, UtilMisc.toList("createdStamp"));
 		if(UtilValidate.isNotEmpty(milkTransferList)){
 			milkTransferList.each{eachMilkTransfer->
 				Map eachVehicleMap=[:];
@@ -108,7 +108,7 @@ if(UtilValidate.isNotEmpty(vehicleIds)){
 				receivedQuantity=eachMilkTransfer.receivedQuantity;
 		
 				if(UtilValidate.isNotEmpty(sendQuantity) && UtilValidate.isNotEmpty(receivedQuantity)){
-					diffQty=sendQuantity-receivedQuantity;
+					diffQty=receivedQuantity-sendQuantity;
 					totSendQty=totSendQty+sendQuantity;
 					totReceivedQty=totReceivedQty+receivedQuantity;
 				}
@@ -151,7 +151,7 @@ if(UtilValidate.isNotEmpty(vehicleIds)){
 					if(UtilValidate.isNotEmpty(rateAmount) && UtilValidate.isNotEmpty(partyDistance) && UtilValidate.isNotEmpty(receivedQuantity) && vehicleCapacity>0){
 					    //amount = ((partyDistance.multiply(rateAmount)).multiply((receivedQuantity.divide(vehicleCapacity,2,BigDecimal.ROUND_HALF_UP)))).setScale(2,BigDecimal.ROUND_HALF_UP);
 						amount = ((partyDistance*rateAmount)*receivedQuantity)/(vehicleCapacity);
-						amount=amount.setScale(0, BigDecimal.ROUND_HALF_UP);
+						amount=amount.setScale(2, BigDecimal.ROUND_HALF_UP);
 						
 						eachVehicleMap.put("amount",amount);
 						totAmount=totAmount+amount;
