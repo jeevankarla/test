@@ -976,7 +976,9 @@ function reportTypeChangeFunc() {
 			      		 <td width="15%">Thru<input  type="text" size="10pt" id="effThruDate" readonly  name="thruDate"/></td>
 			             <td width="15%">Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22"></td>
 			             <td width="15%"></td>
-			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			             <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('paymentOBandCB', '<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>');" class="buttontext"/>
+						       		     <input type="submit" value="CSV" onClick="javascript:appendParams('paymentOBandCB', '<@ofbizUrl>PartywiseBalanceAbstract.csv</@ofbizUrl>');" class="buttontext"/>
+						 </td>         			
 			           </form>
 			        </tr>
 			        <#if (security.hasEntityPermission("PartyFinHistory", "_ARAP", session) )>
