@@ -336,30 +336,68 @@ public class EmplLeaveService {
 						Map tempDayMap = FastMap.newInstance();
 						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
 						List punchDataList = (List) punMap.get("punchDataList");
+						int minimumTime = 0;
+						int hours = 0;
+						int minutes = 0;
+						int totalMinutes = 0;
+						int index = 0;
 						if(UtilValidate.isNotEmpty(punchDataList)){
 							//Map punchDetails = (Map)((punchDataList).get(0));
-							Map punchDetails =  (Map) punchDataList.get(punchDataList.size()-1);
-							if(UtilValidate.isNotEmpty(punchDetails)){
-								String totalTime = (String)punchDetails.get("totalTime");
-								if(UtilValidate.isNotEmpty(totalTime)){
-									totalTime = totalTime.replace(" Hrs", "");
-									List<String> timeSplit = StringUtil.split(totalTime, ":");
-									if(UtilValidate.isNotEmpty(timeSplit)){
-										 int hours = Integer.parseInt(timeSplit.get(0));
-										 int minutes = Integer.parseInt(timeSplit.get(1));
-										 if(UtilValidate.isEmpty(dayFractionId)){
-											 if(((hours*60)+minutes) >=225 && ((hours*60)+minutes) <=465){
-												 return ServiceUtil.returnError("Full Day Leave Not Applicable for "+leaveTypeId+": "+tempDate); 
+							//Map punchDetails =  (Map) punchDataList.get(punchDataList.size()-1);
+							if(UtilValidate.isNotEmpty(punchDataList)){
+								Map firstPunchDetails = (Map) punchDataList.get(0);
+				        		String totalPunchTime = (String)firstPunchDetails.get("totalTime");
+				        		if(UtilValidate.isNotEmpty(totalPunchTime)){
+				        			totalPunchTime = totalPunchTime.replace(" Hrs", "");
+									List<String> punchTimeSplit = StringUtil.split(totalPunchTime, ":");
+									if(UtilValidate.isNotEmpty(punchTimeSplit)){
+										hours = Integer.parseInt(punchTimeSplit.get(0));
+										minutes = Integer.parseInt(punchTimeSplit.get(1));
+										totalMinutes = (hours*60)+minutes;
+										minimumTime = totalMinutes;
+										index = 0;
+									}
+				        		}
+								for (int j = 0; j < punchDataList.size(); ++j) {		
+					        		Map punchDetails = (Map) punchDataList.get(j);
+					        		String totalTime = (String)punchDetails.get("totalTime");
+					        		if(UtilValidate.isNotEmpty(totalTime)){
+										totalTime = totalTime.replace(" Hrs", "");
+										List<String> timeSplit = StringUtil.split(totalTime, ":");
+										if(UtilValidate.isNotEmpty(timeSplit)){
+											hours = Integer.parseInt(timeSplit.get(0));
+											minutes = Integer.parseInt(timeSplit.get(1));
+											totalMinutes = (hours*60)+minutes;
+											if (totalMinutes < minimumTime){
+												minimumTime = totalMinutes;
+												index = j;
+										    }
+										}
+					        		}
+								}
+								Map punchDetails = (Map)punchDataList.get(index);
+								if(UtilValidate.isNotEmpty(punchDetails)){
+									String totalTime = (String)punchDetails.get("totalTime");
+									if(UtilValidate.isNotEmpty(totalTime)){
+										totalTime = totalTime.replace(" Hrs", "");
+										List<String> timeSplit = StringUtil.split(totalTime, ":");
+										if(UtilValidate.isNotEmpty(timeSplit)){
+											 hours = Integer.parseInt(timeSplit.get(0));
+											 minutes = Integer.parseInt(timeSplit.get(1));
+											 if(UtilValidate.isEmpty(dayFractionId)){
+												 if(((hours*60)+minutes) >=225 && ((hours*60)+minutes) <=465){
+													 return ServiceUtil.returnError("Full Day Leave Not Applicable for "+leaveTypeId+": "+tempDate); 
+												 }else{
+													 if(((hours*60)+minutes) <=225){
+														 return ServiceUtil.returnError("Leave Not Applicable for "+leaveTypeId+": "+tempDate);
+													 }
+												 }
 											 }else{
 												 if(((hours*60)+minutes) <=225){
-													 return ServiceUtil.returnError("Leave Not Applicable for "+leaveTypeId+": "+tempDate);
+													 return ServiceUtil.returnError("Half Day Leave Not Applicable for "+leaveTypeId+": "+tempDate);
 												 }
 											 }
-										 }else{
-											 if(((hours*60)+minutes) <=225){
-												 return ServiceUtil.returnError("Half Day Leave Not Applicable for "+leaveTypeId+": "+tempDate);
-											 }
-										 }
+										}
 									}
 								}
 							}
@@ -373,7 +411,7 @@ public class EmplLeaveService {
     	
     	//Debug.log("result:" + result, module);		 
     	return result;
-    }
+	}
 	
 	
 	
