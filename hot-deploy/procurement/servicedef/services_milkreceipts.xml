@@ -471,6 +471,7 @@
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
 		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
 		<attribute name="qcComments" mode="IN" type="String" optional="true"/>
+		<attribute name="qcReject" mode="IN" type="String" optional="true"/>
 		<!-- Product -->
 		<attribute name="productId" mode="IN" type="String" optional="false"/>
 		<!-- Quality Control -->
