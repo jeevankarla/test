@@ -57,8 +57,10 @@ under the License.
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">MOTHER DAIRY-ICE CREAM DIVISION</fo:block>
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">(A UNIT OF KMF LTD.) GKVK POST : BANGALORE - 65</fo:block>
+			                        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportHeaderLable"}, true)>
+			                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportSubHeaderLable"}, true)>
+					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${reportSubHeader.description?if_exists}</fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">(ISSUED UNDER RULE 52A &amp; 173G)</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">ECC NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
