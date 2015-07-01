@@ -305,7 +305,8 @@ under the License.
         <section>
             <actions>
 				<set field="titleProperty" value="Production Run Entry"/>
-                <set field="tabButtonItem1" value="productionRunEntry"/>
+                <set field="tabButtonItem1" value="productionRun"/>
+                <set field="tabButtonItem2" value="productionRunEntry"/>
                 <set field="productionRunId" from-field="parameters.productionRunId" default-value="${parameters.workEffortId}"/>
                 <entity-one entity-name="WorkEffort" value-field="productionRun">
                     <field-map field-name="workEffortId" from-field="productionRunId"/>
@@ -334,6 +335,7 @@ under the License.
             <widgets>
            		<decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
                   <decorator-section name="body">
+                  	<include-menu location="component://production/widget/ProductionMenus.xml" name="ProductionRunTabBar"/>
                    	<section>
                   		<widgets>
        						<platform-specific><html><html-template location="component://production/webapp/production/production/ProductionRunEntry.ftl"/></html></platform-specific>
@@ -581,6 +583,7 @@ under the License.
                 <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>  
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem1" value="productionRun"/>
+                <set field="tabButtonItem2" value="productionRun"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
                 <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
@@ -591,6 +594,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
+                            	<include-menu location="component://production/widget/ProductionMenus.xml" name="ProductionRunTabBar"/>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <!-- <decorator-section name="menu-bar">
                                         <container style="button-bar">

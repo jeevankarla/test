@@ -15,28 +15,7 @@
       	<menu-item name="productionDashboard" title="Dashboard">
        		<link target="productionDashboardMain" ></link>
       	</menu-item>
-      	<menu-item name="productionRun" title="Find Production Run">
-      	<condition>
-			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
-		</condition>
-       		<link target="FindNgProductionRun" ></link>
-      	</menu-item>
-      	<menu-item name="productionRunEntry" title="Production Run Entry">
-      	<condition>
-			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
-		</condition>
-       		<link target="ProductionRunEntry" ></link>
-      	</menu-item>
-      	<menu-item name="productionStockXfers" title="Material Transfers">
-      	<condition>
-      		<if-has-permission permission="PRO" action="_MATERIAL_TRNSFER"/>
-      	</condition>
-       		<link target="findStockXfer"></link>
-      	</menu-item>
-      	<menu-item name="productionReports" title="Reports">
-	        <link target="ProductionReports"></link>
-	    </menu-item>	
-	      <menu-item name="productionIndent" title="Indent">
+      	<menu-item name="productionIndent" title="Indent">
 	      <condition>
 			<if-has-permission permission="PRO" action="_INDENT_ENTRY"/>
 		</condition>
@@ -48,16 +27,45 @@
       	</condition>
 	    	<link target="ProductionIssuance"></link>
 	    </menu-item>
-	    <menu-item name="ProductionVariance" title="Variance (Loss/Gain)">
+      	<menu-item name="productionRun" title="Production Run">
+      	<condition>
+			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
+		</condition>
+       		<link target="FindNgProductionRun" ></link>
+      	</menu-item>
+      	<menu-item name="productionStockXfers" title="Material Transfers">
+      	<condition>
+      		<if-has-permission permission="PRO" action="_MATERIAL_TRNSFER"/>
+      	</condition>
+       		<link target="findStockXfer"></link>
+      	</menu-item>
+      	<menu-item name="ProductionVariance" title="Variance (Loss/Gain)">
 	    	<link target="findProductVariance"></link>
 	    </menu-item>
-		<menu-item name="ProductionTempRecord" title="Record Temperature">
+      	<menu-item name="ProductionTempRecord" title="Record Temperature">
 	    <condition>
       		<if-has-permission permission="PRO" action="_TEMPE_ENTRY"/>
       	</condition>
 	    	<link target="ProductionTempRecord"></link>
 	    </menu-item>
+	    <menu-item name="productionReports" title="Reports">
+	        <link target="ProductionReports"></link>
+	    </menu-item>	
 	</menu>
+	<menu name="ProductionRunTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+	   <menu-item name="productionRun" title="Find Production Run">
+      	<condition>
+			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
+		</condition>
+       		<link target="FindNgProductionRun" ></link>
+      	</menu-item>
+      	<menu-item name="productionRunEntry" title="Production Run Entry">
+      	<condition>
+			<if-has-permission permission="PRO" action="_PRODUCTION_ENTRY"/>
+		</condition>
+       		<link target="ProductionRunEntry" ></link>
+      	</menu-item>
+   </menu>
 	<menu name="ProductionTempRecordTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 	   <menu-item name="findProductionTempRecord" title="Find Temp Record">
 	    	<link target="findProductionTempRecord"/>
@@ -136,7 +144,7 @@
       	</menu-item>
 	</menu>
 	<menu name="AnalyticsMenusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-		<menu-item name="inventoryCheck" title="Silo Inventory">
+		<menu-item name="inventoryCheck" title="Inventory">
        		<link target="productionDashboardMain" ></link>
       	</menu-item>
       	<menu-item name="productionRunTrends" title="Production Run Trends">
