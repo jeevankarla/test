@@ -2852,6 +2852,7 @@ public class MilkReceiptServices {
 				
 				if(qcReject.equalsIgnoreCase("Y")){
 					statusId="MXF_REJECTED";
+					 milkTransfer.set("receiveDate",testDate);
 		 			 milkTransfer.set("statusId", statusId);
 			    }
 	 	    	context.remove("qcReject"); 
