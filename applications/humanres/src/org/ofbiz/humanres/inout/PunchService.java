@@ -680,8 +680,8 @@ public class PunchService {
 				selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
 			}
 			List conditionList2 = UtilMisc.toList(EntityCondition
-					.makeCondition("punchdate", EntityOperator.EQUALS,
-							selectedDate));
+					.makeCondition("punchdate", EntityOperator.IN,
+							UtilMisc.toList(selectedDate,seleDate)));
 			
 			conditionList2.add(EntityCondition.makeCondition("partyId",
 					EntityOperator.IN, empPartyIds));
@@ -691,24 +691,27 @@ public class PunchService {
 			List<GenericValue> finalPunchOUT = delegator.findList("EmplPunch",
 					condition2, null, null, null, false);
 			ArrayList punchDataList = new ArrayList();
-			//for (GenericValue emplPunchIn : finalPunchIN) {
+			int i = 0;
+			for (GenericValue emplPunchIn : finalPunchIN) {
+				i = i + 1;
+				int j = 0;
 				Map emplPunchMap = FastMap.newInstance();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-				String stDate = sdf.format(finalPunchINValue.get("punchdate"));
+				String stDate = sdf.format(emplPunchIn.get("punchdate"));
 				emplPunchMap.put("date", stDate.toString());
-				emplPunchMap.put("partyId", finalPunchINValue.get("partyId"));
-				String EmployeeId = ((finalPunchINValue.get("partyId")).toString());
+				emplPunchMap.put("partyId", emplPunchIn.get("partyId"));
+				String EmployeeId = ((emplPunchIn.get("partyId")).toString());
 				String EmployeeName = PartyHelper.getPartyName(delegator,
 						EmployeeId, false);
 				GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
 				emplPunchMap.put("Employee", EmployeeName);
-				emplPunchMap.put("inTime",(finalPunchINValue.getTime("punchtime").getHours())+":"+(finalPunchINValue.getTime("punchtime").getMinutes()));
+				emplPunchMap.put("inTime",(emplPunchIn.getTime("punchtime").getHours())+":"+(emplPunchIn.getTime("punchtime").getMinutes()));
 				//emplPunchMap.put("inTime", emplPunchIn.getString("punchtime"));
-				String inPunchTime = (finalPunchINValue.get("punchtime")).toString();
-			     if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && employeeDetail.getString("companyBus").equalsIgnoreCase("Y") && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType"))){
+				String inPunchTime = (emplPunchIn.get("punchtime")).toString();
+			     if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && employeeDetail.getString("companyBus").equalsIgnoreCase("Y") && UtilValidate.isNotEmpty(emplPunchIn.getString("shiftType"))){
 			    	 List condList = FastList.newInstance();
 						condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isDefault", EntityOperator.EQUALS, "Y"),EntityOperator.AND ,EntityCondition.makeCondition("isDefault", EntityOperator.NOT_EQUAL, null)));
-						condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, finalPunchINValue.getString("shiftType")));
+						condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, emplPunchIn.getString("shiftType")));
 						EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 						//punchTime 
 						List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", cond, null, UtilMisc.toList("-startTime"),null, false); 
@@ -717,30 +720,39 @@ public class PunchService {
 						}
 						 
 			     }
-				for (GenericValue emplPunchOut : finalPunchOUT) {
-					if (finalPunchINValue.get("partyId").equals(
+			     Map emplPunchOutTimeMap = FastMap.newInstance();
+			     Map emplPunchOutDateMap = FastMap.newInstance();
+			     for (GenericValue emplPunchOut : finalPunchOUT) {
+					if (emplPunchIn.get("partyId").equals(
 							emplPunchOut.get("partyId"))) {
-						SimpleDateFormat format = new SimpleDateFormat(
-								"HH:mm:ss");
 						/*Date inTime = format.parse((emplPunchIn
 								.get("punchtime")).toString());
 						Date outTime = format.parse(emplPunchOut.get(
 								"punchtime").toString());*/
 						//long timeDiff = outTime.getTime() - inTime.getTime();
+						j= j + 1;
+						emplPunchOutTimeMap.put(j,emplPunchOut.get("punchtime"));
+						emplPunchOutDateMap.put(j,emplPunchOut.get("punchdate"));
+					}
+				}
+			    if(UtilValidate.isNotEmpty(emplPunchOutDateMap)){
+					if(UtilValidate.isNotEmpty(emplPunchOutTimeMap)){
+						SimpleDateFormat format = new SimpleDateFormat(
+								"HH:mm:ss");
 						Timestamp punchInTimestamp =
 							    Timestamp.valueOf(
 							        new SimpleDateFormat("yyyy-MM-dd ")
-							        .format(finalPunchINValue.getDate("punchdate")) // get the current date as String
+							        .format(emplPunchIn.getDate("punchdate")) // get the current date as String
 							        .concat(inPunchTime)        // and append the time
 							    );
+						Date punchOutDate = (Date)emplPunchOutDateMap.get(i);
+						Time punchOutTimings = (Time)emplPunchOutTimeMap.get(i);
 						Timestamp punchOutTimestamp =
 							    Timestamp.valueOf(
 							        new SimpleDateFormat("yyyy-MM-dd ")
-							        .format(emplPunchOut.getDate("punchdate")) // get the current date as String
-							        .concat((emplPunchOut.get("punchtime")).toString())        // and append the time
+							        .format(punchOutDate) // get the current date as String
+							        .concat((punchOutTimings).toString())        // and append the time
 							    );
-						
-						
 						
 						long timeDiff = punchOutTimestamp.getTime() - punchInTimestamp.getTime();
 						Long diffHours = new Long(timeDiff / (60 * 60 * 1000));
@@ -751,12 +763,13 @@ public class PunchService {
 								+ diffMinutes.toString() + " Hrs";
 						/*emplPunchMap.put("outTime",
 								emplPunchOut.getString("punchtime"));*/
-						emplPunchMap.put("outTime",(emplPunchOut.getTime("punchtime").getHours())+":"+(emplPunchOut.getTime("punchtime").getMinutes()));
+						
+						emplPunchMap.put("outTime",((punchOutTimings.getHours())+":"+(punchOutTimings.getMinutes())));
 						emplPunchMap.put("totalTime", totalTime.toString());
 					}
 				}
 				punchDataList.add(emplPunchMap);
-			//}
+			}
 			result.put("punchDataList", punchDataList);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, e.getMessage());

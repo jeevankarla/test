@@ -261,7 +261,7 @@ public class HumanresService {
 					    EntityCondition condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 					    String emplWeeklyOffDay = "SUNDAY";
-			    		
+					    
 				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
 				        	emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
 				        }
@@ -275,7 +275,7 @@ public class HumanresService {
 			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
 			    			String dayName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition("date",EntityOperator.EQUALS,UtilDateTime.toSqlDate(cTime)));
-							List weeklyCondList = FastList.newInstance();
+			    			List weeklyCondList = FastList.newInstance();
 							weeklyCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
 							weeklyCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,cTimeEnd));
 							weeklyCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, cTimeStart)));
@@ -285,18 +285,16 @@ public class HumanresService {
 					            GenericValue activeEmpWeeklyOffCalendar = EntityUtil.getFirst(activeEmpWeeklyOffCalList);
 					            emplWeeklyOffDay = (String) activeEmpWeeklyOffCalendar.get("weeklyOffDay");
 							}
-							if(dayName.equalsIgnoreCase(emplWeeklyOffDay)){
-								if(UtilValidate.isNotEmpty(dayShiftList) || (dayShiftList.size() >= 2)){
-									for(int i=0 ;i<dayShiftList.size() ;i++){
-				    					GenericValue dayShift = dayShiftList.get(i);
-				    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
-				    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("-punchtime"));
-				    					GenericValue firstPunch = EntityUtil.getFirst(emplPunchList);
-				    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("punchtime"));
-				    					GenericValue lastPunch = EntityUtil.getFirst(emplPunchList);
-				    				}
-				    				holidays.add(UtilDateTime.toSqlDate(cTime));
-				    			}
+							if((dayName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList)) || (dayShiftList.size() >= 2)){
+								for(int i=0 ;i<dayShiftList.size() ;i++){
+			    					GenericValue dayShift = dayShiftList.get(i);
+			    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
+			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("-punchtime"));
+			    					GenericValue firstPunch = EntityUtil.getFirst(emplPunchList);
+			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("punchtime"));
+			    					GenericValue lastPunch = EntityUtil.getFirst(emplPunchList);
+			    				}
+				    			holidays.add(UtilDateTime.toSqlDate(cTime));
 							}
 			    			c1.add(Calendar.DATE,1);
 						}	
@@ -331,9 +329,50 @@ public class HumanresService {
 								continue;
 							}*/
 							Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+							int minimumTime = 0;
+							int hours = 0;
+							int minutes = 0;
+							int totalMinutes = 0;
+							int index = 0;
 							if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
-								Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
-								if(UtilValidate.isNotEmpty(punchDetails)){
+								List punchDetailsList = (List)punMap.get("punchDataList");
+								if(UtilValidate.isNotEmpty(punchDetailsList)){
+									Map firstPunchDetails = (Map) punchDetailsList.get(0);
+					        		String totalPunchTime = (String)firstPunchDetails.get("totalTime");
+					        		if(UtilValidate.isNotEmpty(totalPunchTime)){
+					        			totalPunchTime = totalPunchTime.replace(" Hrs", "");
+										List<String> punchTimeSplit = StringUtil.split(totalPunchTime, ":");
+										if(UtilValidate.isNotEmpty(punchTimeSplit)){
+											hours = Integer.parseInt(punchTimeSplit.get(0));
+											minutes = Integer.parseInt(punchTimeSplit.get(1));
+											totalMinutes = (hours*60)+minutes;
+											minimumTime = totalMinutes;
+											index = 0;
+										}
+					        		}
+									for (int j = 0; j < punchDetailsList.size(); ++j) {		
+						        		Map punchDetails = (Map) punchDetailsList.get(j);
+						        		String totalTime = (String)punchDetails.get("totalTime");
+						        		if(UtilValidate.isNotEmpty(totalTime)){
+											totalTime = totalTime.replace(" Hrs", "");
+											List<String> timeSplit = StringUtil.split(totalTime, ":");
+											if(UtilValidate.isNotEmpty(timeSplit)){
+												hours = Integer.parseInt(timeSplit.get(0));
+												minutes = Integer.parseInt(timeSplit.get(1));
+												totalMinutes = (hours*60)+minutes;
+												if (totalMinutes < minimumTime){
+													minimumTime = totalMinutes;
+													index = j;
+											    }
+											}
+						        		}
+									}
+									tempDayMap.put("punchDetails", punchDetailsList.get(index));
+									tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
+									workedHolidaysList.add(tempDayMap);
+								}
+								//Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+								/*if(UtilValidate.isNotEmpty(punchDetails)){
 									String totalTime = (String)punchDetails.get("totalTime");
 									if(UtilValidate.isNotEmpty(totalTime)){
 										totalTime = totalTime.replace(" Hrs", "");
@@ -349,7 +388,7 @@ public class HumanresService {
 											 }
 										}
 									}
-								}
+								}*/
 							}
 							//tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
 							//holidays.remove(tempDate);
@@ -364,7 +403,7 @@ public class HumanresService {
 	    	
 	    	//Debug.log("result:" + result, module);		 
 	    	return result;
-	    }
+	 }
 	 public static Map<String, Object> createEmployeeLoan(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String partyId = (String) context.get("partyId");
