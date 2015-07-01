@@ -4215,6 +4215,7 @@ public class ByProductNetworkServices {
 
 		EntityCondition condition = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		List paymentsList = FastList.newInstance();
+		List tempAllPayments = FastList.newInstance();
 		// order by condition will change basing on requirement;
 		List<String> orderBy = UtilMisc.toList("facilityId","-lastModifiedDate");
 		if (orderByBankName) {
@@ -4227,7 +4228,21 @@ public class ByProductNetworkServices {
 			Map tempPayment = FastMap.newInstance();
 			for (int i = 0; i < paymentsList.size(); i++) {
 				GenericValue boothPayment = (GenericValue) paymentsList.get(i);
-
+				Map tempMulPayment = FastMap.newInstance();
+				tempMulPayment.put("facilityId", boothPayment.getString("facilityId"));
+				tempMulPayment.put("partyIdFrom", tempPartyId);
+				if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempPartyId))) {
+					tempMulPayment.put("routeId",boothRouteIdsMap.get(tempPartyId));
+				}
+				tempMulPayment.put("paymentDate",boothPayment.getTimestamp("paymentDate"));
+				tempMulPayment.put("paymentId",boothPayment.getString("paymentId"));
+				tempMulPayment.put("paymentLocation",boothPayment.getString("paymentLocation"));
+				tempMulPayment.put("paymentMethodTypeId",boothPayment.getString("paymentMethodTypeId"));
+				tempMulPayment.put("amount", boothPayment.getBigDecimal("amount"));
+				tempMulPayment.put("userId",boothPayment.getString("createdByUserLogin"));
+				tempMulPayment.put("comments",boothPayment.getString("comments"));
+				tempMulPayment.put("paymentRefNum",boothPayment.getString("paymentRefNum"));
+				tempAllPayments.add(tempMulPayment);
 				if (isByParty) {
 
 					if (tempPartyId == "") {
@@ -4330,6 +4345,7 @@ public class ByProductNetworkServices {
 		}
 		boothsPaymentsDetail.put("invoicesTotalAmount", invoicesTotalAmount);
 		boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);
+		boothsPaymentsDetail.put("boothAllPaymentsList", tempAllPayments);
 		boothsPaymentsDetail.put("paymentsList", paymentsList);
 		boothsPaymentsDetail.put("boothRouteIdsMap", boothRouteIdsMap);// for reporting purpose (boothId,routeId) for which route tat booth belongsto
 		return boothsPaymentsDetail;
@@ -5851,7 +5867,7 @@ public class ByProductNetworkServices {
 			return ServiceUtil.returnError("thruDate cannot be empty");
 		}
 		int totalDays=UtilDateTime.getIntervalInDays(fromDate,thruDate);
-		if(totalDays>32){
+		if(totalDays>186){
 			return SalesHistoryServices.getSalesSummaryPeriodTotals(ctx,context);
 		}
 		String subscriptionType = (String) context.get("subscriptionType");

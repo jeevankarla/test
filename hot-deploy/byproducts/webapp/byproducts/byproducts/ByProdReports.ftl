@@ -149,6 +149,33 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	}
+	//for half year restriction	
+	function makeDatePicker5(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		date = $(this).datepicker('getDate');
+		y = date.getFullYear(),
+		m = date.getMonth();
+		d = date.getDate();
+		    var maxDate = new Date(y, m+6, d);
+		
+		$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+		//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+		}
+		});
+		$( "#"+thruDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function( selectedDate ) {
+		//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+		}
+		});
+	}	
+
 	//one year restriction
 	function makeDatePicker3(fromDateId ,thruDateId){
 		$( "#"+fromDateId ).datepicker({
@@ -231,7 +258,7 @@ function reportTypeChangeFunc() {
 		//makeDatePicker("materialFromDateId","materialThruDateId");
 		makeDatePicker("FDRDateId","");
 	//	makeDatePicker("vatFromDateId","vatThruDateId");
-		makeDatePicker3("vatFromDateId","vatThruDateId");
+		makeDatePicker5("vatFromDateId","vatThruDateId");
 		makeDatePicker("subsidyFromDateId","subsidyThruDateId");
 		makeDatePicker("effFromDate","effThruDate");
 		makeDatePicker("smsNotify","");
