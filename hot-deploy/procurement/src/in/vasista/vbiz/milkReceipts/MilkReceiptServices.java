@@ -2867,6 +2867,35 @@ public class MilkReceiptServices {
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIPNEW")){
 	 			String isCipChecked = (String) context.get("isCipChecked");
 	 			try{
+		 			List conList = FastList.newInstance();
+		 			conList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,(String) milkTransfer.getString("containerId")));
+		 			conList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS,(String) milkTransfer.getString("sequenceNum")));
+		 			conList.add(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS,null));
+		 			EntityCondition con = EntityCondition.makeCondition(conList);
+		 			List<GenericValue> vehicleTripStatusList = delegator.findList("VehicleTripStatus", con, null, null, null, false);
+		 			if(UtilValidate.isEmpty(vehicleTripStatusList)){
+		 				Debug.logError("VehicleId Not Found..:",module);
+						resultMap = ServiceUtil.returnError("VehicleId Not Found.");
+			 			return resultMap;
+		 			}
+		 			GenericValue vehicleTripStatus = EntityUtil.getFirst(vehicleTripStatusList);
+		 			String currentStatusId = (String)vehicleTripStatus.get("statusId");
+		 			if(!currentStatusId.equals("MR_VEHICLE_CIP") && UtilValidate.isEmpty((String)milkTransfer.getString("isCipChecked"))){
+		 				Debug.logError("Vehicle Not Yet Un-loaded:",module);
+						resultMap = ServiceUtil.returnError("Vehicle Not Yet Un-loaded.");
+			 			return resultMap;
+		 			}
+		 			if(!currentStatusId.equals("MR_VEHICLE_CIP") && UtilValidate.isNotEmpty((String)milkTransfer.getString("isCipChecked"))){
+		 				Debug.logError("CIP Already Done.",module);
+						resultMap = ServiceUtil.returnError("CIP Already Done.");
+			 			return resultMap;
+		 			}
+	 			}catch(Exception e){
+					Debug.logError("Error While getting the current status  :",module);
+					resultMap = ServiceUtil.returnError("Error While getting the current status:"+e.getMessage());
+		 			return resultMap;
+				}
+	 			try{
 	 				milkTransfer.set("isCipChecked",isCipChecked);
 		 			milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	 	        	milkTransfer.store();
