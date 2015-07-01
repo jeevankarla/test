@@ -2273,12 +2273,13 @@ public class MilkReceiptServices {
 		try{
 	   	 	List transfersCondList = FastList.newInstance();
 			transfersCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,tankerNo));
-			transfersCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MXF_INPROCESS"));
+			transfersCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("MXF_INPROCESS", "MXF_REJECTED")));
 			EntityCondition transferCondtion = EntityCondition.makeCondition(transfersCondList,EntityJoinOperator.AND) ;
-			List transfersList = delegator.findList("MilkTransfer", transferCondtion,null, null, null, false);
-			
+	        List orderBy = UtilMisc.toList("-milkTransferId");
+			List transfersList = delegator.findList("MilkTransfer", transferCondtion,null, orderBy, null, false);
 			if(UtilValidate.isNotEmpty(transfersList)){
 				GenericValue transferRecord = EntityUtil.getFirst(transfersList);
+			 	String mtStatusId = (String) transferRecord.get("statusId");
 				milkTransferId =(String)transferRecord.get("milkTransferId"); 
 				resultMap = ServiceUtil.returnSuccess();
 				resultMap.put("dcNo", transferRecord.get("dcNo"));
@@ -2320,6 +2321,19 @@ public class MilkReceiptServices {
 				String sendTimeStr = UtilDateTime.toDateString(sendDateFormat,"HHmm");
 				resultMap.put("sendDateStr", sendDateStr);
 				resultMap.put("sendTimeStr", sendTimeStr);
+ 	        	if(mtStatusId.equalsIgnoreCase("MXF_REJECTED")){
+ 	        	List vehicleTripCond = FastList.newInstance();
+ 	        	vehicleTripCond.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,transferRecord.get("containerId")));
+ 	        	vehicleTripCond.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,transferRecord.get("sequenceNum")));
+ 	        	vehicleTripCond.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
+ 	        	EntityCondition vehicleTripCondion = EntityCondition.makeCondition(vehicleTripCond,EntityJoinOperator.AND) ;
+ 	   			List vehicleTripStatusList = delegator.findList("VehicleTripStatus", vehicleTripCondion,null, null, null, false);
+ 		 		if(UtilValidate.isEmpty(vehicleTripStatusList)){
+ 					resultMap = ServiceUtil.returnError("No record Found");
+
+ 		 		  }
+ 	        	}
+
 				return resultMap;
 			}else{
 				resultMap = ServiceUtil.returnError("No record Found");
@@ -2454,6 +2468,7 @@ public class MilkReceiptServices {
    	 	String tankerNo = (String) context.get("tankerNo");
 	 	String statusId = (String) context.get("statusId");
 	 	String milkTransferId = (String) context.get("milkTransferId");
+	 	String qcReject = (String) context.get("qcReject");
 	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
 	 	try{
 	 		GenericValue milkTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId", milkTransferId),false);
@@ -2691,9 +2706,12 @@ public class MilkReceiptServices {
  	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
 		 			return resultMap;
 				}
-	 	        
+				String statusIdCheck = (String) milkTransfer.get("statusId");
 				milkTransfer.set("statusId", "MXF_RECD");
 				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 	        	if(statusIdCheck.equalsIgnoreCase("MXF_REJECTED")){
+					 milkTransfer.set("statusId", "MXF_REJECTED");
+		 	    }
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
@@ -2799,6 +2817,30 @@ public class MilkReceiptServices {
  	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
 		 			return resultMap;
 				}
+	 	      if(qcReject.equalsIgnoreCase("Y")){
+	 	    	 statusId="MR_VEHICLE_QCREJECT";
+	 	    	 updateVehStatusInMap.put("estimatedStartDate",testDate);
+	 	    	 updateVehStatusInMap.put("statusId",statusId);
+	 	    	try{
+	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
+	 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+	 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+			 			return resultMap;
+	 	        	}
+	 	        }catch (GenericServiceException e) {
+					// TODO: handle exception
+	 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+		 			return resultMap;
+	 	        	
+				}catch(Exception e){
+					Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+		 			return resultMap;
+				}
+	 	      }
+	 	        
 				String qcComments = (String) context.get("qcComments");
 	 	        milkTransfer.set("productId",productId);
 	 	        milkTransfer.set("fat",(BigDecimal)context.get("sendFat"));
@@ -2808,6 +2850,12 @@ public class MilkReceiptServices {
 				milkTransfer.set("comments", qcComments);
 				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 				
+				if(qcReject.equalsIgnoreCase("Y")){
+					statusId="MXF_REJECTED";
+		 			 milkTransfer.set("statusId", statusId);
+			    }
+	 	    	context.remove("qcReject"); 
+
 				Map milkTransferItemResult = dispatcher.runSync("createTankerReceiptItem", context);
 				
 	 	        if(ServiceUtil.isError(milkTransferItemResult)){
@@ -2869,16 +2917,20 @@ public class MilkReceiptServices {
 	 			Debug.logError("Cannot update vehicleTripStatus ",module);
 	 			resultMap = ServiceUtil.returnError("Cannot update VehicleTrip Status . Reason : Previous status Not found");
 	 		}
-	 		String previousStatusId = (String)((GenericValue)EntityUtil.getFirst(previousStatusList)).get("statusId");
+	        List previousStatusIds = FastList.newInstance();
+	 		previousStatusIds = EntityUtil.getFieldListFromEntityList(previousStatusList, "statusId", true);
+
 	 		// here we are getting 
 	 		List vehicleTripStatusConditionList = UtilMisc.toList(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
 	 		vehicleTripStatusConditionList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
 	 		EntityCondition vehicleTripStatusCondition = EntityCondition.makeCondition(vehicleTripStatusConditionList);
 	 		List<GenericValue> previousStatusRecordList = delegator.findList("VehicleTripStatus",vehicleTripStatusCondition,null,null,null,false);
-	 		
-	 		EntityCondition prevStatCond = EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,previousStatusId);
+
+	 		EntityCondition prevStatCond = EntityCondition.makeCondition("statusId",EntityOperator.IN,previousStatusIds);
 	 		List<GenericValue> prevStatRecStatusList = EntityUtil.filterByCondition(previousStatusRecordList,prevStatCond);
 	 		GenericValue previousStatusRecord =EntityUtil.getFirst(prevStatRecStatusList);
+	 		String previousStatusId = (String)previousStatusRecord.get("statusId");
+
 	 		if(UtilValidate.isEmpty(previousStatusRecord)){
 	 			EntityCondition prevVehicleCondition = EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null);
 	 			prevStatRecStatusList = EntityUtil.filterByCondition(previousStatusRecordList,prevVehicleCondition);

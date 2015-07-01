@@ -99,81 +99,101 @@ jQuery(document).ready(function() {
 
 $(function() {
     $('#submitEntry').click (function (){
-    	var displayScreen = $('[name=displayScreen]').val();
-    	var action = "createMilkTankerReceiptEntry";
-    	if(displayScreen == "VEHICLE_OUT"){
-    		if(!$("#milkReceiptEntry").validate({messages:{
-     		   exitDate:"" , exitTime:"" , tankerName:"" 
-     	   }}).form()) return;
-    		
-    		action = "updateMilkTankerReceiptEntryOut";
-    	}else if(displayScreen == "VEHICLE_GRSWEIGHT"){
-    		if(!$("#milkReceiptEntry").validate({messages:{
-      		   grossDate:"" ,grossTime:"" , milkTransferId:"" , tankerName:"",numberOfCells:"",dispatchWeight:"",grossWeight:""
-      	   }}).form()) return;
-    		action = "updateMilkTankerReceiptEntryGrsWeight";
-    	}else if(displayScreen == "VEHICLE_TAREWEIGHT"){
-    		if(!$("#milkReceiptEntry").validate({messages:{
-       		   tareDate:"" ,tareTime:"" , milkTransferId:"" , tankerName:"",tareWeight:""
-       	   }}).form()) return;
-    		action = "updateMilkTankerReceiptEntryTAREWeight";
-    	}else if(displayScreen == "VEHICLE_QC"){
-    		if(!$("#milkReceiptEntry").validate({messages:{
-       		   testDate:"" ,testTime:"" , milkTransferId:"" , tankerName:"",sendTemp:"",
-       		   productId:"",sendTemp:"",recdTemp:"",sendAcid:"",recdAcid:"",sendCLR:"",recdCLR:"",
-       		   sendFat:"",recdFat:"",sendSnf:"",recdSnf:"",sendCob:"",recdCob:"",
-       		   sendNutriliser:"",recdFlavour:"",recdSedimentTest:"",recdPH:"",recdMBRT:""
-       		   
-       		   
-       	   }}).form()) return;
-    		action = "updateMilkTankerReceiptEntryQC";
-    	}else if(displayScreen == "VEHICLE_CIP"){
-    		if(!$("#milkReceiptEntry").validate({messages:{
-        		   cipDate:"" ,cipTime:"" , milkTransferId:"" , tankerName:"",silo:""
-        	   }}).form()) return;
-     		action = "updateMilkTankerReceiptEntryCIP";
-     	}else if(displayScreen == "VEHICLE_CIPNEW"){
-     		if(!$("#milkReceiptEntry").validate({messages:{
-     			milkTransferId:"" , tankerName:"",isCipChecked:""
-     		}}).form()) return;
-     		action = "updateMilkReceiptsVehicleCipNew";
-     	}else{
-    		if(!$("#milkReceiptEntry").validate({messages:{
-        		   entryDate:"" ,entryTime:"" , tankerName:"",sendDate:"" ,sendTime:"" ,
-        		   dcNo:"",partyId:"",sealCheck:""
-        	   }}).form()) return;
+    	doAction();
+    	return false;
+	});
+    $('#rejectEntry').click (function (){
+    	$('[name=qcReject]').val('Y');
+    	var confirmationFlag=false;
+    	if(confirm('Dou u want to reject this Record?')){	
+    		confirmationFlag=true;
+    	}else{
+    		confirmationFlag=false;
+    	}	
+    	if(confirmationFlag){
+    			doAction();	
     	}
-    	var dataString = $("#milkReceiptEntry").serialize();
-    	$('input[name=submitButton]').attr("disabled","disabled");
-    	$.ajax({
-            type: "POST",
-            url: action,
-            data: dataString,
-            dataType: 'json',
-            success: function(result) { 
-            	
-            	if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){               	   
-            		populateError(result["_ERROR_MESSAGE_"]);
-                }else{
-                	$("div#milkReceiptEntry_spinner").fadeIn();               	         	   
-             	   $('div#milkReceiptEntry_spinner').html(); 
-             	    $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
-             	   $('div#milkReceiptEntry_spinner').addClass("messageStr");
-             	   $('div#milkReceiptEntry_spinner').html('<label>succesfully updated.</label>'); 
-             	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
-             	   $('input[name=submitButton]').removeAttr("disabled");
-             	   
-             	   clearFields();
-                }
-              },
-              error: function(result) {
-            	  populateError(result["_ERROR_MESSAGE_"]+","+result["_ERROR_MESSAGE_LIST_"]);
-          	 }
-    	});
+    	
+    	
     	
     	return false;
 	});
 });
+function doAction(){
+	var displayScreen = $('[name=displayScreen]').val();
+	var action = "createMilkTankerReceiptEntry";
+	if(displayScreen == "VEHICLE_OUT"){
+		if(!$("#milkReceiptEntry").validate({messages:{
+ 		   exitDate:"" , exitTime:"" , tankerName:"" 
+ 	   }}).form()) return;
+		
+		action = "updateMilkTankerReceiptEntryOut";
+	}else if(displayScreen == "VEHICLE_GRSWEIGHT"){
+		if(!$("#milkReceiptEntry").validate({messages:{
+  		   grossDate:"" ,grossTime:"" , milkTransferId:"" , tankerName:"",numberOfCells:"",dispatchWeight:"",grossWeight:""
+  	   }}).form()) return;
+		action = "updateMilkTankerReceiptEntryGrsWeight";
+	}else if(displayScreen == "VEHICLE_TAREWEIGHT"){
+		if(!$("#milkReceiptEntry").validate({messages:{
+   		   tareDate:"" ,tareTime:"" , milkTransferId:"" , tankerName:"",tareWeight:""
+   	   }}).form()) return;
+		action = "updateMilkTankerReceiptEntryTAREWeight";
+	}else if(displayScreen == "VEHICLE_QC"){
+		if(!$("#milkReceiptEntry").validate({messages:{
+   		   testDate:"" ,testTime:"" , milkTransferId:"" , tankerName:"",sendTemp:"",
+   		   productId:"",sendTemp:"",recdTemp:"",sendAcid:"",recdAcid:"",sendCLR:"",recdCLR:"",
+   		   sendFat:"",recdFat:"",sendSnf:"",recdSnf:"",sendCob:"",recdCob:"",
+   		   sendNutriliser:"",recdFlavour:"",recdSedimentTest:"",recdPH:"",recdMBRT:""
+   		   
+   		   
+   	   }}).form()) return;
+		action = "updateMilkTankerReceiptEntryQC";
+	}else if(displayScreen == "VEHICLE_CIP"){
+		if(!$("#milkReceiptEntry").validate({messages:{
+    		   cipDate:"" ,cipTime:"" , milkTransferId:"" , tankerName:"",silo:""
+    	   }}).form()) return;
+ 		action = "updateMilkTankerReceiptEntryCIP";
+ 	}else if(displayScreen == "VEHICLE_CIPNEW"){
+ 		if(!$("#milkReceiptEntry").validate({messages:{
+ 			milkTransferId:"" , tankerName:"",isCipChecked:""
+ 		}}).form()) return;
+ 		action = "updateMilkReceiptsVehicleCipNew";
+ 	}else{
+		if(!$("#milkReceiptEntry").validate({messages:{
+    		   entryDate:"" ,entryTime:"" , tankerName:"",sendDate:"" ,sendTime:"" ,
+    		   dcNo:"",partyId:"",sealCheck:""
+    	   }}).form()) return;
+	}
+	var dataString = $("#milkReceiptEntry").serialize();
+	$('input[name=submitButton]').attr("disabled","disabled");
+	$.ajax({
+        type: "POST",
+        url: action,
+        data: dataString,
+        dataType: 'json',
+        success: function(result) { 
+        	
+        	if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){               	   
+        		populateError(result["_ERROR_MESSAGE_"]);
+            }else{
+          	   clearFields();
+               $("div#milkReceiptEntry_spinner").fadeIn();               	         	   
+         	   $('div#milkReceiptEntry_spinner').html(); 
+         	   $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
+         	   $('div#milkReceiptEntry_spinner').addClass("messageStr");
+         	   $('div#milkReceiptEntry_spinner').html('<label>succesfully updated.</label>'); 
+         	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
+         	   $('input[name=submitButton]').removeAttr("disabled");
+
+            }
+          },
+          error: function(result) {
+        	  populateError(result["_ERROR_MESSAGE_"]+","+result["_ERROR_MESSAGE_LIST_"]);
+      	 }
+	});
+}
+
+
 function populateError(msg){
 	$("div#milkReceiptEntry_spinner").fadeIn();
 	$('div#milkReceiptEntry_spinner').removeClass("messageStr");

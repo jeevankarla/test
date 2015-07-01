@@ -312,10 +312,9 @@ public class ProductionServices {
 		            EntityCondition conditionForQc = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	            	List<GenericValue> productQcTest = delegator.findList("ProductQcTest", conditionForQc, null, null, null, false);
 	            	if(UtilValidate.isNotEmpty(productQcTest)){
-                 		String qcTestId = (EntityUtil.getFirst(productQcTest)).getString("qcTestId");
-                 		String pRunProductId = (EntityUtil.getFirst(productQcTest)).getString("productId");
+	               	    List<String> qcTestIds = EntityUtil.getFieldListFromEntityList(productQcTest, "qcTestId", true);
 
-			            eliForQc = delegator.find("ProductQcTestDetails", EntityCondition.makeCondition("qcTestId", EntityOperator.EQUALS, qcTestId), null, null, null, null);
+			            eliForQc = delegator.find("ProductQcTestDetails", EntityCondition.makeCondition("qcTestId", EntityOperator.IN, qcTestIds), null, null, null, null);
 		            	if(UtilValidate.isNotEmpty(eliForQc)){
 				            GenericValue qcTrans;
 				            while ((qcTrans = eliForQc.next()) != null) {
@@ -323,11 +322,15 @@ public class ProductionServices {
 				            	String sequenceNumber = qcTrans.getString("sequenceNumber");
 				            	String testComponent = qcTrans.getString("testComponent");
 				                String testValue = qcTrans.getString("value");
-				            		qcComponentsMap.put("qcTestId",qcTestId);
-				            		qcComponentsMap.put("sequenceNumber",sequenceNumber);
-				            		qcComponentsMap.put("testComponent",testComponent);
-				            		qcComponentsMap.put("testValue",testValue);
-				            		qcComponentsList.add(qcComponentsMap);
+				                String qcProductId = qcTrans.getString("productId");
+				                String qcTestId = qcTrans.getString("qcTestId");
+
+		            		    qcComponentsMap.put("qcProductId",qcProductId);
+			            		qcComponentsMap.put("qcTestId",qcTestId);
+			            		qcComponentsMap.put("sequenceNumber",sequenceNumber);
+			            		qcComponentsMap.put("testComponent",testComponent);
+			            		qcComponentsMap.put("testValue",testValue);
+			            		qcComponentsList.add(qcComponentsMap);
 				            }
 		            	}
 		            	eliForQc.close();

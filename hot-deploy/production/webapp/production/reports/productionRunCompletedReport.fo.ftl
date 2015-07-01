@@ -201,17 +201,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
      <#if qcComponentsList?has_content> 
      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PRODUCTION QC DETAILS:</fo:block>
      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> QC Test Id   Sequence Number      TestComponent                        Test Value                  </fo:block>
+     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> QC Product Id 	  QC Test Id   Sequence Number   TestComponent                  Test Value                  </fo:block>
      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
      <fo:block >
 		 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
-           <fo:table-column column-width="100pt"/>               
-            <fo:table-column column-width="150pt"/>               
-            <fo:table-column column-width="220pt"/>
+           <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="100pt"/>               
+            <fo:table-column column-width="130pt"/>               
+            <fo:table-column column-width="170pt"/>
             <fo:table-column column-width="100pt"/>
            	<fo:table-body>
            <#list qcComponentsList as qcComponents>
              <fo:table-row >
+              <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt">${qcComponents.qcProductId?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt">${qcComponents.qcTestId?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">${qcComponents.sequenceNumber?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">${qcComponents.testComponent?if_exists}</fo:block></fo:table-cell>       		

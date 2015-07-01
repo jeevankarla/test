@@ -372,6 +372,19 @@ function fetchTankerRecordNumber(){
            }else{
            		var  milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
+           		 
+           	    if(displayScreen != "VEHICLE_OUT"){
+		   			var  milkTransfer= result['milkTransfer'];
+		   			if(typeof(milkTransfer) != 'undefined'){
+	   					var trnStatusId =  milkTransfer['statusId'];
+	   					if(typeof(trnStatusId) != 'undefined'){
+	   						if(trnStatusId == 'MXF_REJECTED'){
+	   							alert('This Receipt is rejected . you cannot update further.');
+	   						}
+	   					}
+       			    }
+	   			}
+           		
 	   			if(displayScreen == "VEHICLE_TAREWEIGHT"){
 	   				
 	   				grossWeight = result['grossWeight'];
@@ -848,6 +861,7 @@ $( "#"+fromDateId ).datepicker({
 	          		<#if displayScreen == "VEHICLE_QC">
 	          			<table>
 	          					<tr>
+	          				    	<input  name="qcReject" size="10pt" type="hidden" id="qcReject" value="N" /> 
 	          						<td> &nbsp;&nbsp;<td>
 	          					</tr>
 	          					<tr>
@@ -876,6 +890,18 @@ $( "#"+fromDateId ).datepicker({
 	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
+	      	<#if displayScreen == "VEHICLE_QC">
+	      	<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
+      		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
+      		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
+      			<td valign = "middle" align="center">
+	      	<div class='tabletext h1'>
+	 			<input type="submit" align="right"  class="button" name="rejectButton"  id="rejectEntry" value="REJECT"/> 
+	 			     
+	      		</div>
+	      	</td>
+      		</#if>
+	      	
       	</tr>
       </table>
 	       

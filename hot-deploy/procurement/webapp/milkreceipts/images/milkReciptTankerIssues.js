@@ -199,15 +199,15 @@ $(function() {
             	if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){               	   
             		populateError(result["_ERROR_MESSAGE_"]);
                 }else{
-                	$("div#milkReceiptEntry_spinner").fadeIn();               	         	   
+              	   clearFields();
+                   $("div#milkReceiptEntry_spinner").fadeIn();               	         	   
              	   $('div#milkReceiptEntry_spinner').html(); 
-             	    $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
+             	   $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
              	   $('div#milkReceiptEntry_spinner').addClass("messageStr");
              	   $('div#milkReceiptEntry_spinner').html('<label>succesfully updated.</label>'); 
              	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
              	   $('input[name=submitButton]').removeAttr("disabled");
              	   
-             	   clearFields();
                 }
               },
               error: function(result) {
