@@ -61,11 +61,9 @@ under the License.
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell number-columns-spanned="4">
-			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;
-			                    	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportHeaderLable"}, true)>
-			                    	<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportSubHeaderLable"}, true)>                                                                                                   UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${reportSubHeader.description?if_exists}</fo:block>
+			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;                                                                                                   UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+			                    	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+			                    	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if reportFlag?has_content && reportFlag == "gatePass">GATE PASS<#else>DELIVERY CHALLAN</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">TIN : ${companyDetail.get('TIN_NUMBER')?if_exists}</fo:block>
