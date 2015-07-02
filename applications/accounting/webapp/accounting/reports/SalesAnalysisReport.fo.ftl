@@ -105,9 +105,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "SalesAnalysisReport.pdf")}
 			        	<fo:table-column column-width="35%"/>
 			        	<fo:table-column column-width="25%"/>
                     	<fo:table-body>
+                    	<#assign channelWise=channelWiseMap.entrySet()>
+							<#list channelWise as channel>
+                            <#assign glAccnt=delegator.findOne("GlAccount",{"glAccountId",channel.getKey()},true)>
                     		<fo:table-row>
                                 <fo:table-cell>
-                    	   			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">CHANNEL/CATEGORY</fo:block> 
+                    	   			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">${glAccnt.description?if_exists}[${channel.getKey()}]</fo:block> 
                     	   		</fo:table-cell>      
                     	   		<fo:table-cell>
                     	   			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">PRODUCT</fo:block> 
@@ -121,25 +124,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "SalesAnalysisReport.pdf")}
                 					<fo:block font-size="10pt">------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 				</fo:table-cell>
                 			</fo:table-row>	
-                				<#assign channelWise=channelWiseMap.entrySet()>
-								<#list channelWise as channel>
                                  <#if channel.getValue()?has_content>
-							<fo:table-row>
-                    	   		<fo:table-cell>
-                    	   			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="11pt" white-space-collapse="false">${saleTypeMap.get(channel.getKey())?if_exists}</fo:block> 
-                    	   		</fo:table-cell>
-                                <fo:table-cell>
-                    	   			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false"></fo:block> 
-                    	   		</fo:table-cell>
-                    	   		<fo:table-cell>
-                    	   			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false"></fo:block> 
-                    	   		</fo:table-cell>
-                    	   	</fo:table-row>
-                    	   	<fo:table-row>
-                				<fo:table-cell>
-                					<fo:block font-size="10pt">------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-                				</fo:table-cell>
-                			</fo:table-row>
                                 <#assign categoryWise=channel.getValue().entrySet()>
                                 <#list categoryWise as category>
                                 <#assign productCat=delegator.findOne("ProductCategory",{"productCategoryId":category.getKey()},true)>
@@ -218,8 +203,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "SalesAnalysisReport.pdf")}
                     	   	    </#list>
                                 </#if>
                                 </#list> 
-                              
-                			
                     	</fo:table-body>   	
 	                 </fo:table>
 	               </fo:block>

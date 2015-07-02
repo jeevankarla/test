@@ -51,7 +51,7 @@ List glAccountIdsList=FastList.newInstance();
 glAccountIdsList=UtilMisc.toList("401004","401005","401006","401007","401008","401009");
 glAccountIdsList.add("401015");
 
-
+/*
 List unionPartyRole= delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"),null,null,null,false);
 unionRole = EntityUtil.getFieldListFromEntityList(unionPartyRole, "partyId", true);
 
@@ -102,9 +102,11 @@ conversionProducts=ProductWorker.getProductsByCategory(delegator ,"CON_CHG" ,nul
 if(conversionProducts){
 	conversionProductsList=EntityUtil.getFieldListFromEntityList(conversionProducts, "productId", true);
 }
-
+*/
 List conditionList = FastList.newInstance();
+List productIds = FastList.newInstance();
 EntityListIterator acctgTransList=null;
+EntityListIterator acctgTransProdcuctList=null;
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 	conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIdsList));
@@ -112,11 +114,15 @@ EntityListIterator acctgTransList=null;
 	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 acctgTransList = delegator.find("AcctgTransAndEntries",condition,null,null,null,null);
+acctgTransProdcuctList = delegator.find("AcctgTransAndEntries",condition,null,null,null,null);
+productIds = EntityUtil.getFieldListFromEntityListIterator(acctgTransProdcuctList, "productId", true);
+List productList = delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,productIds),null,null,null,false);
 channelWiseMap=[:];
 productType=[:];
 productMap=[:];
 glAccountMap=[:];
 saleTypeMap=[:];
+/*
 if(acctgTransList){
 	while (acctgTransList.hasNext()) {
 		GenericValue transEntry = acctgTransList.next();
@@ -287,10 +293,142 @@ if(UtilValidate.isNotEmpty(glAccountMap)){
 }
 context.salesAnalysisCsv=salesAnalysisCsv;
 }
-
-
-
-
+*/
+if(acctgTransList){
+	while (acctgTransList.hasNext()) {
+		GenericValue transEntry = acctgTransList.next();
+		debit=0;credit=0;value=0;
+		if(transEntry.debitCreditFlag=="C"){
+			credit=transEntry.amount;
+		}
+		if(transEntry.debitCreditFlag=="D"){
+			debit=transEntry.amount;
+		}
+		value=debit-credit;
+		if(UtilValidate.isEmpty(glAccountMap[transEntry.glAccountId])){
+			glAccountMap[transEntry.glAccountId]=value;
+		}else{
+			existingVal=0;
+			existingVal=glAccountMap[transEntry.glAccountId];
+			glAccountMap[transEntry.glAccountId]=value+existingVal;;
+		}
+		
+		glAccountId=transEntry.glAccountId;
+		productId=transEntry.productId;
+		products = EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+		productDetails = EntityUtil.getFirst(products);
+		primaryProductCategoryId="";
+		if(UtilValidate.isNotEmpty(productDetails)){
+		primaryProductCategoryId = productDetails.primaryProductCategoryId;
+		}
+		tempCatTypeMap=FastMap.newInstance();
+		tempProductMap=FastMap.newInstance();
+		if(UtilValidate.isNotEmpty(channelWiseMap[glAccountId])){
+			tempCatTypeMap=channelWiseMap[glAccountId];
+			
+		}
+		if(UtilValidate.isNotEmpty(tempCatTypeMap[primaryProductCategoryId])){
+			tempProductMap=tempCatTypeMap[primaryProductCategoryId];
+		
+		}
+		if(UtilValidate.isNotEmpty(tempProductMap[productId])){
+			tempProductMap.put(productId, tempProductMap.get(productId)+value);
+		
+		}else{
+			tempProductMap.put(productId, value);
+		}
+		if(UtilValidate.isNotEmpty(primaryProductCategoryId)){
+			tempCatTypeMap.put(primaryProductCategoryId, tempProductMap);
+		}
+		if(UtilValidate.isNotEmpty(glAccountId)){
+			channelWiseMap.put(glAccountId, tempCatTypeMap);
+		}
+	}
+	acctgTransList.close();
+}		
+context.glAccountMap=glAccountMap;
+context.channelWiseMap=channelWiseMap;
+//For CSV
+if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
+salesAnalysisCsv=[];
+if(UtilValidate.isNotEmpty(glAccountMap)){
+	for(Map.Entry glAccount:glAccountMap.entrySet()){
+		tempMap=[:];
+		glAccountId=glAccount.getKey();
+		amount=0;
+		if(glAccount.getValue()>=0){
+			amount=glAccount.getValue() +"(Dr)" ;
+		}else{
+			amount=-(glAccount.getValue()) +"(Cr)";
+		}
+		tempMap.glAccountId=glAccountId;
+		glAccnt=delegator.findOne("GlAccount",[glAccountId:glAccountId],false);
+		description="";
+		if(glAccnt){
+			description=glAccnt.description;
+		}
+		tempMap.description=description;
+		tempMap.amount=amount;
+		salesAnalysisCsv.add(tempMap);
+	}
+	for(Map.Entry channel:channelWiseMap.entrySet()){
+		if(UtilValidate.isNotEmpty(channel.getValue())){
+			titleMap=[:];
+			glAccnt=delegator.findOne("GlAccount",[glAccountId:channel.getKey()],false);
+			description="";
+			if(glAccnt){
+				description=glAccnt.description+"["+channel.getKey()+"]";
+			}
+			titleMap.glAccountId=description;
+			titleMap.productId="PRODUCT ID";
+			titleMap.description="PRODUCT NAME";
+			titleMap.amount="AMOUNT";
+			salesAnalysisCsv.add(titleMap);
+			Map categoryWise=FastMap.newInstance();
+			categoryWise=channel.getValue();
+			tempMap=[:];
+			tempMap.glAccountId=saleTypeMap.get(channel.getKey());
+			salesAnalysisCsv.add(tempMap);
+			for(Map.Entry category:categoryWise.entrySet()){
+				products=category.getValue();
+				prodCat=delegator.findOne("ProductCategory",[productCategoryId:category.getKey()],false);
+				tempMap=[:];
+				tempMap.glAccountId=prodCat.description;
+				salesAnalysisCsv.add(tempMap);
+				totValue=0;
+				for(Map.Entry product:products.entrySet()){
+					tempMap=[:];
+					if(product.getValue()!=0){
+					value=0;
+					if(product.getValue()>=0){
+						value=product.getValue() +"(Dr)";
+					}else{
+						value=-(product.getValue()) +"(Cr)";
+					}
+					totValue=totValue+product.getValue();
+					productId=product.getKey();
+					prod=delegator.findOne("Product",[productId:productId],false);
+					tempMap.productId=productId;
+					tempMap.description=prod.productName;
+					tempMap.amount=value;
+					salesAnalysisCsv.add(tempMap);
+					}
+				}
+				tempMap=[:];
+				if(totValue>=0){
+					totValue=totValue +"(Dr)";
+				}else{
+					totValue=-(totValue) +"(Cr)";
+				}
+				tempMap.description="TOTAL  :";
+				tempMap.amount=totValue;
+				salesAnalysisCsv.add(tempMap);
+			}
+		}
+	}
+}
+context.salesAnalysisCsv=salesAnalysisCsv;
+}
 
 
 
