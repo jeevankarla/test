@@ -2974,6 +2974,7 @@ public class ByProductNetworkServices {
 		Map<String, Object> boothDetails = FastMap.newInstance();
 		boothDetails.put("boothId", boothId);
 		boothDetails.put("boothName", boothFacility.getString("facilityName"));
+		boothDetails.put("ownerPartyId", boothFacility.getString("ownerPartyId"));
 		boothDetails.put("categoryTypeEnum",boothFacility.getString("categoryTypeEnum"));
 		boothDetails.put("vendorName", vendorName);
 		boothDetails.put("vendorPhone", vendorPhone);
@@ -5722,9 +5723,25 @@ public class ByProductNetworkServices {
 			roundedAmount = (BigDecimal) boothPayment.get("grandTotal");
 			roundedtotalDueAmount = (BigDecimal) boothPayment.get("totalDue");
 		}
+		boolean enablePartywiseDues = Boolean.FALSE;
+		try {
+			GenericValue tenantConfigEnablePartyDueTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap(	"propertyTypeEnumId", "RT_MKTG", "propertyName","enablePartyWiseDues"), true);
+			if (UtilValidate.isNotEmpty(tenantConfigEnablePartyDueTrack)&& (tenantConfigEnablePartyDueTrack.getString("propertyValue")).equals("Y")) {
+				enablePartywiseDues = Boolean.TRUE;
+			}
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+		}
 		Timestamp nowTime = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		Timestamp OBDate = UtilDateTime.addDaysToTimestamp(nowTime, 1);
-		BigDecimal openingBalance = (BigDecimal)getOpeningBalanceForBooth(ctx, UtilMisc.toMap("userLogin", userLogin ,"isForCalOB","Y","saleDate", OBDate, "facilityId", boothId, "isByParty",Boolean.TRUE)).get("openingBalance");
+		BigDecimal openingBalance = BigDecimal.ZERO;
+		if(enablePartywiseDues){
+			openingBalance = (BigDecimal)getOpeningBalanceForParty(ctx , UtilMisc.toMap("userLogin", userLogin, "saleDate", OBDate, "partyId", (String)boothDues.get("ownerPartyId"))).get("openingBalance");
+		}else{
+			openingBalance = (BigDecimal)getOpeningBalanceForBooth(ctx, UtilMisc.toMap("userLogin", userLogin ,"isForCalOB","Y","saleDate", OBDate, "facilityId", boothId, "isByParty",Boolean.TRUE)).get("openingBalance");
+		}
+		
 		
 		if(openingBalance.compareTo(BigDecimal.ZERO)<0){
 			openingBalance = BigDecimal.ZERO;
