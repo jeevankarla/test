@@ -714,6 +714,33 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
     </request-map> 
+    <request-map uri="CreateNewTanker">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="CreateNewTanker"/>
+    	<response name="error" type="view" value="CreateNewTanker"/>
+    </request-map>
+    <request-map uri="findTanker">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="findTanker"/>
+    	<response name="error" type="view" value="findTanker"/>
+    </request-map>
+    <request-map uri="findVehicleRate">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="findTanker"/>
+    	<response name="error" type="view" value="findTanker"/>
+    </request-map>
+    <request-map uri="createNewTanker">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createNewTanker" global-transaction="true"/>
+        <response name="success" type="view" value="CreateNewTanker"/>
+        <response name="error" type="view" value="CreateNewTanker"/>
+    </request-map>
+    <request-map uri="updateVehicleRateAmount">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateVehicleRateAmount"/>        
+       <response name="success" type="view" value="findTanker"/>
+       <response name="error" type="view" value="findTanker"/>       
+    </request-map>
     <!-- Milk Internal Return Requests -->
     <request-map uri="MilkTankerRetunrQC">
     	<security auth="true" https="true"/>
@@ -868,6 +895,8 @@
     <view-map name="MilkReceiptsTankerTareWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerTareWeightEntry"/>
     <view-map name="MilkReceiptsTankerCip" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerCip"/>
     <view-map name="MilkReceiptsVehicleCipNew" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsVehicleCipNew"/>
+    <view-map name="CreateNewTanker" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#CreateNewTanker"/>
+    <view-map name="findTanker" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#findTanker"/>
     
     
     

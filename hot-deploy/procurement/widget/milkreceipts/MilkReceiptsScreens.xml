@@ -1242,7 +1242,46 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="CreateNewTanker">
+    	<section>
+    		<actions>
+    			<set field="titleProperty" value="CREATE NEW TANKER"/>	
+        		 <set field="tabButtonItem" value="findTanker"/>
+        		 <set field="tabButtonItem2" value="CreateNewTanker"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/facility/CreateNewTanker.groovy"/>
+    		</actions>
+    		<widgets>
+    			<decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="findTankerTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                  	 <platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/CreateNewTanker.ftl"></html-template></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
+    <screen name="findTanker">
+    	<section>
+    		<actions>
+    			<set field="titleProperty" value="FIND TANKER"/>	
+        		 <set field="tabButtonItem" value="findTanker"/>
+        		 <set field="tabButtonItem2" value="findTanker"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/FindVehicleRate.groovy"/>
+    		</actions>
+    		<widgets>
+    			<decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="findTankerTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                  		 <platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/FindVehicleRate.ftl"></html-template></html></platform-specific>
+                  	<screenlet title="Search Results">
+						<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="FindVehicleRate"/>                  	
+                  	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
   </screens>
   
   

@@ -4306,5 +4306,280 @@ public class MilkReceiptServices {
 		return "success"; 
 		
     }// End of the service
-	
+	public static String createNewTanker(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	    String vehicleId = (String)paramMap.get("vehicleId");
+	    String roleTypeId = (String)paramMap.get("roleTypeId");
+	    String partyId = (String)paramMap.get("partyId");
+	    String rateAmountStr = (String)paramMap.get("rateAmount");
+	    String fromDateStr = (String)paramMap.get("fromDate");
+	    String vehicleCapacityStr = (String)paramMap.get("vehicleCapacity");
+	    String custmCapacityStr = (String)paramMap.get("custmCapacity");
+	    
+	    Timestamp fromDate =UtilDateTime.nowTimestamp();
+	    BigDecimal vehicleCapacity = BigDecimal.ZERO;
+	    BigDecimal rateAmount = BigDecimal.ZERO;
+		  boolean beginTransaction = false;
+		try{
+  		  	beginTransaction = TransactionUtil.begin();
+          if (UtilValidate.isNotEmpty(fromDateStr)) { //2011-12-25
+          	SimpleDateFormat   sdf = new SimpleDateFormat("dd MMM, yyyy");             
+  	  		  try {
+  	  			  fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+  	  		  } catch (ParseException e) {
+  	  			  Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+  	  			request.setAttribute("_ERROR_MESSAGE_","Cannot parse date string: " + fromDateStr);
+    			return "error";
+  	              
+  	  		  } catch (NullPointerException e) {
+  	  			  Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+  	  			request.setAttribute("_ERROR_MESSAGE_","Cannot parse date string: " + fromDateStr);
+    			return "error";
+  	  		  }
+  	  	  } 
+          if(UtilValidate.isEmpty(vehicleId)){
+        	   request.setAttribute("_ERROR_MESSAGE_"," vehicleId is missing");
+    			return "error";
+           }
+          if(UtilValidate.isEmpty(roleTypeId)){
+       	   request.setAttribute("_ERROR_MESSAGE_"," roleTypeId is missing");
+   			return "error";
+          }		
+          if(UtilValidate.isEmpty(partyId)){
+          	   request.setAttribute("_ERROR_MESSAGE_"," partyId is missing");
+      			return "error";
+             }
+          if(UtilValidate.isEmpty(partyId)){
+         	   request.setAttribute("_ERROR_MESSAGE_"," partyId is missing");
+     			return "error";
+            }
+           if(UtilValidate.isEmpty(vehicleCapacityStr)){
+        	   request.setAttribute("_ERROR_MESSAGE_"," vehicleCapacity is missing");
+    			return "error";
+           }
+           if(vehicleCapacityStr.equals("OTHER")){
+        	   vehicleCapacityStr = custmCapacityStr;
+           }
+           
+           vehicleCapacity = new BigDecimal(vehicleCapacityStr);
+           if(UtilValidate.isNotEmpty(rateAmountStr)){
+        	   rateAmount = new BigDecimal(rateAmountStr);
+           }
+           
+           //Creating Vechicle
+           Map vehicleMap = FastMap.newInstance();
+	           vehicleMap.put("vehicleId", vehicleId);
+	           vehicleMap.put("vehicleCapacity", vehicleCapacity);
+	           vehicleMap.put("vehicleNumber", vehicleId);
+	           vehicleMap.put("userLogin",userLogin);
+	 		Map vehicleResultMap = dispatcher.runSync("createVehicle", vehicleMap);
+	 		if(ServiceUtil.isError(vehicleResultMap)){
+	 			Debug.logError("Error While Creating vehicle,module",module);
+	 			request.setAttribute("_ERROR_MESSAGE_", "Error While Creating Vehicle");
+	 			return "error";
+	 		}
+	 		//Create VehicleRate
+	 		 Map vehicleRateMap = FastMap.newInstance();
+		 		vehicleRateMap.put("vehicleId", vehicleId);
+		 		vehicleRateMap.put("rateTypeId", "TANKER_RATE");
+		 		vehicleRateMap.put("rateCurrencyUomId", "INR");
+		 		vehicleRateMap.put("fromDate", fromDate);
+		 		vehicleRateMap.put("rateAmount", rateAmount);
+		 		vehicleRateMap.put("userLogin",userLogin);
+		 		Map vehicleRateResultMap = dispatcher.runSync("createVehicleRate", vehicleRateMap);
+		 		if(ServiceUtil.isError(vehicleRateResultMap)){
+		 			Debug.logError("Error While Creating vehicleRate",module);
+		 			request.setAttribute("_ERROR_MESSAGE_", "Error While Creating VehicleRate");
+		 			return "error";
+		 		}
+           //Create vehicleRole
+		 		Map vehicleRoleMap = FastMap.newInstance();
+			 		vehicleRoleMap.put("vehicleId", vehicleId);
+			 		vehicleRoleMap.put("roleTypeId", roleTypeId);
+			 		vehicleRoleMap.put("partyId", partyId);
+			 		vehicleRoleMap.put("fromDate", fromDate);
+			 		vehicleRoleMap.put("facilityId", "_NA_");
+			 		vehicleRoleMap.put("userLogin",userLogin);
+			 		Map vehicleRoleResultMap = dispatcher.runSync("createVehicleRole", vehicleRoleMap);
+			 		if(ServiceUtil.isError(vehicleRoleResultMap)){
+			 			Debug.logError("Error While Creating vehicleRole",module);
+			 			request.setAttribute("_ERROR_MESSAGE_", "Error While Creating VehicleRole");
+			 			return "error";
+			 		}
+  	  	}
+	  	catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+		catch (Exception e) {
+			try {
+				TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beginTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
+	  		}
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "Vehicle  Successfully Created.!");
+		return "success"; 
+		
+    }// End of the service createVehicle
+	public static Map<String, Object> createVehicle(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	Map<String, Object> resultMap = ServiceUtil.returnSuccess("Vehicle Created Successfully");
+   	 	Delegator delegator = dctx.getDelegator();
+   	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	 	String vehicleId = (String) context.get("vehicleId");
+   	 	String vehicleNumber = (String) context.get("vehicleNumber");
+   	 	BigDecimal vehicleCapacity = (BigDecimal) context.get("vehicleCapacity");
+	 	try{
+	 		GenericValue vehicle = delegator.makeValue("Vehicle");
+	 		vehicle.set("vehicleId", vehicleId);
+	 		vehicle.set("vehicleCapacity", vehicleCapacity);
+	 		vehicle.set("vehicleNumber", vehicleNumber);
+	 		vehicle.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicle.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicle.set("createdDate", UtilDateTime.nowTimestamp());
+	 		delegator.create(vehicle);
+	 	}catch (Exception e) {
+			// TODO: handle exception
+	 		Debug.logError("Error while creating vehicle"+e,module);
+	 		resultMap = ServiceUtil.returnError("Error while creating vehicle"+e.getMessage());
+	 		return resultMap;
+		}
+	 	
+    	return resultMap;
+   }// End of the service
+	public static Map<String, Object> createVehicleRate(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	Map<String, Object> resultMap = ServiceUtil.returnSuccess("Vehicle Rate Created Successfully");
+   	 	Delegator delegator = dctx.getDelegator();
+   	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	 	String vehicleId = (String) context.get("vehicleId");
+   	 	String rateTypeId = (String) context.get("rateTypeId");
+   	 	String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
+   	 	BigDecimal rateAmount = (BigDecimal) context.get("rateAmount");
+   	 	Timestamp fromDate = (Timestamp) context.get("fromDate");
+	 	try{
+	 		GenericValue vehicleRate = delegator.makeValue("VehicleRate");
+	 		vehicleRate.set("vehicleId", vehicleId);
+	 		vehicleRate.set("rateTypeId", rateTypeId);
+	 		vehicleRate.set("rateCurrencyUomId", rateCurrencyUomId);
+	 		vehicleRate.set("rateAmount", rateAmount);
+	 		vehicleRate.set("fromDate", fromDate);
+	 		vehicleRate.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicleRate.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicleRate.set("createdDate", UtilDateTime.nowTimestamp());
+	 		delegator.create(vehicleRate);
+	 	}catch (Exception e) {
+			// TODO: handle exception
+	 		Debug.logError("Error while creating vehicleRate"+e,module);
+	 		resultMap = ServiceUtil.returnError("Error while creating vehicleRate"+e.getMessage());
+	 		return resultMap;
+		}
+	 	
+    	return resultMap;
+   }// End of the service
+	public static Map<String, Object> createVehicleRole(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	Map<String, Object> resultMap = ServiceUtil.returnSuccess("Vehicle Role Created Successfully");
+   	 	Delegator delegator = dctx.getDelegator();
+   	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	 	String vehicleId = (String) context.get("vehicleId");
+   	 	String roleTypeId = (String) context.get("roleTypeId");
+   	 	String partyId = (String) context.get("partyId");
+   	 	String facilityId = (String) context.get("facilityId");
+   	 	Timestamp fromDate = (Timestamp) context.get("fromDate");
+	 	try{
+	 		GenericValue party = delegator.findOne("Party",UtilMisc.toMap("partyId", partyId),false);
+	 		if(UtilValidate.isEmpty(party)){
+	 			Debug.logError(partyId+" Not Found..!",module);
+	 			return ServiceUtil.returnError(partyId+" Not Found..!");
+	 		}
+	 		GenericValue vehicleRole = delegator.makeValue("VehicleRole");
+	 		vehicleRole.set("vehicleId", vehicleId);
+	 		vehicleRole.set("roleTypeId", roleTypeId);
+	 		vehicleRole.set("fromDate", fromDate);
+	 		vehicleRole.set("partyId",partyId);
+	 		vehicleRole.set("facilityId",facilityId);
+	 		vehicleRole.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicleRole.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicleRole.set("createdDate", UtilDateTime.nowTimestamp());
+	 		delegator.create(vehicleRole);
+	 	}catch (Exception e) {
+			// TODO: handle exception
+	 		Debug.logError("Error while creating vehicleRole"+e,module);
+	 		resultMap = ServiceUtil.returnError("Error while creating vehicleRole"+e.getMessage());
+	 		return resultMap;
+		}
+	 	
+    	return resultMap;
+   }// End of the service
+ public static Map<String, Object> updateVehicleRateAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	Map<String, Object> resultMap = ServiceUtil.returnSuccess("Vehicle Rate Successfully Updated.!");
+   	 	Delegator delegator = dctx.getDelegator();
+   	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	 	String vehicleId = (String) context.get("vehicleId");
+   	 	String rateAmountStr = (String) context.get("rateAmount");
+   	 	Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+   	 	BigDecimal rateAmount = BigDecimal.ZERO;
+   	 	if(UtilValidate.isNotEmpty(rateAmountStr)){
+   	 		rateAmount = new BigDecimal(rateAmountStr);
+   	 	}
+	 	try{
+	 		List conditionList = FastList.newInstance();
+	 		conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
+	 		conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN,effectiveDate));
+	 		EntityCondition condition = EntityCondition.makeCondition(conditionList);
+	 		List vehicleRateList = delegator.findList("VehicleRate",condition , null, null, null, false);
+	 		if(UtilValidate.isEmpty(vehicleRateList)){
+	 			Debug.logError(vehicleId+" Not Found or check the Effective Date..!",module);
+		 		resultMap = ServiceUtil.returnError(vehicleId+" Not Found or check the Effective Date..!");
+		 		return resultMap;
+	 		}
+	 		GenericValue vehicleRate = EntityUtil.getFirst(vehicleRateList);
+	 		Timestamp thruDate =  UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1));
+	 		vehicleRate.set("thruDate",thruDate);
+	 		vehicleRate.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+	 		vehicleRate.store();
+	 		GenericValue newVehicleRate = delegator.makeValue("VehicleRate");
+	 		newVehicleRate.set("vehicleId", vehicleId);
+	 		newVehicleRate.set("rateTypeId", "TANKER_RATE");
+	 		newVehicleRate.set("fromDate", UtilDateTime.getDayStart(effectiveDate));
+	 		newVehicleRate.set("rateAmount", rateAmount);
+	 		newVehicleRate.set("rateCurrencyUomId", "INR");
+	 		newVehicleRate.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
+	 		newVehicleRate.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+	 		newVehicleRate.set("createdDate", UtilDateTime.nowTimestamp());
+	 		delegator.create(newVehicleRate);
+	 	}catch (Exception e) {
+			// TODO: handle exception
+	 		Debug.logError("Error while creating vehicleRole"+e,module);
+	 		resultMap = ServiceUtil.returnError("Error while creating vehicleRole"+e.getMessage());
+	 		return resultMap;
+		}
+	 	
+    	return resultMap;
+   }// End of the service
 }

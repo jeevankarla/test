@@ -160,6 +160,7 @@
     <StatusValidChange condition="" statusId="MR_RETURN_AQC" statusIdTo="MR_RETURN_UNLOAD" transitionName="ACK QC  TO UNLOAD"/>
     <StatusValidChange condition="" statusId="MR_RETURN_UNLOAD" statusIdTo="MR_RETURN_CIP" transitionName="UNLOAD  TO CIP"/>
     <StatusValidChange condition="" statusId="MR_RETURN_CIP" statusIdTo="MR_RETURN_TARWEIGHT" transitionName="CIP TO TARE WEIGHT"/>
-      
-   
+     
+    <RoleType  description="Vehicle Type"  roleTypeId="VEHICLE_TYPE"/>  
+   	<RoleType  description="PTC Vehicle"  parentTypeId="VEHICLE_TYPE" roleTypeId="PTC_VEHICLE"/>
 </entity-engine-xml>
