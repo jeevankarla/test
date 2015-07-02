@@ -705,6 +705,18 @@
        <field name="userLogin" title="Last Modified By"><display/></field>
        
     </form>
+    <form name="FindVehicleRate" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="vehicleRateList"  default-table-style="basic-table " separate-columns="true"  target="updateVehicleRateAmount">    
+       <field name="vehicleId"><display></display></field>
+       <field name="partyId">
+       	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]">
+            </display-entity>
+       </field>
+       <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
+       <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
+       <field name="rateAmount"><text size="12"></text></field> 
+       <field name="effectiveDate"><date-time  type="date"/></field>
+       <field name="update" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_VCLERATE_UPDATE&quot;, session)))}"><submit/></field>
+     </form>
     
     
 </forms>

@@ -86,6 +86,22 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRANSPORTERS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_REPORTS_VIEW"/>
     
+    <SecurityPermission description="Vehicle Rate Update Permission." permissionId="MR_VCLERATE_UPDATE"/>
+    <SecurityGroup description="Vehicle Rate Update Permission." groupId="MR_VCLERATE_UPDATE"/>
+    <SecurityGroupPermission groupId="MR_VCLERATE_UPDATE" permissionId="MR_VCLERATE_UPDATE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_VCLERATE_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_VCLERATE_UPDATE"/>
     
+    <SecurityPermission description="Find Tanker View Permission." permissionId="MR_FINDTANKER_VIEW"/>
+    <SecurityGroup description="Find Tanker View Permission." groupId="MR_FINDTANKER_VIEW"/>
+    <SecurityGroupPermission groupId="MR_FINDTANKER_VIEW" permissionId="MR_FINDTANKER_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FINDTANKER_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FINDTANKER_VIEW"/>
+    
+    <SecurityPermission description="Create New Tanker." permissionId="MR_TANKER_CREATE"/>
+    <SecurityGroup description="Create New Tanker." groupId="MR_TANKER_CREATE"/>
+    <SecurityGroupPermission groupId="MR_TANKER_CREATE" permissionId="MR_TANKER_CREATE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TANKER_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TANKER_CREATE"/>
     
 </entity-engine-xml>
