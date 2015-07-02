@@ -177,39 +177,61 @@ allDaySaleMap=[:];
 
 obAmount=BigDecimal.ZERO;
 closingBal=BigDecimal.ZERO;
-		
+// all  invoiceTypes in slaes
 exprList=[];
 exprList.clear();
-exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"SHOPEE_RENT"));
+exprList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,["ROUNDING_ADJUSTMENT", "INV_FPROD_ITEM", "VAT_SALE","EMPSUBSID_ADJUSTMENT"]));
+exprList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"SALES_INVOICE"));
+conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+allInvoiceTypesList = delegator.findList("InvoiceItemTypeMapInvoiceType", conditionInvRole ,null, null, null, false );
+invoiceTypeList= EntityUtil.getFieldListFromEntityList(allInvoiceTypesList,"invoiceItemTypeId", true);
+
+facility = delegator.findOne("Facility", ["facilityId" :boothId], true);
+exprList=[];
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,invoiceTypeList));
 exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,boothId));
+exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facility.ownerPartyId));
 exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayStart));
 exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-allInvoiceList = delegator.findList("Invoice", conditionInvRole , null, null, null, false );
-if(allInvoiceList){
-	shopeeInvoiceList=[];
-allInvoiceList.each{ eachinvoice ->
-	tempMap=[:];
-	totalAmount = InvoiceWorker.getInvoiceTotal(eachinvoice);
-	tempMap.put("invoiceId", eachinvoice.invoiceId);
-	tempMap.put("amount", totalAmount);
-	tempMap.put("dueDate", eachinvoice.invoiceDate);
-	
-	shopeeInvoiceList.addAll(tempMap);
-	/*Map invoicePaymentInfoMap =FastMap.newInstance();
-	//BigDecimal outstandingAmount =BigDecimal.ZERO;
-	invoicePaymentInfoMap.put("invoiceId", eachinvoice.invoiceId);
-	invoicePaymentInfoMap.put("userLogin",userLogin);
-		Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
-		Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
-		if(invoicePaymentInfo){
-		shopeeInvoiceList.add(invoicePaymentInfo);
-		}
-		//outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");
-*/	
+allInvoiceIdsList = delegator.findList("InvoiceAndItem", conditionInvRole , null, null, null, false );
+allinvoiceamount=0;
+shopeeInvoiceList=[];
+
+allInvoiceIdsList.each{ eachinvoice ->
+	tempinvoiceDetailMap=[:];
+	invoice = delegator.findOne("Invoice", [invoiceId : eachinvoice.invoiceId], false);
+	totalAmount = InvoiceWorker.getInvoiceTotal(invoice);
+	allinvoiceamount=allinvoiceamount+totalAmount;
+	tempinvoiceDetailMap.put("invoiceId", eachinvoice.invoiceId);
+	tempinvoiceDetailMap.put("dueDate", eachinvoice.invoiceDate);
+	tempinvoiceDetailMap.put("invoiceItemTypeId", eachinvoice.invoiceItemTypeId);
+	description="";
+	if("SERTAX_SALE".equals(eachinvoice.invoiceItemTypeId)){
+		invoiceType=delegator.findOne("InvoiceType",[invoiceTypeId : eachinvoice.invoiceTypeId] , false);
+		description=invoiceType.description;
+		
+	}else{
+	invItemType = delegator.findOne("InvoiceItemType", [invoiceItemTypeId : eachinvoice.invoiceItemTypeId], false);
+	description=invItemType.description;
+	}
+	tempinvoiceDetailMap.put("description", description);
+	tempinvoiceDetailMap.put("invoiceTypeId", eachinvoice.invoiceTypeId);
+	tempinvoiceDetailMap.put("amount", totalAmount);
+	shopeeInvoiceList.add(tempinvoiceDetailMap);
 }
 context.shopeeInvoiceList=shopeeInvoiceList;
+
+boolean enablePartywiseDues = Boolean.FALSE;
+try {
+	GenericValue tenantConfigEnablePartyDueTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap(	"propertyTypeEnumId", "RT_MKTG", "propertyName","enablePartyWiseDues"), true);
+	if (UtilValidate.isNotEmpty(tenantConfigEnablePartyDueTrack)&& (tenantConfigEnablePartyDueTrack.getString("propertyValue")).equals("Y")) {
+	enablePartywiseDues = Boolean.TRUE;
+	}
+} catch (GenericEntityException e) {
+// TODO: handle exception
+Debug.logError(e, module);
 }
 for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 	Timestamp saleDate = UtilDateTime.addDaysToTimestamp(dayStart, j);
@@ -243,9 +265,10 @@ for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 	}
 	if(j==0){
 		if(shopeeInvoiceList){
-		dayTotalRevenue +=shopeeInvoiceList.amount;
+		dayTotalRevenue +=allinvoiceamount;
 		}
 	}	
+	
 //	if(UtilValidate.isNotEmpty(BoothRoutes)){
 //		boothRouteIdsMap=(Map)BoothRoutes.get("boothRouteIdsMap");//to get routeIds
 //	}
@@ -258,25 +281,34 @@ for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
 		curntDaySalesMap["totalRevenue"]=dayTotalRevenue;
 		reciepts = BigDecimal.ZERO;
 		boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId, isByParty:Boolean.TRUE]);
+		
+		paymentList=[];
+		
 		if(UtilValidate.isNotEmpty(boothPaidDetail)){
 			reciepts = boothPaidDetail.get("invoicesTotalAmount");
-			if(UtilValidate.isNotEmpty(boothPaidDetail.get("boothPaymentsList"))){
-				boothPaymentsList=boothPaidDetail.get("boothPaymentsList")
-				
+			if(UtilValidate.isNotEmpty(boothPaidDetail.get("boothAllPaymentsList"))){
+				boothPaymentsList=boothPaidDetail.get("boothAllPaymentsList")
 				boothPaymentsList.each{ eachpayment ->
 				tempMap=[:];
 				tempMap.put("partyIdFrom", eachpayment.get("partyIdFrom"));
 				tempMap.put("paymentMethodTypeId", eachpayment.get("paymentMethodTypeId"));
 				tempMap.put("paymentId", eachpayment.get("paymentId"));
 				tempMap.put("amount", eachpayment.get("amount"));
-				
-				curntDaySalesMap["paymentDetails"] = tempMap;
+				paymentList.add(tempMap);
 				}
+				curntDaySalesMap["paymentDetails"] = paymentList;
+				
 			}
 		}
 		curntDaySalesMap["PaidAmt"] = ((new BigDecimal(reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
+
 		if(j==0){//Opeinig Balance called only  for firstDay  in whole period
-			obAmount =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId, isByParty:Boolean.TRUE])).get("openingBalance");
+			obAmount = 0;
+			if(enablePartywiseDues){
+			obAmount = (ByProductNetworkServices.getOpeningBalanceForParty(dctx , [userLogin: userLogin ,saleDate: saleDate, partyId: facility.ownerPartyId])).get("openingBalance");
+			}else{
+			obAmount =	(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId, isByParty:Boolean.TRUE])).get("openingBalance");
+			}
 			if(UtilValidate.isEmpty(curntDaySalesMap)){
 					openingbal=obAmount;
 					context.openingbal=openingbal;

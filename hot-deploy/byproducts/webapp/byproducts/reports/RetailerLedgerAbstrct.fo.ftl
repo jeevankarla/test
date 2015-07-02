@@ -192,7 +192,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                      <#list shopeeInvoiceList as shopeerent>
 			                       <fo:table-row>
 			                        <fo:table-cell>
-			                          <fo:block text-align="left" text-indent="4pt" keep-together="always">Shopee Rent:</fo:block>
+			                          <fo:block text-align="left" text-indent="4pt" >${shopeerent.get("description")?if_exists}</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" white-space-collapse="false" >InvoiceId: </fo:block>
@@ -214,37 +214,60 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 									</#if>
 								</#if>
 								<#if daySaleEntry.getValue().get("paymentDetails")?has_content>
+			                        <#assign paymentDetails= daySaleEntry.getValue().get("paymentDetails")>
+								<#list paymentDetails as payments>
  								<fo:table-row  >
 			                        <fo:table-cell>
 			                          <fo:block text-align="right"  ></fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right" >	<#if daySaleEntry.getValue().get("paymentDetails")?has_content> PaymentId :</#if></fo:block>
+			                          <fo:block text-align="right" >	 PaymentId :</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>			
-			                          <#if  daySaleEntry.getValue().get("paymentDetails")?has_content>
-			                          <fo:block text-align="left"  keep-together="always">${daySaleEntry.getValue().get("paymentDetails").get("paymentId")?if_exists}</fo:block>
-										 <#else>
-			                          <fo:block text-align="right" >&#160;</fo:block>
-									</#if>		
+			                          <fo:block text-align="left"  keep-together="always">${payments.paymentId?if_exists}</fo:block>
   			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" >&#160; </fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                        <#if daySaleEntry.getValue().get("paymentDetails")?has_content>
-			                          <fo:block text-align="center" ><#if daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId")?has_content && (daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CHEQUE_PAYIN" || daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CHEQUE_PAYOUT")>CHEQUE</#if><#if daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId")?has_content && (daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CASH_PAYIN" || daySaleEntry.getValue().get("paymentDetails").get("paymentMethodTypeId") == "CASH_PAYOUT")>CASH</#if></fo:block>
-			                          <#else>
-			                          <fo:block text-align="right" >&#160;</fo:block>
-									</#if>
+			                          <fo:block text-align="right" >${payments.paymentMethodTypeId?if_exists}</fo:block>
 			                        </fo:table-cell>
 		                        	 <fo:table-cell>
 			                          <fo:block text-align="right" ></fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("PaidAmt")?string("##0.00")}</fo:block>
+			                          <fo:block text-align="right" >${payments.amount?string("##0.00")}</fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
+			                      </#list>
+									</#if>
+							<#if daySaleEntry.getValue().get("penalityDetailes")?has_content>
+			                        <#assign penalityDetailes= daySaleEntry.getValue().get("penalityDetailes")>
+								<#list penalityDetailes as penalityPayments>
+ 								<fo:table-row  >
+			                        <fo:table-cell>
+			                          <fo:block text-align="right"  >PenalityDetails</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >	 PaymentId :</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>			
+			                          <fo:block text-align="left"  keep-together="always">${penalityPayments.paymentId?if_exists}</fo:block>
+  			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >&#160; </fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" ></fo:block>
+			                        </fo:table-cell>
+		                        	 <fo:table-cell>
+			                          <fo:block text-align="right" ></fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >${penalityPayments.amount?string("##0.00")}</fo:block>
+			                        </fo:table-cell>
+			                      </fo:table-row>
+			                      </#list>
 									</#if>
 			                       <fo:table-row>
 			                         <fo:table-cell>
