@@ -2883,7 +2883,7 @@ public class MilkReceiptServices {
 	 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
 		 			return resultMap;
 	 	        }
-	 			try{
+	 			/*try{
 		 			List conList = FastList.newInstance();
 		 			conList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,(String) milkTransfer.getString("containerId")));
 		 			conList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS,(String) milkTransfer.getString("sequenceNum")));
@@ -2911,7 +2911,7 @@ public class MilkReceiptServices {
 					Debug.logError("Error While getting the current status  :",module);
 					resultMap = ServiceUtil.returnError("Error While getting the current status:"+e.getMessage());
 		 			return resultMap;
-				}
+				}*/
 	 			updateVehStatusInMap.put("estimatedStartDate",cipDate);
 	 	        try{
 	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
