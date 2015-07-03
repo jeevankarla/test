@@ -667,7 +667,7 @@ public class ProductionServices {
 		  		  }
 		  		  
 		  		  String productBatchId = (String)resultCtx.get("productBatchId");
-		  		  
+
 		  		  for(String eachItem : inventoryItemIds){
 		  			  GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", eachItem), false);
 		  			 inventoryItem.put("productBatchId", productBatchId);
@@ -1090,7 +1090,7 @@ public class ProductionServices {
         		 if(UtilValidate.isNotEmpty(blendedProductId)){
         			 invProductId = blendedProductId;
         		 }
-            	 
+        		 
         		 // facility capacity check
             	 if(facilitySize.compareTo(BigDecimal.ZERO) >0){
             		 Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", invProductId, "facilityId", facilityId);
@@ -1130,11 +1130,13 @@ public class ProductionServices {
             			 extProd = prodId;
                 	 }
             	 }
-            	 extProdIds.add(invProductId);
+            	 if(!extProdIds.contains(invProductId)){
+            		 extProdIds.add(invProductId);
+            	 }
             	// Raw Milk Silo Check
             	 if(allowFacilityBlend){
             		 
-                	 if(extProdIds.size() == 0){
+                	 if(UtilValidate.isEmpty(inventoryProducts)){
             			 if(UtilValidate.isNotEmpty(blendedProductId)){
             				 if(UtilValidate.isNotEmpty(blendQty)){
                     			 Object qty = blendQty;
