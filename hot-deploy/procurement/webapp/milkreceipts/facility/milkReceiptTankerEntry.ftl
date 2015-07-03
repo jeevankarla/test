@@ -100,6 +100,8 @@
 var productJson = ${StringUtil.wrapString(productJson)}
 var grossWeight = 0;
 $(document).ready(function() {	
+  
+  hideDiv();
   $('#recdPH').autoNumeric({mNum: 1,mDec: 1 , autoTab : true}).trigger('focusout');
   
   $('#recdTemp').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
@@ -575,12 +577,64 @@ $( "#"+fromDateId ).datepicker({
 		}
 	});
 }
-	
-	
+function setVehicleId(selected){
+	var vehicleId = selected.value;
+     $("#DetailsDiv").show();
+    $("#tankerNo").val(vehicleId);
+     var selectedValue = vehicleId;
+	$('[name=tankerName]').val(selectedValue);
+	 populateVehicleSpan();
+    $("#newVehicleDiv").hide();
+}	
+function hideDiv(){
+	var displayScreen = $('[name="displayScreen"]').val()
+ 	if((displayScreen == "VEHICLE_CIPNEW") || (displayScreen == "VEHICLE_CIP")){
+		$("#DetailsDiv").hide();
+ 	}
+}	
+function reloadingPage(){
+	setTimeout("location.reload(true);", 2000);
+}
 </script>
+<#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP">
+<div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
+	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;> 
+		<div class="grid-header h2" style="width:100%">
+		<#if displayScreen == "VEHICLE_CIPNEW">
+			<label>VEHICLES WAITING FOR CIP</label>
+		<#elseif displayScreen == "VEHICLE_CIP">
+   			<label>VEHICLES WAITING FOR UNLOAD</label>
+        </#if>	
+		</div>
+	</div>
+	<div class="screenlet-body">
+	<form id="listPendingVehicles" name="listPendingVehicles" action="" method="post">
+	<table class="basic-table hover-bar h3" widht='80%' style="border-spacing: 50px 2px;" border="1"> 
+		<tr><td><h2><u>VEHICLE NO</u></h2></td>
+		    <td><h2><u>IN TIME</u><h2></td>
+			<td><h2><u> FROM<u><h2></td>
+		</tr>
+		 <#if vehicleList?has_content>
+         <#list vehicleList as vehicle>
+		<tr>
+            <td><h2><input type="button" id="newVehicleId" name="newVehicleId"  value="${vehicle.vehicleId}" onclick="javascript:setVehicleId(this);"/></h2></td>
+            <td><h3>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(vehicle.inTime, "dd-MM-yyyy HH:mm")}</h3></td>
+	        <td><h3>${vehicle.partyId?if_exists}</h3></td>	
+		</tr>
+        </#list>
+        <#else>
+       <tr>
+         <td>No Vehicles Availabel.</td>
+       </tr>
+        </#if>
+	</table>
+	</form>
+	</div>
+</div>
+</#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
 <div name ="displayMsg" id="milkReceiptEntry_spinner"> </div>
-<div style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
+<div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
       <div class="grid-header h2" style="width:100%">
@@ -619,7 +673,11 @@ $( "#"+fromDateId ).datepicker({
 	          			<table>
 	          				<tr>
 					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
-					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+					        	    <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP">
+					        	    <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" readOnly /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+					        	    <#else>
+                                    <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td> 
+					        	    </#if> 
 					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
 					        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
@@ -740,7 +798,7 @@ $( "#"+fromDateId ).datepicker({
 	        				</#if>
 	        				<#if displayScreen == "VEHICLE_CIP">
 	        					<tr>
-	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
+	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_UNLOAD" />
 	        						<td align='left' ><span class='h3'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
@@ -845,7 +903,7 @@ $( "#"+fromDateId ).datepicker({
 						    </#if>
                             <#if displayScreen == "VEHICLE_CIPNEW">
                                 <tr>
-                                    <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIPNEW" />
+                                    <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
 		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
 		        					
 		        				</tr>
@@ -853,6 +911,12 @@ $( "#"+fromDateId ).datepicker({
 		        					<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
 		        					</td>
 						        </tr>
+						        <tr>
+	        						<td align='left' ><span class='h3'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class="h3">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+					        	</tr>
                                 <tr>
                                  <td align='left' ><span class="h3"> Is CIP Checked</span></td><td><input type="checkbox" name="isCipChecked" id="isCipChecked" style="width:20px;height:20px;" value="Y" required/><em>*<em></td>
                                 </tr>
@@ -887,7 +951,7 @@ $( "#"+fromDateId ).datepicker({
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
 	      	<td valign = "middle" align="center">
 	      	<div class='tabletext h1'>
-	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
+	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
 	      	<#if displayScreen == "VEHICLE_QC">

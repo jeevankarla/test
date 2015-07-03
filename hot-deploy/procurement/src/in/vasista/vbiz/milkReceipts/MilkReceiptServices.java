@@ -2712,7 +2712,7 @@ public class MilkReceiptServices {
  	        	if(statusIdCheck.equalsIgnoreCase("MXF_REJECTED")){
 					 milkTransfer.set("statusId", "MXF_REJECTED");
 		 	    }
-	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
+	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_UNLOAD")){
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
 	 	        String siloId = (String)context.get("silo");
@@ -2865,35 +2865,41 @@ public class MilkReceiptServices {
 	 	        	return resultMap;
 	 	        }
 	 			
-	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIPNEW")){
+	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
 	 			String isCipChecked = (String) context.get("isCipChecked");
-	 			try{
-		 			List conList = FastList.newInstance();
-		 			conList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,(String) milkTransfer.getString("containerId")));
-		 			conList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS,(String) milkTransfer.getString("sequenceNum")));
-		 			conList.add(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS,null));
-		 			EntityCondition con = EntityCondition.makeCondition(conList);
-		 			List<GenericValue> vehicleTripStatusList = delegator.findList("VehicleTripStatus", con, null, null, null, false);
-		 			if(UtilValidate.isEmpty(vehicleTripStatusList)){
-		 				Debug.logError("VehicleId Not Found..:",module);
-						resultMap = ServiceUtil.returnError("VehicleId Not Found.");
+	 			String cipDateStr = (String) context.get("cipDate"); 
+	 	        String cipTime = (String) context.get("cipTime");
+	 	        Timestamp cipDate = UtilDateTime.nowTimestamp();
+	 	        try{
+	 		 		if(UtilValidate.isNotEmpty(cipDateStr)){
+	 		 			if(UtilValidate.isNotEmpty(cipTime)){
+	 		 				cipDateStr = cipDateStr.concat(cipTime);
+	 		 			}
+	 		 			cipDate = new java.sql.Timestamp(sdf.parse(cipDateStr).getTime());
+	 		 		}
+	 	        	
+	 	        }catch(ParseException e){
+	 	        	Debug.logError(e, "Cannot parse date string: " + cipDateStr, module);
+	 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+		 			return resultMap;
+	 	        }
+	 			updateVehStatusInMap.put("estimatedStartDate",cipDate);
+	 	        try{
+	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
+	 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+	 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
 			 			return resultMap;
-		 			}
-		 			GenericValue vehicleTripStatus = EntityUtil.getFirst(vehicleTripStatusList);
-		 			String currentStatusId = (String)vehicleTripStatus.get("statusId");
-		 			if(!currentStatusId.equals("MR_VEHICLE_CIP") && UtilValidate.isEmpty((String)milkTransfer.getString("isCipChecked"))){
-		 				Debug.logError("Vehicle Not Yet Un-loaded:",module);
-						resultMap = ServiceUtil.returnError("Vehicle Not Yet Un-loaded.");
-			 			return resultMap;
-		 			}
-		 			if(!currentStatusId.equals("MR_VEHICLE_CIP") && UtilValidate.isNotEmpty((String)milkTransfer.getString("isCipChecked"))){
-		 				Debug.logError("CIP Already Done.",module);
-						resultMap = ServiceUtil.returnError("CIP Already Done.");
-			 			return resultMap;
-		 			}
-	 			}catch(Exception e){
-					Debug.logError("Error While getting the current status  :",module);
-					resultMap = ServiceUtil.returnError("Error While getting the current status:"+e.getMessage());
+	 	        	}
+	 	        }catch (GenericServiceException e) {
+					// TODO: handle exception
+	 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+		 			return resultMap;
+	 	        	
+				}catch(Exception e){
+					Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+ 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
 		 			return resultMap;
 				}
 	 			try{
