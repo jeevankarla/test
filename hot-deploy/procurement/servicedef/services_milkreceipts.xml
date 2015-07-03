@@ -460,6 +460,8 @@
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="cipDate" mode="IN" type="String" optional="false"/>
+		<attribute name="cipTime" mode="IN" type="String" optional="false"/>
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
 		<attribute name="isCipChecked" mode="IN" type="String" optional="false"/>
     </service>

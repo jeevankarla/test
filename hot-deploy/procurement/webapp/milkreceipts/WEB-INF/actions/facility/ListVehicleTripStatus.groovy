@@ -96,7 +96,7 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 			GenericValue vehicleTrip = delegator.findOne("VehicleTrip", UtilMisc.toMap("vehicleId" ,vehicleId,"sequenceNum",sequenceNum), true);
 			if(UtilValidate.isNotEmpty(vehicleTrip) ){
 				String partyId = vehicleTrip.get("partyId");
-				if(statusId == "MR_VEHICLE_CIP"){ 
+				/*if(statusId == "MR_VEHICLE_CIP"){ 
 					List milkTransferList = delegator.findList("MilkTransfer",EntityCondition.makeCondition([EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId),
 					                                                                                        EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum)],EntityOperator.AND),UtilMisc.toSet("isCipChecked"),null,null,false);
 					GenericValue milkTransfer = EntityUtil.getFirst(milkTransferList);
@@ -104,7 +104,7 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 					if(UtilValidate.isEmpty(isCipChecked)){
 						statusId = "MR_VEHICLE_UNLOAD";
 					}
-				}																							
+				}*/																							
 				vehicleTripMap.put("vehicleId",vehicleId);
 				vehicleTripMap.put("partyId",partyId);
 				vehicleTripMap.put("statusId",statusId);

@@ -24,6 +24,7 @@
 				<set field="headerItem" value="MILK RECEIPTS" />
 				<set field="tabButtonItem" value="FindMilkReceiptEntry" />
 				<set field="tabButtonItem2" value="SearchMilkReceiptsTankerEntry" />
+				<set field="displayScreen" value="FINDMILKRECEIPTS"/>
 				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntrySerach.groovy"/>
@@ -150,7 +151,8 @@
         	<actions>
         		 <set field="titleProperty" value="MILK RECEIPTS"/>	
         		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
-        		 <set field="tabButtonItem3" value="SendMilkReceipt"/> 
+        		 <set field="tabButtonItem3" value="SendMilkReceipt"/>
+        		 <set field="displayScreen" value="MILKRECEIPTENTRY"/> 
         		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTabing.js" global="true"/>
         		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
         		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
@@ -175,6 +177,7 @@
         		 <set field="tabButtonItem" value="FindMilkReceiptEntry"/>
         		 <set field="tabButtonItem2" value="UpdateMilkReceipts"/> 
         		 <set field="milkTransferId" from-field="parameters.milkTransferId"/>
+        		 <set field="displayScreen" value="UPDATEMILKRECORD"/>
         		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTabing.js" global="true"/>
         		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
         		<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
@@ -274,6 +277,7 @@
 				<set field="headerItem" value="MILK RECEIPTS" />
 				<set field="tabButtonItem" value="MilkReceiptEntry" />
 				<set field="tabButtonItem3" value="FindMilkReceipt" />
+				<set field="displayScreen" value=" "/>
 				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntrySerach.groovy"/>
@@ -347,6 +351,7 @@
         		 <set field="tabButtonItem" value="MilkReceiptReports"/> 
         		 <set field="tabButtonItem3" value="PTCReports"/>
         		 <set field="reportFrequencyFlag" value="PTCReports"/>
+        		 <set field="displayScreen" value=" "/>
         		 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">
                 	<condition-expr field-name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>
                 	<order-by field-name="-fromDate"/>
@@ -789,6 +794,7 @@
 				<set field="tabButtonItem2"  value="MilkReceiptsToApprove" />
 				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
 				<set field="parameters.flag" value="APPROVE_RECEIPTS"/>
+				<set field="displayScreen" value=" "/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntrySerach.groovy"/>
 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/>
@@ -818,6 +824,7 @@
       		 <set field="tabButtonItem2"  value="TransporterAdjustments"/>
       		 <set field="tabButtonItem3"  value="PtcAdjustmentDeductions"/>
       		 <set field="flag" value="DEDUCTIONS"/>
+      		 <set field="displayScreen" value=" "/>
       		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
       		 <entity-condition list="AdjustmentTypeList" entity-name="Enumeration">
       		  <condition-expr field-name="enumTypeId" operator="equals" value="PTC_DED"/>
@@ -865,6 +872,7 @@
       		 <set field="tabButtonItem2"  value="TransporterAdjustments"/>
       		 <set field="tabButtonItem3"  value="PtcAdjustmentAdditions"/>
       		 <set field="flag" value="ADDITIONS"/>
+      		 <set field="displayScreen" value=" "/>
       		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
       		 <entity-condition list="AdjustmentTypeList" entity-name="Enumeration">
       		  <condition-expr field-name="enumTypeId" operator="equals" value="PTC_ADDN"/>
@@ -913,6 +921,7 @@
       		 <set field="tabButtonItem2"  value="TransporterAdjustments"/>
       		 <set field="tabButtonItem3"  value="FindPtcAdjustment"/>
       		 <set field="flag" value="Find"/>
+      		 <set field="displayScreen" value=" "/>
       		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
       		 <entity-condition list="AdjustmentTypeList" entity-name="Enumeration">
       		   <condition-list combine="or">
@@ -970,6 +979,7 @@
 				<set field="tabButtonItem2"  value="MilkFinalization" />
 				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
 				<set field="parameters.flag" value="FINALIZATION"/>
+				<set field="displayScreen" value=" "/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntrySerach.groovy"/>
 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/>
@@ -1266,6 +1276,7 @@
     			<set field="titleProperty" value="FIND TANKER"/>	
         		 <set field="tabButtonItem" value="findTanker"/>
         		 <set field="tabButtonItem2" value="findTanker"/>
+        		 <set field="displayScreen" value="FINDTANKER"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/FindVehicleRate.groovy"/>
     		</actions>

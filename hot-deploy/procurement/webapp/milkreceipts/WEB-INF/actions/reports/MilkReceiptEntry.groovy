@@ -29,7 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
-
+import org.ofbiz.party.party.PartyHelper;
 detailsMap=[:];
 detailsMap["quantity"]="";
 detailsMap["quantityLtrs"]="";
@@ -214,4 +214,36 @@ List milkPurchasePurposeTypeList = FastList.newInstance();
 milkPurchasePurposeTypeList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId",EntityOperator.EQUALS,"MILK_PRCH_PURP"), null, ["sequenceId"], null, true);
 
 context.put("milkPurchasePurposeTypeList",milkPurchasePurposeTypeList);
+
+if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP")){
+	List conList = FastList.newInstance();
+	if(displayScreen=="VEHICLE_CIP"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_QC"));
+	}
+	if(displayScreen=="VEHICLE_CIPNEW"){								 
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_UNLOAD"));
+	}	
+	conList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
+	EntityCondition ecl = EntityCondition.makeCondition(conList,EntityOperator.AND);
+	List vehicleTripStatus = delegator.findList("VehicleTripStatus",ecl,UtilMisc.toSet("vehicleId","sequenceNum","statusId"),null,null,false);
+	List vehicleList = FastList.newInstance();
+	vehicleTripStatus.each{trip->
+		tempMap=[:];
+		vehicleInTime = delegator.findOne("VehicleTripStatus",[vehicleId:trip.vehicleId,sequenceNum:trip.sequenceNum,statusId:"MR_VEHICLE_IN"],false);
+		List milkTransferList = delegator.findList("MilkTransfer",EntityCondition.makeCondition([EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,trip.vehicleId),
+			                                                                                 EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,trip.sequenceNum)],EntityOperator.AND),UtilMisc.toSet("partyId"),null,null,false);
+		String partyId="";
+		String partyName="";
+		if(milkTransferList){
+			GenericValue milkTransfer = EntityUtil.getFirst(milkTransferList);
+			partyId = milkTransfer.partyId;
+			partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		}
+		tempMap.partyId = partyName +"["+partyId+"]";
+		tempMap.inTime = vehicleInTime.estimatedStartDate;
+		tempMap.vehicleId = trip.vehicleId;
+		vehicleList.add(tempMap);
+	}
+	context.vehicleList = vehicleList;
+}
 
