@@ -446,6 +446,10 @@ under the License.
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productMrpPriceMap.get(invoiceItem.productId)?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
 	                   			</#if>
 	                   			<#else>
 	                   			<fo:table-cell border-style="solid">
