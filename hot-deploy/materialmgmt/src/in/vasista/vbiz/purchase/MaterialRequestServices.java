@@ -803,6 +803,8 @@ public class MaterialRequestServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String shipmentTypeId = (String) context.get("shipmentTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
+        String createNewShipment = (String)context.get("createNewShipment");
+        String shipmentId = "";	
         try {
         	 if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)==0)){
      			return ServiceUtil.returnError("Cannot Accept Quantity ZERO or Empty");
@@ -834,26 +836,52 @@ public class MaterialRequestServices {
                 return ServiceUtil.returnError("Product Not Found with Id : "+productId);
             }
             
-            String shipmentId = "";
-            try{
-    			
-    			GenericValue newEntity = delegator.makeValue("Shipment");
-    	        newEntity.set("shipmentTypeId", shipmentTypeId);	
-    	        newEntity.set("statusId", "GENERATED");
-    	        newEntity.set("estimatedShipDate", UtilDateTime.nowTimestamp());
-    	        newEntity.set("createdByUserLogin", userLogin.getString("userLoginId"));
-    	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-    	        newEntity.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
-    	        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-                delegator.createSetNextSeqId(newEntity);
-                
-                shipmentId = newEntity.getString("shipmentId");
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError("Failed to create a new shipment " + e);            
+            /* Here we are adding this condition to pickup existing shipmentId , when one product is drawn from
+             * multiple facilities.  
+             */
+            if((UtilValidate.isNotEmpty(createNewShipment) && createNewShipment.equalsIgnoreCase("N")) ){
+            	List<GenericValue> shipmentList = FastList.newInstance();
+            	List shipmentCondList = FastList.newInstance();
+            	shipmentCondList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+            	shipmentCondList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+            	shipmentCondList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            	
+            	Timestamp beginDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+            	Timestamp endDate   = UtilDateTime.nowTimestamp();
+            	EntityCondition shipmentCondition = EntityCondition.makeCondition(shipmentCondList, EntityOperator.AND);
+            	try{
+            		shipmentList = delegator.findList("ItemIssuance", shipmentCondition, null, UtilMisc.toList("-issuedDateTime"), null, false);
+            	}catch(Exception e){
+            		Debug.logError("Error while getting request Shipment ::"+e,module);
+            		result = ServiceUtil.returnError("Error while getting request Shipment ::"+e.getMessage());
+            		return result;
+            	}
+            	if(UtilValidate.isNotEmpty(shipmentList)){
+            		GenericValue shipmentDet = EntityUtil.getFirst(shipmentList);
+            		if(UtilValidate.isNotEmpty(shipmentDet)){
+            			shipmentId = (String) shipmentDet.get("shipmentId");
+            		}
+            		
+            	}
             }
-            Debug.log("shipmentId #######################"+shipmentId);
-            /* We need to get facilityId from ProductFacility */
+           if(UtilValidate.isEmpty(shipmentId)){
+	            try{
+	    			GenericValue newEntity = delegator.makeValue("Shipment");
+	    	        newEntity.set("shipmentTypeId", shipmentTypeId);	
+	    	        newEntity.set("statusId", "GENERATED");
+	    	        newEntity.set("estimatedShipDate", UtilDateTime.nowTimestamp());
+	    	        newEntity.set("createdByUserLogin", userLogin.getString("userLoginId"));
+	    	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+	    	        newEntity.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+	    	        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	                delegator.createSetNextSeqId(newEntity);
+	                shipmentId = newEntity.getString("shipmentId");
+	            } catch (GenericEntityException e) {
+	                Debug.logError(e, module);
+	                return ServiceUtil.returnError("Failed to create a new shipment " + e);            
+	            }
+           }
+            // We need to get facilityId from ProductFacility 
             if(UtilValidate.isEmpty(facilityId)){
             	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
             	if(UtilValidate.isEmpty(productFacility)){
@@ -876,7 +904,6 @@ public class MaterialRequestServices {
             if (qohObj != null) {
             	qoh = new BigDecimal(qohObj.toString());
             }
-            Debug.log("toBeIssuedQty=========="+toBeIssuedQty);
             if (toBeIssuedQty.compareTo(qoh) > 0) {
             	Debug.logError("Available Inventory level for productId : "+productId + " is "+qoh, module);
                 return ServiceUtil.returnError("Available Inventory level for productId : "+productId + " is "+qoh);
@@ -952,6 +979,7 @@ public class MaterialRequestServices {
             Debug.logError("Problem in calling service issueInventoryItemToCustRequest", module);
             return ServiceUtil.returnError("Problem in calling service issueInventoryItemToCustRequest");
         }
+        result.put("shipmentId", shipmentId);
         return result;
     }
 	
@@ -1680,6 +1708,28 @@ public class MaterialRequestServices {
 	            Debug.logError("Problem in calling service issueInventoryItemToCustRequest", module);
 	            return ServiceUtil.returnError("Problem in calling service issueInventoryItemToCustRequest");
 	        }
+	        /**
+	         * Here we are trying to cancel the MilkTransfer if it exists.
+	         */
+	         if(ServiceUtil.isSuccess(result)){
+	        	 try{
+	        		 List<GenericValue> milkTransfersList = delegator.findList("MilkTransfer",EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId),null,null,null,false);
+	        		 if(UtilValidate.isNotEmpty(milkTransfersList)){
+	        			 GenericValue milkTransfer = EntityUtil.getFirst(milkTransfersList);
+	        			 milkTransfer.set("statusId","MXF_CANCELLED");
+	        			 try{
+	        				 delegator.store(milkTransfer);
+	        			 }catch(Exception e){
+	        				 Debug.logError("Error while restoring Transfer status ::"+e,module);
+	        				 result = ServiceUtil.returnError("Error while restoring Transfer status ::"+e.getMessage());
+	        			 }
+	        		 }
+	        		 
+	        	 }catch(Exception e){
+	        		 Debug.logError("Error while cancelling related MilkTransfers ::"+e, module);
+	        		 result = ServiceUtil.returnError("Error while cancelling related MilkTransfers ::"+e.getMessage()); 
+	        	 }
+	         }
 	        return result;
 	   }
 	 public static Map<String, Object> cancelEnquiry(DispatchContext ctx,Map<String, ? extends Object> context) {
@@ -1783,6 +1833,9 @@ public class MaterialRequestServices {
 			  		  
 			  		  if(paramMap.containsKey("shipmentTypeId" + thisSuffix)){
 			  			shipmentTypeId = (String) paramMap.get("shipmentTypeId" + thisSuffix);
+			  		  }
+			  		if(paramMap.containsKey("facilityId" + thisSuffix)){
+			  			facilityId = (String) paramMap.get("facilityId" + thisSuffix);
 			  		  }
 			  		  
 			  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {

@@ -504,12 +504,17 @@
         <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
+        <field name="facilityId" title="facility"><display></display></field>
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
          <field name="quantity" title="Req. Qty"><display/></field>
           <field name="issuedQty" title="IssuedQty" ><display/></field>  
          <field name="QOH" title="InventoryAvailable" ><display/></field>
         <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="${toBeIssuedQty}"> </text></field>
-        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
+        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp; showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
+        <field name="issueThruTransfer" widget-style="buttontext" title="Issue thru Transfers" use-when= "showTransferButton == &quot;Y&quot;">
+            <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${productId}','${facilityId}','${quantity}','${toBeIssuedQty}','${custRequestId}','${custRequestItemSeqId}');" description="Issue thru Transfer">
+            </hyperlink>
+        </field>
     </form>
     <form name="SearchReceiptAcknowledgement" type="single" target="searchReceiptAcknowledgement">
     	<field name="productId" title="Product">

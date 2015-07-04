@@ -1951,6 +1951,156 @@ public class ProductionServices {
          result = ServiceUtil.returnSuccess("Record Deleted Seccessfully.!");
          return result;
      }
-     
-     
+     /**
+      * 
+      * @param request
+      * @param response
+      * @return
+      */
+     public static String IssueRequestThroughTransfer(HttpServletRequest request, HttpServletResponse response) {
+			Delegator delegator = (Delegator) request.getAttribute("delegator");
+		  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		  	  Locale locale = UtilHttp.getLocale(request);
+		  	  Map<String, Object> resultCtx = ServiceUtil.returnSuccess();
+		  	  HttpSession session = request.getSession();
+		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
+		  	  String custRequestId = "";
+		  	  String custRequestItemSeqId = "";
+		  	  BigDecimal toBeIssuedQty = BigDecimal.ZERO;
+		  	  String qty="";
+		  	  String facilityId = "";
+		  	  String shipmentTypeId = "";
+		  	  String tankerNo = (String)paramMap.get("tankerNo");
+		  	  if(UtilValidate.isEmpty(tankerNo)){
+		  		  Debug.logError("Vehicle Number should not be empty ", module);
+	  			  request.setAttribute("_ERROR_MESSAGE_", "Vehicle Number should not be empty ");
+	  			  return "error";
+		  	  }
+		  	  GenericValue MilkTransfer = null;
+		  	  
+		  	  try{
+		  		  List tranConditionList = UtilMisc.toList(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,tankerNo));
+		  		  tranConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MXF_INPROCESS"));
+		  		  EntityCondition tranCondition = EntityCondition.makeCondition(tranConditionList);
+		  		  List<GenericValue> milkTransferList = delegator.findList("MilkTransfer",tranCondition,null,null,null,false);
+		  		  MilkTransfer = EntityUtil.getFirst(milkTransferList);
+		  		  
+		  	  }catch(Exception e){
+		  		  Debug.logError("Error while checking vehicle previous status "+e , module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while checking vehicle previous status "+e.getMessage());
+	  			  return "error";
+		  	  }
+		  	  
+		  	  if(UtilValidate.isNotEmpty(MilkTransfer)){
+		  		  Debug.logError("Transfer is in process for the given vehicle. " , module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Transfer is in process for the given vehicle. ");
+	  			  return "error";
+		  	  }
+		  	  String milkTransferId = "";
+		  	  try{
+		  		  MilkTransfer = delegator.makeValue("MilkTransfer");
+		  		  MilkTransfer.set("containerId", tankerNo);
+		  		  MilkTransfer.set("statusId","MXF_INIT");
+		  		  MilkTransfer.set("sendDate",UtilDateTime.nowTimestamp());
+		  		  MilkTransfer.set("createdByUserLogin", userLogin.getString("userLoginId"));
+		  		  MilkTransfer.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
+		  		  delegator.createSetNextSeqId(MilkTransfer);
+		  	  }catch(GenericEntityException e){
+		  		  Debug.logError("Error while initiating Transfer ::"+e , module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while initiating Transfer ::"+e.getMessage());
+	  			  return "error";
+		  	  }
+		  	  String createNewShipment = "Y";		
+			  for (int i = 0; i < rowCount; i++){
+		  		 qty="";
+			  	 facilityId = "";
+			  	 shipmentTypeId = "";  
+			  	 toBeIssuedQty = BigDecimal.ZERO;
+	  			 String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  if(paramMap.containsKey("shipmentTypeId" + thisSuffix)){
+		  			shipmentTypeId = (String) paramMap.get("shipmentTypeId" + thisSuffix);
+		  		  }
+		  		  if(paramMap.containsKey("facilityId" + thisSuffix)){
+		  			facilityId = (String) paramMap.get("facilityId" + thisSuffix);
+		  		  }
+		  		  
+		  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+		  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+		  			custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId"+thisSuffix);
+		  		  }
+		  		   if (paramMap.containsKey("toBeIssuedQty" + thisSuffix)) {
+		  			 qty = (String) paramMap.get("toBeIssuedQty"+thisSuffix);
+		  		  }
+		  		  if(qty.contains(","))
+		  		   {
+		  			 qty = qty.replace(",", "");
+		  		   }
+		  		  if(UtilValidate.isNotEmpty(qty)){
+					  try {
+						  toBeIssuedQty = new BigDecimal(qty);
+			  		  } catch (Exception e) {
+			  			  Debug.logError(e, "Problems parsing quantity string: " + qty, module);
+			  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + qty);
+			  			  return "error";
+			  		  }
+		  		  }
+		  		  /*if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)<=0)){
+					request.setAttribute("_ERROR_MESSAGE_", "Cannot Accept Quantity ZERO for"+custRequestId+"--!");	  		  
+			  		  return "error";
+		  		  }*/
+		  		  if(toBeIssuedQty.compareTo(BigDecimal.ZERO)==1){
+		  			  try{
+							Map issuanceMapCtx = FastMap.newInstance();
+							issuanceMapCtx.put("custRequestId", custRequestId);
+							issuanceMapCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+							issuanceMapCtx.put("toBeIssuedQty", toBeIssuedQty);
+							issuanceMapCtx.put("facilityId", facilityId);
+							issuanceMapCtx.put("shipmentTypeId", shipmentTypeId);
+							issuanceMapCtx.put("userLogin", userLogin);
+							issuanceMapCtx.put("locale", locale);
+							issuanceMapCtx.put("createNewShipment", createNewShipment);
+							resultCtx = dispatcher.runSync("issueProductForRequest", issuanceMapCtx);
+							
+							if (ServiceUtil.isError(resultCtx)) {
+								Debug.logError("Issuance Failed in Service for Indent : " + custRequestId+":"+custRequestItemSeqId, module);
+								return "error";
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+							Debug.logError(e, module);
+							request.setAttribute("_ERROR_MESSAGE_", " Issuance Request Failed ");
+				  			return "error";
+						}
+		  			  
+		  			  if(ServiceUtil.isSuccess(resultCtx) && createNewShipment.equalsIgnoreCase("Y")){
+		  				  String shipmentId = (String)resultCtx.get("shipmentId");
+		  				  if(UtilValidate.isNotEmpty(shipmentId) ){
+		  					  MilkTransfer.set("productId",(String)paramMap.get("productId"));
+		  					  MilkTransfer.set("shipmentId", shipmentId);
+		  					  try{
+		  						  delegator.store(MilkTransfer);
+		  					  }catch(Exception e){
+		  						  Debug.logError("Error while storing shipment To MilkTransfer "+e,module);
+		  						  request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipment To MilkTransfer "+e.getMessage());
+		  						  return "error";
+		  					  }
+		  					  
+		  				  }
+		  			  }
+		  			createNewShipment="N";
+		  		  }	  
+		  		
+		  	}
+			    request.setAttribute("_EVENT_MESSAGE_", "successfully Issued  Selected Materials");
+				return "success";
+		}
 }

@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.entity.Delegator;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
@@ -32,6 +32,7 @@ import org.ofbiz.party.party.PartyHelper;
 // Debug.log("partyId####################"+context.get("partyId"));
 
 dctx = dispatcher.getDispatchContext();
+delegator  = dctx.getDelegator();
 	fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 	def sdf = new SimpleDateFormat("yyyy-mm-dd");
 	try {
@@ -43,6 +44,11 @@ dctx = dispatcher.getDispatchContext();
 		context.errorMessage = "Cannot parse date string: " + e;
 		return;
 	}
+
+List issueThruTransferProductsList = FastList.newInstance();
+issueThruTransferProductsList = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productCategoryId",EntityOperator.EQUALS,"ISSUE_THRU_TRANSFER"),null,null,null,false );
+List issueThruTransferProductIdsList = FastList.newInstance();
+issueThruTransferProductIdsList = EntityUtil.getFieldListFromEntityList(issueThruTransferProductsList, "productId", true);
 
 List custRequestItemsList = FastList.newInstance();
 List productFacility = FastList.newInstance();
@@ -72,20 +78,50 @@ custRequestIds=EntityUtil.getFieldListFromEntityList(custRequestItems, "custRequ
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN, custRequestIds));
 conditionItemIssue = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-
 itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime","-custRequestId"), null, false);
+String facilityId = "";
+List facilityList = FastList.newInstance();
+if(UtilValidate.isNotEmpty(context.get("facilityList"))){
+	facilityList = context.get("facilityList");
+	if(UtilValidate.isNotEmpty(facilityList) && (facilityList.size() == 1)){
+		facility = EntityUtil.getFirst(context.get("facilityList"));
+		if(UtilValidate.isNotEmpty(facility)){
+			facilityId = facility.get("facilityId");
+		}
+	}
+	 
+}
+Map inMap = FastMap.newInstance();
+if(UtilValidate.isNotEmpty(facilityId)){
+	inMap.put("facilityId",facilityId);
+}else{
+	String partyFrom = (String) parameters.get("partyFrom");
+	facilityList = delegator .findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyFrom),null,null,null,false);
+	if(UtilValidate.isNotEmpty(facilityList)){
+		facility = EntityUtil.getFirst(facilityList);
+		if(UtilValidate.isNotEmpty(facility)){
+			inMap.put("facilityId",facility.get("facilityId"));
+		}
+		
+	}
 
+}
+inMap.put("userLogin",userLogin);
+inMap.put("ownerPartyId","Company");
 
 prodInvMap = [:];
 productIds.each{eachProd ->
-	invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProd, ownerPartyId:"Company", userLogin: userLogin]);
+	inMap.put("productId",eachProd);
+	invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", inMap);
 	invQty = invCountMap.get("inventoryCount");
 	prodInvMap.putAt(eachProd, invQty);
 }
 custRequestItemsList = [];
 custRequestItems.each{ eachItem ->
-	tempMap = [:];
+	String productId = eachItem.productId;
 	
+	
+	tempMap = [:];
 	tempMap.putAt("custRequestId", eachItem.custRequestId);
 	tempMap.putAt("custRequestItemSeqId", eachItem.custRequestItemSeqId);
 	tempMap.putAt("custRequestDate", eachItem.custRequestDate);
@@ -93,6 +129,10 @@ custRequestItems.each{ eachItem ->
 	tempMap.putAt("productId", eachItem.productId);
 	tempMap.putAt("quantity", eachItem.quantity);
 	tempMap.putAt("statusId", eachItem.itemStatusId);
+	if(UtilValidate.isNotEmpty(facilityId)){
+		tempMap.putAt("facilityId", facilityId);
+	}
+	
 	List custRequstParty=delegator.findList("CustRequestParty",EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,eachItem.custRequestId),null,null,null,false);
 	custReqParty=EntityUtil.getFirst(custRequstParty);
 	
@@ -118,6 +158,11 @@ custRequestItems.each{ eachItem ->
 	}
 	tempMap.putAt("QOH", invAvail);
 	tempMap.putAt("issuedQty", issuedQty);
+	tempMap.put("showTransferButton","N");
+	if(UtilValidate.isNotEmpty(issueThruTransferProductIdsList)&& issueThruTransferProductIdsList.contains(productId)){
+		tempMap.put("showTransferButton","Y");
+	}
+	
 	if(UtilValidate.isNotEmpty(custReqParty.partyId)){
 		tempMap.partyIdFrom = custReqParty.partyId;
 	}

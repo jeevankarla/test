@@ -2270,10 +2270,16 @@ public class MilkReceiptServices {
    	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
    	 	String tankerNo = (String) context.get("tankerNo");
    	 	String milkTransferId ="";
+   	 	String reqStatusId = (String)context.get("reqStatusId");
 		try{
 	   	 	List transfersCondList = FastList.newInstance();
 			transfersCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,tankerNo));
-			transfersCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("MXF_INPROCESS", "MXF_REJECTED")));
+			List statusList = UtilMisc.toList("MXF_INPROCESS");
+			statusList.add("MXF_REJECTED");
+			if(UtilValidate.isNotEmpty(reqStatusId)){
+				statusList.add(reqStatusId);
+			}
+			transfersCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,statusList));
 			EntityCondition transferCondtion = EntityCondition.makeCondition(transfersCondList,EntityJoinOperator.AND) ;
 	        List orderBy = UtilMisc.toList("-milkTransferId");
 			List transfersList = delegator.findList("MilkTransfer", transferCondtion,null, orderBy, null, false);
@@ -2321,17 +2327,17 @@ public class MilkReceiptServices {
 				String sendTimeStr = UtilDateTime.toDateString(sendDateFormat,"HHmm");
 				resultMap.put("sendDateStr", sendDateStr);
 				resultMap.put("sendTimeStr", sendTimeStr);
- 	        	if(mtStatusId.equalsIgnoreCase("MXF_REJECTED")){
- 	        	List vehicleTripCond = FastList.newInstance();
- 	        	vehicleTripCond.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,transferRecord.get("containerId")));
- 	        	vehicleTripCond.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,transferRecord.get("sequenceNum")));
- 	        	vehicleTripCond.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
- 	        	EntityCondition vehicleTripCondion = EntityCondition.makeCondition(vehicleTripCond,EntityJoinOperator.AND) ;
- 	   			List vehicleTripStatusList = delegator.findList("VehicleTripStatus", vehicleTripCondion,null, null, null, false);
- 		 		if(UtilValidate.isEmpty(vehicleTripStatusList)){
- 					resultMap = ServiceUtil.returnError("No record Found");
-
- 		 		  }
+				if(mtStatusId.equalsIgnoreCase("MXF_REJECTED")){
+	 	        	List vehicleTripCond = FastList.newInstance();
+	 	        	vehicleTripCond.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,transferRecord.get("containerId")));
+	 	        	vehicleTripCond.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,transferRecord.get("sequenceNum")));
+	 	        	vehicleTripCond.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
+	 	        	EntityCondition vehicleTripCondion = EntityCondition.makeCondition(vehicleTripCond,EntityJoinOperator.AND) ;
+	 	   			List vehicleTripStatusList = delegator.findList("VehicleTripStatus", vehicleTripCondion,null, null, null, false);
+	 		 		if(UtilValidate.isEmpty(vehicleTripStatusList)){
+	 					resultMap = ServiceUtil.returnError("No record Found");
+	
+	 		 		  }
  	        	}
 
 				return resultMap;
@@ -2368,15 +2374,17 @@ public class MilkReceiptServices {
 	 	String partyIdTo = (String) context.get("partyIdTo");
 	 	String sealCheck = (String) context.get("sealCheck");
 	 	String vehicleStatusId = (String) context.get("vehicleStatusId");
+	 	String milkTransferId = (String)context.get("milkTransferId");
 	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
 	 	try{
 	 		//we need to check the transfer status of the give tanker
 	 		Map tankerInMap = FastMap.newInstance();
 	 		tankerInMap.put("tankerNo", tankerNo);
 	 		tankerInMap.put("userLogin", userLogin);
+	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
-	 		if(ServiceUtil.isSuccess(getTankerDetailsMap)){
+	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
 	 			return resultMap;
@@ -2431,7 +2439,19 @@ public class MilkReceiptServices {
 	 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip Status");
 	 			return resultMap;
 	 		}
-	 		GenericValue newTransfer = delegator.makeValue("MilkTransfer");
+	 		GenericValue newTransfer = null; 
+	 		if(UtilValidate.isNotEmpty(milkTransferId)){
+		 		try{
+		 			newTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId",milkTransferId),false);
+		 			
+		 		}catch(GenericEntityException e){
+		 			Debug.logError("Error while getting Transfer Details for :: "+milkTransferId,module);
+		 			return ServiceUtil.returnError("Error while getting Transfer Details for :: "+milkTransferId);
+		 		}
+		 	}
+	 		if(UtilValidate.isEmpty(newTransfer)){
+	 			newTransfer = delegator.makeValue("MilkTransfer");
+	 		}
 	 		newTransfer.set("containerId", tankerNo);
 	 		newTransfer.set("sequenceNum", sequenceNum);
 	 		newTransfer.set("sendDate", sendDate);
@@ -2442,20 +2462,21 @@ public class MilkReceiptServices {
 	 		newTransfer.set("productId",productId);
 	 		newTransfer.set("partyId", partyId);
 	 		newTransfer.set("isSealChecked", sealCheck);
-	 		newTransfer.set("statusId", "MXF_INPROCESS");
+ 			newTransfer.set("statusId", "MXF_INPROCESS");
 	 		newTransfer.set("partyIdTo", partyIdTo);
 	 		newTransfer.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
 	 		newTransfer.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
-	 		delegator.createSetNextSeqId(newTransfer);
+	 		if(UtilValidate.isEmpty(milkTransferId)){
+	 			delegator.createSetNextSeqId(newTransfer);
+	 		}else{
+	 			delegator.createOrStore(newTransfer);
+	 		}
 	 		resultMap = ServiceUtil.returnSuccess("Successfully Created Tanker Receipt with Record Number :"+newTransfer.get("milkTransferId"));
-	 		
-	 		
 	 	}catch (Exception e) {
 			// TODO: handle exception
 	 		Debug.logError("Error while creating record==========="+e,module);
 	 		resultMap = ServiceUtil.returnError("Error while creating record==========="+e.getMessage());
 		}
-   	 	
     	return resultMap;
    }
 	
@@ -3665,6 +3686,7 @@ public class MilkReceiptServices {
 	 		Map tankerInMap = FastMap.newInstance();
 	 		tankerInMap.put("tankerNo", tankerNo);
 	 		tankerInMap.put("userLogin", userLogin);
+	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
 	 		if(ServiceUtil.isSuccess(getTankerDetailsMap)){

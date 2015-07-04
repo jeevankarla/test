@@ -214,7 +214,10 @@ List milkPurchasePurposeTypeList = FastList.newInstance();
 milkPurchasePurposeTypeList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId",EntityOperator.EQUALS,"MILK_PRCH_PURP"), null, ["sequenceId"], null, true);
 
 context.put("milkPurchasePurposeTypeList",milkPurchasePurposeTypeList);
-
+String displayScreen = parameters.displayScreen;
+if(UtilValidate.isEmpty(displayScreen)){
+	displayScreen = context.displayScreen;
+}
 if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP")){
 	List conList = FastList.newInstance();
 	if(displayScreen=="VEHICLE_CIP"){

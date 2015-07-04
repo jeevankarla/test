@@ -129,6 +129,8 @@
         <attribute name="toBeIssuedQty" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="shipmentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="createNewShipment" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="createRequirementForCustRequestItem" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="createRequirementForCustRequestItem">

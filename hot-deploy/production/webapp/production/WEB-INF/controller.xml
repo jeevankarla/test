@@ -82,6 +82,14 @@
        <response name="error" type="request" value="json"/>       
     </request-map>
     
+    <request-map uri="getProductFacilityAvailable">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getProductFacilityAvailable"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    
     <request-map uri="createProductionRunSingle">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProductionRun"/>
@@ -380,6 +388,12 @@
     	<response name="success" type="view" value="ProductionIssuanceRequest"/>
     	<response name="error" type="view" value="ProductionIssuanceRequest"/>
     </request-map>
+    <request-map uri="IssueRequestThroughTransfer">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.production.ProductionServices" invoke="IssueRequestThroughTransfer"/>
+       <response name="success" type="request-redirect-noparam" value="ProductionIssuanceRequest"/>
+       <response name="error" type="request-redirect-noparam" value="ProductionIssuanceRequest"/>
+     </request-map>
     <request-map uri="issueSelectedRequests">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="issueSelectedRequests"/>

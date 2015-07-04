@@ -60,4 +60,10 @@
     <VarianceReason varianceReasonId="VAR_MISSHIP_SHIPPED" varianceTypeId="LOSS_VARIANCE" description="Mis-shipped Item Shipped (-)" />
     <VarianceReason varianceReasonId="VAR_SAMPLE" varianceTypeId="LOSS_VARIANCE" description="Sample (Giveaway)" />
     <VarianceReason varianceReasonId="VAR_STOLEN" varianceTypeId="LOSS_VARIANCE" description="Stolen"/>
+    
+    
+    
+    <ProductCategory  productCategoryId="ISSUE_THRU_TRANSFER"/>
+	<ProductCategoryMember productCategoryId="ISSUE_THRU_TRANSFER" productId="TONEDMILK" fromDate="2010-01-01 00:00:00"/> 
+    
 </entity-engine-xml>

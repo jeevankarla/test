@@ -547,6 +547,7 @@
 			    <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
                 <script location="component://production/webapp/production/WEB-INF/actions/InternalRequestAvailableProducts.groovy"/>
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
             </actions>
             <widgets>
             <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -556,7 +557,8 @@
                 	<include-form location="component://production/widget/ProductionForms.xml" name="FindProductionIssueRequests"/>
                 	</screenlet>
                 	<screenlet title="Search Result">
-                	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/IssueMaterial.ftl"></html-template></html></platform-specific>
+                	<platform-specific><html><html-template location="component://production/webapp/production/production/IssueMaterial.ftl"></html-template></html></platform-specific>
+                	<platform-specific><html><html-template location="component://production/webapp/production/production/FacilityProductAvaialbility.ftl"></html-template></html></platform-specific>
                 	<include-form location="component://production/widget/ProductionForms.xml" name="ListProductionIssueRequests"/>
                 	</screenlet>
                     </decorator-section>                                       

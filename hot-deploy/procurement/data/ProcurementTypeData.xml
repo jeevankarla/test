@@ -45,6 +45,8 @@
 	
     <StatusType statusTypeId="MILK_XFER_STTS" description="MILK TRANSFER"/>
     <StatusItem statusId ="MXF_INPROCESS" statusTypeId="MILK_XFER_STTS" statusCode = "INPROCESS" description ="IN PROCESS" />
+    <StatusItem statusId ="MXF_INIT" statusTypeId="MILK_XFER_STTS" statusCode = "INITIATION" description ="INITIATION" />
+    <StatusItem statusId ="MXF_CANCELLED" statusTypeId="MILK_XFER_STTS" statusCode = "CANCELLED" description ="CANCELLED" />
     <StatusItem statusId ="MXF_RECD" statusTypeId="MILK_XFER_STTS" statusCode = "RECEIVED" description ="RECEIVED" />
     <StatusItem statusId ="MXF_APPROVED" statusTypeId="MILK_XFER_STTS" statusCode = "APPROVED" description ="APPROVED" />
    

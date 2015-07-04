@@ -263,6 +263,12 @@ $(document).ready(function() {
 	  			populateProductNames();
 				populateProductSpan();	  			
 	  		}
+	  		if(e.target.name == "dcNo"){
+	  			if(e.which == 110 || e.which == 190){
+    				$(this).val( $(this).val().replace('.',''));
+	    		}
+	    			$(this).val( $(this).val().replace(/[^0-9\.]/g,''));
+		  	}
 	}); 
 });
 

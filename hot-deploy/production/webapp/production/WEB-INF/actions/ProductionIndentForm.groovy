@@ -28,8 +28,13 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 //
 changeFlag=parameters.changeFlag;
 String facilityId = context.getAt("facilityId");
-if(UtilValidate.isEmpty(facilityId)){
-//	facilityId ="ICP_FLOOR";
+List facilityIdsValues = FastList.newInstance();
+if(UtilValidate.isEmpty(facilityId) && UtilValidate.isNotEmpty(context.getAt("facilityList"))){
+	List facilityIdsList = context.get("facilityList");
+	facilityIdsValues = EntityUtil.getFieldListFromEntityList(facilityIdsList, "facilityId", false);
+	//	facilityId ="ICP_FLOOR";
+}else{
+	facilityIdsValues.add(facilityId);
 }
 List<String> workEffortTypeIdsList = FastList.newInstance();
 workEffortTypeIdsList.add("ROUTING");
@@ -40,10 +45,9 @@ workEffortGoodStdTypesList.add("PRUN_PROD_DELIV");
 workEffortGoodStdTypesList.add("PRUNT_PROD_NEEDED");
 
 
-
 List workEffortCondList = FastList.newInstance();
 workEffortCondList.add(EntityCondition.makeCondition("workEffortGoodStdTypeId",EntityOperator.IN,workEffortGoodStdTypesList));
-workEffortCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,facilityId));
+workEffortCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIdsValues));
 workEffortCondList.add(EntityCondition.makeCondition("workEffortTypeId",EntityOperator.IN,workEffortTypeIdsList));
 
 
@@ -54,57 +58,45 @@ List<GenericValue> workEffortGoods = delegator.findList("WorkEffortAndGoods",wor
 List workEffortDeliverables = EntityUtil.filterByCondition(workEffortGoods, EntityCondition.makeCondition("workEffortGoodStdTypeId",EntityOperator.EQUALS,"PRUN_PROD_DELIV"));
 
 List<String> deliverableProducts = EntityUtil.getFieldListFromEntityList(workEffortDeliverables, "productId", false);
-
 List neededProdConditionList = FastList.newInstance();
-
 neededProdConditionList.add(EntityCondition.makeCondition("workEffortGoodStdTypeId",EntityOperator.EQUALS,"PRUNT_PROD_NEEDED"));
-neededProdConditionList.add(EntityCondition.makeCondition("workEffortGoodStdTypeId",EntityOperator.NOT_IN,deliverableProducts));
+neededProdConditionList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_IN,deliverableProducts));
 EntityCondition neededProdCondition = EntityCondition.makeCondition(neededProdConditionList);
 
 List workEffortNeededProductsList = EntityUtil.filterByCondition(workEffortGoods, neededProdCondition);
-
 List<String> needProductsList = EntityUtil.getFieldListFromEntityList(workEffortNeededProductsList, "productId", false);
 List productIds = FastList.newInstance();
 if(changeFlag == "InnerScreen"){
-partyId = parameters.partyId;
-party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
-if(partyId.contains("SUB")){
-	roleTypeId = "DIVISION";
-}else{
-	roleTypeId = parameters.roleTypeId;
-}
-partyRole = null;
-if(party){
-	partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
-}
-if(!party || !partyRole){
-	context.errorMessage = partyId+" incorrect for the transaction !!";
-	displayGrid = false;
-	return result;
-}
-context.party = party;
-partyIdFrom = party.partyId;
-ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
-	                               EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND);
-List facilityList = delegator.findList("Facility",ecl,UtilMisc.toSet("facilityId"),null,null,false);
-List facilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
-List productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),UtilMisc.toSet("productId"),null,null,false);
- productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
-}
-List needProducts = FastList.newInstance();
-productIds.each {productId->
-	needProductsList.each{needProductId->
-		if(productId==needProductId){
-			needProducts.add(productId);
-		}
+	partyId = parameters.partyId;
+	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
+	if(partyId.contains("SUB")){
+		roleTypeId = "DIVISION";
+	}else{
+		roleTypeId = parameters.roleTypeId;
 	}
+	partyRole = null;
+	if(party){
+		partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+	}
+	if(!party || !partyRole){
+		context.errorMessage = partyId+" incorrect for the transaction !!";
+		displayGrid = false;
+		return result;
+	}
+	context.party = party;
+	partyIdFrom = party.partyId;
+	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
+		                               EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND);
+	List facilityList = delegator.findList("Facility",ecl,UtilMisc.toSet("facilityId"),null,null,false);
+	List facilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
+	List productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition(EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),EntityOperator.AND,EntityCondition.makeCondition("productId",EntityOperator.IN,needProductsList)),UtilMisc.toSet("productId"),null,null,false);
+	 productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
 }
 needProductsList.clear();
-needProductsList=needProducts;
+needProductsList.addAll(productIds);
 Map result = (Map)MaterialHelperServices.getProductUOM(delegator, needProductsList);
 uomLabelMap = result.get("uomLabel");
 productUomMap = result.get("productUom");
-
 
 List productsList = delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,needProductsList),null,null,null,false);
 
