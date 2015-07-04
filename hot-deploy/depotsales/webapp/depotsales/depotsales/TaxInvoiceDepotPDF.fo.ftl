@@ -75,7 +75,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 								 <#assign fromPartyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", "Company"?if_exists, "userLogin", userLogin))/>
 								 <fo:table-row> 
 									<fo:table-cell>
-									    <fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold">From: <#if fromPartyAddressResult?has_content>MOTHER DAIRY, </#if></fo:block>
+									    <fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold">From: <#if fromPartyAddressResult?has_content>BANGALORE SALES DEPOT, </#if></fo:block>
 	            						<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold"><#if fromPartyAddressResult.address1?has_content>${fromPartyAddressResult.address1?if_exists} </#if></fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
@@ -416,7 +416,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 			      </fo:table-cell>
 		 	      <fo:table-cell border-style="solid" number-columns-spanned="2">   						
 			 	      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" font-weight="bold"
-			 	       keep-together="always">For MOTHER DAIRY</fo:block>
+			 	       keep-together="always">For BANGALORE SALES DEPOT</fo:block>
 			 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 			 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 			 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 

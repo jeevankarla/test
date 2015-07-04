@@ -401,7 +401,7 @@
 		</section>
 	</screen>
 
-	<screen name="NonRouteGatePassPDF">
+	<screen name="NonRouteGatePassPDFDepot">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
@@ -421,7 +421,7 @@
 						<platform-specific>
 							<xsl-fo>
 								<html-template
-									location="component://byproducts/webapp/byproducts/reports/nonRouteMktGatePass.fo.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/nonRouteMktGatePassDepotSale.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
@@ -495,7 +495,7 @@
 		</section>
 	</screen>
 
-	<screen name="TaxInvoicePDF">
+	<screen name="TaxInvoiceDepotPDF">
 		<section>
 			<actions>
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"

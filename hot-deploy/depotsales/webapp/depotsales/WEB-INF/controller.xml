@@ -94,7 +94,7 @@
     
      <request-map uri="nonRouteGatePassDepot.pdf">
 	        <security https="true" auth="true"/>
-	        <response name="success" type="view" value="NonRouteGatePassPDF"/>
+	        <response name="success" type="view" value="NonRouteGatePassPDFDepot"/>
     </request-map>
     
     <request-map uri="createShipmentAndInvoiceForDepotSalesOrders">
@@ -117,7 +117,7 @@
     
     <request-map uri="taxInvoiceDepot.pdf">
 	        <security https="true" auth="true"/>
-	        <response name="success" type="view" value="TaxInvoicePDF"/>
+	        <response name="success" type="view" value="TaxInvoiceDepotPDF"/>
     </request-map>
     
     <request-map uri="cancelShipmentDepot">
@@ -344,9 +344,9 @@
          <response name="success"  type="request-redirect-noparam" value="FindPO"></response>
         <response name="error" type="view" value="CreatePO"/>
     </request-map>
-     <request-map uri="PurchaseOrderView.pdf">
+     <request-map uri="PurchaseOrderViewDepotSales.pdf">
         <security https="true" auth="true"/>
-    	<response name="success" type="view" value="PurchaseOrderViewPDF"/>
+    	<response name="success" type="view" value="PurchaseOrderViewDepotSalesPDF"/>
     </request-map>
      <request-map uri="arcOrder.pdf">
         <security https="true" auth="true"/>
@@ -469,10 +469,10 @@
     <view-map name="DepotSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrder"/>
     <view-map name="ProcessOrdersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessDepotOrders"/>
     <view-map name="IndentPrintReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
-    <view-map name="NonRouteGatePassPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>
+    <view-map name="NonRouteGatePassPDFDepot" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#NonRouteGatePassPDFDepot" content-type="application/pdf"/>
     <view-map name="FindDepotSalesShipment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindDepotShipment"/>
     <view-map name="BuyerInvoiceDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#BuyerInvoiceDepotPDF" content-type="application/pdf"/>
-    <view-map name="TaxInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#TaxInvoicePDF" content-type="application/pdf"/>
+    <view-map name="TaxInvoiceDepotPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#TaxInvoiceDepotPDF" content-type="application/pdf"/>
     <view-map name="FindGRNReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNReceipts"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#POMaterialReceiptsDepot"/>
     <view-map name="FindGRNShipmentsDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNShipments"/>
@@ -506,7 +506,7 @@
     
     <view-map name="FindPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPO"/>
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
-    <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
+    <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
