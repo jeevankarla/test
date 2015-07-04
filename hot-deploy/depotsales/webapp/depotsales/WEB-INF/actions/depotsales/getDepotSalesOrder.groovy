@@ -85,10 +85,10 @@ partyIdsSet.each{partyId->
 			arPartyOB=arOpeningBalanceRes.get("openingBalance");
 		}
 		//Debug.log("===============arPartyOB="+arPartyOB);
-		if(arPartyOB<0){
-		partyOBMap.put(partyId, arPartyOB *(-1));
+		if(UtilValidate.isNotEmpty(arPartyOB)&&(arPartyOB<0)){
+			partyOBMap.put(partyId, arPartyOB *(-1));
 		}else{
-		partyOBMap.put(partyId, BigDecimal.ZERO);
+			partyOBMap.put(partyId, BigDecimal.ZERO);
 		}
 		
 		
