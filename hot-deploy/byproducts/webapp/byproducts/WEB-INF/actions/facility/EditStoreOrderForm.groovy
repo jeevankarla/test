@@ -130,6 +130,11 @@ if(partyOrderIds){
 		newObj.put("batchNo", batchNo);
 		newObj.put("daysToStore", daysToStore);
 		newObj.put("unitPrice", eachItem.unitListPrice);
+		noOfBoxes=0;
+		if(UtilValidate.isNotEmpty(prodDetail.piecesIncluded)){
+			noOfBoxes=((eachItem.quantity)/prodDetail.piecesIncluded);
+		}
+		newObj.put("noOfBoxes",noOfBoxes);
 		if(changeFlag && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale"){
 			if(eachItem.unitPrice){
 				newObj.put("basicPrice", eachItem.unitPrice);

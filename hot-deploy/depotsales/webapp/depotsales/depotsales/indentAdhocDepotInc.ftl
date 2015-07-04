@@ -100,7 +100,7 @@
 	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
 	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
-	
+	var productQtyInPieces=${StringUtil.wrapString(productPiecesJSON)!'[]'};
 	var availableAdjTags = ${StringUtil.wrapString(orderAdjItemsJSON)!'[]'};
 	var orderAdjLabelJSON = ${StringUtil.wrapString(orderAdjLabelJSON)!'{}'};
 	var orderAdjLabelIdMap = ${StringUtil.wrapString(orderAdjLabelIdJSON)!'{}'};
@@ -374,7 +374,7 @@
 		       <#if changeFlag?exists && changeFlag == "EditDepotSales">
 					{id:"prevQuantity", name:"Prev-Qty(Pkt)", field:"prevQuantity", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false , formatter: rateFormatter},
 				<#else>
-					{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
+					<!--{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},-->
 				</#if>
 				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 				<#-->
@@ -387,11 +387,12 @@
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
-			{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false}
+			{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
 			<#else>
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
-			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
+			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			</#if>
+			{id:"noOfBoxes", name:"No Of Boxes", field:"noOfBoxes", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false}
 		];
 		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title", focusable :false,
@@ -537,7 +538,7 @@
 					</#if>
 					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
-						data[args.row]["ltrQuantity"] = crVal;
+						<!--data[args.row]["ltrQuantity"] = crVal;-->
 					</#if>
 					
 				}
@@ -590,7 +591,7 @@
 					calcQty = parseFloat(data[args.row]["crQuantity"]);
 				</#if>
 				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
+					calcQty = parseFloat(data[args.row]["quantity"]);
 				</#if>
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
@@ -601,6 +602,16 @@
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
+				var piecesIncluded= productQtyInPieces[prod];				
+				var boxes = 0;
+				if(isNaN(piecesIncluded)){
+					piecesIncluded = 0;
+				}
+				if(piecesIncluded !=0){
+					boxes=calcQty/piecesIncluded;
+				}				
+				data[args.row]["noOfBoxes"] = boxes;	
+				grid.updateRow(args.row);
 				var price = 0;
 				if(udp){
 					var basic_price = data[args.row]['basicPrice'];
@@ -619,11 +630,12 @@
 
 					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
 						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
-						data[args.row]["quantity"] = calculateQty;
+						data[args.row]["quantity"] = calcQty;
 					</#if>
 					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						calculateQty = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
-						data[args.row]["quantity"] = calculateQty;
+						calculateQty=calcQty;
+						data[args.row]["quantity"] = calcQty;
 					</#if>
 				}
 				
@@ -888,7 +900,8 @@
 					</#if>
 					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*10000)/10000);
-						data[i]["ltrQuantity"] = crVal;
+						<!--data[i]["ltrQuantity"] = crVal;-->
+						data[i]["quantity"] = qty;
 					</#if>
 				}
 				grid.updateRow(i);

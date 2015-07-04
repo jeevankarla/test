@@ -236,6 +236,7 @@ JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
 JSONObject productLabelIdJSON=new JSONObject();
 context.productList = prodList;
+JSONObject productPiecesJSON = new JSONObject();
 prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
@@ -243,7 +244,9 @@ prodList.each{eachItem ->
 	productItemsJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId, eachItem.description);
 	productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description+"-"+eachItem.internalName, eachItem.productId);
-	
+	if(UtilValidate.isNotEmpty(eachItem.piecesIncluded)){
+		productPiecesJSON.putAt(eachItem.productId, eachItem.piecesIncluded);
+	}
 	if(productUomMap){
 		uomId = productUomMap.get(eachItem.productId);
 		if(uomId){
@@ -256,7 +259,7 @@ prodList.each{eachItem ->
 }
 context.productUOMJSON = productUOMJSON;
 context.uomLabelJSON = uomLabelJSON; 
-
+context.productPiecesJSON = productPiecesJSON;
 productPrices = [];
 
 JSONObject productCostJSON = new JSONObject();
