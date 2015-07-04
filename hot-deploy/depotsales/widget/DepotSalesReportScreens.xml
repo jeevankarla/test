@@ -156,7 +156,7 @@
 			
 		</section>
 	</screen>
-	<screen name="PurchaseOrderViewPDF">
+	<screen name="PurchaseOrderViewDepotSalesPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -171,7 +171,7 @@
 						<platform-specific>
 						 	<xsl-fo>
 								<html-template
-								location="component://materialmgmt/webapp/materialmgmt/purchase/purchaseOrderReport.fo.ftl" />
+								location="component://depotsales/webapp/depotsales/depotsales/purchaseOrderReportDepotSale.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>

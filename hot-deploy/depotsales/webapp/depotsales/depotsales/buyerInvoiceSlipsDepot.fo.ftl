@@ -455,7 +455,7 @@ under the License.
 				<fo:block text-align="left" font-size="12pt" white-space-collapse="false">4. In case of CST rate of tax, if the 'C' form is not given, the difference in tax rate is to your account.</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">for KCMPF Ltd, Unit: Mother Dairy</fo:block>
+				<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">for BANGALORE SALES DEPOT</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">AUTHORISED SIGNATORY</fo:block>
