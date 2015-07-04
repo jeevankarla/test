@@ -602,8 +602,7 @@
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
-				var piecesIncluded= productQtyInPieces[prod];
-				alert(piecesIncluded);
+				var piecesIncluded= productQtyInPieces[prod];				
 				var boxes = 0;
 				if(isNaN(piecesIncluded)){
 					piecesIncluded = 0;
