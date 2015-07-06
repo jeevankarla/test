@@ -2089,6 +2089,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepositReceivedAccount"/>
     </request-map>
+     <request-map uri="DepositTransfer">
+        <security https="true" auth="true"/>
+          <response name="success" type="view"  value="DepositTransfer"/>
+    </request-map>
      <request-map uri="FindDepositPaidAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepositPaidAccount"/>
@@ -2187,11 +2191,21 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFinAccount"/>
     </request-map>
+     <request-map uri="DepositEditFinAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepositEditFinAccount"/>
+    </request-map>
     <request-map uri="createFinAccount">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFinAccount"/>
         <response name="success" type="view" value="EditFinAccount"/>
         <response name="error" type="view" value="EditFinAccount"/>
+    </request-map>
+    <request-map uri="DepositcreateFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFinAccount"/>
+        <response name="success" type="view" value="DepositEditFinAccount"/>
+        <response name="error" type="view" value="DepositEditFinAccount"/>
     </request-map>
 <!--     <request-map uri="createDepositFinAccountAndDeposit">
         <security https="true" auth="true"/>
@@ -2256,6 +2270,12 @@ under the License.
         <event type="service" path="" invoke="updateFinAccount"/>
         <response name="success" type="view" value="EditFinAccount"/>
         <response name="error" type="view" value="EditFinAccount"/>
+    </request-map>
+     <request-map uri="DepositupdateFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFinAccount"/>
+        <response name="success" type="view" value="DepositEditFinAccount"/>
+        <response name="error" type="view" value="DepositEditFinAccount"/>
     </request-map>
     <request-map uri="updateDepositFinAccount">
         <security https="true" auth="true"/>
@@ -4109,6 +4129,7 @@ under the License.
 <!--     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/> -->
         <view-map name="FindDepositReceivedAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositReceivedAccount"/>
         <view-map name="FindDepositPaidAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositPaidAccount"/>
+        <view-map name="DepositTransfer" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositTransfer"/>
     
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
@@ -4129,6 +4150,7 @@ under the License.
     -->
 
     <view-map name="EditFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccount"/>
+    <view-map name="DepositEditFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#DepositEditFinAccount"/>
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountAuths"/>
