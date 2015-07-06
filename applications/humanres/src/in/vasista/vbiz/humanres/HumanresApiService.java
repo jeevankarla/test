@@ -334,7 +334,9 @@ Debug.logInfo("result:" + result, module);
     	}
 		List leaves = FastList.newInstance();        
     	String partyId = (String)userLogin.get("partyId");
-    	Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -45));
+    	Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+    	Timestamp yearStart = UtilDateTime.getYearStart(nowTimestamp);
+		Timestamp fromDate = UtilDateTime.addDaysToTimestamp(yearStart, -31);
 
 		try{    	
 			List conditionList = UtilMisc.toList(
