@@ -13,6 +13,8 @@ import java.text.ParseException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.HumanresService
+
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 dctx = dispatcher.getDispatchContext();
@@ -23,6 +25,7 @@ def sdf = new SimpleDateFormat("dd/MM/yyyy");
 Timestamp fromDate = null;
 Timestamp thruDate = null;
 employeeId = parameters.employeeId;
+Locale locale = new Locale("en","IN");
 
 try {
 	if (parameters.fromDate) {
@@ -334,7 +337,6 @@ if(UtilValidate.isNotEmpty(timePeiodIdsList)) {
 
 //Debug.logError("attendanceDaysSet="+attendanceDaysSet,"");
 //Debug.logError("missingListJSON="+missingListJSON,"");
-
 context.employeeId = employeeId;
 context.employeeName = employeeName;
 context.companyBus = companyBus;
