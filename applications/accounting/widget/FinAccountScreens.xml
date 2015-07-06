@@ -158,6 +158,46 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="DepositEditFinAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditFinAccount"/>
+                <set field="tabButtonItem" value="DepositTransfer"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+                                <not><if-empty field="finAccountId"/></not>
+                            </condition>
+                            <widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingEditFinAccount}"></label>
+                                <screenlet id="EditFinAccountPanel" collapsible="true">
+                                    <include-form name="DepositEditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
+                                <screenlet id="CreateFinAccountPanel" collapsible="true">
+                                    <include-form name="DepositEditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="EditFinAccountRoles">
         <section>

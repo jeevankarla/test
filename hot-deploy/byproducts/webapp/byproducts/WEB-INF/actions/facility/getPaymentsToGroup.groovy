@@ -64,6 +64,7 @@ if(hideSearch == "Y"){
 	condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
 	condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, partyIdsList));
 	condList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, null));
+	condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CHEQUE_PAYIN"));
 	
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
 	if(paymentDate){

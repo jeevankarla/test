@@ -1729,6 +1729,32 @@
 			<link target="FindFinAccount" />
 		</menu-item>
 	</menu>
+	<menu name="DepositFinAccountSubTabBar" menu-container-style="button-bar button-style-2"
+		extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+		<menu-item name="createNew"
+			title="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingFinAccount}">
+			<condition>
+			<if-has-permission permission="ACCOUNTING"  action="_FINACCOUNT_EDIT"/>				
+			</condition>
+			<link target="DepositEditFinAccount" />
+		</menu-item>
+		<!-- <menu-item name="advancedFinAccountSearch" title="${uiLabelMap.CommonAdvancedSearch}">
+			<condition>
+				<if-compare field="displayAdvancedSearch" operator="not-equals"
+					value="true" />
+			</condition>
+			<link target="FindFinAccount">
+				<parameter param-name="displayAdvancedSearch" value="true" />
+			</link>
+		</menu-item>
+		<menu-item name="quickFinAccountSearch" title="${uiLabelMap.AccountingQuickSearch}">
+			<condition>
+				<if-compare field="displayAdvancedSearch" operator="equals"
+					value="true" />
+			</condition>
+			<link target="FindFinAccount" />
+		</menu-item> -->
+	</menu>
 	<menu name="FinAccountMainTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml">
 		<menu-item name="finAccountMain" title="${uiLabelMap.CommonMain}">
@@ -2089,6 +2115,15 @@
             	</or>            
             </condition>
 			<link target="FindDepositPaidAccount">
+			</link>
+		 </menu-item>
+		 <menu-item name="DepositTransfer" title="Deposit Transfer">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="DepositTransfer">
 			</link>
 		 </menu-item>
 		 <menu-item name="IncomingAdvances" title="Advances Received">
