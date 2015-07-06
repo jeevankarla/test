@@ -1303,5 +1303,12 @@ under the License.
     	<field name="productId" title="*"><display></display></field>
     	<field name="description" title="GL ACCOUNT NAME"><display></display></field>
     	<field name="amount" title="AMOUNT"><display></display></field>
+    	<field name="UNION" title="*"><display></display></field>
+    	<field name="UNITS" title="*"><display></display></field>
+    	<field name="IC_WHOLESALE" title="*"><display></display></field>
+    	<field name="EXCLUSIVE_CUSTOMER" title="*"><display></display></field>
+    	<field name="DEPOT_CUSTOMER" title="*"><display></display></field>
+    	<field name="EMPLOYEE" title="*"><display></display></field>
+    	<field name="OTHER" title="*"><display></display></field>
     </form>
 </forms>
