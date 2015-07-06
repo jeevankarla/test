@@ -71,7 +71,7 @@ facilityCommissionList = UtilMisc.sortMaps(facilityCommissionList, UtilMisc.toLi
 finAccountId = parameters.finAccountId;
 dtcBankMap = [:];
 finAccountParties = [];
-finAccountParties = (TransporterServices.getFacilityByFinAccount(dctx,UtilMisc.toMap("finAccountId",finAccountId,"userLogin",userLogin))).get("partyList");
+finAccountParties = (TransporterServices.getFacilityByFinAccount(dctx,UtilMisc.toMap("finAccountId",finAccountId,"userLogin",userLogin,"fromDate",monthBegin,"thruDate",monthEnd,"reportflag","DTCReport"))).get("partyList");
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
