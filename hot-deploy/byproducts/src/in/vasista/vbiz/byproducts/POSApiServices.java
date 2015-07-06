@@ -610,6 +610,18 @@ Debug.logInfo("result:" + result, module);
 			Debug.logError(e, "Problem fetching dues for booth " + facilityId, module);
 			return ServiceUtil.returnError("Problem fetching dues for booth " + facilityId);
 		}	
+		Map boothTotalDues = (Map)svcResult.get("boothTotalDues");
+		if (boothTotalDues != null) {
+			Map FDRDetails = (Map)ByProductNetworkServices.getFacilityFixedDeposit( dctx , UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, 
+				"effectiveDate", UtilDateTime.nowTimestamp())).get("FacilityFDRDetail");
+			if(UtilValidate.isNotEmpty(FDRDetails) && UtilValidate.isNotEmpty(FDRDetails.get(facilityId))){
+				Map facilityFDRDetail = (Map)FDRDetails.get(facilityId);
+				BigDecimal fixedDeposit = BigDecimal.ZERO;
+				fixedDeposit = (BigDecimal)facilityFDRDetail.get("totalAmount");
+				boothTotalDues.put("fdrAmount", fixedDeposit);			
+			}
+		}
+Debug.logInfo("result:" + svcResult, module);		 		
 		return svcResult;   
     }
     
