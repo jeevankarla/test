@@ -619,7 +619,7 @@ Debug.logInfo("result:" + result, module);
 				Map facilityFDRDetail = (Map)FDRDetails.get(facilityId);
 				fixedDeposit = (BigDecimal)facilityFDRDetail.get("totalAmount");
 			}
-			boothTotalDues.put("fdrAmount", fixedDeposit);						
+			boothTotalDues.put("fdrAmount", fixedDeposit.doubleValue());						
 		}
 Debug.logInfo("result:" + svcResult, module);		 		
 		return svcResult;   
