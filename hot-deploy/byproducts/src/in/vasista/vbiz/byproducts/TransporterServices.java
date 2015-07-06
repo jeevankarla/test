@@ -1883,6 +1883,9 @@ import java.text.SimpleDateFormat;
 		    public static Map<String, Object> getFacilityByFinAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
 		    	Delegator delegator = ctx.getDelegator();
 		    	String finAccountId = (String)context.get("finAccountId");
+		    	Timestamp fromDate = (Timestamp)context.get("fromDate");
+		    	Timestamp thruDate = (Timestamp)context.get("thruDate");
+		    	String reportflag = (String)context.get("reportflag");
 		    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 		    	Map<String, Object> result = ServiceUtil.returnSuccess();
 		    	List partyList= FastList.newInstance();
@@ -1890,6 +1893,12 @@ import java.text.SimpleDateFormat;
 		    		List conditionList= FastList.newInstance();
 		    		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 		    		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "DTC_BILL"));
+		    		 if((UtilValidate.isNotEmpty(reportflag))&&("DTCReport".equals(reportflag))){
+		    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDate));
+
+		    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+		    				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+		    		 }
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 
 		        	List<GenericValue> finAccountRoleList = delegator.findList("FinAccountRole", condition, null, null, null, false);
 		        	partyList = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", false);
