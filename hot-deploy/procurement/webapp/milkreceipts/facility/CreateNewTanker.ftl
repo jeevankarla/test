@@ -1,3 +1,4 @@
+
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/css/smoothness/jquery-ui-1.8.5.custom.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
@@ -14,6 +15,9 @@
 
 <script type="application/javascript">
 	var countVal=0;
+	
+	var contracterNameObj = ${StringUtil.wrapString(contracterNameObj)}
+   var contractorJSON = ${StringUtil.wrapString(contractorJSON)}
  function showTextBox(selected){
  	var capacity = selected.value;
  	if(capacity == "OTHER"){
@@ -43,7 +47,7 @@
  }
  
  $(document).ready(function(){
-		
+		$("#partyId").autocomplete({ source: contractorJSON }).keydown(function(e){});
 		$( "#fromDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
@@ -56,7 +60,12 @@
 	  		}
           });
 	});
-
+	
+function displayName(selection){
+	  var value = $("#partyId").val();
+	   var name = contracterNameObj[value];
+	   $("#contractorName").html("<h6>"+name+"</h6>");
+	}
 </script>
 <div class="screenlet">
 	<div class="screenlet-title-bar">
@@ -84,12 +93,12 @@
     		</tr>  -->
     		<tr>
     			<td><span class="h3">Contractor </span></td>
-    			<td><@htmlTemplate.lookupField size="10" maxlength="22" formName="createNewTankerForm" size="12"  name="partyId" id="partyId" fieldFormName="LookupPartyName"/><font color='red'>*</font></td>
+    			<td><input type="text" name="partyId" id="partyId" size="12" onblur="javascript:displayName(this);"/><font color='red'>*</font><span class="tooltip" id="contractorName"/> </td>
     		</tr>
-    		<tr>
+    	<#--	<tr>
     			<td><span class="h3">Vehicle Rate </span></td>
     			<td><input type="text" name="rateAmount" id="rateAmount" size="12"/></td>
-    		</tr>
+    		</tr> -->
              <tr>
     			<td><span class="h3">From Date </span></td>
     			<td><input type="text" name="fromDate" id="fromDate" size="12"/><font color='red'>*</font></td>

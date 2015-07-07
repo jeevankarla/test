@@ -715,9 +715,9 @@
        </field>
        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
-       <field name="rateAmount"><text size="12"></text></field> 
+       <!-- <field name="rateAmount"><text size="12"></text></field> 
        <field name="effectiveDate"><date-time  type="date"/></field>
-       <field name="update" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_VCLERATE_UPDATE&quot;, session)))}"><submit/></field>
+       <field name="update" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_VCLERATE_UPDATE&quot;, session)))}"><submit/></field> -->
      </form>
     
     
