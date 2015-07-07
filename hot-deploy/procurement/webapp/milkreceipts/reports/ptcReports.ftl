@@ -97,6 +97,7 @@
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("contractorFromDate","contractorThruDate");
 		makeDatePicker("vehicleFromDate","vehicleThruDate");
+		makeDatePicker("unionsFromDate","unionsThruDate");
 		makeDatePicker("milkProcessRegDate","");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -180,6 +181,31 @@
 					</table>
 				</form>
 			</tr>
+				<tr class="alternate-row"> 
+				<form id="PTCUnionsReport" name="PTCUnionsReport" mothed="post" action="<@ofbizUrl>ptcUnionsReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'>Unions PTC Report</span></td>
+							
+							<td width="25%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="unionsFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="unionsThruDate"   name="thruDate"/>
+								 </span>
+							</td>
+							<td align='left' width="30%"><span class="h3">PurposeType Id</span>
+					            <select name="purposeTypeId" id="purposeTypeId">
+						     <option value='All'>All</option>  
+						     <option value='INTERNAL' >IDR</option>
+ 						     <option value='CONVERSION' >CONVERSION</option>
+						     </select>
+						    </td>
+						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+			
        </table>
     </div>
   </div>

@@ -17,11 +17,55 @@
 * under the License.
 */
 
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
+
+import java.util.*;
+import java.awt.image.renderable.ContextualRenderedImageFactory;
+import java.lang.*;
+
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+
+import java.sql.*;
+import java.util.Calendar;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import org.ofbiz.base.util.UtilNumber;
+
+import java.math.RoundingMode;
+import java.util.Map;
+
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.UtilDateTime;
+
+import in.vasista.vbiz.milkReceipts.MilkReceiptReports;
+import in.vasista.vbiz.procurement.ProcurementReports;
+import in.vasista.vbiz.procurement.ProcurementNetworkServices;
+import in.vasista.vbiz.procurement.ProcurementServices;
+import in.vasista.vbiz.procurement.PriceServices;
+
 import java.util.List;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.base.util.UtilDateTime;
+
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
+
 import javolution.util.FastList;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
@@ -29,37 +73,29 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.util.EntityUtil;
+
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
-String fromDate = null;
+// shifts for Milk Receipts
+allShiftsList = delegator.findList("WorkShiftTypePeriodAndMap",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"MILK_SHIFT"),null,UtilMisc.toList("shiftTypeId"),null,false);
+if(UtilValidate.isNotEmpty(allShiftsList)){
+	context.allShiftsList=allShiftsList;
+}
+
+shiftType= null;
+shiftDate = null;
+shiftDateTime=null;
+shiftDateTimeStart=null;
+shiftDateTimeEnd=null;
+
 String thruDate = null;
 String hideSearch = parameters.hideSearch;
-List milkDetailslist = FastList.newInstance();
+searchMilkList=[];
+milkDetailslist=[];
+if(UtilValidate.isNotEmpty(parameters.shiftId)){
+	shiftType = parameters.shiftId;
+}
 if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
-	fromDate = parameters.fromDate;
-	thruDate = parameters.thruDate;
-	java.sql.Timestamp fromStartTime =null;
-	java.sql.Timestamp thruEndTime =null;
-	if(fromDate){
-		java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MMMM dd, yyyy");
-		java.util.Date fromParsedDate = dateFormat.parse(fromDate);	
-		java.sql.Timestamp fromTimestamp = new java.sql.Timestamp(fromParsedDate.getTime());
-		 fromStartTime =  UtilDateTime.getDayStart(fromTimestamp);	
-		if(thruDate){
-			java.util.Date thruParsedDate = dateFormat.parse(thruDate);
-			java.sql.Timestamp thruTimestamp = new java.sql.Timestamp(thruParsedDate.getTime());
-			 thruEndTime =  UtilDateTime.getDayEnd(thruTimestamp);
-			thruDateTimeStamp = (String)thruEndTime ;
-		}
-		
-	}
-	if(UtilValidate.isEmpty(fromStartTime)){
-		fromStartTime = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -15));
-	}
-	if(UtilValidate.isEmpty(thruEndTime)){
-		thruEndTime = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-	}
-	milkDetailslist=[];
 	List conditionList=FastList.newInstance();
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyId));
@@ -70,27 +106,104 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
 		conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
 	}
-	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
 	if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="APPROVE_RECEIPTS"){
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
 	}
 	if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="FINALIZATION"){
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_APPROVED"));
 	}
-	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
 	if(UtilValidate.isNotEmpty(parameters.productId)){
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
 	}
-		/*conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromStartTime)]));
-		conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruEndTime));*/
-	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromStartTime));
-	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruEndTime));
-	
 	if(UtilValidate.isNotEmpty(parameters.createdByUserLogin)){
 		conditionList.add(EntityCondition.makeCondition("createdByUserLogin", EntityOperator.EQUALS ,parameters.createdByUserLogin));
 	}
+	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
+    conditionList.add(EntityCondition.makeCondition([
+			EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS,null),
+			EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"VEHICLE_OUT")], EntityOperator.OR));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	milkDetailslist = delegator.findList("MilkTransferAndMilkTransferItem",condition,null,UtilMisc.toList("-createdStamp"),null,false);
+	milkDetailslist = delegator.findList("MilkTransferAndItemVehicleTripStatus",condition,null,UtilMisc.toList("-createdDate"),null,false);
+	
 }
-context.milkDetailslist=milkDetailslist;
+sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+String toDate=null;
+shiftDate = parameters.fromDate;
+if(UtilValidate.isEmpty(shiftDate)){
+	 shiftDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	 shiftDateTime = UtilDateTime.toDateString(shiftDate, "yyyy-MM-dd");
+}else{
+	sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
+	shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
+}
+
+//nextDay = UtilDateTime.getNextDayStart(shiftDate);
+//nextDateTime = UtilDateTime.toDateString(nextDay,"yyyy-MM-dd");
+
+
+def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd){
+	  List condList=FastList.newInstance();
+	  condList.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
+	  condList.add(EntityCondition.makeCondition("estimatedStartDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
+	  cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	  shiftList = EntityUtil.filterByCondition(milkDetailslist, cond);
+	  shiftList.each{eachShift->
+		  shiftsMap=[:];
+		  shiftsMap.put("milkTransferId",eachShift.milkTransferId);
+		  shiftsMap.put("partyId",eachShift.partyId);
+		  shiftsMap.put("partyIdTo",eachShift.partyIdTo);
+		  shiftsMap.put("productId",eachShift.productId);
+		  shiftsMap.put("siloId",eachShift.siloId);
+		  shiftsMap.put("receivedQuantity",eachShift.receivedQuantity);
+		  shiftsMap.put("receivedQuantityLtrs",eachShift.receivedQuantityLtrs);
+		  shiftsMap.put("receivedFat",eachShift.receivedFat);
+		  shiftsMap.put("receivedSnf",eachShift.receivedSnf);
+		  shiftsMap.put("receivedKgFat",eachShift.receivedKgFat);
+		  shiftsMap.put("receivedKgSnf",eachShift.receivedKgSnf);
+		  shiftsMap.put("containerId",eachShift.vehicleId);
+		  shiftsMap.put("statusId",eachShift.statusId);
+		  
+		  searchMilkList.add(shiftsMap);
+		  
+	  }
+}
+
+if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
+	if(UtilValidate.isEmpty(shiftType)){
+		allShiftsList.each{eachShift->
+			eachShiftType = EntityUtil.filterByCondition(allShiftsList, EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, eachShift.shiftTypeId));
+			if(UtilValidate.isNotEmpty(eachShiftType)){
+				eachShiftType = EntityUtil.getFirst(eachShiftType);
+				startTime=eachShiftType.startTime;
+				endTime=eachShiftType.endTime;
+				shiftTimeStart = shiftDateTime +" "+startTime;
+				shiftTimeEnd = shiftDateTime +" "+endTime;
+				shiftDateTimeStart= new java.sql.Timestamp(sdf1.parse(shiftTimeStart).getTime());
+				shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());
+			
+				getShiftWiseRecords(shiftDateTimeStart,shiftDateTimeEnd);
+			
+			}
+		}
+		
+	}else{
+		eachShiftType = EntityUtil.filterByCondition(allShiftsList, EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, shiftType));
+		if(UtilValidate.isNotEmpty(eachShiftType)){
+			eachShiftType = EntityUtil.getFirst(eachShiftType);
+		    startTime=eachShiftType.startTime;
+			endTime=eachShiftType.endTime;
+			shiftTimeStart = shiftDateTime +" "+startTime;
+			shiftTimeEnd = shiftDateTime +" "+endTime;
+			shiftDateTimeStart= new java.sql.Timestamp(sdf1.parse(shiftTimeStart).getTime());
+			shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());
+		
+			getShiftWiseRecords(shiftDateTimeStart,shiftDateTimeEnd);
+		
+		}	
+	}
+}
+context.searchMilkList=searchMilkList;
+
 

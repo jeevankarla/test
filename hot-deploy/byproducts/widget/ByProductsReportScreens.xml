@@ -1333,6 +1333,7 @@
 	<screen name="PartywiseBalanceAbstractCSV">
 		<section>
 			<actions>
+				<set field="viewSize" value="99999" />
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>

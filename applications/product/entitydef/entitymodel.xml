@@ -2654,6 +2654,27 @@ under the License.
         <key-map field-name="containerId"/>
       </relation>
     </entity>
+    <view-entity entity-name="MilkTransferAndItemVehicleTripStatus"
+            package-name="org.ofbiz.product.inventory"
+            title="MilkTransfer and VehicleTripStatus View Entity">
+      <member-entity entity-alias="MT" entity-name="MilkTransfer"/>
+      <member-entity entity-alias="MTI" entity-name="MilkTransferItem"/>
+      <member-entity entity-alias="VHTPST" entity-name="VehicleTripStatus"/>
+       <alias-all entity-alias="MT" >
+       <exclude field="containerId"/>
+       <exclude field="sequenceNum"/>
+       <exclude field="statusId"/>
+       </alias-all>
+       <alias entity-alias="MTI" name="siloId"/>
+       <alias-all entity-alias="VHTPST" />
+       <view-link entity-alias="MT" rel-entity-alias="VHTPST">
+        <key-map field-name="containerId" rel-field-name="vehicleId"/>
+       	<key-map field-name="sequenceNum"/>
+       </view-link>
+       <view-link entity-alias="MT" rel-entity-alias="MTI">
+        	<key-map field-name="milkTransferId"/>
+       </view-link>
+    </view-entity>
     <entity entity-name="Lot"
             package-name="org.ofbiz.product.inventory"
             title="Lot Entity">

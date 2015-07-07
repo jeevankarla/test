@@ -214,8 +214,17 @@ function deleteTransferEntry(thisValue,milkTransferId){
 	        				<tr>
 	        					<td><span class='h3'>From Date: </span></td><td><input  size="12" type="text" id="findFromDate" name="fromDate"/></td>
 	        				</tr>
-	        				<tr>	
-                         		<td><span class='h3'>Thru Date: </span></td><td><input size="12" type="text" id="findThruDate" name="thruDate"/></td>
+	        				<tr>
+	        					<td align='left' ><span class='h3'> Shift</span></td><td> 
+		        						<select name="shiftId"  id="shiftId" >
+						        					<option value=""></option>
+						        					<#if allShiftsList?has_content>
+							        					<#list allShiftsList as shiftDetails>
+							        						<option value="${shiftDetails.shiftTypeId}">${shiftDetails.description}</option>
+							        					</#list>
+						        					</#if>
+	          							</select>
+          					 	</td>
 	        				</tr>
 						    <tr>
 						      	<td><span class='h3'>userLogin </span></td><td><input  name="createdByUserLogin" size="15" type="text" /></td>
