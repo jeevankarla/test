@@ -1157,6 +1157,7 @@ public class EmplLeaveService {
     	Map<String, Object> result = ServiceUtil.returnSuccess();
     	String leaveTypeId = (String) context.get("leaveTypeId");
     	String partyId = (String) context.get("partyId");
+    	String dayFractionId = (String) context.get("dayFractionId");
     	Timestamp fromDate = (Timestamp) context.get("fromDate");
     	Timestamp thruDate = (Timestamp) context.get("thruDate");
     	List chDateStringList =  (List)context.get("chDate");
@@ -1168,6 +1169,10 @@ public class EmplLeaveService {
     	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
     	Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
     	int intervalDays = (UtilDateTime.getIntervalInDays(fromDateStart, thruDateEnd)+1);
+    	BigDecimal maxIntervalDays = new BigDecimal(intervalDays);
+    	if(UtilValidate.isNotEmpty(dayFractionId)){
+    		maxIntervalDays = (maxIntervalDays.divide(new BigDecimal(2),2,BigDecimal.ROUND_HALF_UP));
+    	}
     	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
     	
     	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
@@ -1197,7 +1202,6 @@ public class EmplLeaveService {
     		            } 
     	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
     	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
-    	    			BigDecimal maxIntervalDays = new BigDecimal(intervalDays);
     	    			if(UtilValidate.isNotEmpty(maxIntervalDays) && ((maxIntervalDays).compareTo(BigDecimal.ZERO) !=0)){
     	    				if((maxIntervalDays.compareTo(leaveClosingBalance)) >0){
     	    					return ServiceUtil.returnError("You cannot apply leave more than available leaves for leaveType: "+leaveTypeId);

@@ -936,6 +936,7 @@ under the License.emplpunch
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
         <attribute name="chDate" mode="IN" type="List" optional="true"/>
+        <attribute name="dayFractionId" mode="IN" type="String" optional="true"/>
     </service>
      <service name="createEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmplLeave" auth="true">
