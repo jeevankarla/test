@@ -168,7 +168,7 @@
                 chartLegend.valueField = "quantity";
 				chartLegend.depth3D = 10;
             	chartLegend.angle = 20;
-            	chartLegend.labelText = "[[value]]";
+            	chartLegend.labelText = "";
             	chartLegend.labelRadius = -30;
             	chartLegend.sequencedAnimation = true;
                 chartLegend.startEffect = "elastic";

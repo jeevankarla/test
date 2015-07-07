@@ -113,9 +113,9 @@ if(facilityId){
 			facility = EntityUtil.filterByCondition(plantFacilities, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachFacilityId));
 			prodIds = EntityUtil.getFieldListFromEntityList(facilityInventory, "productId", true);
 			productId = "";
-			qoh = BigDecimal.ZERO;
 			
 			prodIds.each{ eachProdId ->
+				qoh = BigDecimal.ZERO;
 				JSONObject newObj = new JSONObject();
 				productNames = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
 				productName = "";
