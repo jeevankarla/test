@@ -110,7 +110,7 @@ under the License.
                         <check-errors/>
                     </else>
                 </if-empty>
-            </else>
+            </else> 
         </if>
 
         <!-- use invoiceIdTemp along with the invoiceIdPrefix to create the real ID -->
