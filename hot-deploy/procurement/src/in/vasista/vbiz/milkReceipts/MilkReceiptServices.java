@@ -4415,7 +4415,7 @@ public class MilkReceiptServices {
 	 			return "error";
 	 		}
 	 		//Create VehicleRate
-	 		 Map vehicleRateMap = FastMap.newInstance();
+	 		/* Map vehicleRateMap = FastMap.newInstance();
 		 		vehicleRateMap.put("vehicleId", vehicleId);
 		 		vehicleRateMap.put("rateTypeId", "TANKER_RATE");
 		 		vehicleRateMap.put("rateCurrencyUomId", "INR");
@@ -4427,7 +4427,7 @@ public class MilkReceiptServices {
 		 			Debug.logError("Error While Creating vehicleRate",module);
 		 			request.setAttribute("_ERROR_MESSAGE_", "Error While Creating VehicleRate");
 		 			return "error";
-		 		}
+		 		}*/
            //Create vehicleRole
 		 		Map vehicleRoleMap = FastMap.newInstance();
 			 		vehicleRoleMap.put("vehicleId", vehicleId);

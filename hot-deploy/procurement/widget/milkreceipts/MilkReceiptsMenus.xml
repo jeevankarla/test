@@ -95,7 +95,7 @@
         	</condition>
             <link target="ShiftWiseReport"></link>
       	</menu-item>
-      	<menu-item name="findTanker" title="Find Tanker" >
+      	<menu-item name="findTanker" title="Find Vehicle" >
       	<condition>
         		<if-has-permission permission="MR" action="_FINDTANKER_VIEW"/>
         	</condition>

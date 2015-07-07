@@ -1,3 +1,4 @@
+
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.grid.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.pager.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/css/smoothness/jquery-ui-1.8.5.custom.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
@@ -12,16 +13,7 @@
 		text-align: center;
 	}
 	
-	.tooltip { /* tooltip style */
-    background-color: #ffffbb;
-    border: 0.1em solid #999999;
-    color: #000000;
-    font-style: arial;
-    font-size: 80%;
-    font-weight: normal;
-    margin: 0.4em;
-    padding: 0.1em;
-}
+	
 .tooltipWarning { /* tooltipWarning style */
     background-color: #ffffff;
     border: 0.1em solid #FF0000;
@@ -65,10 +57,11 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/autoTab/jquery.autotab-1.1b.js</@ofbizContentUrl>"></script>
 
 <script type="application/javascript">
-	
+	var contracterNameObj = ${StringUtil.wrapString(contracterNameObj)}
+   var contractorJSON = ${StringUtil.wrapString(contractorJSON)}
 $(document).ready(function() {	
 	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
-
+$("#partyId").autocomplete({ source: contractorJSON }).keydown(function(e){});
 	$("input").keyup(function(e){
 	  		if(e.target.name == "tankerName"){
 	  			$('[name=tankerName]').val(($('[name=tankerName]').val()).toUpperCase());
@@ -119,7 +112,12 @@ function populateVehicleSpan(){
 					    }
 				});
 	}
-
+	
+    function displayName(selection){
+	  var value = $("#partyId").val();
+	   var name = contracterNameObj[value];
+	   $("#contractorName").html("<h6>"+name+"</h6>");
+	}
 </script>
 <div class="screenlet">
 	<div class="screenlet-title-bar">
@@ -136,7 +134,7 @@ function populateVehicleSpan(){
        </tr>
        <tr>
 			<td><span class="h3">Contractor </span></td>
-			<td><@htmlTemplate.lookupField size="10" maxlength="22" formName="findVehicleRate" size="12"  name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+			<td><input type="text" name="partyId" id="partyId" size="12" onblur="javascript:displayName(this);"/><span class="tooltip h2" id="contractorName"/> </td>
 		</tr>
         <tr>
     	<td align='left'><span class="h3">Rate </span> </td><td>

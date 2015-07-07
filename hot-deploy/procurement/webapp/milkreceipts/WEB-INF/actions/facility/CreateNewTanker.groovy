@@ -27,7 +27,7 @@ import javolution.util.FastMap;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import org.ofbiz.party.party.PartyHelper;
 /*List vehicleTypesList = FastList.newInstance();
 
 vehicleTypesList = delegator.findList("RoleType",EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"VEHICLE_TYPE"),null,null,null,false);
@@ -44,6 +44,23 @@ ecl = EntityCondition.makeCondition([EntityCondition.makeCondition("vehicleId",E
 									 EntityCondition.makeCondition("vehicleCapacity",EntityOperator.GREATER_THAN,BigDecimal.ZERO)],EntityOperator.AND);
 List vehicleCapacitys = delegator.findList("Vehicle",ecl,UtilMisc.toSet("vehicleCapacity"),null,null,false);
 context.vehicleCapacitys=EntityUtil.getFieldListFromEntityList(vehicleCapacitys, "vehicleCapacity", true);
+
+//ContractorJSON
+JSONArray contractorJSON = new JSONArray();
+JSONObject contracterNameObj = new JSONObject();
+List contractorsList = delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"Contractor"),UtilMisc.toSet("partyId","roleTypeId"),null,null,false);
+contractorsList.each{party->
+	JSONObject contracter = new JSONObject();
+	String partyId = party.partyId;
+	partyName = PartyHelper.getPartyName(delegator, partyId, false);
+	contracter.put("value",partyId);
+	contracter.put("label",partyName);
+	contracterNameObj.put(partyId, partyName);
+	contractorJSON.add(contracter);
+}
+
+context.contracterNameObj=contracterNameObj;
+context.contractorJSON = contractorJSON;
 
 
 
