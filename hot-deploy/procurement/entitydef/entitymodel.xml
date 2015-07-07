@@ -383,6 +383,8 @@
       <field name="receivedQuantity" type="fixed-point"></field>
       <field name="receivedQuantityLtrs" type="fixed-point"></field>
       <field name="milkType" type="indicator"></field>
+      <field name="shipmentId" type="id"></field>
+      
       <field name="supplyTypeEnumId" type="id"/>
       <field name="driverName" type="id"/>
       
@@ -407,7 +409,9 @@
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="milkTransferId"/>
-      
+      <relation rel-entity-name="Shipment" type="one" fk-name="MILK_XFER_SHIPMENT">
+      	<key-map field-name="shipmentId"/>
+      </relation>
       <relation type="one" fk-name="MILK_XFER_PURTYP_ENUM" rel-entity-name="Enumeration">
           <key-map field-name="purposeTypeId" rel-field-name="enumId"/>
       </relation>

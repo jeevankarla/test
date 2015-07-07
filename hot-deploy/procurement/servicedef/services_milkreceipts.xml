@@ -368,6 +368,7 @@
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="getTankerRecordNumber" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="vehicleId" mode="OUT" type="String" optional="true"></attribute>
+	 	<attribute name="reqStatusId" mode="IN" type="String" optional="true"></attribute>
 	 	<!-- <attribute name="milkTransferId" mode="OUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
 	 	<attribute name="partyId" mode="OUT" type="String" optional="true"/>

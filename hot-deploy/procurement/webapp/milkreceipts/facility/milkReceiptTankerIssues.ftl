@@ -254,9 +254,18 @@ $(document).ready(function() {
 	  		}
 	  		
 	  		if(e.target.name == "product" ){
-	  			populateProductNames();
-				populateProductSpan();	  			
+	  			var isReadOnly = $(this).attr('readonly');
+	  			if(!isReadOnly){
+	  				populateProductNames();
+					populateProductSpan();
+				}	  			
 	  		}
+	  		if(e.target.name == "dcNo"){
+	  			if(e.which == 110 || e.which == 190){
+    				$(this).val( $(this).val().replace('.',''));
+	    		}
+	    			$(this).val( $(this).val().replace(/[^0-9\.]/g,''));
+		  	}
 	}); 
 });
 
@@ -327,6 +336,11 @@ function fetchTankerRecordNumber(){
 	var tankerNo = $('[name=tankerNo]').val();
 	var dataString = {"tankerNo": tankerNo};
 	var displayScreen = $('[name="displayScreen"]').val();
+	if(displayScreen == "ISSUE_CIP"){
+		dataString = {"tankerNo": tankerNo,"reqStatusId":"MXF_INIT"};
+	}
+	
+	
 	$.ajax({
          type: "POST",
          url: action,
@@ -365,14 +379,16 @@ function fetchTankerRecordNumber(){
 	   				
 	   				var milkTransfer = result['milkTransfer'];
 	   				if(typeof(milkTransfer)!= "undefined"){
+	   				  var sealNumber = milkTransfer['sealNo'];
 	   				  
+	   				  if(typeof(sealNumber)){
+	   				  	$('[name=sealNumber]').val(sealNumber);
+	   				  }
 	   				  $('#sendFat').val(milkTransfer['fat']);
 	   				  $('#sendSnf').val(milkTransfer['snf']);
 	   				  
 	   				  
 	   				}
-	   				
-	   				
 	   			}
            		if($('[name=sealCheck]').length !=0){
            			if(displayScreen == "ISSUE_GRSWEIGHT"){
@@ -391,9 +407,7 @@ function fetchTankerRecordNumber(){
            			}
            		
            		}
-           		
-           		
-           		if($('[name=product]').length !=0){
+           		if($('[name=product]').length !=0 &&  typeof(milkTransferId)!='undefined'){
 	           		var productId = result['productId'];
 	           		if(typeof(productId)!= "undefined"){
 	           			$('[name=product]').val(productId);
@@ -446,19 +460,37 @@ function fetchTankerRecordNumber(){
 	  					$('span#partyIdFromToolTip').removeClass("tooltipWarning");
 	  					$('span#partyIdFromToolTip').html(partyName);
            			}
-	  				
-	  				
+           				if(typeof(milkTransferId) != 'undefined'){
+           					var milkTransfer = result['milkTransfer'];
+           					if(typeof(milkTransfer)!='undefined'){
+           						var shipmentId = milkTransfer['shipmentId'];
+           						if(typeof(shipmentId) != 'undefined'){
+           							var productId = milkTransfer['productId'];
+           							$('#productId').val(productId);
+           							$('#product').val(productId);
+           							$('#product').parent().hide();
+           							$('#productId').attr("readonly","readonly");
+           							$('#product').attr("readonly","readonly");
+           							$('span#productToolTip').addClass("tooltip");
+									$('span#productToolTip').removeClass("tooltipWarning");
+									$('span#productToolTip').html(productId);
+           						}else{
+           							$('span#productToolTip').removeClass("tooltip");
+									$('span#productToolTip').addClass("tooltipWarning");
+									$('span#productToolTip').html('None');
+           						}
+           					}
+           				}
+           			
 	  			}else{
 	  				$('span#tankerIdToolTip').removeClass("tooltip");
 	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
 	  				$('span#tankerIdToolTip').html('none');
-	  				
 	  				$('span#partyIdFromToolTip').removeClass("tooltip");
 	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
 	  				$('span#partyIdFromToolTip').html('none');
 	  			}
            }
-           
          },
           error: function() {
         	 		
@@ -471,7 +503,7 @@ function fetchTankerRecordNumber(){
 }
 
 function populateProductNames(){
-	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
+		var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 		$("#product").autocomplete({					
 			source:  availableTags,
 			select: function(event, ui) {
@@ -550,7 +582,7 @@ $( "#"+fromDateId ).datepicker({
       <div class="grid-header h2" style="width:100%">
       			<#assign velhicleStatus = displayScreen+ "  ::VEHICLE ENTRY DETAILS">
       			<#if displayScreen == "ISSUE_CIP">
-      				<#assign velhicleStatus = "ISSUING  CIP DETAILS">
+      				<#assign velhicleStatus = "CIP DETAILS">
       			</#if>
       			
       			<#if displayScreen == "VEHICLE_OUT">
@@ -563,10 +595,10 @@ $( "#"+fromDateId ).datepicker({
       				<#assign velhicleStatus = "VEHICLE  TARE WEIGHT DETAILS">
       			</#if>
       			<#if displayScreen == "ISSUE_QC">
-      				<#assign velhicleStatus = "ISUUING QUALITY CONTROL DETAILS">
+      				<#assign velhicleStatus = "QUALITY CONTROL DETAILS">
       			</#if>
       			<#if displayScreen == "ISSUE_AQC">
-      				<#assign velhicleStatus = "ISUUING ACK QUALITY CONTROL DETAILS">
+      				<#assign velhicleStatus = "ACKNOWLEDGED QUALITY CONTROL DETAILS">
       			</#if>
       			<#if displayScreen == "VEHICLE_CIP">
       				<#assign velhicleStatus = "UN-LOAD AND SILO DETAILS">
@@ -643,8 +675,8 @@ $( "#"+fromDateId ).datepicker({
 							    </tr>
 							    <tr>
         							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
-						        		<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
-                     					<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on"/><span class="tooltip" id ="productToolTip">none</span></td>
+						        		<input type="hidden" size="15" id="productId" maxlength="15" name="productId" autocomplete="off" value="" />
+                     					<input type="text" size="15" maxlength="15" name="product" id="product" autocomplete="on"/></td><td><h2><h2><span class="tooltip" id ="productToolTip">none</span></h2></h2></td>
 									</td>
 				        		</tr> 
 	                         	<tr>
@@ -759,8 +791,8 @@ $( "#"+fromDateId ).datepicker({
 					        	</tr>
 					        	<tr>
 	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
-							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
-                         				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
+							        	<input type="hidden" size="15" id="productId" maxlength="15" name="productId" autocomplete="off" value="" />
+                         				<input type="text" size="15" maxlength="15" name="product" id="product" autocomplete="on" required/></td><td><h2><span class="tooltip" id ="productToolTip">none</span></h2></td>
 									</td>
 					        	</tr>
 	        					
@@ -813,11 +845,10 @@ $( "#"+fromDateId ).datepicker({
 					        	</tr>
 					        	<tr>
 	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
-							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
-                         				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
+							        	<input type="hidden" size="15" id="productId" maxlength="15" name="productId" autocomplete="off" value="" />
+                         				<input type="text" size="15" maxlength="15" name="product" id="product" autocomplete="on" required/></td><td><h2><span class="tooltip" id ="productToolTip">none</span></h2></td>
 									</td>
 					        	</tr>
-	        					
 					        	<tr>
 	        						<td align='left' ><span class="h1"> Recieved Quality</span> </td>
 					        	</tr>
@@ -850,8 +881,6 @@ $( "#"+fromDateId ).datepicker({
             									<option value="Y">POSITIVE</option>
           												</select></td>
 					        	</tr>
-					        	
-					        	
 						    </#if>
 						    
                             <#if displayScreen == "VEHICLE_CIPNEW">
