@@ -319,7 +319,10 @@ purchaseSumInvDetaildMap=[:];
 		
 		invoiceItemsIter.each{invoiceItem->
 			if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
-				BigDecimal cstRevenue = invoiceItem.cstAmount;
+				BigDecimal cstRevenue=BigDecimal.ZERO;
+				if(invoiceItem.cstAmount){
+				 cstRevenue = invoiceItem.cstAmount;
+				}
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
 				//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
 				//preparing Another Map here for Category
