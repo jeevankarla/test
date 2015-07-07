@@ -4987,7 +4987,6 @@ public class InvoiceServices {
         BigDecimal amountAppliedRunningTotal = paymentAmount;
         for( int i=0; i< invoiceIds.size(); i++){
         	String invoiceId = (String)invoiceIds.get(i);
-        	amountAppliedRunningTotal=(BigDecimal)invoiceAmountMap.get(invoiceId);
         	Map invoicePaymentInfoMap =FastMap.newInstance();
 			BigDecimal outstandingAmount =BigDecimal.ZERO;
 			invoicePaymentInfoMap.put("invoiceId", invoiceId);
@@ -5041,8 +5040,8 @@ public class InvoiceServices {
              		 Debug.logError(invoiceApplResult.toString(), module);
                      return ServiceUtil.returnError(null, null, null, invoiceApplResult);
                  }
-             	amountAppliedRunningTotal =outstandingAmount .subtract(amountAppliedRunningTotal);
-             	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) < 0){
+             	amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
+             	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
              		break;
              		
              	}
@@ -5050,7 +5049,7 @@ public class InvoiceServices {
              	Debug.logError(e, e.toString(), module);
                  return ServiceUtil.returnError(e.toString());
              }
-            
+        	
         }  
         Map<String, Object> result = ServiceUtil.returnSuccess();        
         result.put("paymentId", paymentId);
