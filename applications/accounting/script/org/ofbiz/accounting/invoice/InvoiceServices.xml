@@ -690,7 +690,11 @@ under the License.
                        <clear-field field="invoice.paidDate"/>
                    </if-compare>
           		 </if-not-empty>
+          		                                     <log level="always" message="=============================${parameters.cancelComments}"></log>
+          		 
                   <if-not-empty field="parameters.cancelComments">
+                  <log level="always" message="=============================${parameters.invoiceId}"></log>
+                  
 				<set from-field="parameters.cancelComments" field="invoice.cancelComments"/>
 				   </if-not-empty>
                 <set from-field="parameters.statusId" field="invoice.statusId"/>
@@ -956,6 +960,9 @@ under the License.
         <iterate list="parameters.invoiceIds" entry="invoiceId">
             <set field="setInvoiceStatusMap.invoiceId" from-field="invoiceId"/>
             <set field="setInvoiceStatusMap.statusId" from-field="parameters.statusId"/>
+              <if-not-empty field="parameters.cancelComments">
+                          <set field="setInvoiceStatusMap.cancelComments" from-field="parameters.cancelComments"/>
+              </if-not-empty>
             <call-service service-name="setInvoiceStatus" in-map-name="setInvoiceStatusMap"/>
             <clear-field field="setInvoiceStatusMap"/>
         </iterate>
