@@ -5318,7 +5318,9 @@ public class PayrollService {
 		    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
 		    	        	if(UtilValidate.isEmpty(empEmployement)){
 		    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate));
-		    	        	}
+		    	        	}else{
+ 		    	        		employement = empEmployement;
+ 		    	        	}
 		        		}
 	        		}
 	        		
