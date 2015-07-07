@@ -587,69 +587,68 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 			 Map<String, Object> MaterialReceiptRegisterMap = new TreeMap<String, Object>();
 			 
 			 while( shipmentReceiptItr != null && (receiptItem = shipmentReceiptItr.next()) != null) {
-				    Map tempMap = FastMap.newInstance();
-		            String receiptId = receiptItem.getString("receiptId");
-		            String shipmentId = receiptItem.getString("shipmentId");
-		            String tmpProductId = receiptItem.getString("productId");
-		            BigDecimal quantity  = receiptItem.getBigDecimal("quantityAccepted");
-		            BigDecimal price  = receiptItem.getBigDecimal("unitCost");
-		            Timestamp datetimeReceived =  receiptItem.getTimestamp("datetimeReceived");
-		            String datetReceived = UtilDateTime.toDateString(UtilDateTime.toSqlDate(datetimeReceived));
-		            BigDecimal amount = price.multiply(quantity);
-	   try{
+				 Map tempMap = FastMap.newInstance();
+				 String receiptId = receiptItem.getString("receiptId");
+				 String shipmentId = receiptItem.getString("shipmentId");
+				 String tmpProductId = receiptItem.getString("productId");
+				 BigDecimal quantity  = receiptItem.getBigDecimal("quantityAccepted");
+				 BigDecimal price  = receiptItem.getBigDecimal("unitCost");
+				 Timestamp datetimeReceived =  receiptItem.getTimestamp("datetimeReceived");
+				 String datetReceived = UtilDateTime.toDateString(UtilDateTime.toSqlDate(datetimeReceived));
+				 BigDecimal amount = price.multiply(quantity);
+				 try{
 
-			List conList=FastList.newInstance();
-	        if(UtilValidate.isNotEmpty(shipmentId)){
-	       	conList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-	       	conList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
-	       		 }
-	        EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
-			List<GenericValue> shipmentData = delegator.findList("Shipment", con, null, null, null, false);
-	        //	Set fieldsSelect = UtilMisc.toSet("supplierInvoiceId","supplierInvoiceDate","deliveryChallanNumber","shipmentId");
-	       	// List<GenericValue> shipmentData = delegator.find("Shipment", con, null,fieldsSelect, null,null);
-	       	String mrrNo =null;
-	       	String supplierInvoiceId =null;
-	       	Timestamp supplierInvoiceDate =null;  
-	       	if(UtilValidate.isNotEmpty(shipmentData)){
-					GenericValue shipmentInvoiceData = EntityUtil.getFirst(shipmentData);
-					mrrNo=shipmentInvoiceData.getString("shipmentId");
-					supplierInvoiceId=shipmentInvoiceData.getString("supplierInvoiceId");
-					supplierInvoiceDate=shipmentInvoiceData.getTimestamp("supplierInvoiceDate");
-		            tempMap.put("supplierInvoiceId",supplierInvoiceId );
-		            tempMap.put("supplierInvoiceDate",supplierInvoiceDate); 
-		            tempMap.put("mrrNo", mrrNo);
-
-		        }
-	   }catch(Exception e){
-			Debug.logError(e.toString(), module);
-			return ServiceUtil.returnError(e.toString());
-		}   
+					 List conList=FastList.newInstance();
+				        if(UtilValidate.isNotEmpty(shipmentId)){
+				       	conList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+				       	conList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+				       		 }
+				        EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
+						List<GenericValue> shipmentData = delegator.findList("Shipment", con, null, null, null, false);  
+			        //	Set fieldsSelect = UtilMisc.toSet("supplierInvoiceId","supplierInvoiceDate","deliveryChallanNumber","shipmentId");
+			       	// List<GenericValue> shipmentData = delegator.find("Shipment", con, null,fieldsSelect, null,null);
+			       	String mrrNo =null;
+			       	String supplierInvoiceId =null;
+			       	Timestamp supplierInvoiceDate =null;  
+			       	if(UtilValidate.isNotEmpty(shipmentData)){
+			       		GenericValue shipmentInvoiceData = EntityUtil.getFirst(shipmentData);
+						mrrNo=shipmentInvoiceData.getString("shipmentId");
+						supplierInvoiceId=shipmentInvoiceData.getString("supplierInvoiceId");
+						supplierInvoiceDate=shipmentInvoiceData.getTimestamp("supplierInvoiceDate");
+			            tempMap.put("supplierInvoiceId",supplierInvoiceId );
+			            tempMap.put("supplierInvoiceDate",supplierInvoiceDate); 
+			            tempMap.put("mrrNo", mrrNo);
+				    }
+				 }catch(Exception e){
+						Debug.logError(e.toString(), module);
+						return ServiceUtil.returnError(e.toString());
+				 }   
 		
-		            tempMap.put("datetReceived", datetReceived);
-		            tempMap.put("quantity", quantity);
-		            tempMap.put("receiptId", receiptId);
-		            tempMap.put("amount", amount);
-		            tempMap.put("price", price);
-		            receiptsList.add(tempMap);
-		            if(UtilValidate.isNotEmpty(isForMRRReg) && isForMRRReg.equals("Y")){
-		            	if(UtilValidate.isEmpty(MaterialReceiptRegisterMap.get(receiptId))){
-		            		Map<String ,Object> receiptDetailsMap = FastMap.newInstance();
-		            		String orderId = receiptItem.getString("orderId");
-		            		//SUPPLIER_AGENT,ISSUE_TO_DEPT
-		            		
-		            		String supplierId =null;
-		            		String departmentId =null;
-		            		String billNo =null;
-		            		String billDate =null;
-		            		List<GenericValue> orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId",orderId));
-		            		GenericValue supplierRole = EntityUtil.getFirst(EntityUtil.filterByAnd(orderRoles, UtilMisc.toMap("roleTypeId","SUPPLIER_AGENT")));
-		            		GenericValue deptRole = EntityUtil.getFirst(EntityUtil.filterByAnd(orderRoles, UtilMisc.toMap("roleTypeId","ISSUE_TO_DEPT")));
-		            		if(UtilValidate.isNotEmpty(supplierRole))
-		            			supplierId = supplierRole.getString("partyId");
-		            		
-		            		if(UtilValidate.isNotEmpty(deptRole))
-		            			departmentId = deptRole.getString("partyId");
-		            		
+	            tempMap.put("datetReceived", datetReceived);
+	            tempMap.put("quantity", quantity);
+	            tempMap.put("receiptId", receiptId);
+	            tempMap.put("amount", amount);
+	            tempMap.put("price", price);
+	            receiptsList.add(tempMap);
+	            if(UtilValidate.isNotEmpty(isForMRRReg) && isForMRRReg.equals("Y")){
+	            	if(UtilValidate.isEmpty(MaterialReceiptRegisterMap.get(receiptId))){
+	            		Map<String ,Object> receiptDetailsMap = FastMap.newInstance();
+	            		String orderId = receiptItem.getString("orderId");
+	            		//SUPPLIER_AGENT,ISSUE_TO_DEPT
+	            		
+	            		String supplierId =null;
+	            		String departmentId =null;
+	            		String billNo =null;
+	            		String billDate =null;
+	            		List<GenericValue> orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId",orderId));
+	            		GenericValue supplierRole = EntityUtil.getFirst(EntityUtil.filterByAnd(orderRoles, UtilMisc.toMap("roleTypeId","SUPPLIER_AGENT")));
+	            		GenericValue deptRole = EntityUtil.getFirst(EntityUtil.filterByAnd(orderRoles, UtilMisc.toMap("roleTypeId","ISSUE_TO_DEPT")));
+	            		if(UtilValidate.isNotEmpty(supplierRole))
+	            			supplierId = supplierRole.getString("partyId");
+	            		
+	            		if(UtilValidate.isNotEmpty(deptRole))
+	            			departmentId = deptRole.getString("partyId");
+	            		
 //		            		List<GenericValue> orderAttributes = delegator.findByAnd("OrderAttribute", UtilMisc.toMap("orderId",orderId));
 //		            		GenericValue billNoAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_NUMBER")));
 //		            		GenericValue billDateAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_DATE")));
@@ -659,65 +658,65 @@ public static Map<String, Object> createCustTimePeriodMM(DispatchContext dctx,Ma
 //		            		
 //		            		if(UtilValidate.isNotEmpty(billDateAttr))
 //		            			billDate = billDateAttr.getString("attrValue");
-		            		
-		            		GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
-		            		BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
-		            		
-		            		receiptDetailsMap.put("receiptId", receiptId);
-		            		receiptDetailsMap.put("datetimeReceived", datetimeReceived);
-		            		receiptDetailsMap.put("departmentId", departmentId);
-		            		receiptDetailsMap.put("supplierId", supplierId);
+	            		
+	            		GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+	            		BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
+	            		
+	            		receiptDetailsMap.put("receiptId", receiptId);
+	            		receiptDetailsMap.put("datetimeReceived", datetimeReceived);
+	            		receiptDetailsMap.put("departmentId", departmentId);
+	            		receiptDetailsMap.put("supplierId", supplierId);
 //		            		receiptDetailsMap.put("billNo", billNo);
 //		            		receiptDetailsMap.put("billDate", billDate);
-		            		receiptDetailsMap.put("amount", orderTotal);
-		            		MaterialReceiptRegisterMap.put(receiptId, receiptDetailsMap);
-		            	}
-		            	
-		            }
-		         // Handle product totals   			
-	    			if (productTotals.get(tmpProductId) == null) {
-	    				Map<String, Object> newMap = FastMap.newInstance();
-	    				Map<String, Object> dayWiseMap = FastMap.newInstance();
-	    				Map<String, Object> dayDetailMap = FastMap.newInstance();
+	            		receiptDetailsMap.put("amount", orderTotal);
+	            		MaterialReceiptRegisterMap.put(receiptId, receiptDetailsMap);
+	            	}
+	            	
+	            }
+	         // Handle product totals   			
+    			if (productTotals.get(tmpProductId) == null) {
+    				Map<String, Object> newMap = FastMap.newInstance();
+    				Map<String, Object> dayWiseMap = FastMap.newInstance();
+    				Map<String, Object> dayDetailMap = FastMap.newInstance();
+    				dayDetailMap.put("quantity", quantity);
+    				dayDetailMap.put("amount", amount);
+    				dayWiseMap.put(datetReceived, dayDetailMap);
+    				newMap.put("dayWiseMap", dayWiseMap);
+    				newMap.put("quantity", quantity);
+    				newMap.put("amount", amount);
+    				productTotals.put(tmpProductId, newMap);
+    				
+    			}else {
+    				Map productMap = (Map)productTotals.get(tmpProductId);
+    				BigDecimal runningQuantity = (BigDecimal)productMap.get("quantity");
+    				runningQuantity = runningQuantity.add(quantity);
+    				productMap.put("quantity", runningQuantity);
+    				BigDecimal runningTotalAmount = (BigDecimal)productMap.get("amount");
+    				runningTotalAmount = runningTotalAmount.add(amount);
+    				productMap.put("amount", runningTotalAmount);
+    				
+    				Map dayWiseMap = (Map) productMap.get("dayWiseMap");
+    				if(dayWiseMap.get(datetReceived)!= null){
+    					Map<String, Object> dayDetailMap = FastMap.newInstance();
+    					dayDetailMap = (Map<String, Object>) dayWiseMap.get(datetReceived);
+    					BigDecimal runningDayQuantity = (BigDecimal)dayDetailMap.get("quantity");
+    					BigDecimal runningDayAmount = (BigDecimal)dayDetailMap.get("amount");
+    					runningDayQuantity = runningDayQuantity.add(quantity);
+    					runningDayAmount = runningDayAmount.add(amount);
+	    				dayDetailMap.put("quantity", runningDayQuantity);
+	    				dayDetailMap.put("amount", runningDayAmount);
+	    				dayWiseMap.put(datetReceived,dayDetailMap);
+        				productMap.put("dayWiseMap", dayWiseMap);
+    				}else{
+    					Map<String, Object> dayDetailMap = FastMap.newInstance();
 	    				dayDetailMap.put("quantity", quantity);
 	    				dayDetailMap.put("amount", amount);
-	    				dayWiseMap.put(datetReceived, dayDetailMap);
-	    				newMap.put("dayWiseMap", dayWiseMap);
-	    				newMap.put("quantity", quantity);
-	    				newMap.put("amount", amount);
-	    				productTotals.put(tmpProductId, newMap);
-	    				
-	    			}else {
-	    				Map productMap = (Map)productTotals.get(tmpProductId);
-	    				BigDecimal runningQuantity = (BigDecimal)productMap.get("quantity");
-	    				runningQuantity = runningQuantity.add(quantity);
-	    				productMap.put("quantity", runningQuantity);
-	    				BigDecimal runningTotalAmount = (BigDecimal)productMap.get("amount");
-	    				runningTotalAmount = runningTotalAmount.add(amount);
-	    				productMap.put("amount", runningTotalAmount);
-	    				
-	    				Map dayWiseMap = (Map) productMap.get("dayWiseMap");
-	    				if(dayWiseMap.get(datetReceived)!= null){
-	    					Map<String, Object> dayDetailMap = FastMap.newInstance();
-	    					dayDetailMap = (Map<String, Object>) dayWiseMap.get(datetReceived);
-	    					BigDecimal runningDayQuantity = (BigDecimal)dayDetailMap.get("quantity");
-	    					BigDecimal runningDayAmount = (BigDecimal)dayDetailMap.get("amount");
-	    					runningDayQuantity = runningDayQuantity.add(quantity);
-	    					runningDayAmount = runningDayAmount.add(amount);
-		    				dayDetailMap.put("quantity", runningDayQuantity);
-		    				dayDetailMap.put("amount", runningDayAmount);
-		    				dayWiseMap.put(datetReceived,dayDetailMap);
-	        				productMap.put("dayWiseMap", dayWiseMap);
-	    				}else{
-	    					Map<String, Object> dayDetailMap = FastMap.newInstance();
-		    				dayDetailMap.put("quantity", quantity);
-		    				dayDetailMap.put("amount", amount);
-		    				dayWiseMap.put(datetReceived,dayDetailMap);
-	        				productMap.put("dayWiseMap", dayWiseMap);
-	    				}
-	    				productTotals.put(tmpProductId, productMap);
-	    			}
-			 }       
+	    				dayWiseMap.put(datetReceived,dayDetailMap);
+        				productMap.put("dayWiseMap", dayWiseMap);
+    				}
+    				productTotals.put(tmpProductId, productMap);
+    			}
+		 }       
 		   shipmentReceiptItr.close();
 		   result.put("MaterialReceiptRegisterMap",MaterialReceiptRegisterMap);
 		   result.put("receiptsList", receiptsList);
@@ -1223,17 +1222,25 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		List productFacilities=FastList.newInstance();
-		List storesList=FastList.newInstance();
+		List<GenericValue> storesList=FastList.newInstance();
 		try{
 			List<GenericValue> productFacilitiesList=delegator.findList("ProductFacility",null,null,null,null,false);
 			if(UtilValidate.isNotEmpty(productFacilitiesList)){
 				productFacilities=EntityUtil.getFieldListFromEntityList(productFacilitiesList, "facilityId", true);
 			}
 			if(UtilValidate.isNotEmpty(productFacilities)){
-				for(int i=0;i<productFacilities.size();i++){
-					GenericValue Facility=delegator.findOne("Facility",UtilMisc.toMap("facilityId",productFacilities.get(i)),false);
-					storesList.add(Facility);
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, productFacilities));
+				conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> facilities = delegator.findList("Facility", condition, null, null, null, false);
+				if(UtilValidate.isNotEmpty(facilities)){
+					storesList.addAll(facilities);
 				}
+				/*for(int i=0;i<productFacilities.size();i++){
+					GenericValue Facility=delegator.findOne("Facility",UtilMisc.toMap("facilityId",productFacilities.get(i)),false);
+					
+				}*/
 			}
 			result.put("storesList",storesList);
 		}catch(Exception e){
