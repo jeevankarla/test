@@ -52,18 +52,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 		 <fo:table width="100%" align="center" table-layout="fixed"  font-size="12pt" border-style="solid">
            <fo:table-column column-width="30pt"/>               
             <fo:table-column column-width="50pt"/>               
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="170pt"/>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="50pt"/>
           <#list partyIds as partyId>
             <fo:table-column column-width="50pt"/>
           </#list>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="120pt"/>
             <#if recoveryTypeIds?has_content> 
-	          <#list recoveryTypeIds as recoveryTypeId>
-                <fo:table-column column-width="50pt"/>
-	          </#list> 
+            <fo:table-column column-width="80pt"/>
+             <fo:table-column column-width="80pt"/>
 		    <fo:table-column column-width="100pt"/>
 		    </#if>
 		          
@@ -80,13 +79,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL TRIPS / KM</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TRANSPORTER AMOUNT</fo:block></fo:table-cell>
 		          <#if recoveryTypeIds?has_content> 
-			          <#list recoveryTypeIds as recoveryTypeId>
-			            <#assign recoveryTypeIdName = delegator.findOne("Enumeration", {"enumId" : recoveryTypeId}, true)>
-		           <#if recoveryTypeIdName?has_content> 
-			          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">${recoveryTypeIdName.get("description")}</fo:block></fo:table-cell>       		
-			         </#if>
-			          </#list> 
-			    <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL AMOUNT</fo:block></fo:table-cell>
+			
+			    <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL ADDITIONS</fo:block></fo:table-cell>
+		        <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL DEDUCTIONS</fo:block></fo:table-cell>
+		        <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL AMOUNT</fo:block></fo:table-cell>
 		          </#if>    		
 	         </fo:table-row>
 	         <#assign siNo=1>
@@ -101,16 +97,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 		              <fo:block text-align="left" >			   
 						 <fo:table >
 							  <fo:table-column column-width="80pt"/>
-					           <fo:table-column column-width="40pt"/>
+					           <fo:table-column column-width="50pt"/>
 							    <#list partyIds as partyId>
                                <fo:table-column column-width="50pt"/>
                                 </#list>
-                              <fo:table-column column-width="70pt"/>
-                              <fo:table-column column-width="100pt"/>
+                              <fo:table-column column-width="80pt"/>
+                              <fo:table-column column-width="120pt"/>
                               <#if recoveryTypeIds?has_content> 
-			                  <#list recoveryTypeIds as recoveryTypeId>
-                              <fo:table-column column-width="50pt"/>
-			                 </#list> 
+			                  <fo:table-column column-width="80pt"/>
+			             	  <fo:table-column column-width="80pt"/>
 			                  <fo:table-column column-width="100pt"/>
 		                     </#if>
                               
@@ -120,19 +115,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 		                 	    <#list eachcontractorVehicles as eachcontractorVehicle>
 		                 
 							   <fo:table-row>
-							       <fo:table-cell border-style="dotted"><fo:block text-align="center"   font-size="12pt">${eachcontractorVehicle.getKey()}</fo:block>		</fo:table-cell>
-			                        <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("vehicleRate")}</fo:block>   </fo:table-cell>
+							       <fo:table-cell border-style="dotted"><fo:block text-align="center"   font-size="12pt">${eachcontractorVehicle.getKey()?if_exists}</fo:block>		</fo:table-cell>
+			                        <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("vehicleRate")?if_exists}</fo:block>   </fo:table-cell>
 			                    <#assign vehiclePartyIds = eachcontractorVehicle.getValue().get("partyIds").entrySet()?if_exists>											
 			              		  <#list vehiclePartyIds as vehiclePartyId>
 	                                <fo:table-cell border-style="dotted"><fo:block text-align="center"   font-size="12pt">${vehiclePartyId.getValue()}</fo:block></fo:table-cell>       		
 	                               </#list>
 	                            <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("eachPartyTrips")} ,  ${eachcontractorVehicle.getValue().get("totPartyDistance")}  </fo:block>   </fo:table-cell>
-	                            <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("total")}</fo:block></fo:table-cell>       		
-			                    <#assign fenalities= eachcontractorVehicle.getValue().get("fineRecoveryMap").entrySet()?if_exists>											
-			                  <#list fenalities as fenality>
-	                                <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${fenality.getValue()}</fo:block></fo:table-cell>       		
-			                 </#list> 
-			                  <#if fenalities?has_content>
+	                            <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("total")?if_exists}</fo:block></fo:table-cell>       		
+			           <#assign fenalities= eachcontractorVehicle.getValue().get("fineRecoveryMap").entrySet()?if_exists>											
+			              <#if fenalities?has_content>
+                                   <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("totAdditionsForVehicle")?if_exists}</fo:block></fo:table-cell>       		
+	                               <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("totDeductionsForVehicle")?if_exists}</fo:block></fo:table-cell>       		
 	                                <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("total")+eachcontractorVehicle.getValue().get("totAdditionsForVehicle")-eachcontractorVehicle.getValue().get("totDeductionsForVehicle")}</fo:block></fo:table-cell>       		
 			                 </#if> 
 				                </fo:table-row>  
@@ -151,14 +145,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
           <fo:table-row border-style="solid">
 		    <fo:table-cell border-style="dotted" number-columns-spanned="5"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL</fo:block>		</fo:table-cell>
 	      <#list totalsForPartiesDetails as totalsForPartiesDetail>
-	        <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">${totalsForPartiesDetail.getValue()}</fo:block></fo:table-cell>       		
+	        <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">${totalsForPartiesDetail.getValue()?if_exists}</fo:block></fo:table-cell>       		
 	       </#list>		                           
 	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalTripsParties} , ${totalDistanceParties}</fo:block></fo:table-cell>       		
-	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAmtParties}</fo:block></fo:table-cell>       		
+	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAmtParties?if_exists}</fo:block></fo:table-cell>       		
 	     <#if recoveryTypeIds?has_content>
-	 	        <#list recoveryTypeIds as recoveryTypeId>
-      	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalsForRecoveryMap.get(recoveryTypeId)}</fo:block></fo:table-cell>       		
-      	       </#list>
+	 	       <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAdditions?if_exists}</fo:block></fo:table-cell>       		
+      	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalDeductions?if_exists}</fo:block></fo:table-cell>       		
+      	       
    	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAmtParties+totalAdditions-totalDeductions}</fo:block></fo:table-cell>       		
             </#if>
 	    

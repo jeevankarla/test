@@ -49,6 +49,7 @@ facilitySkimmilkList=EntityUtil.filterByCondition(facilityList,EntityCondition.m
 skimfacilityIds=EntityUtil.getFieldListFromEntityList(facilitySkimmilkList, "facilityId", true);
 
 conditionList =[];
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_APPROVED","MXF_RECD"]));
 conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS,"CONVERSION"));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));

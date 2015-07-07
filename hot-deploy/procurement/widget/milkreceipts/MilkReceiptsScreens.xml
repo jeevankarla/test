@@ -1019,6 +1019,7 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<container style="full">
+						   	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/vehicleDetailsDashboardQtip.ftl"/></html></platform-specific>
 							<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/findVehicleTripStatus.ftl"></html-template></html></platform-specific>
 							<screenlet title="Tanker Status List">
 								<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml"	name="ListVehicleTripStatus" />

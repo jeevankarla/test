@@ -49,6 +49,7 @@
     <StatusItem statusId ="MXF_CANCELLED" statusTypeId="MILK_XFER_STTS" statusCode = "CANCELLED" description ="CANCELLED" />
     <StatusItem statusId ="MXF_RECD" statusTypeId="MILK_XFER_STTS" statusCode = "RECEIVED" description ="RECEIVED" />
     <StatusItem statusId ="MXF_APPROVED" statusTypeId="MILK_XFER_STTS" statusCode = "APPROVED" description ="APPROVED" />
+   	<StatusItem statusId ="MXF_REJECTED" statusTypeId="MILK_XFER_STTS" statusCode = "REJECTED" description ="REJECTED" />
    
     <ProductCategory longDescription="Milk Procurement Products"
         productCategoryId="MILK_PROCUREMENT" categoryName="Milk Procurement" productCategoryTypeId="CATALOG_CATEGORY"/>

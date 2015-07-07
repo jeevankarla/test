@@ -68,7 +68,7 @@ contractorVehicleIds=null;
 conditionList =[];
 
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "PTC_VEHICLE"));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "ROUTE_VEHICLE"));
  if(UtilValidate.isNotEmpty(contractorId) && (!"all".equalsIgnoreCase(contractorId))){
 	context.contractorId=contractorId;
    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , contractorId));

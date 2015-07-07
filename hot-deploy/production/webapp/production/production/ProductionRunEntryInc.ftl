@@ -97,6 +97,7 @@
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var availProdTagsGrid1;
 	var availFacilityTagsGrid1 = [];
+	var availFacilityTag = [];
 	var productDetails = [];
 	var productNameObj= ${StringUtil.wrapString(productNameObj)!'[]'};
     var workEffortObj= ${StringUtil.wrapString(workEffortObj)!'[]'};
@@ -537,8 +538,12 @@
 					var prodDetMap = {};
 					prodDetMap = productDetails[prod];
 					var productInventoryMap = prodDetMap['facilityInventoryJSON'];
-					var facilityId = data[args.row]["issueFacilityId"];
+					var facilityName = data[args.row]["issueFacilityId"];
+					var facilityLabelIdJSON = prodDetMap['facilityLabelIdJSON'];
+					var facilityId = facilityLabelIdJSON[facilityName];
 					data[args.row]['inventoryAvl'] = productInventoryMap[facilityId];
+					data[args.row]["issueFacilityId"] = facilityId;
+					
 				}
 				grid.updateRow(args.row);
 			}

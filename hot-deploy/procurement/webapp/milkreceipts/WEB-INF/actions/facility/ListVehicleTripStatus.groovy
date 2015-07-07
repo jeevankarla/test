@@ -106,6 +106,7 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 					}
 				}*/																							
 				vehicleTripMap.put("vehicleId",vehicleId);
+				vehicleTripMap.put("sequenceNum",sequenceNum);
 				vehicleTripMap.put("partyId",partyId);
 				vehicleTripMap.put("statusId",statusId);
 				vehicleTripMap.put("userLogin",userLoginId);
