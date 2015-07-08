@@ -3375,4 +3375,154 @@ public class ProductionRunServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    public static Map<String, Object> cancelNGProductionRun(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+	  	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Locale locale = (Locale) context.get("locale");
+	  	String productionRunId = (String) context.get("productionRunId");
+	  	
+	  	ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
+        if (!productionRun.exist()) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
+        }
+        String currentStatusId = productionRun.getGenericValue().getString("currentStatusId");
+
+        // PRUN_CREATED, PRUN_DOC_PRINTED --> PRUN_CANCELLED
+        if (currentStatusId.equals("PRUN_CREATED") || currentStatusId.equals("PRUN_DOC_PRINTED") || currentStatusId.equals("PRUN_SCHEDULED") || currentStatusId.equals("PRUN_RUNNING")) {
+            try {
+                // First of all, make sure that there aren't production runs that depend on this one.
+                List<ProductionRun> mandatoryWorkEfforts = FastList.newInstance();
+                ProductionRunHelper.getLinkedProductionRuns(delegator, dispatcher, productionRunId, mandatoryWorkEfforts);
+                for (int i = 1; i < mandatoryWorkEfforts.size(); i++) {
+                    GenericValue mandatoryWorkEffort = (mandatoryWorkEfforts.get(i)).getGenericValue();
+                    if (!(mandatoryWorkEffort.getString("currentStatusId").equals("PRUN_CANCELLED"))) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChangedMandatoryProductionRunFound", locale));
+                    }
+                }
+                Map<String, Object> serviceContext = FastMap.newInstance();
+                // change the production run (header) status to PRUN_CANCELLED
+                serviceContext.put("workEffortId", productionRunId);
+                serviceContext.put("currentStatusId", "PRUN_CANCELLED");
+                serviceContext.put("userLogin", userLogin);
+                dispatcher.runSync("updateWorkEffort", serviceContext);
+                // Cancel the product promised
+                List<GenericValue> products = delegator.findByAnd("WorkEffortGoodStandard", 
+                        UtilMisc.toMap("workEffortId", productionRunId, "workEffortGoodStdTypeId", "PRUN_PROD_DELIV",
+                                "statusId", "WEGS_CREATED"));
+                if (!UtilValidate.isEmpty(products)) {
+                    Iterator<GenericValue> productsIt = products.iterator();
+                    while (productsIt.hasNext()) {
+                        GenericValue product = productsIt.next();
+                        product.set("statusId", "WEGS_CANCELLED");
+                        product.store();
+                    }
+                }
+                List<String> workEffortIds = FastList.newInstance();
+                workEffortIds.add(productionRunId);
+                
+                // change the tasks status to PRUN_CANCELLED
+                List<GenericValue> tasks = productionRun.getProductionRunRoutingTasks();
+                GenericValue oneTask = null;
+                String taskId = null;
+                
+                for (int i = 0; i < tasks.size(); i++) {
+                    oneTask = tasks.get(i);
+                    taskId = oneTask.getString("workEffortId");
+                    workEffortIds.add(taskId);
+                    serviceContext.clear();
+                    serviceContext.put("workEffortId", taskId);
+                    serviceContext.put("currentStatusId", "PRUN_CANCELLED");
+                    serviceContext.put("userLogin", userLogin);
+                    dispatcher.runSync("updateWorkEffort", serviceContext);
+                    // cancel all the components
+                    List<GenericValue> components = delegator.findByAnd("WorkEffortGoodStandard", 
+                            UtilMisc.toMap("workEffortId", taskId, "workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED", 
+                                    "statusId", "WEGS_CREATED"));
+                    if (!UtilValidate.isEmpty(components)) {
+                        Iterator<GenericValue> componentsIt = components.iterator();
+                        while (componentsIt.hasNext()) {
+                            GenericValue component = componentsIt.next();
+                            component.set("statusId", "WEGS_CANCELLED");
+                            component.store();
+                        }
+                    }
+                    List<GenericValue> delivComponents = delegator.findByAnd("WorkEffortGoodStandard", 
+                            UtilMisc.toMap("workEffortId", taskId, "workEffortGoodStdTypeId", "PRUN_PROD_DELIV", 
+                                    "statusId", "WEGS_CREATED"));
+                    if (!UtilValidate.isEmpty(delivComponents)) {
+                        Iterator<GenericValue> componentsIt = delivComponents.iterator();
+                        while (componentsIt.hasNext()) {
+                            GenericValue component = componentsIt.next();
+                            component.set("statusId", "WEGS_CANCELLED");
+                            component.store();
+                        }
+                    }
+                }
+                if(UtilValidate.isNotEmpty(workEffortIds)){
+                	List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds), null, null, null, false);
+                	
+                	List<String> inventoryItemIds = EntityUtil.getFieldListFromEntityList(inventoryItemDetails, "inventoryItemId", true);
+                	
+                	List conditionList = FastList.newInstance();
+                	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIds));
+                	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "IXF_CANCELLED"));
+                	EntityCondition condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	List<GenericValue> transfers = delegator.findList("InventoryTransfer", condition1, null, null, null, false);
+                	if(UtilValidate.isNotEmpty(transfers)){
+                		Debug.logError("Cannot cancel production run, products produced in this run are already in use .!!", module);
+                        return ServiceUtil.returnError("Cannot cancel production run, products produced in this run are already transfered to other facility .!!");
+                	}
+                	
+                	conditionList.clear();
+                	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIds));
+                	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_CANCELLED"));
+                	EntityCondition condition2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	List<GenericValue> receipts = delegator.findList("ShipmentReceipt", condition1, null, null, null, false);
+                	if(UtilValidate.isNotEmpty(receipts)){
+                		Debug.logError("Cannot cancel production run, products produced in this run are already in use .!!", module);
+                        return ServiceUtil.returnError("Cannot cancel production run, products produced in this run are already shipped to other facility .!!");
+                	}
+
+                	List<GenericValue> issuances = delegator.findList("ItemIssuance", EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIds), null, null, null, false);
+                	if(UtilValidate.isNotEmpty(issuances)){
+                		Debug.logError("Cannot cancel production run, products produced in this run are already in use .!!", module);
+                        return ServiceUtil.returnError("Cannot cancel production run, products produced in this run are already issued .!!");
+                	}
+                	
+                	List<GenericValue> variance = delegator.findList("InventoryItemVariance", EntityCondition.makeCondition("inventoryItemId", EntityOperator.IN, inventoryItemIds), null, null, null, false);
+                	if(UtilValidate.isNotEmpty(variance)){
+                		Debug.logError("Cannot cancel production run, products produced in this run are already in use .!!", module);
+                        return ServiceUtil.returnError("Cannot cancel production run, products produced in this run are already marked in Loss/Gain .!!");
+                	}
+                	
+                	for(GenericValue eachItem : inventoryItemDetails){
+                		serviceContext.clear();
+                        serviceContext.put("inventoryItemId", eachItem.getString("inventoryItemId"));
+                        serviceContext.put("workEffortId", eachItem.getString("workEffortId"));
+                        serviceContext.put("availableToPromiseDiff", (eachItem.getBigDecimal("availableToPromiseDiff")).negate());
+                        serviceContext.put("quantityOnHandDiff", (eachItem.getBigDecimal("quantityOnHandDiff")).negate());
+                        serviceContext.put("userLogin", userLogin);
+                        Map resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                        if(ServiceUtil.isError(resultService)){
+                        	Debug.logError("Error while creating inventory item detail", module);
+                            return ServiceUtil.returnError("Error while reverting inventory for production run .!!");
+                        }
+                        String inventoryItemDetailSeqId = (String)resultService.get("inventoryItemDetailSeqId");
+                	}
+                	
+                }
+                
+            } catch (Exception e) {
+                Debug.logError(e, "Problem calling the updateWorkEffort service", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
+            }
+            
+            result = ServiceUtil.returnSuccess("Production run cancelled ...!"+productionRunId);
+            result.put("productionRunId", productionRunId);
+            return result;
+        }
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunCannotBeCancelled", locale));
+    }
 }
