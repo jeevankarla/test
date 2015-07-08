@@ -478,7 +478,7 @@
 	        <sort-field name="delete"/>
        </sort-order>
     </form>    
-    <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="searchMilkList"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
+    <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="milkDetailslist"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
        <field name="milkTransferId" title="Record No"><display/></field>
        <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
        <field name="partyIdTo" separate-column="true" title="To"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>

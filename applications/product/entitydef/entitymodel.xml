@@ -2660,10 +2660,10 @@ under the License.
       <member-entity entity-alias="MT" entity-name="MilkTransfer"/>
       <member-entity entity-alias="MTI" entity-name="MilkTransferItem"/>
       <member-entity entity-alias="VHTPST" entity-name="VehicleTripStatus"/>
+      <alias name="vehicleTripStatusId" entity-alias="VHTPST" field="statusId"/>
        <alias-all entity-alias="MT" >
-       <exclude field="containerId"/>
-       <exclude field="sequenceNum"/>
-       <exclude field="statusId"/>
+       		<exclude field="containerId"/>
+       		<exclude field="sequenceNum"/>
        </alias-all>
        <alias entity-alias="MTI" name="siloId"/>
        <alias-all entity-alias="VHTPST" />

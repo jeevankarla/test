@@ -34,13 +34,16 @@ if(UtilValidate.isNotEmpty(vehicleTripStatus)){
 	   statusItem = delegator.findOne("StatusItem",["statusId":statusId],false);
 	   if(statusItem){
 		   currentStatusId=statusItem.get("description");
-	   newVehicleObj.put("statusId", currentStatusId);
+	       newVehicleObj.put("statusId", currentStatusId);
 	   }
 	   newVehicleObj.put("statusEntryDate", statusEntryDate);
+	   
 	   if(UtilValidate.isNotEmpty(eachVehicleStatus.siloId)){
 		   productObj.put("siloId", eachVehicleStatus.siloId);
 	   }
-	   if(UtilValidate.isNotEmpty(eachVehicleStatus.tareWeight)){
+	   if(UtilValidate.isNotEmpty(eachVehicleStatus.tareWeight) && UtilValidate.isNotEmpty(eachVehicleStatus.tareWeight)){
+		   grossWeight=eachVehicleStatus.grossWeight;
+		   tareWeight=eachVehicleStatus.tareWeight;
 		   productObj.put("netWeight", grossWeight-tareWeight);
 	   }
 	   vehicleStatusJSONList.add(newVehicleObj);

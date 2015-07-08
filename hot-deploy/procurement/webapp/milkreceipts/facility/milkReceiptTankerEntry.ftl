@@ -685,7 +685,7 @@ function reloadingPage(){
                                     <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td> 
 					        	    </#if> 
 					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
-					        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
+					        		<input  name="milkTransferId" id="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
 					        	</td>
 					        </tr>
@@ -960,6 +960,19 @@ function reloadingPage(){
 	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
+	       
+	      <#if displayScreen == "VEHICLE_TAREWEIGHT"> 
+	        <td valign = "middle" align="center"></td>
+   		    <td valign = "middle" align="center"></td>
+	        <td>
+	        	<div class='tabletext h2'>
+	        	<#assign url = ""/>
+	            <a class="buttontext" id="hrefSub" target="_BLANK" onclick="javascript: setUrl();">Report</a>
+	      		</div>
+	        </td>
+	      </#if>
+	      	
+
 	      	<#if displayScreen == "VEHICLE_QC">
 	      	<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
@@ -979,3 +992,10 @@ function reloadingPage(){
   </div>
  </div>
 </div>
+<script type='application/javascript'>
+	function setUrl(){
+		var milkTransId = $("#milkTransferId").val();
+		var urlStr = "<@ofbizUrl>MilkIncommingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
+		$("#hrefSub").attr("href",urlStr)
+	}
+</script>

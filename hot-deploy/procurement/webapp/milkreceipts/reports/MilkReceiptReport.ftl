@@ -104,14 +104,14 @@ function appendParams(formName, action) {
           		</td>
           	</form>  	   
          </tr>   
-         <tr class="alternate-row"> 
+   <#-->      <tr class="alternate-row"> 
 				<form id="MilkIncommingReport" name="MilkIncommingReport" mothed="post" action="<@ofbizUrl>MilkIncommingReport.pdf</@ofbizUrl>" target="_blank">
 				   <td>Milk Incoming Report</td>
 				   <td>Party Id<input type="text" id="partyId"name="partyId">
                           dc No<input type="text" id="dcNo"name="dcNo">
 				               <input type="submit" value="Download" class="buttontext"></td>
 			 </form>
-		  </tr>
+		  </tr>   -->
           <tr class="alternate-row"> 		
 			  <form id="MilkAnalysisReportTxt" name="MilkAnalysisReportTxt" mothed="post" action="<@ofbizUrl>MilkAnalysisReport.txt</@ofbizUrl>">
 			     <td> Dispatch Milk Analysis Report</td>
