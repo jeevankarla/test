@@ -242,6 +242,8 @@
    <ProductFacility facilityId="DF1" productId="224" capacity="500000"/>
    
    
+   <StatusValidChange statusId="PRUN_RUNNING" statusIdTo="PRUN_CANCELLED" transitionName="Cancelled"/>
+   <StatusValidChange statusId="PRUN_COMPLETED" statusIdTo="PRUN_CANCELLED" transitionName="Cancelled"/>
    
    
    
