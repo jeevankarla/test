@@ -91,7 +91,6 @@
 	var grid3;
 	var data2 = ${StringUtil.wrapString(additionalChargesJSON)!'[]'};
 	var data3;
-	//var dropDownOption = "RTN_DEFECTIVE_ITEM , RTN_NOT_WANT";
 	var productLabelIdGrid1;
 	var productIdLabelGrid1;
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
@@ -102,6 +101,8 @@
     var workEffortObj= ${StringUtil.wrapString(workEffortObj)!'[]'};
     var facilityWorkEffObj=${StringUtil.wrapString(facilityWorkEffObj)!'[]'};
     var availFacTagsGrid2 = [];
+	var facIdLabelGrid1;
+	var facLabelIdGrid1;
 	var facIdLabelGrid2;
 	var facLabelIdGrid2;
 	var availFacTagsGrid3 = [];
@@ -309,10 +310,25 @@
     function issueProductFormatter(row, cell, value, columnDef, dataContext) {
     	return productIdLabelGrid1[value];
     }
+	function issueFacilityFormatter(row, cell, value, columnDef, dataContext){
+		if(value){
+			if(facLabelIdGrid1 && facLabelIdGrid1[value]){
+				var entryVal = facLabelIdGrid1[value];
+				data[row]['issueFacilityId'] = entryVal;
+				return facLabelIdGrid1[value];
+			}
+			if(facIdLabelGrid1 && facIdLabelGrid1[value]){
+				return facIdLabelGrid1[value];
+			}
+		}
+		return "";
+	}
 	
 	function facilityFormatter(row, cell, value, columnDef, dataContext) {
 		if(value){
 			if(facLabelIdGrid2 && facLabelIdGrid2[value]){
+				var entryVal = facLabelIdGrid2[value];
+				data2[row]['toFacilityId'] = entryVal;
 				return facLabelIdGrid2[value];
 			}
 			if(facIdLabelGrid2 && facIdLabelGrid2[value]){
@@ -323,9 +339,9 @@
     }
 	function returnFacilityFormatter(row, cell, value, columnDef, dataContext) {
 		if(value){
-			if(facLabelIdGrid3 && facLabelIdGrid3[value]){
+			/*if(facLabelIdGrid3 && facLabelIdGrid3[value]){
 				return facLabelIdGrid3[value];
-			}
+			}*/
 			if(facIdLabelGrid3 && facIdLabelGrid3[value]){
 				return facIdLabelGrid3[value];
 			}
@@ -392,7 +408,7 @@
 					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, cssClass:"cell-title", regexMatcher:"contains", availableTags: availProdTagsGrid1, editor: AutoCompleteEditor,formatter: issueProductFormatter, sortable:false, toolTip:""},
 					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter,validator: quantityValidator, sortable:false},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
-					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor, sortable:false},
+					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor,formatter: issueFacilityFormatter, sortable:false},
 					{id:"inventoryAvl", name:"Available Stock", field:"inventoryAvl", width:140, minWidth:140, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, focusable :false, sortable:false}
 			];
 			
@@ -524,6 +540,8 @@
 					var prodDetMap = {};
 					prodDetMap = productDetails[prod];
 					availFacilityTagsGrid1 = prodDetMap['productFacilityJSON'];
+					facIdLabelGrid1 = prodDetMap['facilityIdLabelJSON'];
+					facLabelIdGrid1 = prodDetMap['facilityLabelIdJSON'];
 					var setData = grid.getColumns();
 					setData[3].availableTags = availFacilityTagsGrid1;
 					grid.setColumns(setData);
