@@ -90,8 +90,8 @@ shiftDateTimeEnd=null;
 
 String thruDate = null;
 String hideSearch = parameters.hideSearch;
-searchMilkList=[];
 milkDetailslist=[];
+milkTransferDetailsList=[];
 if(UtilValidate.isNotEmpty(parameters.shiftId)){
 	shiftType = parameters.shiftId;
 }
@@ -122,10 +122,9 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
     conditionList.add(EntityCondition.makeCondition([
 			EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS,null),
-			EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"VEHICLE_OUT")], EntityOperator.OR));
+			EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS,"MR_VEHICLE_OUT")], EntityOperator.OR));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	milkDetailslist = delegator.findList("MilkTransferAndItemVehicleTripStatus",condition,null,UtilMisc.toList("-createdDate"),null,false);
-	
+	milkTransferDetailsList = delegator.findList("MilkTransferAndItemVehicleTripStatus",condition,null,UtilMisc.toList("-createdDate"),null,false);
 }
 sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 String toDate=null;
@@ -148,7 +147,7 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 	  condList.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
 	  condList.add(EntityCondition.makeCondition("estimatedStartDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
 	  cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	  shiftList = EntityUtil.filterByCondition(milkDetailslist, cond);
+	  shiftList = EntityUtil.filterByCondition(milkTransferDetailsList, cond);
 	  shiftList.each{eachShift->
 		  shiftsMap=[:];
 		  shiftsMap.put("milkTransferId",eachShift.milkTransferId);
@@ -165,7 +164,7 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  shiftsMap.put("containerId",eachShift.vehicleId);
 		  shiftsMap.put("statusId",eachShift.statusId);
 		  
-		  searchMilkList.add(shiftsMap);
+		  milkDetailslist.add(shiftsMap);
 		  
 	  }
 }
@@ -204,6 +203,6 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 		}	
 	}
 }
-context.searchMilkList=searchMilkList;
+context.milkDetailslist=milkDetailslist;
 
 

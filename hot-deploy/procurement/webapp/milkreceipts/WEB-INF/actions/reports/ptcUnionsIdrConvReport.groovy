@@ -131,7 +131,7 @@ if(UtilValidate.isNotEmpty(unions)){
 						 idrTempMap.putAt("quantity", idrTempMap.get("quantity") + receivedQuantity);
 						 idrTempMap.putAt("kgFat", idrTempMap.get("kgFat") + receivedKgFat);
 						 idrTempMap.putAt("kgSnf", idrTempMap.get("kgSnf") + receivedKgSnf);
-						 IssuedSiloMap.put(productId, idrTempMap);
+						 idrProductsMap.put(productId, idrTempMap);
 						}
 				}else if(("CONVERSION".equalsIgnoreCase(purposeTypeId)) && UtilValidate.isNotEmpty(purposeTypeId)){
 					if(UtilValidate.isEmpty(convProductsMap) || (UtilValidate.isNotEmpty(convProductsMap) && UtilValidate.isEmpty(convProductsMap.get(productId)))){

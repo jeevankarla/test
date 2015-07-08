@@ -695,6 +695,7 @@
 		<alias name="productId" entity-alias="MT"/>
 		<alias name="partyId" entity-alias="MT"/>
 		<alias name="partyIdTo" entity-alias="MT"/>
+		<alias name="driverName" entity-alias="MT"/>
 		<alias name="receiveDate" entity-alias="MT"/>
 		<alias name="containerId" entity-alias="MT"/>
 		<alias name="grossWeight" entity-alias="MT"/>

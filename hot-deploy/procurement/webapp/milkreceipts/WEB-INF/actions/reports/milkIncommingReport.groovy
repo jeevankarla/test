@@ -39,7 +39,7 @@ import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 import org.ofbiz.party.party.PartyHelper;
 
-milkIncomeDate = parameters.milkIncomeDate;
+/*milkIncomeDate = parameters.milkIncomeDate;
 partyId = parameters.partyId;
 dcNo = parameters.dcNo;
 if(UtilValidate.isEmpty(partyId)){
@@ -51,71 +51,81 @@ if(UtilValidate.isEmpty(dcNo)){
 	Debug.logError("dcNo Cannot Be Empty","");
 	context.errorMessage = "dcNo Cannot Be Empty, Please Enter Dc No";
 	return;
-}
+}*/
+milkTransferId=parameters.milkTransferId;
 milkTransferMap=[:];
 conditionList =[];
+partyId=null;
+if(UtilValidate.isNotEmpty(milkTransferId)){
+	context.milkTransferId=milkTransferId;	
 
-if(UtilValidate.isNotEmpty(partyId) && UtilValidate.isNotEmpty(dcNo)){
-	context.dcNo=dcNo;	context.partyId=partyId;
-
-	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-	conditionList.add(EntityCondition.makeCondition("dcNo", EntityOperator.EQUALS, dcNo));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
+	conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS, milkTransferId));
+	//conditionList.add(EntityCondition.makeCondition("dcNo", EntityOperator.EQUALS, dcNo));
+	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	
 	MilkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
-	if(UtilValidate.isNotEmpty(MilkTransferList)){
 	MilkTransferList=EntityUtil.getFirst(MilkTransferList);
-	containerId=MilkTransferList.containerId;
-	sendDate=MilkTransferList.sendDate;
-	receiveDate=MilkTransferList.receiveDate;
-	sendTime=MilkTransferList.sendTime;
-	ackTime=MilkTransferList.ackTime;
 	
-	sendQtyKgs=MilkTransferList.quantity;
-	receivedQuantity=MilkTransferList.receivedQuantity;
-	grossWeight	=MilkTransferList.grossWeight;
-	tareWeight	=MilkTransferList.tareWeight;
-	milkTransferId	=MilkTransferList.milkTransferId;
-	partyId	=MilkTransferList.partyId;
-	receivedProductId=MilkTransferList.receivedProductId;
-	sendProductId=MilkTransferList.sendProductId;
-	receivedProductId=MilkTransferList.receivedProductId;
-	sendTemparature=MilkTransferList.sendTemparature;
-	receivedTemparature=MilkTransferList.receivedTemparature;
-	sendAcidity	=MilkTransferList.sendAcidity;
-	receivedAcidity=MilkTransferList.receivedAcidity;
-	sendLR=MilkTransferList.sendLR;
-	receivedLR=MilkTransferList.receivedLR;
-	fat=MilkTransferList.fat;
-	receivedFat=MilkTransferList.receivedFat;
-	snf	=MilkTransferList.snf;
-	receivedSnf	=MilkTransferList.receivedSnf;
-	
-	milkTransferMap.put("containerId", containerId);
-	milkTransferMap.put("sendDate", sendDate);
-	milkTransferMap.put("receiveDate", receiveDate);
-	milkTransferMap.put("sendTime", sendTime);
-	milkTransferMap.put("ackTime", ackTime);
-	milkTransferMap.put("sendQtyKgs", sendQtyKgs);
-	milkTransferMap.put("receivedQuantity", receivedQuantity);
-	milkTransferMap.put("grossWeight", grossWeight);
-	milkTransferMap.put("tareWeight", tareWeight);
-	milkTransferMap.put("milkTransferId", milkTransferId);
-	milkTransferMap.put("receivedProductId", receivedProductId);
-	milkTransferMap.put("sendProductId", sendProductId);
-	milkTransferMap.put("receivedProductId", receivedProductId);
-	milkTransferMap.put("sendTemparature", sendTemparature);
-	milkTransferMap.put("receivedTemparature", receivedTemparature);
-	milkTransferMap.put("sendAcidity", sendAcidity);
-	milkTransferMap.put("receivedAcidity", receivedAcidity);
-	milkTransferMap.put("sendLR", sendLR);
-	milkTransferMap.put("receivedLR", receivedLR);
-	milkTransferMap.put("fat", fat);
-	milkTransferMap.put("snf", snf);
-	milkTransferMap.put("receivedFat", receivedFat);
-	milkTransferMap.put("receivedSnf", receivedSnf);
-	  }
+	if(UtilValidate.isNotEmpty(MilkTransferList.tareWeight)){
+		containerId=MilkTransferList.containerId;
+		sendDate=MilkTransferList.sendDate;
+		receiveDate=MilkTransferList.receiveDate;
+		sendTime=MilkTransferList.sendTime;
+		ackTime=MilkTransferList.ackTime;
+		dcNo=MilkTransferList.dcNo;
+		context.dcNo=dcNo;
+		
+		sendQtyKgs=MilkTransferList.quantity;
+		receivedQuantity=MilkTransferList.receivedQuantity;
+		grossWeight	=MilkTransferList.grossWeight;
+		tareWeight	=MilkTransferList.tareWeight;
+		milkTransferId	=MilkTransferList.milkTransferId;
+		partyId	=MilkTransferList.partyId;
+		receivedProductId=MilkTransferList.receivedProductId;
+		sendProductId=MilkTransferList.sendProductId;
+		receivedProductId=MilkTransferList.receivedProductId;
+		sendTemparature=MilkTransferList.sendTemparature;
+		receivedTemparature=MilkTransferList.receivedTemparature;
+		sendAcidity	=MilkTransferList.sendAcidity;
+		receivedAcidity=MilkTransferList.receivedAcidity;
+		sendLR=MilkTransferList.sendLR;
+		receivedLR=MilkTransferList.receivedLR;
+		fat=MilkTransferList.fat;
+		receivedFat=MilkTransferList.receivedFat;
+		snf	=MilkTransferList.snf;
+		receivedSnf	=MilkTransferList.receivedSnf;
+		driverName =MilkTransferList.driverName;
+		
+		milkTransferMap.put("driverName", driverName);
+		milkTransferMap.put("containerId", containerId);
+		milkTransferMap.put("sendDate", sendDate);
+		milkTransferMap.put("receiveDate", receiveDate);
+		milkTransferMap.put("sendTime", sendTime);
+		milkTransferMap.put("ackTime", ackTime);
+		milkTransferMap.put("sendQtyKgs", sendQtyKgs);
+		milkTransferMap.put("receivedQuantity", receivedQuantity);
+		milkTransferMap.put("grossWeight", grossWeight);
+		milkTransferMap.put("tareWeight", tareWeight);
+		milkTransferMap.put("milkTransferId", milkTransferId);
+		milkTransferMap.put("receivedProductId", receivedProductId);
+		milkTransferMap.put("sendProductId", sendProductId);
+		milkTransferMap.put("receivedProductId", receivedProductId);
+		milkTransferMap.put("sendTemparature", sendTemparature);
+		milkTransferMap.put("receivedTemparature", receivedTemparature);
+		milkTransferMap.put("sendAcidity", sendAcidity);
+		milkTransferMap.put("receivedAcidity", receivedAcidity);
+		milkTransferMap.put("sendLR", sendLR);
+		milkTransferMap.put("receivedLR", receivedLR);
+		milkTransferMap.put("fat", fat);
+		milkTransferMap.put("snf", snf);
+		milkTransferMap.put("receivedFat", receivedFat);
+		milkTransferMap.put("receivedSnf", receivedSnf);
+	}else{
+		Debug.logError("Tare weight Cannot Be Empty","");
+		context.errorMessage = " Please Enter Tare Weight Details";
+		return;
+	}
 	partyDetailsMap=[:]
 	if(UtilValidate.isNotEmpty(partyId)){
 		
@@ -162,5 +172,6 @@ if(UtilValidate.isNotEmpty(partyId) && UtilValidate.isNotEmpty(dcNo)){
 	}
 	
 	context.partyDetailsMap=partyDetailsMap;
-	context.milkTransferMap=milkTransferMap;
+	
 }
+context.milkTransferMap=milkTransferMap;
