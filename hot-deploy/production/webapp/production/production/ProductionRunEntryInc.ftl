@@ -556,9 +556,7 @@
 					var prodDetMap = {};
 					prodDetMap = productDetails[prod];
 					var productInventoryMap = prodDetMap['facilityInventoryJSON'];
-					var facilityName = data[args.row]["issueFacilityId"];
-					var facilityLabelIdJSON = prodDetMap['facilityLabelIdJSON'];
-					var facilityId = facilityLabelIdJSON[facilityName];
+					var facilityId = data[args.row]['issueFacilityId'];
 					data[args.row]['inventoryAvl'] = productInventoryMap[facilityId];
 					data[args.row]["issueFacilityId"] = facilityId;
 					
