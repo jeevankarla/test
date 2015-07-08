@@ -88,6 +88,6 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="dueDate"><date-find type="timestamp"/></field>
+		<field name="dueDate"><date-find type="timestamp" default-option-from="sameDay"/></field>
 	</form>
 </forms>
