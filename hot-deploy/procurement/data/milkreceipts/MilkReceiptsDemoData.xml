@@ -70,4 +70,47 @@
 				 
 	<Enumeration enumId="INTERNAL" enumCode="IDR" description="Internal Dairy Pupose" enumTypeId="MILK_PRCH_PURP" sequenceId="1"></Enumeration>
 	<Enumeration enumId="CONVERSION" enumCode="CONVERSION" description="Conversion Purpose" enumTypeId="MILK_PRCH_PURP" sequenceId="2"></Enumeration>
+		
+	<FacilityPartyRate partyId="MAN" facilityId="_NA_" 
+	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="154" 
+	rateCurrencyUomId="INR" rateTypeId="DISTANCE_FROM_MD" supplyTypeEnumId="_NA_" />
+	
+	<RateType rateTypeId="PTC_RATE" description="Ptc Rate"/>
+	<FacilityPartyRate partyId="MAN" facilityId="_NA_" acctgFormulaId="PTC_MAN"
+	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="0" 
+	rateCurrencyUomId="INR" rateTypeId="PTC_RATE" supplyTypeEnumId="_NA_" />
+	
+	<AcctgFormula acctgFormulaId="PTC_MAN"  description="PTC MAN " isSlabBased="Y"/>
+	<AcctgFormulaSlabs acctgFormulaId="PTC_MAN" slabStart="0" slabEnd="9270" formula="26.7*${DISTANCE}*${QUANTITYKGS}/${CAPACITY}" description="PTC CALCULATION FOR MAN"/>
+	<AcctgFormulaSlabs acctgFormulaId="PTC_MAN" slabStart="9271" slabEnd="99999" formula="28.3*${DISTANCE}*${QUANTITYKGS}/${CAPACITY}" description="PTC CALCULATION FOR MAN"/>
+	
+	<RoleType roleTypeId="CHILL_CENTER" hasTable="N" description="Chilling Center"/>
+	<PartyRole partyId="SAD" roleTypeId="CHILL_CENTER" fromDate ="2015-01-01 00:00:00" />
+	<PartyRole partyId="GOW" roleTypeId="CHILL_CENTER" fromDate ="2015-01-01 00:00:00" />
+	
+	<PartyRelationship partyIdFrom="KMU" partyIdTo="SAD" roleTypeIdFrom="UNION" roleTypeIdTo="CHILL_CENTER" fromDate="2015-01-01 00:00:00"/>
+	<PartyRelationship partyIdFrom="KMU" partyIdTo="GOW" roleTypeIdFrom="UNION" roleTypeIdTo="CHILL_CENTER" fromDate="2015-01-01 00:00:00"/>
+	
+	
+	<RateType rateTypeId="PTC_RATE" description="Ptc Rate"/>
+	<FacilityPartyRate partyId="SAD" facilityId="_NA_" acctgFormulaId=""
+	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="0.40" 
+	rateCurrencyUomId="INR" rateTypeId="PTC_RATE" supplyTypeEnumId="_NA_" />
+	
+	
+	
+	<FacilityPartyRate partyId="KMU" facilityId="_NA_" acctgFormulaId=""
+	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="0.40" 
+	rateCurrencyUomId="INR" rateTypeId="PTC_RATE" supplyTypeEnumId="_NA_" />
+	
+	<FacilityPartyRate partyId="SAD" facilityId="_NA_" 
+	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="114" 
+	rateCurrencyUomId="INR" rateTypeId="DISTANCE_FROM_MD" supplyTypeEnumId="_NA_" />
+	<FacilityPartyRate partyId="GOW" facilityId="_NA_" 
+	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="120" 
+	rateCurrencyUomId="INR" rateTypeId="DISTANCE_FROM_MD" supplyTypeEnumId="_NA_" />
+	
+	
+	
+	
 </entity-engine-xml>

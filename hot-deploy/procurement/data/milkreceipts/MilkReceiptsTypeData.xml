@@ -66,6 +66,7 @@
     <RoleType createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" description="Transport Booth" hasTable="N" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PTC_VEHICLE"/>
    
    <RateType rateTypeId="DISTANCE_FROM_MD" description="Distance from MDKMF"/>
+   <RateType rateTypeId="PTC_RATE" description="Ptc Rate"/>
    <RateType rateTypeId="TANKER_RATE" description="MilkTanker Rate"/>
    <PartyRate rateTypeId="DISTANCE_FROM_MD" partyId="MAN" fromDate="2014-03-01 00:00:00" rateAmount="154"/>
    <VehicleRate vehicleId="KA01B6711" rateTypeId="TANKER_RATE" rateAmount ="28.300" fromDate = "2015-03-01 00:00:00" rateCurrencyUomId="INR"/>

@@ -905,9 +905,11 @@ public class ProcurementNetworkServices {
 		  /* 
      	  * formula for calculate total solids using lr,fat% 
      	  * snf = lactoReading/4+0.21*fat+0.364
+     	  * For kmf snf = [(fat+lr)/4]+0.35
      	  */
 		  	BigDecimal snfQty = BigDecimal.ZERO;
-	    	snfQty = (lactoReading.divide(new BigDecimal(4),5,4)).add((fatQty.multiply(new BigDecimal(0.21)))).add(new BigDecimal(0.36)).setScale(2,BigDecimal.ROUND_HALF_UP);
+	    	//snfQty = (lactoReading.divide(new BigDecimal(4),5,4)).add((fatQty.multiply(new BigDecimal(0.21)))).add(new BigDecimal(0.36)).setScale(2,BigDecimal.ROUND_HALF_UP);
+		  	snfQty = ((lactoReading.add(fatQty)).divide(new BigDecimal(4),5,4)).add(new BigDecimal(0.35));
 	    	return snfQty;
 	    }
 	// this  service  returns Snf value by evoluting Accounting Formula

@@ -2384,7 +2384,7 @@ public class MilkReceiptServices {
 	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
-	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
+	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isNotEmpty(milkTransferId)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
 	 			return resultMap;
@@ -2600,7 +2600,7 @@ public class MilkReceiptServices {
 				BigDecimal recdQty = BigDecimal.ZERO;
 				
 				if(UtilValidate.isNotEmpty(tareWeight) && UtilValidate.isNotEmpty(milkTransfer.get("dispatchWeight"))){
-					sendQty = ((BigDecimal)milkTransfer.get("dispatchWeight")).subtract(tareWeight);
+					sendQty = ((BigDecimal)milkTransfer.get("dispatchWeight"));
 					if(sendQty.compareTo(BigDecimal.ZERO)<0){
 						Debug.logError("Dispatch Weight is Wrong",module);
 						resultMap = ServiceUtil.returnError("DispatchWeight is Wrong");
@@ -3258,6 +3258,7 @@ public class MilkReceiptServices {
 			            
 						GenericValue milkTrans = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId",milkTransferId), false);
 						milkTrans.set("statusId", "MXF_APPROVED");
+						milkTrans.set("shipmentId",shipmentId);
 						milkTrans.store();
 			            
 					}else{

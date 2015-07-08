@@ -1123,5 +1123,16 @@ under the License.
           <attribute name="slabAmount" type="BigDecimal" mode="IN" optional="true"/>
         <override name="rateTypeId" optional="false"/>
     </service>
-    
+	<service name="createFacilityPartyRate" engine="java"
+        location="org.ofbiz.product.product.FacilityRateServices" invoke="createFacilityPartyRate">
+        <description>Create  Facility Party Rate Amount </description>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="rateTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="priceActionTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="threshold" mode="IN" type="BigDecimal" optional="true"/>                                              
+    </service>    
  </services>

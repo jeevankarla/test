@@ -295,10 +295,10 @@ function populateVehicleName(){
 		                         <td><span>Custom Time PeriodId</span></td><td>: 
 									<select name="customTimePeriodId" id="customTimePeriodId">
                                      <#if flag?has_content && flag=="Find">
-                                      <option></option>
+                                      	<option></option>
                                      </#if>
 									<#list customTimeList as timePeriod>				
-									<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}::${timePeriod.fromDate} - ${timePeriod.thruDate} </option>
+										<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate} - ${timePeriod.thruDate} </option>
 									</#list></select>	
 		                         </td>
                    			</tr>
