@@ -155,7 +155,11 @@
         <event type="java" path="in.vasista.vbiz.production.ProductionServices"  invoke="declareRoutingTaskMaterial" global-transaction="true"/>
         <response name="success" type="request" value="json"/>
     </request-map>
-    
+    <request-map uri="cancelNgProductionRun">
+        <security https="true" auth="true"/>
+        <event type="service" path=""  invoke="cancelNGProductionRun" global-transaction="true"/>
+        <response name="success" type="request" value="FindNgProductionRun"/>
+    </request-map>
     <request-map uri="changeRoutingTaskStatus">
         <security https="true" auth="true"/>
         <event type="service" path=""  invoke="changeRoutingTaskStatus" global-transaction="true"/>
