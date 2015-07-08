@@ -59,6 +59,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.GenericDelegator;
 
 
 
@@ -161,4 +162,126 @@ public class FacilityRateServices {
 		
 			
 	}
+	/**
+	 * 
+	 * @param dctx
+	 * @param context
+	 * @return
+	 */
+	public static Map<String, Object> createFacilityPartyRate(DispatchContext dctx, Map context) {
+		
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess("Booth discount updated successfully.");	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String facilityId = (String)context.get("facilityId");
+		String productId = (String)context.get("productId");
+		BigDecimal amount = (BigDecimal)context.get("amount");
+		String supplyTypeEnumId = (String)context.get("supplyTypeEnumId");
+		String partyId = (String)context.get("partyId");
+		String rateTypeId = (String)context.get("rateTypeId");
+		String priceActionTypeId = (String)context.get("priceActionTypeId");
+		BigDecimal threshold = (BigDecimal)context.get("threshold");
+		Timestamp fromDate = UtilDateTime.nowTimestamp();
+		if(UtilValidate.isNotEmpty(context.get("fromDate"))){
+			 fromDate = (Timestamp) context.get("fromDate");
+		}	
+		Timestamp dayStart = UtilDateTime.getDayStart(fromDate);
+		Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayStart, -1));
+		if(UtilValidate.isEmpty(productId)){
+			productId = "_NA_";
+		}
+		if(UtilValidate.isEmpty(facilityId)){
+			facilityId = "_NA_";
+		}
+		if(UtilValidate.isEmpty(supplyTypeEnumId)){
+			supplyTypeEnumId = "_NA_";
+		}
+		try{			
+			GenericValue facility =delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId),false);
+			if(UtilValidate.isNotEmpty(facility)){
+			if(!(facility.getString("facilityTypeId")).equals("BOOTH")){
+				Debug.logError(facilityId+"====is not a booth", module);    			
+	            return ServiceUtil.returnError(facilityId+"====is not a booth");
+				}
+			}else{
+				Debug.logError(facilityId+" ====is not a valid facilityId", module);
+				return ServiceUtil.returnError(facilityId+" is not a valid facilityId");
+			}
+			List condList = FastList.newInstance();
+		//	condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "RATE_HOUR"));
+			condList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
+			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, facility.getString("ownerPartyId")));	    	
+		//	condList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, "_NA_"));
+		//	condList.add(EntityCondition.makeCondition("emplPositionTypeId", EntityOperator.EQUALS, "_NA_"));	    	
+			/*if((facility.getString("categoryTypeEnum")).equals("VENDOR") ){
+				rateTypeId = "VENDOR_DEDUCTION";				
+			}else if((facility.getString("categoryTypeEnum")).equals("SO_INST") ){
+				rateTypeId = "SO_INST_MRGN";				
+			}else if((facility.getString("categoryTypeEnum")).equals("CR_INST") ){
+				rateTypeId = "CR_INST_MRGN";				
+			}else{
+				if(UtilValidate.isNotEmpty(facility.getString("categoryTypeEnum"))){
+						rateTypeId = facility.getString("categoryTypeEnum")+"_MRGN";
+				}else{
+					rateTypeId = "VENDOR_DEDUCTION";	
+				}
+			}*/
+			condList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+			condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+			EntityCondition condition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue> rateAmounts = delegator.findList("FacilityPartyRate", condition, null, null, null, false);
+			rateAmounts =EntityUtil.filterByDate(rateAmounts ,dayStart);
+			GenericValue rateAmount = EntityUtil.getFirst(rateAmounts);
+			if(UtilValidate.isNotEmpty(rateAmount)){
+				rateAmount.put("thruDate", previousDayEnd);
+				delegator.store(rateAmount);
+				// lets create new rate amount record for the Booth
+				rateAmount.put("thruDate", null);
+				rateAmount.put("fromDate", dayStart);
+				rateAmount.put("productId", productId);
+				rateAmount.put("facilityId", facilityId);
+				rateAmount.put("supplyTypeEnumId", supplyTypeEnumId);
+				rateAmount.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+				rateAmount.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+				rateAmount.put("rateAmount", amount);
+				delegator.createOrStore(rateAmount);
+			}else{
+				GenericValue newRateAmount = delegator.makeValue("FacilityPartyRate");				
+			//	newRateAmount.put("periodTypeId", "RATE_HOUR");
+				newRateAmount.put("rateCurrencyUomId", "INR");
+				if(UtilValidate.isEmpty(partyId)){
+				newRateAmount.put("partyId", facility.getString("ownerPartyId"));
+				}else{
+					newRateAmount.put("partyId", partyId);
+				}
+			//	newRateAmount.put("workEffortId", "_NA_");
+			//	newRateAmount.put("emplPositionTypeId", "_NA_");				
+				newRateAmount.put("rateTypeId", rateTypeId);
+				newRateAmount.put("priceActionTypeId", priceActionTypeId);
+				newRateAmount.put("threshold", threshold);
+				newRateAmount.put("fromDate", dayStart);
+				newRateAmount.put("productId", productId);
+				newRateAmount.put("facilityId", facilityId);
+				newRateAmount.put("supplyTypeEnumId", supplyTypeEnumId);
+				newRateAmount.put("rateAmount", amount);	
+				newRateAmount.put("createdDate",UtilDateTime.nowTimestamp());
+				newRateAmount.put("createdByUserLogin",userLogin.getString("userLoginId"));
+				newRateAmount.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+				newRateAmount.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+				delegator.create(newRateAmount);				
+			}	
+			condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, dayStart));
+			EntityCondition condition1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue> futureDaysRateAmounts = delegator.findList("FacilityPartyRate", condition1, null, null, null, false);
+			delegator.removeAll(futureDaysRateAmounts);
+		}catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError( e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		return result;
+	   }
 }

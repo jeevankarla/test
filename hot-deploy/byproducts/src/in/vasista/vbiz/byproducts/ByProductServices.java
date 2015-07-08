@@ -6725,4 +6725,123 @@ public class ByProductServices {
 		    }
 		        return result;
 		 }
+		 /**
+		  * 
+		  * @param dctx
+		  * @param context
+		  * @return
+		  */
+		 public static Map<String, Object> getFacilityPartyRate(DispatchContext dctx, Map context) {
+				
+				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> result = ServiceUtil.returnSuccess();
+				Locale locale = (Locale) context.get("locale");
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				
+				Timestamp fromDate = (Timestamp) context.get("fromDate");
+				if (UtilValidate.isEmpty(fromDate)) {
+					fromDate = UtilDateTime.nowTimestamp();
+			    }
+				
+				Timestamp dayStart = UtilDateTime.getDayStart(fromDate, TimeZone.getDefault(), locale);
+				
+				String partyId = (String) context.get("partyId");
+				String facilityId = (String) context.get("facilityId");
+				String productId = (String) context.get("productId");
+				String periodTypeId = (String) context.get("periodTypeId");
+				String rateTypeId = (String) context.get("rateTypeId");
+				String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
+				if(UtilValidate.isEmpty(productId)){
+					productId="_NA_";
+				}
+				if(UtilValidate.isEmpty(facilityId)){
+					facilityId="_NA_";
+				}
+				if(UtilValidate.isEmpty(rateCurrencyUomId)){
+					rateCurrencyUomId="INR";
+				}
+				GenericValue rateAmountEntry =null;
+				List<GenericValue> amountList = FastList.newInstance();
+				BigDecimal rateAmount = BigDecimal.ZERO;
+				try {
+					List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "_NA_"));
+					conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+					conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+					List<GenericValue> partyProdRateAmount = delegator.findList("FacilityPartyRate", condition , null, null, null, false);
+					amountList = EntityUtil.filterByDate(partyProdRateAmount, dayStart);
+					if(UtilValidate.isEmpty(amountList)){
+						conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "_NA_"));
+						conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+						conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+						conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+						EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+						List<GenericValue> facilityProdRateAmount = delegator.findList("FacilityPartyRate", cond, null, null, null, false);
+						amountList = EntityUtil.filterByDate(facilityProdRateAmount, dayStart);
+						if(UtilValidate.isEmpty(amountList)){
+							conditionList.clear();
+							conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "_NA_"));
+							conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+							conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "_NA_"));
+							conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+							conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+							EntityCondition partyCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+							List<GenericValue> partyRateAmount = delegator.findList("FacilityPartyRate", partyCond, null, null, null, false);
+							amountList = EntityUtil.filterByDate(partyRateAmount, dayStart);
+							if(UtilValidate.isEmpty(amountList)){
+								conditionList.clear();
+								conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "_NA_"));
+								conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "_NA_"));
+								conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+								conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+								conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+								EntityCondition facilityCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+								List<GenericValue> facilityRateAmount = delegator.findList("FacilityPartyRate", facilityCond, null, null, null, false);
+								amountList = EntityUtil.filterByDate(facilityRateAmount, dayStart);
+								if(UtilValidate.isEmpty(amountList)){
+									conditionList.clear();
+									conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+									conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+									conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "_NA_"));
+									conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+									conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+									EntityCondition facPartyCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+									List<GenericValue> facPartyRateAmount = delegator.findList("FacilityPartyRate", facPartyCond, null, null, null, false);
+									amountList = EntityUtil.filterByDate(facPartyRateAmount, dayStart);
+									if(UtilValidate.isEmpty(amountList)){
+										conditionList.clear();
+										conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+										conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+										conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+										conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+										conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+										EntityCondition allCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+										List<GenericValue> allParamRateAmount = delegator.findList("FacilityPartyRate", allCond, null, null, null, true);
+										amountList = EntityUtil.filterByDate(allParamRateAmount, dayStart);
+									}
+								}
+							}
+						}
+					}
+					if(UtilValidate.isNotEmpty(amountList)){
+						rateAmountEntry = EntityUtil.getFirst(amountList);
+						if(UtilValidate.isNotEmpty(rateAmountEntry.get("rateAmount"))){
+							rateAmount = rateAmountEntry.getBigDecimal("rateAmount");
+						}
+					}
+				} catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				}
+				result.put("rateAmount", rateAmount);
+				result.put("rateAmountEntry", rateAmountEntry);
+				return result;
+			}
+		 
 }

@@ -919,4 +919,17 @@
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
         <attribute name="kilometers" type="BigDecimal" mode="IN" optional="true"/>
     </service>
+    <service name="getFacilityPartyRate" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getFacilityPartyRate">
+        <description>Get Facility/Party Rate Amount</description>
+        <attribute name="rateAmount" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="rateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateAmountEntry" type="org.ofbiz.entity.GenericValue" optional="true" mode="OUT"/> 
+        <attribute name="thruDate" type="Timestamp" mode="OUT" optional="true"/>
+    </service>
 </services>

@@ -75,9 +75,11 @@ jQuery(document).ready(function() {
         			}
     				
     			}
+    			if(curentElName != "sealNumber"){
+    				next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
+        			next.focus();	
+    			}
     			
-    			next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
-    			next.focus();
     		}
     	}
     	

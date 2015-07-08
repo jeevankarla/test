@@ -861,7 +861,7 @@ import org.ofbiz.product.product.ProductEvents;
 						
 						masterResultMap = getPtcMasterList(dctx,inMap);
 						if(ServiceUtil.isError(masterResultMap)){
-							Debug.logError("Error while Preparing masterList ::",module);
+							Debug.logError("Error while Preparing masterList ::"+masterResultMap,module);
 							return ServiceUtil.returnError("Error while Preparing masterLis ::"+ServiceUtil.getErrorMessage(masterResultMap));
 						}
 						masterList.addAll((List)masterResultMap.get("masterList"));
@@ -937,6 +937,7 @@ import org.ofbiz.product.product.ProductEvents;
 					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 					conditionList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 					conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"INTERNAL"));
 					List<String> stausList = UtilMisc.toList("MXF_APPROVED");
 					stausList.add("MXF_RECD");
 					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,stausList));
@@ -1003,7 +1004,8 @@ import org.ofbiz.product.product.ProductEvents;
 			
 			public static Map<String, Object>  calculateTankerMarginRate(DispatchContext dctx, Map<String, ? extends Object> context)  {
 				
-		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		    	String unionId = "";
+				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 				Map<String, Object> result = ServiceUtil.returnSuccess();	
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1011,30 +1013,45 @@ import org.ofbiz.product.product.ProductEvents;
 				String partyId = (String) context.get("partyId");
 				String vehicleId = (String) context.get("vehicleId");
 				Timestamp priceDate = (Timestamp)context.get("priceDate");
-				
 				BigDecimal quantityKgs = (BigDecimal) context.get("quantityKgs");
 				BigDecimal quantityLtrs = (BigDecimal) context.get("quantityLtrs");
-				
-				
 				List<GenericValue> partyDetails = null;
 				List conditionList = FastList.newInstance();
+				Boolean hasRelation = false;
+				try{
+					List relationShipCondList = FastList.newInstance();
+					relationShipCondList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"UNION"));
+					relationShipCondList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyId));
+					EntityCondition relCondtion = EntityCondition.makeCondition(relationShipCondList);
+					List<GenericValue> relatedParties = delegator.findList("PartyRelationship", relCondtion, null, null, null, false);
+					List filterdParties = EntityUtil.filterByDate(relatedParties, priceDate);
+					if(UtilValidate.isNotEmpty(filterdParties)){
+						unionId = (String)(EntityUtil.getFirst(filterdParties)).get("partyIdFrom");
+						hasRelation = true;
+					}
+					
+				}catch(Exception e){
+					Debug.logError("Error while finding relationship with union:"+e,module);
+					return ServiceUtil.returnError("Error while finding relationship with union:"+e.getMessage());
+				}
 				try{
 					conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
 					conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
 					partyDetails = delegator.findList("PartyRoleAndPartyDetail",condition,null,null,null,false);
 					if(UtilValidate.isEmpty(partyDetails)){
-						Debug.logError("union not found for :"+partyId,module);
-						return ServiceUtil.returnError("union not found for "+partyId);
+						// checking it has any relation ship with union.If it has relation then we need to consider it 
+						if(!hasRelation){
+							Debug.logError("Relationship with union not found for :"+partyId,module);
+							return ServiceUtil.returnError("Relationship with union not found for "+partyId);
+						}
+						
 					}
 					
 				}catch(GenericEntityException e){
 					Debug.logError("Error while getting union details"+e,module);
 					return ServiceUtil.returnError("Error while getting union details");
 				}
-				
-				
-				
 				BigDecimal amount = BigDecimal.ZERO;
 				BigDecimal recoveryAmount = BigDecimal.ZERO;
 				//here we need to add  calculation logic 
@@ -1042,22 +1059,16 @@ import org.ofbiz.product.product.ProductEvents;
 				BigDecimal distance = BigDecimal.ZERO;
 				BigDecimal capacity = BigDecimal.ZERO;
 				BigDecimal rate = BigDecimal.ZERO;
+				Map inMap = FastMap.newInstance();
+				inMap.put("partyId", partyId);
+				inMap.put("userLogin", userLogin);
+				inMap.put("fromDate",priceDate);
 				try{
-					conditionList.clear();
-					conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
-					conditionList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS,"DISTANCE_FROM_MD"));
-					conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,priceDate));
-					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,priceDate)));
-					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
-					
-					List<GenericValue> distanceDetailsList = delegator.findList("PartyRate",condition,null,null,null,false);
-					GenericValue distanceDeails = EntityUtil.getFirst(distanceDetailsList);
-					if(UtilValidate.isEmpty(distanceDeails)){
-						Debug.logError("Distance not configured for :"+partyId,module);
-						return ServiceUtil.returnError("Distance not configured for : "+partyId);
-					}
-					distance = (BigDecimal)distanceDeails.get("rateAmount");
-				}catch(GenericEntityException e){
+					// here we are getting  distance 
+					inMap.put("rateTypeId", "DISTANCE_FROM_MD");
+					Map<String, Object> serviceResults = dispatcher.runSync("getFacilityPartyRate", inMap);
+					distance = (BigDecimal)serviceResults.get("rateAmount");
+				}catch(Exception e){
 					Debug.logError("Error while getting distance of the union :"+e,module);
 					return ServiceUtil.returnError("Error while getting distance of the union :"+partyId);
 				}
@@ -1066,59 +1077,64 @@ import org.ofbiz.product.product.ProductEvents;
 					if(UtilValidate.isNotEmpty(vehicleDeails) && UtilValidate.isNotEmpty(vehicleDeails.get("vehicleCapacity"))){
 						capacity = (BigDecimal)vehicleDeails.get("vehicleCapacity");
 					}
-				}catch(GenericEntityException e){
+				}catch(Exception e){
 					Debug.logError("Error while getting Capacity of vehicle :"+e,module);
 					return ServiceUtil.returnError("Error while getting Capacity of vehicle :"+vehicleId);
 				}
-				if(UtilValidate.isEmpty(distance) || (UtilValidate.isNotEmpty(distance) && distance.compareTo(BigDecimal.ZERO)<1)){
-					result.put("amount", amount);
-					return result;
-				}
 				
 				String acctgFormulaId = ""; 
-				// here we are getting vehicle Rate	
 				try{
-					conditionList.clear();
-					conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
-					conditionList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS,"TANKER_RATE"));
-					conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,priceDate));
-					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,priceDate)));
-					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
-					List<GenericValue> VehicleRateList = delegator.findList("VehicleRate",condition,null,null,null,false);
-					VehicleRateList = EntityUtil.filterByDate(VehicleRateList, priceDate);
+					//rateAmountEntry
+					inMap.put("rateTypeId", "PTC_RATE");
+					Map<String, Object> serviceResults = dispatcher.runSync("getFacilityPartyRate", inMap);
+					rate = (BigDecimal)serviceResults.get("rateAmount");
+					if(UtilValidate.isNotEmpty(serviceResults) && UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==0){
+						GenericValue VehicleRate = (GenericValue)serviceResults.get("rateAmountEntry");
+						if(UtilValidate.isNotEmpty(VehicleRate)){
+							rate = (BigDecimal)VehicleRate.get("rateAmount");
+							
+							if(UtilValidate.isNotEmpty(VehicleRate.get("acctgFormulaId")) ){
+								acctgFormulaId = (String)VehicleRate.get("acctgFormulaId");
+							}
+						}
+					}
 					
-					GenericValue VehicleRate = EntityUtil.getFirst(VehicleRateList);
-					if(UtilValidate.isEmpty(VehicleRate)){
-						Debug.logError("Vehicle rate not Configured  :"+vehicleId,module);
-						return ServiceUtil.returnError("Vehicle rate not configured  for :"+vehicleId);	
-					}
-					rate = (BigDecimal)VehicleRate.get("rateAmount");
-					if(UtilValidate.isNotEmpty(VehicleRate.get("acctgFormulaId")) ){
-						acctgFormulaId = (String)VehicleRate.get("acctgFormulaId");
-					}
-				}catch(GenericEntityException e){
-					Debug.logError("Error while getting distance of the union :"+e,module);
-					return ServiceUtil.returnError("Error while getting distance of the union :"+partyId);
+				}catch(Exception e){
+					Debug.logError("Error while getting rate of the union ::"+e,module);
+					return ServiceUtil.returnError("Error while getting rate of the union ::"+partyId);
 				}
 				
-				if(UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==1){
-					if(capacity.compareTo(BigDecimal.ZERO) == 1){
-						// formula is distance*ratePerKm* recdQtyKgs/capacity
+				if(UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==0 && UtilValidate.isEmpty(acctgFormulaId)){
+					inMap.put("rateTypeId", "PTC_RATE");
+					inMap.put("partyId", unionId);
+					try{
+						Map<String, Object> serviceResults = dispatcher.runSync("getFacilityPartyRate", inMap);
+						rate = (BigDecimal)serviceResults.get("rateAmount");
+						if(UtilValidate.isEmpty(rate) || (UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==0)){
+							GenericValue VehicleRate = (GenericValue)serviceResults.get("rateAmountEntry");
+							if(UtilValidate.isNotEmpty(VehicleRate)){
+								rate = (BigDecimal)VehicleRate.get("rateAmount");
+								if(UtilValidate.isNotEmpty(VehicleRate.get("acctgFormulaId")) ){
+									acctgFormulaId = (String)VehicleRate.get("acctgFormulaId");
+								}
+							}
+						}
 						
-						amount = ((distance.multiply(rate)).multiply((quantityKgs.divide(capacity,2,BigDecimal.ROUND_HALF_UP)))).setScale(2,BigDecimal.ROUND_HALF_UP);
-					}else{
-						Debug.logError ("Capacity is not defined for the Vehicle ::"+vehicleId,module);
-						return ServiceUtil.returnError("Capacity is not defined for the Vehicle ::"+vehicleId);
+					}catch(Exception e){
+						Debug.logError("Error while getting related Union Rate details ::"+e,module);
+						return ServiceUtil.returnError("Error while getting related Union Rate details ::"+e.getMessage());
+						
 					}
-					
+				}
+				if(UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==1){
+						// formula is rate*recdQtyKgs
+						amount = (rate.multiply(quantityKgs)).setScale(2,BigDecimal.ROUND_HALF_UP);
 				}else{
-					if(UtilValidate.isNotEmpty(acctgFormulaId)){
+					if(UtilValidate.isNotEmpty(acctgFormulaId) && UtilValidate.isNotEmpty(capacity) && capacity.compareTo(BigDecimal.ZERO)==1){
 						try{
-							String variableValues = "QUANTITYKGS="+quantityKgs+","+"QUANTITYLTRS="+quantityLtrs+","+"CAPACITY="+capacity+"DISTANCE"+distance+"RATE"+rate ;
-							
-							Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "acctgFormulaId",acctgFormulaId,"variableValues",variableValues);
+							String variableValues = "QUANTITYKGS="+quantityKgs+","+"QUANTITYLTRS="+quantityLtrs+","+"CAPACITY="+capacity+","+"DISTANCE="+distance+","+"RATE="+rate ;
+							Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin,"slabAmount",capacity, "acctgFormulaId",acctgFormulaId,"variableValues",variableValues);
 						  	Map<String, Object> rateResult = dispatcher.runSync("evaluateAccountFormula", input);
-						  	
 						  	if (ServiceUtil.isError(rateResult)) {
 			        			Debug.logError("unable to evaluate AccountFormula"+acctgFormulaId, module);	
 			                    return ServiceUtil.returnError("unable to evaluate AccountFormula"+acctgFormulaId);	
@@ -1129,14 +1145,15 @@ import org.ofbiz.product.product.ProductEvents;
 							Debug.logError("Error while evaluating Acctg Formula :"+e,module);
 							return ServiceUtil.returnError("Error while evaluating Acctg Formula :"+acctgFormulaId);
 						}
+					}else{
+						Debug.logError("Vehicle Capacity Not Found for :: "+vehicleId,module);
+						result = ServiceUtil.returnError("Vehicle Capacity Not Found for :: "+vehicleId);
+						
 					}
 				}
-				
-				
-				result.put("amount", amount);
+				result.put("amount", amount.setScale(2,BigDecimal.ROUND_HALF_UP));
 				return result;
 			}
-			
 			public static Map<String, Object> updateFineRecvoryWithBilling(DispatchContext dctx, Map<String, Object> context) {
 				List conditionList= FastList.newInstance(); 
 				LocalDispatcher dispatcher = dctx.getDispatcher();

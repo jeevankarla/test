@@ -5725,6 +5725,64 @@ under the License.
 	       <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
 	    </relation>  		 
     </entity>
+    <entity entity-name="FacilityPartyRate" package-name="org.ofbiz.product.facility">
+		<field name="partyId" type="id-ne" />
+		<field name="facilityId" type="id-ne" />
+		<field name="rateTypeId" type="id-ne" />
+		<field name="productId" type="id-ne" />
+		<field name="supplyTypeEnumId" type="id-ne" />
+		<field name="rateCurrencyUomId" type="id-ne" />			
+		<field name="acctgFormulaId" type="id"></field>
+		<field name="priceActionTypeId" type="id"></field>
+		<field name="threshold" type="fixed-point"></field>
+		<field name="uomId" type="id"></field>
+		<field name="fromDate" type="date-time">
+			<description>Describes when a rate amount will be valid. If null, valid immediately.</description>
+		</field>
+		<field name="thruDate" type="date-time">
+			<description>Describes when a rate amount will be valid untl. If null, valid indefinitly.</description>
+		</field>
+		<field name="rateAmount" type="fixed-point" />
+		<field name="createdDate" type="date-time"></field>
+	    <field name="createdByUserLogin" type="id-vlong"></field>
+	    <field name="lastModifiedDate" type="date-time"></field>
+	    <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+	    <prim-key field="partyId" />
+		<prim-key field="facilityId" />
+		<prim-key field="productId" />
+		<prim-key field="supplyTypeEnumId" />
+		<prim-key field="rateTypeId" />
+		<prim-key field="rateCurrencyUomId" />		
+		<prim-key field="fromDate" />
+		<relation type="one" fk-name="FP_RATE_PA"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="FP_RATE_FA"
+			rel-entity-name="Facility">
+			<key-map field-name="facilityId" />
+		</relation>
+		<relation type="one" fk-name="FP_RATE_RT"
+			rel-entity-name="RateType">
+			<key-map field-name="rateTypeId" />
+		</relation>
+		<relation type="one" fk-name="FP_RATE_PR"
+			rel-entity-name="Product">
+			<key-map field-name="productId" />
+		</relation>
+		<relation type="one" fk-name="FP_RATE_RCT"
+			rel-entity-name="Uom">
+			<key-map field-name="rateCurrencyUomId" rel-field-name="uomId" />
+		</relation>
+		<relation type="one" fk-name="FP_RATE_ACTFRL"
+			rel-entity-name="AcctgFormula">
+			<key-map field-name="acctgFormulaId" />
+		</relation>
+		<relation type="one" fk-name="FP_RATE_PATY"
+			rel-entity-name="ProductPriceActionType">
+			<key-map field-name="priceActionTypeId"  rel-field-name="productPriceActionTypeId"/>
+		</relation>	
+	</entity>
     
     <view-entity entity-name="FacilityAndProductStoreFacility"
           package-name="org.ofbiz.product.store" 
