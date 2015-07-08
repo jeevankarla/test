@@ -180,7 +180,7 @@
                 legend = new AmCharts.AmLegend();
                 legend.align = "center";
                 legend.markerType = "triangleUp";
-                legend.maxColumns = 1;
+                legend.maxColumns = 3;
                 legend.position = "top";
                 chartLegend.balloonText = "[[title]]<br><span style='font-size:14px'><b>[[value]]</b></span>";
                 
@@ -315,25 +315,25 @@
 	</div>
 </div>
 </div>
-<div class="full">
-	<#if categoryList?has_content>
+
+<#if categoryList?has_content>
+	<div class="full">
 		<div class="screenlet-title-bar">
      		<div class="grid-header" style="width:100%">
 				<center><label>Inventory Summary</label><center>
 			</div>
 	     </div>
 	
-	
 	     <div class="screenlet-body">
-	     	<div class="lefthalf">
-	     		<div id="summaryLegend" style="width: 100%; height: 250px;"></div>
-	     	</div>
-	     	<div class="righthalf">
-	     		<div id="chartMoveDiv" style="width: 100%; height: 250px;"></div>
-			</div>
+	     	<div id="chartMoveDiv" style="width: 100%; height: 250px;"></div>
 	     </div>
-	</#if>
-</div>
+	</div>
+	<div class="clear"></div>
+	<div class="full">
+	     <div id="summaryLegend" style="width: 100%; height: 250px;"></div>
+	</div>
+</#if>
+
 <div class="clear"></div>
 <div class="full">
 	<#if facilityFloorJSON?has_content>
