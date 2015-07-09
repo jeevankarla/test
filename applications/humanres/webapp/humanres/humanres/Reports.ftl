@@ -300,7 +300,7 @@ function setOrgPartyId() {
 										<td width="5%"><input type="hidden" name="partyIdFrom" class="commonPartyId"/> 
 										<td width="5%"><input type="hidden" name="departmentFlag"  value="department"/> 
 										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('DepartmentCadreRankingReport', '<@ofbizUrl>CadreRankingReport.pdf</@ofbizUrl>');" class="buttontext"/>
-										<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('DepartmentCadreRankingReport', '<@ofbizUrl>CadreRankingReport.csv</@ofbizUrl>');" class="buttontext"/></span></td>
+										<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('DepartmentCadreRankingReport', '<@ofbizUrl>DepartmentCadreRankingReport.csv</@ofbizUrl>');" class="buttontext"/></span></td>
 									</tr>
 								</table>
 							</form>
