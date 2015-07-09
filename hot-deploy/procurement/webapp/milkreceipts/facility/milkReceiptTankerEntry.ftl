@@ -963,7 +963,7 @@ function reloadingPage(){
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
 	      	<td valign = "middle" align="center">
 	      	<div class='tabletext h1'>
-	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
+	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
 	       
