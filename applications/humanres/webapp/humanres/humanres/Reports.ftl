@@ -86,6 +86,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ESIForm7fromDate","ESIForm7fromDate");
 		makeDatePicker("ESIForm7thruDate","ESIForm7thruDate");
 		makeDatePicker("GdrFromDate","GdrFromDate");
+		makeDatePicker("CadrefromDate","CadrefromDate");
+		makeDatePicker("CadrethruDate","CadrethruDate");
+		makeDatePicker("DepartmentCadrefromDate","DepartmentCadrefromDate");
+		makeDatePicker("DepartmentCadrethruDate","DepartmentCadrethruDate");
 		makeDatePicker("loanFromDate","loanFromDate");
 		makeDatePicker("loanThruDate","loanThruDate");
 		makeDatePicker("AttMyfromDate","AttMyfromDate");
@@ -258,6 +262,45 @@ function setOrgPartyId() {
 											</span>
 										</td>	
 										<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("CadreRankingReport.pdf")?exists) && (reportDetailsMap.get("CadreRankingReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("CadreRankingReport.pdf"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="CadreRankingReport" name="CadreRankingReport" mothed="post" action="<@ofbizUrl>CadreRankingReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>Cadre Ranking Report</span></td>
+										<td width="45%"><span class='h3'>
+												From Date<input  type="text" size="18pt" id="CadrefromDate"   name="CadrefromDate"/>
+												Thru Date<input  type="text" size="18pt" id="CadrethruDate"   name="CadrethruDate"/>
+											</span>
+										</td>
+										<td width="5%"><input type="hidden" name="partyIdFrom" class="commonPartyId"/> 
+										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('CadreRankingReport', '<@ofbizUrl>CadreRankingReport.pdf</@ofbizUrl>');" class="buttontext"/>
+										<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('CadreRankingReport', '<@ofbizUrl>CadreRankingReport.csv</@ofbizUrl>');" class="buttontext"/></span></td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("DepartmentCadreRankingReport.pdf")?exists) && (reportDetailsMap.get("DepartmentCadreRankingReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("DepartmentCadreRankingReport.pdf"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="DepartmentCadreRankingReport" name="DepartmentCadreRankingReport" mothed="post" action="<@ofbizUrl>CadreRankingReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>Department Cadre Ranking Report</span></td>
+										<td width="40%"><span class='h3'>
+												From Date<input  type="text" size="18pt" id="DepartmentCadrefromDate"   name="CadrefromDate"/>
+												Thru Date<input  type="text" size="18pt" id="DepartmentCadrethruDate"   name="CadrethruDate"/>
+											</span>
+										</td>
+										<td width="5%"><input type="hidden" name="partyIdFrom" class="commonPartyId"/> 
+										<td width="5%"><input type="hidden" name="departmentFlag"  value="department"/> 
+										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('DepartmentCadreRankingReport', '<@ofbizUrl>CadreRankingReport.pdf</@ofbizUrl>');" class="buttontext"/>
+										<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('DepartmentCadreRankingReport', '<@ofbizUrl>CadreRankingReport.csv</@ofbizUrl>');" class="buttontext"/></span></td>
 									</tr>
 								</table>
 							</form>
