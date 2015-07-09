@@ -252,14 +252,14 @@ public class ProductionServices {
 		            	if(UtilValidate.isNotEmpty(productionTrans.getBigDecimal("snfPercent"))){
 		            	snfPercent = productionTrans.getBigDecimal("snfPercent");
 		            	}
-		            	String returnId = productionTrans.getString("returnId");
-		             	if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) <= 0) && (UtilValidate.isEmpty(returnId))){
+		            	String inventoryTransferId = productionTrans.getString("inventoryTransferId");
+		             	if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) <= 0) && (UtilValidate.isEmpty(inventoryTransferId))){
 		             		issuedProductsMap.put("issuedProdId",productId);
 		             		issuedProductsMap.put("issuedQty",quantityOnHandDiff);
 		             		issuedProductsMap.put("fatPercent",fatPercent);
 		             		issuedProductsMap.put("snfPercent",snfPercent);
 		             		issuedProductsList.add(issuedProductsMap);
-		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(returnId))){
+		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(inventoryTransferId))){
 		                    String productBatchId = productionTrans.getString("productBatchId");
 		                 	if(UtilValidate.isNotEmpty(productBatchId)){
 		                    	List<GenericValue> productBatchSequence = delegator.findList("ProductBatchAndSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, productBatchId), null, UtilMisc.toList("sequenceId"), null, false);
@@ -280,7 +280,7 @@ public class ProductionServices {
 		          //production run Return Products Details
 	            	conditionList.clear();
 		            conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds));
-		            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "RETURN_XFER"));
+		            conditionList.add(EntityCondition.makeCondition("transferGroupTypeId", EntityOperator.EQUALS, "RETURN_XFER"));
 		            EntityCondition conditionForReturn = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	            	List<GenericValue> inventoryTransferGroup = delegator.findList("InventoryTransferGroup", conditionForReturn, null, null, null, false);
 	            	if(UtilValidate.isNotEmpty(inventoryTransferGroup)){
