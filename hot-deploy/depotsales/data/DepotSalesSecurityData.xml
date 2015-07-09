@@ -71,7 +71,9 @@
     <SecurityGroup description="Viewing the Reports TAB!" groupId="DEPOTSALES_REPORTS"/>
     <SecurityGroupPermission groupId="DEPOTSALES_REPORTS"  permissionId="DEPOTSALES_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_REPORTS_VIEW"/>
-
+	<SecurityGroupPermission groupId="DEPOTSALES_REPORTS"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_REPORTS"  permissionId="CATALOG_VIEW"/>
+     
     <SecurityPermission description="View Sale Variance" permissionId="DEPOTSALES_PUR_RTRNS"/>
     <SecurityGroup description="View and Edit of Purchases Returns!" groupId="DEPOTSALES_PUR_RTRNS"/>
     <SecurityGroupPermission groupId="DEPOTSALES_PUR_RTRNS"  permissionId="DEPOTSALES_PUR_RTRNS"/>
@@ -87,9 +89,40 @@
     <SecurityGroupPermission groupId="DEPOTSALES_STCK_PSTN"  permissionId="DEPOTSALES_STCK_PSTN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="DEPOTSALES_STCK_PSTN"/>
     
-    
-
-
+ 
+    <SecurityGroup description="DEPOTSALES Management Purchase Manager !" groupId="DEPOTSALES_MANAGER"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_SALE_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_GRECEIPTS_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_PORDER_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_PUR_RTRNS"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ACCOUNTING_TREASURER"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_PORDER_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_SALE_RTRN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_STCK_PSTN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_DELETE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ORDERMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ACCOUNTING_APINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ACCOUNTING_UPDATE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="ACCOUNTING_TREASURER"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_CREATE_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_EDIT_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_APPROVE_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_CANCEL_PO"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_RAISE_GRN"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="DEPOTSALES_RAISE_INVOICE"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="FGSSALE_SHIP_CANCEL"/>
+    <SecurityGroupPermission groupId="DEPOTSALES_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
+        
 <!-- PO PERMISSIONS  -->
 
 	<SecurityPermission description="Create Purchase Order" permissionId="DEPOTSALES_CREATE_PO"/>
