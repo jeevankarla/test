@@ -45,17 +45,17 @@ under the License.
 	     			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt">${partyGroup.groupName?if_exists}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="12pt"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
 	     			<fo:block text-align="right" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                                                                  DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>
-	     			<fo:block text-align="right" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                                                       PAGE: <fo:page-number/></fo:block>
+	     			<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                   <#if (parameters.departmentFlag)?has_content>DEPARTMENT WISE EMPLOYEE CADRE RANKING <#else>  CADRE WISE EMPLOYEE RANKING REPORT </#if>FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "MMMMM,yyyy"))?upper_case}       PAGE: <fo:page-number/></fo:block>
 	     			</fo:static-content>       	 	 	  	 	
 	     		 <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 	     			<fo:block font-family="Courier,monospace">
 	     				<fo:table>
 	     					<fo:table-column column-width="30pt"/>
 	     					<fo:table-column column-width="45pt"/>
-	     					<fo:table-column column-width="155pt"/>
+	     					<fo:table-column column-width="165pt"/>
 	     					<fo:table-column column-width="180pt"/>
 	       					<fo:table-column column-width="40pt"/>
-	       					<fo:table-column column-width="220pt"/>
+	       					<fo:table-column column-width="225pt"/>
 	       					<fo:table-body>
 	       						<fo:table-cell><fo:block text-align="center" font-size="13pt" font-weight="bold" border-style="solid">sNo</fo:block></fo:table-cell>
 	       						<fo:table-cell><fo:block text-align="center" font-size="13pt" font-weight="bold" border-style="solid">Empl</fo:block></fo:table-cell>
@@ -69,20 +69,22 @@ under the License.
            			<fo:block text-align="center">
            				<fo:table text-align="center">
            					<fo:table-column column-width="30pt"/>
-           					<fo:table-column column-width="45pt"/>
-	     					<fo:table-column column-width="155pt"/>
+	     					<fo:table-column column-width="45pt"/>
+	     					<fo:table-column column-width="165pt"/>
 	     					<fo:table-column column-width="180pt"/>
 	       					<fo:table-column column-width="40pt"/>
-	       					<fo:table-column column-width="220pt"/>
+	       					<fo:table-column column-width="225pt"/>
 	       					<fo:table-body>
+	       					<#assign sNo = 0>
 	       					<#list cadreEmployeeList as cadreEmployee>
+	       					<#assign sNo = sNo+1>
    								<fo:table-row>
-		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${cadreEmployee.get("sNo")?if_exists}</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${sNo}</fo:block></fo:table-cell>
 		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${cadreEmployee.get("partyId")?if_exists}</fo:block></fo:table-cell>
-		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${cadreEmployee.get("Name")?if_exists}</fo:block></fo:table-cell>
-		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${cadreEmployee.get("designation")?if_exists}</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">&#160;${cadreEmployee.get("Name")?if_exists}</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">&#160;${cadreEmployee.get("designation")?if_exists}</fo:block></fo:table-cell>
 		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${cadreEmployee.get("gradeLevel")?if_exists}</fo:block></fo:table-cell>
-   									<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${cadreEmployee.get("deptName")?if_exists}</fo:block></fo:table-cell>
+   									<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">&#160;${cadreEmployee.get("deptName")?if_exists}</fo:block></fo:table-cell>
 	       						</fo:table-row>
 			       			</#list>
 	       					</fo:table-body>

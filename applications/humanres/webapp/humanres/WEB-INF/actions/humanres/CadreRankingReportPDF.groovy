@@ -50,38 +50,25 @@ employementIds = [];
 partyIdsList = [];
 Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-if(parameters.departmentFlag){
-	employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-}else{
-	employeList = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-	if(UtilValidate.isNotEmpty(employeList)){
-		employeList.each{ partyId->
-			employementId = partyId;
-			tempMap =[:];
-			tempMap.employementId=employementId;
-			String paddedemployementId = String.format("%15s", employementId).replace(' ', '0');
-			tempMap.paddedemployementId=paddedemployementId;
-			partyIdsList.addAll(tempMap);
-		}
-	}
-	if(UtilValidate.isNotEmpty(partyIdsList)){
-		partyIdsList =UtilMisc.sortMaps(partyIdsList, UtilMisc.toList("paddedemployementId"));
-	}
-	partyIdsList.each{ party->
-		partyId=party.get("employementId");
-		employementIds.addAll(partyId);
-	}
-}
+employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 
 if(UtilValidate.isNotEmpty(employementIds)){
 	sNo = 0;
 	employementIds.each { partyId ->
 		sNo = sNo+1;
 		cadreMap = [:];
+		
 		partyDetails = delegator.findOne("Person",[ partyId : partyId ], false);
-		String partyName = partyDetails.get("nickname");
-		if(UtilValidate.isEmpty(partyName)){
-			partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		if(UtilValidate.isNotEmpty(partyDetails)){
+			String firstName = "";
+			String LastName = "";
+			if(UtilValidate.isNotEmpty(partyDetails.get("firstName"))){
+				firstName = partyDetails.get("firstName");
+			}
+			if(UtilValidate.isNotEmpty(partyDetails.get("lastName"))){
+				LastName = partyDetails.get("lastName");
+			}
+			partyName = firstName+LastName;
 		}else{
 			partyName  = "-";
 		}
@@ -120,13 +107,24 @@ if(UtilValidate.isNotEmpty(employementIds)){
 			designationId  = "-";
 			gradeLevel = 0;
 		}
-		cadreMap.put("sNo",sNo);
 		cadreMap.put("partyId",partyId);
 		cadreMap.put("Name",partyName);
 		cadreMap.put("designation",designationId);
+		String gradeSorting = String.format("%15s", gradeLevel).replace(' ', '0');
+		cadreMap.put("gradeSorting",gradeSorting);
 		cadreMap.put("gradeLevel",gradeLevel);
 		cadreMap.put("deptName",deptName);
 		cadreEmployeeList.addAll(cadreMap);
 	}
 }
-context.put("cadreEmployeeList",cadreEmployeeList);
+if(parameters.departmentFlag){
+	if(UtilValidate.isNotEmpty(cadreEmployeeList)){
+		cadreEmployeeList =UtilMisc.sortMaps(cadreEmployeeList, UtilMisc.toList("deptName"));
+	}
+	context.put("cadreEmployeeList",cadreEmployeeList);
+}else{
+	if(UtilValidate.isNotEmpty(cadreEmployeeList)){
+		cadreEmployeeList =UtilMisc.sortMaps(cadreEmployeeList, UtilMisc.toList("gradeSorting"));
+	}
+	context.put("cadreEmployeeList",cadreEmployeeList);
+}

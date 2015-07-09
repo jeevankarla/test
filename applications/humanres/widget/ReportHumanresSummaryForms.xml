@@ -218,7 +218,7 @@
 		<field name="Name" title="Name"><display/></field>
 		<field name="designation" title="Designation"><display/></field>
 		<field name="gradeLevel" title="Cadre"><display/></field>
-		<field name="deptName" title="Department"><display type="date"/></field>
+		<field name="deptName" title="Department"><display/></field>
 	</form>
 	<form name="EmployeeBankDetailsCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
