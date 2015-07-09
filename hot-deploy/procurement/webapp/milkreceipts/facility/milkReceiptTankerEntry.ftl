@@ -852,7 +852,7 @@ function reloadingPage(){
 					        	</tr>
 					        	<tr>
 	        						<td align='left' ><span class="h3">Seal Number</span></td>
-	        						<td><input  name="sealNumber"  size="12" class="onlyNumber" maxlength="4" type="text" id="sealNumber" autocomplete="off" required/>
+	        						<td><input  name="sealNumber"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
