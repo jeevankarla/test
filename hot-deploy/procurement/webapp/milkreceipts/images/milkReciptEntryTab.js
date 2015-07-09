@@ -75,11 +75,9 @@ jQuery(document).ready(function() {
         			}
     				
     			}
-    			if(curentElName != "sealNumber"){
-    				next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
-        			next.focus();	
-    			}
     			
+    			next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
+    			next.focus();
     		}
     	}
     	
@@ -105,7 +103,6 @@ $(function() {
     	return false;
 	});
     $('#rejectEntry').click (function (){
-    	$('[name=qcReject]').val('Y');
     	var confirmationFlag=false;
     	if(confirm('Dou u want to reject this Record?')){	
     		confirmationFlag=true;
@@ -113,11 +110,9 @@ $(function() {
     		confirmationFlag=false;
     	}	
     	if(confirmationFlag){
-    			doAction();	
+    		$('[name=qcReject]').val('Y');	
+    		doAction();	
     	}
-    	
-    	
-    	
     	return false;
 	});
 });

@@ -171,7 +171,10 @@ if(UtilValidate.isNotEmpty(vehicleIds)){
 				   Map tempPartyMap = FastMap.newInstance();
 				   tempPartyMap.putAll(abstractPartyMap.get(partyId));
 				   tempPartyMap.putAt("trips", tempPartyMap.get("trips") + 1);
-				   tempPartyMap.putAt("tQty", tempPartyMap.get("tQty") + receivedQuantity);
+				   if(UtilValidate.isNotEmpty(receivedQuantity)) {
+					   tempPartyMap.putAt("tQty", tempPartyMap.get("tQty") + receivedQuantity);
+				   }else
+			  	   tempPartyMap.putAt("tQty", tempPartyMap.get("tQty") + 0);
 				   tempPartyMap.putAt("tAmt", tempPartyMap.get("tAmt") + amount);
 				   abstractPartyMap.put(partyId, tempPartyMap);
 				   }

@@ -489,7 +489,7 @@ under the License.
 				<platform-specific>
 					<html>
 						<html-template
-							location="component://procurement/webapp/milkreceipts/reports/MilkIncommingReport.fo.ftl"></html-template>
+							location="component://procurement/webapp/milkreceipts/reports/milkIncommingReport.fo.ftl"></html-template>
 					</html>
 				</platform-specific>
 			</widgets>

@@ -37,15 +37,35 @@ if(facilityId){
 			inventoryTransMap.put("toFacilityId", eachIncommingTransfer.toFacilityId);
 			inventoryTransMap.put("statusId", eachIncommingTransfer.statusId);
 			inventoryTransMap.put("productId", eachIncommingTransfer.productId);
-			productQcTest = delegator.findList("ProductQcTest", EntityCondition.makeCondition([transferGroupId : eachIncommingTransfer.transferGroupId]), null, null, null, false);
-			   if(UtilValidate.isNotEmpty(productQcTest)){
-				 productQcTest = EntityUtil.getFirst(productQcTest);
-				 statusId=productQcTest.statusId;
-				 inventoryTransMap.put("qcStatusId",statusId);
-			}else{
-				inventoryTransMap.put("qcStatusId","QC_NOT_ACCEPT");
-			}
-			incommingTransfer.add(inventoryTransMap);
+
+			productCategoryIds=null;productTestCategory=[];productTestProdData=[];
+			productCategoryMember = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachIncommingTransfer.productId)  , null, null, null, false );
+			if(UtilValidate.isNotEmpty(productCategoryMember)){
+				productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoryMember, "productCategoryId", true);
+			 }
+			if(UtilValidate.isNotEmpty(productCategoryIds)){
+				productTestCategory = delegator.findList("ProductTestComponent",EntityCondition.makeCondition("productCategoryId", EntityOperator.IN , productCategoryIds)  , null, null, null, false );
+			 }
+			if(UtilValidate.isNotEmpty(eachIncommingTransfer.productId)){
+				productTestProdData = delegator.findList("ProductTestComponent",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachIncommingTransfer.productId)  , null, null, null, false );
+			 }
+			
+			if(UtilValidate.isNotEmpty(productTestProdData) || UtilValidate.isNotEmpty(productTestCategory)){
+					productQcTest = delegator.findList("ProductQcTest", EntityCondition.makeCondition([transferGroupId : eachIncommingTransfer.transferGroupId]), null, null, null, false);
+					if(UtilValidate.isNotEmpty(productQcTest)){
+						 productQcTest = EntityUtil.getFirst(productQcTest);
+						 statusId=productQcTest.statusId;
+						 inventoryTransMap.put("qcStatusId",statusId);
+					}else{
+						inventoryTransMap.put("qcStatusId","QC_NOT_ACCEPT");
+					}
+					incommingTransfer.add(inventoryTransMap);
+			 }else{
+				inventoryTransMap.put("qcStatusId","QC_ACCEPT");
+				incommingTransfer.add(inventoryTransMap);
+			 }
+			
+		
 		}
 	}
 

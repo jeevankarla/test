@@ -95,6 +95,7 @@ milkTransferDetailsList=[];
 if(UtilValidate.isNotEmpty(parameters.shiftId)){
 	shiftType = parameters.shiftId;
 }
+hideSearch = "N";
 if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	List conditionList=FastList.newInstance();
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
@@ -138,8 +139,8 @@ if(UtilValidate.isEmpty(shiftDate)){
 	shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
 }
 
-//nextDay = UtilDateTime.getNextDayStart(shiftDate);
-//nextDateTime = UtilDateTime.toDateString(nextDay,"yyyy-MM-dd");
+  nextDay = UtilDateTime.getNextDayStart(shiftDate);
+  nextDateTime = UtilDateTime.toDateString(nextDay,"yyyy-MM-dd");
 
 
 def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd){
@@ -163,7 +164,7 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  shiftsMap.put("receivedKgSnf",eachShift.receivedKgSnf);
 		  shiftsMap.put("containerId",eachShift.vehicleId);
 		  shiftsMap.put("statusId",eachShift.statusId);
-		  
+		  shiftsMap.put("purposeTypeId",eachShift.purposeTypeId);
 		  milkDetailslist.add(shiftsMap);
 		  
 	  }
@@ -177,13 +178,17 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 				eachShiftType = EntityUtil.getFirst(eachShiftType);
 				startTime=eachShiftType.startTime;
 				endTime=eachShiftType.endTime;
+				if(startTime>endTime){
+					shiftTimeStart = shiftDateTime +" "+startTime;
+					shiftTimeEnd = nextDateTime +" "+endTime
+				}else{
 				shiftTimeStart = shiftDateTime +" "+startTime;
 				shiftTimeEnd = shiftDateTime +" "+endTime;
+				}
 				shiftDateTimeStart= new java.sql.Timestamp(sdf1.parse(shiftTimeStart).getTime());
 				shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());
 			
 				getShiftWiseRecords(shiftDateTimeStart,shiftDateTimeEnd);
-			
 			}
 		}
 		
@@ -193,11 +198,16 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 			eachShiftType = EntityUtil.getFirst(eachShiftType);
 		    startTime=eachShiftType.startTime;
 			endTime=eachShiftType.endTime;
+			if(startTime>endTime){
+				shiftTimeStart = shiftDateTime +" "+startTime;
+				shiftTimeEnd = nextDateTime +" "+endTime
+			}else{
 			shiftTimeStart = shiftDateTime +" "+startTime;
 			shiftTimeEnd = shiftDateTime +" "+endTime;
+			}
 			shiftDateTimeStart= new java.sql.Timestamp(sdf1.parse(shiftTimeStart).getTime());
 			shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());
-		
+			
 			getShiftWiseRecords(shiftDateTimeStart,shiftDateTimeEnd);
 		
 		}	

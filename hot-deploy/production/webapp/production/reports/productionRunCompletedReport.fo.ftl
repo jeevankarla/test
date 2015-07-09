@@ -212,8 +212,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
             <fo:table-column column-width="100pt"/>
            	<fo:table-body>
            <#list qcComponentsList as qcComponents>
-             <fo:table-row >
-              <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt">${qcComponents.qcProductId?if_exists}</fo:block></fo:table-cell>       		
+           <#assign productQcTest = delegator.findOne("ProductQcTest", {"qcTestId" :qcComponents.qcTestId }, true)>
+            <fo:table-row >
+		     <#if productQcTest?has_content>
+            	 <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt">${productQcTest.productId?if_exists}</fo:block></fo:table-cell>       		
+		     </#if>
               <fo:table-cell ><fo:block text-align="left"   keep-together="always" font-size="12pt">${qcComponents.qcTestId?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">${qcComponents.sequenceNumber?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">${qcComponents.testComponent?if_exists}</fo:block></fo:table-cell>       		

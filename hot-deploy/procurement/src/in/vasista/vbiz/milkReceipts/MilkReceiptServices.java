@@ -2384,7 +2384,7 @@ public class MilkReceiptServices {
 	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
-	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isNotEmpty(milkTransferId)){
+	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
 	 			return resultMap;

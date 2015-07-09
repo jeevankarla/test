@@ -29,7 +29,7 @@ if(UtilValidate.isNotEmpty(vehicleTripStatus)){
 	productObj.put("partyId",vehicleProductDetails.partyId);
     vehicleTripStatus.each{eachVehicleStatus->
 	   JSONObject newVehicleObj = new JSONObject();
-	   String statusId =eachVehicleStatus.statusId;
+	   String statusId =eachVehicleStatus.vehicleTripStatusId;
 	   String statusEntryDate =eachVehicleStatus.estimatedStartDate;
 	   statusItem = delegator.findOne("StatusItem",["statusId":statusId],false);
 	   if(statusItem){
