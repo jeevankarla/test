@@ -218,7 +218,7 @@ String displayScreen = parameters.displayScreen;
 if(UtilValidate.isEmpty(displayScreen)){
 	displayScreen = context.displayScreen;
 }
-if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP")){
+if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP") || (displayScreen=="VEHICLE_QC")){
 	List conList = FastList.newInstance();
 	if(displayScreen=="VEHICLE_CIP"){
 		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_QC"));
@@ -226,6 +226,9 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") |
 	if(displayScreen=="VEHICLE_CIPNEW"){								 
 		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_UNLOAD"));
 	}	
+	if(displayScreen=="VEHICLE_QC"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_GRSWEIGHT"));
+	}
 	conList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
 	EntityCondition ecl = EntityCondition.makeCondition(conList,EntityOperator.AND);
 	List vehicleTripStatus = delegator.findList("VehicleTripStatus",ecl,UtilMisc.toSet("vehicleId","sequenceNum","statusId"),null,null,false);

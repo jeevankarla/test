@@ -92,7 +92,7 @@
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
-	if($('#displayScreen').val()=="VEHICLE_CIP"){
+	if(($('#displayScreen').val()=="VEHICLE_CIP") || ($('#displayScreen').val()=="VEHICLE_CIPNEW")){
 		dispatchDateFormat = $('#cipDate').datepicker( "option", "dateFormat" );
 		$('#cipDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
@@ -159,7 +159,7 @@ $(document).ready(function() {
  		$('#sendTime').attr("readonly","readonly");
  		makeDatePicker("testDate","fromDate");
  	}
- 	if($('#displayScreen').val()=="VEHICLE_CIP"){
+ 	if($('#displayScreen').val()=="VEHICLE_CIP" || $('#displayScreen').val()=="VEHICLE_CIPNEW"){
  		$('#dcNo').attr("readonly","readonly");	
  		makeDatePicker("cipDate","fromDate");
  	}
@@ -585,6 +585,10 @@ $( "#"+fromDateId ).datepicker({
 }
 function setVehicleId(selected){
 	var vehicleId = selected.value;
+	var check = confirm("Please Confirm The Vehicle No :"+vehicleId);
+	 if (check == false) {
+            return false;
+        }
      $("#DetailsDiv").show();
     $("#tankerNo").val(vehicleId);
      var selectedValue = vehicleId;
@@ -594,7 +598,7 @@ function setVehicleId(selected){
 }	
 function hideDiv(){
 	var displayScreen = $('[name="displayScreen"]').val()
- 	if((displayScreen == "VEHICLE_CIPNEW") || (displayScreen == "VEHICLE_CIP")){
+ 	if((displayScreen == "VEHICLE_CIPNEW") || (displayScreen == "VEHICLE_CIP") || (displayScreen == "VEHICLE_QC")){
 		$("#DetailsDiv").hide();
  	}
 }	
@@ -602,7 +606,7 @@ function reloadingPage(){
 	setTimeout("location.reload(true);", 2000);
 }
 </script>
-<#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP">
+<#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC">
 <div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;> 
 		<div class="grid-header h2" style="width:100%">
@@ -610,6 +614,8 @@ function reloadingPage(){
 			<label>VEHICLES WAITING FOR CIP</label>
 		<#elseif displayScreen == "VEHICLE_CIP">
    			<label>VEHICLES WAITING FOR UNLOAD</label>
+   		<#elseif displayScreen == "VEHICLE_QC">
+   			<label>VEHICLES WAITING FOR QC</label>	
         </#if>	
 		</div>
 	</div>
@@ -679,7 +685,7 @@ function reloadingPage(){
 	          			<table>
 	          				<tr>
 					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
-					        	    <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP">
+					        	    <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC">
 					        	    <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" readOnly /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
 					        	    <#else>
                                     <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td> 
@@ -846,7 +852,7 @@ function reloadingPage(){
 					        	</tr>
 					        	<tr>
 	        						<td align='left' ><span class="h3">Seal Number</span></td>
-	        						<td><input  name="sealNumber"  size="10" class="onlyNumber" maxlength="4" type="text" id="sealNumber" autocomplete="off" required/>
+	        						<td><input  name="sealNumber"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
@@ -899,11 +905,11 @@ function reloadingPage(){
 					        					<option value="NORMAL">NORMAL</option>
             									<option value="ABNORMAL">ABNORMAL</option>
           												</select></td>
-					        		<td align='left' ><span class="h3"> SedimentTest(+ve/-ve)</span> </td><td>
+					        		<td align='left' ><span class="h3"> SedimentTest</span> </td><td>
 					        		<select name="recdSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
 					        					<option value="">SELECT</option>
-					        					<option value="N">NEGITIVE</option>
-            									<option value="Y">POSITIVE</option>
+					        					<option value="N">ABSENT</option>
+            									<option value="Y">PRESENT</option>
           												</select></td>
 					        	</tr>
 						    </#if>
@@ -957,7 +963,7 @@ function reloadingPage(){
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
 	      	<td valign = "middle" align="center">
 	      	<div class='tabletext h1'>
-	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
+	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
 	       
