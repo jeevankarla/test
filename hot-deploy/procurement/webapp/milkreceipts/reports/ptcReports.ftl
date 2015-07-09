@@ -169,7 +169,7 @@
 							</td>
 	                        <td align='left' width="30%"><span class="h3">Vehicle No </span>
 					            <select name="vehicleId" id="vehicleId">
-						     <option value="">All</option>  
+						     <option value="all">All</option>  
                              <#list vehicleRoleList as vehicles>
 						     <option value='${vehicles.vehicleId?if_exists}' >${vehicles.vehicleId?if_exists}</option>
 						     </#list>
