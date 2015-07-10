@@ -24,10 +24,11 @@
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createPayGrade" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="payGradeId"><lookup target-form-name="LookupPayGrade"/></field>
+        <field name="payGradeId" title="Pay Grade ID"><lookup target-form-name="LookupPayGrade"/></field>
+        <field name="tenantId"><hidden/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListPayGrades" type="list" list-name="listIt" title="" target="updatePayGrade" paginate-target="FindPayGrade"
+    <form name="ListPayGrades" type="list" list-name="listIt" title="" target="updatePayGrade" paginate-target="FindPayGrades"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -38,13 +39,14 @@
             </service>
         </actions>
         <auto-fields-service default-field-type="display" service-name="updatePayGrade"/>
+        <field name="tenantId"><hidden/></field>
         <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="linktext">
             <hyperlink also-hidden="true" target="EditPayGrade" target-type="plain" description="${payGradeId}">
                 <parameter param-name="payGradeId"/>
             </hyperlink>
         </field>
         <field name="deleteLink" use-when="hasGlobalHREditPermission" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deletePayGrade" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deletePayGrades" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payGradeId"/>
             </hyperlink>
         </field>
@@ -59,44 +61,37 @@
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="EditPayGradeReadOnly" type="single" target="updatePayGrade" title=""
-        header-row-style="header-row" default-table-style="basic-table" default-map-name="payGrade">
-        <alt-target use-when="payGradeId==null" target="createPayGrade"/>
-        <auto-fields-service service-name="updatePayGrade"/>
-        <field name="payGradeId"><display/></field>
-        <field name="payGradeName" ><display/></field>
-        <field name="comments" ><display/></field>        
-    </form>    
-    <form name="ListSalarySteps" type="multi" target="updateSalaryStep?salaryStepSeqId=${salaryStepSeqId}&amp;payGradeId=${payGradeId}" paginate-target="findSalarySteps"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-one entity-name="SalaryStep" auto-field-map="true"/>
-            <entity-condition entity-name="SalaryStep"> <condition-expr field-name="payGradeId" operator="equals" from-field="payGradeId"/><order-by field-name="salaryStepSeqId"/></entity-condition>
-        </actions>
-        <auto-fields-service service-name="updateSalaryStep"/>
-        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display also-hidden="true"/></field>
-        <field name="payGradeId"><hidden/></field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
-            <hyperlink target="deleteSalaryStep" description="${uiLabelMap.CommonDelete}">
-                <parameter param-name="salaryStepSeqId"/>
-                <parameter param-name="payGradeId"/>
-            </hyperlink>
-        </field>
+    <form name="createNewPayGrade" type="single" target="createNewPayGrade" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="comments"><hidden value=" "/></field>
+        <field name="payGradeId" title="payGradeID" tooltip="${uiLabelMap.payGrade}"><text></text></field>
+        <field name="seqId" title="Seq Id"><text></text></field>
+        <field name="payGradeName" title="PayGrade Name" id-name="payGradeName" tooltip="${uiLabelMap.payGradeName}"><text></text></field>
+        <field name="payScale" title="Pay Scale"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>  
+    <form name="FindSalaryStep" type="single" target="FindSalaryStep"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="salaryStepSeqId"><lookup target-form-name="LookupSalaryStep"/></field>
+        <field name="payGradeId" title="Pay Grade ID"><lookup target-form-name="LookupPayGrade"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListSalaryStepsReadOnly" type="multi" target="updateSalaryStep?salaryStepSeqId=${salaryStepSeqId}&amp;payGradeId=${payGradeId}" paginate-target="findSalarySteps"
+    <form name="ListSalarySteps" list-name="salaryStepList" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-one entity-name="SalaryStep" auto-field-map="true"/>
-            <entity-condition entity-name="SalaryStep"> <condition-expr field-name="payGradeId" operator="equals" from-field="payGradeId"/><order-by field-name="salaryStepSeqId"/></entity-condition>
-        </actions>
-        <auto-fields-service service-name="updateSalaryStep"/>
-        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display also-hidden="true"/></field>
-        <field name="dateModified"><display/></field>
-        <field name="amount"><display/></field>        
-        <field name="payGradeId"><hidden/></field>
-    </form>    
+        <field name="salaryStepSeqId"><display></display></field>
+        <field name="payGradeId" title="Pay Grade ID"><display></display></field>
+        <field name="amount"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonEdit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="createNewSalaryStep" type="single" target="createSalaryStep"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createSalaryStep"/>
+        <field name="salaryStepSeqId"><ignored/></field>
+        <field name="payGradeId" title="Pay Grade ID"><lookup target-form-name="LookupPayGrade"/></field>
+        <field name="dateModified"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     <form name="AddSalaryStep" type="single" target="createSalaryStep"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createSalaryStep"/>

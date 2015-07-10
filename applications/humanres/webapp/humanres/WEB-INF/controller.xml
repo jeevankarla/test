@@ -567,6 +567,18 @@ under the License.
         <response name="success" type="view" value="EditPayGrade"/>
         <response name="error" type="view" value="EditPayGrade"/>
     </request-map>
+    <request-map uri="createNewPayGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createNewPayGrade"/>
+        <response name="success" type="view" value="EditPayGrade"/>
+        <response name="error" type="view" value="EditPayGrade"/>
+    </request-map>
+    <request-map uri="deletePayGrades">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePayGrade"/>
+        <response name="success" type="view" value="FindListPayGrades"/>
+        <response name="error" type="view" value="FindListPayGrades"/>
+    </request-map>
     <request-map uri="updatePayGrade">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePayGrade"/>
@@ -583,9 +595,13 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditSalarySteps"/>
     </request-map>
-    <request-map uri="findSalarySteps">
+    <request-map uri="FindSalaryStep">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditSalarySteps"/>
+    </request-map>
+    <request-map uri="createNewSalaryStep">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createNewSalaryStep"/>
     </request-map>
     <request-map uri="createSalaryStep">
         <security https="true" auth="true"/>
@@ -594,7 +610,7 @@ under the License.
     </request-map>
     <request-map uri="updateSalaryStep">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateSalaryStep"/>
+        <event type="service" invoke="updateSalaryStep"/>
         <response name="success" type="view" value="EditSalarySteps"/>
     </request-map>
     <request-map uri="deleteSalaryStep">
@@ -2582,7 +2598,9 @@ under the License.
     <view-map name="ListPayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListPayHistories"/>
      <view-map name="AddPayHistory" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AddPayHistory"/>
     <view-map name="PayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayHistories"/>
+    <view-map name="CreateNewPayGrades" type="screen" page="component://humanres/widget/PayGradeScreens.xml#CreateNewPayGrade"/>
     <view-map name="EditSalarySteps" type="screen" page="component://humanres/widget/PayGradeScreens.xml#EditSalarySteps"/>
+    <view-map name="createNewSalaryStep" type="screen" page="component://humanres/widget/PayGradeScreens.xml#createNewSalaryStep"/>
     <view-map name="EditUnemploymentClaims" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditUnemploymentClaims"/>
     <view-map name="EditAgreementEmploymentAppls" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditAgreementEmploymentAppls"/>
 	

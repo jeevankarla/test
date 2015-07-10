@@ -200,15 +200,17 @@
 		                            	<if-compare field="hasEmplEditPermission" operator="equals" value="true" type="Boolean"/>
 		                            </condition> 
 		                            <widgets>  
-		                             <container style="button-bar">
-                                             <link target="AddPayHistory" text="Add PayHistory"  style="buttontext create">
-                                       		      <parameter param-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
-								            	  <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
-								                  <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
-								                  <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
-								                  <parameter param-name="partyId" from-field="parameters.partyId"/>
-                                             </link>
-                                                </container>                  
+										<container style="button-bar">
+			                        		<link target="AddPayHistory" text="Add PayHistory" style="buttontext">
+			                        			<parameter param-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
+								            	<parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
+								             	<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+								              	<parameter param-name="partyIdTo" from-field="parameters.partyId"/>
+								               	<parameter param-name="partyId" from-field="parameters.partyId"/>
+								          	</link>
+			                        		<link target="FindPayGrades" text="Add PayGrade" style="buttontext"></link>
+			                        		<link target="EditSalarySteps" text="Add Salarystep" style="buttontext"></link>
+			                        	</container>
 		                        	</widgets> 
 		                        </section>                  
 		                        <screenlet title="${uiLabelMap.HumanResListPayHistories}">
