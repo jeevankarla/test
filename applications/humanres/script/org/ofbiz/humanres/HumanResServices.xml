@@ -398,6 +398,36 @@
         <create-value value-field="newEntity"/>
     </simple-method>
     
+    <simple-method method-name="createNewPayGrade" short-description="Create a Pay Grade">
+         <make-value entity-name="PayGrade" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+         <entity-one entity-name="PayGrade" value-field="payGrade" auto-field-map="true"/>
+         <if>
+             <condition>
+                   <if-compare-field field="payGrade.payGradeId" to-field="parameters.payGradeId" operator="equals"/>
+             </condition>
+             <then>
+                  <add-error>
+                     <fail-message message="PayGrade already exists."/>
+                  </add-error>
+                  <check-errors/>
+             </then>
+             <else>
+             	<if-not-empty field="parameters.payGradeId">
+ 		            <set field="newEntity.payGradeId" from-field="parameters.payGradeId"/>
+ 		        <else>
+ 		            <sequenced-id sequence-name="PayGrade" field="newEntity.payGradeId"/>
+ 		        </else>
+ 		        </if-not-empty>
+             	<field-to-result field="newEntity.payGradeId" result-name="payGradeId"/>
+                 <create-value value-field="newEntity"/>
+                 <set field="responseMessage" value="Created successfully."/>
+         		<field-to-result field="responseMessage" result-name="successMessage"/>
+             </else>
+         </if>
+    </simple-method>
+    
      <simple-method method-name="createDeductionType" short-description="Create a Deduction  Type">
         <make-value entity-name="DeductionType" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -491,13 +521,31 @@
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="createSalaryStep" short-description="Create a Salary Step">
+	<simple-method method-name="createSalaryStep" short-description="Create a Salary Step">
         <make-value entity-name="SalaryStep" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="SalaryStep" field="newEntity.salaryStepSeqId"/>
-        <field-to-result field="salaryStepSeqId" result-name="salaryStepSeqId"/>
-        <create-value value-field="newEntity"/>
+        <make-value entity-name="SalaryStep" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+        <entity-and entity-name="SalaryStep" list="SalarySteps">
+            <field-map field-name="payGradeId" from-field="parameters.payGradeId"/>
+            <field-map field-name="amount" from-field="parameters.amount"/>
+        </entity-and>
+        <if-empty field="SalarySteps">
+            <sequenced-id sequence-name="SalaryStep" field="newEntity.salaryStepSeqId"/>
+	        <field-to-result field="salaryStepSeqId" result-name="salaryStepSeqId"/>
+	        <create-value value-field="newEntity"/>
+	        <set field="responseMessage" value="Created successfully."/>
+        	<field-to-result field="responseMessage" result-name="successMessage"/>
+        <else>
+        	<add-error>
+               <fail-message message="PayGrade with this amount already exists"/>
+            </add-error>
+            <check-errors/>
+        </else>
+        </if-empty>
     </simple-method>
 
     <simple-method method-name="updateSalaryStep" short-description="Update Salary Step">

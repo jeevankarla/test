@@ -382,6 +382,13 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="payGradeName" optional="false"/>
     </service>
+    <service name="createNewPayGrade" engine="simple" default-entity-name="PayGrade"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createNewPayGrade" auth="true">
+        <description>Create a Pay Grade</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="payGradeName" optional="false"/>
+    </service>
     <service name="createBenefit" engine="simple" default-entity-name="BenefitType"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createBenefit" auth="true">
         <description>Create a Benefit</description>
@@ -519,15 +526,15 @@ under the License.emplpunch
     <service name="updateSalaryStep" engine="simple" default-entity-name="SalaryStep"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateSalaryStep" auth="true">
         <description>Update Salary Step</description>
-        <permission-service service-name="humanResManagerPermission" main-action="GLOBALHR_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="flag" mode="IN" type="String" optional="true"></attribute>
+       	<attribute name="flag" mode="OUT" type="String" optional="false"></attribute>
     </service>
 
     <service name="deleteSalaryStep" engine="simple" default-entity-name="SalaryStep"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteSalaryStep" auth="true">
         <description>Delete Salary Step</description>
-        <permission-service service-name="humanResManagerPermission" main-action="GLOBALHR_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 

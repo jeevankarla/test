@@ -669,9 +669,9 @@
         <menu-item name="EmplLeaveType" title="${uiLabelMap.HumanResEmplLeaveType}">
             <link target="EditEmplLeaveTypes"/>
         </menu-item>
-        <menu-item name="PayGrade" title="${uiLabelMap.HumanResPayGrade}">
-            <link target="FindPayGrades"/>
-        </menu-item>
+        <!-- <menu-item name="PayGrade" title="${uiLabelMap.HumanResPayGrade}">
+                <link target="FindPayGrades"/>
+        </menu-item> -->
         <menu-item name="FindEmplPositions" title="Employee Positions">    
         	<condition>
             	<if-has-permission permission="HR"  action="_EMPLPOSITION_VIEW"/>

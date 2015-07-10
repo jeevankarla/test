@@ -216,6 +216,9 @@
         <field name="salaryStepSeqId" tooltip="${uiLabelMap.CommonRequired}" required-field="true" title="Salary Step"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time type="date"/></field>
         <field name="periodTypeId"><hidden/></field>
+        <field name="comments"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>
+        <field name="lastModifiedByUserLogin"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
         <sort-order>
         	<sort-field name="fromDate"/>
