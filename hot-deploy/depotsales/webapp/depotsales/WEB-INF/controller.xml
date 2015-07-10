@@ -432,6 +432,7 @@
     <request-map uri="FindFacilityPhysicalInventoryDepot">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityPhysicalInventoryDepot"/>
+        <response name="error" type="view" value="FindFacilityPhysicalInventoryDepot"/>
     </request-map>
       <request-map uri="finddepotPayments">
         <security https="true" auth="true"/>
