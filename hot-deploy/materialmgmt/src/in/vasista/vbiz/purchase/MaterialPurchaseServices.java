@@ -361,7 +361,7 @@ public class MaterialPurchaseServices {
 							BigDecimal maxQty=oldRecvdQty.add(quantity);
 							Debug.log("=orderQty=="+orderQty+"==checkQty="+checkQty+"==maxQty=="+maxQty+"==quantity="+quantity);
 							//if(quantity.compareTo(checkQty)>0){
-							if(UtilValidate.isEmpty(allowedGraterthanTheOrdered) || (UtilValidate.isNotEmpty(allowedGraterthanTheOrdered) && "N".equals(allowedGraterthanTheOrdered))){								
+							if(UtilValidate.isEmpty(allowedGraterthanTheOrdered) || (UtilValidate.isNotEmpty(allowedGraterthanTheOrdered) && "Y".equals(allowedGraterthanTheOrdered))){								
 								if(maxQty.compareTo(checkQty)>0){	
 									Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
 									request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
