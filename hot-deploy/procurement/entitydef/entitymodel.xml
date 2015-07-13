@@ -847,6 +847,7 @@
 		<field name="vehicleId" type="id-ne"></field>
 		<field name="statusId" type="id-ne"></field>
 		<field name="weightKgs" type="fixed-point"></field>
+		<field name="weighmentType" type="indicator"></field>
 		<field name="createdDate" type="date-time"></field>      
 		<prim-key field="weighmentId"/>
 		<relation type="one" fk-name="WBD_VID" rel-entity-name="Vehicle">
