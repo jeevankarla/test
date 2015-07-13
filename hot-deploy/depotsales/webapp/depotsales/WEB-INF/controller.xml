@@ -422,7 +422,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyFinHistory"/>
     </request-map>
-    <request-map uri="createPhysicalVariances">
+    <request-map uri="createPhysicalInventoryVariances">
         <security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="createPhysicalInventoryAndVariance"/>
         <response name="success" type="view" value="FindFacilityPhysicalInventoryDepot"/>
