@@ -527,7 +527,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListPhysicalInventoryDepot" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
+    <form name="ListPhysicalInventoryDepot" type="multi" list-name="physicalInventory" target="createPhysicalInventoryVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
        
         <field name="shipmentId" title="Shipment Id"><display/></field>
