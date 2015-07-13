@@ -39,6 +39,10 @@ if(facilityId){
 		
 		productInventory = EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
 		
+		productBatchIds = EntityUtil.getFieldListFromEntityList(productInventory, "productBatchId", true);
+		
+		productBatchSequence = delegator.findList("ProductBatchSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.IN, productBatchIds), null, null, null,false);
+		
 		inventoryTransMap=[:];
 		inventoryTransMap.put("facilityId", facilityId);
 		inventoryTransMap.put("productId", eachProd.productId);
@@ -46,9 +50,16 @@ if(facilityId){
 		atpTotal = BigDecimal.ZERO;
 		tempList = [];
 		productInventory.each{ prodInv ->
+			
+			productBatchNum = EntityUtil.filterByCondition(productBatchSequence, EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, prodInv.productBatchId));
+			
 			tempMap = [:];
 			tempMap.put("inventoryItemId", prodInv.inventoryItemId);
-			tempMap.put("batchNumber", prodInv.productBatchId);
+			tempMap.put("productBatchId", "");
+			if(productBatchNum && prodInv.productBatchId){
+				prodNum = EntityUtil.getFirst(productBatchNum);
+				tempMap.put("productBatchId", prodNum.sequenceId);
+			}
 			tempMap.put("quantity", prodInv.availableToPromiseTotal);
 			tempList.add(tempMap);
 			atpTotal = atpTotal.add(prodInv.availableToPromiseTotal);

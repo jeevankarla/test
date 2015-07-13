@@ -27,12 +27,20 @@ if(productId){
 	prodInventoryItems = delegator.findList("InventoryItem", condExpr, null, null, null, false);
 	
 	batchNumberList = [];
+	productBatchIds = EntityUtil.getFieldListFromEntityList(prodInventoryItems, "productBatchId", true);
+	productBatchSequence = delegator.findList("ProductBatchSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.IN, productBatchIds), null, null, null,false);
 	
 	prodInventoryItems.each{ eachInv ->
+		
+		productBatchNum = EntityUtil.filterByCondition(productBatchSequence, EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, eachInv.productBatchId));
 		tempMap = [:];
 		tempMap["inventoryItemId"] = eachInv.inventoryItemId;
 		tempMap["qoh"] = eachInv.quantityOnHandTotal;
-		tempMap["batchNumber"] = eachInv.batchNumber;
+		tempMap.put("batchNumber", "");
+		if(productBatchNum && eachInv.productBatchId){
+			prodNum = EntityUtil.getFirst(productBatchNum);
+			tempMap.put("batchNumber", prodNum.sequenceId);
+		}
 		batchNumberList.add(tempMap);
 	}
 	
