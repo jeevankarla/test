@@ -64,7 +64,7 @@ public class CreateWeighBridgeData {
     		@QueryParam("login.username") String username,@QueryParam("login.password") String password,
     		@QueryParam("tenantId") String tenantId,
     		@QueryParam("date") String date,	@QueryParam("vehicleNumber") String vehicleId,
-    		@QueryParam("weight") String weight) {
+    		@QueryParam("weight") String weight,@QueryParam("weighmentType") String weighmentType) {
     	Map<String, Object> result = FastMap.newInstance();
     	String productId = "";
     	Locale locale = Locale.getDefault();
@@ -118,6 +118,7 @@ public class CreateWeighBridgeData {
         	weighBridgeDetails.set("weightKgs",weightKgs);
         	weighBridgeDetails.set("statusId","ITEM_CREATED");
         	weighBridgeDetails.set("createdDate",entryDate);
+        	weighBridgeDetails.set("weighmentType",weighmentType);
         	weighBridgeDetails.set("weighmentId",delegator.getNextSeqId("WeighBridgeDetails"));
         	
         	delegator.create(weighBridgeDetails);		

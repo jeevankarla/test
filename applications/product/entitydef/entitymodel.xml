@@ -2671,7 +2671,7 @@ under the License.
         <key-map field-name="containerId" rel-field-name="vehicleId"/>
        	<key-map field-name="sequenceNum"/>
        </view-link>
-       <view-link entity-alias="MT" rel-entity-alias="MTI">
+       <view-link entity-alias="MT" rel-entity-alias="MTI" rel-optional="true">
         	<key-map field-name="milkTransferId"/>
        </view-link>
     </view-entity>
