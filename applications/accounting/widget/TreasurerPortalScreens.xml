@@ -4183,6 +4183,7 @@
 		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 		<set field="parameters.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
+		<set field="parameters.unAppliedGlAccountTypeId" value="ACC_REC_UN"/>
 		<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 		<set field="reportName" value="DEBTORS ABSTRACT REPORT"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>
@@ -4226,6 +4227,7 @@
 		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 		<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 		<set field="parameters.glAccountTypeId" value="ACCOUNTS_PAYABLE"/>
+		<set field="parameters.unAppliedGlAccountTypeId" value="ACC_PAY_UN"/>
 		<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 		<set field="reportName" value="CREDITORS ABSTRACT REPORT"/>
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyLedgerGroup.groovy"/>

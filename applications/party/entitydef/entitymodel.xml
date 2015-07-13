@@ -3119,6 +3119,7 @@ under the License.
             title="Role Type Attribute Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="priority" type="numeric"></field>
       <prim-key field="roleTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="ROLE_TYPATR_RTYP" rel-entity-name="RoleType">

@@ -69,6 +69,10 @@ if(UtilValidate.isNotEmpty(glAccountTypeId)){
 if(UtilValidate.isNotEmpty(parameters.glAccountId)){
 	glAccountId=parameters.glAccountId;
 }
+String unAppliedGlAccountTypeId="";
+if(UtilValidate.isNotEmpty(parameters.unAppliedGlAccountTypeId)){
+	unAppliedGlAccountTypeId=parameters.unAppliedGlAccountTypeId;
+}
 /*if(UtilValidate.isNotEmpty(parameters.partyId)){
  partyIds=parameters.partyId;
  }else{
@@ -110,51 +114,44 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 		partyIds=EntityUtil.getFieldListFromEntityListIterator(acctgTransEntryPartyIds, "partyId", true);
 		
 	}else{
-		if(parameters.roleTypeId=="UNION" || parameters.roleTypeId=="UNITS" || parameters.roleTypeId=="TAX_AUTHORITY" || parameters.roleTypeId=="EMPLOYEE"){
-			List partyRole= delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId),UtilMisc.toSet("partyId"),null,null,false);
-			partyIds = EntityUtil.getFieldListFromEntityList(partyRole, "partyId", true);
-		}else if(parameters.roleTypeId){
-			String  roleType = parameters.roleTypeId;
-			fieldToSelect = UtilMisc.toSet("partyId");
-			EntityListIterator partyRole = delegator.find("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId),null,fieldToSelect,null,null);
-			List partyRoleNotList = UtilMisc.toList("UNION","UNITS","TAX_AUTHORITY","EMPLOYEE");
-			while (partyRole.hasNext()){
-				List tempPartyRoleNotList = FastList.newInstance();
-				tempPartyRoleNotList.addAll(partyRoleNotList);
-				if(roleType.equalsIgnoreCase("Contractor")){
-					tempPartyRoleNotList.addAll(UtilMisc.toList("SUPPLIER","Retailer","EXCLUSIVE_CUSTOMER","IC_WHOLESALE"));
-				}
-				if(roleType.equalsIgnoreCase("SUPPLIER")){
-					tempPartyRoleNotList.addAll(UtilMisc.toList("Retailer","EXCLUSIVE_CUSTOMER","IC_WHOLESALE"));
-				}
-				if(roleType.equalsIgnoreCase("Retailer")){
-					tempPartyRoleNotList.addAll(UtilMisc.toList("EXCLUSIVE_CUSTOMER","IC_WHOLESALE"));
-				}
-				if(roleType.equalsIgnoreCase("EXCLUSIVE_CUSTOMER")){
-					tempPartyRoleNotList.addAll(UtilMisc.toList("IC_WHOLESALE"));
-				}
-				GenericValue party = partyRole.next();
-				partyId=party.partyId;
-				
-				List partyRoles= delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId),UtilMisc.toSet("roleTypeId"),null,null,false);
-				partyRoleTypeIds = EntityUtil.getFieldListFromEntityList(partyRoles, "roleTypeId", true);
-				
-				Boolean addParty = true;
-				if(UtilValidate.isNotEmpty(partyRoleTypeIds)){
-					for(partyRoleTypestr in partyRoleTypeIds){
-						if(tempPartyRoleNotList.contains(partyRoleTypestr)){
-							addParty = false;
-							break;
+		List roleTypeList=FastList.newInstance();
+		List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCOUNTING_ROLE"),null,null,null,false);
+	    if(roleTypeAttr){
+			List roleTypeIdAttr = EntityUtil.filterByCondition(roleTypeAttr, EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId));
+			GenericValue roleTypeValue = EntityUtil.getFirst(roleTypeIdAttr);
+			if(UtilValidate.isNotEmpty(roleTypeValue.get("priority"))){
+				if(roleTypeValue.get("priority")==1){
+					List partyRole= delegator.findList("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,parameters.roleTypeId),UtilMisc.toSet("partyId"),null,null,false);
+					partyIds = EntityUtil.getFieldListFromEntityList(partyRole, "partyId", true);
+				}else{
+					String  roleType = parameters.roleTypeId;
+					fieldToSelect = UtilMisc.toSet("partyId");
+					EntityListIterator partyRole = delegator.find("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,roleType),null,fieldToSelect,null,null);
+					List priorityList = EntityUtil.filterByCondition(roleTypeAttr, EntityCondition.makeCondition("priority",EntityOperator.LESS_THAN,roleTypeValue.get("priority")));
+					List partyRoleNotList = EntityUtil.getFieldListFromEntityList(priorityList, "roleTypeId", true);
+					while (partyRole.hasNext()){
+						GenericValue party = partyRole.next();
+						partyId=party.partyId;
+						List partyRoles= delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId),UtilMisc.toSet("roleTypeId"),null,null,false);
+						partyRoleTypeIds = EntityUtil.getFieldListFromEntityList(partyRoles, "roleTypeId", true);
+						Boolean addParty = true;
+						if(UtilValidate.isNotEmpty(partyRoleTypeIds)){
+							for(partyRoleTypestr in partyRoleTypeIds){
+								if(partyRoleNotList.contains(partyRoleTypestr)){
+									addParty = false;
+									break;
+								}
+								
+							}
 						}
-						
+						if(addParty){
+							partyIds.add(partyId);
+						}
 					}
-				}
-				if(addParty){
-					partyIds.add(partyId);
+					partyRole.close();
 				}
 			}
-			partyRole.close();
-		}
+	    }	
 	}
 }
 
@@ -212,6 +209,7 @@ fieldToSelect.add("amount");
 acctgTransIter = delegator.find("AcctgTransAndEntries",condition,null,fieldToSelect,null,null);
 partyMap=[:];
 openingBalMap=[:];
+unAppliedOpeningBalMap=[:];
 /*if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameters.partyId)){
  acctgTransList = delegator.find("AcctgTransAndEntries",condition,null,null,null,null);
  acctgPartyIds = EntityUtil.getFieldListFromEntityListIterator(acctgTransList, "partyId", true);
@@ -236,6 +234,10 @@ if(UtilValidate.isNotEmpty(glAccountTypeId)){
 if(UtilValidate.isNotEmpty(parameters.glAccountId)){
 	acctgTransMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountId",glAccountId));
 }
+Map unAppledMap=[:];
+if(UtilValidate.isNotEmpty(unAppliedGlAccountTypeId)){
+	unAppledMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId",unAppliedGlAccountTypeId));
+}
 partyIds.each{partyId->
 	partyId=partyId.toUpperCase();
 
@@ -255,6 +257,19 @@ partyIds.each{partyId->
 			openingBalMap[partyId]=0;
 		}
 	}
+	Map tempUnAppliedMap = unAppledMap.get("openingBalMap");
+	unAppCredit=0;unAppDebit=0;
+	if(UtilValidate.isNotEmpty(tempUnAppliedMap)){
+		Map resultMap=tempUnAppliedMap.get(partyId);
+		if(UtilValidate.isNotEmpty(resultMap)){
+			unAppCredit=resultMap.get("credit");
+			unAppDebit=resultMap.get("debit");
+			unAppliedOpeningBalMap[partyId]=unAppDebit-unAppCredit;
+		}else{
+			unAppliedOpeningBalMap[partyId]=0;
+		}
+	}
+	
 }
 
 //	openingBalMap[partyId]=acctgTransMap.get("openingBalance");
@@ -350,12 +365,15 @@ if(acctgTransIter){
 }
 context.partyMap=partyMap;
 context.openingBalMap=openingBalMap;
+context.unAppliedOpeningBalMap=unAppliedOpeningBalMap;
+
 if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	partyLedgerCsv=[];
 	partyLedgerAbsCsv=[];
-	grdDebit=0;grdCredit=0;
+	grdDebit=0;grdCredit=0;grdUnAppAmt=0;
 	finalMap=[:];
 	for(Map.Entry partyDetails : partyMap.entrySet()){
+		
 		partyId = partyDetails.getKey();
 		partyVal = partyDetails.getValue();
 		tempMap=[:];
@@ -461,6 +479,23 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		tempMap.credit=clsCredit;
 		partyLedgerCsv.add(tempMap);
 		//for abstract csv
+		unAppDebit=0;unAppCredit=0;
+		unAppBal=0;
+		if(UtilValidate.isNotEmpty(unAppliedOpeningBalMap.get(partyId))){
+			unAppBal=unAppliedOpeningBalMap.get(partyId);
+		}
+		if(unAppBal>=0){
+			unAppDebit=unAppBal;
+		}else{
+			unAppCredit=-(unAppBal);
+		}
+		if((unAppDebit-unAppCredit)>=0){
+			tempAbsMap.unApplied=(unAppDebit-unAppCredit)+"(Dr)";
+			grdUnAppAmt=grdUnAppAmt+unAppDebit-unAppCredit;
+		}else{
+			tempAbsMap.unApplied=-(unAppDebit-unAppCredit)+"(Cr)";
+			grdUnAppAmt=grdUnAppAmt-(unAppDebit-unAppCredit);
+		}
 		tempAbsMap.debit=clsDebit;
 		tempAbsMap.credit=clsCredit;
 		partyLedgerAbsCsv.add(tempAbsMap);
@@ -473,8 +508,18 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	//for abstract csv
 	tempFinalAbsMap=[:];
 	tempFinalAbsMap.name="TOTAL :";
-	tempFinalAbsMap.debit=grdDebit;
-	tempFinalAbsMap.credit=grdCredit;
+	if((grdDebit-grdCredit)>=0){
+		tempFinalAbsMap.debit=grdDebit-grdCredit;
+		tempFinalAbsMap.credit=0;
+	}else{
+		tempFinalAbsMap.debit=0;
+		tempFinalAbsMap.credit=-(grdDebit-grdCredit);
+	}
+	if(grdUnAppAmt>=0){
+		tempFinalAbsMap.unApplied=grdUnAppAmt+"(Dr)";
+	}else{
+		tempFinalAbsMap.unApplied=-grdUnAppAmt+"(Cr)";
+	}
 	partyLedgerAbsCsv.add(tempFinalAbsMap);
 
 	finalMap=[:];
@@ -497,6 +542,11 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	tempFinalAbsMap.name="NET AMOUNT :";
 	tempFinalAbsMap.debit=clsGrdDebit;
 	tempFinalAbsMap.credit=clsGrdCredit;
+	if(grdUnAppAmt>=0){
+		tempFinalAbsMap.unApplied=grdUnAppAmt+"(Dr)";
+	}else{
+		tempFinalAbsMap.unApplied=-grdUnAppAmt+"(Cr)";
+	}
 	partyLedgerAbsCsv.add(tempFinalAbsMap);
 	context.partyLedgerAbsCsv=partyLedgerAbsCsv;
 }
