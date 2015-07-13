@@ -195,7 +195,7 @@
      <property key="Pan1">
         <value xml:lang="en">PAN Registration Number</value>
     </property>       
-    <property key="payGrade">
+    <property key="payGradeId">
         <value xml:lang="en">Eg : BASIC_PAY12</value>
     </property> 
     <property key="payGradeName">

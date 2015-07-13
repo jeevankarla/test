@@ -43,7 +43,7 @@
 	            <#assign rowCount = rowCount + 1>
 	    	</#list>
 	    <#else>
-	      	<div class="screenlet-body">${uiLabelMap.AccountingNoChildPeriodsFound}</div>
+	      	<div class="screenlet-body">No Salary Steps found</div>
 	    </#if>
 	</div>
 </div>
