@@ -110,6 +110,12 @@ public class CreateWeighBridgeData {
         }
         BigDecimal weightKgs = BigDecimal.ZERO;
         
+        if(UtilValidate.isNotEmpty(weighmentType)){
+        	if((!weighmentType.equalsIgnoreCase("G") )&& (!weighmentType.equalsIgnoreCase("T"))){
+        		Debug.logError("weighment Type must be either G or T ",CreateWeighBridgeData.class.getName());
+        		return Response.serverError().entity("weighment Type must be either G or T ").build();
+        	 }
+        }
         
         try{
         	weightKgs = new BigDecimal(weight);
