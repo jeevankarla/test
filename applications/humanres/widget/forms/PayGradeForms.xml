@@ -40,11 +40,7 @@
         </actions>
         <auto-fields-service default-field-type="display" service-name="updatePayGrade"/>
         <field name="tenantId"><hidden/></field>
-        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="linktext">
-            <hyperlink also-hidden="true" target="EditPayGrade" target-type="plain" description="${payGradeId}">
-                <parameter param-name="payGradeId"/>
-            </hyperlink>
-        </field>
+        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="linktext"></field>
         <field name="deleteLink" use-when="hasGlobalHREditPermission" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePayGrades" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payGradeId"/>
@@ -64,7 +60,7 @@
     <form name="createNewPayGrade" type="single" target="createNewPayGrade" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="comments"><hidden value=" "/></field>
-        <field name="payGradeId" title="payGradeID" tooltip="${uiLabelMap.payGrade}"><text></text></field>
+        <field name="payGradeId" title="payGradeID" tooltip="${uiLabelMap.payGradeId}"><text></text></field>
         <field name="seqId" title="Seq Id"><text></text></field>
         <field name="payGradeName" title="PayGrade Name" id-name="payGradeName" tooltip="${uiLabelMap.payGradeName}"><text></text></field>
         <field name="payScale" title="Pay Scale"><text></text></field>

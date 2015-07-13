@@ -552,6 +552,8 @@
         <entity-one entity-name="SalaryStep" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+        <set field="flag" value="Y"/>
+        <field-to-result field="flag" result-name="flag" />
     </simple-method>
 
     <simple-method method-name="deleteSalaryStep" short-description="Delete Salary Step">

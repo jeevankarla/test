@@ -517,7 +517,6 @@ under the License.emplpunch
     <service name="createSalaryStep" engine="simple" default-entity-name="SalaryStep"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createSalaryStep" auth="true">
         <description>Create Salary Step</description>
-        <permission-service service-name="humanResManagerPermission" main-action="GLOBALHR_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override type="String" mode="IN" name="salaryStepSeqId" optional="true"/>
