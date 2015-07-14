@@ -1234,7 +1234,7 @@
     </request-map>
     <request-map uri="deleteCustRequestParty">
         <security https="true" auth="true"/>
-     	<event type="service"   invoke="deleteCustRequestParty"/>
+     	<event type="service"   invoke="deleteCustReqstParty"/>
         <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
         <redirect-parameter name="custRequestId"/>
         </response>

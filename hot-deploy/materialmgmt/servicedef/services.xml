@@ -150,5 +150,9 @@
         <description>create a sequence for the new Product  </description>
         <attribute name="internalName" mode="OUT" type="String" optional="false"/>
     </service>
-    
+    <service name="deleteCustReqstParty" engine="simple" default-entity-name="CustRequestParty"
+            location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="deleteCustRequestParty" auth="true">
+        <description>Delete a CustRequestParty record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>
