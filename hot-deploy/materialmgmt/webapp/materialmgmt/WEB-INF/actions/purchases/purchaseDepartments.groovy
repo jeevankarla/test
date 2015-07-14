@@ -72,18 +72,19 @@ if(UtilValidate.isNotEmpty(parameters.flag) && (parameters.flag=="DEPT_HEADAPPRO
 	resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx,inputMap);
 	newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,resultMap.get("deptId")));
 }	
+
+if(UtilValidate.isNotEmpty(parameters.custRequestTypeId) && parameters.custRequestTypeId=="INTERNAL_INDENT"){
+	inputMap.clear();
+	inputMap.put("userLogin",userLogin);
+	inputMap.put("partyId",userLogin.partyId);
+	inputMap.put("roleTypeIdTo","PRODUCTION_RUN");
+	resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx,inputMap);
+	newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,resultMap.get("deptId")));
+}
 if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
 	context.put("finalDepartmentList",newDepatmentList);
 	context.partyId=resultMap.get("deptId");
 }
-if(UtilValidate.isNotEmpty(parameters.custRequestTypeId) && parameters.custRequestTypeId=="INTERNAL_INDENT"){
-	if(!(security.hasEntityPermission("PRODUCTION","_ADMIN", session))){
-		newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,context.get("partyIdFrom")));
-		context.put("finalDepartmentList",newDepatmentList);
-		context.partyId=context.get("partyIdFrom");
-	}
-}
-
 //Debug.log("finalDepartmentList================="+finalDepartmentList);
 	
 

@@ -61,6 +61,10 @@
     <SecurityGroupPermission groupId="MR_QCCIP_ENTRY" permissionId="MR_QCCIP_ENTRY"/>
     <SecurityGroupPermission groupId="MR_UNLOAD_ENTRY" permissionId="MR_UNLOAD_ENTRY"/>
     
+     <SecurityGroupPermission groupId="MR_FIND_VIEW" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="MR_FIND_VIEW" permissionId="FACILITY_CREATE"/>
+    <SecurityGroupPermission groupId="MR_FIND_VIEW" permissionId="ACCTG_PREF_VIEW"/>
+    
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MILKRECEIPT_ADMIN"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_DASHBORD_VIEW"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_ENTRY_VIEW"/>

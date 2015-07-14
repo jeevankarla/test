@@ -379,7 +379,7 @@
 		</field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
  		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
- 		<field name="shipmentTypeId" ><hidden value="ISSUANCE_SHIPMENT"/> </field>
+ 		<!-- <field name="shipmentTypeId" ><hidden value="PRODUCTION_SHIPMENT"/> </field> -->
  		<!-- <field name="statusId" ><hidden value="GENERATED"/> </field> -->
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -394,6 +394,7 @@
             <field-map field-name="orderBy" value="-issueDate"/>
             <field-map field-name="inputFields.custRequestTypeId" value="INTERNAL_INDENT"/>
             <field-map field-name="inputFields.statusId" value="GENERATED"/>
+            <field-map field-name="inputFields.shipmentTypeId" value="PRODUCTION_SHIPMENT"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>

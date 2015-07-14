@@ -13,23 +13,31 @@ import net.sf.json.JSONArray;
 import java.util.SortedMap;
 import java.math.RoundingMode;
 import javolution.util.FastList;
+import javolution.util.FastMap;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.product.inventory.InventoryWorker;
 import org.ofbiz.party.party.PartyHelper;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
+dctx = dispatcher.getDispatchContext();
 userLogin=parameters.userLogin;
 partyIdTo=userLogin.partyId;
 List employmentList=FastList.newInstance();
 List facilityList=FastList.newInstance();
 partyIdFrom="";
-condition=EntityCondition.makeCondition([EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyIdTo),
+/*condition=EntityCondition.makeCondition([EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyIdTo),
 										 EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null)],EntityOperator.AND);
 employmentList=delegator.findList("Employment",condition,null,null,null,false);
 employment=EntityUtil.getFirst(employmentList);
- partyRole=delegator.findOne("PartyRole",[partyId:partyIdTo,roleTypeId:"PRODUCTION_RUN"],false);
- if(UtilValidate.isNotEmpty(partyRole)){
-	if(UtilValidate.isNotEmpty(employment)){
-		partyIdFrom=employment.partyIdFrom;
-	}
+ partyRole=delegator.findOne("PartyRole",[partyId:partyIdTo,roleTypeId:"PRODUCTION_RUN"],false);*/
+Map inputMap = FastMap.newInstance();
+inputMap.clear();
+inputMap.put("userLogin",userLogin);
+inputMap.put("partyId",partyIdTo);
+inputMap.put("roleTypeIdTo","PRODUCTION_RUN");
+resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx, inputMap);
+
+ if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
+		partyIdFrom=resultMap.get("deptId");
 	
 	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
 																					  EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND),null,null,null,false);
@@ -49,8 +57,8 @@ if(UtilValidate.isNotEmpty(partyIdFrom)){
 	context.partyIdFrom=partyIdFrom;
 }else{
 	
-	if(UtilValidate.isNotEmpty(employment)){
-		partyIdFrom=employment.partyIdFrom;
+	if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
+		partyIdFrom=resultMap.get("deptId");
 	}
 	context.partyIdFrom=partyIdFrom;
 }
