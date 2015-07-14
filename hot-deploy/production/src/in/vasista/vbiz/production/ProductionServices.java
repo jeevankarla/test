@@ -1174,7 +1174,80 @@ public class ProductionServices {
          }
          return context;
      }
-     
+    
+    public static Map<String, ? extends Object> validateInventoryForFacility(DispatchContext dctx, Map context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map<String, ? extends Object> result = ServiceUtil.returnSuccess();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String inventoryItemId = (String) context.get("inventoryItemId");
+        BigDecimal qohDiff = (BigDecimal) context.get("quantityOnHandDiff");
+        BigDecimal atpDiff = (BigDecimal) context.get("availableToPromiseDiff");
+        try {
+       	 	
+       	 	GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+       	 
+	       	String facilityId = inventoryItem.getString("facilityId");
+	       	GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+	       	String facilityTypeId = facility.getString("facilityTypeId");
+	       	BigDecimal facilitySize = facility.getBigDecimal("facilitySize");
+	       	
+	       	if(UtilValidate.isNotEmpty(qohDiff)){
+	       		BigDecimal qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
+	       		BigDecimal totalQOH = qoh.add(qohDiff);
+	       		if(totalQOH.compareTo(BigDecimal.ZERO)<0){
+	       			Debug.logError("Inventory(QOH) cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"), module);
+                    return ServiceUtil.returnError("Inventory cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"));
+	       		}
+	       	}
+	       	
+	       	if(UtilValidate.isNotEmpty(atpDiff)){
+	       		BigDecimal atp = inventoryItem.getBigDecimal("availableToPromiseTotal");
+	       		BigDecimal totalATP = atp.add(atpDiff);
+	       		if(totalATP.compareTo(BigDecimal.ZERO)<0){
+	       			Debug.logError("Inventory(ATP) cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"), module);
+                    return ServiceUtil.returnError("Inventory cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"));
+	       		}
+	       	}
+	       	
+	       	if(UtilValidate.isNotEmpty(facilityTypeId) && UtilValidate.isNotEmpty(facilityTypeId.equals("SILO")) && UtilValidate.isNotEmpty(facilitySize)){
+	       		Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", inventoryItem.getString("productId"), "facilityId", facilityId);
+          		Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+          		if (ServiceUtil.isError(resultCtx)) {
+              	 	Debug.logError("Problem getting inventory level of the request for product Id :"+inventoryItem.getString("productId"), module);
+              	 	return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+inventoryItem.getString("productId"));
+          		}
+          		
+          		Object qohObj = resultCtx.get("quantityOnHandTotal");
+          		Object atpObj = resultCtx.get("availableToPromiseTotal");
+                BigDecimal qohAvl = BigDecimal.ZERO;
+                BigDecimal atpAvl = BigDecimal.ZERO;
+                if (qohObj != null) {
+                	qohAvl = new BigDecimal(qohObj.toString());
+                }
+                if (atpAvl != null) {
+                	atpAvl = new BigDecimal(atpAvl.toString());
+                }
+                BigDecimal totalQOHQtyInc = facilitySize.subtract(qohAvl.add(qohDiff));
+                if(totalQOHQtyInc.compareTo(BigDecimal.ZERO) < 0){
+               	 	Debug.logError("Facility capacity exceeded..!", module);
+                    return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
+                }
+                
+                BigDecimal totalATPQtyInc = facilitySize.subtract(atpAvl.add(atpDiff));
+                if(totalATPQtyInc.compareTo(BigDecimal.ZERO) < 0){
+               	 	Debug.logError("Facility capacity exceeded..!", module);
+                    return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
+                }
+	       	} 
+        }
+        catch(Exception e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        return context;
+     }
+    
      public static Map<String, Object> createStockXferRequest(DispatchContext dctx, Map<String, ? extends Object> context) {
          Delegator delegator = dctx.getDelegator();
          LocalDispatcher dispatcher = dctx.getDispatcher();
