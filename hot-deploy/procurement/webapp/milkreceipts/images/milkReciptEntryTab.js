@@ -75,9 +75,11 @@ jQuery(document).ready(function() {
         			}
     				
     			}
+    			if(curentElName != "sealNumber"){
+    				next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
+        			next.focus();
+    			}
     			
-    			next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
-    			next.focus();
     		}
     	}
     	
@@ -202,12 +204,12 @@ function populateError(msg){
 }
 	
 function clearFields(){
-	   var frm = document.getElementsByName('milkReceiptEntry')[0];
-	   frm.reset();
+	  var displayScreen= $('[name=displayScreen]').val(); 
+	  var frm = document.getElementsByName('milkReceiptEntry')[0];
+	  frm.reset();
+	  if(typeof(displayScreen)!= 'undefined'){
+		   if( displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC" ){ 
+		   	reloadingPage();
+		   }
+	   }
 }
-
-
-
-
-
-

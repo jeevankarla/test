@@ -603,7 +603,7 @@ function hideDiv(){
  	}
 }	
 function reloadingPage(){
-	setTimeout("location.reload(true);", 2000);
+	setTimeout("location.reload(true);", 1000);
 }
 </script>
 <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC">
@@ -645,7 +645,7 @@ function reloadingPage(){
 </div>
 </#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
-<div name ="displayMsg" id="milkReceiptEntry_spinner"> </div>
+<div name ="displayMsg" id="milkReceiptEntry_spinner" style="width:20; height:20%"> </div>
 <div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
@@ -963,7 +963,7 @@ function reloadingPage(){
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
 	      	<td valign = "middle" align="center">
 	      	<div class='tabletext h1'>
-	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC"> onclick="javascript:reloadingPage();"</#if>  <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
+	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "VEHICLE_IN">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
 	       

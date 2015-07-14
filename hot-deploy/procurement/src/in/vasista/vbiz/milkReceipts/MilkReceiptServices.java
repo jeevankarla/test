@@ -2384,7 +2384,8 @@ public class MilkReceiptServices {
 	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
-	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
+	 		Debug.log("getTankerDetailsMap========"+getTankerDetailsMap);
+	 		if(ServiceUtil.isSuccess(getTankerDetailsMap)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
 	 			return resultMap;
@@ -2734,6 +2735,7 @@ public class MilkReceiptServices {
 					 milkTransfer.set("statusId", "MXF_REJECTED");
 		 	    }
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_UNLOAD")){
+	 			Debug.log("UNLOAD ===ST=======#################======================");
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
 	 	        String siloId = (String)context.get("silo");
@@ -2798,10 +2800,10 @@ public class MilkReceiptServices {
 				resultMap = ServiceUtil.returnError("Exception while updating purpose :"+e.getMessage());
 	 			return resultMap;
 			}
-	 	        
+	 	Debug.log("UNLOAD ==========#################======================");        
 	 			
-	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_QC")){
-	 			
+	 	}else if(statusId.equalsIgnoreCase("MR_VEHICLE_QC")){
+	 			Debug.log("QC STARTED #################################################");
 	 			String testDateStr = (String) context.get("testDate"); 
 	 	        String testTime = (String) context.get("testTime");
 	 	        String productId = (String) context.get("productId");
@@ -2885,8 +2887,9 @@ public class MilkReceiptServices {
 	 	        	resultMap = ServiceUtil.returnError("Error while storing QC details");
 	 	        	return resultMap;
 	 	        }
-	 			
+	 			Debug.log("QC EXECUTED SUCCESSFULLY #################################################");
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
+	 			Debug.log("CIP STARTED #################################################");
 	 			String isCipChecked = (String) context.get("isCipChecked");
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
@@ -2932,6 +2935,7 @@ public class MilkReceiptServices {
 					resultMap = ServiceUtil.returnError("Exception while updating Cip Check :"+e.getMessage());
 		 			return resultMap;
 				}
+	 			Debug.log("CIP EXECUTED SUCCESSFULLY #################################################");
 	 		}
 	 		milkTransfer.store();
 	 	}catch(GenericEntityException e){
@@ -2945,6 +2949,7 @@ public class MilkReceiptServices {
 	 		resultMap = ServiceUtil.returnError("Error While updating the status:"+e.getMessage());
 	 		return resultMap;
 	 	}
+	 	Debug.log("resultMap===================="+resultMap);
     	return resultMap;
    }
 	
