@@ -680,7 +680,7 @@ public class PunchService {
 				selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
 			}
 			List conditionList2 = FastList.newInstance();
-			if(UtilValidate.isNotEmpty(finalPunchINValueLatest) && UtilValidate.isNotEmpty(finalPunchINValueLatest.getString("shiftType")) && (finalPunchINValueLatest.getString("shiftType").equals("SHIFT_NIGHT"))){
+			if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
 				conditionList2 = UtilMisc.toList(EntityCondition
 						.makeCondition("punchdate", EntityOperator.EQUALS,
 										selectedDate));
@@ -692,6 +692,8 @@ public class PunchService {
 			
 			conditionList2.add(EntityCondition.makeCondition("partyId",
 					EntityOperator.IN, empPartyIds));
+			conditionList2.add(EntityCondition.makeCondition("shiftType", 
+					EntityOperator.EQUALS, finalPunchINValue.getString("shiftType")));
 			conditionList2.add(EntityCondition.makeCondition("InOut", "OUT"));
 			EntityCondition condition2 = EntityCondition.makeCondition(
 					conditionList2, EntityOperator.AND);
