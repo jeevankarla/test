@@ -57,6 +57,12 @@
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="INOUT" optional="true"/>
     </service>
+    <service name="validateInventoryForFacility" default-entity-name="InventoryItemDetail" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="validateInventoryForFacility">
+    	<description>Check Facility Inventory Capacity</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="INOUT" optional="true"/>
+    </service>
+    
     <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
     	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
     </service>
