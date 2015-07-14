@@ -689,7 +689,8 @@ public class PunchService {
 						.makeCondition("punchdate", EntityOperator.IN,
 								UtilMisc.toList(selectedDate,seleDate)));
 			}
-			
+			conditionList2.add(EntityCondition.makeCondition("shiftType",
+                    EntityOperator.EQUALS, finalPunchINValueLatest.getString("shiftType")));
 			conditionList2.add(EntityCondition.makeCondition("partyId",
 					EntityOperator.IN, empPartyIds));
 			conditionList2.add(EntityCondition.makeCondition("InOut", "OUT"));
