@@ -496,7 +496,7 @@ function reportTypeChangeFunc() {
 					</tr>	
 					<tr class="alternate-row">
 				<form id="EmployeeAdvancesAndSubSchedule" name="EmployeeAdvancesAndSubSchedule" method="post" action="<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>" target="_blank">	
-					<td width="30%"> Employee Advances And Sub Sechedule</td>
+					<td width="30%"> Employee Advances And Sub Schedule</td>
 					<td width="10%">From<input  type="text" size="18pt" id="EMPAdvSehFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="EMPAdvSehThruDate" readonly  name="thruDate"/></td>
   					<td width="10%">Loan Type :<select name='finAccountTypeId' id ="finAccountTypeId">	
@@ -527,7 +527,7 @@ function reportTypeChangeFunc() {
               </tr>
               <tr class="alternate-row">
 				<form id="OthersncesAndSubSchedule" name="OthersAdvancesAndSubSchedule" method="post" action="<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>" target="_blank">	
-					<td width="30%"> Others Advances And Sub Sechedule</td>
+					<td width="30%"> Others Advances And Sub Schedule</td>
 					<td width="10%">From<input  type="text" size="18pt" id="OtherAdvSehFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="OtherAdvSehThruDate" readonly  name="thruDate"/></td>
   					<td width="10%">Type :<select name='finAccountTypeId' id ="finAccountTypeId">	
@@ -599,7 +599,7 @@ function reportTypeChangeFunc() {
                 
               <tr class="alternate-row">
 				<form id="PartyLedgerGroup" name="PartyLedgerGroup" method="post" action="<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>" target="_blank">	
-					<td width="30%">Party Ledger Debtor Report</td>
+					<td width="30%">Party Ledger Debtors Report</td>
 					<td width="10%">From<input  type="text" size="18pt" id="PartyLedgerFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="PartyLedgerThruDate" readonly  name="thruDate"/></td>
   					<td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
