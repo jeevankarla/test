@@ -1191,9 +1191,11 @@ public class ProductionServices {
 	       	GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 	       	String facilityTypeId = facility.getString("facilityTypeId");
 	       	BigDecimal facilitySize = facility.getBigDecimal("facilitySize");
-	       	
 	       	if(UtilValidate.isNotEmpty(qohDiff)){
-	       		BigDecimal qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
+	       		BigDecimal qoh = BigDecimal.ZERO;
+	       		if(UtilValidate.isNotEmpty(inventoryItem.get("quantityOnHandTotal"))){
+	       			qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
+	       		}
 	       		BigDecimal totalQOH = qoh.add(qohDiff);
 	       		if(totalQOH.compareTo(BigDecimal.ZERO)<0){
 	       			Debug.logError("Inventory(QOH) cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"), module);
@@ -1202,7 +1204,10 @@ public class ProductionServices {
 	       	}
 	       	
 	       	if(UtilValidate.isNotEmpty(atpDiff)){
-	       		BigDecimal atp = inventoryItem.getBigDecimal("availableToPromiseTotal");
+	       		BigDecimal atp = BigDecimal.ZERO;
+	       		if(UtilValidate.isNotEmpty(inventoryItem.get("availableToPromiseTotal"))){
+	       			atp = inventoryItem.getBigDecimal("availableToPromiseTotal");
+	       		}
 	       		BigDecimal totalATP = atp.add(atpDiff);
 	       		if(totalATP.compareTo(BigDecimal.ZERO)<0){
 	       			Debug.logError("Inventory(ATP) cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"), module);

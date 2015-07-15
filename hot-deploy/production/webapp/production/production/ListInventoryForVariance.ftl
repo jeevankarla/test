@@ -41,12 +41,12 @@ under the License.
 	var varianceReasonJSON = ${StringUtil.wrapString(varianceReasonTypeJSON)!'{}'};
 	
 	jQuery(document).ready( function() {
-      $("#varianceTypeId").trigger("onchange");                  
+      $("#varianceTypeId").trigger("onchange");
     });
 	
     function changeBatchQty(thisObj){
     	var selectVal = $(thisObj).val();
-    	var thisRow = $(thisObj).parent().parent().parent();
+    	var thisRow = $(thisObj).parent().parent();
     	var changeQty = 0;
     	if(inventoryQtyMap){
     		if(selectVal && selectVal != 'LIFO' && selectVal != 'FIFO'){
@@ -67,20 +67,30 @@ under the License.
 		}    	
     }
     function changeVarianceType(thisObj){
-    	var selectVal = $(thisObj).val();
-    	if(varianceReasonJSON && selectVal){
-    		var reasonByType = varianceReasonJSON[selectVal];
-			if(reasonByType){
-				$('#varianceReasonId').find('option').remove();
-				for(var i=0;i<reasonByType.length;i++){
-					 $('#varianceReasonId').append($('<option>', { 
-					 	value: reasonByType[i]['varianceReasonId'],
-        				text : reasonByType[i]['description'] 
-    				}));
-				}
+    	
+    	var index = 0;
+    	$('#varianceTab tr').each(function (i, row) {
+			if(index != 0){
+				var $row = $(row);
+		    	var selectVarType = $row.find("#varianceTypeId");
+		    	var selectVal = $(selectVarType).val();
+		    	if(varianceReasonJSON && selectVal){
+		    		var reasonByType = varianceReasonJSON[selectVal];
+					if(reasonByType){
+						$row.find('#varianceReasonId').find('option').remove();
+						for(var i=0;i<reasonByType.length;i++){
+							$row.find('#varianceReasonId').append($('<option>', { 
+							 	value: reasonByType[i]['varianceReasonId'],
+		        				text : reasonByType[i]['description'] 
+		    				}));
+						}
+					}
+					    		
+		    	}
 			}
-			    		
-    	}
+			index++;
+        	
+    	});
     }
 //]]>
 </script>
@@ -96,7 +106,7 @@ under the License.
     	</table>
     </div> -->
 	
-    <table class="basic-table hover-bar" cellspacing="1">
+    <table class="basic-table hover-bar" id="varianceTab" cellspacing="1">
       <thead>
         <tr class="header-row-2">
           <td>Product</td>
