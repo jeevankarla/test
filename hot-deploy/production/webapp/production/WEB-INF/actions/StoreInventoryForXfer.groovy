@@ -32,11 +32,19 @@ if(facilityId){
 	while (inventoryItem = inventoryItemItr.next()) {
 		prodId = inventoryItem.productId;
 		qty = inventoryItem.quantityOnHandTotal;
+		qtyATP = inventoryItem.availableToPromiseTotal;
 		if(productQtyMap.get(prodId)){
-			extQty = productQtyMap.get(prodId);
-			productQtyMap.put(prodId, (extQty+qty));
+			qtyMap = productQtyMap.get(prodId);
+			extQOHQty = qtyMap.get("qohQty");
+			extATPQty = qtyMap.get("atpQty");
+			qtyMap.put("qohQty", extQOHQty+qty);
+			qtyMap.put("atpQty", extATPQty+qtyATP);
+			productQtyMap.put(prodId, qtyMap);
 		}else{
-			productQtyMap.put(prodId, qty);
+			tempMap = [:]
+			tempMap.put("qohQty", qty);
+			tempMap.put("atpQty", qtyATP);
+			productQtyMap.put(prodId, tempMap);
 		}
 	}
 	
@@ -45,9 +53,10 @@ if(facilityId){
 		tempMap = [:];
 		Map.Entry entry = mapIter.next();
 		prodId=entry.getKey();
-		qty=entry.getValue();
+		qtyMap=entry.getValue();
 		tempMap.put("productId", prodId);
-		tempMap.put("qoh", qty);
+		tempMap.put("qoh", qtyMap.get("qohQty"));
+		tempMap.put("atp", qtyMap.get("atpQty"));
 		tempMap.put("facilityId", facilityId);
 		storeProductInventory.add(tempMap)
 	}

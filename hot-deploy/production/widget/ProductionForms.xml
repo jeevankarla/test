@@ -82,7 +82,8 @@
     	default-table-style="basic-table hover-bar" separate-columns="true" paginate-target="productionStockXfers">   
         <field name="facilityId" title="Store"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
         <field name="productId" title="Product"><display-entity entity-name="Product" key-field-name="productId" description="${productName} [${internalName}]"/></field>
-        <field name="qoh" title="Total Qty"><display/></field>
+        <field name="qoh" title="Qty on Hand"><display/></field>
+        <field name="atp" title="Avl. to Promise"><display/></field>
         <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="Stock Xfer"  target="javascript: showXferForm('${facilityId}', '${productId}');" ></hyperlink></field>
         <!-- <field name="Override" widget-style="buttontext"> 
         </field>-->

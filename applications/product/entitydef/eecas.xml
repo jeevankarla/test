@@ -65,9 +65,9 @@ under the License.
     <eca entity="InventoryItem" operation="create" event="validate">
         <action service="checkAndManageBlendedProductInventory" mode="sync"/>
     </eca>
-   <!--  <eca entity="InventoryItemDetail" operation="create" event="validate">
+    <eca entity="InventoryItemDetail" operation="create" event="validate">
         <action service="validateInventoryForFacility" mode="sync"/>
-    </eca> -->
+    </eca>
     <!-- The InventoryItemDetail entity should never be updated/stored or deleted/removed, but we'll catch those too anyway... -->
     <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">
         <action service="updateInventoryItemFromDetail" mode="sync"/>
