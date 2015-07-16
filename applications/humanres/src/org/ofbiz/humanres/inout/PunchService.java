@@ -667,7 +667,8 @@ public class PunchService {
 					conditionList1, EntityOperator.AND);
 			List<GenericValue> finalPunchIN = delegator.findList("EmplPunch",
 					condition1, null, null, null, false);
-			
+			List shiftTypeIdsList = EntityUtil
+					.getFieldListFromEntityList(finalPunchIN, "shiftType", true);
 			GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
 			GenericValue finalPunchINValueLatest =  (GenericValue) finalPunchIN.get(finalPunchIN.size()-1);
 			
@@ -693,7 +694,7 @@ public class PunchService {
 			conditionList2.add(EntityCondition.makeCondition("partyId",
 					EntityOperator.IN, empPartyIds));
 			conditionList2.add(EntityCondition.makeCondition("shiftType", 
-					EntityOperator.EQUALS, finalPunchINValue.getString("shiftType")));
+					EntityOperator.IN, shiftTypeIdsList));
 			conditionList2.add(EntityCondition.makeCondition("InOut", "OUT"));
 			EntityCondition condition2 = EntityCondition.makeCondition(
 					conditionList2, EntityOperator.AND);
