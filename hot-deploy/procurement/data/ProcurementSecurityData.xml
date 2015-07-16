@@ -80,7 +80,11 @@
 	<SecurityGroupPermission groupId="FULLADMIN" permissionId="OPCOST_VIEW"/>
 	<SecurityGroupPermission groupId="BIZADMIN" permissionId="OPCOST_VIEW"/>
 	
-	
+	<!-- MR Transporter Time Period View permissions -->
+    <SecurityPermission description="MRTransporters Billing Timeperiod" permissionId="MILKRECEIPT_MRTPRD"/>
+    <SecurityGroup description="Viewing the MRTransporters Billing Timeperiod ! " groupId="MILKRECEIPT_TMPERIOD"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_TMPERIOD" permissionId="MILKRECEIPT_TMPERIOD"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MILKRECEIPT_TMPERIOD"/>
 	
 	<!-- Permissions to View ProcurementReports only -->
 	<SecurityPermission description="Permission to view reports in the Procurement Component." permissionId="PROCUREMENT_REPORTS"/>
