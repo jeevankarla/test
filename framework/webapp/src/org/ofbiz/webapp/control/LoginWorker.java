@@ -72,6 +72,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.stats.VisitHandler;
+import java.net.URL;
 
 /**
  * Common Workers
@@ -590,10 +591,21 @@ public class LoginWorker {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
         doBasicLogout(userLogin, request, response);
-
+        try{
+    		URL requestUrl = new URL(request.getRequestURL().toString());
+            String portString = 
+                    requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
+            String redirectUrl = requestUrl.getProtocol() + 
+                    "://" + requestUrl.getHost() + portString + "/myportal/control/main";
+        	
+        }catch(Exception e){
+        	
+        }
+        
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
         }
+        
         return "success";
     }
 
