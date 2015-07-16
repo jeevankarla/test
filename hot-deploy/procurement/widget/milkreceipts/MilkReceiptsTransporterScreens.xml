@@ -25,6 +25,40 @@
             </widgets>
         </section>
     </screen>
+    <screen name="MRTransporterTimePeriod">
+ 	   <section>
+		  <actions>
+			<set field="titleProperty" value="MILK RECEIPTS"/>	
+			<set field="tabButtonItem" value="MRTransporterMargins"/>
+			<set field="tabButtonItem2" value="MRTransporterTimePeriod" />
+			<entity-condition list="TimePeriods" entity-name="CustomTimePeriod">
+           		<condition-expr field-name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>
+           	    <order-by field-name="-customTimePeriodId" />
+	        </entity-condition>
+		 </actions>
+ 		 <widgets>
+			 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                     <include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+            	  <section>
+					<widgets>
+						<screenlet title="Time Periods">
+							<include-form name="ListTimePeriods" location="component://procurement/widget/milkreceipts/MilkReceiptsTransporterForms.xml" />
+						</screenlet>
+						<section>
+						  <widgets>
+							<screenlet title="New Time Period">
+								<include-form name="CreateMRTransporterTimePeriod" location="component://procurement/widget/milkreceipts/MilkReceiptsTransporterForms.xml" />
+							</screenlet>
+						  </widgets>
+						</section>
+					</widgets>
+				  </section>
+			   </decorator-section>
+			</decorator-screen>
+ 		 </widgets>
+ 	   </section>
+	</screen>	
      <screen name="MRTransporterBilling">
         <section>
         	<actions>

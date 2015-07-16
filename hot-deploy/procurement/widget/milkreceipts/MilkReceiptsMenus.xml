@@ -13,7 +13,15 @@
    <menu name="MilkReceiptTransporterTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="MRTransporters" title="Transporters">
         	<link target="mrTransporters"/>
-        </menu-item>    
+        </menu-item>
+        <menu-item name="MRTransporterTimePeriod" title="Time Period">
+            <condition>
+	        	<or>
+	        		<if-has-permission permission="MILKRECEIPT"  action="_TMPERIOD"/>
+	        	</or>        		
+	        </condition> 
+        	<link target="mrTransporterTimePeriod"/>
+        </menu-item>     
         <menu-item name="MRTransporterBilling" title="Transporter Billing">
         	<link target="mrTransporterBilling"/>
         </menu-item>  

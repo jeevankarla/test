@@ -519,6 +519,16 @@
        <response name="success" type="view" value="mrTransporters"/>
        <response name="error" type="view" value="mrTransporters"/>       
     </request-map>
+    <request-map uri="mrTransporterTimePeriod">
+       <security https="true" auth="true"/>               
+       <response name="success" type="view" value="mrTransporterTimePeriod"/>
+    </request-map>
+    <request-map uri="createMRTransporterTimePeriod">
+	        <security https="true" auth="true"/>
+	        <event type="service" invoke="createCustTimePeriodMM"/>
+	        <response name="success" type="request-redirect" value="mrTransporterTimePeriod"/>
+	        <response name="error" type="request-redirect" value="mrTransporterTimePeriod"/>
+    </request-map>
     <request-map uri="mrTransporterBilling">
         <security https="true" auth="true"/>
        <response name="success" type="view" value="mrTransporterBilling"/>
@@ -912,6 +922,7 @@
     
     <!-- view maps of transporter Screens -->
     <view-map name="mrTransporters" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporters"/>
+    <view-map name="mrTransporterTimePeriod" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporterTimePeriod"/>
     <view-map name="mrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporterBilling"/>
     <view-map name="GenerateMRTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRTransporterMarginReport"/>
    
