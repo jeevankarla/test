@@ -45,7 +45,9 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
 
+dctx = dispatcher.getDispatchContext();
 List facilityTypeIds = FastList.newInstance();
 List facilityIds = FastList.newInstance();
 List facilityList = FastList.newInstance();
@@ -68,15 +70,14 @@ userLogin=parameters.userLogin;
 partyIdTo=userLogin.partyId;
 List employmentList=FastList.newInstance();
 partyIdFrom="";
-condition=EntityCondition.makeCondition([EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyIdTo),
-										 EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null)],EntityOperator.AND);
-employmentList=delegator.findList("Employment",condition,null,null,null,false);
-employment=EntityUtil.getFirst(employmentList);
- partyRole=delegator.findOne("PartyRole",[partyId:partyIdTo,roleTypeId:"PRODUCTION_RUN"],false);
- if(UtilValidate.isNotEmpty(partyRole)){
-	if(UtilValidate.isNotEmpty(employment)){
-		partyIdFrom=employment.partyIdFrom;
-	}
+Map inputMap = FastMap.newInstance();
+inputMap.clear();
+inputMap.put("userLogin",userLogin);
+inputMap.put("partyId",partyIdTo);
+inputMap.put("roleTypeIdTo","PRODUCTION_RUN");
+resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx, inputMap);
+ if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
+		partyIdFrom=resultMap.get("deptId");
 	
 	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
 																					  EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds)],EntityOperator.AND),UtilMisc.toSet("facilityId","facilityName"),null,null,false);

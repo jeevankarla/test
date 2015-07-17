@@ -89,8 +89,8 @@
 	 <WorkShiftTypePeriodMap isDefault="Y" shiftPeriodId="202" shiftTypeId="PROD_SHIFT_02"/>
 	 <WorkShiftTypePeriodMap isDefault="Y" shiftPeriodId="203" shiftTypeId="PROD_SHIFT_NIGHT"/>
 	
-	 <WorkShiftPeriod endTime="14:00:00" shiftPeriodId="201" startTime="06:00:00"/>
-	 <WorkShiftPeriod endTime="22:00:00" shiftPeriodId="202" startTime="14:00:00"/>
-	 <WorkShiftPeriod endTime="06:00:00" shiftPeriodId="203" startTime="22:00:00"/>
+	 <WorkShiftPeriod endTime="13:59:59" shiftPeriodId="201" startTime="06:00:00"/>
+	 <WorkShiftPeriod endTime="21:59:59" shiftPeriodId="202" startTime="14:00:00"/>
+	 <WorkShiftPeriod endTime="05:59:59" shiftPeriodId="203" startTime="22:00:00"/>
     
 </entity-engine-xml>
