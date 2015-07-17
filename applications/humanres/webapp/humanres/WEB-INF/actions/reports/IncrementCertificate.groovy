@@ -26,6 +26,8 @@ endDate = UtilDateTime.toDateString(currentDayTimeEnd);
 context.put("fromDate",timePeriodStart);
 context.put("thruDate",timePeriodEnd);
 
+selectedEmploye = parameters.employeeId;
+context.put("selectedEmploye",selectedEmploye);
 
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 
@@ -38,6 +40,11 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
 employments = UtilMisc.sortMaps(employments, UtilMisc.toList("partyId"));
 employmentsIds = EntityUtil.getFieldListFromEntityList(employments, "partyId", true);
+if(UtilValidate.isNotEmpty(selectedEmploye)){
+	employmentsIds = [selectedEmploye];
+}else{
+	employmentsIds = EntityUtil.getFieldListFromEntityList(employments, "partyId", true);
+}
 employmentList=[];
 
 if(UtilValidate.isNotEmpty(employmentsIds)){
@@ -100,6 +107,7 @@ if(UtilValidate.isNotEmpty(employmentList)){
 					//presentPay=PayGradeId.get("amount");
 					presentSalaryStepSeqId = PayGradeId.get("salaryStepSeqId");
 					presentPayGradeId = PayGradeId.get("payGradeId");
+					presentPayScale = "";
 					presentSalaryConditionList=[];
 					presentSalaryConditionList.add(EntityCondition.makeCondition("salaryStepSeqId", EntityOperator.EQUALS ,presentSalaryStepSeqId));
 					presentSalaryConditionList.add(EntityCondition.makeCondition("payGradeId", EntityOperator.EQUALS ,presentPayGradeId));
@@ -214,6 +222,9 @@ if(UtilValidate.isNotEmpty(employmentList)){
 			EmployeeFinalMap.put(employee,detailsMap);
 		}
 	}
+}else{
+	Debug.logError( "employee doesn't have increment","");
+	context.errorMessage =  "employee doesn't have increment";
 }
 
 context.put("EmployeeFinalMap",EmployeeFinalMap);

@@ -859,7 +859,8 @@ function setOrgPartyId() {
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="25%"><span class='h3'>Increment Certificate Report</span></td>
-										<td width="50%"><span class='h3'>Period Id</span>
+										<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="IncrementCertificate" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
+										<td width="30%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
 												<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
 											</select>
