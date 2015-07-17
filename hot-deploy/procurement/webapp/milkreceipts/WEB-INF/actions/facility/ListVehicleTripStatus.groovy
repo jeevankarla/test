@@ -73,22 +73,21 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 	conditionList.add(EntityCondition.makeCondition("statusTypeId", EntityOperator.EQUALS, "MR_VEHICLE_STATUS" ));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList);
 	stausList = delegator.findList("StatusItem",condition,null,null,null,false);
-	
 	List<String> statusIdsList = EntityUtil.getFieldListFromEntityList(stausList, "statusId", false);
+
+	List vehicleTripStatusViewList = delegator.findList("MilkTransferAndItemVehicleTripStatus",EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.IN , statusIdsList ),null,UtilMisc.toList("-estimatedStartDate"),null,false);
+	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.GREATER_THAN_EQUAL_TO , shiftDateStart ));
 	conditionList.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.LESS_THAN_EQUAL_TO , shiftDateEnd ));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , statusIdsList ));
-	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS , null ),EntityOperator.OR,EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MR_VEHICLE_OUT" )));
-	
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS , null ),EntityOperator.OR,EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "MR_VEHICLE_OUT" )));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	List vehicleStatusList = delegator.findList("VehicleTripStatus",condition,null,UtilMisc.toList("-estimatedStartDate"),null,false);
-	
+	List vehicleStatusList = EntityUtil.filterByCondition(vehicleTripStatusViewList, condition);
 	if(UtilValidate.isNotEmpty(vehicleStatusList)){
 		for(vehicleStatus in vehicleStatusList){
 			String vehicleId = vehicleStatus.getAt("vehicleId");
 			String sequenceNum = vehicleStatus.getAt("sequenceNum");
-			String statusId = vehicleStatus.getAt("statusId");
+			String statusId = vehicleStatus.getAt("vehicleTripStatusId");
 			String userLoginId = vehicleStatus.getAt("lastModifiedByUserLogin");
 			Map vehicleTripMap = FastMap.newInstance();
 			conditionList.clear();
@@ -96,15 +95,24 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 			GenericValue vehicleTrip = delegator.findOne("VehicleTrip", UtilMisc.toMap("vehicleId" ,vehicleId,"sequenceNum",sequenceNum), true);
 			if(UtilValidate.isNotEmpty(vehicleTrip) ){
 				String partyId = vehicleTrip.get("partyId");
-				/*if(statusId == "MR_VEHICLE_CIP"){ 
-					List milkTransferList = delegator.findList("MilkTransfer",EntityCondition.makeCondition([EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId),
-					                                                                                        EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum)],EntityOperator.AND),UtilMisc.toSet("isCipChecked"),null,null,false);
-					GenericValue milkTransfer = EntityUtil.getFirst(milkTransferList);
-					String isCipChecked = milkTransfer.getString("isCipChecked") 
-					if(UtilValidate.isEmpty(isCipChecked)){
-						statusId = "MR_VEHICLE_UNLOAD";
+
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , vehicleId ));
+				conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS , sequenceNum ));
+				conditionList.add(EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "MR_VEHICLE_IN" ));	
+				EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				vehicleEntryProductList = EntityUtil.filterByCondition(vehicleTripStatusViewList, cond);
+				if(UtilValidate.isNotEmpty(vehicleEntryProductList)){
+					vehicleEntryProduct = EntityUtil.getFirst(vehicleEntryProductList);
+					String productId = vehicleEntryProduct.productId;
+					Timestamp estimatedStartDate = vehicleEntryProduct.estimatedStartDate;
+					String statusDate=null;
+					if(UtilValidate.isNotEmpty(estimatedStartDate)){
+						statusDate = UtilDateTime.toDateString(estimatedStartDate,"dd-MM-yyyy HH:mm");
 					}
-				}*/																							
+					vehicleTripMap.put("productId",productId);
+					vehicleTripMap.put("estimatedStartDate",statusDate);
+				}
 				vehicleTripMap.put("vehicleId",vehicleId);
 				vehicleTripMap.put("sequenceNum",sequenceNum);
 				vehicleTripMap.put("partyId",partyId);

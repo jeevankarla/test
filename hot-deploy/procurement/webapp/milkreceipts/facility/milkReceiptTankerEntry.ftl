@@ -488,6 +488,7 @@ function fetchTankerRecordNumber(){
            				alert('this tanker is already in process');
            				$('#tankerName').val('');
            				$('#tankerNo').val('');
+           				$('#milkTransferId').val('');
            				populateVehicleSpan();	
            			}
 	  				

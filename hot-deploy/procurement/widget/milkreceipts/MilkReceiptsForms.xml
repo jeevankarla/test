@@ -480,18 +480,18 @@
     </form>    
     <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="milkDetailslist"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
        <field name="milkTransferId" title="Record No"><display/></field>
+       <field name="containerId" title="Vehicle Number"><display/></field>
        <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
        <field name="partyIdTo" separate-column="true" title="To"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
-       <field name="receiveDate" title="RecDate"><display type="date"/></field>
+       <field name="receiveDate" title="Recd.Date"><display/></field>
        <field name="productId" title="Milktype"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
        <field name="siloId" title="Silo"><display></display></field>
-       <field name="receivedQuantity" title="Recquantity(Kgs)"><display/></field>
-       <field name="receivedQuantityLtrs" title="Recquantity(Ltrs)"><display default-value="${quantity/1.03}"/></field>
+       <field name="receivedQuantity" title="Recd.Qty(Kgs)"><display/></field>
+       <field name="receivedQuantityLtrs" title="Recd.Qty(Ltrs)"><display default-value="${quantity/1.03}"/></field>
        <field name="receivedFat" ><display/></field>
        <field name="receivedSnf" ><display/></field>
        <field name="receivedKgFat" title="RecKgFat"><display/></field>
        <field name="receivedKgSnf" title="RecKgSnf"><display/></field>
-       <field name="containerId" title="Vehicle Number"><display/></field>
        <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
        <!-- <field   name="update"  title="Edit" title-style="buttontext" separate-column="true" widget-style="button">
           <hyperlink target="updateMilkRecord" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
@@ -505,6 +505,8 @@
         </field> 
        <sort-order>
 	        <sort-field name="milkTransferId"/>
+   	        <sort-field name="containerId"/>
+   	        <sort-field name="receiveDate"/>
 	        <sort-field name="partyId"/>
 	        <sort-field name="partyIdTo"/>
 	        <sort-field name="productId"/>
@@ -515,8 +517,6 @@
 	        <sort-field name="receivedSnf"/>
 	        <sort-field name="receivedKgFat"/>
 	        <sort-field name="receivedKgSnf"/>
-	        <sort-field name="containerId"/>
-	        <sort-field name="receiveDate"/>
 	        <sort-field name="statusId"/>
 	        <sort-field name="update"/>
 	        <sort-field name="delete"/>
@@ -702,6 +702,8 @@
        <field name="vehicleId"  title="Tanker" title-style="buttontext" separate-column="true" widget-style="buttontext">
           <hyperlink  target-type="plain" description="${vehicleId}"  target="javascript: vehicleDashBoardQtip('${vehicleId}','${sequenceNum}');" ></hyperlink>
           </field>
+       <field name="estimatedStartDate" separate-column="true" title="Entry Date"><display/></field>
+       <field name="productId" separate-column="true" title="Product Name"><display-entity entity-name="Product" key-field-name="productId" description="${description}[${productId}]"></display-entity></field>
        <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
        <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" key-field-name="statusId" description="${groovy: description.toUpperCase()}"></display-entity></field>
        <field name="userLogin" title="Last Modified By"><display/></field>

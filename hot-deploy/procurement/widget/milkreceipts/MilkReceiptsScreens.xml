@@ -1012,7 +1012,7 @@
 				<set field="tabButtonItem" value="MilkReceiptsDashboard"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/facility/ListVehicleTripStatus.groovy"/>
 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/vehicleTripStatus.js" global="true"/>
-				 <set field="parameters.shiftDate" value="${groovy: return org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(),&quot;yyyy-MM-dd&quot;)}"/>
+				 <set field="parameters.shiftDate" value="${parameters.shiftDate}" default-value="${groovy: return org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(),&quot;yyyy-MM-dd&quot;)}"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="MilkReceiptsCommonDecorator"

@@ -94,18 +94,22 @@ milkDetailslist=[];
 milkTransferDetailsList=[];
 if(UtilValidate.isNotEmpty(parameters.shiftId)){
 	shiftType = parameters.shiftId;
+	context.shiftId=shiftType;
 }
 hideSearch = "N";
 if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	List conditionList=FastList.newInstance();
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyId));
+		context.partyId=parameters.partyId;
 	}
 	if(UtilValidate.isNotEmpty(parameters.siloId)){
 		conditionList.add(EntityCondition.makeCondition("siloId", EntityOperator.EQUALS , parameters.siloId));
+		context.siloId=parameters.siloId;
 	}
 	if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
 		conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
+		context.milkTransferId=parameters.milkTransferId;
 	}
 	if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="APPROVE_RECEIPTS"){
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_RECD"));
@@ -115,17 +119,18 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	}
 	if(UtilValidate.isNotEmpty(parameters.productId)){
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
+		context.productId=parameters.productId;
 	}
 	if(UtilValidate.isNotEmpty(parameters.createdByUserLogin)){
 		conditionList.add(EntityCondition.makeCondition("createdByUserLogin", EntityOperator.EQUALS ,parameters.createdByUserLogin));
+		context.createdByUserLogin=parameters.createdByUserLogin;
 	}
 	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
-    conditionList.add(EntityCondition.makeCondition([
-			EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS,null),
-			EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS,"MR_VEHICLE_OUT")], EntityOperator.OR));
-	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	milkTransferDetailsList = delegator.findList("MilkTransferAndItemVehicleTripStatus",condition,null,UtilMisc.toList("-createdDate"),null,false);
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	vehicleTripStatusViewList = delegator.findList("MilkTransferAndItemVehicleTripStatus",condition,null,UtilMisc.toList("-estimatedStartDate"),null,false);
+	
+    milkTransferDetailsList = EntityUtil.filterByCondition(vehicleTripStatusViewList, EntityCondition.makeCondition(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS , null ),EntityOperator.OR,EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "MR_VEHICLE_OUT" )));
 }
 sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 String toDate=null;
@@ -134,6 +139,7 @@ if(UtilValidate.isEmpty(shiftDate)){
 	 shiftDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 	 shiftDateTime = UtilDateTime.toDateString(shiftDate, "yyyy-MM-dd");
 }else{
+ 	context.shiftDate=shiftDate;
 	sdf = new SimpleDateFormat("MMMM dd, yyyy");
 	shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
 	shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
@@ -165,8 +171,24 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  shiftsMap.put("containerId",eachShift.vehicleId);
 		  shiftsMap.put("statusId",eachShift.statusId);
 		  shiftsMap.put("purposeTypeId",eachShift.purposeTypeId);
-		  milkDetailslist.add(shiftsMap);
+		  shiftsMap.put("sequenceNum",eachShift.sequenceNum);
 		  
+		  List eachCondList = FastList.newInstance();
+		  eachCondList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , eachShift.vehicleId ));
+		  eachCondList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS , eachShift.sequenceNum ));
+		  eachCondList.add(EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "MR_VEHICLE_IN" ));
+		  EntityCondition eachCond = EntityCondition.makeCondition(eachCondList,EntityOperator.AND);
+		  vehicleEntryProductList = EntityUtil.filterByCondition(vehicleTripStatusViewList, eachCond);
+		  if(vehicleEntryProductList){
+			  vehicleEntryProduct = EntityUtil.getFirst(vehicleEntryProductList);
+			  estimatedStartDate = vehicleEntryProduct.estimatedStartDate;
+			  String receiveDate=null;
+			  if(UtilValidate.isNotEmpty(estimatedStartDate)){
+				  receiveDate = UtilDateTime.toDateString(estimatedStartDate,"dd-MM-yyyy HH:mm");
+			  }
+			  shiftsMap.put("receiveDate",receiveDate);
+		  }
+		  milkDetailslist.add(shiftsMap);
 	  }
 }
 
