@@ -9,42 +9,42 @@ function changeRowColor() {
 	var tableObj = $('#_col table tr');
 	$(tableObj).each(function(index, element) {
 		
-		var resultEnter = $(this).find("td:contains('VEHICLE ENTERED')");
+		var resultEnter = $(this).find("td:contains('ENTRY')");
 		var compText = $.trim($(resultEnter).text());
-		if (compText == ("VEHICLE ENTERED")) {
+		if (compText == ("ENTRY")) {
 			$(this).css("background-color", "#A9A9A9");
 		}
 		
-		var resultGrw = $(this).find("td:contains('VEHICLE AT GROSSWEIGHT')");
+		var resultGrw = $(this).find("td:contains('GROSS WEIGHT')");
 		var compTextGrw = $.trim($(resultGrw).text());
-		if (compTextGrw == ("VEHICLE AT GROSSWEIGHT")) {
+		if (compTextGrw == ("GROSS WEIGHT")) {
 			$(this).css("background-color", "#F0E68C");
 		}
-		var resultQc = $(this).find("td:contains('VEHICLE AT QUALITY CONTROL')");
+		var resultQc = $(this).find("td:contains('QC')");
 		var compTextQc = $.trim($(resultQc).text());
-		if (compTextQc == ("VEHICLE AT QUALITY CONTROL")) {
+		if (compTextQc == ("QC")) {
 			$(this).css("background-color", "#FF7F50");
 		}
-		var resultCip = $(this).find("td:contains('VEHICLE AT UN-LOAD')");
+		var resultCip = $(this).find("td:contains('UNLOAD')");
 		var compTextCip = $.trim($(resultCip).text());
-		if (compTextCip == ("VEHICLE AT UN-LOAD")) {
+		if (compTextCip == ("UNLOAD")) {
 			$(this).css("background-color", "#6495ED");
 		}
-		var resultCip = $(this).find("td:contains('VEHICLE AT CIP')");
+		var resultCip = $(this).find("td:contains('CIP')");
 		var compTextCip = $.trim($(resultCip).text());
-		if (compTextCip == ("VEHICLE AT CIP")) {
+		if (compTextCip == ("CIP")) {
 			$(this).css("background-color", "#88FAFA");
 		}
-		var resultTw = $(this).find("td:contains('VEHICLE AT TAREWEIGHT')");
+		var resultTw = $(this).find("td:contains('TARE WEIGHT')");
 		var compTextTw = $.trim($(resultTw).text());
-		if (compTextTw == ("VEHICLE AT TAREWEIGHT")) {
+		if (compTextTw == ("TARE WEIGHT")) {
 			//#8A2BE2
 			$(this).css("background-color", "#FFEBCD");
 		}
 		
-		var resultOUT = $(this).find("td:contains('VEHICLE OUT')");
+		var resultOUT = $(this).find("td:contains('EXIT')");
 		var compTextOUT = $.trim($(resultOUT).text());
-		if (compTextOUT == ("VEHICLE OUT")) {
+		if (compTextOUT == ("EXIT")) {
 			$(this).css("background-color", "#90EE90");
 		}
 

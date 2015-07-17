@@ -98,6 +98,7 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td>Record No</td>
+          <td>Recd Date</td>
           <td>From Union</td>
           <td>To</td>
           <td>Milk Type</td>
@@ -105,14 +106,13 @@ under the License.
           <td>Milk Used For</td>
           </#if>
           <td>Silo</td>
-          <td>Received Qty(Kgs)</td>
-          <td>Received Qty(Ltrs)</td>
-          <td>Received Fat</td>
-          <td>Received Snf</td>
-          <td>Received KgFat</td>
-          <td>Received KgSnf</td>
+          <td>Recd Qty(Kgs)</td>
+          <td>Recd Qty(Ltrs)</td>
+          <td>Recd Fat</td>
+          <td>Recd Snf</td>
+          <td>Recd KgFat</td>
+          <td>Recd KgSnf</td>
           <td>Vehicle Number</td>
-          <td>Received Date</td>
           <td>Status</td>
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllReceipts" name="checkAllReceipts" onchange="javascript:toggleRequestId(this);"/></td>
         </tr>
@@ -124,9 +124,16 @@ under the License.
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
 				<input type=hidden name=milkTransferId value='${eachItem.milkTransferId?if_exists}'>
               	<td>${eachItem.milkTransferId?if_exists}</td>
+              	 <#if eachItem.receiveDate?has_content>
+				<td>${eachItem.receiveDate}</td>
+				<#else>
+                <td></td>
+                </#if>
+              	
+              	
               	<#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : eachItem.partyId}, false))!>
                 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
-                <td>  
+                <td> 
                 <select name="partyId" class='h4' >
                     <option value='${eachItem.partyId}'>${partyName.groupName?if_exists}</option>
 			       <#list unionsList as union>    
@@ -177,12 +184,7 @@ under the License.
 				<td>${eachItem.receivedKgFat?if_exists}</td>
 				<td>${eachItem.receivedKgSnf?if_exists}</td>
 				<td>${eachItem.containerId?if_exists}</td>
-				<#if eachItem.receiveDate?has_content>
-				<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.receiveDate, "dd/MM/yyyy")}</td>
-				<#else>
-                <td></td>
-                </#if>
-                <#assign statusItem = (delegator.findOne("StatusItem",{"statusId" : eachItem.statusId},false))!>
+			   <#assign statusItem = (delegator.findOne("StatusItem",{"statusId" : eachItem.statusId},false))!>
                 <td>${statusItem.description?if_exists}</td>
            		<td><input type="checkbox" id="receiptCheckBoxId_${eachItem_index}" name="receiptCheckBoxId"/></td>
             </tr>

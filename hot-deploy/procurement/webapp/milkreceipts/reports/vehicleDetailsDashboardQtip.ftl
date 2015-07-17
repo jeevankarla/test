@@ -103,14 +103,20 @@
           	 	alert(result["_ERROR_MESSAGE_"]);
          	 }
        });
-        var siloId=vehicleProdDetails.siloId;
+        var receivedFat=vehicleProdDetails.receivedFat;
+        var netWeight=vehicleProdDetails.netWeight;
     	var message = "";
-        message += "<form action='' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10  width='100%' > " ; 
+        message += "<form action='' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 > " ; 
 		message +="<tr>"+"<td>"+"<input  type='hidden' required='required' name='vehicleId' value='"+vehicleId+"' />"+"</td></tr>";
-	    message +="<tr class='h3'><td align='left' class='h3' width='25%'>Product Id :</td><td align='left' width='30%'>"+vehicleProdDetails.productId+"</td><td align='left' width='30%'>Union/Chilling Center :</td><td align='left' width='30%' keep-together='always'>"+vehicleProdDetails.partyId+"</td></tr>";
+	    message +="<tr class='h3'><td align='left' class='h3' width='25%'>Product Name :</td><td align='left' width='25%'>"+vehicleProdDetails.productName+" [ "+vehicleProdDetails.productId+"] </td></tr>";
+	    message +="<tr class='h3'><td align='left' class='h3' width='25%'>Union/Chilling Center :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.partyId+"</td><td align='left' width='30%'>DC No      :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.dcNo+"</td></tr>";
 		
-		if (siloId) {
-		message +="<tr class='h3'><td align='left' class='h3' width='25%'>Silo Id :</td><td align='left' width='30%'>"+vehicleProdDetails.siloId+"</td><td align='left' width='30%'>Net Weight :</td><td align='left' width='30%' keep-together='always'>"+vehicleProdDetails.netWeight+"</td></tr>";
+		if (netWeight) {
+		message +="<tr class='h3'><td align='left' width='20%'>Gross Weight(Kgs) :</td><td align='left' width='10%'>"+vehicleProdDetails.grossWeight+"</td><td align='left' width='20%'>Tare Weight (Kgs) :</td><td align='left' width='10%' keep-together='always'>"+vehicleProdDetails.tareWeight+"</td><td align='left' width='20%' keep-together='always'></tr>";
+		message +="<tr class='h3'><td align='left' class='h3' width='25%'>Silo Id :</td><td align='left' width='30%'>"+vehicleProdDetails.siloId+"</td><td align='left' width='25%' >Net Weight (Kgs) :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.netWeight+"</td></tr>";
+		}
+		if (receivedFat) {
+		message +="<tr class='h3'><td align='left' class='h3' width='25%'>Fat % :</td><td align='left' width='30%'>"+vehicleProdDetails.receivedFat+"</td><td align='left' width='25%'>SNF % :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.receivedSnf+"</td></tr>";
 		}
 		for(var i=0 ; i<vehicleStatusDetails.length ; i++){
 			var innerList=vehicleStatusDetails[i];
@@ -118,10 +124,10 @@
 			var statusEntryDate=  innerList['statusEntryDate']; 
 		    message +="<tr class='h3'><td align='left' width='30%' keep-together='always'>"+statusId+" Time :</td><td align='left' width='30%' keep-together='always'>"+statusEntryDate+"</td></tr>";
 		}
-		message += "<tr class='h3'><td></td><td width='10%' align='center' class='h3'><span align='right'><button id='cancelButton' class='styled-button' value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallbutton'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		message += "<tr class='h3'><td></td><td width='10%' align='center' class='h3'><span align='right'><button id='cancelButton' class='styled-button' value='${uiLabelMap.CommonClose}' onclick='return cancelForm();' class='smallbutton'>${uiLabelMap.CommonClose}</button></span></td></tr>";
 		message += "</table></form>";	    
   		//alert("#####"+message);
-	    var title =vehicleId+" Details ";
+	    var title ="Tanker "+vehicleId+" Details ";
 		Alert(message, title);   
         
  	}

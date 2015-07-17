@@ -177,57 +177,89 @@ function deleteTransferEntry(thisValue,milkTransferId){
 	          		<tr>
 	          			<table>
 	          				<tr>
-	        					<td><span class='h3'>Record No: </span></td><td><input  size="12" type="text" id="milkTrnsfId" name="milkTransferId"/></td>
+	          				<td><span class='h3'>Record No: </span></td>
+	        					<td><input  size="12" type="text" id="milkTrnsfId" name="milkTransferId" <#if milkTransferId?has_content> value="${milkTransferId}" </#if>/></td>
 	        				</tr>
-                         	<tr>
-		                         		<td><span class='h3'>From Union: </span></td><td>
-		                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on"/><span class="tooltip" id ="partyToolTip">none</span></td>
-		                         		<input type="hidden" size="6" maxlength="6" name="partyId"/>
-		                         		
-		                         		<input type="hidden" size="6" maxlength="6" name="hideSearch" value="N"/>
-		                         		
-		                   			</tr>
+                         	 <tr>
+                         		<td><span class='h3'>From Union: </span></td>
+                         		<td><input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" <#if partyId?has_content> value="${partyId}" </#if>/><span class="tooltip" id ="partyToolTip">none</span></td>
+                         		<input type="hidden" size="6" maxlength="6" name="partyId"/>
+                         		<input type="hidden" size="6" maxlength="6" name="hideSearch" value="N"/>
+		                   	 </tr>
         					<tr>	        	
-					        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type</td><td>
-						        	<select name="productId" class='h4' >
-						        	<option value=''></option>
-			                		<#list productsList as product>    
-			                  	    	<option value='${product.productId}' >
-				                    		${product.description?if_exists}
-				                  		</option>
-			                		</#list>            
-								</select>
-								</td>
+					        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type</td>
+					        	<td>
+			                       <select name="productId" id="productId">  
+			        				 <option value=""></option>
+			    					 <#if productsList?has_content>
+						                <#list productsList as product>
+						                	<#if !siloId?exists>    
+							                  	<#assign isDefault = false>                  
+						                    </#if>
+						                    	<#if productId?exists && productId == product.productId>
+						      						<option  value="${productId}" selected="selected">${product.description}</option>
+						      					<#else>
+						      						<option value='${product.productId}'<#if isDefault> selected="selected"</#if>>
+						                    			${product.description}
+						                  			</option>
+    					      					</#if>
+						      			  </#list>
+		       					      </#if>
+							        </select> 
+       						    </td>
         					</tr>
         					<tr>
-	        					<td align='left' ><span class='h3'> Silo</span></td><td> 
-		        						<select name="siloId"  id="siloId" >
-						        					<option value=""></option>
-						        					<#if rawMilkSilosList?has_content>
-							        					<#list rawMilkSilosList as rawMilkSilo>
-							        						<option value="${rawMilkSilo.facilityId}">${rawMilkSilo.facilityId}</option>
-							        					</#list>
-						        					</#if>
-	          							</select>
-          						    </td>
-	        					</tr> 
+	        					<td align='left' ><span class='h3'> Silo</span></td>
+	        					<td>
+			                       <select name="siloId" id="siloId">  
+			        				 <option value=""></option>
+			    					 <#if rawMilkSilosList?has_content>
+						                <#list rawMilkSilosList as rawMilkSilo>
+						                	<#if !siloId?exists>    
+							                  	<#assign isDefault = false>                  
+						                    </#if>
+						                    	<#if siloId?exists && siloId == rawMilkSilo.facilityId>
+						      						<option  value="${siloId}" selected="selected">${rawMilkSilo.facilityId}</option>
+						      						<#else>
+						      						<option value='${rawMilkSilo.facilityId}'<#if isDefault> selected="selected"</#if>>
+						                    			${rawMilkSilo.facilityId}
+						                  			</option>
+						      					</#if>
+						      						
+						      			  </#list>
+		       					      </#if>
+							       </select> 
+       						    </td>
+	        				</tr> 
 	        				<tr>
-	        					<td><span class='h3'>From Date: </span></td><td><input  size="12" type="text" id="findFromDate" name="fromDate"/></td>
+	        					<td><span class='h3'>From Date: </span></td>
+	        					<td><input  size="12" type="text" id="findFromDate" name="fromDate" <#if shiftDate?has_content> value="${shiftDate}" </#if>/></td>
 	        				</tr>
 	        				<tr>
-	        					<td align='left' ><span class='h3'> Shift</span></td><td> 
-		        						<select name="shiftId"  id="shiftId" >
-						        					<option value=""></option>
-						        					<#if allShiftsList?has_content>
-							        					<#list allShiftsList as shiftDetails>
-							        						<option value="${shiftDetails.shiftTypeId}">${shiftDetails.description}</option>
-							        					</#list>
-						        					</#if>
-	          							</select>
-          					 	</td>
+	        					<td align='left' ><span class='h3'> Shift</span></td>
+	        		     		<td>
+			                       <select name="shiftId" id="shiftId">  
+			        				 <option value=""></option>
+			    					 <#if allShiftsList?has_content>
+						                <#list allShiftsList as shiftDetails>
+						                	<#if !shiftId?exists>    
+							                  	<#assign isDefault = false>                  
+						                    </#if>
+						                    	<#if shiftId?exists && shiftId == shiftDetails.shiftTypeId>
+						      						<option  value='${shiftId}' selected="selected">${shiftDetails.description}</option>
+						      				    <#else>
+						      				 <option value='${shiftDetails.shiftTypeId}'<#if isDefault> selected="selected"</#if>>
+						                    		${shiftDetails.description}
+						                	  </option>
+						                	  </#if>	
+						      			  </#list>
+		       					      </#if>
+							       </select> 
+       						    </td>
 	        				</tr>
 						    <tr>
-						      	<td><span class='h3'>userLogin </span></td><td><input  name="createdByUserLogin" size="15" type="text" /></td>
+						      	<td><span class='h3'>userLogin </span></td>
+						      	<td><input  name="createdByUserLogin" size="15" type="text" <#if createdByUserLogin?has_content> value="${createdByUserLogin}" </#if>/></td>
 						    </tr>	  
 						    <tr><td align='right'><span class='h2'><input type="submit"  size="10" value="Find" class="buttontext h1"/></span> </td></tr>      					 
                       	</table>
@@ -239,3 +271,21 @@ function deleteTransferEntry(thisValue,milkTransferId){
 	</form>
    </div>
 </div>  
+<script type="application/javascript">
+	$(document).ready(function() {
+		//var partyId = $("#partyId").val();
+		var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)};
+		var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
+	  			if(tempPartyJson){
+	  				$('span#partyToolTip').addClass("tooltip");
+	  				$('span#partyToolTip').removeClass("tooltipWarning");
+	  				var partyName = tempPartyJson["partyName"];
+	  				var partyId = tempPartyJson["partyId"];
+	  				if(!partyName){
+	  					partyName = partyId;
+	  				}
+	  				$('span#partyToolTip').html(partyName);
+	  				$('[name=partyId]').val(partyId);
+	  			}
+	});	
+</script>
