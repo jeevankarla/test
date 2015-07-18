@@ -47,6 +47,9 @@
     <SecurityGroupPermission groupId="PRO_PRODUCTION_ENTRY" permissionId="PRO_PRODUCTION_ENTRY" />
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_PRODUCTION_ENTRY"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_PRODUCTION_ENTRY"/>
+    <SecurityGroupPermission groupId="PRO_PRODUCTION_ENTRY" permissionId="WORKEFFORTMGR_ROLE_ADMIN"/>
+    <SecurityGroupPermission groupId="PRO_PRODUCTION_ENTRY" permissionId="ASSETMAINT_ADMIN"/>ACCTG_PREF_ADMIN
+    <SecurityGroupPermission groupId="PRO_PRODUCTION_ENTRY" permissionId="ACCTG_PREF_ADMIN"/>
     
     <SecurityPermission description="Permission for Production Indent Entry" permissionId="PRO_INDENT_ENTRY"/>
     <SecurityGroup description="Permission for Production Indent Entry" groupId="PRO_INDENT_ENTRY"/>

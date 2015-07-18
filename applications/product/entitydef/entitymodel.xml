@@ -1303,7 +1303,7 @@ under the License.
             <key-map field-name="facilityGroupTypeId"/>
         </relation>
          <relation type="one" fk-name="FACILITY_OW_FA" rel-entity-name="Facility">
-            <key-map field-name="facilityId" rel-field-name="ownerFacilityId"/>
+            <key-map field-name="ownerFacilityId" rel-field-name="facilityId"/>
         </relation>
         <relation type="one" fk-name="FACILITY_GP_PGRP" title="PrimaryParent" rel-entity-name="FacilityGroup">
             <key-map field-name="primaryParentGroupId" rel-field-name="facilityGroupId"/>
