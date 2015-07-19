@@ -1,3 +1,4 @@
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -82,9 +83,16 @@ if(UtilValidate.isNotEmpty(milkTransferId)){
 		tareWeight	=MilkTransferList.tareWeight;
 		milkTransferId	=MilkTransferList.milkTransferId;
 		partyId	=MilkTransferList.partyId;
-		receivedProductId=MilkTransferList.receivedProductId;
-		sendProductId=MilkTransferList.sendProductId;
-		receivedProductId=MilkTransferList.receivedProductId;
+		productName = delegator.findOne("Product",UtilMisc.toMap("productId",MilkTransferList.receivedProductId),false);
+		receivedProductId="";
+		if(UtilValidate.isNotEmpty(productName)){
+			receivedProductId = productName.description;
+		}
+		sendProductId="";
+		productName = delegator.findOne("Product",UtilMisc.toMap("productId",MilkTransferList.sendProductId),false);
+		if(UtilValidate.isNotEmpty(productName)){
+			sendProductId = productName.description;
+		}
 		sendTemparature=MilkTransferList.sendTemparature;
 		receivedTemparature=MilkTransferList.receivedTemparature;
 		sendAcidity	=MilkTransferList.sendAcidity;

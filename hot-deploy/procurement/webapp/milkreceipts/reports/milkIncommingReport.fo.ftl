@@ -1,3 +1,4 @@
+
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -29,7 +30,6 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
  <#if milkTransferMap?has_content> 
 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
@@ -43,17 +43,21 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold" >${uiLabelMap.KMFDairyHeader}</fo:block>
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold" >${uiLabelMap.KMFDairySubHeader}</fo:block>
 			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold">ACKNOWLEDGEMENT </fo:block>
+			    <#if flag?has_content && flag=="ForEmail">
+			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold">PROVISIONAL ACKNOWLEDGEMENT </fo:block>
+				<#else>
+             	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold">ACKNOWLEDGEMENT </fo:block>
+             	</#if>
 			    
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160; </fo:block> 
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold" >DISPATCH FROM:      </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if milkTransferMap.get("partyId")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Id: ${milkTransferMap.get("partyId")}, <#else> </#if><#if milkTransferMap.get("partyName")?has_content>${milkTransferMap.get("partyName")} <#else> </#if>        </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if milkTransferMap.get("address1")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${milkTransferMap.get("address1")}   <#else> </#if>     </fo:block>
-                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if milkTransferMap.get("address2")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${milkTransferMap.get("address2")?if_exists} <#else> </#if>     </fo:block>
-                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if milkTransferMap.get("city")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${milkTransferMap.get("city")?if_exists}-${milkTransferMap.get("postalCode")?if_exists}. <#else> </#if>                          </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  <#if partyDetailsMap.get("partyName")?has_content>${partyDetailsMap.get("partyName")} <#else> </#if><#if partyDetailsMap.get("partyId")?has_content>[${partyDetailsMap.get("partyId")}] <#else> </#if>        </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("address1")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("address1")}   <#else> </#if>     </fo:block>
+                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("address2")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("address2")?if_exists} <#else> </#if>     </fo:block>
+                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("city")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("city")?if_exists}-${partyDetailsMap.get("postalCode")?if_exists}. <#else> </#if>                          </fo:block>
                 
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${milkTransferMap.get("phoneNumber")?if_exists}         </fo:block>
-                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${milkTransferMap.get("emailAddress")?if_exists}        </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("phoneNumber")?if_exists}         </fo:block>
+                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("emailAddress")?if_exists}        </fo:block>
                             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160; </fo:block>
                
              
@@ -61,6 +65,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">TANKER NO :     ${milkTransferMap.get("containerId")?if_exists} </fo:block>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">DISPATCH DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("sendDate"), "dd MMM yyyy")}                                   DISPATCH TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("sendDate"), "HH:mm")}</fo:block>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">RECEIVED DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("receiveDate"), "dd MMM yyyy")}                                   RECEIVED TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(milkTransferMap.get("receiveDate"), "HH:mm")}     </fo:block>
+              <#if flag?has_content && flag=="ForEmail">
+              <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">OUT DATE&#160;&#160;&#160;&#160;&#160;&#160;: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDateTime, "dd MMM yyyy")}                                   OUT TIME&#160;&#160;&#160;&#160;&#160; : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDateTime, "HH:mm")}     </fo:block>
+              </#if>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">DRIVER NAME :   ${milkTransferMap.get("driverName")?if_exists}     </fo:block>
      	  
       	    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------</fo:block>
@@ -68,8 +75,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------</fo:block>
        <fo:block >
 		 <fo:table width="100%" align="right" table-layout="fixed"  font-size="10pt">
-           <fo:table-column column-width="90pt"/>               
-            <fo:table-column column-width="50pt"/>               
+           <fo:table-column column-width="80pt"/>               
+            <fo:table-column column-width="60pt"/>               
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="60pt"/>
             <fo:table-column column-width="60pt"/>
@@ -79,7 +86,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
            	<fo:table-body>
              <fo:table-row>
               <fo:table-cell ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="10pt" >DISPATCH</fo:block></fo:table-cell>       		
-              <fo:table-cell  ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendProductId")?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell  ><fo:block text-align="left"  font-weight="bold"  font-size="10pt">${milkTransferMap.get("sendProductId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendQtyKgs")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendTemparature")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendAcidity")?if_exists}</fo:block></fo:table-cell>       		
@@ -89,7 +96,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
              </fo:table-row>
             <fo:table-row>
               <fo:table-cell ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="10pt" >ACKNOWLEDGED</fo:block></fo:table-cell>       		
-             <fo:table-cell  ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedProductId")?if_exists}</fo:block></fo:table-cell>       		
+             <fo:table-cell  ><fo:block text-align="left"  font-weight="bold"  font-size="10pt">${milkTransferMap.get("receivedProductId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedTemparature")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedAcidity")?if_exists}</fo:block></fo:table-cell>       		
@@ -103,7 +110,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
         <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------ ---</fo:block>
      
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160; </fo:block>
-     
+     <#if flag?has_content && flag=="ForEmail">
+		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >*This is a computer generated acknowledgment, hence no signature is required.* </fo:block>
+     <#else> 
        <fo:block  keep-together="always" font-weight="bold" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">&#160;GROSS WT: ${milkTransferMap.get("grossWeight")?if_exists}                  TARE WT: ${milkTransferMap.get("tareWeight")?if_exists}                  NET WT: ${milkTransferMap.get("grossWeight")-milkTransferMap.get("tareWeight")?if_exists}</fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160; </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160; </fo:block>
@@ -111,7 +120,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
        <fo:block  text-align="left"  font-weight="bold" keep-together="always" font-size="10pt" >&#160;&#160;&#160;SECURITY &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;   &#160;&#160;&#160;&#160;&#160; SHIFT INCHARGE   </fo:block>       		
        <fo:block  text-align="right"  font-weight="bold" keep-together="always" font-size="10pt" > &#160;</fo:block>       		
        <fo:block  text-align="right"  font-weight="bold" keep-together="always" font-size="10pt" >(Weighbridge) &#160;</fo:block>       		
- 
+ 	</#if>
 			 </fo:flow>
 			 </fo:page-sequence>
 			 
@@ -120,7 +129,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "MilkIncommingReport.pdf")}
     			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
        		 		<fo:block font-size="14pt">
        	<#-->	 	<#if partyId?has_content> <#if dcNo?has_content> No Records Found....!</#if><#else> ${errorMessage} </#if>-->
-       		 	Please First Enter Tare Weight Details...!   			   
+       		 	Please First Enter The Details...!   			   
        		 		</fo:block>
     			</fo:flow>
 			</fo:page-sequence>

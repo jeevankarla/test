@@ -710,4 +710,19 @@
         <attribute name="effectiveDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
     </service>
     
+   <service name="sendQcReportEmail" engine="simple" location="component://procurement/script/MilkReceiptsServices.xml" invoke="sendQcReportEmail">
+        <description>sendQcReportEmail  </description>
+        <attribute name="milkTransferId" type="String" mode="IN" optional="false"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/> 
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
+        <attribute name="attchName" mode="IN" type="String" optional="true"/> 
+    </service>
+    <service name="sendEmailForQcReport" engine="groovy" location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/SendQcReportEmailToParty.groovy" invoke="" transaction-timeout="12000">
+        <description>Emailing Qc Report to party</description>
+        <attribute name="milkTransferId" type="String" mode="IN" optional="false"/>  
+    </service>
 </services>

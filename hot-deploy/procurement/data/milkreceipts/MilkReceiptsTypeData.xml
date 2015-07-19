@@ -168,4 +168,7 @@
      
     <RoleType  description="Vehicle Type"  roleTypeId="VEHICLE_TYPE"/>  
    	<RoleType  description="PTC Vehicle"  parentTypeId="VEHICLE_TYPE" roleTypeId="PTC_VEHICLE"/>
+   	
+   	<TenantConfiguration  description="Sending QC Report to Union/Units."  propertyName="enableQcReportEmail" propertyTypeEnumId="MILK_RECEIPTS" propertyValue="N"/>
+   	
 </entity-engine-xml>
