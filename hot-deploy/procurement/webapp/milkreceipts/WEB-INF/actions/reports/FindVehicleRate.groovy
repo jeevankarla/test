@@ -1,3 +1,4 @@
+
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
@@ -30,10 +31,7 @@ if(parameters.thruDate){
 	} catch (ParseException e) {
 	}
 }
-BigDecimal rateAmount = BigDecimal.ZERO;
-if(UtilValidate.isNotEmpty(parameters.rateAmount)){
-	rateAmount = new BigDecimal(parameters.rateAmount);
-}
+
 List conditionList = FastList.newInstance();
 
 if(UtilValidate.isNotEmpty(parameters.tankerNo)){
@@ -45,32 +43,35 @@ if(UtilValidate.isNotEmpty(parameters.fromDate)){
 if(UtilValidate.isNotEmpty(parameters.thruDate)){
 	conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,thruDate));
 }
-if(UtilValidate.isNotEmpty(parameters.rateAmount)){
-	conditionList.add(EntityCondition.makeCondition("rateAmount",EntityOperator.EQUALS,rateAmount));
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,parameters.partyId));
 }
-
+conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-List vehicleRateList = delegator.findList("VehicleRate",condition,null,null,null,false);
-List vehicleIds = EntityUtil.getFieldListFromEntityList(vehicleRateList, "vehicleId",  true);
+
 List finalList = FastList.newInstance();
-ecl = EntityCondition.makeCondition([EntityCondition.makeCondition("vehicleId",EntityOperator.IN,vehicleIds),
-	                                 EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE")],EntityOperator.AND);
-List vehicleRoleList = delegator.findList("VehicleRole",ecl,null,null,null,false);
-vehicleRateList.each{vehicleRate->
+
+List vehicleRoleList = delegator.findList("VehicleRole",condition,null,null,null,false);
+List vehicleIds = EntityUtil.getFieldListFromEntityList(vehicleRoleList, "vehicleId", true);
+List vehicles = delegator.findList("Vehicle",EntityCondition.makeCondition("vehicleId",EntityOperator.IN,vehicleIds),UtilMisc.toSet("vehicleId","vehicleCapacity"),null,null,false);
+vehicleRoleList.each{vehicleRole->
 	tempMap=[:];
-	List vehiclePartyList = EntityUtil.filterByCondition(vehicleRoleList, EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleRate.vehicleId));
-	if(vehiclePartyList){
-		vehicleParty = EntityUtil.getFirst(vehiclePartyList);
-	}	
-	tempMap.vehicleId = vehicleRate.vehicleId;
-	tempMap.fromDate = vehicleRate.fromDate;
-	tempMap.thruDate = vehicleRate.thruDate;
-	tempMap.rateAmount = vehicleRate.rateAmount;
-	tempMap.partyId = vehicleParty.partyId;
-	if(UtilValidate.isNotEmpty(parameters.partyId) && vehicleParty.partyId == parameters.partyId){
+	List vehicleList = EntityUtil.filterByCondition(vehicles, EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleRole.vehicleId));
+	vehicle = EntityUtil.getFirst(vehicleList);
+	tempMap.vehicleId = vehicleRole.vehicleId;
+	tempMap.partyId = vehicleRole.partyId;
+	tempMap.fromDate = vehicleRole.fromDate;
+	tempMap.thruDate = vehicleRole.thruDate;
+	BigDecimal vehicleCapacity = BigDecimal.ZERO;
+	if(UtilValidate.isNotEmpty(vehicle.vehicleCapacity)){
+		vehicleCapacity = new BigDecimal(vehicle.vehicleCapacity);
+	}
+	tempMap.vehicleCapacity = vehicleCapacity; 
+	if(UtilValidate.isNotEmpty(parameters.vehicleCapacity) && (vehicleCapacity == new BigDecimal(parameters.vehicleCapacity))){
 		finalList.add(tempMap);
-	}else if(UtilValidate.isEmpty(parameters.partyId)){
-	  finalList.add(tempMap);
+	}else if(UtilValidate.isEmpty(parameters.vehicleCapacity)){
+		finalList.add(tempMap);
 	}
 }
+
 context.vehicleRateList=finalList;

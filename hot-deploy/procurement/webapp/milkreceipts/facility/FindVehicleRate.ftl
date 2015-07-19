@@ -137,8 +137,8 @@ function populateVehicleSpan(){
 			<td><input type="text" name="partyId" id="partyId" size="12" onblur="javascript:displayName(this);"/><span class="tooltip h2" id="contractorName"/> </td>
 		</tr>
         <tr>
-    	<td align='left'><span class="h3">Rate </span> </td><td>
-    		<input  name="rateAmount" size="12pt" type="text" id="rateAmount"   /></td>
+    	<td align='left'><span class="h3">Capacity </span> </td><td>
+    		<input  name="vehicleCapacity" size="12pt" type="text" id="vehicleCapacity"   /></td>
     	</td>
        </tr>
        <tr>

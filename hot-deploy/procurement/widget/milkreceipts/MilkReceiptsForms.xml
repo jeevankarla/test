@@ -710,11 +710,12 @@
        
     </form>
     <form name="FindVehicleRate" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="vehicleRateList"  default-table-style="basic-table " separate-columns="true"  target="updateVehicleRateAmount">    
-       <field name="vehicleId"><display></display></field>
-       <field name="partyId">
+       <field name="vehicleId" title="Vehicle No"><display></display></field>
+       <field name="partyId" title="Contractor">
        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]">
             </display-entity>
        </field>
+       <field name="vehicleCapacity" title="Capacity"><display></display></field>
        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
        <!-- <field name="rateAmount"><text size="12"></text></field> 
