@@ -441,6 +441,8 @@ public class EmailServices {
         }
         String orderId = (String) bodyParameters.get("orderId");
         String custRequestId = (String) bodyParameters.get("custRequestId");
+        String milkTransferId = (String) bodyParameters.get("milkTransferId");
+        String attchName = (String) bodyParameters.get("attchName");
         
         bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
         NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
@@ -453,7 +455,7 @@ public class EmailServices {
         ScreenRenderer screens = new ScreenRenderer(bodyWriter, screenContext, htmlScreenRenderer);
         screens.populateContextForService(dctx, bodyParameters);
         screenContext.putAll(bodyParameters);
-
+        
         if (bodyScreenUri != null) {
             try {
                 screens.render(bodyScreenUri);
@@ -486,7 +488,12 @@ public class EmailServices {
             
             for (int i = 0; i < xslfoAttachScreenLocationList.size(); i++) {
                 String xslfoAttachScreenLocation = xslfoAttachScreenLocationList.get(i);
-                String attachmentName = "Details.pdf";
+                String attachmentName ="";
+                if(UtilValidate.isNotEmpty(attchName)){
+                	attachmentName=attchName;
+                }else{
+                	attachmentName = "Details.pdf";
+                }	
                 if (UtilValidate.isNotEmpty(attachmentNameList) && attachmentNameList.size() >= i) {
                     attachmentName = attachmentNameList.get(i);
                 }
@@ -500,7 +507,7 @@ public class EmailServices {
                     screensAtt.populateContextForService(dctx, bodyParameters);
                     screenContextAtt.putAll(bodyParameters);
                     screensAtt.render(xslfoAttachScreenLocation);
-
+                    
                     /*
                     try { // save generated fo file for debugging
                         String buf = writer.toString();
@@ -605,7 +612,7 @@ public class EmailServices {
         }            
         if (UtilValidate.isNotEmpty(custRequestId)) {
             result.put("custRequestId", custRequestId);
-        }            
+        } 
         return result;
     }
 

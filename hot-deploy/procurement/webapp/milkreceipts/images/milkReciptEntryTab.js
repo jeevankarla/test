@@ -208,7 +208,7 @@ function clearFields(){
 	  var frm = document.getElementsByName('milkReceiptEntry')[0];
 	  frm.reset();
 	  if(typeof(displayScreen)!= 'undefined'){
-		   if( displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC" ){ 
+		   if((displayScreen=="VEHICLE_OUT") || (displayScreen=="VEHICLE_GRSWEIGHT") || (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP") || (displayScreen=="VEHICLE_QC")){ 
 		   	reloadingPage();
 		   }
 	   }

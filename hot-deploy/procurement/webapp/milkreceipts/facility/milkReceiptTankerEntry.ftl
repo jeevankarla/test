@@ -17,7 +17,7 @@
     border: 0.1em solid #999999;
     color: #000000;
     font-style: arial;
-    font-size: 80%;
+    font-size: 110%;
     font-weight: normal;
     margin: 0.4em;
     padding: 0.1em;
@@ -599,7 +599,7 @@ function setVehicleId(selected){
 }	
 function hideDiv(){
 	var displayScreen = $('[name="displayScreen"]').val()
- 	if((displayScreen == "VEHICLE_CIPNEW") || (displayScreen == "VEHICLE_CIP") || (displayScreen == "VEHICLE_QC")){
+ 	if((displayScreen != "VEHICLE_IN")){
 		$("#DetailsDiv").hide();
  	}
 }	
@@ -607,7 +607,7 @@ function reloadingPage(){
 	setTimeout("location.reload(true);", 1000);
 }
 </script>
-<#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC">
+<#if displayScreen != "VEHICLE_IN" >
 <div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;> 
 		<div class="grid-header h2" style="width:100%">
@@ -617,6 +617,12 @@ function reloadingPage(){
    			<label>VEHICLES WAITING FOR UNLOAD</label>
    		<#elseif displayScreen == "VEHICLE_QC">
    			<label>VEHICLES WAITING FOR QC</label>	
+   		<#elseif displayScreen == "VEHICLE_GRSWEIGHT">	
+   			<label>VEHICLES WAITING FOR GROSS WEIGHT</label>
+		<#elseif displayScreen == "VEHICLE_TAREWEIGHT">	
+   			<label>VEHICLES WAITING FOR TARE WEIGHT</label>
+   		<#elseif displayScreen == "VEHICLE_OUT">	
+   			<label>VEHICLES WAITING TO EXIT</label>		
         </#if>	
 		</div>
 	</div>
@@ -637,7 +643,7 @@ function reloadingPage(){
         </#list>
         <#else>
        <tr>
-         <td>No Vehicles Availabel.</td>
+         <td><span class="h2">No Vehicles Available.</span></td>
        </tr>
         </#if>
 	</table>
@@ -685,77 +691,77 @@ function reloadingPage(){
 	          		<tr>
 	          			<table>
 	          				<tr>
-					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
-					        	    <#if displayScreen == "VEHICLE_CIPNEW" || displayScreen == "VEHICLE_CIP" || displayScreen == "VEHICLE_QC">
-					        	    <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" readOnly /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+					        	<td align='left'><span class="h2">Vehicle No</span> </td><td>
+					        	    <#if (displayScreen=="VEHICLE_OUT") || (displayScreen=="VEHICLE_GRSWEIGHT") || (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP") || (displayScreen=="VEHICLE_QC")>
+					        	    <input  name="tankerName"  size="12pt" type="text" id="tankerNo"  autocomplete="off" required="required" readOnly /><span class="tooltip h4" id ="tankerToolTip">none</span></td>
 					        	    <#else>
-                                    <input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td> 
+                                    <input  name="tankerName" size="12pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td> 
 					        	    </#if> 
-					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
-					        		<input  name="milkTransferId" id="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
+					        		<input  name="tankerNo" size="12pt" type="hidden"   autocomplete="off" required/></td>
+					        		<input  name="milkTransferId" id="milkTransferId" size="12pt" type="hidden"   autocomplete="off"/></td>
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
 					        	</td>
 					        </tr>
 					        <#if displayScreen == "VEHICLE_OUT">
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
-	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h2'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 					        </#if>
 					        <#if displayScreen !="VEHICLE_IN">
 					        	<tr>
-					        			<td id="displayRecievedFrom" align ="left"><span class="h3">UNION/CHILLING CENTER :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h2">UNION/CHILLING CENTER :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
 					        	</tr>
 					        	<tr>
-								    <td align='left'><span class="h3">DC No </span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
+								    <td align='left'><span class="h2">DC No </span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
 								</tr>		
 								<#if displayScreen == "VEHICLE_QC">
 									<tr>
-										<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off"/></td>
+										<td align='left' ><span class="h2">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off"/></td>
 									</tr> 
 									<tr>
-										<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+										<td align='left' ><span class="h2">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
 					        		</tr> 
 								</#if>
 					        </#if>
 					        	
 					        <#if displayScreen == "VEHICLE_IN">
 		                        <tr>
-	        						<td align='left' ><span class="h3">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" value="${setDate}" name="entryDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" value="${setDate}" name="entryDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 	                         	<tr>
-		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+		        					<td align='left' ><span class="h2">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
 		        					
 		        				</tr>
 		        				<tr>
-		        					<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+		        					<td align='left' ><span class="h2">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
 		        					</td>
 						        </tr>
 						        <tr>
-							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
+							       	<td align='left'><span class="h2">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
 							    </tr>
 							    <tr>
-        							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
+        							<td align='left' valign='middle' nowrap="nowrap"><span class="h2">Milk Type</span></td><td>
 						        		<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
                      					<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
 									</td>
 				        		</tr> 
 	                         	<tr>
-	                         		<td><span class="h3">UNION/CHILLING CENTER :</span></td><td>
+	                         		<td><span class="h2">UNION / CHILLING CENTER :</span></td><td>
 	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
 	                         		<input type="hidden" size="6" maxlength="6" name="partyId" required="required"/>
 	                   			</tr>
 	                   			<tr>
-	                   				<td><span class='h3'>To:</span></td><td><span class='h3'> MOTHER DAIRY</span><input type="hidden" size="6" id="partyIdTo" maxlength="6" name="partyIdTo" autocomplete="off" value="MD" /></td>
+	                   				<td><span class='h2'>To:</span></td><td><span class='h3'> MOTHER DAIRY</span><input type="hidden" size="6" id="partyIdTo" maxlength="6" name="partyIdTo" autocomplete="off" value="MD" /></td>
 	                   			</tr>
 	                   			<tr>
-	                   				<td><span class='h3'>Seal check:</span></td><td> 
+	                   				<td><span class='h2'>Seal check:</span></td><td> 
 	                   				<input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
 	                   			</tr>
 		                   	</#if>		
@@ -763,48 +769,48 @@ function reloadingPage(){
 							    
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_GRSWEIGHT" />
-	        						<td align='left' ><span class="h3">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" value="${setDate}" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h2">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" value="${setDate}" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
-	        						<td align='left' ><span class="h3"> Dispatch Weight(Kgs)</span></td><td><input  type="text" size="15pt" id="dispatchWeight" name="dispatchWeight" autocomplete="off" required="required"/></td>
+	        						<td align='left' ><span class="h2"> Dispatch Weight(Kgs)</span></td><td><input  type="text" size="15pt" id="dispatchWeight" name="dispatchWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
 							    <tr>
-	        						<td align='left' ><span class="h3"> Gross Weight(Kgs)</span> </td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
+	        						<td align='left' ><span class="h2"> Gross Weight(Kgs)</span> </td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Number of compartments</span></td><td><input  type="text" size="15pt" id="numberOfCells" name="numberOfCells" autocomplete="off" required="required"/></td>
+	        						<td align='left' ><span class="h2">Number of compartments</span></td><td><input  type="text" size="15pt" id="numberOfCells" name="numberOfCells" autocomplete="off" required="required"/></td>
 	        					</tr>
 	        					<tr>
-							       	<td align='left'><span class="h3">Driver Name</span> </td><td><input  name="driverName" size="25" maxlength="20" id= "driverName" type="text" autocomplete="off"  required/><em>*<em></td>
+							       	<td align='left'><span class="h2">Driver Name</span> </td><td><input  name="driverName" size="25" maxlength="20" id= "driverName" type="text" autocomplete="off"  required/><em>*<em></td>
 							    </tr>
 	        					<tr>
-	                   				<td><span class='h3'>Seal check:</span></td><td> <input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
+	                   				<td><span class='h2'>Seal check:</span></td><td> <input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
 	                   			</tr>
 	        				</#if>	
 	        				<#if displayScreen == "VEHICLE_TAREWEIGHT">
                                 <tr>
-	        						<td align='left' ><span class="h3">Is Cip Checked</span></td>
+	        						<td align='left' ><span class="h2">Is Cip Checked</span></td>
 	        						<td align='left'><input type="text" readOnly size="3pt" id="isCipChecked" name="isCipChecked" required/><em>*<em><span class="h4" id="isCipCheckedDes" name="isCipCheckedDes"/></td>
 	        					</tr> 
 	        					<tr>
-	        						<td align='left' ><span class="h3">Gross Weight(Kgs)</span></td>
+	        						<td align='left' ><span class="h2">Gross Weight(Kgs)</span></td>
 	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
 	        					</tr>
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_TARWEIGHT" />
-	        						<td align='left' ><span class="h3">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
-	        						<td align='left' ><span class="h3">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Net Weight(Kgs)</span></td>
+	        						<td align='left' ><span class="h2">Net Weight(Kgs)</span></td>
 	        						
 	        						<td><input  type="text" class="onlyNumber" size="15pt" id="netWeightToolTip" autocomplete="off" value="0"/></td>
 	        					</tr>
@@ -812,13 +818,13 @@ function reloadingPage(){
 	        				<#if displayScreen == "VEHICLE_CIP">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_UNLOAD" />
-	        						<td align='left' ><span class='h3'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h2'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
-	        						<td align='left' ><span class='h3'>UN-LOADED TO SILO</span></td><td> 
+	        						<td align='left' ><span class='h2'>UN-LOADED TO SILO</span></td><td> 
 		        						<select name="silo" required="required" id="silo" allow-empty="false">
 						        					<option value="">SELECT</option>
 						        					<#if rawMilkSilosList?has_content>
@@ -830,7 +836,7 @@ function reloadingPage(){
           						    </td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class='h3'>Milk Used For</span></td><td> 
+	        						<td align='left' ><span class='h2'>Milk Used For</span></td><td> 
 		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false">
 						        					<#if milkPurchasePurposeTypeList?has_content>
 							        					<#list milkPurchasePurposeTypeList as purposeType>
@@ -845,19 +851,19 @@ function reloadingPage(){
 	        				<#if displayScreen == "VEHICLE_QC">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_QC" />
-	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h2">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
+	        						<td align='left' ><span class="h2">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
-	        						<td align='left' ><span class="h3">Seal Number</span></td>
+	        						<td align='left' ><span class="h2">Seal Number</span></td>
 	        						<td><input  name="sealNumber"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
-	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
+	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h2">Milk Type</span></td><td>
 							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
                          				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
 									</td>
@@ -867,14 +873,14 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h1"> Dispatch Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h3">Temp </span></td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h3"> CLR </span></td><td><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h2">Temp </span></td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h2"> CLR </span></td><td><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right'><span class="h3"> COB</span> </td>
+					        		<td align='right'><span class="h2"> COB</span> </td>
 					        			<td> <select name="sendCob" required="required" id="sendCob" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="N">NEGITIVE</option>
@@ -885,28 +891,28 @@ function reloadingPage(){
 	        						<td align='left'><span class="h1"> Received Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h3">Temp</span> </td><td><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
-					        		<td align='left' > <span class="h3">Acidity% </span></td><td><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h2">Temp</span> </td><td><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
+					        		<td align='left' > <span class="h2">Acidity% </span></td><td><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h2"> CLR </span></td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Fat% </span></td><td><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Snf% </span></td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h3"> COB(Y/N)</span> </td>
+					        		<td align='right' ><span class="h2"> COB(Y/N)</span> </td>
 					        		<td><select name="recdCob" required="required" id="recdCob" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					
 					        					<option value="N">NEGITIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
-					        		<td align='left' ><span class="h3">OT</span> </td>
+					        		<td align='left' ><span class="h2">OT</span> </td>
 					        		<td>
 					        		<select name="recdOrganoLepticTest" required="required" id="recdOrganismTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="NORMAL">NORMAL</option>
             									<option value="ABNORMAL">ABNORMAL</option>
           												</select></td>
-					        		<td align='left' ><span class="h3"> SedimentTest</span> </td><td>
+					        		<td align='left' ><span class="h2"> SedimentTest</span> </td><td>
 					        		<select name="recdSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="N">ABSENT</option>
@@ -917,21 +923,21 @@ function reloadingPage(){
                             <#if displayScreen == "VEHICLE_CIPNEW">
                                 <tr>
                                     <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
-		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+		        					<td align='left' ><span class="h2">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
 		        					
 		        				</tr>
 		        				<tr>
-		        					<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+		        					<td align='left' ><span class="h2">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
 		        					</td>
 						        </tr>
 						        <tr>
-	        						<td align='left' ><span class='h3'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h2'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
                                 <tr>
-                                 <td align='left' ><span class="h3"> Is CIP Checked</span></td><td><input type="checkbox" name="isCipChecked" id="isCipChecked" style="width:20px;height:20px;" value="Y" required/><em>*<em></td>
+                                 <td align='left' ><span class="h2"> Is CIP Checked</span></td><td><input type="checkbox" name="isCipChecked" id="isCipChecked" style="width:20px;height:20px;" value="Y" required/><em>*<em></td>
                                 </tr>
                              </#if>
 	          		</table>
@@ -1004,5 +1010,6 @@ function reloadingPage(){
 		var milkTransId = $("#milkTransferId").val();
 		var urlStr = "<@ofbizUrl>MilkIncommingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
 		$("#hrefSub").attr("href",urlStr)
+		setTimeout("location.reload(true);", 20000);
 	}
 </script>

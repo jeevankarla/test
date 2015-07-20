@@ -218,7 +218,7 @@ String displayScreen = parameters.displayScreen;
 if(UtilValidate.isEmpty(displayScreen)){
 	displayScreen = context.displayScreen;
 }
-if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP") || (displayScreen=="VEHICLE_QC")){
+if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_OUT") || (displayScreen=="VEHICLE_TAREWEIGHT") || (displayScreen=="VEHICLE_GRSWEIGHT") || (displayScreen=="VEHICLE_CIPNEW") || (displayScreen=="VEHICLE_CIP") || (displayScreen=="VEHICLE_QC")){
 	List conList = FastList.newInstance();
 	if(displayScreen=="VEHICLE_CIP"){
 		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_QC"));
@@ -228,6 +228,15 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_CIPNEW") |
 	}	
 	if(displayScreen=="VEHICLE_QC"){
 		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_GRSWEIGHT"));
+	}
+	if(displayScreen=="VEHICLE_GRSWEIGHT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_IN"));
+	}
+	if(displayScreen=="VEHICLE_TAREWEIGHT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_CIP"));
+	}
+	if(displayScreen=="VEHICLE_OUT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_TARWEIGHT"));
 	}
 	conList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
 	EntityCondition ecl = EntityCondition.makeCondition(conList,EntityOperator.AND);

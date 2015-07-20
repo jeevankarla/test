@@ -53,4 +53,8 @@ under the License.
     <eca service="createBillingAdjustment" event="invoke" run-on-error="false">
     	<action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
     </eca>
+    <eca service="updateMilkTankerReceiptEntryOut" event="commit">
+        <condition field-name="milkTransferId" operator="not-equals" value="null"/>
+        <action service="sendEmailForQcReport" mode="sync" />
+    </eca>
 </service-eca>
