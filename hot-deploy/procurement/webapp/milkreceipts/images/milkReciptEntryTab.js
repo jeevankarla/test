@@ -180,7 +180,7 @@ function doAction(){
          	   $('div#milkReceiptEntry_spinner').html(); 
          	   $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
          	   $('div#milkReceiptEntry_spinner').addClass("messageStr");
-         	   $('div#milkReceiptEntry_spinner').html('<label><h1>succesfully updated. </h1></label>'); 
+         	   $('div#milkReceiptEntry_spinner').html('<label><h1>successfully updated. </h1></label>'); 
          	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
          	   $('input[name=submitButton]').removeAttr("disabled");
 
