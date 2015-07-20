@@ -652,7 +652,7 @@ function reloadingPage(){
 </div>
 </#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
-<div name ="displayMsg" id="milkReceiptEntry_spinner" style="width:30%; height:40%"> </div>
+<div name ="displayMsg" id="milkReceiptEntry_spinner" style="width:30%;  height:40%"> </div>
 <div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
