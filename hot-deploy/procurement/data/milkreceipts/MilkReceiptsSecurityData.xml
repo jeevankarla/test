@@ -108,4 +108,9 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TANKER_CREATE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TANKER_CREATE"/>
     
+    <SecurityPermission description="Send Qc Report Email." permissionId="MR_EMAIL_QCRPT"/>
+    <SecurityGroup description="Send Qc Report Email." groupId="MR_EMAIL_QCRPT"/>
+    <SecurityGroupPermission groupId="MR_EMAIL_QCRPT" permissionId="MR_EMAIL_QCRPT"/>
+    
+    
 </entity-engine-xml>
