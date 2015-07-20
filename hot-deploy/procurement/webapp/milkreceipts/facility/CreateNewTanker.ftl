@@ -111,7 +111,7 @@ function displayName(selection){
     			             <#list vehicleCapacitys as vehicleCapacity>
                              <option value="${vehicleCapacity}">${vehicleCapacity?if_exists}</option>
                              </#list>
-                             <option value="OTHER">Other</option>
+                           <#--  <option value="OTHER">Other</option> --> 
     						 </select><font color='red'>*</font>	
     			</td>
     			</#if>
