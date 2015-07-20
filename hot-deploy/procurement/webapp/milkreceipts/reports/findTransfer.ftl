@@ -70,6 +70,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	
 		var mccCodeJson = ${StringUtil.wrapString(mccCodeJson)};
 		var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)};
+		var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
 		$("input").keyup(function(e){
 		  		if(e.target.name == "mccCode" ){
 					var tempUnitJson = mccCodeJson[$('[name=mccCode]').val()];
@@ -109,6 +110,28 @@ function makeDatePicker(fromDateId ,thruDateId){
 		  				$('span#partyToolTip').html('Code not found');
 		  			}
 		  		}
+		  		if(e.target.name == "vehicleName"){
+		  			$('[name=vehicleName]').val(($('[name=vehicleName]').val()).toUpperCase());
+		  			populateVehicleName();
+					var tempVehicleJson = vehicleCodeJson[$('[name=vehicleName]').val()];
+		  			if(tempVehicleJson){
+		  				$('span#vehicleToolTip').addClass("tooltip");
+		  				$('span#vehicleToolTip').removeClass("tooltipWarning");
+		  				var vehicleName = tempVehicleJson["vehicleName"];
+		  				var vehicleId = tempVehicleJson["vehicleId"];
+		  				alert("vehicleId==================="+vehicleId);
+		  				if(!vehicleName){
+		  					vehicleName = vehicleId;
+		  				}
+		  				$('span#vehicleToolTip').html(vehicleName);
+		  				$('[name=vehicleId]').val(vehicleId);
+		  			}else{
+		  				$('[name=vehicleId]').val('');
+		  				$('span#vehicleToolTip').removeClass("tooltip");
+		  				$('span#vehicleToolTip').addClass("tooltipWarning");
+		  				$('span#vehicleToolTip').html('Code not found');
+		  			}
+		  		}
 		}); 
 		
 	});
@@ -120,6 +143,14 @@ function populatePartyName(){
 				});
 				
 }
+function populateVehicleName(){
+	var availableTags = ${StringUtil.wrapString(vehItemsJSON)!'[]'};
+				$("#vehicleId").autocomplete({					
+						source:  availableTags
+				});
+				
+}
+
 function deleteTransferEntry(thisValue,milkTransferId){	
 	var confirmationFlag=false;
 	if(confirm('Dou u want to delete this Record?')){	
@@ -186,8 +217,14 @@ function deleteTransferEntry(thisValue,milkTransferId){
                          		<input type="hidden" size="6" maxlength="6" name="partyId"/>
                          		<input type="hidden" size="6" maxlength="6" name="hideSearch" value="N"/>
 		                   	 </tr>
+		                   	 <tr>
+                         		<td><span class='h3'>Vehicle : </span></td>
+                         		<td><input type="text" size="6" maxlength="6" name="vehicleName" id="vehicleId" autocomplete="on" <#if vehicleId?has_content> value="${vehicleId}" </#if>/><span class="tooltip" id ="vehicleToolTip">none</span></td>
+                         		<input type="hidden" size="6" maxlength="6" name="vehicleId"/>
+                         		<input type="hidden" size="6" maxlength="6" name="hideSearch" value="N"/>
+		                   	 </tr>
         					<tr>	        	
-					        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type</td>
+					        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Milk Type :</td>
 					        	<td>
 			                       <select name="productId" id="productId">  
 			        				 <option value=""></option>
@@ -209,7 +246,7 @@ function deleteTransferEntry(thisValue,milkTransferId){
        						    </td>
         					</tr>
         					<tr>
-	        					<td align='left' ><span class='h3'> Silo</span></td>
+	        					<td align='left' ><span class='h3'> Silo :</span></td>
 	        					<td>
 			                       <select name="siloId" id="siloId">  
 			        				 <option value=""></option>
@@ -236,7 +273,7 @@ function deleteTransferEntry(thisValue,milkTransferId){
 	        					<td><input  size="12" type="text" id="findFromDate" name="fromDate" <#if shiftDate?has_content> value="${shiftDate}" </#if>/></td>
 	        				</tr>
 	        				<tr>
-	        					<td align='left' ><span class='h3'> Shift</span></td>
+	        					<td align='left' ><span class='h3'> Shift:</span></td>
 	        		     		<td>
 			                       <select name="shiftId" id="shiftId">  
 			        				 <option value=""></option>
@@ -257,10 +294,7 @@ function deleteTransferEntry(thisValue,milkTransferId){
 							       </select> 
        						    </td>
 	        				</tr>
-						    <tr>
-						      	<td><span class='h3'>userLogin </span></td>
-						      	<td><input  name="createdByUserLogin" size="15" type="text" <#if createdByUserLogin?has_content> value="${createdByUserLogin}" </#if>/></td>
-						    </tr>	  
+						    	  
 						    <tr><td align='right'><span class='h2'><input type="submit"  size="10" value="Find" class="buttontext h1"/></span> </td></tr>      					 
                       	</table>
 	          		</tr>
@@ -287,5 +321,19 @@ function deleteTransferEntry(thisValue,milkTransferId){
 	  				$('span#partyToolTip').html(partyName);
 	  				$('[name=partyId]').val(partyId);
 	  			}
+
+	  		 	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)};
+	  			var tempVehicleJson = vehicleCodeJson[$('[name=vehicleName]').val()];
+		  			if(tempVehicleJson){
+		  				$('span#vehicleToolTip').addClass("tooltip");
+		  				$('span#vehicleToolTip').removeClass("tooltipWarning");
+		  				var vehicleName = tempVehicleJson["vehicleName"];
+		  				var vehicleId = tempVehicleJson["vehicleId"];
+		  				if(!vehicleName){
+		  					vehicleName = vehicleId;
+		  				}
+		  				$('span#vehicleToolTip').html(vehicleName);
+		  				$('[name=vehicleId]').val(vehicleId);
+		  			}
 	});	
 </script>

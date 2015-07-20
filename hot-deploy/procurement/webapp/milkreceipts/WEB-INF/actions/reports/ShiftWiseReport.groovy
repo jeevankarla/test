@@ -63,12 +63,18 @@ ShiftWiseMap = [:];
 ShiftWiseTimeMap = [:];
 shiftTime = null;
 conditionList =[];
-conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO , shiftDateStart ));
-conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO , shiftDateEnd ));
+conditionList.add(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.GREATER_THAN_EQUAL_TO , shiftDateStart ));
+conditionList.add(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.LESS_THAN_EQUAL_TO , shiftDateEnd ));
 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
+
+/*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 ShiftWiseList = delegator.findList("MilkTransfer",condition,null,null,null,false);
+*/
+conditionList.add(EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "MR_VEHICLE_TARWEIGHT"));
+EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+ShiftWiseList = delegator.findList("MilkTransferAndItemVehicleTripStatus",condition,null,null,null,false);
+
 
 sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 def setShiftDateTime(int i){
