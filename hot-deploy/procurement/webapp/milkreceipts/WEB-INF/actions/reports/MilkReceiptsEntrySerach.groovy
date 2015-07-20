@@ -107,6 +107,10 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 		conditionList.add(EntityCondition.makeCondition("siloId", EntityOperator.EQUALS , parameters.siloId));
 		context.siloId=parameters.siloId;
 	}
+	if(UtilValidate.isNotEmpty(parameters.vehicleId)){
+		conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , parameters.vehicleId));
+		context.vehicleId=parameters.vehicleId;
+	}
 	if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
 		conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS , parameters.milkTransferId));
 		context.milkTransferId=parameters.milkTransferId;
@@ -182,11 +186,31 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  if(vehicleEntryProductList){
 			  vehicleEntryProduct = EntityUtil.getFirst(vehicleEntryProductList);
 			  estimatedStartDate = vehicleEntryProduct.estimatedStartDate;
+			  String vehicleEntryDate=null;
 			  String receiveDate=null;
 			  if(UtilValidate.isNotEmpty(estimatedStartDate)){
-				  receiveDate = UtilDateTime.toDateString(estimatedStartDate,"dd-MM-yyyy HH:mm");
+				  vehicleEntryDate = UtilDateTime.toDateString(estimatedStartDate,"dd-MM-yyyy HH:mm");
 			  }
+			  if(UtilValidate.isNotEmpty(vehicleEntryProduct.receiveDate)){
+				  receiveDate = UtilDateTime.toDateString(vehicleEntryProduct.receiveDate,"dd-MM-yyyy HH:mm");
+			  }
+			  shiftsMap.put("vehicleEntryDate",vehicleEntryDate);
 			  shiftsMap.put("receiveDate",receiveDate);
+		  }
+		  
+		  List contrcatCondList = FastList.newInstance();
+		  contrcatCondList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , eachShift.vehicleId ));
+		  contrcatCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "PTC_VEHICLE"));
+		  contrcatCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, shiftDate));
+		  contrcatCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+			  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDate)));
+		  EntityCondition contrcatCond = EntityCondition.makeCondition(contrcatCondList,EntityOperator.AND);
+		  vehicleRole = delegator.findList("VehicleRole",contrcatCond, null, null, null, true);
+		  if(UtilValidate.isNotEmpty(vehicleRole)){
+			  vehicleRole = EntityUtil.getFirst(vehicleRole);
+			  if(UtilValidate.isNotEmpty(vehicleRole.partyId)){
+				  shiftsMap.put("contractorId",vehicleRole.partyId);
+			  }
 		  }
 		  milkDetailslist.add(shiftsMap);
 	  }

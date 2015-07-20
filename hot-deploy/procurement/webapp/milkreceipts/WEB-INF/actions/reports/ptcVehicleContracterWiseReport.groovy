@@ -48,12 +48,20 @@ if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
 	return;
 }
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
-fromDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-thruDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-dayBegin = UtilDateTime.getDayStart(fromDate);
-dayEnd = UtilDateTime.getDayEnd(thruDate);
+fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+nextDateTime = UtilDateTime.getNextDayStart(thruDateTime);
+thruDate = UtilDateTime.toDateString(nextDateTime,"yyyy-MM-dd");
+fromDate = UtilDateTime.toDateString(fromDateTime,"yyyy-MM-dd");
+sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+shiftDayTimeStart = fromDate + " 05:00:00.000";
+shiftDayTimeEnd = thruDate + " 04:59:59.000";
+
+dayBegin = new java.sql.Timestamp(sdf.parse(shiftDayTimeStart).getTime());
+dayEnd = new java.sql.Timestamp(sdf.parse(shiftDayTimeEnd).getTime());
 context.fromDate = dayBegin;
-context.thruDate = dayEnd;
+context.thruDate = thruDateTime;
+
 //BigDecimal receivedUnionQty=BigDecimal.ZERO;
 
 eachcontractorMap=[:];
@@ -68,7 +76,7 @@ contractorVehicleIds=null;
 conditionList =[];
 
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "ROUTE_VEHICLE"));
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "PTC_VEHICLE"));
  if(UtilValidate.isNotEmpty(contractorId) && (!"all".equalsIgnoreCase(contractorId))){
 	context.contractorId=contractorId;
    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , contractorId));
@@ -78,10 +86,34 @@ contractorVehicle = delegator.findList("VehicleRole", contractCond, null,null, n
 if(UtilValidate.isNotEmpty(contractorVehicle)){
 	contractorVehicleIds=EntityUtil.getFieldListFromEntityList(contractorVehicle, "vehicleId", true);
 }
-if(UtilValidate.isNotEmpty(contractorVehicleIds)){
+
+periodBillingId=null;
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["GENERATED","APPROVED","APPROVED_PAYMENT"]));
+conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_PTC_TRSPT_MRGN"));
+condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+periodBilling = delegator.findList("PeriodBilling", condition , null, null, null, false );
+if(UtilValidate.isNotEmpty(periodBilling)){
+	periodBillingData = EntityUtil.getFirst(periodBilling);
+	periodBillingId = periodBillingData.periodBillingId;
+}
+List milkTransferIds = FastList.newInstance();
+if(UtilValidate.isNotEmpty(periodBillingId)){
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+	conditionList.add(EntityCondition.makeCondition("containerId", EntityOperator.IN, contractorVehicleIds));
+	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	ptcBillingCommiMilkTransfer = delegator.findList("PtcBillingCommissionAndMilkTransfer", condition , null, null, null, false );
+	if(UtilValidate.isNotEmpty(ptcBillingCommiMilkTransfer)){
+		 milkTransferIds = EntityUtil.getFieldListFromEntityList(ptcBillingCommiMilkTransfer, "milkTransferId", false);
+	}
+}
+
+if(UtilValidate.isNotEmpty(milkTransferIds)){
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
-	conditionList.add(EntityCondition.makeCondition("containerId", EntityOperator.IN, contractorVehicleIds));
+	conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.IN, milkTransferIds));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	milkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
 	
@@ -99,14 +131,17 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 			contractors=EntityUtil.getFieldListFromEntityList(vehicleRoleList, "partyId", true);
 		}
 		
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
-		conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, "DISTANCE_FROM_MD"));
-		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
-		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd)));
-		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		partyRate = delegator.findList("PartyRate", condition , null, null, null, false );
+		
+		if(UtilValidate.isNotEmpty(partyIds)){
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
+			conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, "DISTANCE_FROM_MD"));
+			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd)));
+			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			partyRate = delegator.findList("FacilityPartyRate", condition , null, null, null, false );
+		}
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.IN , containerIds));
@@ -135,10 +170,18 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 		totalAdditions=0;
 		totalDeductions=0;
 		
+		totContractSubTotMap=[:];
 		if(UtilValidate.isNotEmpty(contractors)){
 			contractors.each{eachContractor->
 				contractorList=EntityUtil.filterByCondition(vehicleRoleList,EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachContractor));
 				eachVehicleMap=[:];
+				
+				contractSubTotMap=[:];
+				contractorAmt=0
+				contractorAdditions=0
+				contractorDedutions=0
+				contractorTotAmt=0
+				
 				contractorList.each{eachVehicle->
 					partyIdsMap=[:];
 					eachPartyMap=[:];
@@ -155,7 +198,7 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 					totDeductionsForVehicle=0;
 					partyIds.each{eachParty->
 						eachSupplierData=EntityUtil.filterByCondition(vehiclesupplierParties,EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachParty));
-						trips=0;
+						trips=0;0
 						if(UtilValidate.isNotEmpty(eachSupplierData)){
 							eachSupplierData.each{eachTimeSupplier->
 		                        partyDistance=0;
@@ -170,24 +213,21 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 								}
 								receivedQuantity=eachTimeSupplier.receivedQuantity;
 								receiveDate=eachTimeSupplier.receiveDate;
-								conditionList.clear();
-								conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , eachVehicle.vehicleId));
-								conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, receiveDate));
-								conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-									EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, receiveDate)));
-							    con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-								vehicleRatesForDate=EntityUtil.filterByCondition(vehicleRates,con);
-								if(UtilValidate.isNotEmpty(vehicleRatesForDate)){
-									vehicleRatesForDate = EntityUtil.getFirst(vehicleRatesForDate);
-									vehicleRate = vehicleRatesForDate.rateAmount;
-									partyIdsMap.put("vehicleRate",vehicleRate);
-								}
-								if(UtilValidate.isNotEmpty(vehicleRate) && UtilValidate.isNotEmpty(partyDistance) && UtilValidate.isNotEmpty(receivedQuantity) && vehicleCapacity>0){
-									//amount = ((partyDistance.multiply(rateAmount)).multiply((receivedQuantity.divide(vehicleCapacity,2,BigDecimal.ROUND_HALF_UP)))).setScale(2,BigDecimal.ROUND_HALF_UP);
-									amount = ((partyDistance*vehicleRate)*receivedQuantity)/(vehicleCapacity);
-									amount=amount.setScale(2, BigDecimal.ROUND_HALF_UP);
-									//partyIdsMap.put("amount",amount);
-									totAmount=totAmount+amount;
+								milkTransferId=eachTimeSupplier.milkTransferId;
+								
+								if(UtilValidate.isNotEmpty(milkTransferId)){
+									ptcBillingCommission=EntityUtil.filterByCondition(ptcBillingCommiMilkTransfer,EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId));
+									if(UtilValidate.isNotEmpty(ptcBillingCommission)){
+										ptcBillingCommissionData = EntityUtil.getFirst(ptcBillingCommission);
+										//amount = ((partyDistance*vehicleRate)*receivedQuantity)/(vehicleCapacity);
+										if(UtilValidate.isNotEmpty(ptcBillingCommission.commissionAmount)){
+											amount=ptcBillingCommissionData.commissionAmount;
+											amount=amount.setScale(2, BigDecimal.ROUND_HALF_UP);
+											//eachVehicleMap.put("amount",amount);
+											totAmount=totAmount+amount;
+											contractorAmt=contractorAmt+amount;
+										}
+									}
 								}
 						   }
 							
@@ -224,16 +264,19 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 								ptcAddDed = delegator.findOne("Enumeration",["enumId":recoveryTypeId],false);
 								if(ptcAddDed  && ("PTC_ADDN".equals(ptcAddDed.get("enumTypeId"))) ){
 									totAdditionsForVehicle=totAdditionsForVehicle+amount;
-								}else
-							      totDeductionsForVehicle=totDeductionsForVehicle+amount;
-							  if(UtilValidate.isEmpty(totalsForRecoveryMap) || (UtilValidate.isNotEmpty(totalsForRecoveryMap) && UtilValidate.isEmpty(totalsForRecoveryMap.get(recoveryTypeId)))){
-								  totalsForRecoveryMap.put(recoveryTypeId, amount);
-							  }else{
+									contractorAdditions=contractorAdditions+amount;
+								}else{
+							     	 totDeductionsForVehicle=totDeductionsForVehicle+amount;
+									  contractorDedutions=contractorDedutions+amount;
+								}
+								if(UtilValidate.isEmpty(totalsForRecoveryMap) || (UtilValidate.isNotEmpty(totalsForRecoveryMap) && UtilValidate.isEmpty(totalsForRecoveryMap.get(recoveryTypeId)))){
+									totalsForRecoveryMap.put(recoveryTypeId, amount);
+							    }else{
 								  tempAmt=0;
 								  tempAmt=totalsForRecoveryMap.get(recoveryTypeId);
 								  tempAmt=tempAmt+amount;
 								  totalsForRecoveryMap.put(recoveryTypeId, tempAmt);
-								  }
+								}
 							}else{
 						    fineRecoveryMap.put(recoveryTypeId,0);
 							totalsForRecoveryMap.put(recoveryTypeId, 0);
@@ -260,6 +303,13 @@ if(UtilValidate.isNotEmpty(contractorVehicleIds)){
 					totalDeductions=totalDeductions+totDeductionsForVehicle;
 					
 				}
+				contractorTotAmt=(contractorAmt+contractorAdditions)-contractorDedutions;
+				contractSubTotMap.put("contractorAmt", contractorAmt);
+				contractSubTotMap.put("contractorAdditions", contractorAdditions);
+				contractSubTotMap.put("contractorDedutions", contractorDedutions);
+				contractSubTotMap.put("contractorTotAmt", contractorTotAmt);
+				totContractSubTotMap.put(eachContractor, contractSubTotMap);
+				
 				eachcontractorMap.put(eachContractor, eachVehicleMap);
 				partyName =  PartyHelper.getPartyName(delegator, eachContractor, false);
 				if(UtilValidate.isNotEmpty(partyName)){
@@ -282,4 +332,4 @@ context.eachcontractorMap=eachcontractorMap;
 context.totalsForPartiesMap=totalsForPartiesMap;
 context.totalsForRecoveryMap=totalsForRecoveryMap;
 
-//Debug.log("partyNames===============5=totalsForRecoveryMap================="+totalsForRecoveryMap);
+context.totContractSubTotMap=totContractSubTotMap;

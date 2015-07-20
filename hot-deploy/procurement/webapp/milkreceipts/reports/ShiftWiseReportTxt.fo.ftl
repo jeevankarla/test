@@ -210,7 +210,7 @@ under the License.
 			                    			<fo:block text-align="center" font-size = "7pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shiftDetail.get("receiveDate"), "HH:mm")}</fo:block>
 			                    		</fo:table-cell>
 			                    		<fo:table-cell>
-			                    			<fo:block text-align="center" font-size = "7pt">${shiftDetail.get("containerId")}</fo:block>
+			                    			<fo:block text-align="center" font-size = "7pt">${shiftDetail.get("vehicleId")}</fo:block>
 			                    		</fo:table-cell>
 			                    		<fo:table-cell>
 			                    			<fo:block text-align="right" font-size = "7pt">${shiftDetail.get("receivedQuantity")?if_exists?string("##0.00")}</fo:block>

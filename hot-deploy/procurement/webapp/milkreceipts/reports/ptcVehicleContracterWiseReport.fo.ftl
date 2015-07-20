@@ -54,7 +54,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
             <fo:table-column column-width="50pt"/>               
             <fo:table-column column-width="170pt"/>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="50pt"/>
+        <#-->    <fo:table-column column-width="50pt"/> -->
           <#list partyIds as partyId>
             <fo:table-column column-width="50pt"/>
           </#list>
@@ -72,7 +72,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="center" font-weight="bold"  font-size="12pt">TPCD CODE</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TRANSPORTERS</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TANKER NO</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">RATE PER KM</fo:block></fo:table-cell>       		
+		       <#-->   <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">RATE PER KM</fo:block></fo:table-cell>     -->   		
 		          <#list partyIds as partyId>
 		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">${partyId}</fo:block></fo:table-cell>       		
 		          </#list>
@@ -97,7 +97,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 		              <fo:block text-align="left" >			   
 						 <fo:table >
 							  <fo:table-column column-width="80pt"/>
-					           <fo:table-column column-width="50pt"/>
+					         <#-->  <fo:table-column column-width="50pt"/> -->
 							    <#list partyIds as partyId>
                                <fo:table-column column-width="50pt"/>
                                 </#list>
@@ -109,29 +109,40 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 			                  <fo:table-column column-width="100pt"/>
 		                     </#if>
                               
-		                          <fo:table-body>
-		                 <#assign eachcontractorVehiclesData = eachcontractorDetail.getValue()?if_exists>
-		                         <#assign eachcontractorVehicles = eachcontractorVehiclesData.entrySet()?if_exists>											
+		                       <fo:table-body>
+		                	 <#assign eachcontractorVehiclesData = eachcontractorDetail.getValue()?if_exists>
+		                     <#assign eachcontractorVehicles = eachcontractorVehiclesData.entrySet()?if_exists>											
 		                 	    <#list eachcontractorVehicles as eachcontractorVehicle>
 		                 
 							   <fo:table-row>
 							       <fo:table-cell border-style="dotted"><fo:block text-align="center"   font-size="12pt">${eachcontractorVehicle.getKey()?if_exists}</fo:block>		</fo:table-cell>
-			                        <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("vehicleRate")?if_exists}</fo:block>   </fo:table-cell>
+			                      <#-->  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("vehicleRate")?if_exists}</fo:block>   </fo:table-cell> -->
 			                    <#assign vehiclePartyIds = eachcontractorVehicle.getValue().get("partyIds").entrySet()?if_exists>											
 			              		  <#list vehiclePartyIds as vehiclePartyId>
 	                                <fo:table-cell border-style="dotted"><fo:block text-align="center"   font-size="12pt">${vehiclePartyId.getValue()}</fo:block></fo:table-cell>       		
 	                               </#list>
 	                            <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("eachPartyTrips")} ,  ${eachcontractorVehicle.getValue().get("totPartyDistance")}  </fo:block>   </fo:table-cell>
-	                            <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("total")?if_exists}</fo:block></fo:table-cell>       		
+	                            <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if eachcontractorVehicle.getValue().get("total")?has_content>${eachcontractorVehicle.getValue().get("total")?if_exists?string("##0.00")} </#if></fo:block></fo:table-cell>       		
 			           <#assign fenalities= eachcontractorVehicle.getValue().get("fineRecoveryMap").entrySet()?if_exists>											
 			              <#if fenalities?has_content>
-                                   <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("totAdditionsForVehicle")?if_exists}</fo:block></fo:table-cell>       		
-	                               <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("totDeductionsForVehicle")?if_exists}</fo:block></fo:table-cell>       		
-	                                <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${eachcontractorVehicle.getValue().get("total")+eachcontractorVehicle.getValue().get("totAdditionsForVehicle")-eachcontractorVehicle.getValue().get("totDeductionsForVehicle")}</fo:block></fo:table-cell>       		
+                                   <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if eachcontractorVehicle.getValue().get("totAdditionsForVehicle")?has_content>${eachcontractorVehicle.getValue().get("totAdditionsForVehicle")?if_exists?string("##0.00")} </#if></fo:block></fo:table-cell>       		
+	                               <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if eachcontractorVehicle.getValue().get("totDeductionsForVehicle")?has_content>${eachcontractorVehicle.getValue().get("totDeductionsForVehicle")?if_exists?string("##0.00")} </#if></fo:block></fo:table-cell>       		
+	                               <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if eachcontractorVehicle.getValue().get("total")?has_content>		         
+	                                           <#assign eachVehicleTotal = eachcontractorVehicle.getValue().get("total")+eachcontractorVehicle.getValue().get("totAdditionsForVehicle")-eachcontractorVehicle.getValue().get("totDeductionsForVehicle")> ${eachVehicleTotal?if_exists?string("##0.00")}</#if></fo:block></fo:table-cell>       		
 			                 </#if> 
 				                </fo:table-row>  
 				                    </#list>
-				                
+				               <#if totContractSubTotMap?has_content>
+				                 <#assign totContractSubTotals = totContractSubTotMap.get(partyId)?if_exists>
+								  <fo:table-row border-style="dotted">
+									  <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">  </fo:block></fo:table-cell>       		
+							          <fo:table-cell number-columns-spanned="2"><fo:block text-align="center"  font-weight="bold"  font-size="12pt" > Sub Total</fo:block></fo:table-cell>       		
+							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorAmt')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorAdditions')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorDedutions')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorTotAmt')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+						           </fo:table-row>
+						         </#if> 
    		                            </fo:table-body>   
 	 	                   </fo:table>			 
 				        </fo:block>
@@ -143,17 +154,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
          
          <#assign totalsForPartiesDetails = totalsForPartiesMap.entrySet()?if_exists>
           <fo:table-row border-style="solid">
-		    <fo:table-cell border-style="dotted" number-columns-spanned="5"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL</fo:block>		</fo:table-cell>
+		    <fo:table-cell border-style="dotted" number-columns-spanned="4"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">TOTAL</fo:block>		</fo:table-cell>
 	      <#list totalsForPartiesDetails as totalsForPartiesDetail>
 	        <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">${totalsForPartiesDetail.getValue()?if_exists}</fo:block></fo:table-cell>       		
 	       </#list>		                           
 	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalTripsParties} , ${totalDistanceParties}</fo:block></fo:table-cell>       		
-	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAmtParties?if_exists}</fo:block></fo:table-cell>       		
+	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAmtParties?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
 	     <#if recoveryTypeIds?has_content>
-	 	       <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAdditions?if_exists}</fo:block></fo:table-cell>       		
-      	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalDeductions?if_exists}</fo:block></fo:table-cell>       		
-      	       
-   	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAmtParties+totalAdditions-totalDeductions}</fo:block></fo:table-cell>       		
+	 	       <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalAdditions?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+      	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totalDeductions?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+                  <#assign grandTotal = totalAmtParties+totalAdditions-totalDeductions>        		
+   	        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${grandTotal?if_exists?string('##0.00')?if_exists}</fo:block></fo:table-cell>       		
             </#if>
 	    
 	    </fo:table-row> 
@@ -166,7 +177,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-       <fo:block  text-align="right"  font-weight="bold" keep-together="always" font-size="12pt" >SHIFT INCHARGE   &#160;</fo:block>       		
  
 			 </fo:flow>
 			 </fo:page-sequence>

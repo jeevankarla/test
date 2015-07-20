@@ -160,13 +160,28 @@
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>PTC vehicle Wise Report</span></td>
-							
-							<td width="25%">
+								<td width="25%">
+								 <span class='h3'>Time Period </span>
+			                    <select name="customTimePeriodId" class='h4'>
+			                    <#if timePeriodList?has_content>	
+			                        <#list timePeriodList as timePeriod>    
+			                			  <#if ((timePeriod.fromDate)?has_content) && ((timePeriod.thruDate)?has_content)>
+			                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.fromDate, "MMMdd")/>
+			                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.thruDate, "MMMdd yyyy")/>
+					                  	    <option value='${timePeriod.customTimePeriodId}' >
+					                    		${fromDate}-${thruDate}
+					                  		 </option>
+					                  	 </#if>
+			                		</#list>    
+			                	</#if>	    
+			                    </select>
+							</td>
+					<#-->	<td width="25%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="vehicleFromDate"   name="fromDate"/>
 									To   <input  type="text" size="18pt" id="vehicleThruDate"   name="thruDate"/>
 								 </span>
-							</td>
+							</td>-->
 	                        <td align='left' width="30%"><span class="h3">Vehicle No </span>
 					            <select name="vehicleId" id="vehicleId">
 						     <option value="all">All</option>  
@@ -186,13 +201,29 @@
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Unions PTC Report</span></td>
-							
 							<td width="25%">
+								 <span class='h3'>Time Period </span>
+			                    <select name="customTimePeriodId" class='h4'>
+			                    <#if timePeriodList?has_content>	
+			                        <#list timePeriodList as timePeriod>    
+			                			  <#if ((timePeriod.fromDate)?has_content) && ((timePeriod.thruDate)?has_content)>
+			                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.fromDate, "MMMdd")/>
+			                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.thruDate, "MMMdd yyyy")/>
+					                  	    <option value='${timePeriod.customTimePeriodId}' >
+					                    		${fromDate}-${thruDate}
+					                  		 </option>
+					                  	 </#if>
+			                		</#list>    
+			                	</#if>	    
+			                    </select>
+							</td>
+							
+						<#-->	<td width="25%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="unionsFromDate"   name="fromDate"/>
 									To   <input  type="text" size="18pt" id="unionsThruDate"   name="thruDate"/>
 								 </span>
-							</td>
+							</td> -->
 							<td align='left' width="30%"><span class="h3">PurposeType Id</span>
 					            <select name="purposeTypeId" id="purposeTypeId">
 						     <option value='All'>All</option>  

@@ -51,9 +51,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
  
      <fo:block >
 		 <fo:table width="100%" align="center" table-layout="fixed"  font-size="12pt" border-style="solid">
-            <fo:table-column column-width="150pt"/>               
+            <fo:table-column column-width="180pt"/>               
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="120pt"/>
 		    <fo:table-column column-width="100pt"/>
 		    <fo:table-column column-width="100pt"/>
