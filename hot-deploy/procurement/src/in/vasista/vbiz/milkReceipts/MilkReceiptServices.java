@@ -2735,7 +2735,6 @@ public class MilkReceiptServices {
 					 milkTransfer.set("statusId", "MXF_REJECTED");
 		 	    }
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_UNLOAD")){
-	 			Debug.log("UNLOAD ===ST=======#################======================");
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
 	 	        String siloId = (String)context.get("silo");
@@ -2800,96 +2799,171 @@ public class MilkReceiptServices {
 				resultMap = ServiceUtil.returnError("Exception while updating purpose :"+e.getMessage());
 	 			return resultMap;
 			}
-	 	Debug.log("UNLOAD ==========#################======================");        
 	 			
-	 	}else if(statusId.equalsIgnoreCase("MR_VEHICLE_QC")){
-	 			Debug.log("QC STARTED #################################################");
-	 			String testDateStr = (String) context.get("testDate"); 
-	 	        String testTime = (String) context.get("testTime");
-	 	        String productId = (String) context.get("productId");
-	 	        Timestamp testDate = UtilDateTime.nowTimestamp();
-	 	        try{
-	 		 		if(UtilValidate.isNotEmpty(testDateStr)){
-	 		 			if(UtilValidate.isNotEmpty(testTime)){
-	 		 				testDateStr = testDateStr.concat(testTime);
-	 		 			}
-	 		 			testDate = new java.sql.Timestamp(sdf.parse(testDateStr).getTime());
-	 		 		}
-	 	        	
-	 	        }catch(ParseException e){
-	 	        	Debug.logError(e, "Cannot parse date string: " + testDateStr, module);
-	 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
-		 			return resultMap;
-	 	        }
-	 	        updateVehStatusInMap.put("estimatedStartDate",testDate);
-	 	        try{
-	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
-	 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
-	 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
-	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
-			 			return resultMap;
-	 	        	}
-	 	        }catch (GenericServiceException e) {
-					// TODO: handle exception
-	 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
- 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
-		 			return resultMap;
-	 	        	
-				}catch(Exception e){
-					Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
- 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
-		 			return resultMap;
-				}
-	 	      if(qcReject.equalsIgnoreCase("Y")){
-	 	    	 statusId="MR_VEHICLE_QCREJECT";
-	 	    	 updateVehStatusInMap.put("estimatedStartDate",testDate);
-	 	    	 updateVehStatusInMap.put("statusId",statusId);
-	 	    	try{
-	 	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
-	 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
-	 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
-	 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
-			 			return resultMap;
-	 	        	}
-	 	        }catch (GenericServiceException e) {
-					// TODO: handle exception
-	 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
- 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
-		 			return resultMap;
-	 	        	
-				}catch(Exception e){
-					Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
- 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
-		 			return resultMap;
-				}
-	 	      }
-	 	        
-				String qcComments = (String) context.get("qcComments");
-	 	        milkTransfer.set("productId",productId);
-	 	        milkTransfer.set("fat",(BigDecimal)context.get("sendFat"));
-				milkTransfer.set("snf",(BigDecimal)context.get("sendSnf"));
-				milkTransfer.set("receivedFat",(BigDecimal)context.get("recdFat"));
-				milkTransfer.set("receivedSnf",(BigDecimal)context.get("recdSnf"));
-				milkTransfer.set("comments", qcComments);
-				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-				
-				if(qcReject.equalsIgnoreCase("Y")){
-					statusId="MXF_REJECTED";
-					 milkTransfer.set("receiveDate",testDate);
-		 			 milkTransfer.set("statusId", statusId);
-			    }
-	 	    	context.remove("qcReject"); 
-
-				Map milkTransferItemResult = dispatcher.runSync("createTankerReceiptItem", context);
-				
-	 	        if(ServiceUtil.isError(milkTransferItemResult)){
-	 	        	Debug.logError("Error while storing QC details"+ServiceUtil.getErrorMessage(milkTransferItemResult),module);
-	 	        	resultMap = ServiceUtil.returnError("Error while storing QC details");
-	 	        	return resultMap;
-	 	        }
-	 			Debug.log("QC EXECUTED SUCCESSFULLY #################################################");
-	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
-	 			Debug.log("CIP STARTED #################################################");
+	 	}else if(statusId.equalsIgnoreCase("MR_VEHICLE_QC")){String testDateStr = (String) context.get("testDate"); 
+	        String testTime = (String) context.get("testTime");
+	        String productId = (String) context.get("productId");
+	        Timestamp testDate = UtilDateTime.nowTimestamp();
+	        try{
+		 		if(UtilValidate.isNotEmpty(testDateStr)){
+		 			if(UtilValidate.isNotEmpty(testTime)){
+		 				testDateStr = testDateStr.concat(testTime);
+		 			}
+		 			testDate = new java.sql.Timestamp(sdf.parse(testDateStr).getTime());
+		 		}
+	        	
+	        }catch(ParseException e){
+	        	Debug.logError(e, "Cannot parse date string: " + testDateStr, module);
+	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+ 			return resultMap;
+	        }
+	        updateVehStatusInMap.put("estimatedStartDate",testDate);
+	        try{
+	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
+	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+	 			return resultMap;
+	        	}
+	        }catch (GenericServiceException e) {
+			// TODO: handle exception
+	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+     		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+ 			return resultMap;
+	        	
+		}catch(Exception e){
+			Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+     		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+ 			return resultMap;
+		}
+	      if(qcReject.equalsIgnoreCase("Y")){
+	    	 statusId="MR_VEHICLE_QCREJECT";
+	    	 updateVehStatusInMap.put("estimatedStartDate",testDate);
+	    	 updateVehStatusInMap.put("statusId",statusId);
+	    	try{
+	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
+	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+	 			return resultMap;
+	        	}
+	        }catch (GenericServiceException e) {
+			// TODO: handle exception
+	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+     		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+ 			return resultMap;
+	        	
+		}catch(Exception e){
+			Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+     		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+ 			return resultMap;
+		}
+	      }
+	        
+		String qcComments = (String) context.get("qcComments");
+	        milkTransfer.set("productId",productId);
+	        milkTransfer.set("fat",(BigDecimal)context.get("sendFat"));
+		milkTransfer.set("snf",(BigDecimal)context.get("sendSnf"));
+		milkTransfer.set("receivedFat",(BigDecimal)context.get("recdFat"));
+		milkTransfer.set("receivedSnf",(BigDecimal)context.get("recdSnf"));
+		milkTransfer.set("comments", qcComments);
+		milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		GenericValue milkTransferAttribute = delegator.makeValue("MilkTransferAttribute");
+		try{
+			milkTransferAttribute.set("milkTransferId",milkTransferId);
+			milkTransferAttribute.set("attrName","sealNumber1");
+			milkTransferAttribute.set("attrValue",(String)context.get("sealNumber1"));
+			milkTransferAttribute.create();
+		}catch(Exception e){
+			Debug.logError("Exception while Creating MilkTransferAttribute sealNumber1"+e,module);
+     		resultMap = ServiceUtil.returnError("Exception while Creating MilkTransferAttribute sealNumber1"+e.getMessage());
+ 			return resultMap;
+		}	
+		if(UtilValidate.isNotEmpty(context.get("sealNumber2"))){
+			try{	
+				milkTransferAttribute = delegator.makeValue("MilkTransferAttribute");
+				milkTransferAttribute.set("milkTransferId",milkTransferId);
+				milkTransferAttribute.set("attrName","sealNumber2");
+				milkTransferAttribute.set("attrValue",(String)context.get("sealNumber2"));
+				milkTransferAttribute.create();
+			}catch(Exception e){
+				Debug.logError("Exception while Creating MilkTransferAttribute sealNumber2"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while Creating MilkTransferAttribute sealNumber2"+e.getMessage());
+	 			return resultMap;
+			}
+		}
+		if(UtilValidate.isNotEmpty(context.get("sealNumber3"))){
+			try{	
+				milkTransferAttribute = delegator.makeValue("MilkTransferAttribute");
+				milkTransferAttribute.set("milkTransferId",milkTransferId);
+				milkTransferAttribute.set("attrName","sealNumber3");
+				milkTransferAttribute.set("attrValue",(String)context.get("sealNumber3"));
+				milkTransferAttribute.create();
+			}catch(Exception e){
+				Debug.logError("Exception while Creating MilkTransferAttribute sealNumber3"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while Creating MilkTransferAttribute sealNumber3"+e.getMessage());
+	 			return resultMap;
+			}
+		}
+		if(UtilValidate.isNotEmpty(context.get("sealNumber4"))){
+			try{	
+				milkTransferAttribute = delegator.makeValue("MilkTransferAttribute");
+				milkTransferAttribute.set("milkTransferId",milkTransferId);
+				milkTransferAttribute.set("attrName","sealNumber4");
+				milkTransferAttribute.set("attrValue",(String)context.get("sealNumber4"));
+				milkTransferAttribute.create();
+			}catch(Exception e){
+				Debug.logError("Exception while Creating MilkTransferAttribute sealNumber4"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while Creating MilkTransferAttribute sealNumber4"+e.getMessage());
+	 			return resultMap;
+			}
+		}
+		if(UtilValidate.isNotEmpty(context.get("sealNumber5"))){
+			try{	
+				milkTransferAttribute = delegator.makeValue("MilkTransferAttribute");
+				milkTransferAttribute.set("milkTransferId",milkTransferId);
+				milkTransferAttribute.set("attrName","sealNumber5");
+				milkTransferAttribute.set("attrValue",(String)context.get("sealNumber5"));
+				milkTransferAttribute.create();
+			}catch(Exception e){
+				Debug.logError("Exception while Creating MilkTransferAttribute sealNumber5"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while Creating MilkTransferAttribute sealNumber5"+e.getMessage());
+	 			return resultMap;
+			}
+		}
+		if(UtilValidate.isNotEmpty(context.get("sealNumber6"))){
+			try{	
+				milkTransferAttribute = delegator.makeValue("MilkTransferAttribute");
+				milkTransferAttribute.set("milkTransferId",milkTransferId);
+				milkTransferAttribute.set("attrName","sealNumber6");
+				milkTransferAttribute.set("attrValue",(String)context.get("sealNumber6"));
+				milkTransferAttribute.create();
+			}catch(Exception e){
+				Debug.logError("Exception while Creating MilkTransferAttribute sealNumber6"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while Creating MilkTransferAttribute sealNumber6"+e.getMessage());
+	 			return resultMap;
+			}
+		}
+		
+		if(qcReject.equalsIgnoreCase("Y")){
+			statusId="MXF_REJECTED";
+			 milkTransfer.set("receiveDate",testDate);
+ 			 milkTransfer.set("statusId", statusId);
+	    }
+	    	context.remove("qcReject"); 
+	    	context.remove("sealNumber1");
+	    	context.remove("sealNumber2");
+	    	context.remove("sealNumber3");
+	    	context.remove("sealNumber4");
+	    	context.remove("sealNumber5");
+	    	context.remove("sealNumber6");
+		Map milkTransferItemResult = dispatcher.runSync("createTankerReceiptItem", context);
+		
+	        if(ServiceUtil.isError(milkTransferItemResult)){
+	        	Debug.logError("Error while storing QC details"+ServiceUtil.getErrorMessage(milkTransferItemResult),module);
+	        	resultMap = ServiceUtil.returnError("Error while storing QC details");
+	        	return resultMap;
+	        }}else if(statusId.equalsIgnoreCase("MR_VEHICLE_CIP")){
 	 			String isCipChecked = (String) context.get("isCipChecked");
 	 			String cipDateStr = (String) context.get("cipDate"); 
 	 	        String cipTime = (String) context.get("cipTime");
@@ -2935,7 +3009,6 @@ public class MilkReceiptServices {
 					resultMap = ServiceUtil.returnError("Exception while updating Cip Check :"+e.getMessage());
 		 			return resultMap;
 				}
-	 			Debug.log("CIP EXECUTED SUCCESSFULLY #################################################");
 	 		}
 	 		milkTransfer.store();
 	 	}catch(GenericEntityException e){
@@ -2949,7 +3022,6 @@ public class MilkReceiptServices {
 	 		resultMap = ServiceUtil.returnError("Error While updating the status:"+e.getMessage());
 	 		return resultMap;
 	 	}
-	 	Debug.log("resultMap===================="+resultMap);
     	return resultMap;
    }
 	
@@ -3179,6 +3251,7 @@ public class MilkReceiptServices {
         }
 		
 	        String milkTransferId = "";
+	        boolean beginTransaction = false;
 			for (int i = 0; i < rowCount; i++) {
 				  
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
@@ -3191,6 +3264,7 @@ public class MilkReceiptServices {
 				}
 				
 				try{
+					beginTransaction = TransactionUtil.begin();
 					Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 					String shipmentId ="";
 					List <GenericValue> milkTransferAndItemList = delegator.findList("MilkTransferAndMilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
@@ -3209,9 +3283,9 @@ public class MilkReceiptServices {
 				        newEntity.set("estimatedShipDate", nowTimeStamp);
 				        newEntity.set("shipmentTypeId", "MILK_RE_SHIPMENT");
 				        newEntity.set("statusId", "GENERATED");
-				        newEntity.put("vehicleId",containerId);
-				        newEntity.put("partyIdFrom",partyIdFrom);
-				        newEntity.put("primaryOrderId", milkTransferId);
+				        newEntity.set("vehicleId",containerId);
+				        newEntity.set("partyIdFrom",partyIdFrom);
+				        /*newEntity.put("primaryOrderId", milkTransferId);*/
 				        newEntity.set("createdDate", nowTimeStamp);
 				        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -3273,9 +3347,13 @@ public class MilkReceiptServices {
 					}
 				}catch (Exception e) {
 					// TODO: handle exception
-					Debug.logError(e, module);
-					request.setAttribute("_ERROR_MESSAGE_", " Error while getting the MilkTransfer. ");
-		  			return "error";
+					try {
+						TransactionUtil.rollback(beginTransaction, "Error Fetching data", e);
+			  		} catch (GenericEntityException e2) {
+			  			Debug.logError(e, module);
+						request.setAttribute("_ERROR_MESSAGE_", " Error while getting the MilkTransfer. ");
+			  			return "error";
+			  		}
 				}
 			}
 			

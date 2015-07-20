@@ -429,7 +429,6 @@
 		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="true"/>
 		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="true"/>
-		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
 		<attribute name="sendOrganoLepticTest" mode="IN" type="String" optional="true"/>
 		<attribute name="qcComments" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="recdOrganoLepticTest" mode="IN" type="String" optional="false"></attribute>

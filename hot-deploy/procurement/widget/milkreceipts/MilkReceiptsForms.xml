@@ -500,6 +500,16 @@
             <parameter param-name="milkTransferId"/>
           </hyperlink>
        </field>  -->
+       <field name="report" use-when="!statusId.equals(&quot;MXF_INPROCESS&quot;)" widget-style="buttontext">
+       		<hyperlink  description="Report" target="MilkIncommingReport.pdf" target-window="_blank">
+       		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
+           </hyperlink>
+       </field>
+       <field name="sendEmail" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_EMAIL_QCRPT&quot;, session)))}" widget-style="buttontext">
+       		<hyperlink  description="Send Email" target="sendQcReportEmailToParty">
+       		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
+           </hyperlink>
+       </field>
        <field  name="delete" use-when="statusId.equals(&quot;MXF_RECD&quot;)" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
             <hyperlink  description="delete" target-type="plain">
             	<parameter param-name="hideSearch" value="N"/>

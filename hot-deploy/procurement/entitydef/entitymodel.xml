@@ -557,6 +557,17 @@
         <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
       </relation>
     </entity>
+	
+	<entity entity-name="MilkTransferAttribute" package-name="org.ofbiz.product.inventory" title="MilkTransfer Attribute Entity">
+        <field name="milkTransferId" type="id-ne"></field>
+        <field name="attrName" type="id-long-ne"></field>
+        <field name="attrValue" type="value"></field>
+        <prim-key field="milkTransferId"/>
+        <prim-key field="attrName"/>
+        <relation type="one" fk-name="MT_ATTR" rel-entity-name="MilkTransfer">
+            <key-map field-name="milkTransferId"/>
+        </relation>
+    </entity>
 
     <entity entity-name="FacilityCustomTimePeriod"
             package-name="org.ofbiz.common.period"
