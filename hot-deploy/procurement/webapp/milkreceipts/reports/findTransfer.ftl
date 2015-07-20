@@ -119,7 +119,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 		  				$('span#vehicleToolTip').removeClass("tooltipWarning");
 		  				var vehicleName = tempVehicleJson["vehicleName"];
 		  				var vehicleId = tempVehicleJson["vehicleId"];
-		  				alert("vehicleId==================="+vehicleId);
 		  				if(!vehicleName){
 		  					vehicleName = vehicleId;
 		  				}
