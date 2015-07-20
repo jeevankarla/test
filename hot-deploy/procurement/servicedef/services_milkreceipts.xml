@@ -471,7 +471,12 @@
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
-		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
+		<attribute name="sealNumber1" mode="IN" type="String" optional="false"/>
+		<attribute name="sealNumber2" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber3" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber4" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber5" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber6" mode="IN" type="String" optional="true"/>
 		<attribute name="qcComments" mode="IN" type="String" optional="true"/>
 		<attribute name="qcReject" mode="IN" type="String" optional="true"/>
 		<!-- Product -->
