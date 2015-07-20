@@ -709,7 +709,7 @@
        <field name="userLogin" title="Last Modified By"><display/></field>
        
     </form>
-    <form name="FindVehicleRate" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="vehicleRateList"  default-table-style="basic-table " separate-columns="true"  target="updateVehicleRateAmount">    
+    <form name="FindVehicleRate" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="vehicleRateList"  default-table-style="basic-table " separate-columns="true"  target="updateVehicleRateAmount" use-row-submit="true" paginate-style="nav-pager" paginate-target="findTanker">    
        <field name="vehicleId" title="Vehicle No"><display></display></field>
        <field name="partyId" title="Contractor">
        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]">
