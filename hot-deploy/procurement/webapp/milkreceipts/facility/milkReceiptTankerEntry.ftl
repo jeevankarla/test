@@ -652,7 +652,7 @@ function reloadingPage(){
 </div>
 </#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
-<div name ="displayMsg" id="milkReceiptEntry_spinner" style="width:20; height:20%"> </div>
+<div name ="displayMsg" id="milkReceiptEntry_spinner" style="width:30%; height:40%"> </div>
 <div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
@@ -859,8 +859,12 @@ function reloadingPage(){
 					        	</tr>
 					        	<tr>
 	        						<td align='left' ><span class="h2">Seal Number</span></td>
-	        						<td><input  name="sealNumber"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber" autocomplete="off" required/>
-			        					</td>
+	        						<td> <input  name="sealNumber1"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber1" autocomplete="off" required/></td>
+	        						<td> <input  name="sealNumber2"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber2" autocomplete="off" /></td>
+	        						<td> <input  name="sealNumber3"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber3" autocomplete="off" /></td>
+	        						<td> <input  name="sealNumber4"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber4" autocomplete="off" /></td>
+			        				<td> <input  name="sealNumber5"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber5" autocomplete="off" /></td>
+			        				<td><input  name="sealNumber6"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber6" autocomplete="off" /></td>	
 					        	</tr>
 					        	<tr>
 	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h2">Milk Type</span></td><td>
@@ -883,7 +887,7 @@ function reloadingPage(){
 					        		<td align='right'><span class="h2"> COB</span> </td>
 					        			<td> <select name="sendCob" required="required" id="sendCob" allow-empty="true">
 					        					<option value="">SELECT</option>
-					        					<option value="N">NEGITIVE</option>
+					        					<option value="N">NEGATIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
 					        	</tr>
@@ -902,7 +906,7 @@ function reloadingPage(){
 					        		<td><select name="recdCob" required="required" id="recdCob" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					
-					        					<option value="N">NEGITIVE</option>
+					        					<option value="N">NEGATIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
 					        		<td align='left' ><span class="h2">OT</span> </td>

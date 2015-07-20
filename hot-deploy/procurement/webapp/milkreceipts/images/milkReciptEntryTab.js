@@ -180,7 +180,7 @@ function doAction(){
          	   $('div#milkReceiptEntry_spinner').html(); 
          	   $('div#milkReceiptEntry_spinner').removeClass("errorMessage");           	 
          	   $('div#milkReceiptEntry_spinner').addClass("messageStr");
-         	   $('div#milkReceiptEntry_spinner').html('<label>succesfully updated.</label>'); 
+         	   $('div#milkReceiptEntry_spinner').html('<label><h1>succesfully updated.</h1></label>'); 
          	   $('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
          	   $('input[name=submitButton]').removeAttr("disabled");
 
@@ -197,7 +197,7 @@ function populateError(msg){
 	$("div#milkReceiptEntry_spinner").fadeIn();
 	$('div#milkReceiptEntry_spinner').removeClass("messageStr");
 	$('div#milkReceiptEntry_spinner').addClass("errorMessage");
-	$('div#milkReceiptEntry_spinner').html('<label>'+msg +'</label>');
+	$('div#milkReceiptEntry_spinner').html('<label><h1>'+msg +'</h1></label>');
 	$('div#milkReceiptEntry_spinner').delay(7000).fadeOut('slow');
 	$('input[name=submitButton]').removeAttr("disabled");
 	
