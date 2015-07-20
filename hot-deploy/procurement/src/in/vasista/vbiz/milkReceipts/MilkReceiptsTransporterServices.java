@@ -52,20 +52,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Locale;
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -1411,7 +1397,7 @@ import org.ofbiz.product.product.ProductEvents;
 					               // createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
 					                createInvoiceContext.put("dueDate", monthEnd);
 					                createInvoiceContext.put("invoiceDate", monthEnd);
-					                createInvoiceContext.put("invoiceTypeId", "PTC_TRNSPORTOR_INV");
+					                createInvoiceContext.put("invoiceTypeId", "COGS_OUT");
 					                createInvoiceContext.put("referenceNumber", "PTC_TRSPT_MRGN_"+periodBillingId);
 					                // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
 					                createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
@@ -1461,8 +1447,6 @@ import org.ofbiz.product.product.ProductEvents;
 							                    if (ServiceUtil.isError(result)) {
 							    	                Debug.logWarning("There was an error while creating  the "+recKeyStr+" InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 							                    }
-					                    		
-					                    		
 					                    	}
 				                    	}
 				                    	
