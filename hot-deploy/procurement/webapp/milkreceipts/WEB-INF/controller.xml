@@ -844,12 +844,12 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkQcReportPDF"/> 
     </request-map> 
-    <!-- <request-map uri="sendQcReportEmailToParty">
+    <request-map uri="sendQcReportEmailToParty">
     	<security auth="true" https="true"/>
     	<event type="groovy" invoke="SendQcReportEmailToParty.groovy" path="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/"/>
-    	<response name="success" type="view" value="MilkReceiptsTankerOutEntry"/>
-    	<response name="error" type="view" value="MilkReceiptsTankerOutEntry"/>
-    </request-map> -->
+    	<response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
+    	<response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
+    </request-map>
     
     <!-- View Mappings -->
 	    
