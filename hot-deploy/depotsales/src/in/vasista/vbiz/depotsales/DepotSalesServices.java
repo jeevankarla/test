@@ -1034,6 +1034,9 @@ public class DepotSalesServices{
 	    List detailReturnsList = (List) context.get("detailReturnsList");
 	    String returnId="";
 	    String geoTax = "";
+	    BigDecimal paymentAmount = BigDecimal.ZERO;
+	    String paymentId = "";
+
 	    boolean isSale = Boolean.TRUE;
 	   
 	    if((UtilValidate.isEmpty(returnHeaderTypeId)) || UtilValidate.isEmpty(fromPartyId)){
@@ -1113,7 +1116,37 @@ public class DepotSalesServices{
 	    		returnItem.put("vatPercent", vatPercent);
 	   		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 	    		delegator.create(returnItem);
+	    		
+	    		paymentAmount = paymentAmount.add(new BigDecimal((priceResult.get("totalPrice")).toString()));
+
 	    	}
+	    	
+	    	Map paymentCtx = FastMap.newInstance();
+        	paymentCtx.put("paymentTypeId", "SALES_PAYIN");
+            paymentCtx.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+            paymentCtx.put("partyIdTo", "Company");
+            paymentCtx.put("partyIdFrom", fromPartyId);
+           
+           // paymentCtx.put("isEnableAcctg", context.get("isEnableAcctg"));
+            if (!UtilValidate.isEmpty(effectiveDate) ) {
+                paymentCtx.put("effectiveDate", effectiveDate);                        	
+            }
+            paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
+            
+            paymentCtx.put("statusId", "PMNT_RECEIVED");            
+            paymentCtx.put("amount", paymentAmount);
+            paymentCtx.put("userLogin", userLogin);
+            
+            paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+            paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
+            
+            Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
+            if (ServiceUtil.isError(paymentResult)) {
+            	Debug.logError(paymentResult.toString(), module);    			
+                return ServiceUtil.returnError(null, null, null, paymentResult);
+            }
+            paymentId = (String)paymentResult.get("paymentId");
+
 	    }
 	    catch(Exception e){
 	    	 Debug.logError(e, "Problem Creating the Return Item for party " + fromPartyId, module);		  
@@ -1122,10 +1155,6 @@ public class DepotSalesServices{
 
 	    return result;
    }
-   
-   
-   
-   
    
    
 }
