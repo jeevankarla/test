@@ -59,12 +59,17 @@
 	  			$('[name=vehicleId]').val(($('[name=vehicleId]').val()).toUpperCase());
 	  		}
           });
+          $("input").keyup(function(e){
+	  		if(e.target.name == "partyId"){
+	  			$('[name=partyId]').val(($('[name=partyId]').val()).toUpperCase());
+	  		}
+          });
 	});
 	
 function displayName(selection){
 	  var value = $("#partyId").val();
 	   var name = contracterNameObj[value];
-	   $("#contractorName").html("<h6>"+name+"</h6>");
+	   $('span#contractorName').html('<label>'+name+'</label>');   
 	}
 </script>
 <div class="screenlet">
