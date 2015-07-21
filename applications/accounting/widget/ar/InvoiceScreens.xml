@@ -133,7 +133,8 @@ under the License.
                     <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
                 </service>
                 <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>  
-                 <set field="parentTypeId" from-field="parameters.parentTypeId" />      
+                 <set field="parentTypeId" from-field="parameters.parentTypeId" />
+                 <set field="maximumSize"  from-field="parameters.maximumSize" global="true" type="Integer"/>     
                  <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>            
             	 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/InvoiceSearchFilter.groovy"/>
             </actions>
@@ -206,6 +207,7 @@ under the License.
 														target="findInvoices">
 														<parameter param-name="VIEW_INDEX_1" value="${viewIndex-1}"/>
 														<parameter param-name="VIEW_SIZE_1" value="${viewSize}"/>
+														<parameter param-name="maximumSize" value="${maximumSize}"/>
 														<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
 														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
@@ -245,6 +247,7 @@ under the License.
 														target="findInvoices">
 														<parameter param-name="VIEW_INDEX_1" value="${viewIndex+1}"/>
 														<parameter param-name="VIEW_SIZE_1" value="${viewSize}"/>
+														<parameter param-name="maximumSize" value="${maximumSize}"/>
 														<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
 														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
