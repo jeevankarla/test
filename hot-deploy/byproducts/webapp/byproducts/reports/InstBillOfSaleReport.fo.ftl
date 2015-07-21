@@ -109,7 +109,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								 <fo:table-cell>
 								 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
 								 <fo:block text-align="right" font-size = "12pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-			                     <fo:block text-align="right" font-size = "12pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;<#if invoiceSequenceNumMap?has_content && (invoiceSequenceNumMap.get(invoiceList.get('invoiceId')))?exists>${(invoiceSequenceNumMap.get(invoiceList.get("invoiceId")))?if_exists}<#else>${invoiceList.get("invoiceId")?if_exists}</#if></fo:block>
+			                     <fo:block text-align="right" font-size = "12pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;MD<#if invoiceSequenceNumMap?has_content && (invoiceSequenceNumMap.get(invoiceList.get('invoiceId')))?exists>${(invoiceSequenceNumMap.get(invoiceList.get("invoiceId")))?if_exists}<#else>${invoiceList.get("invoiceId")?if_exists}</#if></fo:block>
 			                  </fo:table-cell>
 							</fo:table-row>
 							
