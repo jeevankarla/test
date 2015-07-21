@@ -104,7 +104,7 @@ under the License.
             						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
             					</fo:table-cell>
             					<fo:table-cell>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice No: ${invoiceNo?if_exists}</fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice No: MD${invoiceNo?if_exists}</fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Internal No: ${invoice.get('invoiceId')?if_exists}</fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((invoice.get('invoiceDate')), "dd-MMM-yyyy")}</fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Time: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((invoice.get('createdStamp')), "HH:mm:ss")?if_exists}</fo:block>

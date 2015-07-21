@@ -55,7 +55,7 @@
 <script type="application/javascript">
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
-			dateFormat:'yy-mm-dd',
+			dateFormat:'dd-mm-yy',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {

@@ -50,9 +50,9 @@ if(UtilValidate.isNotEmpty(hideSearch) && hideSearch.equalsIgnoreCase("N")){
 	shiftDate = parameters.shiftDate;
 	
 	if(UtilValidate.isEmpty(shiftDate)){
-		shiftDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(),"yyyy-MM-dd");
+		shiftDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(),"dd-MM-yyyy");
 	}
-	sdf = new SimpleDateFormat("yyyy-MM-dd");
+	sdf = new SimpleDateFormat("dd-MM-yyyy");
 	shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
 	shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
 	nextDay = UtilDateTime.getNextDayStart(shiftDate);

@@ -98,21 +98,21 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td>Record No</td>
-          <td>Recd Date</td>
+          <td>Vehicle Number</td>
+          <td>Contractor</td>
+          <td>Entry Date</td>
+          <td>TareWeight  Date</td>
           <td>From Union</td>
-          <td>To</td>
           <td>Milk Type</td>
           <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
           <td>Milk Used For</td>
           </#if>
           <td>Silo</td>
-          <td>Recd Qty(Kgs)</td>
-          <td>Recd Qty(Ltrs)</td>
-          <td>Recd Fat</td>
-          <td>Recd Snf</td>
-          <td>Recd KgFat</td>
-          <td>Recd KgSnf</td>
-          <td>Vehicle Number</td>
+          <td>&#160;      Quantity(Kgs)</td>
+          <td>&#160;      Fat %</td>
+          <td>&#160;      SNF %</td>
+          <td>&#160;      KgFat</td>
+          <td>&#160;      KgSNF</td>
           <td>Status</td>
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllReceipts" name="checkAllReceipts" onchange="javascript:toggleRequestId(this);"/></td>
         </tr>
@@ -124,6 +124,9 @@ under the License.
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
 				<input type=hidden name=milkTransferId value='${eachItem.milkTransferId?if_exists}'>
               	<td>${eachItem.milkTransferId?if_exists}</td>
+              	<td>${eachItem.containerId?if_exists}</td>
+              	<td>${eachItem.contractorId?if_exists}</td>
+				<td>${eachItem.vehicleEntryDate}</td>
               	 <#if eachItem.receiveDate?has_content>
 				<td>${eachItem.receiveDate}</td>
 				<#else>
@@ -135,28 +138,36 @@ under the License.
                 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
                 <td> 
                 <select name="partyId" class='h4' >
-                    <option value='${eachItem.partyId}'>${partyName.groupName?if_exists}</option>
-			       <#list unionsList as union>    
-			          <option value='${union.partyId}' >
+                     <#assign existedParty = eachItem.partyId >
+                    <#--><option value='${eachItem.partyId}'>${partyName.groupName?if_exists}</option>-->
+			       <#list unionsList as union>  
+			        <#if existedParty?has_content  && existedParty == union.partyId >
+			       <option value='${eachItem.partyId}' selected='selected'>${partyName.groupName?if_exists}</option>
+			           <#else>
+			          	  <option value='${union.partyId}' >
 				         ${union.groupName?if_exists}
 				      </option>
+				      </#if>
 			       </#list>            
 				</select>
 				</td>
                 <#else>  
                 <td>${partyName.groupName?if_exists}[${eachItem.partyId}]</td>
                 </#if>
-              	<#assign partyIdToName = (delegator.findOne("PartyNameView", {"partyId" : eachItem.partyIdTo}, false))!>
-                <td>${partyIdToName.groupName?if_exists}[${eachItem.partyIdTo}]</td>
+              	
                 <#assign product = (delegator.findOne("Product", {"productId" : eachItem.productId}, false))!>
               	<#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
                 <td>  
                 <select name="productId" class='h4' >
-                    <option value='${eachItem.productId}'>${product.description?if_exists}</option>
+                   <#assign existedPurpose = eachItem.productId >
 			       <#list productsList as product>    
+			       <#if existedPurpose?has_content  && existedPurpose == product.productId >
+			           <option value='${eachItem.productId}' selected='selected'>${product.description?if_exists}</option>
+   			       <#else>
 			          <option value='${product.productId}' >
 				         ${product.description?if_exists}
 				      </option>
+				    </#if>
 			       </#list>            
 				</select>
 				</td>
@@ -167,23 +178,25 @@ under the License.
                 <#assign enumeration = delegator.findOne("Enumeration",{"enumId":eachItem.purposeTypeId},false)>
                 <td>
                 	<select name="purposeTypeId" class='h4' >
-                    <option value='${eachItem.purposeTypeId}'>${enumeration.enumCode?if_exists}</option>
+                    <#assign existedPurpose = eachItem.purposeTypeId >
 			       <#list milkPurchasePurposeTypeList as purpose>    
+			         <#if existedPurpose?has_content  && existedPurpose == purpose.enumId >
+			        	<option value='${eachItem.purposeTypeId}' selected='selected'>${enumeration.enumCode?if_exists}</option> 	
+			         <#else>
 			          <option value='${purpose.enumId}' >
 				         ${purpose.enumCode?if_exists}
 				      </option>
+				      </#if>
 			       </#list>            
 				</select>
                 </td>
                 </#if>
                 <td>${eachItem.siloId?if_exists}</td>
-              	<td>${eachItem.receivedQuantity?if_exists}</td>
-				<td>${eachItem.receivedQuantityLtrs?if_exists}</td>
-				<td>${eachItem.receivedFat?if_exists}</td>
-				<td>${eachItem.receivedSnf?if_exists}</td>
-				<td>${eachItem.receivedKgFat?if_exists}</td>
-				<td>${eachItem.receivedKgSnf?if_exists}</td>
-				<td>${eachItem.containerId?if_exists}</td>
+              	<td align="right">${eachItem.receivedQuantity?if_exists}</td>
+				<td align="right">${eachItem.receivedFat?if_exists}</td>
+				<td align="right">${eachItem.receivedSnf?if_exists}</td>
+				<td align="right">${eachItem.receivedKgFat?if_exists}</td>
+				<td align="right">${eachItem.receivedKgSnf?if_exists}</td>
 			   <#assign statusItem = (delegator.findOne("StatusItem",{"statusId" : eachItem.statusId},false))!>
                 <td>${statusItem.description?if_exists}</td>
            		<td><input type="checkbox" id="receiptCheckBoxId_${eachItem_index}" name="receiptCheckBoxId"/></td>

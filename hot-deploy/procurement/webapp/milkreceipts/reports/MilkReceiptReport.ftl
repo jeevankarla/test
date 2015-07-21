@@ -4,7 +4,7 @@
 <script type="text/javascript">
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
-			dateFormat:'MM d, yy',
+			dateFormat:'dd-mm-yy',
 			changeMonth: true,
 			numberOfMonths: 1,
 			maxDate:fromDateId,

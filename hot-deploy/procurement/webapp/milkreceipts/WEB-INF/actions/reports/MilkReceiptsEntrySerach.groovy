@@ -144,7 +144,7 @@ if(UtilValidate.isEmpty(shiftDate)){
 	 shiftDateTime = UtilDateTime.toDateString(shiftDate, "yyyy-MM-dd");
 }else{
  	context.shiftDate=shiftDate;
-	sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	sdf = new SimpleDateFormat("dd-MM-yyyy");
 	shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
 	shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
 }

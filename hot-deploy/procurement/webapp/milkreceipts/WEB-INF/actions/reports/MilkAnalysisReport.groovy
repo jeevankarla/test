@@ -46,7 +46,7 @@ if(UtilValidate.isEmpty(shiftDate)){
 	context.errorMessage = "shiftDate Cannot Be Empty";
 	return;
 }
-sdf = new SimpleDateFormat("MMMM dd, yyyy");
+sdf = new SimpleDateFormat("dd-MM-yyyy");
 shiftDate = new java.sql.Timestamp(sdf.parse(shiftDate).getTime());
 shiftDateTime = UtilDateTime.toDateString(shiftDate,"yyyy-MM-dd");
 nextDay = UtilDateTime.getNextDayStart(shiftDate);
