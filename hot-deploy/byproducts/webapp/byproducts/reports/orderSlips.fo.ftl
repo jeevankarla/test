@@ -81,7 +81,8 @@ under the License.
 			                              		</fo:table-cell>
 			                              		<fo:table-cell>
 							                        <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">Supply Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDetail.orderHeader.estimatedDeliveryDate?if_exists, "dd-MMM-yyyy")}</fo:block>
-							                        <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">PO No: <#if partyPONumMap?has_content && (partyPONumMap.get(facility.facilityId))?exists>${partyPONumMap.get(facility.facilityId)}</#if></fo:block>
+							                      <#--  <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">PO No: <#if partyPONumMap?has_content && (partyPONumMap.get(facility.facilityId))?exists>${partyPONumMap.get(facility.facilityId)}</#if></fo:block> -->
+                                                         <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">PO No: <#if orderDetail.orderHeader.externalId?has_content > ${orderDetail.orderHeader.externalId}</#if></fo:block>
 							          			</fo:table-cell>  
 			                            	</fo:table-row>
 			                            	<fo:table-row>
