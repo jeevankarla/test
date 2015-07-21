@@ -263,12 +263,13 @@ $(document).ready(function() {
 	  			populateProductNames();
 				populateProductSpan();	  			
 	  		}
-	  		if(e.target.name == "dcNo"){
+	  		if(e.target.name == "dcNo" || e.target.name == "sealNumber1" || e.target.name == "sealNumber2" || e.target.name == "sealNumber3" || e.target.name == "sealNumber4" || e.target.name == "sealNumber5" || e.target.name == "sealNumber6"){
 	  			if(e.which == 110 || e.which == 190){
     				$(this).val( $(this).val().replace('.',''));
 	    		}
 	    			$(this).val( $(this).val().replace(/[^0-9\.]/g,''));
 		  	}
+			
 	}); 
 });
 

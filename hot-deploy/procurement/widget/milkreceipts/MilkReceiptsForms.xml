@@ -505,7 +505,7 @@
        		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
            </hyperlink>
        </field>
-       <field name="sendEmail" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_EMAIL_QCRPT&quot;, session)))}" widget-style="buttontext">
+       <field name="sendEmail" use-when="!statusId.equals(&quot;MXF_INPROCESS&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_EMAIL_QCRPT&quot;, session)))}" widget-style="buttontext">
        		<hyperlink  description="Send Email" target="sendQcReportEmailToParty">
        		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
            </hyperlink>
