@@ -1118,6 +1118,34 @@ public class DepotSalesServices{
 	    		delegator.create(returnItem);
 	    		
 	    		paymentAmount = paymentAmount.add(new BigDecimal((priceResult.get("totalPrice")).toString()));
+	    		
+	    		//creating Inventory for Damaged goods
+	    		try {
+	                Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", detailReturn.get("productId"),
+	                        "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+	                serviceContext.put("facilityId", "DAMAGEDSTORE");
+	                if("RTN_INDNT_FAULT".equals(detailReturn.get("returnReasonId"))){
+	                	serviceContext.put("facilityId", "STORE");
+	                }
+	                serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+	                serviceContext.put("comments", "Created by Sales Returns Damaged Goods " + returnId);
+	                serviceContext.put("userLogin", userLogin);
+	                serviceContext.put("unitCost", BigDecimal.ZERO);
+	                serviceContext.put("userLogin", userLogin);
+	                Map<String, Object> resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+	                String inventoryItemId = (String)resultService.get("inventoryItemId");
+	               
+	                serviceContext.clear();
+	                serviceContext.put("inventoryItemId", inventoryItemId);
+	                serviceContext.put("returnId", returnId);
+	                serviceContext.put("availableToPromiseDiff", detailReturn.get("quantity"));
+	                serviceContext.put("quantityOnHandDiff", detailReturn.get("quantity"));
+	                serviceContext.put("userLogin", userLogin);
+	                resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+	                
+	            } catch (Exception exc) {
+	                return ServiceUtil.returnError(exc.getMessage());
+	            }
 
 	    	}
 	    	
