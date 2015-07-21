@@ -3625,6 +3625,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>	
                       						<include-form name="listFGSShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -3659,6 +3662,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>	
                       						<include-form name="listDepotShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -3693,6 +3699,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="${parameters.hideSearch}">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
                       						<include-form name="listICPNandiniShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -3728,6 +3737,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
                       						<include-form name="listICPAmulShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -3762,6 +3774,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
                       						<include-form name="listICPAmulShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -4003,6 +4018,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="ICP Stock Transfer Shipments">
+                      					 <platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>	
                       						<include-form name="listICPTransferShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -4037,6 +4055,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="Inter Unit Stock Transfrd Shipments">
+                      					 <platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>	
                       						<include-form name="listInterUnitShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>

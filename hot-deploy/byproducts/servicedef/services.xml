@@ -64,6 +64,7 @@
         location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="cancelICPShipment">
         <description>Cancel ICP Shipment</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
     </service>
     <service name="approveICPOrder" engine="java" 
         location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="approveICPOrder">

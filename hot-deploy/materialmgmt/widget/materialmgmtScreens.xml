@@ -21,8 +21,11 @@
 			                            			<include-form name="FindPurchaseOrder" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
 			                      </decorator-section>
 			                      <decorator-section name="search-results">
+			                      <platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
 			                      					<screenlet title="">
-			                          					<include-form name="listPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+			                          					<include-form name="MainNglistPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
 			                      					</screenlet>
 			                      </decorator-section>
 			                      </decorator-screen>
@@ -237,7 +240,10 @@
 												<parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
 												<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
 									  	 	</link> -->
-                          					<include-form name="listPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+									  	 	<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
+                          					<include-form name="MainNglistPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
                                 </decorator-screen>
@@ -818,6 +824,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
                       						<include-form name="listFGSShipmentsMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -935,6 +944,9 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="Inter Unit Stock Transfrd Shipments">
+                      					<platform-specific>
+	                                     			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+	                                	</platform-specific>
                       						<include-form name="listInterUnitShipmentsMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
                       					</screenlet>
                       				</decorator-section>

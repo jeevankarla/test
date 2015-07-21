@@ -649,6 +649,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelICPNandiniShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -665,8 +666,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelICPNandiniShipment" description="Cancel Shipment">
+           <!--  <hyperlink target="cancelICPNandiniShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+           <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form>
@@ -682,6 +685,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelICPBellaryShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -699,8 +703,10 @@
         </field>
       
         <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelICPBellaryShipment" description="Cancel Shipment">
+            <!-- <hyperlink target="cancelICPBellaryShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+            <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form>
@@ -716,6 +722,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelICPAmulShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -733,8 +740,10 @@
         </field>
       
         <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelICPAmulShipment" description="Cancel Shipment">
+           <!--  <hyperlink target="cancelICPAmulShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+             <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form>
@@ -751,7 +760,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            
+            <set field="action" value="cancelInterUnitShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -779,10 +788,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
-	            <parameter param-name="shipmentId"/>
+            <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
+        
     </form>
     <form name="listICPTransferShipments" type="list" list-name="listIt" paginate-target="FindICPTranferShipment" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -794,6 +803,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelICPTransferShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -821,8 +831,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelICPTransferShipment" description="Cancel Shipment">
+            <!-- <hyperlink target="cancelICPTransferShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+              <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form>
@@ -838,6 +850,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelInterUnitShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -859,8 +872,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
+           <!--  <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+           <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form>
@@ -874,6 +889,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelFGSShipment"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -895,8 +911,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelFGSShipment" description="Cancel Shipment">
+            <!-- <hyperlink target="cancelFGSShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+           <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form> 
