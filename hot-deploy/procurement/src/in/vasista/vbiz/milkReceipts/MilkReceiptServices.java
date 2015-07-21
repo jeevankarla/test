@@ -3355,6 +3355,14 @@ public class MilkReceiptServices {
 			  			return "error";
 			  		}
 				}
+				finally {
+			  		try {
+			  			TransactionUtil.commit(beginTransaction);
+			  		} catch (GenericEntityException e) {
+			  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+			  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
+			  		}
+			  	}
 			}
 			
 	        request.setAttribute("_EVENT_MESSAGE_", "Milk Receipt Successfully Approved");

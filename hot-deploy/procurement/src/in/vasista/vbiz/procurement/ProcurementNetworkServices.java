@@ -910,6 +910,7 @@ public class ProcurementNetworkServices {
 		  	BigDecimal snfQty = BigDecimal.ZERO;
 	    	//snfQty = (lactoReading.divide(new BigDecimal(4),5,4)).add((fatQty.multiply(new BigDecimal(0.21)))).add(new BigDecimal(0.36)).setScale(2,BigDecimal.ROUND_HALF_UP);
 		  	snfQty = ((lactoReading.add(fatQty)).divide(new BigDecimal(4),5,4)).add(new BigDecimal(0.35));
+		  	snfQty = snfQty.setScale(2,BigDecimal.ROUND_HALF_UP);
 	    	return snfQty;
 	    }
 	// this  service  returns Snf value by evoluting Accounting Formula
