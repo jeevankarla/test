@@ -109,7 +109,7 @@ if(UtilValidate.isNotEmpty(periodBillingId)){
 		 milkTransferIds = EntityUtil.getFieldListFromEntityList(ptcBillingCommiMilkTransfer, "milkTransferId", false);
 	}
 }
-
+Map totContractSubTotMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(milkTransferIds)){
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
@@ -170,7 +170,6 @@ if(UtilValidate.isNotEmpty(milkTransferIds)){
 		totalAdditions=0;
 		totalDeductions=0;
 		
-		totContractSubTotMap=[:];
 		if(UtilValidate.isNotEmpty(contractors)){
 			contractors.each{eachContractor->
 				contractorList=EntityUtil.filterByCondition(vehicleRoleList,EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachContractor));
