@@ -165,6 +165,70 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                        CLOSING BALANCE:     ${(balance)?string("##0.00")}          ${(balance)?string("##0.00")} </fo:block>
              </#if> 
              <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			 <fo:block>
+                    <fo:table>
+				    <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="25%"/>
+			        <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+
+                    <fo:table-body>
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+						<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+						<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="left" keep-together="always" >&#160;Prepared by </fo:block>
+		                	</fo:table-cell>
+		                	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+		                	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160; Pre Auditor</fo:block>
+		                	</fo:table-cell>
+		                	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+		                	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" >&#160;</fo:block>
+		                	</fo:table-cell>
+	                    	<fo:table-cell>
+	                    	    <fo:block font-size="11pt" text-align="right" keep-together="always" > &#160;Manager (Finance)</fo:block>
+		                	</fo:table-cell>
+						</fo:table-row>
+						</fo:table-body>
+                </fo:table>
+               </fo:block> 
+			 
 			 </fo:flow>
 			 </fo:page-sequence>
 			 </#list>	
