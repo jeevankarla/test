@@ -37,14 +37,16 @@ $(document).ready(function() {
 		"columns": [
 			{ "title": "Transporter Id" },			
 			{ "title": "Transporter Name" },
-			{ "title": "Phone" },			
+			{ "title": "Phone" },
+			{ "title": "Vehicle No" },	
+			{ "title": "Vehicle Capacity", sClass: "myRightAlignClass" },
 			{ "title": "Contract Start" },			
 			{ "title": "Contract End" }],
-		"columnDefs": [{ type: 'date-eu', targets: [3,4] }],
+		"columnDefs": [{ type: 'date-eu', targets: [5,6] }],
        	"iDisplayLength" : 100,
        	"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-       		if (aData[4] && aData[4].length > 0) {
-       			var parts =aData[4].split('/');  // dd/MM/yyyy
+       		if (aData[6] && aData[6].length > 0) {
+       			var parts =aData[6].split('/');  // dd/MM/yyyy
 				var thruDate = new Date(parts[2],parts[1]-1,parts[0]);
 				var currentDate = new Date();
 				var interval = thruDate.getTime() - currentDate.getTime();
@@ -55,7 +57,7 @@ $(document).ready(function() {
             }
          }
 	} );	
-	datatable2.fnSort( [ [4,'asc'] ] );	 	 	
+	datatable2.fnSort( [ [6,'asc'] ] );	 	 	
 } );
 
 </script>
