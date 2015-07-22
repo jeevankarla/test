@@ -89,12 +89,66 @@ if(UtilValidate.isNotEmpty(thruDate)){
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 leaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
-context.put("employeeLeaveList",leaveDetails);
 
+
+weekMap=[:];
+weekMap["1"]="Sunday";
+weekMap["2"]="Monday";
+weekMap["3"]="Tuesday";
+weekMap["4"]="Wednesday";
+weekMap["5"]="Thursday";
+weekMap["6"]="Friday";
+weekMap["7"]="Saturday";
+
+employeeLeaveList = [];
 compDateMap = [:];
 if(UtilValidate.isNotEmpty(leaveDetails)){
 	leaveDetails.each{ leave->
+		int leaveCount = 1;
 		emplLeaveApplId = leave.emplLeaveApplId;
+		leaveFromDate = leave.fromDate;
+		leaveThruDate = leave.thruDate;
+		leaveCountDays = UtilDateTime.getIntervalInDays(leaveFromDate,leaveThruDate)+1;
+		
+		if((leave.leaveTypeId).equals("CL")){
+			for(int i=1 ;i < leaveCountDays; i++){
+				nextDay = UtilDateTime.addDaysToTimestamp(leaveFromDate, 1);
+				String dayOfWeek = (UtilDateTime.getDayOfWeek(nextDay, timeZone, locale)).toString();
+				String weekDay = weekMap[dayOfWeek];
+				leaveFromDate = nextDay;
+				leaveDate = "";
+				secondSatDate = "";
+				leaveDate = UtilDateTime.toDateString(nextDay,"dd");
+				if(weekDay.equals("Saturday")){
+					secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(nextDay),0,2,timeZone,locale), -1);
+					secondSatDate = UtilDateTime.toDateString(secondSaturDay,"dd");
+				}
+				if(!leaveDate.equals(secondSatDate) && !weekDay.equals("Sunday")){
+					leaveCount = leaveCount + 1;
+				}
+			}
+		}else{
+			leaveCount = leaveCountDays;
+		}
+		
+		leaveDetailsMap = [:];
+		leaveDetailsMap.put("emplLeaveApplId", leave.emplLeaveApplId);
+		leaveDetailsMap.put("partyId", leave.partyId);
+		leaveDetailsMap.put("leaveCountDays", leaveCount);
+		leaveDetailsMap.put("leaveTypeId", leave.leaveTypeId);
+		leaveDetailsMap.put("emplLeaveReasonTypeId", leave.emplLeaveReasonTypeId);
+		leaveDetailsMap.put("fromDate", leave.fromDate);
+		leaveDetailsMap.put("thruDate", leave.thruDate);
+		leaveDetailsMap.put("approverPartyId", leave.approverPartyId);
+		leaveDetailsMap.put("leaveStatus", leave.leaveStatus);
+		leaveDetailsMap.put("effectedCreditDays", leave.effectedCreditDays);
+		leaveDetailsMap.put("lossOfPayDays", leave.lossOfPayDays);
+		leaveDetailsMap.put("dayFractionId", leave.dayFractionId);
+		leaveDetailsMap.put("GHSSdays", leave.GHSSdays);
+		leaveDetailsMap.put("documentsProduced", leave.documentsProduced);
+		leaveDetailsMap.put("comment", leave.comment);
+		leaveDetailsMap.put("appliedBy", leave.appliedBy);
+		employeeLeaveList.addAll(leaveDetailsMap);
 		compDateList = [];
 		if(UtilValidate.isNotEmpty(emplLeaveApplId)){
 			emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
@@ -111,6 +165,7 @@ if(UtilValidate.isNotEmpty(leaveDetails)){
 		}
 	}
 }
+context.put("employeeLeaveList",employeeLeaveList);
 context.put("compDateMap",compDateMap);
 
 emplLeaveApplId = parameters.emplLeaveApplId;
