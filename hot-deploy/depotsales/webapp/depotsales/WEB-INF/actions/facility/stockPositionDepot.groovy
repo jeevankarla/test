@@ -425,6 +425,20 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
  condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
  inventoryItemList = delegator.findList("InventoryItem", condition, null, null, null, false);
+ //getting Inventory From Damaged Store
+ 
+ conList=[];
+ conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "DAMAGED_STORE"));
+ conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+ condition = EntityCondition.makeCondition(conList, EntityOperator.AND);
+ damagedInventoryItem = delegator.findList("InventoryItem", condition, null, null, null, false);
+ if(UtilValidate.isNotEmpty(damagedInventoryItem)){
+	 damagedInventoryItem.each{ damageInventory->
+		 if(UtilValidate.isNotEmpty(damageInventory.quantityOnHandTotal)){
+			 damagedQty+=damageInventory.quantityOnHandTotal;
+		 }
+	 }
+ }
  
  if(UtilValidate.isNotEmpty(inventoryItemList)){
 	 conditionList.clear();
