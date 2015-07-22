@@ -591,7 +591,7 @@ public class LoginWorker {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
         doBasicLogout(userLogin, request, response);
-        try{
+        /*try{
     		URL requestUrl = new URL(request.getRequestURL().toString());
             String portString = 
                     requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
@@ -600,7 +600,7 @@ public class LoginWorker {
         	
         }catch(Exception e){
         	
-        }
+        }*/
         
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
