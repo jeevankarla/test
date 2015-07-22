@@ -98,6 +98,7 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
+        <field name="leaveCountDays" title="Total no.of days"><display/></field> 
 		<field name="leaveTypeId" title="Type"></field>        
 		<field name="emplLeaveReasonTypeId" title="Reason"></field>                
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
@@ -133,6 +134,17 @@
             </hyperlink>
         </field>
         <field name="description"><hidden/></field>
+        <sort-order>
+		<field-group title="" initially-collapsed="false">
+		<sort-field name="emplLeaveApplId"/>
+		<sort-field name="partyId"/>
+		<sort-field name="leaveTypeId"/>
+		<sort-field name="emplLeaveReasonTypeId"/>
+		<sort-field name="fromDate"/>
+		<sort-field name="thruDate"/>
+		<sort-field name="leaveCountDays"/>
+		</field-group>        
+        </sort-order>
       </form>
     <form name="EditEmplLeave" type="single" target="updateEmplLeaveExt" default-map-name="leaveApp"
         header-row-style="header-row" default-table-style="basic-table">
