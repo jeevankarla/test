@@ -1123,7 +1123,7 @@ public class DepotSalesServices{
 	    		try {
 	                Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", detailReturn.get("productId"),
 	                        "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
-	                serviceContext.put("facilityId", "DAMAGEDSTORE");
+	                serviceContext.put("facilityId", "DAMAGED_STORE");
 	                if("RTN_INDNT_FAULT".equals(detailReturn.get("returnReasonId"))){
 	                	serviceContext.put("facilityId", "STORE");
 	                }

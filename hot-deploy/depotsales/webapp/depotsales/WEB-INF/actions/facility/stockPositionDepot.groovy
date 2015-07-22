@@ -428,7 +428,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  //getting Inventory From Damaged Store
  
  conList=[];
- conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "DAMAGEDSTORE"));
+ conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "DAMAGED_STORE"));
  conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
  condition = EntityCondition.makeCondition(conList, EntityOperator.AND);
  damagedInventoryItem = delegator.findList("InventoryItem", condition, null, null, null, false);
