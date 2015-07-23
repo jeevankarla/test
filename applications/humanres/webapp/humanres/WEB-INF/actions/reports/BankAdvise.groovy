@@ -77,7 +77,7 @@ List conditionList =[];
 if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 	parameters.partyIdFrom=parameters.partyIdFrom;
 }else{
-	parameters.partyIdFrom=parameters.partyId;
+	parameters.partyIdFrom= "Company";
 }
 fromDate= context.getAt("timePeriodStart");
 thruDate= context.getAt("timePeriodEnd");
@@ -135,7 +135,7 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 					}
 					tempfinAccountList.add(tempAccNoMap);
 				}
-				tempfinAccountList = UtilMisc.sortMaps(tempfinAccountList, UtilMisc.toList("finAccountCode"));
+				tempfinAccountList = UtilMisc.sortMaps(tempfinAccountList, UtilMisc.toList("ownerPartyId"));
 				canraBankPartyIds=[];
 				//handling canara bank 
 				if(UtilValidate.isNotEmpty(tempfinAccountList)){
