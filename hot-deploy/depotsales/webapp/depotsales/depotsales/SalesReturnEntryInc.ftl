@@ -137,7 +137,11 @@
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var reason = jQuery("<input>").attr("type", "hidden").attr("name", "returnReasonId_o_" + rowCount).val(returnReason);
-					
+				if(reason.val().length < 1){
+				alert("Return Reason is Mandatory.!");
+					window.location.reload(true);
+					return false;
+				}
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
 				jQuery(formId).append(jQuery(reason));
