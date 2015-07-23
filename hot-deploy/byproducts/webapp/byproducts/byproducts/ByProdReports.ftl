@@ -1457,7 +1457,7 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
-			        <tr class="alternate-row">
+			      <#---<tr class="alternate-row">
       					<form id="IceCreamDuesAbstractReport" name="IceCreamDuesAbstractReport" method="post" action="<@ofbizUrl>iceCreamDueParticulars.pdf</@ofbizUrl>" target="_blank">	
       						<td width="30%">Ice Cream Sundry Debtor Report
 							<td width="15%">From<input  type="text" size="18pt" id="iceDueFromDateId" readonly  name="fromDate"/></td>
@@ -1470,7 +1470,7 @@ function reportTypeChangeFunc() {
 							<td width="20%"><input type="submit" value="PDF" onClick="javascript:appendParams('IceCreamDuesAbstractReportt', '<@ofbizUrl>iceCreamDueParticulars.pdf</@ofbizUrl>');" class="buttontext"/>
 							<input type="submit" value="CSV" onClick="javascript:appendParams('IceCreamDuesAbstractReport', '<@ofbizUrl>iceCreamDueParticulars.csv</@ofbizUrl>');" class="buttontext"/></td>   </tr>
       					</form>
-      				</tr>
+      				</tr>-->
       				
 			        <tr class="alternate-row">
 					<form id="fDExpiringOrMaturingReport" name="fDExpiringOrMaturingReport" method="post" action="<@ofbizUrl>fDExpiringOrMaturingReport.pdf</@ofbizUrl>" target="_blank">	
