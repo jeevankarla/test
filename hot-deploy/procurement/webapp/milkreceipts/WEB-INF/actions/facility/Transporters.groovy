@@ -35,30 +35,45 @@ vehicleRole=delegator.findList("VehicleRole",ecl,null,null,null,false);
 partyIds=EntityUtil.getFieldListFromEntityList(vehicleRole,"partyId",true);
 if(partyIds){
 	partyIds.each{partyId->
-		String partyName = PartyHelper.getPartyName(delegator, partyId, false);
-		JSONArray transporterJSON = new JSONArray();
-		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
-		phoneNumber = "";
-		if (partyTelephone != null && partyTelephone.contactNumber != null) {
-			phoneNumber = partyTelephone.contactNumber;
-		}
-		transporterJSON.add(partyId);
-		transporterJSON.add(partyName);
-		transporterJSON.add(phoneNumber);
 		partyDetails=EntityUtil.filterByCondition(vehicleRole,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
-		partyDetail=EntityUtil.getFirst(partyDetails);
-		
-		fromDate = "";
-		if (partyDetail.fromDate != null) {
-			fromDate = UtilDateTime.toDateString(partyDetail.fromDate, "dd/MM/yyyy");
+		//partyDetail=EntityUtil.getFirst(partyDetails);
+		partyDetails.each{partyDetail->
+			String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			JSONArray transporterJSON = new JSONArray();
+			partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
+			phoneNumber = "";
+			if (partyTelephone != null && partyTelephone.contactNumber != null) {
+				phoneNumber = partyTelephone.contactNumber;
+			}
+			transporterJSON.add(partyId);
+			transporterJSON.add(partyName);
+			transporterJSON.add(phoneNumber);
+			vehicleId = partyDetail.vehicleId;
+			vehicleDetails = delegator.findOne("Vehicle", [vehicleId : vehicleId], false);
+			if(UtilValidate.isNotEmpty(vehicleDetails)){
+				vehicleNo = "";
+				if (vehicleDetails.vehicleId != null){
+					vehicleNo = vehicleDetails.vehicleId;
+				 }
+				vehicleCapacity = "";
+				if (vehicleDetails.vehicleCapacity != null){
+					vehicleCapacity = vehicleDetails.vehicleCapacity;
+				 }
+			}
+			fromDate = "";
+			if (partyDetail.fromDate != null) {
+				fromDate = UtilDateTime.toDateString(partyDetail.fromDate, "dd/MM/yyyy");
+			}
+			thruDate = "";
+			if (partyDetail.thruDate != null) {
+				thruDate = UtilDateTime.toDateString(partyDetail.thruDate, "dd/MM/yyyy");
+			}
+			transporterJSON.add(vehicleNo);
+			transporterJSON.add(vehicleCapacity);
+			transporterJSON.add(fromDate);
+			transporterJSON.add(thruDate);
+			transportersJSON.add(transporterJSON);
 		}
-		thruDate = "";
-		if (partyDetail.thruDate != null) {
-			thruDate = UtilDateTime.toDateString(partyDetail.thruDate, "dd/MM/yyyy");
-		}
-		transporterJSON.add(fromDate);
-		transporterJSON.add(thruDate);
-		transportersJSON.add(transporterJSON);
 	}
 }
 
