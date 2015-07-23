@@ -20,7 +20,7 @@ under the License.
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-        margin-top="0.3in" margin-bottom="0.3in" margin-left="1in" margin-right=".5in">
+        margin-top="0.3in" margin-bottom="0.3in" margin-left="0.7in" margin-right=".5in">
           <fo:region-body margin-top="1.2in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
@@ -28,11 +28,11 @@ under the License.
     </fo:layout-master-set>
     
  	<#assign totalAmount=0>
- 	<#if BankAdvicePayRollMap?has_content>   
+ 	<#if bankWiseEmplDetailsMap?has_content>   
  		<#assign bankDetailsList=bankWiseEmplDetailsMap.entrySet()>
  		<#if bankDetailsList?has_content>  
- 			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
- 			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
+ 			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : "Company"}, true)>
+ 			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", "Company", "userLogin", userLogin))/>
  			<#list bankDetailsList as companyBankDetails>
  				<#assign temp=0>
   				<fo:page-sequence master-reference="main">
@@ -40,11 +40,13 @@ under the License.
 						<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
 						<#assign nowDate=Static["org.ofbiz.base.util.UtilDateTime"].getDayStart(nowTimestamp, timeZone,locale)>
 						<fo:block white-space-collapse="false" font-weight="bold" text-align="left" text-indent="60pt" keep-together="always">${partyGroup.groupName?if_exists}, <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if> </fo:block>
-					    <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">${finAccDetails.finAccountName?if_exists}
+					    <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt"> &#160;                                                                                                                                                 ${uiLabelMap.CommonPage}No: <fo:page-number/></fo:block>
 					    <#if parameters.billingTypeId=="SP_LEAVE_ENCASH">   
 					    	<#assign timePeriodEnd=basicSalDate?if_exists>
-					    </#if>                                                  																					${uiLabelMap.CommonPage}No: <fo:page-number/></fo:block>
+					    </#if>                                                  																					
 					    <fo:block text-align="right" keep-together="always" white-space-collapse="false" font-weight="bold">LOANS DISBURSED : BANK ADVISE REPORT FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}                Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDate, "dd-MMM-yyyy")}</fo:block>
+						<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">&#160; </fo:block>
+						<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">&#160; ${finAccDetails.finAccountName?if_exists} &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 					</fo:static-content>  	
     				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">  
       					<#if CanaraBankMap.get(companyBankDetails.getKey())?has_content>
@@ -52,25 +54,25 @@ under the License.
       					</#if>  	
       					<fo:block>
 							<fo:table width="100%" table-layout="fixed">
-					    		<fo:table-header height="14px">
+					    		<fo:table-header height="13px">
 							       	<fo:table-row height="14px" space-start=".15in" text-align="center">
 					                	<fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
 					                    	<fo:block text-align="center" font-weight="bold">Sl.No</fo:block>
 					                    </fo:table-cell>
 					                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
-					                    	<fo:block text-align="center" font-weight="bold">EMP No</fo:block>
+					                    	<fo:block text-align="center" font-weight="bold">Emp No</fo:block>
 					                    </fo:table-cell>
 					                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="170px">
-					                        <fo:block text-align="center" font-weight="bold" >${uiLabelMap.EmployeeName}</fo:block>
+					                        <fo:block text-align="left" font-weight="bold" >&#160;&#160;Employee Name</fo:block>
 					                     </fo:table-cell> 
 					                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="130px">
-					                        <fo:block text-align="center" font-weight="bold" >${uiLabelMap.Designation}</fo:block>
+					                        <fo:block text-align="left" font-weight="bold" >&#160;&#160;${uiLabelMap.Designation}</fo:block>
 					                     </fo:table-cell> 
 					                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="150px">
-					                        <fo:block font-weight="bold" text-align="center" >${uiLabelMap.AccountNumber}</fo:block>
+					                        <fo:block font-weight="bold" text-align="left" >&#160;&#160;Account Number</fo:block>
 					                    </fo:table-cell>
 					                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="80px">
-					                        <fo:block font-weight="bold" text-align="center" >${uiLabelMap.Amount}</fo:block>
+					                        <fo:block font-weight="bold" text-align="left" >&#160;&#160;${uiLabelMap.Amount}</fo:block>
 					                    </fo:table-cell>
 					                </fo:table-row>
 					            </fo:table-header>
@@ -126,13 +128,13 @@ under the License.
 	               						</#if> 
                   				</#list>
               					<fo:table-row border="solid">
-              						<fo:table-cell/>
-					              	<fo:table-cell>              		
-					              	</fo:table-cell>
+              						<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
+					              	<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
 					              	<fo:table-cell>
 					              		<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
 					              	</fo:table-cell>
-					              	<fo:table-cell />
+					              	<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
+					              	<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
 					              	<fo:table-cell border="solid"><fo:block text-align="center" font-weight="bold">${totalNetAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
               					</fo:table-row>
 				              	<#if CanaraBankMap.get(companyBankDetails.getKey())?has_content>
@@ -184,13 +186,13 @@ under the License.
 					                    </#list>
 					           		</#if>
 					              	<fo:table-row border="solid">
-					              		<fo:table-cell/>
-					              		<fo:table-cell>              		
-					              		</fo:table-cell>
+					              		<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
+					              		<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
 					              		<fo:table-cell>
 					              			<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
 					              		</fo:table-cell>
-					              		<fo:table-cell />
+					              		<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
+					              		<fo:table-cell><fo:block text-align="center" font-weight="bold">&#160;</fo:block></fo:table-cell>
 					              		<fo:table-cell border="solid"><fo:block text-align="center" font-weight="bold">${totAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
 					              	</fo:table-row>
 		            			</#if>          

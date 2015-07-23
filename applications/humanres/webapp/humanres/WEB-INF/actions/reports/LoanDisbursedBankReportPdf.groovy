@@ -51,13 +51,13 @@ if(UtilValidate.isNotEmpty(employments)){
 
 employeeLoanDisbursedMap = [:];
 
-bankWiseEmplDetailsMap = context.get("bankWiseEmplDetailsMap")
+bankWiseEmplDetailsMap = context.get("bankWiseEmplDetailsMap");
 if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 	Iterator bankWiseEmplDetailsMapIter = bankWiseEmplDetailsMap.entrySet().iterator();
 	while(bankWiseEmplDetailsMapIter.hasNext()){
 		bankAmount = 0;
 		Map.Entry bankWiseEmplDetailsMapIterEntry = bankWiseEmplDetailsMapIter.next();
-		employmentsList = bankWiseEmplDetailsMapIterEntry.getValue()
+		employmentsList = bankWiseEmplDetailsMapIterEntry.getValue();
 		if(UtilValidate.isNotEmpty(employmentsList)){
 			employmentsList.each{ employeeId->
 				employeeDetailMap = [:];
