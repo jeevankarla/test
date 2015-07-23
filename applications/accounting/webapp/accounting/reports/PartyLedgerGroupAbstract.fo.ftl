@@ -50,15 +50,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 				<#assign partyWiseList = partyMap.entrySet()>
 				<#assign grdDebit=0>
                 <#assign grdCredit=0>
-                <#assign grdUnAppliedAmt=0>
+               <#assign grdUnAppCredit=0>
+               <#assign grdUnAppDebit=0>
                 <fo:block>
                     <fo:table>
 				    <fo:table-column column-width="7%"/>
+			        <fo:table-column column-width="10%"/>
+			        <fo:table-column column-width="18%"/>
 			        <fo:table-column column-width="12%"/>
-			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="18%"/>
-			        <fo:table-column column-width="18%"/>
-			        <fo:table-column column-width="18%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="15%"/>
+			        <fo:table-column column-width="15%"/>
                     <fo:table-body>
                     	<fo:table-row>
                     	   <fo:table-cell>
@@ -77,7 +81,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">CREDIT</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">UN-APPLIED AMT</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">UN-APP-DEBIT</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">UN-APP-CREDIT</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">NET AMOUNT</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                         <fo:table-row>
@@ -105,20 +115,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 </#if> 
                 </#if>
 
-				<#assign unApplAmt=0>
+				<#assign unAppAmt=0>
 				<#assign unAppCredit=0>
                 <#assign unAppDebit=0>
-                <#if unAppliedOpeningBalMap?has_content>
-                <#assign unApplAmt=unAppliedOpeningBalMap.get(partyList.getKey())>
-                <#if unApplAmt gte 0>
-                <#assign unAppDebit=unApplAmt>
-                <#else>
-                <#assign unAppCredit=((-1)*unApplAmt)>
-                </#if> 
+                <#if closingUnAppMap?has_content>
+                <#assign unAppAmt=closingUnAppMap.get(partyList.getKey())>
+	                <#if unAppAmt gte 0>
+	                	<#assign unAppDebit=unAppAmt>
+                	<#else>
+                		<#assign unAppCredit=((-1)*unAppAmt)>
+                	</#if> 
                 </#if>
-                <#assign totUnAppAmt=unAppDebit-unAppCredit>
-                <#assign grdUnAppliedAmt=grdUnAppliedAmt+totUnAppAmt>
-				<#if acctgDetails?has_content || openDebit !=0 || openCredit!=0 || totUnAppAmt!=0>
+				<#if acctgDetails?has_content || openDebit !=0 || openCredit!=0 || unAppCredit!=0 || unAppDebit!=0>
                     <#list acctgDetails as acctgTrans>
                           <#assign totDebit=totDebit+acctgTrans.get("debit")>
                           <#assign totCredit=totCredit+acctgTrans.get("credit")>
@@ -138,33 +146,43 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                       <#if closingDebit !=0 || closingCredit !=0>
                 		<fo:table-row>
                 			<fo:table-cell>
-                    			 <fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${sno}</fo:block>  
+                    			 <fo:block  keep-together="always" text-align="left"   font-size="10pt" white-space-collapse="false">${sno}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${partyList.getKey()}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="left"   font-size="10pt" white-space-collapse="false">${partyList.getKey()}</fo:block>  
                 			</fo:table-cell>
                              <fo:table-cell>
-                    			<fo:block   text-align="left"   font-size="12pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}</fo:block>  
+                    			<fo:block   text-align="left"   font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${closingDebit?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right"   font-size="10pt" white-space-collapse="false">${closingDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${((-1)*closingCredit)?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right"   font-size="10pt" white-space-collapse="false">${((-1)*closingCredit)?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
-                			<#if totUnAppAmt gt 0>
-	                            <fo:table-cell>
-	                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${totUnAppAmt?if_exists?string("##0.00")}(Dr)</fo:block>  
-	                			</fo:table-cell>
-                			<#elseif totUnAppAmt lt 0>
-                                <fo:table-cell>
-	                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${((-1)*totUnAppAmt)?if_exists?string("##0.00")}(Cr)</fo:block>  
-	                			</fo:table-cell>   
-                            <#else>
-                                <fo:table-cell>
-	                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
-	                			</fo:table-cell>
-                            </#if> 
+                			<#assign grdUnAppCredit=grdUnAppCredit+unAppCredit>
+                            <#assign grdUnAppDebit=grdUnAppDebit+unAppDebit>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right"   font-size="10pt" white-space-collapse="false">${unAppDebit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right"  font-size="10pt" white-space-collapse="false">${unAppCredit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                			<#assign finalAmt=0>
+                            <#assign finalAmt=(closingDebit+unAppDebit)-(((-1)*closingCredit)+unAppCredit)> 
+                            <#if finalAmt gt 0>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right"  font-size="10pt" white-space-collapse="false">${finalAmt?if_exists?string("##0.00")}(Dr)</fo:block>  
+                			</fo:table-cell>
+                            <#elseif finalAmt lt 0>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right"  font-size="10pt" white-space-collapse="false">${((-1)*finalAmt)?if_exists?string("##0.00")}(Cr)</fo:block>  
+                			</fo:table-cell> 
+                             <#else>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right"  font-size="10pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                             </#if>
                 		</fo:table-row>
                 		<#assign sno=sno+1>
                         </#if>
@@ -182,11 +200,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
 	          <fo:block>
                     <fo:table>
 				    <fo:table-column column-width="7%"/>
+			        <fo:table-column column-width="10%"/>
+			        <fo:table-column column-width="18%"/>
 			        <fo:table-column column-width="12%"/>
-			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="18%"/>
-			        <fo:table-column column-width="18%"/>
-			        <fo:table-column column-width="18%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="15%"/>
+			        <fo:table-column column-width="15%"/>
                     <fo:table-body>
                     	<fo:table-row>
                 			<fo:table-cell>
@@ -196,27 +217,35 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                              <fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">TOTALS :</fo:block>  
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="11pt" white-space-collapse="false">TOTALS :</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grdDebit?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${grdDebit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 			<fo:table-cell>
-                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grdCredit?if_exists?string("##0.00")}</fo:block>  
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${grdCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
-                            <#if grdUnAppliedAmt gt 0>
-	                            <fo:table-cell>
-	                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grdUnAppliedAmt?if_exists?string("##0.00")}(Dr)</fo:block>  
-	                			</fo:table-cell>
-                			<#elseif grdUnAppliedAmt lt 0>
-                                <fo:table-cell>
-	                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*grdUnAppliedAmt)?if_exists?string("##0.00")}(Cr)</fo:block>  
-	                			</fo:table-cell>   
-                            <#else>
-                                <fo:table-cell>
-	                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
-	                			</fo:table-cell>
-                            </#if>
+                            <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${grdUnAppDebit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold" font-size="10pt" white-space-collapse="false">${grdUnAppCredit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+							<#assign grdfinalAmt=0>
+                            <#assign grdfinalAmt=(grdDebit+grdUnAppDebit)-(grdCredit+grdUnAppCredit)> 
+                            <#if grdfinalAmt gt 0>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${grdfinalAmt?if_exists?string("##0.00")}(Dr)</fo:block>  
+                			</fo:table-cell>
+                            <#elseif grdfinalAmt lt 0>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="10pt" white-space-collapse="false">${((-1)*grdfinalAmt)?if_exists?string("##0.00")}(Cr)</fo:block>  
+                			</fo:table-cell> 
+                             <#else>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold" font-size="10pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                             </#if>
                 		</fo:table-row>
                 		<fo:table-row>
                 			<fo:table-cell>
@@ -259,7 +288,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
                 			</fo:table-cell>
                             </#if>
-                             <#if grdUnAppliedAmt gt 0>
+                          <#-- <#if grdUnAppliedAmt gt 0>
 	                            <fo:table-cell>
 	                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${grdUnAppliedAmt?if_exists?string("##0.00")}(Dr)</fo:block>  
 	                			</fo:table-cell>
@@ -271,7 +300,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                                 <fo:table-cell>
 	                    			<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
 	                			</fo:table-cell>
-                            </#if>
+                            </#if> -->
                 		</fo:table-row>
                     </fo:table-body>
                 </fo:table>

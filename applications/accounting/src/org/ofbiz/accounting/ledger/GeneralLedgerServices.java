@@ -902,4 +902,103 @@ public class GeneralLedgerServices {
 		return consolidateAcctgTransEntries;
 	}
 	
+	public static Map<String, Object> getAcctgTransBalance(DispatchContext dctx, Map<String, Object> context){
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId = (String) context.get("partyId");
+        List<String> partyIdList = (List) context.get("partyIds");
+        String glAccountTypeId =(String) context.get("glAccountTypeId");
+        List<String> glAccountTypeIds = (List) context.get("glAccountTypeIds");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String fromGlAccountId =(String) context.get("glAccountId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        List partyIds = FastList.newInstance();
+        Map<String, Object> openingBalMap = FastMap.newInstance();
+        List conditionList = FastList.newInstance();
+        List<GenericValue> acctgTransList=null;
+        EntityListIterator acctgTransEntryList=null;
+        List glAccountIds = FastList.newInstance();
+        BigDecimal credit = BigDecimal.ZERO;
+        BigDecimal debit = BigDecimal.ZERO;
+        BigDecimal openingBalance = BigDecimal.ZERO;
+        try{
+        	if(UtilValidate.isNotEmpty(partyId)){
+        		partyIds.add(partyId);
+        	}
+        	if(UtilValidate.isNotEmpty(partyIdList)){
+        		partyIds=partyIdList;
+        	}
+        	String glAccountId="";
+        	if(UtilValidate.isNotEmpty(glAccountTypeId)){
+	        	GenericValue glAccountTypeDefault = delegator.findOne("GlAccountTypeDefault", UtilMisc.toMap("glAccountTypeId",glAccountTypeId,"organizationPartyId","Company"), false);
+	        	glAccountId = glAccountTypeDefault.getString("glAccountId");
+        	}
+        	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
+	        	List<GenericValue> glAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault",EntityCondition.makeCondition("glAccountTypeId",EntityOperator.IN,glAccountTypeIds),UtilMisc.toSet("glAccountId"),null,null,false);
+	        	glAccountIds = EntityUtil.getFieldListFromEntityList(glAccountTypeDefaultList, "glAccountId", true);
+        	}
+        	if(UtilValidate.isNotEmpty(fromGlAccountId)){
+	        	glAccountId = fromGlAccountId;
+        	}
+
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+        	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
+        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
+        	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
+        	if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
+        		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
+        	}  
+        	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
+        		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
+        	} 
+        	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
+        	if(UtilValidate.isNotEmpty(acctgTransEntryList)){
+        		while (acctgTransEntryList.hasNext()) {
+                    GenericValue acctgTrans = acctgTransEntryList.next();
+
+                        if(((String)acctgTrans.get("debitCreditFlag")).equals("C") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
+        					credit=credit.add((BigDecimal)acctgTrans.get("amount"));
+        				}
+        				if(((String)acctgTrans.get("debitCreditFlag")).equals("D") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
+        					debit=debit.add((BigDecimal)acctgTrans.get("amount"));
+        				}
+        				BigDecimal partyCredit = BigDecimal.ZERO;
+        				BigDecimal partyDebit = BigDecimal.ZERO;
+        				if(((String)acctgTrans.get("debitCreditFlag")).equals("C") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
+        					partyCredit=(BigDecimal)acctgTrans.get("amount");
+        				}
+        				if(((String)acctgTrans.get("debitCreditFlag")).equals("D") && UtilValidate.isNotEmpty((BigDecimal)acctgTrans.get("amount"))){
+        					partyDebit=(BigDecimal)acctgTrans.get("amount");
+        				}
+        				Map tempMap = FastMap.newInstance();
+        				tempMap.put("credit", partyCredit);
+        				tempMap.put("debit", partyDebit);
+        				if(UtilValidate.isEmpty(openingBalMap.get((acctgTrans.getString("partyId")).toUpperCase()))){
+        					openingBalMap.put(acctgTrans.getString("partyId").toUpperCase(),tempMap);
+        				}else{
+        					Map existing = FastMap.newInstance();
+        					existing = (Map)openingBalMap.get(acctgTrans.getString("partyId").toUpperCase());
+        					tempMap.put("credit", partyCredit.add((BigDecimal)existing.get("credit")));
+            				tempMap.put("debit", partyDebit.add((BigDecimal)existing.get("debit")));
+            				openingBalMap.put(acctgTrans.getString("partyId").toUpperCase(),tempMap);
+        				}
+        		}
+        		acctgTransEntryList.close();
+        		openingBalance=(debit).subtract(credit);
+        	}
+        }catch (Exception e) {
+	        Debug.logError(e, "Error While getting the Opening balace.!", module);
+	        return ServiceUtil.returnError(e.getMessage());
+	    }
+        result.put("credit", credit);
+		result.put("debit", debit);
+		result.put("openingBalance", openingBalance);
+		result.put("openingBalMap", openingBalMap);
+        return result;
+    }	
 }
