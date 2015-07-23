@@ -661,55 +661,73 @@
           </hyperlink></field>
     </form> 
     <form name="ListAdditions" type="list" list-name="AdditionsList" default-table-style="basic-table hover-bar 2" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row" target="updateAddition">
-    <field name="recoveryId"><display></display></field>
-    <field name="recoveryTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-    <field name="vehicleId"><display></display> </field>
-    <field name="customTimePeriodId"><hidden/></field>
-    <field name="amount"><text size="5"></text></field>
-    <field name="incidentDate"><date-time  type="date"/></field>
-    <field name="Update"><submit/></field>
-    <field name="delete"  title="Delete" title-style="buttontext" separate-column="true" widget-style="buttontext">
-          <hyperlink target="deleteAddition" description="${uiLabelMap.CommonDelete}">
-            <parameter param-name="recoveryTypeId"/>
-            <parameter param-name="customTimePeriodId"/>
-            <parameter param-name="vehicleId"/>
-            <parameter param-name="incidentDate"/>
-            <parameter param-name="recoveryId"/>
-          </hyperlink></field>
+    	<row-actions>
+			<set field="eachVehicleId" value="${vehicleId}"/>
+  			<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getContractorName.groovy"/>
+  			<set field="contractorId" value="${contractorId}"/>
+  		</row-actions>
+	    <field name="recoveryId"><display></display></field>
+	    <field name="recoveryTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+	    <field name="contractorId" title="Contractor"> <display/></field>
+	    <field name="vehicleId"><display></display> </field>
+	    <field name="customTimePeriodId"><hidden/></field>
+	    <field name="amount"><text size="5"></text></field>
+	    <field name="incidentDate"><date-time  type="date"/></field>
+	    <field name="Update"><submit/></field>
+	    <field name="delete"  title="Delete" title-style="buttontext" separate-column="true" widget-style="buttontext">
+	          <hyperlink target="deleteAddition" description="${uiLabelMap.CommonDelete}">
+	            <parameter param-name="recoveryTypeId"/>
+	            <parameter param-name="customTimePeriodId"/>
+	            <parameter param-name="vehicleId"/>
+	            <parameter param-name="incidentDate"/>
+	            <parameter param-name="recoveryId"/>
+	          </hyperlink></field>
      </form>
     <form name="ListDeductions" type="list" list-name="DeductionsList" default-table-style="basic-table hover-bar 2" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row" target="updateDeduction">
-    <field name="recoveryId"><display></display></field>
-    <field name="recoveryTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-    <field name="vehicleId"><display></display> </field>
-    <field name="amount"><text size="5"></text></field>
-    <field name="customTimePeriodId"><hidden/></field>
-    <field name="incidentDate"><date-time  type="date"/></field>
-    <field name="Update"><submit/></field>
-    <field name="delete"  title="Delete" title-style="buttontext" separate-column="true" widget-style="buttontext">
-          <hyperlink target="deleteDeduction" description="${uiLabelMap.CommonDelete}">
-            <parameter param-name="recoveryTypeId"/>
-            <parameter param-name="customTimePeriodId"/>
-            <parameter param-name="vehicleId"/>
-            <parameter param-name="incidentDate"/>
-            <parameter param-name="recoveryId"/>
-          </hyperlink></field>
+		<row-actions>
+			<set field="eachVehicleId" value="${vehicleId}"/>
+  			<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getContractorName.groovy"/>
+  			<set field="contractorId" value="${contractorId}"/>
+		</row-actions>
+	    <field name="recoveryId"><display></display></field>
+	    <field name="recoveryTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+	    <field name="contractorId" title="Contractor"> <display/></field>
+	    <field name="vehicleId"><display></display> </field>
+	    <field name="amount"><text size="5"></text></field>
+	    <field name="customTimePeriodId"><hidden/></field>
+	    <field name="incidentDate"><date-time  type="date"/></field>
+	    <field name="Update"><submit/></field>
+	    <field name="delete"  title="Delete" title-style="buttontext" separate-column="true" widget-style="buttontext">
+	          <hyperlink target="deleteDeduction" description="${uiLabelMap.CommonDelete}">
+	            <parameter param-name="recoveryTypeId"/>
+	            <parameter param-name="customTimePeriodId"/>
+	            <parameter param-name="vehicleId"/>
+	            <parameter param-name="incidentDate"/>
+	            <parameter param-name="recoveryId"/>
+	          </hyperlink></field>
     </form>
     <form name="ListAdjustments" type="list" list-name="fineRecoveryList" default-table-style="basic-table hover-bar 2" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row" target="updatePtcAdjustment">
-    <field name="recoveryId"><display></display></field>
-    <field name="recoveryTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-    <field name="vehicleId"><display></display> </field>
-    <field name="amount"><text size="5"></text></field>
-    <field name="customTimePeriodId"><hidden/></field>
-    <field name="incidentDate"><date-time  type="date"/></field>
-    <field name="Update"><submit/></field>
-    <field name="delete"  title="Delete" title-style="buttontext" separate-column="true" widget-style="buttontext">
-          <hyperlink target="deletePtcAdjustment" description="${uiLabelMap.CommonDelete}">
-            <parameter param-name="recoveryTypeId"/>
-            <parameter param-name="customTimePeriodId"/>
-            <parameter param-name="vehicleId"/>
-            <parameter param-name="incidentDate"/>
-            <parameter param-name="recoveryId"/>
-          </hyperlink></field>
+   		<row-actions>
+			<set field="eachVehicleId" value="${vehicleId}"/>
+  			<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getContractorName.groovy"/>
+  			<set field="contractorId" value="${contractorId}"/>
+  		</row-actions>
+	    <field name="recoveryId"><display></display></field>
+	    <field name="recoveryTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="contractorId" title="Contractor"> <display/></field>
+	    <field name="vehicleId"><display></display> </field>
+	    <field name="amount"><text size="5"></text></field>
+	    <field name="customTimePeriodId"><hidden/></field>
+	    <field name="incidentDate"><date-time  type="date"/></field>
+	    <field name="Update"><submit/></field>
+	    <field name="delete"  title="Delete" title-style="buttontext" separate-column="true" widget-style="buttontext">
+	          <hyperlink target="deletePtcAdjustment" description="${uiLabelMap.CommonDelete}">
+	            <parameter param-name="recoveryTypeId"/>
+	            <parameter param-name="customTimePeriodId"/>
+	            <parameter param-name="vehicleId"/>
+	            <parameter param-name="incidentDate"/>
+	            <parameter param-name="recoveryId"/>
+	          </hyperlink></field>
     </form>
     
     <form name="ListVehicleTripStatus" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="listTripStatus"  default-table-style="basic-table " separate-columns="true"  paginate-target="MilkReceiptDashboard">    
@@ -736,6 +754,15 @@
        <field name="effectiveDate"><date-time  type="date"/></field>
        <field name="update" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_VCLERATE_UPDATE&quot;, session)))}"><submit/></field> -->
      </form>
+     <form name="ptcBankReportCSV" type="list" list-name="ptcBankList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">	
+				<field name="partyId" title="Party Id"><display/></field>
+				<field name="partyName" title="party Name"><display/></field>
+				<field name="partyPan" title="Pan Number"><display/></field>
+				<field name="finAccountCode" title="Account No."><display/></field>
+				<field name="amount" title="Net Amount"><display/></field>
+     </form>
+    
     
     
 </forms>

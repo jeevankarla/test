@@ -236,6 +236,45 @@
 					</table>
 				</form>
 			</tr>
+			<tr class="alternate-row"> 
+				<form id="PTCBankReport" name="PTCBankReport" mothed="post" action="<@ofbizUrl>ptcBankReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'> PTC Bank Report</span></td>
+							<td width="25%">
+								 <span class='h3'>Time Period </span>
+			                    <select name="customTimePeriodId" class='h4'>
+			                    <#if timePeriodList?has_content>	
+			                        <#list timePeriodList as timePeriod>    
+			                			  <#if ((timePeriod.fromDate)?has_content) && ((timePeriod.thruDate)?has_content)>
+			                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.fromDate, "MMMdd")/>
+			                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.thruDate, "MMMdd yyyy")/>
+					                  	    <option value='${timePeriod.customTimePeriodId}' >
+					                    		${fromDate}-${thruDate}
+					                  		 </option>
+					                  	 </#if>
+			                		</#list>    
+			                	</#if>	    
+			                    </select>
+							</td>
+							<td width="30%">
+								 <span class='h3'>Bank </span>
+			                    <select name="finAccountId" id="finAccountId">
+			                    <#if finAcctIdList?has_content>	
+			                        <#list finAcctIdList as finAcctIds>    
+					                  	    <option value='${finAcctIds.finAccountId}' >
+					                    		${finAcctIds.finAccountName}
+					                  		 </option>
+			                		</#list>    
+			                	</#if>	    
+			                    </select>
+							</td>
+					        <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('PTCBankReport', '<@ofbizUrl>ptcBankReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							   				 <input type="submit" value="CSV" onClick="javascript:appendParams('PTCBankReport', '<@ofbizUrl>ptcBankReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			                                                       </form>
+						</tr>
+					</table>
+				</form>
+			</tr>
 			
        </table>
     </div>
