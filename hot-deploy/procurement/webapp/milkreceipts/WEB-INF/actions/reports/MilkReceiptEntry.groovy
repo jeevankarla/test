@@ -262,3 +262,40 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_OUT") || (
 	context.vehicleList = vehicleList;
 }
 
+
+// ptc Bank Report Details ==> finAcctId,periodBillingid List's
+reportFrequencyFlag=parameters.reportFrequencyFlag;
+reportFrequencyFlag=context.reportFrequencyFlag;
+if("PTCReports".equals(reportFrequencyFlag) && UtilValidate.isNotEmpty(reportFrequencyFlag)){
+	List finAcctIdList =FastList.newInstance();
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PTC_BILL"));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	finAccountRoleList = delegator.findList("FinAccountAndRole", condition, null, null, null, false);
+	if(UtilValidate.isNotEmpty(finAccountRoleList)){
+		finAccountIds = new HashSet(EntityUtil.getFieldListFromEntityList(finAccountRoleList, "finAccountId", false));
+		finAccountIds.each{eachFinAcctId->
+			Map eachFinMap =FastMap.newInstance();
+			eachFinAcctList = EntityUtil.filterByCondition(finAccountRoleList, EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, eachFinAcctId));
+			eachFinAcctList = EntityUtil.getFirst(eachFinAcctList);
+			eachFinMap.put("finAccountId", eachFinAcctList.finAccountId);
+			eachFinMap.put("finAccountName", eachFinAcctList.finAccountName);
+			finAcctIdList.add(eachFinMap);
+		}
+		context.finAcctIdList=finAcctIdList;
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
