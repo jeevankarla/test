@@ -128,6 +128,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<td class="label">Analysis Code :</td>
 						    <td>
 							<select name="productCategoryId" id="productCategoryId">
+											<option></option>
 						      	    <#list materialCategoryList as materialCategory>
 						      	   			<option value='${materialCategory.productCategoryId}'>${materialCategory.description}</option>
 								    </#list>  
