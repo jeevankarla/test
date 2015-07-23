@@ -1297,7 +1297,9 @@ under the License.
     <field name="name" title="Party Name"><display></display></field>
     <field name="debit" title="Debit"><display></display></field>
     <field name="credit" title="Credit"><display></display></field>
-    <field name="unApplied" title="Un Applied AMT"><display></display></field>
+    <field name="unAppDebit" title="Un Applied Debit"><display></display></field>
+    <field name="unAppCredit" title="Un Applied Credit"><display></display></field>
+    <field name="finalAmt" title="Net Amount"><display></display></field>
     </form>
     <form name="SalesAnalysisCSV" type="list" list-name="salesAnalysisCsv">
     	<field name="glAccountId" title="GL ACCOUNT ID"><display></display></field>

@@ -70,8 +70,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 <#assign openCredit=((-1)*openBal)>
                 </#if> 
                 </#if>
-                <#if acctgDetails?has_content || ((openDebit !=0) || (openCredit!=0))>  
-				<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="11pt" white-space-collapse="false">PARTY NAME : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}[${partyList.getKey()}]</fo:block>
+                <#assign unAppAmt=0>
+				<#assign unAppCredit=0>
+                <#assign unAppDebit=0>
+                <#if closingUnAppMap?has_content>
+                <#assign unAppAmt=closingUnAppMap.get(partyList.getKey())>
+	                <#if unAppAmt gte 0>
+	                	<#assign unAppDebit=unAppAmt>
+                	<#else>
+                		<#assign unAppCredit=((-1)*unAppAmt)>
+                	</#if> 
+                </#if>
+                <#if acctgDetails?has_content || ((openDebit !=0) || (openCredit!=0)) || ((unAppDebit !=0) || (unAppCredit!=0))>  
+				<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="11pt" white-space-collapse="false">PARTY NAME : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyList.getKey(), false)}[${partyList.getKey()}] </fo:block>
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                <fo:block>
                     <fo:table>
@@ -293,6 +304,40 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 			</fo:table-cell>
                 			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${((-1)*closingCredit)?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                		</fo:table-row>
+                		<fo:table-row>
+                			<fo:table-cell>
+                			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                			</fo:table-cell>
+                		</fo:table-row>
+                		<fo:table-row>
+                    	   <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block   text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">UN-APPLIED AMOUNT :</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                             <fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${unAppDebit?if_exists?string("##0.00")}</fo:block>  
+                			</fo:table-cell>
+                			<fo:table-cell>
+                    			<fo:block  keep-together="always" text-align="right" font-weight="bold"  font-size="12pt" white-space-collapse="false">${unAppCredit?if_exists?string("##0.00")}</fo:block>  
                 			</fo:table-cell>
                 		</fo:table-row>
                 		<fo:table-row>
