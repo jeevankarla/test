@@ -57,8 +57,8 @@ periodBillingId="";
 if(UtilValidate.isNotEmpty(customTimePeriodId)){
 	conditionList =[];
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS , customTimePeriodId));
-	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED_PAYMENT"));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["APPROVED_PAYMENT","GENERATED"]));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED_PAYMENT"));
+	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["APPROVED_PAYMENT","GENERATED"]));
 	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_PTC_TRSPT_MRGN"));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	periodBillingList = delegator.findList("PeriodBilling",condition , null, null, null, false);
