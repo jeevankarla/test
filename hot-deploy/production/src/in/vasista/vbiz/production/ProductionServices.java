@@ -1908,7 +1908,7 @@ public class ProductionServices {
   		return "error";
   		}
   		Timestamp recordDateTime = null;
-         SimpleDateFormat SimpleDF = new SimpleDateFormat("dd:MM:yyyy hh:mm");
+         SimpleDateFormat SimpleDF = new SimpleDateFormat("dd:MM:yyyy HH:mm");
  	  	if(UtilValidate.isNotEmpty(recordDateTimeStr)){
  	  		try {
  	  			recordDateTime = new java.sql.Timestamp(SimpleDF.parse(recordDateTimeStr).getTime());
