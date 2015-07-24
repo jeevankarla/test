@@ -270,6 +270,7 @@
                 <set field="targetRequest" value="FindMaterialQCApproval"/>
                 <set field="targetRequestForAccept" value="acceptReceiptQtyByQC"/>
       			<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
+      			<set field="parameters.flag" value="DEPT_HEADAPPROVE"/>
       			<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
