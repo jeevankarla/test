@@ -22,7 +22,7 @@
 	function numbersOnly(e){
       	var event = e || window.event;
          //alert(event.keyCode);
-         if( !(event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 110 || event.keyCode == 190                             // backspace/Tab/"."
+         if( !(event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 110 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109                            // backspace/Tab/"."
           || event.keyCode == 46                              // delete
           || (event.keyCode >= 35 && event.keyCode <= 40)     // arrow keys/home/end
           || (event.keyCode >= 48 && event.keyCode <= 57)     // numbers on keyboard
@@ -48,7 +48,7 @@
 	       	var facilityIdVal = $("[name="+facilityId+"]").val();
 	       	var temperatureVal = $("[name="+temperature+"]").val();
 	       	var commentsVal = $("[name="+comments+"]").val();
-	       	if(temperatureVal != undefined && temperatureVal>0){
+	       	if(temperatureVal != undefined && temperatureVal!="" && temperatureVal!=null){
 	       		var facilityIdStr = jQuery("<input>").attr("type", "hidden").attr("name", "facilityId_o_"+countVal).val(facilityIdVal);
 				var temperatureStr = jQuery("<input>").attr("type", "hidden").attr("name", "temperature_o_"+countVal).val(temperatureVal);
 				var commentsStr = jQuery("<input>").attr("type", "hidden").attr("name", "comments_o_"+countVal).val(commentsVal);

@@ -103,7 +103,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "temperatureRecordReport.pdf")}
                 					  		<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">${facility.facilityName?if_exists}</fo:block>
                 					  	</fo:table-cell>
                                         <fo:table-cell>
-                					  		<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">${values.temperature?if_exists}'C</fo:block>
+                					  		<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">${values.temperature?if_exists}${"\x00B0"}C</fo:block>
                 					  	</fo:table-cell>
                 					  	<fo:table-cell>
                 					  		<fo:block   text-align="left" font-weight="bold"  font-size="10pt" white-space-collapse="false">${values.comments?if_exists}</fo:block>
