@@ -42,6 +42,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelFGSShipmentMm"/>
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -63,8 +64,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelFGSShipmentMm" description="Cancel Shipment">
+           <!--  <hyperlink target="cancelFGSShipmentMm" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+             <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form> 
@@ -78,6 +81,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <set field="action" value="cancelInterUnitShipmentMm" />
         </actions>
         <field name="shipmentId" ><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -105,8 +109,10 @@
             </hyperlink>
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
-            <hyperlink target="cancelInterUnitShipmentMm" description="Cancel Shipment">
+           <!--  <hyperlink target="cancelInterUnitShipmentMm" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
+            </hyperlink> -->
+             <hyperlink  target-type="plain" description="Cancel Shipment"  target="javascript:getReasonForCancelShipment('${shipmentId}','${action}');">
             </hyperlink>
         </field> 
     </form>
@@ -225,6 +231,126 @@
                 <parameter param-name="statusId"/>
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
+        </field> 
+    </form>
+     <form name="MainNglistPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+             <!-- filter orderId based on invoiceId -->
+            <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/filterInterUnitShipmentInvoices.groovy" />
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="OrderHeader"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <set field="action" value="cancelInterUnitPurchaseOrder"/>
+        </actions>
+        <row-actions>
+            <entity-and entity-name="OrderItemBilling" list="invoices">
+                <field-map field-name="orderId"/>
+            </entity-and>
+            <set field="invoiceId" from-field="invoices[0].invoiceId"/>  
+            <set field="invTotal" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)}"></set>  
+         
+              <entity-and entity-name="PaymentApplication" list="paymentApplications">
+                <field-map field-name="invoiceId"/>
+            </entity-and>
+           <set field="paymentApplicationId" from-field="paymentApplications[0].paymentApplicationId"/>
+           
+           <entity-one entity-name="Invoice" value-field="invoice">
+        		<field-map field-name="invoiceId" from-field="invoiceId" />
+        	</entity-one>
+        	<set field="partyIdFrom" from-field="invoice.partyIdFrom" />
+        	<set field="supplierName" value="${bsh:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,partyIdFrom,false);}"></set>
+        	<set field="invStatusId" from-field="invoice.statusId"/>
+        </row-actions>
+      
+        <field name="partyIdFrom" title="Supplier Code"> <display  description="${supplierName}[${partyIdFrom}]"> </display></field>
+         <field name="shipmentId" ><hidden></hidden></field>
+        <field name="invoiceId" title="Invoice Id" widget-style="buttontext"><hyperlink target="invoiceOverview" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink>        </field>
+        <field name="invTotal" title="Invoice Amt (Rs)"><display/></field>
+        <field name="invStatusId" title="Status Id" ><display-entity key-field-name="statusId" description="${description}" entity-name="StatusItem"/></field>
+        <field name="estimatedDeliveryDate" title="Delivery Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="createdBy" title="Created By"><display/></field>
+        <field name="salesChannelEnumId"><display/></field>
+      
+        <field name="lastUpdatedStamp" title="Last Update"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastUpdatedStamp, &quot;dd/MM/yyyy HH:mm:ss&quot;);}" /></field>
+        <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="Order" widget-style="buttontext" >
+            <hyperlink target="printAdhocOrder" description="Print Order" target-window="_blank">
+             <parameter param-name="estimatedDeliveryDate"/>
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="originFacilityId"/>
+                  <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> -->
+         <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="GatePass" widget-style="buttontext" >
+            <hyperlink target="AdhocTruckSheetReport.txt" description="GatePass" target-window="_blank">
+                 <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field> 
+        <field name="InvoiceSlips" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;ORDER_APPROVED&quot;"  id-name = "invoiceSlips">
+            <hyperlink target="Invoice.txt" description="Invoice Slips" target-window="_blank"> 	
+                  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
+               	  <parameter param-name="reportTypeFlag" value="invoiceSlips"/> 
+               	   <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+        <field use-when="&quot;${statusId}&quot;==&quot;ORDER_APPROVED&quot;" name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
+            <hyperlink target="buyerInvoice.pdf" description="New Invoice Format" target-window="_blank"> 	
+                  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
+               	  <parameter param-name="invoiceId" from-field="invoiceId"/>
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field> 
+         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="PayAmount" widget-style="buttontext"  >
+            <hyperlink target="createAdhocSalePayment" description="Pay Order" target-window="_blank" >
+             <parameter param-name="estimatedDeliveryDate"/>
+                <parameter param-name="orderId"/>
+                  <parameter param-name="invoiceId"/>
+                   <parameter param-name="amount" value="${invTotal}"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="facilityId"  from-field="originFacilityId"/>
+                  <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> -->
+       <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="EditOrder" widget-style="buttontext" >
+            <hyperlink target="AdhocOrderCorrection" description="Edit Order" target-window="_blank">
+             <parameter param-name="estimatedDeliveryDate"/>
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="originFacilityId"/>
+                  <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> -->
+        <field name="debitNote" use-when="salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)"  title="Debit/Credit Note" widget-style="buttontext" id-name = "DebitNote">
+            <hyperlink target="DebitNote" description="Debit/Credit Note" target-window="_blank"> 	
+               	  <parameter param-name="orderId"/>
+               	  <parameter param-name="invoiceId"/>
+               	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
+            </hyperlink>
+        </field>
+        <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null &amp;&amp;  salesChannelEnumId.equals(&quot;PROD_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
+            <hyperlink target="cancelPurchaseOrder" description="Cancel Order">
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
+            </hyperlink>
+        </field> 
+         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp;   salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
+           <!--  <hyperlink target="cancelInterUnitPurchaseOrder" description="Cancel  Order">
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
+            </hyperlink> -->
+              <hyperlink  target-type="plain" description="Cancel Order"  target="javascript:getReasonForCancelOrder('${orderId}','${statusId}','${partyIdFrom}','${action}');">
+            </hyperlink> 
         </field> 
     </form>
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders"

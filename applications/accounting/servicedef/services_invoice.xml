@@ -544,6 +544,7 @@ under the License.
         <description>Set status of invoices in bulk.</description>
         <attribute name="invoiceIds" type="List" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
         <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
     </service>
 	<service name="bulkSms" engine="simple"

@@ -1258,6 +1258,10 @@ public static Map<String, Object> cancelPurchaseOrder(DispatchContext dctx, Map<
     String orderId = (String) context.get("orderId");
     String statusId = (String) context.get("statusId");
     String partyId = (String) context.get("partyId");
+    String cancelComments="";
+    if (UtilValidate.isNotEmpty(context.get("cancelComments"))) {
+    	cancelComments=(String) context.get("cancelComments");
+    }
     String salesChannelEnumId=null;
     if(UtilValidate.isEmpty(orderId)){
 		return ServiceUtil.returnError("orderId is null" + orderId);
@@ -1316,6 +1320,9 @@ public static Map<String, Object> cancelPurchaseOrder(DispatchContext dctx, Map<
  		 	       	cancelInvoiceInput.put("invoiceId", invoiceId);
  		 	        cancelInvoiceInput.put("statusId", "INVOICE_CANCELLED");
  		 	       	cancelInvoiceInput.put("userLogin", userLogin);
+ 		 	       	if (UtilValidate.isNotEmpty(cancelComments)){
+ 	 		 	       	cancelInvoiceInput.put("cancelComments", cancelComments);
+ 		 	       	}
  		 	        Map<String, Object> resultMap = null;
  		 	        try {
  		 	        	resultMap = dispatcher.runSync("setInvoiceStatus", cancelInvoiceInput);

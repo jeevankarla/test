@@ -1279,6 +1279,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    Locale locale = (Locale) context.get("locale");
 	    String shipmentId = (String) context.get("shipmentId");
+	    String cancelComments="";
+	    if(UtilValidate.isNotEmpty(context.get("cancelComments"))){
+	    	cancelComments = (String) context.get("cancelComments");
+	    }
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		List<String> orderIds = FastList.newInstance();
 		List<String> invoiceIds = FastList.newInstance();
@@ -1305,7 +1309,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
        		List<GenericValue> partyInvoiceList = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), UtilMisc.toSet("invoiceId") , null, null, false);   
        		invoiceIds = EntityUtil.getFieldListFromEntityList(partyInvoiceList, "invoiceId", true);    		
 
-			result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", invoiceIds, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
+			result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", invoiceIds, "statusId","INVOICE_CANCELLED","cancelComments",cancelComments,"userLogin", userLogin));
    		 
    		 	if (ServiceUtil.isError(result)) {
    		 		Debug.logError("There was an error while Cancel  the invoices: " + ServiceUtil.getErrorMessage(result), module);	               

@@ -18,6 +18,7 @@
         <attribute name="orderId" mode="IN" type="String" optional="false"/>
         <attribute name="partyId" mode="IN" type="String" optional="true"/>
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <attribute name="cancelComments" mode="IN" type="String" optional="true"/>
    </service>
    
    <service name="createNewRequirement" engine="simple"
