@@ -681,7 +681,7 @@ public class PunchService {
 				selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
 			}
 			List conditionList2 = FastList.newInstance();
-			if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
+			if((finalPunchIN.size() == 1) && UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
 				conditionList2 = UtilMisc.toList(EntityCondition
 						.makeCondition("punchdate", EntityOperator.EQUALS,
 										selectedDate));
