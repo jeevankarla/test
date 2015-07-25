@@ -732,7 +732,7 @@ public class ByProductServices {
    				if (ServiceUtil.isError(result)) {
    	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
    	    			generationFailed = true;
-   	    			return result;
+   	    			break;
    	    		}  
 
    			/*BigDecimal quantity = (BigDecimal)result.get("quantity");
