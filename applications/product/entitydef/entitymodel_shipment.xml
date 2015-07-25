@@ -799,6 +799,26 @@ under the License.
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="ShipmentAndReceipt"
+            package-name="org.ofbiz.shipment.shipment"
+            title="Shipment and Receipt View Entity">
+      <member-entity entity-alias="SH" entity-name="Shipment"/>
+      <member-entity entity-alias="SR" entity-name="ShipmentReceipt"/>
+      <alias-all entity-alias="SR"/>
+      <alias entity-alias="SH" name="shipmentTypeId"/>
+      <alias entity-alias="SH" name="shStatusId" field="statusId"/>
+      <view-link entity-alias="SH" rel-entity-alias="SR">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="receiptId"/>
+      </relation>
+    </view-entity>
+    
     <view-entity entity-name="ShipmentAndType"
             package-name="org.ofbiz.shipment.shipment"
             title="Shipment and Type View Entity">
