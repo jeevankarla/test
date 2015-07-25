@@ -35,6 +35,7 @@ fromDate=parameters.storeFromDate;
 thruDate=parameters.storeThruDate;
 reportTypeFlag = parameters.reportTypeFlag;
 context.reportTypeFlag = reportTypeFlag;
+productCategoryId = parameters.categoryType;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -111,6 +112,9 @@ if(UtilValidate.isNotEmpty(deptIds)){
 		 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 		 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 				                                         EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+		 if(UtilValidate.isNotEmpty(productCategoryId)){
+			conditionList.add(EntityCondition.makeCondition("productCategoryId", ,EntityOperator.EQUALS, productCategoryId));
+		 }
 		 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 productCatDetails = delegator.findList("ProductCategoryAndMember", condition, UtilMisc.toSet("productCategoryId","productId","fromDate","thruDate"), null, null, false);
          productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);

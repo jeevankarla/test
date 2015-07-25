@@ -446,6 +446,7 @@
                  <order-by field-name="productCategoryId" /> 
                </entity-condition>
                 <entity-condition list="productCategoryList" entity-name="ProductCategory" use-cache="true" filter-by-date="false">
+                 <condition-expr field-name="productCategoryTypeId" operator="equals" value="RAW_MATERIAL" /> 
                  <order-by field-name="productCategoryId" /> 
                </entity-condition>
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
