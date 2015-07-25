@@ -732,7 +732,7 @@ public class ByProductServices {
    				if (ServiceUtil.isError(result)) {
    	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
    	    			generationFailed = true;
-   	    			break;
+   	    			//return result;
    	    		}  
 
    			/*BigDecimal quantity = (BigDecimal)result.get("quantity");
@@ -740,8 +740,7 @@ public class ByProductServices {
        			totalQuantity = totalQuantity.add(quantity);
        		}   */ 		
        		orderCounter++;
-           }
-           
+           }           
    		
    		if (generationFailed) {
    			/*List<GenericValue> shipmentReceipts;
@@ -1122,6 +1121,7 @@ public class ByProductServices {
 		}
         Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
         String orderId = (String) orderCreateResult.get("orderId");
+        Debug.log("#########orderId ##########"+orderId);
         // handle employee subsidies here 
         if(productSubscriptionTypeId.equals("EMP_SUBSIDY")){
         	Map empSubdCtx = UtilMisc.toMap("userLogin",userLogin);	  	
