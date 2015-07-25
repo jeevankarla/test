@@ -25,7 +25,7 @@ try {
 if (punchDate == null) {
 	punchDate = UtilDateTime.nowTimestamp();
 }
-shiftTypeList = delegator.findList("WorkShiftType", null, null, null, null, false);
+shiftTypeList = delegator.findList("WorkShiftType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"HR_SHIFT"), null, null, null, false);
 context.shiftTypeList = shiftTypeList;
 String punchDateStr = UtilDateTime.toDateString(punchDate, "dd/MM/yyyy");			
 
