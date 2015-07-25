@@ -151,6 +151,7 @@ public class HumanresPunchService {
 			}*/
 			
 			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isDefault", EntityOperator.EQUALS, "Y"),EntityOperator.AND ,EntityCondition.makeCondition("isDefault", EntityOperator.NOT_EQUAL, null)));
+			condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"HR_SHIFT"));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			//punchTime 
 			List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", cond, null, UtilMisc.toList("-startTime"),null, false);
@@ -180,7 +181,6 @@ public class HumanresPunchService {
 				
 			}
 		   	
-			
 		}catch(Exception e){
   			Debug.logError("Error updating  Empl Punch :" + e.getMessage(), module);
   		}
