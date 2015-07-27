@@ -182,11 +182,15 @@ boothsList.each{  boothId->
    boothTotalsMap.put("netAmount", netAmount);
    if(openingBalance!=0|| totalPaidAmnt!=0 || totalRevenue!=0 ){
 	facility = delegator.findOne("Facility",[facilityId : boothId], false);
-	if(UtilValidate.isEmpty(facility)){
+	/*if(UtilValidate.isEmpty(facility)){
 		facilityBooth =EntityUtil.getFirst(delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, boothId),  UtilMisc.toSet("facilityId"), null, null, false));
 		facility = delegator.findOne("Facility",[facilityId : facilityBooth.get("facilityId")], false);
-	}
-	if(	UtilValidate.isNotEmpty(facility)&& facility.categoryTypeEnum){
+	}*/
+	if(	UtilValidate.isNotEmpty(facility)){
+		if(UtilValidate.isEmpty(facility.categoryTypeEnum)){
+			facilityBooth =EntityUtil.getFirst(delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, boothId),  UtilMisc.toSet("facilityId"), null, null, false));
+			facility = delegator.findOne("Facility",[facilityId : facilityBooth.get("facilityId")], false);
+		}
 		categoryType = facility.categoryTypeEnum;
 			if(categoryTotalMap.containsKey(categoryType)){
 			tempCatList = categoryTotalMap.get(categoryType);
