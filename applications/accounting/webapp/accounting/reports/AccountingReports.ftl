@@ -564,6 +564,7 @@ function reportTypeChangeFunc() {
 					    <select name="reportTypeFlag" id="reportTypeFlag">
 						   <option value='Ledger'>Ledger</option>
 						   <option value='Abstract'>Abstract</option>
+						   <option value='DetailedAbs'>Detailed Abstract</option>
 					   </select>
                      </td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyWiseLedger" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
@@ -613,6 +614,7 @@ function reportTypeChangeFunc() {
 					    <select name="reportTypeFlag" id="reportTypeFlag">
 						   <option value='Ledger'>Ledger</option>
 						   <option value='Abstract'>Abstract</option>
+							<option value='DetailedAbs'>Detailed Abstract</option>
 					   </select>
                      </td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
@@ -637,6 +639,7 @@ function reportTypeChangeFunc() {
 					    <select name="reportTypeFlag" id="reportTypeFlag">
 						   <option value='Ledger'>Ledger</option>
 						   <option value='Abstract'>Abstract</option>
+							<option value='DetailedAbs'>Detailed Abstract</option>
 					   </select>
                      </td> 
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>

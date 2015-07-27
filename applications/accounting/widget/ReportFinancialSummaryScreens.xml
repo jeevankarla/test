@@ -4768,6 +4768,14 @@
 				<include-form name="PartyLedgerGroupAbstractReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
 			</widgets>		
 			</section>
+			<section>
+             <condition>
+					<if-compare operator="equals" value="DetailedAbs" field="reportTypeFlag" />
+			</condition>	
+			<widgets>
+				<include-form name="PartyLedgerGroupDetailedAbsCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+			</widgets>		
+			</section>
             </widgets>
 		</section>
 	</screen>
@@ -4798,6 +4806,14 @@
 				<include-form name="PartyLedgerGroupAbstractReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
 			</widgets>		
 			</section>
+			<section>
+             <condition>
+					<if-compare operator="equals" value="DetailedAbs" field="reportTypeFlag" />
+			</condition>	
+			<widgets>
+				<include-form name="PartyLedgerGroupDetailedAbsCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+			</widgets>		
+			</section>
             </widgets>
 		</section>
 	</screen>
@@ -4825,6 +4841,14 @@
 			</condition>	
 			<widgets>
 				<include-form name="PartyLedgerGroupAbstractReportCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+			</widgets>		
+			</section>
+			<section>
+             <condition>
+					<if-compare operator="equals" value="DetailedAbs" field="reportTypeFlag" />
+			</condition>	
+			<widgets>
+				<include-form name="PartyLedgerGroupDetailedAbsCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
 			</widgets>		
 			</section>
             </widgets>

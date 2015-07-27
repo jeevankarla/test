@@ -344,6 +344,8 @@ context.closingUnAppMap=closingUnAppMap;
 if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	partyLedgerCsv=[];
 	partyLedgerAbsCsv=[];
+	partyLedgerDetailedAbsCsv=[];
+	grdOpenDebit=0;grdOpenCredit=0;grdCurrDebit=0;grdCurrCredit=0;
 	grdDebit=0;grdCredit=0;
 	grdUnAppDebit=0;grdUnAppCredit=0;
 	finalMap=[:];
@@ -352,6 +354,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		partyVal = partyDetails.getValue();
 		tempMap=[:];
 		tempAbsMap=[:];
+		tempDetailedAbsMap=[:];
 		partyName=PartyHelper.getPartyName(delegator, partyId, false);
 		name=partyName+"["+partyId+"]";
 		tempMap.glAccountId="PARTY NAME :";
@@ -370,6 +373,8 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		}else{
 		   openCredit=-(openBal);
 		}
+		grdOpenDebit=grdOpenDebit+openDebit;
+		grdOpenCredit=grdOpenCredit+openCredit;
 		unAppAmt=0;unAppDebit=0;unAppCredit=0;
 		if(UtilValidate.isNotEmpty(closingUnAppMap.get(partyId))){
 			unAppAmt=closingUnAppMap.get(partyId);
@@ -377,7 +382,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		if(unAppAmt>=0){
 			unAppDebit=unAppAmt;
 		}else{
-			unAppCredit=unAppAmt;
+			unAppCredit=-(unAppAmt);
 		}
 		tempMap.isPosted="Opening Balance";
 		tempMap.credit=openCredit;
@@ -439,6 +444,23 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			tempTransMap.debit=debit;
 			partyLedgerCsv.add(tempTransMap);
 		}
+		//For Detailed Abs report
+		grdCurrDebit=grdCurrDebit+totDebit;
+		grdCurrCredit=grdCurrCredit+totCredit;
+		tempDetailedAbsMap.partyId=partyId;
+		tempDetailedAbsMap.name=name;
+		tempDetailedAbsMap.openDebit=openDebit;
+		tempDetailedAbsMap.openCredit=openCredit;
+		tempDetailedAbsMap.currDebit=totDebit;
+		tempDetailedAbsMap.currCredit=totCredit;
+		tempDetailedAbsMap.unAppDebit=unAppDebit;
+		tempDetailedAbsMap.unAppCredit=unAppCredit;
+		if((openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit)>0){
+			tempDetailedAbsMap.finalValue=(openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit)+"(Dr)";
+		}else if((openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit)<0){
+			tempDetailedAbsMap.finalValue=-((openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit))+"(Cr)";
+		}
+		partyLedgerDetailedAbsCsv.add(tempDetailedAbsMap);
 		
 		tempMap=[:];
 		tempMap.glAccDescription="TRANSACTION TOTAL  :";
@@ -527,6 +549,23 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	tempFinalAbsMap.credit=clsGrdCredit;
 	partyLedgerAbsCsv.add(tempFinalAbsMap);
 	context.partyLedgerAbsCsv=partyLedgerAbsCsv;
+	
+	//for Detailed Abs
+	tempDetailedAbsMap=[:];
+	tempDetailedAbsMap.name="TOTALS  :";
+	tempDetailedAbsMap.openDebit=grdOpenDebit;
+	tempDetailedAbsMap.openCredit=grdOpenCredit;
+	tempDetailedAbsMap.currDebit=grdCurrDebit;
+	tempDetailedAbsMap.currCredit=grdCurrCredit;
+	tempDetailedAbsMap.unAppDebit=grdUnAppDebit;
+	tempDetailedAbsMap.unAppCredit=grdUnAppCredit;
+	if((grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit)>0){
+		tempDetailedAbsMap.finalValue=(grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit)+"(Dr)";
+	}else if((grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit)<0){
+		tempDetailedAbsMap.finalValue=-((grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit))+"(Cr)";
+	}
+	partyLedgerDetailedAbsCsv.add(tempDetailedAbsMap);
+	context.partyLedgerDetailedAbsCsv=partyLedgerDetailedAbsCsv;
 }
 
 

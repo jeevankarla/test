@@ -1301,6 +1301,17 @@ under the License.
     <field name="unAppCredit" title="Un Applied Credit"><display></display></field>
     <field name="finalAmt" title="Net Amount"><display></display></field>
     </form>
+    <form name="PartyLedgerGroupDetailedAbsCSV" type="list" list-name="partyLedgerDetailedAbsCsv">
+    	<field name="partyId" title="PARTY ID"><display></display></field>
+    	<field name="name" title="NAME"><display></display></field>
+    	<field name="openDebit" title="OPENING DEBIT"><display></display></field>
+    	<field name="openCredit" title="OPENING CREDIT"><display></display></field>
+    	<field name="currDebit" title="DURING THE PERIOD DEBIT"><display></display></field>
+    	<field name="currCredit" title="DURING THE PERIOD CREDIT"><display></display></field>
+    	<field name="unAppDebit" title="UN APP DEBIT"><display></display></field>
+    	<field name="unAppCredit" title="UN APP CREDIT"><display></display></field>
+    	<field name="finalValue" title="NET AMOUNT"><display></display></field>
+    </form>
     <form name="SalesAnalysisCSV" type="list" list-name="salesAnalysisCsv">
     	<field name="glAccountId" title="GL ACCOUNT ID"><display></display></field>
     	<field name="productId" title="*"><display></display></field>
