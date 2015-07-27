@@ -4214,7 +4214,20 @@
 				</xsl-fo>
 	        </platform-specific>
 	        </widgets>
-	    </section>    
+	    </section>  
+	    <section>	
+	  		<condition>
+					<if-compare operator="equals" value="DetailedAbs" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroupDetailedAbs.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section>  
   	</widgets>
   	</section>
   </screen>
@@ -4258,7 +4271,20 @@
 				</xsl-fo>
 	        </platform-specific>
 	        </widgets>
-	    </section>    
+	    </section>  
+	    <section>	
+	  		<condition>
+					<if-compare operator="equals" value="DetailedAbs" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroupDetailedAbs.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section>  
   	</widgets>
   	</section>
   </screen>
@@ -4275,6 +4301,19 @@
   		<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PartyWiseLedger.groovy"/>
   	</actions>
   	<widgets>
+  	    <section>	
+	  		<condition>
+					<if-compare operator="equals" value="DetailedAbs" field="reportTypeFlag" />
+			</condition>
+	  		<widgets>
+	  		<platform-specific>
+	            <xsl-fo>
+				<html-template
+					location="component://accounting/webapp/accounting/reports/PartyLedgerGroupDetailedAbs.fo.ftl" />
+				</xsl-fo>
+	        </platform-specific>
+	        </widgets>
+	    </section>
 	  	<section>	
 	  		<condition>
 					<if-compare operator="equals" value="Ledger" field="reportTypeFlag" />
