@@ -100,7 +100,7 @@ import org.ofbiz.webapp.view.ApacheFopWorker;
 import org.ofbiz.widget.fo.FoScreenRenderer;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ScreenRenderer;
-
+import in.vasista.vbiz.production.ProductionNetworkServices;
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
 
@@ -369,7 +369,22 @@ public class ProductionServices {
 	  	  boolean beginTransaction = false;
 	  	  try{
 	  		  beginTransaction = TransactionUtil.begin();
-		  	  for (int i = 0; i < rowCount; i++){
+		  	  
+	  		  String productionRunId = (String)ProductionNetworkServices.getRootProductionRun(delegator, workEffortId);
+	  		  
+	  		  Debug.log("productionRunId #####"+productionRunId);
+	  		  
+	  		  GenericValue productionRun = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId), false);
+	  		  
+	  		  if(UtilValidate.isEmpty(productionRun)){
+	  			  Debug.logError("Primary Production run doesn't exist for Task: "+workEffortId, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "Primary Production run doesn't exist for Task: "+workEffortId);	  		  
+		  		  return "error";
+	  		  }
+	  		  
+	  		  String productionFloorId = productionRun.getString("facilityId"); 
+	  		
+	  		  for (int i = 0; i < rowCount; i++){
 		  		  
 		  		  String facilityId = "";
 		  		  String productId = "";
@@ -465,15 +480,18 @@ public class ProductionServices {
 	  	  try{
 	  		  beginTransaction = TransactionUtil.begin();
 	  		  
-	  		  GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
-	  		  if(UtilValidate.isEmpty(workEffort)){
-	  			  Debug.logError("Not a valid production run : "+workEffortId, module);
-	  			  request.setAttribute("_ERROR_MESSAGE_", "Not a valid production run : "+workEffortId);
-	  			  TransactionUtil.rollback();
-	  			  return "error";
-	  		  }
-	  		  String facilityId = workEffort.getString("facilityId");
+	  		  String productionRunId = (String)ProductionNetworkServices.getRootProductionRun(delegator, workEffortId);
 	  		  
+	  		  GenericValue productionRun = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId), false);
+	  		  
+	  		  if(UtilValidate.isEmpty(productionRun)){
+	  			  Debug.logError("Primary Production run doesn't exist for Task: "+workEffortId, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "Primary Production run doesn't exist for Task: "+workEffortId);	  		  
+		  		  return "error";
+	  		  }
+	  		  
+	  		  String facilityId = productionRun.getString("facilityId"); 
+	  		
 	  		  /*GenericValue returnHeader = delegator.makeValue("ReturnHeader");
 	  		  returnHeader.set("returnHeaderTypeId", "PRODUCTION_RETURN");
 	  		  returnHeader.set("statusId", "RTN_INITIATED");
@@ -511,7 +529,34 @@ public class ProductionServices {
 		  		  if (paramMap.containsKey("description" + thisSuffix)) {
 		  			  description = (String) paramMap.get("description"+thisSuffix);
 		  		  }
-		  			
+		  		
+			  		Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", productId, "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+	                serviceContext.put("facilityId", facilityId);
+	                serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+	                serviceContext.put("userLogin", userLogin);
+	                Map<String, Object> resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+	                if(ServiceUtil.isError(resultService)){
+	                	Debug.logError("Error creating inventory item for work effort : "+workEffortId, module);
+	                	request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultService));
+	                	TransactionUtil.rollback();
+	            		return "error";
+	                }
+	                
+	                String inventoryItemId = (String)resultService.get("inventoryItemId");
+	                
+	                serviceContext.clear();
+	                serviceContext.put("inventoryItemId", inventoryItemId);
+	                serviceContext.put("availableToPromiseDiff", quantity);
+	                serviceContext.put("quantityOnHandDiff", quantity);
+	                serviceContext.put("workEffortId", workEffortId);
+	                serviceContext.put("userLogin", userLogin);
+	                resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+	                if(ServiceUtil.isError(resultService)){
+	                	Debug.logError("Error creating inventory item detail for work effort : "+workEffortId, module);
+	                	request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultService));
+	                	TransactionUtil.rollback();
+	            		return "error";
+	                }
 		  			/*GenericValue returnItem = delegator.makeValue("ReturnItem");
 		    		returnItem.set("returnReasonId", "RTN_DEFECTIVE_ITEM");
 		    		if(UtilValidate.isNotEmpty(returnReasonId)){
@@ -1460,7 +1505,8 @@ public class ProductionServices {
 		  		  GenericValue transferGroup = delegator.findOne("InventoryTransferGroup", UtilMisc.toMap("transferGroupId", transferGroupId), false);
 		  		  
 		  		  String oldStatusId = transferGroup.getString("statusId");
-		  		  
+		  		  String workEffortId = transferGroup.getString("workEffortId");
+		  		  String transferTypeId = transferGroup.getString("transferGroupTypeId");
 		  		  GenericValue statusItem = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", oldStatusId, "statusIdTo", statusId), false);
 		  		  
 		  		  if(UtilValidate.isEmpty(statusItem)){
@@ -1491,6 +1537,32 @@ public class ProductionServices {
 		            	  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
 		            	  TransactionUtil.rollback();
 		            	  return "error";
+		              }
+		              
+		              if(UtilValidate.isNotEmpty(statusId) && statusId.equals("IXF_COMPLETE") && transferTypeId.equals("RETURN_XFER") && UtilValidate.isNotEmpty(transferGroup.get("workEffortId"))){
+		            		
+		            	  String facIdTo = eachTransfer.getString("facilityIdTo");
+		            	  GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", eachTransfer.getString("inventoryItemId")), false);
+		            	  inventoryItem.set("facilityId", facIdTo);
+		            	  inventoryItem.store();
+		              }
+		              
+		              if(UtilValidate.isNotEmpty(statusId) && statusId.equals("IXF_CANCELLED") && transferTypeId.equals("RETURN_XFER") && UtilValidate.isNotEmpty(transferGroup.get("workEffortId"))){
+		            	  List<GenericValue> tranferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
+		            	  for(GenericValue eachXferGroup : tranferGroupMembers){
+		            		  inputCtx.clear();
+			            	  inputCtx.put("inventoryItemId", eachXferGroup.getString("inventoryItemId"));
+			            	  inputCtx.put("availableToPromiseDiff", (eachXferGroup.getBigDecimal("xferQty")).negate());
+			            	  inputCtx.put("quantityOnHandDiff", (eachXferGroup.getBigDecimal("xferQty")).negate());
+			            	  inputCtx.put("userLogin", userLogin);
+				              Map resultService = dispatcher.runSync("createInventoryItemDetail", inputCtx);
+				              if(ServiceUtil.isError(resultService)){
+				            	  Debug.logError("Error while rejecting return for production run : "+workEffortId, module);
+				            	  request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultService));
+				            	  TransactionUtil.rollback();
+				            	  return "error";
+				              }
+		            	  }
 		              }
 		  		  }
 		  	  }

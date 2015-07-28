@@ -78,8 +78,10 @@ if (workEffortId) {
 		facilityId = "";
 		qty = 0;
 		if(inventoryItemDetail){
-			qty = ((EntityUtil.getFirst(inventoryItemDetail)).quantityOnHandDiff).negate();
 			facilityId = (EntityUtil.getFirst(inventoryItemDetail)).facilityId;
+			inventoryItemDetail.each{ eachDetail ->
+				qty = qty+((eachDetail.quantityOnHandDiff).negate());
+			}
 		}
 		
 		String uomId = eachProd.get("quantityUomId");
@@ -89,7 +91,7 @@ if (workEffortId) {
 			displayButton = 'N';
 			JSONObject newObj = new JSONObject();
 			newObj.put("cIssueProductId",eachProd.productId);
-			newObj.put("cIssueProductName", eachProd.productId);
+			newObj.put("cIssueProductName", eachProd.brandName+"["+eachProd.description+"]");
 			newObj.put("issueQuantity", qty);
 			newObj.put("uomDescription"," ");
 			if(UtilValidate.isNotEmpty(uomDetails)){

@@ -104,7 +104,14 @@ public class ProductionNetworkServices {
 	        return silosList;
 	    } // End of the service
 	   
-	   
+	    public static String getRootProductionRun(Delegator delegator, String productionRunId)  throws GenericEntityException {
+	        List<GenericValue> linkedWorkEfforts = delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
+	        GenericValue linkedWorkEffort = EntityUtil.getFirst(linkedWorkEfforts);
+	        if (linkedWorkEffort != null) {
+	            productionRunId = getRootProductionRun(delegator, linkedWorkEffort.getString("workEffortIdTo"));
+	        }
+	        return productionRunId;
+	    }
 	   
 	   
 	   
