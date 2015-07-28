@@ -207,7 +207,11 @@
              <hyperlink  target-type="plain" description="Send to QC"  target="javascript:showQCApprovalQTip('${receiptId}');"></hyperlink>
         </field> 
     </form>
-    
+    <form name="listOrderRoles" type="list" list-name="orderRolesList" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row"   default-table-style="basic-table hover-bar">
+         <field name="orderRoleType" title="Role Type"><display/></field>
+         <field name="partyName" title="Party"><display/></field>
+    </form>
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>

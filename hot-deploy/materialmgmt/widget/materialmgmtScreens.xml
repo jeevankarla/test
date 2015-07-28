@@ -420,6 +420,10 @@
        					                 	<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/> -->
        					                 	<include-screen name="listMaterialShipmentReceipt"/>
        					                </screenlet>
+       					                <screenlet title="Order Roles">
+       					                 	<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/> -->
+       					                 	<include-screen name="listOrderRoles"/>
+       					                </screenlet>
        					                <platform-specific>
                            					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
                        					</platform-specific>
@@ -602,6 +606,27 @@
 						  <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/qcApproval.ftl"/>
 					   </html>
 				   </platform-specific>				   
+			</widgets>    	
+    	</section>
+    </screen>
+    <screen name="listOrderRoles">
+    	<section>
+	    	<actions>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="targetRequest" value="FindGRNReceipts"/>
+	            <service service-name="performFind" result-map="result" result-map-list="listIt">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="ShipmentReceipt"/>
+	                <field-map field-name="orderBy"  value="-receiptId"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>	    	
+            </actions>
+			<widgets>
+			  	<include-form name="listOrderRoles" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
 			</widgets>    	
     	</section>
     </screen>
