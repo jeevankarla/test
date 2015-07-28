@@ -1090,21 +1090,19 @@ public class ProductionServices {
         	 if(UtilValidate.isNotEmpty(facility) && UtilValidate.isNotEmpty(facility.get("facilityTypeId"))){
         		 facilityTypeId = facility.getString("facilityTypeId");
         	 }
-        	 
         	 if(UtilValidate.isNotEmpty(facilityTypeId) && facilityTypeId.equals("SILO")){
         		 
         		 boolean allowFacilityBlend = Boolean.FALSE;
         		 if(UtilValidate.isNotEmpty(facility.get("allowProductBlend")) && (facility.getString("allowProductBlend").equals("Y"))){
             		 allowFacilityBlend = Boolean.TRUE;
             	 }
-            	 List conditionList = FastList.newInstance();
+        		 List conditionList = FastList.newInstance();
             	 
             	 conditionList.clear();
             	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             	 conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
             	 EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
             	 List<GenericValue> inventoryProducts = delegator.findList("InventoryItem", invCond, UtilMisc.toSet("productId"), null, null, false);
-            	 
             	 String blendedProductId = "";
             	 BigDecimal blendQty = null;
             	 
@@ -1126,7 +1124,6 @@ public class ProductionServices {
                 	 }
             	 }
         		 BigDecimal facilitySize = BigDecimal.ZERO;
-            	 
             	 if(UtilValidate.isNotEmpty(facility.get("facilitySize"))){
             		 facilitySize = facility.getBigDecimal("facilitySize");
             	 }
@@ -1182,7 +1179,7 @@ public class ProductionServices {
             	 if(allowFacilityBlend){
             		 
                 	 if(UtilValidate.isEmpty(inventoryProducts)){
-            			 if(UtilValidate.isNotEmpty(blendedProductId)){
+                		 if(UtilValidate.isNotEmpty(blendedProductId)){
             				 if(UtilValidate.isNotEmpty(blendQty)){
                     			 Object qty = blendQty;
                     			 context.put("quantityOnHandTotal", qty);
@@ -1573,6 +1570,7 @@ public class ProductionServices {
 	  		} catch (GenericEntityException e2) {
 	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
 	  			request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+	  			return "error";
 	  		}
 	  		Debug.logError("An entity engine error occurred while fetching data", module);
 	  	}
@@ -1582,6 +1580,7 @@ public class ProductionServices {
  	  		} catch (GenericEntityException e2) {
  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
  			  request.setAttribute("_ERROR_MESSAGE_", e2.toString());
+ 			  return "error";
  	  		}
  	  		Debug.logError("An entity engine error occurred while calling services", module);
  	  	}
@@ -1591,6 +1590,7 @@ public class ProductionServices {
 	  		} catch (GenericEntityException e) {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
+	  			return "error";
 	  		}
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "Entry Successfully");
