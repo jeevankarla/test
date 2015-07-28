@@ -920,6 +920,23 @@
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
         <attribute name="kilometers" type="BigDecimal" mode="IN" optional="true"/>
     </service>
+    <service name="updateFacilityRateAmount" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="updateFacilityRateAmount">
+        <description>update Facility Rate</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="supplyTypeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="startDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="endDate" mode="IN" type="Timestamp" optional="true" />
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="kilometers" type="BigDecimal" mode="IN" optional="true"/>
+    </service>
     <service name="getFacilityPartyRate" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getFacilityPartyRate">
         <description>Get Facility/Party Rate Amount</description>

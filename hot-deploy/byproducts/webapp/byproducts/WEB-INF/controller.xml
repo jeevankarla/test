@@ -1690,7 +1690,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewDieselAmount"/>
     </request-map>
-  
+    <request-map uri="updateFacilityRateAmount">
+     <security https="true" auth="true"/>
+       <event type="service"  invoke="updateFacilityRateAmount"/>
+       <response name="success" type="view" value="EditDieselAmount"/>
+        <response name="failed" type="view" value="EditDieselAmount"/>
+        <response name="error" type="view" value="EditDieselAmount"/>
+    </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>

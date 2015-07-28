@@ -951,7 +951,7 @@
         <menu-item name="DieselHikePayment" title="Diesel Hike Payment">
         	<link target="DieselHikePayment"/>
         </menu-item>  
-         <menu-item name="EditDieselAmount" title="Edit Disel Amount">
+         <menu-item name="EditDieselAmount" title="Edit Rate Amount">
         	<link target="EditDieselAmount"/>
         </menu-item>
         
