@@ -87,3 +87,23 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 	}
 	context.listIt=receiptList;
 }
+orderRolesList = [];
+orderRoles = delegator.findList("OrderRole",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , parameters.orderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(orderRoles)){
+	orderRoles.each{eachOrderRole->
+		
+		tempMap=[:];
+		partyId = eachOrderRole.partyId;
+		orderTypeId = eachOrderRole.roleTypeId;
+		tempMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
+		orderTypes = delegator.findOne("OrderType",["orderTypeId":orderTypeId],false);
+		if(UtilValidate.isNotEmpty(orderTypes)){
+			 orderRoleType = orderTypes.description;
+			tempMap.put("orderRoleType",orderRoleType);
+			orderRolesList.add(tempMap);
+		}
+		
+	}
+	context.orderRolesList = orderRolesList;
+}
+
