@@ -338,6 +338,44 @@
 		}
 		return "";
     }
+    
+    function facilityValidator(value,item) {
+    	
+    	var invalid = 1;
+    	var valueId;
+    	if(value){
+			if(facLabelIdGrid1 && facLabelIdGrid1[value]){
+				valueId = facLabelIdGrid1[value];
+			}
+			else if(facLabelIdGrid1 && facLabelIdGrid1[value]){
+				valueId = facIdLabelGrid2[value];
+			}
+		}
+	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
+	  	{ 
+			var prod = data[rowCount]["cIssueProductId"];
+			if(productDetails){
+				var prodDetMap = {};
+				prodDetMap = productDetails[prod];
+				var facilityAvl = prodDetMap['productFacilityJSON'];
+				var errorMsg = 0;
+				
+				for(var index=0; index < facilityAvl.length; ++index){
+					var allowedFacility = facilityAvl[index]["value"];
+					if(allowedFacility == valueId){
+						errorMsg = 1;
+					}
+				}
+				if(errorMsg == 1){
+					invalid = 0;
+				}
+			}
+	  	}
+	  	if(invalid == 1){
+	  		return {valid: false, msg: "Facility Not Allowed" + value};
+	  	}
+	    return {valid: true, msg: null};
+    }
 	function returnFacilityFormatter(row, cell, value, columnDef, dataContext) {
 		if(value){
 			/*if(facLabelIdGrid3 && facLabelIdGrid3[value]){
@@ -409,8 +447,8 @@
 					{id:"cIssueProductName", name:"Material", field:"cIssueProductName", width:240, minWidth:240, cssClass:"cell-title", regexMatcher:"contains", availableTags: availProdTagsGrid1, editor: AutoCompleteEditor,formatter: issueProductFormatter, sortable:false, toolTip:""},
 					{id:"issueQuantity", name:"Quantity", field:"issueQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter,validator: quantityValidator, sortable:false},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
-					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor,formatter: issueFacilityFormatter, sortable:false},
-					{id:"inventoryAvl", name:"Available Stock", field:"inventoryAvl", width:140, minWidth:140, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, focusable :false, sortable:false}
+					{id:"issueFacilityId", name:"From Store", field:"issueFacilityId", width:140, minWidth:140, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacilityTagsGrid1, editor: AutoCompleteEditor,formatter: issueFacilityFormatter, validator: facilityValidator, sortable:false},
+					{id:"inventoryAvl", name:"Stock Avl. to Issue[ATP]", field:"inventoryAvl", width:140, minWidth:140, cssClass:"readOnlyColumnClass",editor:FloatCellEditor, focusable :false, sortable:false}
 			];
 			
 			issuedMaterialCol = [
