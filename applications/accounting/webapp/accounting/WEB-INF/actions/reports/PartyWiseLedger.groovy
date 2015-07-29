@@ -79,7 +79,7 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 		conList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 		conList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 		conList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,rolePartyIds));
-		conList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountIds));
+		conList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
 		conList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 		EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 		EntityFindOptions efo = new EntityFindOptions();

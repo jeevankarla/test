@@ -121,6 +121,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
                 <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunDeptByUserLogin.groovy"/>
                 <set field="facilityListFlag" value="${facilityListFlag}"/>
+                <script location="component://production/webapp/production/WEB-INF/actions/ProductionRunPerFormFind.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
