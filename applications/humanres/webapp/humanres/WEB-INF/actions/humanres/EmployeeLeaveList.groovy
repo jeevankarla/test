@@ -104,8 +104,9 @@ employeeLeaveList = [];
 compDateMap = [:];
 if(UtilValidate.isNotEmpty(leaveDetails)){
 	leaveDetails.each{ leave->
-		int leaveCount = 1;
+		float leaveCount = 1;
 		emplLeaveApplId = leave.emplLeaveApplId;
+		dayFractionId = leave.dayFractionId;
 		leaveFromDate = leave.fromDate;
 		leaveThruDate = leave.thruDate;
 		leaveCountDays = UtilDateTime.getIntervalInDays(leaveFromDate,leaveThruDate)+1;
@@ -125,6 +126,11 @@ if(UtilValidate.isNotEmpty(leaveDetails)){
 				}
 				if(!leaveDate.equals(secondSatDate) && !weekDay.equals("Sunday")){
 					leaveCount = leaveCount + 1;
+				}
+			}
+			if(UtilValidate.isNotEmpty(dayFractionId)){
+				if((dayFractionId.equals("FIRST_HALF")) || (dayFractionId.equals("SECOND_HALF"))){
+					leaveCount = leaveCount - 0.5;
 				}
 			}
 		}else{

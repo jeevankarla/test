@@ -1189,15 +1189,15 @@
                 </entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
                 </entity-condition>  	
-                
-                <entity-condition list="SupplyCustomTimePeriodList" entity-name="CustomTimePeriod">
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/monthWiseLeaveEncashmentPeriods.groovy"/>
+                <!-- <entity-condition list="SupplyCustomTimePeriodList" entity-name="CustomTimePeriod">
                 	<condition-list combine="or">
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_QUARTER"/>
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_LEAVEENCASH"/>                	
                 	</condition-list>
                 	<order-by field-name="thruDate"/>
                     <order-by field-name="periodNum"/>
-                </entity-condition> 
+                </entity-condition>  -->
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="SupplyPayrollReports"/>
