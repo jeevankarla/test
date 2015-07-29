@@ -405,6 +405,7 @@
       <field name="sendDate" type="date-time"></field>
       <field name="receiveDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
+      <field name="insuranceQty" type="fixed-point"></field>
       <field name="isMilkRcpt" type="id-ne"></field>      
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
