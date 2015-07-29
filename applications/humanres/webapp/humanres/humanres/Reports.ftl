@@ -1511,9 +1511,9 @@ function setOrgPartyId() {
 								<td width="40%"><span class='h3'>Leave Encashment Report</span></td>
 								<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveEncashmentReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
 								<td width="30%" class='h4'>TimePeriod 
-									<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+									<select name="periodBillingId" id="periodBillingId" class='h4'>
 											<#list SupplyCustomTimePeriodList as customTimePeriod>
-						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						      						<option value='${customTimePeriod.periodBillingId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 						                  		</option>
 									      </#list>
 									</select>
