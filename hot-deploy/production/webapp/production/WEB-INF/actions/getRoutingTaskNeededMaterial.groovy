@@ -131,8 +131,8 @@ if (workEffortId) {
 			if (ServiceUtil.isError(resultCtx)) {
 				return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+eachItem.productId);
 			}
-			qoh = (BigDecimal)resultCtx.get("quantityOnHandTotal");
-			facilityInventoryJSON.put(eachFac.facilityId, qoh);
+			atp = (BigDecimal)resultCtx.get("availableToPromiseTotal");
+			facilityInventoryJSON.put(eachFac.facilityId, atp);
 		}
 		tempProdFacJSON.put("productFacilityJSON", productFacilityJSON);
 		tempProdFacJSON.put("facilityIdLabelJSON", facilityIdLabelJSON);
