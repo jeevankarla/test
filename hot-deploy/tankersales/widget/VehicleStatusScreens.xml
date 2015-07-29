@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+   
+    <screen name="VehicleStatus">
+		<section>
+			<actions>
+                <set field="titleProperty" value="Vehicle Status"/>	            
+               <set field="tabButtonItem" value="VehicleStatus"/>     
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/> 
+               <set field="actionUrl" value="VehicleStatus"/>
+               <set field="formHeading" value="Find Vehicle Status"/> 
+                      
+                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/date.js" global="true"/>   
+                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
+                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+                  <set field="supplyDate" from-field="parameters.supplyDate"/>
+                  <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+			   <script location="component://tankersales/webapp/tankersales/WEB-INF/actions/vehiclestatus/VehicleStatus.groovy" />		
+			</actions>
+			<widgets>
+            	<decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+ 							<platform-specific><html><html-template location="component://tankersales/webapp/tankersales/vehiclestatus/vehicleStatusFind.ftl"></html-template></html></platform-specific>
+						<screenlet title="VehicleStatus List">				
+						<platform-specific><html><html-template location="component://tankersales/webapp/tankersales/vehiclestatus/vehicleBulkSubmitForm.ftl"></html-template></html></platform-specific>
+						<include-form name="ListVehicleStatus" location="component://tankersales/widget/VehicleStatusForms.xml" />
+						</screenlet>		
+												
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="VehicleStatusChange">
+		<section>
+			<actions>
+                <set field="titleProperty" value="PageTitleReturnItems"/>
+                <set field="headerItem" value="return"/>
+                <set field="titleProperty" value="VehicleStatus"/>	            
+               <set field="tabButtonItem" value="VehicleStatus"/>   
+              
+                <set field="returnId" from-field="parameters.returnId"/>
+                <set field="screenFlag" value="returns"/>
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               	<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getReturnItems.groovy"/>
+               <set field="shipDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(shipmentDate, &quot;dd MMMMM, yyyy&quot;);}" />
+               <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                	<field-map field-name="statusId" from-field="returnHeader.statusId"/>
+            	</entity-one>
+            	<entity-condition list="headerType" entity-name="ReturnHeaderType"/>
+            	<entity-one value-field="returnHeaderTypeId" entity-name="ReturnHeaderType" >
+            		<field-map field-name="returnHeaderTypeId" />
+            	</entity-one>               
+              <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getReturnItems.groovy"/>
+                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/vehicleStatusAjaxSubmit.js" global="true"/>
+            </actions>
+            
+            <widgets>
+            	<decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Vehicle Status">  
+   									<platform-specific><html><html-template location="component://tankersales/webapp/tankersales/vehiclestatus/vehicleStatus.ftl"></html-template></html></platform-specific>
+								</screenlet>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>         
+	</screen>
+    
+ </screens>

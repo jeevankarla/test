@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+	<Vehicle vehicleId="V_DEFAULT" vehicleName ="Vehicle Default" vehicleNumber="V1"/>
+	
+	<VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R001" facilityId="R001" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R022" facilityId="R022" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R023" facilityId="R023" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R024" facilityId="R024" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R026" facilityId="R026" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R027" facilityId="R027" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R028" facilityId="R028" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R029" facilityId="R029" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R032" facilityId="R032" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R033" facilityId="R033" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R034" facilityId="R034" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R035" facilityId="R035" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R036" facilityId="R036" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R037" facilityId="R037" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R038" facilityId="R038" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R039" facilityId="R039" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R040" facilityId="R040" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R041" facilityId="R041" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R042" facilityId="R042" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R043" facilityId="R043" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R046" facilityId="R046" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R047" facilityId="R047" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R049" facilityId="R049" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R050" facilityId="R050" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R052" facilityId="R052" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R053" facilityId="R053" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R054" facilityId="R054" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R055" facilityId="R055" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R056" facilityId="R056" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R058" facilityId="R058" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R065" facilityId="R065" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R072" facilityId="R072" fromDate="2015-01-01 00:00:00.0"/>
+    <VehicleRole vehicleId="V_DEFAULT" roleTypeId="TRANS_VEHICLE" partyId="R086" facilityId="R086" fromDate="2015-01-01 00:00:00.0"/>
+	
+	
+</entity-engine-xml>

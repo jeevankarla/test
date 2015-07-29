@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+
+
+	<DataCategory categoryName="SO Document" dataCategoryId="SO_DOCUMENT" parentCategoryId="ROOT"/> 
+	<ContentType contentTypeId="SO_DOCUMENT" description="Sales Order Document"/> 
+	
+	<Enumeration enumId="TANKER_SALES_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" description="Tanker Sales" enumCode="Tanker Sales Channel"/> 
+	
+	<RoleType description="Calendar Owner" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_OWNER"/>
+	
+	
+	
+
+</entity-engine-xml>

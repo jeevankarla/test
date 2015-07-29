@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+	<include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/>
+    <description>TankerSales Component Site Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+
+    <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    
+    <!-- milkIssues Requests -->
+    
+    <request-map uri="FindPendingOrders">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindPendingOrders"/>
+       <response name="error" type="view" value="FindPendingOrders"/>
+    </request-map>
+    <request-map uri="LoadingDetails">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="LoadingDetails"/>
+        <response name="error" type="view" value="LoadingDetails"/>
+    </request-map>
+    <request-map uri="milkTankerIssues">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssues"/>
+        <response name="error" type="view" value="MilkTankerIssues"/>
+    </request-map>
+     <request-map uri="MilkTankerIssuesCIP">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssuesCIP"/>
+        <response name="error" type="view" value="MilkTankerIssuesCIP"/>
+    </request-map>
+     <request-map uri="MilkTankerIssuesTareWeight">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssuesTareWeight"/>
+        <response name="error" type="view" value="MilkTankerIssuesTareWeight"/>
+    </request-map>
+     <request-map uri="MilkTankerIssuesQC">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssuesQC"/>
+        <response name="error" type="view" value="MilkTankerIssuesQC"/>
+    </request-map>
+     <request-map uri="MilkTankerIssuesGrossWeight">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssuesGrossWeight"/>
+        <response name="error" type="view" value="MilkTankerIssuesGrossWeight"/>
+    </request-map>
+    <request-map uri="MilkTankerIssuesAQC">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssuesAQC"/>
+        <response name="error" type="view" value="MilkTankerIssuesAQC"/>
+    </request-map>
+    <request-map uri="FindTankerSaleSO">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindTankerSaleSO"/>
+       <response name="error" type="view" value="FindTankerSaleSO"/>
+   </request-map>
+   <request-map uri="CreateTSSO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateTSSO"/>
+    </request-map>     
+    <request-map uri="CreateNewTSSO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewTSSO"/>
+    </request-map> 
+    <request-map uri="CreateTankerSaleSO">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="CreateTankerSalesSOEvent" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="FindTankerSaleSO"></response>
+        <response name="error" type="view" value="CreateTSSO"/>
+    </request-map>
+    <request-map uri="CreateNewTankerSaleSO">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="CreateNewTankerSaleSO"/>
+        <response name="success"  type="request-redirect-noparam" value="FindTankerSaleSO"></response>
+        <response name="error" type="view" value="CreateNewTSSO"/>
+    </request-map>
+    <request-map uri="editTankerSaleSO">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditTankerSaleSO"/>
+    </request-map>
+    <request-map uri="ApproveOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ChangeOrderStatus"/>
+        <response name="success" type="view" value="FindTankerSaleSO"/>
+        <response name="error" type="view" value="FindTankerSaleSO"/>
+    </request-map>
+    <request-map uri="CancelOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelSOStatus"/>
+        <response name="success" type="view" value="FindTankerSaleSO"/>
+        <response name="error" type="view" value="FindTankerSaleSO"/>
+    </request-map>
+    <request-map uri="getMaterialSOValue">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="getMaterialSOValue" global-transaction="true"/>
+       <response name="success" type="request" value="json"/>
+     </request-map>
+     <request-map uri="SOoverview">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="SalesOrderOverView"/>
+       <response name="error" type="view" value="SalesOrderOverView"/>
+     </request-map>
+     <request-map uri="createOrderAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderAttribute"/>
+        <response name="success" type="view" value="SalesOrderOverView"/>
+        <response name="error" type="view" value="SalesOrderOverView"/>
+    </request-map>
+    <request-map uri="deleteOrderAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteOrderAttribute"/>
+        <response name="success" type="view" value="SalesOrderOverView"/>
+        <response name="error" type="view" value="SalesOrderOverView"/>
+    </request-map>
+    <request-map uri="createSOContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadSOContentFile"/>
+        <response name="success" type="view" value="SalesOrderOverView"/>
+        <response name="error" type="view" value="SalesOrderOverView"/>
+    </request-map>
+    <request-map uri="removeSOcontent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removeSOcontent"/>
+        <response name="success" type="view" value="SalesOrderOverView"/>
+        <response name="error" type="view" value="SalesOrderOverView"/>
+    </request-map>
+    <request-map uri="creatNewnote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="creatNewnote"/>
+    </request-map>
+    <request-map uri="createSONote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderNote"/>
+        <response name="success" type="view" value="SalesOrderOverView"/>
+        <response name="error" type="view" value="SalesOrderOverView"/>
+    </request-map>
+    <request-map uri="updateSONote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateOrderNote"/>
+        <response name="success" type="view" value="SalesOrderOverView"/>
+        <response name="error" type="view" value="SalesOrderOverView"/>
+    </request-map>
+    <request-map uri="getOrderDetailsAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getOrderDetails"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getTankerRecordNumber">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getTankerRecordNumber"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    <request-map uri="createShipmentForTankerSalesOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShipmentForTankerSalesOrder"/>
+        <response name="success" type="request" value="json"/>
+        <response name="failed" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    <request-map uri="updateTankerSalesCIP">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateTankerSalesCIP"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+    <request-map uri="createMilkTankerReceiptEntryTS">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createMilkTankerReceiptEntryTS"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    <request-map uri="updateInternalMilkTransferTareWeightTS">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateInternalMilkTransferTareWeightTS"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map> 
+    <request-map uri="updateInternalMilkTransferQCTS">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateInternalMilkTransferQCTS"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map> 
+    
+    <request-map uri="updateInternalMilkTransferGrsWeightTS">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateInternalMilkTransferGrsWeightTS"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map> 
+     <request-map uri="updateInternalMilkTransferAQCTS">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateInternalMilkTransferAQCTS"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map> 
+    <request-map uri="LookupName" track-serverhit="false" track-visit="false">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="LookupName"/>
+    </request-map>
+    
+    <!-- Transporters -->
+    
+    <request-map uri="Transporters">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Transporters"/>
+    </request-map> 
+    <request-map uri="DtcBillingTimePeriod">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="DtcBillingTimePeriod"/>
+    </request-map>
+    <request-map uri="TransporterMargins">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TransporterMargins"/>
+    </request-map>
+    <request-map uri="FinesAndPenalties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinesAndPenalties"/>
+    </request-map>
+    <request-map uri="DieselHikePayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+    <request-map uri="EditDieselAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditDieselAmount"/>
+    </request-map>
+    <request-map uri="createDtcBillingCustomTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustTimePeriodMM"/>
+        <response name="success" type="request-redirect" value="DtcBillingTimePeriod"/>
+        <response name="error" type="request-redirect" value="DtcBillingTimePeriod"/>
+    </request-map>
+    <request-map uri="GenerateTransporterMarginReport">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="GenerateTransporterMarginReport"/>   
+       <response name="failed" type="view" value="GenerateTransporterMarginReport"/>    
+    </request-map>
+    <request-map uri="createTransporterMarginReport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="populatePeriodBilling"/>
+        <response name="success" type="request" value="TransporterMargins"/>
+        <response name="failed" type="view" value="GenerateTransporterMarginReport"/>
+        <response name="error" type="view" value="GenerateTransporterMarginReport"/>
+    </request-map>
+    <request-map uri="CreateNewFineorPenalty">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewFineorPenalty"/>
+    </request-map>
+    <request-map uri="createTransporterRecovery">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTankerSalesTransporterRecovery"/>
+        <response name="success" type="request" value="FinesAndPenalties"/>
+        <response name="failed" type="view" value="FinesAndPenalties"/>
+        <response name="error" type="view" value="FinesAndPenalties"/>
+    </request-map>
+    <request-map uri="DieselHikePayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+    <request-map uri="EnterNewHikeOrPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EnterNewHikeOrPayment"/>
+    </request-map>
+    <request-map uri="CreateNewHikeOrPayment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createNewHikeOrPayment"/>
+        <response name="success" type="request" value="DieselHikePayment"/>
+        <response name="failed" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+    <request-map uri="FindDiselAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditDieselAmount"/>
+        <response name="error" type="view" value="EditDieselAmount"/>
+    </request-map>
+    <request-map uri="NewDieselAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewDieselAmount"/>
+    </request-map>
+    <request-map uri="createOrUpdateDiselAmount">
+        <security https="true" auth="true"/>
+       <event type="service"  invoke="createOrUpdateDiselAmount"/>
+       <response name="success" type="view" value="EditDieselAmount"/>
+        <response name="failed" type="view" value="EditDieselAmount"/>
+        <response name="error" type="view" value="EditDieselAmount"/>
+    </request-map>
+    <request-map uri="cancelTranporterRecovery">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelTranporterRecovery"/>
+        <response name="success" type="request" value="FinesAndPenalties"/>
+        <response name="failed" type="view" value="FinesAndPenalties"/>
+        <response name="error" type="view" value="FinesAndPenalties"/>
+    </request-map>
+    <request-map uri="cancelHikeOrPayment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelTranporterRecovery"/>
+        <response name="success" type="request" value="DieselHikePayment"/>
+        <response name="failed" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+    <request-map uri="cancelTransporterMarginReport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelTransporterMarginReport"/>
+       <response name="success" type="request" value="TransporterMargins"/>
+        <response name="failed" type="view" value="TransporterMargins"/>
+        <response name="error" type="view" value="TransporterMargins"/>
+    </request-map>
+    <request-map uri="updateDTCStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateDTCStatus"/>
+       <response name="success" type="request-redirect-noparam" value="TransporterMargins"/>
+       <response name="failed" type="request-redirect-noparam" value="TransporterMargins"/>
+       <response name="error" type="request-redirect-noparam" value="TransporterMargins"/>
+    </request-map>
+    <request-map uri="getSnfFromLactoReading">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getSnfFromLactoReading"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <!-- Vehicle status -->
+    	    
+    <request-map uri="VehicleStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="VehicleStatus"/>
+    </request-map>
+    <request-map uri="VehicleStatusChange">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="VehicleStatusChanges"/>
+    </request-map>
+    <request-map uri="FinalizeOrders">
+        <security auth="true" https="true"/>   
+        <event type="service" invoke="finalizeOrders"/>
+        <response name="success" type="request" value="VehicleStatus"/>
+        <response name="error" type="request" value="VehicleStatus"/>
+    </request-map>
+    <request-map uri="getOrderReturnItemsJson">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getOrderReturnItems"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="processReturnItemsMISAjax">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices" invoke="processReturnItemsMIS"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- TankerSale Main -->
+    <request-map uri="FindTankerSalesShipment">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="FindTankerSalesShipment"/>
+        <response name="error" type="view" value="FindTankerSalesShipment"/>
+    </request-map>
+    <request-map uri="TankerSalesToApprove">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="FindTankerSalesShipment"/>
+        <response name="error" type="view" value="FindTankerSalesShipment"/>
+    </request-map>
+    <request-map uri="RaiseInvoiceFromShipment">
+    	<security auth="true" https="true"/>
+    	<event type="service" invoke="raiseInvoiceFromShipment"/>
+        <response name="success" type="view" value="FindTankerSalesShipment"/>
+        <response name="error" type="view" value="FindTankerSalesShipment"/>
+    </request-map>
+    
+    <!-- <request-map uri="FindTankerSalesEntries">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="FindTankerSalesEntries"/>
+        <response name="error" type="view" value="FindTankerSalesEntries"/>
+    </request-map>
+    <request-map uri="TankerSalesToApprove">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="ApproveTankerSales"/>
+        <response name="error" type="view" value="ApproveTankerSales"/>
+    </request-map> -->
+    
+    <!-- View Mappings -->
+    
+    <!-- <view-map name="ApproveMilkReceipts" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#ApproveTankerSales" />
+    <view-map name="FindTankerSalesEntries" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#FindTankerSalesEntries"/> -->
+    <view-map name="FindTankerSalesShipment" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#FindTankerSalesShipment" />
+    
+    
+    <view-map name="main" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#LoadingDetails"/>
+    
+    <view-map name="LoadingDetails" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#LoadingDetails"/>
+    <view-map name="MilkTankerIssues" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#MilkTankerIssuesCIP"/>
+    <view-map name="MilkTankerIssuesCIP" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#MilkTankerIssuesCIP"/>
+    <view-map name="MilkTankerIssuesTareWeight" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#MilkTankerIssuesTareWeight"/>
+    <view-map name="MilkTankerIssuesQC" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#MilkTankerIssuesQC"/>
+    <view-map name="MilkTankerIssuesGrossWeight" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#MilkTankerIssuesGrossWeight"/>
+    <view-map name="MilkTankerIssuesAQC" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#MilkTankerIssuesAQC"/>
+    
+    <view-map name="FindTankerSaleSO" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#FindTankerSaleSO"/>
+    <view-map name="CreateTSSO" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#CreateTSSO"/>
+    <view-map name="CreateNewTSSO" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#CreateNewTSSO"/>
+    <view-map name="SalesOrderOverView" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#SalesOrderOverView"/>
+    <view-map name="creatNewnote" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#OrderNewNote"/>
+    <view-map name="EditTankerSaleSO" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#EditTankerSaleSO"/>
+    
+    <view-map name="FindPendingOrders" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#FindPendingOrders"/>
+    <view-map name="LookupName" type="screen" page="component://tankersales/widget/LookupScreens.xml#LookupName"/>
+    
+    
+    <!--Transporters View  -->
+    <view-map name="Transporters" type="screen" page="component://tankersales/widget/TransporterScreens.xml#Transporters"/>
+    <view-map name="DtcBillingTimePeriod" type="screen" page="component://tankersales/widget/TransporterScreens.xml#DtcBillingTimePeriod"/>
+    <view-map name="TransporterMargins" type="screen" page="component://tankersales/widget/TransporterScreens.xml#TransporterMargins"/>
+    <view-map name="FinesAndPenalties" type="screen" page="component://tankersales/widget/TransporterScreens.xml#FinesAndPenalties"/>
+    <view-map name="DieselHikePayment" type="screen" page="component://tankersales/widget/TransporterScreens.xml#DieselHikePayment"/>
+    <view-map name="EditDieselAmount" type="screen" page="component://tankersales/widget/TransporterScreens.xml#EditDieselAmount"/>
+    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://tankersales/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
+    <view-map name="CreateNewFineorPenalty" type="screen" page="component://tankersales/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
+    <view-map name="DieselHikePayment" type="screen" page="component://tankersales/widget/TransporterScreens.xml#DieselHikePayment"/>
+    <view-map name="EnterNewHikeOrPayment" type="screen" page="component://tankersales/widget/TransporterScreens.xml#EnterNewHikeOrPayment"/>
+    <view-map name="NewDieselAmount" type="screen" page="component://tankersales/widget/TransporterScreens.xml#NewDieselAmount"/>
+    
+    <!-- Vehicle status -->
+        <view-map name="VehicleStatus" type="screen" page="component://tankersales/widget/VehicleStatusScreens.xml#VehicleStatus"/> 
+        <view-map name="VehicleStatusChanges" type="screen" page="component://tankersales/widget/VehicleStatusScreens.xml#VehicleStatusChange"/>
+    
+    
+    
+    
+    
+    
+</site-conf>

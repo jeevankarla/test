@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" title="${uiLabelMap.TankerSalesApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+    </menu>
+    
+    <menu name="TankerSalesMainTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml">
+		<actions> 
+			<script
+				location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy" />
+		</actions>
+		<menu-item name="FindTankerSaleSO" title="Sales Order">
+                <link target="FindTankerSaleSO"/>
+        </menu-item>
+    	<menu-item name="MilkTankerIssues" title="Tanker Sales" >
+      	    <!-- <condition>
+    			<if-has-permission permission="MR" action="_TANKERISSUE_VIEW"/>
+    		</condition> -->
+            <link target="LoadingDetails">
+			</link>
+      	</menu-item>
+      	<menu-item name="Transporters" title="Transporters">
+                <link target="Transporters"/>
+        </menu-item>
+        <menu-item name="VehicleStatus" title="Vehicle Status">
+           	<!-- <condition>
+                    <if-has-permission permission="BYPRODUCTS" action="_TRCKSHEET"/>
+               </condition>  -->              
+               <link target="VehicleStatus">               
+               </link>
+       </menu-item>
+       <menu-item name="TankerSalesShipment" title="Tanker Sales Shipments">
+			<link target="FindTankerSalesShipment"></link>
+	   </menu-item>
+       
+      	<!-- <menu-item name="SearchTankerSalesEntries" title="Search Tanker Sales">
+			<link target="FindTankerSalesEntries"></link>
+		</menu-item>
+		<menu-item name="TankerSalesToApprove" title="Approve Tanker Sales">
+		 	<link target="TankerSalesToApprove"></link>
+		</menu-item> -->
+	</menu>
+    <menu name="TankerIssuanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		
+		<menu-item name="FindPendingOrders" title="Pending Orders">
+                <link target="FindPendingOrders"/>
+        </menu-item>
+        <menu-item name="Loading" title="Loading Plan" >
+            <link target="LoadingDetails">
+			</link>
+      	</menu-item>
+		<menu-item name="MilkIssues" title="Cip Details" >
+            <link target="milkTankerIssues">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesTareWeight" title="TareWeight Details" >
+            <link target="MilkTankerIssuesTareWeight">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesQC" title="QC Details" >
+            <link target="MilkTankerIssuesQC">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesGrossWeight" title="Gross weight Details" >
+            <link target="MilkTankerIssuesGrossWeight">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesAQC" title="Ack QC" >
+            <link target="MilkTankerIssuesAQC">
+			</link>
+      	</menu-item>				
+	</menu>
+	<menu name="FindTankerSaleSOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindTankerSaleSO" title="Find Sales Order">
+        	<link target="FindTankerSaleSO"/>
+        </menu-item>
+        <menu-item name="SOoverView" title="Sales Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="SOoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+    </menu>
+    <menu name="TransporterMarginsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="Transporters" title="Transporters">
+        	<link target="Transporters"/>
+        </menu-item>
+        <menu-item name="DtcBillingTimePeriod" title="Time Period">
+        	<link target="DtcBillingTimePeriod"/>
+        </menu-item> 	    
+        <menu-item name="TransporterMargins" title="TransporterBilling">
+        	<link target="TransporterMargins"/>
+        </menu-item>
+        <menu-item name="FinesAndPenalties" title="Fines And Penalties">
+        	<link target="FinesAndPenalties"/>
+        </menu-item>    
+        <menu-item name="DieselHikePayment" title="Diesel Hike Payment">
+        	<link target="DieselHikePayment"/>
+        </menu-item>  
+        <!-- <menu-item name="EditDieselAmount" title="Edit Disel Amount">
+        	<link target="EditDieselAmount"/>
+        </menu-item> -->
+        
+      </menu>
+      
+      <menu name="FindTankerSalesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="SearchTankerSalesEntries" title="Search Tanker Sales">
+			<link target="FindTankerSalesEntries"></link>
+		</menu-item>
+		<menu-item name="TankerSalesToApprove" title="Approve Milk Transfer">
+		 	<link target="TankerSalesToApprove"></link>
+		</menu-item>	
+		<!-- <menu-item name="MilkFinalization" title="Milk Finalization">
+			<link target="MilkFinalization"></link>
+		</menu-item> -->			
+	  </menu>
+</menus>

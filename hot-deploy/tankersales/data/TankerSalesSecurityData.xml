@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the TankerSales Component." permissionId="TANKERSALES_VIEW"/>
+    <SecurityPermission description="Create operations in the TankerSales Component." permissionId="TANKERSALES_CREATE"/>
+    <SecurityPermission description="Update operations in the TankerSales Component." permissionId="TANKERSALES_UPDATE"/>
+    <SecurityPermission description="Delete operations in the TankerSales Component." permissionId="TANKERSALES_DELETE"/>
+    <SecurityPermission description="ALL operations in the TankerSales Component." permissionId="TANKERSALES_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TANKERSALES_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TANKERSALES_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TANKERSALES_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TANKERSALES_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TANKERSALES_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TANKERSALES_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="TANKERSALES_ADMIN"/>
+</entity-engine-xml>
