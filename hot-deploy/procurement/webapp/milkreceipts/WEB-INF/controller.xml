@@ -916,7 +916,7 @@
 	<!-- Report View Mappings -->
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>
 	<view-map name="GenerateMlkRecptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#GenerateMlkRecptsBilling"/>
-    
+    <view-map name="mrPurchaseBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRPurchaseBilling"/>
     <view-map name="ShiftWiseReportTxt" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ShiftWiseReportTxt" content-type="text/plain"/>
     <view-map name="ShiftWiseReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ShiftWiseReport"/>
     <view-map name="PTCReports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PTCReports"/>
