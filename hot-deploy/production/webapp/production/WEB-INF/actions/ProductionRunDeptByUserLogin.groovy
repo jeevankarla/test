@@ -35,12 +35,16 @@ inputMap.put("userLogin",userLogin);
 inputMap.put("partyId",partyIdTo);
 inputMap.put("roleTypeIdTo","PRODUCTION_RUN");
 resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx, inputMap);
-
  if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
-		partyIdFrom=resultMap.get("deptId");
-	
-	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
+	 if((resultMap.get("deptId")).size()>1){
+		 partyIdFromList= resultMap.get("deptId");
+		 facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,partyIdFromList),
+			 																		EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND),null,null,null,false);
+	 }else{
+		partyIdFrom=(resultMap.get("deptId")).get(0);
+		facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
 																					  EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND),null,null,null,false);
+	 }																				  
 //	if(UtilValidate.isNotEmpty(facilityList)){
 //	facility=EntityUtil.getFirst(facilityList);
 //	context.facilityId=facility.facilityId;
@@ -58,8 +62,14 @@ if(UtilValidate.isNotEmpty(partyIdFrom)){
 }else{
 	
 	if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
-		partyIdFrom=resultMap.get("deptId");
+		if((resultMap.get("deptId")).size()>1){
+			partyIdFromList= resultMap.get("deptId");
+			context.partyIdFromList= partyIdFromList;
+		}else{
+		partyIdFrom=(resultMap.get("deptId")).get(0);
+		context.partyIdFrom=partyIdFrom;
+		}
 	}
-	context.partyIdFrom=partyIdFrom;
+	
 }
 context.deptName=deptName;

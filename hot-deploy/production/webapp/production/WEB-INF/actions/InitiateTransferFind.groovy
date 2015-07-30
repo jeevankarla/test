@@ -79,7 +79,7 @@ resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx, inputMap);
  if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
 		partyIdFrom=resultMap.get("deptId");
 	
-	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
+	facilityList=delegator.findList("Facility",EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,partyIdFrom),
 																					  EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds)],EntityOperator.AND),UtilMisc.toSet("facilityId","facilityName"),null,null,false);
  }else{
 		 facilityList=delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId",EntityOperator.IN,facilityTypeIds),UtilMisc.toSet("facilityId","facilityName"),null,null,false);

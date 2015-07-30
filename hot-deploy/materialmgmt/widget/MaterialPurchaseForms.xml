@@ -325,7 +325,7 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
     	<field name="shipmentId"><text-find></text-find></field>
-    	<field name="partyId" title="From Department">
+    	<field name="fromPartyId" title="From Department">
 			<drop-down allow-empty="true" >
 				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
 			</drop-down>
@@ -339,11 +339,12 @@
     </form>
     <form name="ListMaterialQCApproval" type="list" extends="ListMaterialForQCApproval" list-name="listIt">
         <actions>
+        <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/MaterialQcApprovalPerformFind.groovy"/>
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="inputFields.statusId" value="SR_QUALITYCHECK"/>
-            <field-map field-name="inputFields.partyId" from-field="partyId" />
+            <!-- <field-map field-name="inputFields.partyId" from-field="partyId" /> -->
             <field-map field-name="orderBy" value="-receiptId"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>

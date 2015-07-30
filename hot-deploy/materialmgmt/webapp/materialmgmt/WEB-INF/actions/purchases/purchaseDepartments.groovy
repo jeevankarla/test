@@ -37,6 +37,7 @@ import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.product.inventory.InventoryWorker;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
+
 dctx = dispatcher.getDispatchContext();
 userLogin= context.userLogin;
 organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : "INTERNAL_ORGANIZATIO"], ["groupName", "partyId"]);
@@ -70,7 +71,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && (parameters.flag=="DEPT_HEADAPPRO
 	inputMap.put("partyId",userLogin.partyId);
 	inputMap.put("roleTypeIdTo","INDENTDEPTAPPROVER");
 	resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx,inputMap);
-	newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,resultMap.get("deptId")));
+	newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.IN,resultMap.get("deptId")));
 }	
 
 if(UtilValidate.isNotEmpty(parameters.custRequestTypeId) && parameters.custRequestTypeId=="INTERNAL_INDENT"){
@@ -79,7 +80,7 @@ if(UtilValidate.isNotEmpty(parameters.custRequestTypeId) && parameters.custReque
 	inputMap.put("partyId",userLogin.partyId);
 	inputMap.put("roleTypeIdTo","PRODUCTION_RUN");
 	resultMap=MaterialHelperServices.getDepartmentByUserLogin(dctx,inputMap);
-	newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,resultMap.get("deptId")));
+	newDepatmentList=EntityUtil.filterByCondition(finalDepartmentList,EntityCondition.makeCondition("partyId",EntityOperator.IN,resultMap.get("deptId")));
 }
 if(UtilValidate.isNotEmpty(resultMap.get("deptId"))){
 	context.put("finalDepartmentList",newDepatmentList);

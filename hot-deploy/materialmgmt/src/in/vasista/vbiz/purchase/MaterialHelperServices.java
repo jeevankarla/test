@@ -2454,16 +2454,17 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		  departmentDetails = delegator.findList("PartyRelationship",condition, null, null, null,false);
 		  List<GenericValue> activeFacilityParties = (List<GenericValue>)EntityUtil.filterByDate(departmentDetails,UtilDateTime.nowTimestamp()); 
-		  activeDepartmentParty = EntityUtil.getFirst((List<GenericValue>)EntityUtil.filterByDate(departmentDetails,UtilDateTime.nowTimestamp()));
+		  List<String> departmentsList = EntityUtil.getFieldListFromEntityList(activeFacilityParties, "partyIdFrom", true); 
+		  /*activeDepartmentParty = EntityUtil.getFirst((List<GenericValue>)EntityUtil.filterByDate(departmentDetails,UtilDateTime.nowTimestamp()));
 		  if(UtilValidate.isEmpty(activeFacilityParties)){
 			  resultMap = ServiceUtil.returnError("No department is associated with this user ::"+userLogin.get("loginId"));
 		  return resultMap;
-		  }
-		  resultMap.put("deptId", activeDepartmentParty.getString("partyIdFrom"));
+		  }*/
+		  resultMap.put("deptId", departmentsList);
 	  
 	  	}catch(GenericEntityException e){
 		  Debug.logError("Error while getting department associated with this user"+e.getMessage(), module);
-		  resultMap = ServiceUtil.returnError("Error while getting department associated with this user ::"+userLogin.get("loginId"));
+		  resultMap = ServiceUtil.returnError("Error while getting department associated with this user ::"+userLogin.get("partyId"));
 		  return resultMap;
 	  	}
 	  return resultMap;

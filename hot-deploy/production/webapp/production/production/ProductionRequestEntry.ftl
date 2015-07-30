@@ -140,6 +140,25 @@ var screenFlag;
 				               			${partyIdFrom.toUpperCase()} [${deptName?if_exists}]   <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 				            		</div>
 				          	</td> 
+				          	<#elseif partyIdFromList?has_content>
+                               <#if fromParty?has_content>
+                                   <input type="hidden" name="partyIdFrom" id="partyIdFrom" value="${fromParty.partyId.toUpperCase()}"/>
+					          		<td valign='middle'>
+					            		<div class='tabletext h2'>
+					               			${fromParty.partyId.toUpperCase()} [ ${fromParty.groupName?if_exists} ]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+					            		</div>
+					          		</td> 
+							   <#else>	 
+	                             <td>
+	                                <select id="partyIdFrom" name="partyIdFrom">
+	                                    <#list partyIdFromList as partyId>
+	                                     <#assign paymentPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+	                                     <option value="${partyId}">${paymentPartyName?if_exists}</option> 
+	                                    </#list>
+	                                	
+	                                </select>
+	                             </td>
+                               </#if>
                             </#if> 
 						</tr>
 						<tr><td><br/></td></tr>

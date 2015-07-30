@@ -21,10 +21,23 @@ parameters.statusId = statusIds;
 parameters.statusId_op = "in";
 
 
-if(UtilValidate.isNotEmpty(context.get("partyId"))){
+if((parameters.fromPartyId)  instanceof String){
+	String partyIdstr = parameters.fromPartyId;
+	if(partyIdstr.contains("{")){
+		parameters.fromPartyId=context.get("partyId");
+		parameters.fromPartyId_op="in";
+	}
+}
+if(UtilValidate.isEmpty(parameters.fromPartyId)){
+	parameters.fromPartyId=context.get("partyId");
+	parameters.fromPartyId_op="in";
+}else{
+	parameters.partyId=parameters.fromPartyId;
+}
+/*if(UtilValidate.isNotEmpty(context.get("partyId"))){
 	parameters.partyId=context.get("partyId");
 	parameters.partyId_op="in";
-}
+}*/
 /*
 shedId = parameters.shedId;
 if(UtilValidate.isEmpty(parameters.statusId)){
