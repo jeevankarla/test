@@ -147,6 +147,26 @@ rawMilkSiloConditionList.add(EntityCondition.makeCondition("facilityTypeId",Enti
 rawMilkSiloConditionList.add(EntityCondition.makeCondition("categoryTypeEnum",EntityOperator.IN,siloTypeList));
 EntityCondition rawMilkSiloCondition = EntityCondition.makeCondition(rawMilkSiloConditionList,EntityOperator.AND);
 rawMilkSilosList = delegator.findList("Facility",rawMilkSiloCondition, null, null, null, true);
+if(UtilValidate.isNotEmpty(rawMilkSilosList)){
+	prodFacilitys=EntityUtil.getFieldListFromEntityList(rawMilkSilosList, "facilityId", true);
+}
 context.putAt("rawMilkSilosList", rawMilkSilosList);
+
+ productFacilityDetails ='';
+if(UtilValidate.isNotEmpty(rawMilkSilosList)){
+	productFacilityDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.IN , prodFacilitys)  , null, null, null, false );
+}
+JSONObject productFacilityIdMap = new JSONObject();
+if(UtilValidate.isNotEmpty(productFacilityDetails)){
+	facilityProdIds=EntityUtil.getFieldListFromEntityList(productFacilityDetails, "productId", true);
+	if(UtilValidate.isNotEmpty(facilityProdIds)){
+		facilityProdIds.each{eachProdId->
+			productFacilities = EntityUtil.filterByCondition(productFacilityDetails, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
+			eachProdFacilityIds=EntityUtil.getFieldListFromEntityList(productFacilities, "facilityId", true);
+			productFacilityIdMap.putAt(eachProdId, eachProdFacilityIds);
+		}
+	}
+}
+context.putAt("productFacilityIdMap", productFacilityIdMap);
 
 

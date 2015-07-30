@@ -92,6 +92,10 @@
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
+	if($('#displayScreen').val()=="ISSUE_LOAD"){
+		dispatchDateFormat = $('#loadDate').datepicker( "option", "dateFormat" );
+		$('#loadDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
+	}
 	if($('#displayScreen').val()=="ISSUE_AQC"){
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
@@ -153,6 +157,10 @@ $(document).ready(function() {
  		$('#sendDate').attr("readonly","readonly");
  		$('#sendTime').attr("readonly","readonly");
  		makeDatePicker("testDate","fromDate");
+ 	}
+ 	if($('#displayScreen').val()=="ISSUE_LOAD"){
+ 		$('#dcNo').attr("readonly","readonly");
+ 		makeDatePicker("loadDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_AQC"){
  		$('#dcNo').removeAttr("readonly");
@@ -355,8 +363,24 @@ function fetchTankerRecordNumber(){
 	  				$('span#tankerIdToolTip').html('none');
 	  				$('span#partyIdFromToolTip').removeClass("tooltip");
 	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
-	  				$('span#partyIdFromToolTip').html('none');
-	  				           	   
+	  				$('span#partyIdFromToolTip').html('none');		    
+	  				if(displayScreen == "ISSUE_CIP"){
+           				$('#sendDate').val('');
+           				$('#sendTime').val('');
+           				$('#dcNo').val('');
+           				$('#product').val('');
+          				$('#productId').val('');
+           				$('#partyId').val('');
+           				$('#tankerName').val('');
+           				$('#tankerNo').val('');
+           				$('#milkTransferId').val('');
+           				$('#product').parent().show();
+           				$('span#productToolTip').addClass("tooltip");
+						$('span#productToolTip').removeClass("tooltipWarning");
+						$('span#productToolTip').html('none');
+           				
+           				populateVehicleSpan();	
+           			}          	   
            }else{
            		var  milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
@@ -440,6 +464,7 @@ function fetchTankerRecordNumber(){
            		
            		var partyId = result['partyIdTo'];
            		partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+           		productFacilityIdMap = ${StringUtil.wrapString(productFacilityIdMap)}
            		var tempPartyJson = partyCodeJson[''+partyId];
            		var partyName ;
                	if(tempPartyJson){	
@@ -466,6 +491,8 @@ function fetchTankerRecordNumber(){
            						var shipmentId = milkTransfer['shipmentId'];
            						if(typeof(shipmentId) != 'undefined'){
            							var productId = milkTransfer['productId'];
+           							var facilityIds = productFacilityIdMap[productId];
+           							setSiloDropdown(facilityIds);
            							$('#productId').val(productId);
            							$('#product').val(productId);
            							$('#product').parent().hide();
@@ -478,10 +505,10 @@ function fetchTankerRecordNumber(){
            							$('span#productToolTip').removeClass("tooltip");
 									$('span#productToolTip').addClass("tooltipWarning");
 									$('span#productToolTip').html('None');
+           							$('#product').parent().show();
            						}
            					}
            				}
-           			
 	  			}else{
 	  				$('span#tankerIdToolTip').removeClass("tooltip");
 	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
@@ -501,6 +528,20 @@ function fetchTankerRecordNumber(){
           
     });
 }
+
+function setSiloDropdown(facilityIds){
+			var optionList = '';
+			optionList += "<option value = " + "" + " >" +" "+ "</option>";
+			var list= facilityIds;
+			if (list) {
+	        	for(var i=0 ; i<list.length ; i++){
+					var innerList=list[i];	   
+	                optionList += "<option value = " + innerList + " >" + innerList + "</option>";          			
+	      		}//end of main list for loop
+	      	   jQuery("[name=silo]").html(optionList);
+	      	 }//end of main list if
+	}
+
 
 function populateProductNames(){
 		var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
@@ -597,6 +638,9 @@ $( "#"+fromDateId ).datepicker({
       			<#if displayScreen == "ISSUE_QC">
       				<#assign velhicleStatus = "QUALITY CONTROL DETAILS">
       			</#if>
+      			<#if displayScreen == "ISSUE_LOAD">
+      				<#assign velhicleStatus = "LOAD AND SILO DETAILS">
+      			</#if>
       			<#if displayScreen == "ISSUE_AQC">
       				<#assign velhicleStatus = "ACKNOWLEDGED QUALITY CONTROL DETAILS">
       			</#if>
@@ -653,6 +697,23 @@ $( "#"+fromDateId ).datepicker({
 					        		</tr> 
 								</#if>
 					        </#if>
+					        <#if displayScreen == "ISSUE_LOAD">
+	        					<tr>
+	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_LOAD" />
+	        						<td align='left' ><span class='h2'>Loading Date</span></td><td><input  type="text" size="15pt" id="loadDate" name="loadDate" value="${setDate}" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class="h2">Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="loadTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="loadTime" autocomplete="off" required/></td>
+					        	</tr>
+							    <tr>
+	        						<td align='left' ><span class='h2'>Loaded From Silo</span></td><td> 
+		        						<select name="silo" required="required" id="silo" allow-empty="false">
+						        					<option value="">SELECT</option>
+						        					
+	          							</select>
+          						    </td>
+	        					</tr>
+	        				</#if>	
 					        	
 					        <#if displayScreen == "ISSUE_CIP">
 		                        <tr>
@@ -676,7 +737,7 @@ $( "#"+fromDateId ).datepicker({
 							    <tr>
         							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
 						        		<input type="hidden" size="15" id="productId" maxlength="15" name="productId" autocomplete="off" value="" />
-                     					<input type="text" size="15" maxlength="15" name="product" id="product" autocomplete="on"/></td><td><h2><h2><span class="tooltip" id ="productToolTip">none</span></h2></h2></td>
+                     					<input type="text" size="15" maxlength="15" name="product" id="product"  autocomplete="off" required="required" /></td><td><h2><h2><span class="tooltip" id ="productToolTip">none</span></h2></h2></td>
 									</td>
 				        		</tr> 
 	                         	<tr>

@@ -141,7 +141,7 @@ public class MilkReceiptServices {
     protected static final FoScreenRenderer foScreenRenderer = new FoScreenRenderer();
    
     
-    
+
     public static final Map<String, Object> createMilkReceiptEntryAjax(DispatchContext dctx, Map<String, ? extends Object> context) {
    	 	LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -2386,7 +2386,7 @@ public class MilkReceiptServices {
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
 	 		Debug.log("getTankerDetailsMap========"+getTankerDetailsMap);
-	 		if(ServiceUtil.isSuccess(getTankerDetailsMap)){
+	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
 	 			return resultMap;
@@ -3563,6 +3563,7 @@ public class MilkReceiptServices {
 	 			return resultMap;
  	        }
  	        updateVehStatusInMap.put("estimatedStartDate",grossDate);
+ 	        updateVehStatusInMap.put("estimatedEndDate",grossDate);
  	        try{
  	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
  	        	if(ServiceUtil.isError(updateVehStatResultMap)){
@@ -3581,6 +3582,80 @@ public class MilkReceiptServices {
 	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
 	 			return resultMap;
 			}
+ 	       
+ 	       GenericValue MilkTransferItem = null;
+ 	       List<GenericValue> milkTransferItemsList = FastList.newInstance();
+ 			try{
+ 				milkTransferItemsList = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
+ 			}catch(Exception e){
+ 				Debug.logError("Error while getting transferItems List ::"+e,module);
+ 				return ServiceUtil.returnError("Error while getting transferItems List ::"+e.getMessage());
+ 			}
+ 			
+ 			if(UtilValidate.isNotEmpty(milkTransferItemsList)){
+ 				MilkTransferItem = EntityUtil.getFirst(milkTransferItemsList);
+ 			}
+ 			BigDecimal sendFat = (BigDecimal) milkTransfer.get("fat");
+ 			BigDecimal sendSnf = (BigDecimal) milkTransfer.get("snf");
+ 			
+ 			BigDecimal tareWeight = (BigDecimal) milkTransfer.get("tareWeight");
+ 		//	BigDecimal grossWeight = (BigDecimal) milkTransfer.get("grossWeight");
+ 			
+ 			BigDecimal sendKgFat = BigDecimal.ZERO;
+ 			BigDecimal sendKgSnf = BigDecimal.ZERO;
+ 			
+ 			if(UtilValidate.isNotEmpty(tareWeight) && UtilValidate.isNotEmpty(grossWeight)){
+ 				BigDecimal qtyKgs = grossWeight.subtract(tareWeight);
+ 				BigDecimal qtyLtrs = ProcurementNetworkServices.convertKGToLitre(qtyKgs);
+ 				sendKgFat =((BigDecimal)ProcurementNetworkServices.calculateKgFatOrKgSnf(qtyKgs,sendFat));
+ 				sendKgSnf =((BigDecimal)ProcurementNetworkServices.calculateKgFatOrKgSnf(qtyKgs,sendSnf));
+ 				
+ 				milkTransfer.set("quantity",qtyKgs);
+ 				milkTransfer.set("receivedQuantity",qtyKgs);
+ 				milkTransfer.set("quantityLtrs",qtyLtrs);
+ 				milkTransfer.set("receivedQuantityLtrs",qtyLtrs);
+ 				
+ 				milkTransfer.set("sendKgFat",sendKgFat);
+ 				milkTransfer.set("sendKgSnf",sendKgSnf);
+ 				milkTransfer.set("receivedKgFat",sendKgFat);
+ 				milkTransfer.set("receivedKgSnf",sendKgSnf);
+ 				
+ 				MilkTransferItem.set("quantity",qtyKgs);
+ 				MilkTransferItem.set("receivedQuantity",qtyKgs);
+ 				MilkTransferItem.set("quantityLtrs",qtyLtrs);
+ 				MilkTransferItem.set("receivedQuantityLtrs",qtyLtrs);
+ 				
+ 				MilkTransferItem.set("sendKgFat",sendKgFat);
+ 				MilkTransferItem.set("sendKgSnf",sendKgSnf);
+ 				MilkTransferItem.set("receivedKgFat",sendKgFat);
+ 				MilkTransferItem.set("receivedKgSnf",sendKgSnf);
+ 				
+ 				MilkTransferItem.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 				
+ 			}
+ 			
+ 			milkTransfer.set("receivedFat",sendFat);
+ 			milkTransfer.set("receivedSnf",sendSnf);
+ 			
+ 			//here we need to create transferItem
+ 			
+ 			try{
+ 				MilkTransferItem.set("milkTransferId",milkTransferId);
+ 				MilkTransferItem.set("receivedFat",sendFat);
+ 				MilkTransferItem.set("receivedSnf",sendSnf);
+ 				MilkTransferItem.set("receivedTemparature",(BigDecimal) MilkTransferItem.get("sendTemparature"));
+ 				MilkTransferItem.set("receivedAcidity",(BigDecimal) MilkTransferItem.get("sendAcidity"));
+ 				
+ 				MilkTransferItem.set("receivedLR",(BigDecimal) MilkTransferItem.get("sendLR"));
+ 				MilkTransferItem.set("receivedCob",(String) MilkTransferItem.get("sendCob"));
+ 				//MilkTransferItem.set("recdOrganoLepticTest",(String)MilkTransferItem.get("sendOrganoLepticTest"));
+ 				//MilkTransferItem.set("receivedSedimentTest",(String)MilkTransferItem.get("sendSedimentTest"));
+ 				
+ 				delegator.store(MilkTransferItem);
+ 			}catch(Exception e){
+ 				Debug.logError("Error while updating qc details "+e,module);
+ 				return ServiceUtil.returnError("Error while updating qc details "+e.getMessage());
+ 			}
  	        String sealCheck = (String) context.get("sealCheck");
 			milkTransfer.set("dispatchWeight", dispatchWeight);
 			milkTransfer.set("grossWeight", grossWeight);
@@ -3589,6 +3664,7 @@ public class MilkReceiptServices {
 				milkTransfer.set("isSealChecked",sealCheck);
 			}
 			milkTransfer.set("driverName", driverName);
+			milkTransfer.set("statusId", "MXF_RECD");
 			milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			try{
 				delegator.store(milkTransfer);
@@ -3597,6 +3673,74 @@ public class MilkReceiptServices {
 				return ServiceUtil.returnError("Error while storing grossweight details ::"+e.getMessage());
 			}
 			
+		}else if(vehicleStatusId.equalsIgnoreCase("MR_ISSUE_LOAD")){
+		
+			String loadDateStr = (String) context.get("loadDate"); 
+	        String loadTime = (String) context.get("loadTime");
+	        String silo = (String) context.get("silo");
+	        Timestamp loadDate = UtilDateTime.nowTimestamp();
+	        
+	        try{
+		 		if(UtilValidate.isNotEmpty(loadDateStr)){
+		 			if(UtilValidate.isNotEmpty(loadTime)){
+		 				loadDateStr = loadDateStr.concat(loadTime);
+		 			}
+		 			loadDate = new java.sql.Timestamp(sdf.parse(loadDateStr).getTime());
+		 		}
+	        	
+	        }catch(ParseException e){
+	        	Debug.logError(e, "Cannot parse date string: " + loadDateStr, module);
+	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+ 			return resultMap;
+	        }
+	        updateVehStatusInMap.put("estimatedStartDate",loadDate);
+	        try{
+	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
+	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+	        		Debug.logError("Error while updating the vehicleTrip Status ::"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status ::"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+	 			return resultMap;
+	        	}
+	        }catch (GenericServiceException e) {
+			// TODO: handle exception
+	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
+ 			return resultMap;
+	        	
+	        }catch(Exception e){
+	        	Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
+        		return resultMap;
+	        }
+	        milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        GenericValue MilkTransferItem = null;
+	 	    List<GenericValue> milkTransferItemsList = FastList.newInstance();
+	        try{
+				milkTransferItemsList = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
+			}catch(Exception e){
+				Debug.logError("Error while getting transferItems List ::"+e,module);
+				return ServiceUtil.returnError("Error while getting transferItems List ::"+e.getMessage());
+			}
+			
+			if(UtilValidate.isNotEmpty(milkTransferItemsList)){
+				MilkTransferItem = EntityUtil.getFirst(milkTransferItemsList);
+			}
+			try{
+				MilkTransferItem.set("milkTransferId",milkTransferId);
+				MilkTransferItem.set("siloId",silo);
+				MilkTransferItem.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+				delegator.store(MilkTransferItem);
+			}catch(Exception e){
+				Debug.logError("Error while updating load details "+e,module);
+				return ServiceUtil.returnError("Error while updating load details "+e.getMessage());
+			}
+
+	        try{
+	        	delegator.store(milkTransfer);
+	        }catch(Exception e){
+	        	Debug.logError ("Error while Loading milk details ::"+e,module);
+	        	return ServiceUtil.returnError("Error while Loading milk details ::"+e.getMessage());
+	        }
 		}else if(vehicleStatusId.equalsIgnoreCase("MR_ISSUE_AQC")){
 			replaceVehicleStatusString = "MR_ISSUE_AQC";
 			replaceWithStatusString = "ACK QC";
