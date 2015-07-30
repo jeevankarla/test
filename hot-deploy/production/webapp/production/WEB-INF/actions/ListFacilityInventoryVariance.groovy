@@ -26,8 +26,8 @@ if(facilityId){
 	if(productId){
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	}
-	conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
-	conditionList.add(EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+	conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN_EQUAL_TO, BigDecimal.ZERO));
+	conditionList.add(EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN_EQUAL_TO, BigDecimal.ZERO));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	inventoryItemDetails = delegator.findList("InventoryItem", condition, null, null, null, false);
 	
