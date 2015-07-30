@@ -47,18 +47,23 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Locale;
-	
+
+
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.network.LmsServices;
 import org.ofbiz.product.product.ProductEvents;
-
+import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	
  	public class MilkReceiptsTransporterServices {
 		
@@ -202,7 +207,7 @@ import org.ofbiz.product.product.ProductEvents;
 				List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
 				  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS,  "PTC_TRSPT_MRGN_"+periodBillingId));
 				  
-			     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PTC_TRNSPORTOR_INV"));
+			     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "COGS_OUT"));
 			     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
 			     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
 	             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED")); 
@@ -404,11 +409,16 @@ import org.ofbiz.product.product.ProductEvents;
 					return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
 				}
 				if("APPROVED".equalsIgnoreCase(statusId)){
-				Map ptcInvoiceResult=createPTCInvoice(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
-				result.putAll(ptcInvoiceResult);
-		       }
+					Map ptcInvoiceResult=createPTCInvoice(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+					result.putAll(ptcInvoiceResult);
+				}
 				if("APPROVED_PAYMENT".equalsIgnoreCase(statusId)){
 					Map ptcPaymentResult=createTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+					if(ServiceUtil.isError(ptcPaymentResult)){
+						Debug.logError("Error while creating payments "+ServiceUtil.getErrorMessage(ptcPaymentResult),module);
+						return ServiceUtil.returnError("Error while creating payments "+ServiceUtil.getErrorMessage(ptcPaymentResult));
+					}
+					
 					try{
 			        	  periodBilling.set("statusId", "APPROVED_PAYMENT");
 						  periodBilling.store();
@@ -417,7 +427,12 @@ import org.ofbiz.product.product.ProductEvents;
 			    		return ServiceUtil.returnError("Unable to Make Payment Process For PTC Billing! "); 
 					}   
 					result.putAll(ptcPaymentResult);
-			       }
+					Map updateInvoiceResult = updatePTCBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));  
+					if(ServiceUtil.isError(updateInvoiceResult)){
+						Debug.logError("Error while updating invoice Status to Paid ::"+ServiceUtil.getErrorMessage(updateInvoiceResult),module);
+						return ServiceUtil.returnError("Error while updating invoice Status to Paid ::"+ServiceUtil.getErrorMessage(updateInvoiceResult));
+					}
+			    }
 				if("REJECT_PAYMENT".equalsIgnoreCase(statusId)){
 					Map ptcPaymentCancelResult=cancelPTCTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
 					try{
@@ -477,32 +492,32 @@ import org.ofbiz.product.product.ProductEvents;
 					  
 					if(UtilValidate.isNotEmpty(invoicePaymentInfo)){
 						 if(outStandingAmount.compareTo(BigDecimal.ZERO)>0){
-						 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), false);
-						           // paymentCtx.put("partyIdFrom","Company");
-						            paymentCtx.put("organizationPartyId",invoice.getString("partyIdFrom"));
-						            paymentCtx.put("facilityId", invoice.getString("facilityId"));
-						            paymentCtx.put("paymentPurposeType", "");
-						            paymentCtx.put("paymentRefNum", paymentRef); 
-						            paymentCtx.put("instrumentDate", invoice.getTimestamp("dueDate"));
-									paymentCtx.put("paymentDate", invoice.getTimestamp("dueDate"));
-									paymentCtx.put("effectiveDate", invoice.getTimestamp("dueDate"));
-						            //paymentCtx.put("statusId", "PMNT_RECEIVED");
-						            paymentCtx.put("statusId", "PMNT_NOT_PAID");
-						            paymentCtx.put("isEnableAcctg", "Y");
-						            paymentCtx.put("amount", outStandingAmount);
-						            paymentCtx.put("userLogin", userLogin); 
-						            paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
-						    		try{
-						            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
-						            if (ServiceUtil.isError(paymentResult)) {
-						            	Debug.logError(paymentResult.toString(), module);
-						                return ServiceUtil.returnError(null, null, null, paymentResult);
-						            }
-						            paymentId = (String)paymentResult.get("paymentId");
-						            }catch (Exception e) {
-						            Debug.logError(e, e.toString(), module);
-						            return ServiceUtil.returnError(e.toString());
-							        }
+							GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), false);
+				           // paymentCtx.put("partyIdFrom","Company");
+				            paymentCtx.put("organizationPartyId",invoice.getString("partyIdFrom"));
+				            paymentCtx.put("facilityId", invoice.getString("facilityId"));
+				            paymentCtx.put("paymentPurposeType", "");
+				            paymentCtx.put("paymentRefNum", paymentRef); 
+				            paymentCtx.put("instrumentDate", invoice.getTimestamp("dueDate"));
+							paymentCtx.put("paymentDate", invoice.getTimestamp("dueDate"));
+							paymentCtx.put("effectiveDate", invoice.getTimestamp("dueDate"));
+				            //paymentCtx.put("statusId", "PMNT_RECEIVED");
+				            paymentCtx.put("statusId", "PMNT_NOT_PAID");
+				            paymentCtx.put("isEnableAcctg", "Y");
+				            paymentCtx.put("amount", outStandingAmount);
+				            paymentCtx.put("userLogin", userLogin); 
+				            paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+				    		try{
+				            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+				            if (ServiceUtil.isError(paymentResult)) {
+				            	Debug.logError(paymentResult.toString(), module);
+				                return ServiceUtil.returnError(null, null, null, paymentResult);
+				            }
+				            paymentId = (String)paymentResult.get("paymentId");
+				            }catch (Exception e) {
+				            Debug.logError(e, e.toString(), module);
+				            return ServiceUtil.returnError(e.toString());
+					        }
 						 }
 					 }
 				}
@@ -658,7 +673,7 @@ import org.ofbiz.product.product.ProductEvents;
 					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
 					  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS,  "PTC_TRSPT_MRGN_"+periodBillingId));
 					  
-				     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PTC_TRNSPORTOR_INV"));
+				     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "COGS_OUT"));
 				     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
 				     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
 		             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED")); 
@@ -919,13 +934,34 @@ import org.ofbiz.product.product.ProductEvents;
 					return ServiceUtil.returnError("fromDate or thruDate or TimePeriod is Empty");
 				}
 				
+				Map inMap = FastMap.newInstance();
+				inMap.put("userLogin", userLogin);
+				inMap.put("shiftType", "MILK_SHIFT");
+				inMap.put("fromDate", fromDate);
+				inMap.put("thruDate", thruDate);
+				Map workShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMap );
+				if(ServiceUtil.isError(workShifts)){
+					Debug.logError("Error while getting shift times :"+workShifts, module);
+					return ServiceUtil.returnError("Error while getting shift times :"+ServiceUtil.getErrorMessage(workShifts));
+				}
+				fromDate =(Timestamp)workShifts.get("fromDate");
+				thruDate =(Timestamp)workShifts.get("thruDate");
+				// here we need to eliminate Internal organizations
+				Map internalOrganizations = ByProductNetworkServices.getPartyByRoleType(dctx,UtilMisc.toMap("userLogin",userLogin,"roleTypeId","INTERNAL_ORGANIZATIO"));
+				List<String> intPartyIds = FastList.newInstance();
+				if(UtilValidate.isNotEmpty(internalOrganizations) && UtilValidate.isNotEmpty(internalOrganizations.get("partyIds"))){
+					intPartyIds = (List)internalOrganizations.get("partyIds");
+				}
 				try{
 					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 					conditionList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 					conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
+					if(UtilValidate.isNotEmpty(intPartyIds)){
+						conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,intPartyIds));
+					}
 					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"INTERNAL"));
 					List<String> stausList = UtilMisc.toList("MXF_APPROVED");
-					stausList.add("MXF_RECD");
+					//stausList.add("MXF_RECD");
 					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,stausList));
 					conditionList.add(EntityCondition.makeCondition("receivedQuantity",EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
@@ -933,6 +969,10 @@ import org.ofbiz.product.product.ProductEvents;
 				}catch(GenericEntityException e){
 					Debug.logError("Error While Preparing Master List :"+e,module);
 					result= ServiceUtil.returnError("Error while getting masterList");
+				}
+				if(UtilValidate.isEmpty(milkTransferList)){
+					Debug.logError("No Records found" ,module);
+					return ServiceUtil.returnError("No records found");
 				}
 				if(UtilValidate.isNotEmpty(milkTransferList)){
 					List<String> partyKeys = EntityUtil.getFieldListFromEntityList(milkTransferList,"partyId", false);
@@ -1291,9 +1331,9 @@ import org.ofbiz.product.product.ProductEvents;
 				
 				try{
 					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
-					  conditionList.add(EntityCondition.makeCondition("paymentRefNum", EntityOperator.EQUALS,  "PTC_TRSPT_MRGN_"+periodBillingId));
-				     conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, "EXPENSE_PAYOUT"));
-		             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+					conditionList.add(EntityCondition.makeCondition("paymentRefNum", EntityOperator.EQUALS,  "PTC_TRSPT_MRGN_"+periodBillingId));
+				    conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, "EXPENSE_PAYOUT"));
+		            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
 		            
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);      	
 		        	List<GenericValue> paymentsList = delegator.findList("Payment", condition, null, null, null, false);
@@ -1375,7 +1415,6 @@ import org.ofbiz.product.product.ProductEvents;
 				Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
 		//		Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("roundedContractorRecoveryInfoMap");
 				
-				
 				if(UtilValidate.isNotEmpty(totalPartyTradingTotalMap)){
 					Iterator partyMarginsIter = totalPartyTradingTotalMap.entrySet().iterator();
 					try{
@@ -1383,8 +1422,7 @@ import org.ofbiz.product.product.ProductEvents;
 							Map.Entry partyEntry = (Entry) partyMarginsIter.next();	
 							String invoiceId="";
 							//String facilityId = (String) routeEntry.getKey();	
-							
-							String partyIdTo = (String) partyEntry.getKey();	
+							String partyIdTo = (String) partyEntry.getKey();
 							Map partyWiseValues = (Map) partyEntry.getValue();
 							BigDecimal totalMargin = (BigDecimal) partyWiseValues.get("margin");
 							BigDecimal quantity = BigDecimal.ONE;
@@ -1397,6 +1435,7 @@ import org.ofbiz.product.product.ProductEvents;
 					               // createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
 					                createInvoiceContext.put("dueDate", monthEnd);
 					                createInvoiceContext.put("invoiceDate", monthEnd);
+					                createInvoiceContext.put("description", "PTC BILL FROM "+UtilDateTime.toDateString(monthBegin,"dd-MMM-yyyy")+" to "+UtilDateTime.toDateString(monthEnd,"dd-MMM-yyyy"));
 					                createInvoiceContext.put("invoiceTypeId", "COGS_OUT");
 					                createInvoiceContext.put("referenceNumber", "PTC_TRSPT_MRGN_"+periodBillingId);
 					                // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
@@ -1624,7 +1663,7 @@ import org.ofbiz.product.product.ProductEvents;
 		        	unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"), null, null, null, true);
 		        	if(UtilValidate.isNotEmpty(unionsList)){
 		        		unionIdsList = EntityUtil.getFieldListFromEntityList(unionsList, "partyId", false);
-		        		unionIdsList.remove("MD");
+		        		unionIdsList.add("MD");
 		        	}else{
 		        		return ServiceUtil.returnError("Unions are not found::");
 		        	}
@@ -1641,6 +1680,7 @@ import org.ofbiz.product.product.ProductEvents;
 			        EntityCondition condition = EntityCondition.makeCondition(conditionList);
 			        
 			        contractorsList = delegator.findList("VehicleRole",condition, null, null, null, true);
+			        contractorsList = EntityUtil.filterByDate(contractorsList, fromDate);
 		        }catch(Exception e){
 		        	
 		        	Debug.logError("Error while getting contractors List "+e, module);
@@ -1768,12 +1808,12 @@ import org.ofbiz.product.product.ProductEvents;
 		            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 		            conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		        		List<GenericValue> periodBillingList = FastList.newInstance();
-		        		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);	 
-		        		if(UtilValidate.isNotEmpty(periodBillingList)){
-		        			 Debug.logError("Billing Is Already Generated For This Period", module);
-		        			 return ServiceUtil.returnError("Billing Is Already Generated For This Period  and You Can Not Create Additions or Deductions!");   
-		        		}
+	        		List<GenericValue> periodBillingList = FastList.newInstance();
+	        		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);	 
+	        		if(UtilValidate.isNotEmpty(periodBillingList)){
+	        			 Debug.logError("Billing Is Already Generated For This Period", module);
+	        			 return ServiceUtil.returnError("Billing Is Already Generated For This Period  and You Can Not Create Additions or Deductions!");   
+	        		}
 		 			
 		        	conditionList.clear();
 		        	conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS, vehicleId));
@@ -2091,6 +2131,59 @@ import org.ofbiz.product.product.ProductEvents;
 			 	}	
 			 	return result;
 		 }
+		 
+		 
+		 public static Map<String, Object> updatePTCBillingInvoices(DispatchContext dctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = dctx.getDelegator();
+		    	TimeZone timeZone = TimeZone.getDefault();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();       
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    	Locale locale = (Locale) context.get("locale");
+		        Map<String, Object> result = new HashMap<String, Object>();
+		        result = ServiceUtil.returnSuccess();
+		        String periodBillingId = (String) context.get("periodBillingId");
+		        List<GenericValue> invoicesList = FastList.newInstance();
+		        String referenceNumber = "PTC_TRSPT_MRGN_"+periodBillingId;
+		        String statusId = (String) context.get("statusId");
+		        try{
+		        	List conditionList = FastList.newInstance();
+		        	conditionList.add(EntityCondition.makeCondition("referenceNumber",EntityOperator.EQUALS,referenceNumber));
+		        	if(statusId.equalsIgnoreCase("INVOICE_READY")){
+		        		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_IN_PROCESS"));
+		        	}
+		        	if(statusId.equalsIgnoreCase("INVOICE_PAID")){
+		        		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_READY"));
+		        	}
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList);
+		        	invoicesList = delegator.findList("Invoice", condition, null, null, null, false);
+		        	if(UtilValidate.isEmpty(invoicesList)){
+		        		Debug.logError("Invoices not found for the billing period :"+periodBillingId,module);
+		        		return ServiceUtil.returnError("Invoices not found for the billing period :"+periodBillingId);
+		        	}
+		        }catch(Exception e){
+		        	Debug.logError("Error while getting invoices "+e,module);
+		        	return ServiceUtil.returnError("Error while getting invoices "+e.getMessage());
+		        }
+		        HashSet<String> invoiceIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(invoicesList, "invoiceId", true));
+		        for(String invoiceId : invoiceIdsSet){
+			        Map invoiceCtx = FastMap.newInstance();
+			      //set to Ready for Posting
+			        invoiceCtx.put("userLogin", userLogin);
+			        invoiceCtx.put("invoiceId", invoiceId);
+			        invoiceCtx.put("statusId",statusId);
+			        try{
+			        	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+			        	if (ServiceUtil.isError(invoiceResult)) {
+			        		Debug.logError(invoiceResult.toString(), module);
+			                return ServiceUtil.returnError(null, null, null, invoiceResult);
+			            }	             	
+			        }catch(GenericServiceException e){
+			        	 Debug.logError(e, e.toString(), module);
+			            return ServiceUtil.returnError(e.toString());
+			        } 
+		        }
+		    	return result;
+		    }//end of the method
 		    
 }
 

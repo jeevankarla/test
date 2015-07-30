@@ -14,11 +14,13 @@
             title="Procurement Price Chart Entity">
       <field name="procPriceChartId" type="id-ne"/>
       <field name="regionId" type="id"/>
+      <field name="partyId" type="id"/>
       <field name="categoryTypeEnum" type="id"/>
       <field name="supplyTypeEnumId" type="id"/>      
       <field name="useBaseSnf" type="indicator"/>
       <field name="useBaseFat" type="indicator"/>
       <field name="billQuantity" type="id"/>
+      <field name="billQuality" type="id"/>
       <field name="isPremiumChart" type="indicator"/>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field> 
@@ -29,7 +31,10 @@
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>   
-      <prim-key field="procPriceChartId"/>  
+      <prim-key field="procPriceChartId"/>
+      <relation rel-entity-name="Party" type="one" fk-name="PPC_PARTY">
+      	<key-map field-name="partyId"/>
+      </relation>  
       <relation type="one" fk-name="PPC_lrFormulaId" rel-entity-name="AcctgFormula">
       	<key-map field-name="lrFormulaId" rel-field-name="acctgFormulaId"/>
       </relation>
@@ -366,6 +371,14 @@
       <field name="isSealChecked" type="indicator"/>
       <field name="isCipChecked" type="indicator"/>
       <field name="productId" type="id-ne"></field>
+      <field name="conversionProductId" type="id-ne"></field>
+      <field name="unitPrice" type="currency-amount"/>
+      <field name="fatPremium" type="currency-amount"/>
+      <field name="snfPremium" type="currency-amount"/>
+     
+      <field name="billQuantity" type="id"></field>
+      <field name="billQuality" type="id"></field>
+      
       <field name="quantity" type="fixed-point"></field>
       <field name="quantityLtrs" type="fixed-point"></field>
       <field name="snf" type="fixed-point"></field>
@@ -419,6 +432,9 @@
       
       <relation type="one" fk-name="MILK_XFER_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_CPROD" rel-entity-name="Product">
+        <key-map field-name="conversionProductId" rel-field-name="productId"/>
       </relation>
       <relation type="one" fk-name="MILK_XFER_VEHICLE" rel-entity-name="VehicleTrip">
         <key-map field-name="containerId" rel-field-name="vehicleId"/>

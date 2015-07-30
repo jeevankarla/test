@@ -742,6 +742,7 @@ public class PriceServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) context.get("productId");    
         String facilityId = (String) context.get("facilityId");
+        String partyId = (String) context.get("partyId");
         String categoryTypeEnum = (String) context.get("categoryTypeEnum");
         String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");           
         Timestamp priceDate = (Timestamp) context.get("priceDate");
@@ -783,8 +784,23 @@ public class PriceServices {
         result.put("useTotalSolids", useTotalSolids);
         Map priceChartMap = FastMap.newInstance();
     	try {
-    		// Fist get the appropriate Procurement Chart 
-   		 	GenericValue priceChart = fetchPriceChart(dctx, UtilMisc.toMap("priceDate", priceDate, "facilityId", facilityId ,"categoryTypeEnum", categoryTypeEnum ,"supplyTypeEnumId" , supplyTypeEnumId ,"isPremiumChart" ,isPremiumChart));  
+    		// Fist get the appropriate Procurement Chart
+    		Map pricChartInMap = FastMap.newInstance();
+    		pricChartInMap.put("priceDate", priceDate);
+    		pricChartInMap.put("supplyTypeEnumId", supplyTypeEnumId);
+    		pricChartInMap.put("isPremiumChart", isPremiumChart);
+    		
+    		
+    		GenericValue priceChart =  null;
+    		if(UtilValidate.isNotEmpty(facilityId)){
+    			pricChartInMap.put("categoryTypeEnum", categoryTypeEnum);
+    			pricChartInMap.put("facilityId", facilityId);
+    			priceChart = fetchPriceChart(dctx, pricChartInMap); 
+    		}
+    		if(UtilValidate.isNotEmpty(partyId)){
+    			pricChartInMap.put("partyId", partyId);
+    			priceChart = fetchPriceChartForParty(dctx,pricChartInMap ); 
+    		}
    		 	if(UtilValidate.isEmpty(priceChart)){
    		 		Debug.logInfo("No valid price chart found!", module);
           		return ServiceUtil.returnError("No valid price chart found!");  
@@ -802,6 +818,7 @@ public class PriceServices {
     		Map priceInMap =FastMap.newInstance();
     		priceInMap.putAll(context);
     		priceInMap.put("priceChartId",  priceChart.getString("procPriceChartId"));
+    		
     		if(UtilValidate.isEmpty(fatPercent) && UtilValidate.isEmpty(snfPercent)){
     			for(int j=0; j<fatPercentList.size(); j++){
     				tempFatPercent = fatPercentList.get(j);
@@ -825,7 +842,7 @@ public class PriceServices {
     		}else{    			
     			priceInMap.put("snfPercent", snfPercent);
     			priceInMap.put("fatPercent", fatPercent);
-   		 		result = calculateProcurementProductPrice(dctx ,priceInMap);
+    			result = calculateProcurementProductPrice(dctx ,priceInMap);
    		 		if(UtilValidate.isNotEmpty(result.get("uomId"))){
    		 			uomId = (String)result.get("uomId"); 
    		 		}
@@ -834,8 +851,6 @@ public class PriceServices {
    		 		premium = (BigDecimal)result.get("premium");
    		 		useTotalSolids = (String)result.get("useTotalSolids");   		 		
     		}
-    		
-   		 	
     	} catch (Exception e) {
            Debug.logError(e, module);
            return ServiceUtil.returnError(e.getMessage());
@@ -1006,6 +1021,7 @@ public class PriceServices {
 		request.setAttribute("priceDate",priceDate);
 		return "success";
     }// End of the service
+   
     /**
      * 
      * 
@@ -1020,6 +1036,7 @@ public class PriceServices {
         String priceChartId = (String) context.get("priceChartId");
         String productId = (String) context.get("productId");    
         String facilityId = (String) context.get("facilityId");
+        String partyId = (String) context.get("partyId");
         String categoryTypeEnum = (String) context.get("categoryTypeEnum");
         String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");
         BigDecimal fatPercent = (BigDecimal) context.get("fatPercent");
@@ -1031,6 +1048,7 @@ public class PriceServices {
         result.put("snfPremium", BigDecimal.ZERO);
         List<EntityCondition> procPriceEcList = FastList.newInstance();
         String billQuantity= null;
+        String billQuality= null;
         String useBaseSnf = "Y";
         String useBaseFat = "Y";
         String uomId = "VLIQ_KGFAT";
@@ -1045,10 +1063,11 @@ public class PriceServices {
         			useBaseFat= (String)priceChartIdDetails.get("useBaseFat");
         			uomId = (String)priceChartIdDetails.get("uomId");
         			billQuantity = (String) priceChartIdDetails.get("billQuantity");
+        			billQuality = (String) priceChartIdDetails.get("billQuality");
         		}
         	}catch (GenericEntityException e) {
         		Debug.logError("Error while getting useBaseSnf Value=======>"+e.getMessage(),module);
-        		ServiceUtil.returnError("Error while getting useBaseSnf Value:");
+        		return ServiceUtil.returnError("Error while getting useBaseSnf Value:");
         	}
         	
         	// lets override high fat with max value fat 
@@ -1057,7 +1076,7 @@ public class PriceServices {
 	        procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS , "PROC_PRICE_MAX_QLTY" ));
 	        EntityCondition procPriceSlab = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
 	        try{
-	        	 List<GenericValue> productPricesMax = delegator.findList("ProcurementPrice", procPriceSlab, null, UtilMisc.toList("-snfPercent","-fatPercent"), null, false);	         	
+	        	 List<GenericValue> productPricesMax = delegator.findList("ProcurementPrice", procPriceSlab, null, UtilMisc.toList("-snfPercent","-fatPercent"), null, false);
 	        	 if(UtilValidate.isNotEmpty(productPricesMax)){
 	         		GenericValue productPriceMax = EntityUtil.getFirst(productPricesMax);	         		
 	         		if(fatPercent.compareTo(productPriceMax.getBigDecimal("fatPercent")) > 0){
@@ -1067,6 +1086,10 @@ public class PriceServices {
 	         			snfMaxQuality = productPriceMax.getBigDecimal("snfPercent");
 	         		}
 	         	}else{
+	         		result = ServiceUtil.returnError("Error");
+	         		result.put("price", BigDecimal.ZERO);
+	                result.put("fatPremium", BigDecimal.ZERO);
+	                result.put("snfPremium", BigDecimal.ZERO);
 	         		return result;
 	         	}
 	        }catch (Exception e) {
@@ -1105,10 +1128,13 @@ public class PriceServices {
         if(UtilValidate.isEmpty(billQuantity)){
         	billQuantity ="ACK_QTY";
         }
+        if(UtilValidate.isEmpty(billQuality)){
+        	billQuality ="ACK_QLTY";
+        }
         result.put("billQuantity", billQuantity);
+        result.put("billQuality", billQuality);
         result.put("useTotalSolids", "N");
     	try {
-    		
     		procPriceEcList.clear();
    	        //lets get the slab bucket for the given fat and snf
    	        String procurementPriceTypeId = null;
@@ -1143,7 +1169,7 @@ public class PriceServices {
    	        procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, "PROC_PRICE_SOUR"));
    	        EntityCondition procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
    	        List<GenericValue> productPrices = delegator.findList("ProcurementPrice", procPriceEc, null, null, null, true);
-   		 	if(UtilValidate.isEmpty(productPrices)){
+   	        if(UtilValidate.isEmpty(productPrices)){
    		 		Debug.logInfo("No sour Price configuration found (" + procPriceEc + ")", module);
    		 	}
    		 	GenericValue productSourPrice = EntityUtil.getFirst(productPrices);
@@ -1338,5 +1364,133 @@ public class PriceServices {
 		}        
         return result;
     }
+    
+    
+    
+    //Procurement Price Services for Party
+    private static GenericValue fetchPriceChartForParty(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();		
+		GenericValue priceChart = null;
+        Timestamp priceDate = (Timestamp) context.get("priceDate");
+        String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");
+        String categoryTypeEnum = (String) context.get("categoryTypeEnum");
+        String isPremiumChart = (String) context.get("isPremiumChart");
+        List ancestorNodeList =FastList.newInstance();
+        List ancestorCatTypeList =FastList.newInstance();
+        List<EntityCondition> condList = FastList.newInstance();
+        if (UtilValidate.isEmpty(priceDate)) {
+        	priceDate = UtilDateTime.nowTimestamp();
+        } 		
+        String partyId = (String) context.get("partyId");
+        ancestorNodeList.add(partyId);
+    	try {
+    		// ::TODO:: Need to handle region-specific rate charts    	
+    		// Fist get the appropriate Procurement Chart
+    		Map ancestorNodeMap =fetchAncestorNodesForParty(dctx, UtilMisc.toMap("partyId", partyId ,"ancestorNodeList", ancestorNodeList,"priceDate",priceDate));    		
+    		ancestorNodeList = (List)ancestorNodeMap.get("ancestorNodeList");
+    		ancestorNodeList.add("_NA_");
+    		Debug.logInfo("ancestorNodeList =========="+ancestorNodeList, module);
+    		List orderBy = UtilMisc.toList("-supplyTypeEnumId");
+    		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN , ancestorNodeList));
+    		
+    		if(UtilValidate.isNotEmpty(isPremiumChart) && isPremiumChart.equals("Y")){
+    			condList.add(EntityCondition.makeCondition("isPremiumChart" ,EntityOperator.EQUALS , "Y"));
+    		}else{
+    			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isPremiumChart" ,EntityOperator.EQUALS , null) ,EntityOperator.OR,EntityCondition.makeCondition("isPremiumChart" ,EntityOperator.EQUALS , "N")));
+    		}
+    		List<GenericValue> chartList = delegator.findList("ProcurementPriceChart", EntityCondition.makeCondition(condList , EntityOperator.AND ), null, orderBy, null, true);
+    		List<GenericValue> selChartList = EntityUtil.filterByDate(chartList, priceDate);
+   		 	if(UtilValidate.isEmpty(selChartList)){
+   		 		Debug.logInfo("No valid price chart found!", module);
+   		 		return priceChart;
+   		 	}	
+   		 	if (selChartList.size() == 1 && "_NA_".equals(selChartList.get(0).getString("partyId"))) {
+   		 		priceChart = selChartList.get(0); 
+   		 		return priceChart;
+   		 	}   		
+   		 	Map<String, List> priceChartMap = FastMap.newInstance();
+   		 	for (int i = 0; i < selChartList.size(); ++ i) {
+   		 		GenericValue tempChart = selChartList.get(i);
+   		 		String chartPartyId = tempChart.getString("partyId");
+   		 		List<GenericValue> tempChartList = FastList.newInstance();   		 		
+   		 		if(UtilValidate.isEmpty(priceChartMap.get(chartPartyId))){
+   		 			tempChartList.add(tempChart);
+   		 			priceChartMap.put(chartPartyId,tempChartList);
+   		 			continue;
+   		 		}
+   		 		tempChartList.addAll(priceChartMap.get(partyId));
+   		 		tempChartList.add(tempChart);
+   		 		priceChartMap.put(chartPartyId,tempChartList);  
+   		 	}   	      
+   		 	HashSet regions = new HashSet(EntityUtil.getFieldListFromEntityList(selChartList, "partyId", false));
+   		 	// if the facility has specific price chart then return that 
+   		 	if(regions.contains(partyId)){
+   		 		List<GenericValue> tempChartList = priceChartMap.get(partyId);
+   		 		 if(tempChartList.size() == 1 && (UtilValidate.isEmpty(tempChartList.get(0).getString("supplyTypeEnumId")) || (UtilValidate.isNotEmpty(supplyTypeEnumId) && supplyTypeEnumId.equals(tempChartList.get(0).getString("supplyTypeEnumId"))))){
+   		 			 return tempChartList.get(0); 
+   		 		 }
+   		 		 
+   		 	}
+   		 		//lets iterate through each node list to find appropriate price chart
+	 		for(int i=0;i<ancestorNodeList.size();i++){
+	 			String tempNodeId = (String)ancestorNodeList.get(i);
+	 			//ancestorNode has only one price chart  and  supplyTypeEnumId,categoryTypeEnum are  null or  equals 
+	 			//then return that price chart item	 			
+	 			if(UtilValidate.isNotEmpty(priceChartMap.get(tempNodeId))){   		 				
+   		 			List<GenericValue> tempChartList = priceChartMap.get(tempNodeId);   		 			
+   		 		if(tempChartList.size() == 1){
+      		 			return tempChartList.get(0); 
+      		 		 }else{
+      		 			 //Prepare the temp chart list based on the priority
+      		 			 // priority  will be like following
+      		 			  /* 
+      		 			  * 1. supplyTypeEnumId  should match
+      		 			  */ 
+      		 			
+      		 			 for( GenericValue tempChart : tempChartList){      		 				
+      		 				 if((UtilValidate.isNotEmpty(supplyTypeEnumId))&&UtilValidate.isNotEmpty(tempChart.get("supplyTypeEnumId"))&& tempChart.getString("supplyTypeEnumId").equals(supplyTypeEnumId)){	 					
+      		 					 return tempChart;	      		 					      		 						      		 					 
+      		 				 }else{
+      		 					return tempChart;
+      		 				}  		 				 
+      		 			 }//end of for each
+      		 		 }
+	 			}
+	 		}	 
+    	} catch (GenericEntityException e) {
+            Debug.logError(e, module);
+     	}   		 	
+		return priceChart;
+	}
+    
+    public static Map<String, ? extends Object> fetchAncestorNodesForParty(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();	 		
+        String partyId = (String) context.get("partyId");
+        List ancestorNodeList =(List) context.get("ancestorNodeList");
+        Timestamp priceDate = (Timestamp) context.get("priceDate");
+        try {  	   
+        	List partyRelationShipConditionList = FastList.newInstance();
+        	partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyId));
+        	partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"UNION"));
+ 	 	   	EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)	;
+        	List<GenericValue> PartyRelDetails = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+        	PartyRelDetails = EntityUtil.filterByDate(PartyRelDetails,priceDate);
+        	if(UtilValidate.isEmpty(PartyRelDetails)){
+ 	 		   return context;	 		   
+ 	 	   	}
+ 	 	   	GenericValue PartyRelDet = EntityUtil.getFirst(PartyRelDetails);
+ 	 	   	partyId = PartyRelDet.getString("partyIdFrom");
+ 	 	   	if(UtilValidate.isNotEmpty(partyId)){
+ 	 	   		ancestorNodeList.add(partyId);
+ 	 	   		return fetchAncestorNodesForParty(dctx, UtilMisc.toMap("partyId", partyId ,"ancestorNodeList", ancestorNodeList,"priceDate",priceDate)); 
+ 	 	   	}else{ 		
+ 	 	   		return context;
+ 	 	   	}
+        }catch(Exception e){
+        	Debug.logError("Error while getting ancestor nodes ::"+e,module);
+        	return ServiceUtil.returnError("Error while getting ancestor nodes ::"+e.getMessage());
+        }
+		//return context;
+	}
    
 }

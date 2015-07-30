@@ -13,6 +13,29 @@
         <attribute name="periodBillingId" type="String" mode="OUT" optional="true"/> 
         <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="populateMilkReceiptPeriodBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="populateMilkReceiptPeriodBilling">
+        <description>populate Purchase Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+     <service name="updatePurchaseBillingStatus" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="updateMilkReceiptPeriodBilling">
+        <description>Update Billing StatusId.</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
+    </service>
+     <service name="cancelPurchaseBillingInvoice" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="cancelPurchaseBillingInvoice">
+        <description>Cancel PurchaseBilling Invoice.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <service name="cancelPurchaseBilling" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="cancelPurchaseBilling">
+        <description>Cancel Purchase Billing.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
     <service name="generatePtcTranporterMargin" engine="java" auth="true" transaction-timeout="3000"
         location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="generatePtcTranporterMargin">
         <description>Generate PTC Transporter Margin.</description>

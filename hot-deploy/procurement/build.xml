@@ -36,6 +36,7 @@
 	    <fileset dir="../../applications/product/build/lib" includes="*.jar"/>
 	    <fileset dir="../../applications/marketing/build/lib" includes="*.jar"/>
     	<fileset dir="../../applications/order/build/lib" includes="*.jar"/>
+    	<fileset dir="../../hot-deploy/byproducts/build/lib" includes="*.jar"/>
     </path>
 
     <!-- ================================================================= -->
