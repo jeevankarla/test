@@ -41,10 +41,17 @@ accountingTransEntryList = [];
 accountingTransEntries = [:];
 finAccountTransId = parameters.finAccountTransId;
 acctgTransId = parameters.acctgTransId;
+
 if(UtilValidate.isNotEmpty(acctgTransId)){
 	accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
 }else{
 	if(UtilValidate.isNotEmpty(finAccountTransId)){
+		finTransAttr = delegator.findOne("FinAccountTransAttribute",[finAccountTransId : finAccountTransId,attrName:"INFAVOUR_OF"] , false);
+		String cheqInFavour="";
+		if(finTransAttr){
+		cheqInFavour=finTransAttr.attrValue;
+		}
+		context.cheqInFavour=cheqInFavour;
 		accountingTransList = delegator.findList("AcctgTrans",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS , finAccountTransId)  , null, null, null, false );
 		if(UtilValidate.isNotEmpty(accountingTransList)){
 			accountingTransEntries = EntityUtil.getFirst(accountingTransList);

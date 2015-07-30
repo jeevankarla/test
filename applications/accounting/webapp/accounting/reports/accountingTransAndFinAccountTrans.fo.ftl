@@ -367,9 +367,9 @@ under the License.
 		                            		<fo:block  text-align="left"  ></fo:block>  
 		                       			</fo:table-cell>
 		                       		</#if>
-		                     		<#if finAccountTransDetails.comments?has_content>
+		                     		<#if cheqInFavour?has_content>
 		                    		<fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="left" >Cheque in favour:${finAccountTransDetails.comments?if_exists}</fo:block>  
+		                            		<fo:block  keep-together="always" text-align="left" >Cheque in favour:${cheqInFavour?if_exists}</fo:block>  
 		                       		</fo:table-cell>
 		                       		<#else>
 		                       			<fo:table-cell>

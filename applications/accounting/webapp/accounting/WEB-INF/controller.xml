@@ -2126,6 +2126,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewInterUnitContra"/>
     </request-map>
+     <request-map uri="CreateNewInterUnitContraPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewInterUnitContraPayments"/>
+    </request-map>
      <request-map uri="CreateNewBatchContra">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateNewBatchContra"/>
@@ -2139,6 +2143,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InterUnitContraEntry"><redirect-parameter name=""/></response>
         <response name="error" type="view" value="InterUnitContraEntry"/>
+    </request-map>
+     <request-map uri="InterUnitContraPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitContraPayments"><redirect-parameter name=""/></response>
+        <response name="error" type="view" value="InterUnitContraPayments"/>
     </request-map>
     <request-map uri="BatchBankContraEntry">
         <security https="true" auth="true"/>
@@ -2156,6 +2165,12 @@ under the License.
         <event type="service" path="" invoke="preCreateFinAccountTrans"/>
         <response name="success" type="request-redirect-noparam" value="BankContraEntry" />
         <response name="error" type="request-redirect-noparam" value="BankContraEntry"/>
+    </request-map>
+    <request-map uri="preCreateInterUnitContraEntryPayments">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="preCreateFinAccountTrans"/>
+        <response name="success" type="request-redirect-noparam" value="InterUnitContraPayments" />
+        <response name="error" type="request-redirect-noparam" value="InterUnitContraPayments"/>
     </request-map>
     <request-map uri="preCreateInterUnitContraEntry">
         <security https="true" auth="true"/>
@@ -4134,9 +4149,11 @@ under the License.
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
     <view-map name="InterUnitContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#InterUnitContraEntry"/>
+    <view-map name="InterUnitContraPayments" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#InterUnitContraEntryPayments"/>
     <view-map name="BatchBankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BatchBankContraEntry"/>
     <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
     <view-map name="CreateNewInterUnitContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewInterUnitContra"/>
+    <view-map name="CreateNewInterUnitContraPayments" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewInterUnitContraPayments"/>
     <view-map name="CreateNewBatchContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewBatchContra"/>
     
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>

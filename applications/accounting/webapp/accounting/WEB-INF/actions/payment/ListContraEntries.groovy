@@ -83,7 +83,13 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	}
 	finAccountIdsList = [];
 	if(UtilValidate.isNotEmpty(interUnitFlag) && interUnitFlag == "interUnitFlag"){
-		finAccountList = delegator.findList("FinAccount", EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"), null, null, null, false);
+		condList=[];
+		condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"));
+		condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"),EntityOperator.AND,
+			EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company")));
+		
+	conditions=EntityCondition.makeCondition(condList,EntityOperator.OR);
+		finAccountList = delegator.findList("FinAccount",conditions , null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountList)){
 			finAccountIdsList = EntityUtil.getFieldListFromEntityList(finAccountList, "finAccountId", true);
 		}
