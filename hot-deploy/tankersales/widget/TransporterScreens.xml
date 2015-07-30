@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+   
+    <screen name="TransporterMargins">
+		<section>
+			<actions>
+				<set field="titleProperty" value="TransporterBilling"/> 
+				<set field="tabButtonItem" value="Transporters" />
+				<set field="tabButtonItem2" value="TransporterMargins" />
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/> 
+                <entity-condition list="listVendorReports" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_VNDR_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                	<order-by field-name="-customTimePeriodId"/>
+                	<order-by field-name="-lastModifiedDate"/>
+                </entity-condition>
+                <entity-condition list="listTransporterReports" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_TRSPT_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                	<order-by field-name="-lastModifiedDate"/>
+                </entity-condition>  				
+			</actions>
+			<widgets>
+			<decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					<include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+						<section>
+							<!-- <condition>
+								<or>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+									<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					                <if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
+								</or>
+							</condition> -->
+							<widgets>
+								<container style="button-bar">
+									<section>
+									<condition>	
+									<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+									</condition>
+									<widgets>
+									<link target="GenerateTransporterMarginReport" text="Generate Transporter Margin Billing" style="buttontext create">				
+										<parameter param-name="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+									</link></widgets>
+									</section>
+								<platform-specific><html><html-template location="component://tankersales/webapp/tankersales/transporter/billingStatus.ftl"></html-template></html></platform-specific>
+								</container>
+								<screenlet title="Transporter Margin Billing Reports">				
+									<include-form name="ListTransporterReports" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+   <screen name="GenerateTransporterMarginReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="TransporterBilling"/>
+                <set field="tabButtonItem" value="Transporters" />
+				<set field="tabButtonItem2" value="TransporterMargins" />
+				<set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                    	<section>
+                    	<condition > 
+                    	 <or>
+                    	<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+                    	<if-has-permission permission="FACILITY" action="_ADMIN"></if-has-permission>	
+                    	</or>
+                    	</condition>
+							<widgets>
+								 <screenlet title="New TransporterMargin Billing">
+                    				<include-form location="component://tankersales/widget/TransporterForms.xml" name="GenerateTransporterMarginReport"/>
+                    			</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="FinesAndPenalties">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="TransporterBilling"/>              
+			   <set field="tabButtonItem" value="Transporters" />	
+			   <set field="tabButtonItem2" value="FinesAndPenalties"/> 
+            </actions>           
+            <widgets>
+            <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Find Fines and Penalties">				
+									<include-form name="FindFinesAndPenalties" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+								<screenlet title="List Fines and Penalties">				
+									<include-form name="ListFinesAndPenalties" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateNewFineorPenalty">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="TransporterBilling"/>              
+			   <set field="tabButtonItem" value="Transporters" />	
+			   <set field="tabButtonItem2" value="FinesAndPenalties"/> 
+			    <set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Transporter Fines/Penalties">				
+									<include-form name="createNewFineorPenalty" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="Transporters">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Transporters"/>              
+			   <set field="tabButtonItem" value="Transporters" />	
+			   <set field="tabButtonItem2" value="Transporters"/> 
+				<script	location="component://tankersales/webapp/tankersales/WEB-INF/actions/transporter/Transporters.groovy" /> 			   
+            </actions>           
+            <widgets> 
+            	<decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+   						<platform-specific><html><html-template location="component://tankersales/webapp/tankersales/transporter/Transporters.ftl"></html-template></html></platform-specific>
+					</decorator-section>
+				</decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="DtcBillingTimePeriod">
+ 	   <section>
+		  <actions>
+			<set field="titleProperty" value="TimePeriod" />
+			<set field="tabButtonItem" value="TransporterMargins" />
+			<set field="tabButtonItem2" value="DtcBillingTimePeriod" />
+			<entity-condition list="TimePeriods" entity-name="CustomTimePeriod">
+           		<condition-expr field-name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
+           	    <order-by field-name="-customTimePeriodId" />
+	        </entity-condition>
+		 </actions>
+ 		 <widgets>
+			<decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                <decorator-section name="body">
+                <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+            	  <section>
+					<widgets>
+						<screenlet title="Time Periods">
+							<include-form name="ListTimePeriods" location="component://tankersales/widget/TransporterForms.xml" />
+						</screenlet>
+						<section>
+						  <widgets>
+							<screenlet title="New Time Period">
+								<include-form name="CreateDtcBillingTimePeriod" location="component://tankersales/widget/TransporterForms.xml" />
+							</screenlet>
+						  </widgets>
+						</section>
+					</widgets>
+				  </section>
+			   </decorator-section>
+			</decorator-screen>
+ 		 </widgets>
+ 	   </section>
+	</screen>	
+     <screen name="DieselHikePayment">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Transporter Billing"/>              
+			   <set field="tabButtonItem" value="TransporterMargins" />	
+			   <set field="tabButtonItem2" value="DieselHikePayment"/> 
+            </actions>           
+            <widgets>
+            <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="EnterNewHikeOrPayment" text="Create New Hike" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Additional Payment">				
+									<include-form name="FindHikesAndPayments" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+								<screenlet title="List Fines and Penalties">				
+									<include-form name="ListHikesAndPayments" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <screen name="EnterNewHikeOrPayment">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="TransporterBilling"/>              
+			   <set field="tabButtonItem" value="TransporterMargins" />	
+			   <set field="tabButtonItem2" value="DieselHikePayment"/> 
+			    <set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Transporter Hikes">				
+									<include-form name="EnterNewHikeOrPayment" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="EditDieselAmount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Diesel Amount"/>
+                <set field="tabButtonItem" value="TransporterMargins"/>
+ 				<set field="tabButtonItem2" value="EditDieselAmount" />       
+                <!-- <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+                <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>  -->
+                <script location="component://tankersales/webapp/tankersales/WEB-INF/actions/transporter/DiselAmount.groovy"/>
+            </actions>            
+            <widgets>
+				 <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                      <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>                                                        					   
+                        <section>
+                        	<widgets>
+	                        	<container>
+		                        	<container style="button-bar">
+		                        		<link target="NewDieselAmount" text="Create New Diesel Amount" style="buttontext"></link>
+		                        	</container>
+		                        	<container>
+			                        	<screenlet title="Search Options">
+			                        		<include-form location="component://tankersales/widget/TransporterForms.xml" name="FindDiselAmount"/>
+				                        </screenlet>
+				                        <screenlet title="Search Result">
+			                        		<include-form location="component://tankersales/widget/TransporterForms.xml" name="ListDiselAmount"/>
+				                        </screenlet>
+		                        	</container>
+		                        </container>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+     <screen name="NewDieselAmount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit RateAmount Variables"/>
+                <set field="tabButtonItem" value="TransporterMargins"/>
+ 				<set field="tabButtonItem2" value="EditDieselAmount" /> 
+ 				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/rateType.js" global="true"/>                                          
+            </actions>            
+            <widgets>
+				 <decorator-screen name="TankerSalesCommonDecorator" location="component://tankersales/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu name="TransporterMarginsTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                        <section>
+                        	<widgets>
+	                        	<screenlet title="Create Diesel Amount">				
+									<include-form name="CreateDieselHike" location="component://tankersales/widget/TransporterForms.xml" />
+								</screenlet>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+ </screens>

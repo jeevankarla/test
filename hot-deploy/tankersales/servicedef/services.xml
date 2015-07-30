@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>TankerSales Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+    <service name="CreateTankerSaleSO" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="CreateTankerSaleSO" default-entity-name="OrderHeader">
+        <description> Create TankerSales Sales Order</description>        
+        <attribute name="supplierId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="poNumber" type="String" mode="IN" optional="true"/> 
+        <attribute name="orderId" type="String" mode="OUT" optional="false"/>   
+    </service>
+     <service name="CreateNewTankerSaleSO" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="CreateTankerSalesEvent" default-entity-name="OrderHeader">
+        <description> Create Tanker Sales Order</description>        
+        <attribute name="orderTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="SoDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="effectiveDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="ShipToPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="unitPrice" mode="IN" type="BigDecimal" optional="true"/>
+    </service>   
+    <service name="ChangeOrderStatus" engine="java" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="setOrderStatus">
+        <description>Change the status of an existing order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="setItemStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
+        <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="cancelSOStatus" engine="java" auth="true"
+            location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="cancelSOStatus">
+            <!-- setOrderStatus -->
+        <description>Cancel PO and change Quote and Enquiry status if exists</description>
+        
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="setItemStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
+        <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createOrderAttribute" engine="simple" default-entity-name="OrderAttribute"
+             location="component://tankersales/script/TankerSalesServices.xml" invoke="createOrderAttribute" auth="true">
+        <description>Create Order Attribute</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	<service name="deleteOrderAttribute" engine="simple" default-entity-name="OrderAttribute"
+             location="component://tankersales/script/TankerSalesServices.xml" invoke="DeleteOrderAttribute" auth="true">
+        <description>Delete Order Attribute</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="uploadSOContentFile" engine="group" transaction-timeout="300">
+        <description>Upload and attach a file to a Purchase Order</description>
+        <group>
+            <invoke name="createContentFromUploadedFile" result-to-context="true"/>
+            <invoke name="createSOContent"/>
+        </group>
+    </service>
+    <service name="createSOContent" engine="simple" default-entity-name="OrderContent"
+            location="component://tankersales/script/TankerSalesServices.xml" invoke="createSOContent" auth="true">
+        <description>Create a OrderContent record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    
+    <service name="removeSOcontent" engine="simple" default-entity-name="OrderContent"
+            location="component://tankersales/script/TankerSalesServices.xml" invoke="removeSOcontent" auth="true">
+        <description>Remove a OrderContent record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="createCustTimePeriodMM" engine="java"
+                location="in.vasista.vbiz.tankersales.TransporterSalesHelperServices" invoke="createCustTimePeriodMM" auth="true">
+         <description>Create a CustomTimePeriod java record</description>
+         <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
+         <attribute name="organizationPartyId" mode="IN" type="String" optional="true"/>
+         <attribute name="fromDate" mode="IN" type="Date" optional="false"/>
+         <attribute name="thruDate" mode="IN" type="Date" optional="false"/>
+         <attribute name="isClosed" mode="IN" type="String" optional="false"/>
+         <attribute name="periodNum" mode="IN" type="Long" optional="true"/>
+         <attribute name="periodName" mode="IN" type="String" optional="true"/>
+         <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="populatePeriodBilling" engine="java" auth="true" transaction-timeout="40000"
+        location="in.vasista.vbiz.byproducts.SalesHistoryServices" invoke="populatePeriodBilling">
+        <description>populate Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="false"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="createTankerSalesTransporterRecovery" engine="java" auth="true" 
+        location="in.vasista.vbiz.tankersales.TransporterSalesHelperServices" invoke="createTransporterRecovery">
+        <description>Create Transporter Recovery based on Fines and Penalties</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/> 
+        <attribute name="incidentDate" type="Timestamp" mode="INOUT" optional="false"/>    
+        <attribute name="createdDate" type="Timestamp" mode="OUT" optional="true"/>    
+        <attribute name="description" type="String" mode="INOUT" optional="true"/>   
+    </service>
+    <service name="createNewHikeOrPayment" engine="java" auth="true" 
+        location="in.vasista.vbiz.tankersales.TransporterSalesHelperServices" invoke="createTransporterRecovery">
+        <description>Create Transporter Additional Payment or Hikes</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/> 
+        <attribute name="incidentDate" type="Timestamp" mode="INOUT" optional="false"/>    
+        <attribute name="createdDate" type="Timestamp" mode="OUT" optional="true"/>    
+        <attribute name="description" type="String" mode="INOUT" optional="true"/>   
+    </service>
+    <service name="createOrUpdateDiselAmount" engine="java"
+            location="in.vasista.vbiz.tankersales.TransporterSalesHelperServices" invoke="createOrUpdateDiselAmount">
+        <description>create Disel Amount</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="supplyTypeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="kilometers" type="BigDecimal" mode="IN" optional="true"/>
+    </service>
+    <service name="sendFacilityRecoverySms" engine="java" auth="true" 
+        location="in.vasista.vbiz.tankersales.TransporterSalesHelperServices" invoke="sendFacilityRecoverySms">
+        <description>Send Transporter Margin SMS</description>        
+       	<attribute name="facilityId" mode="IN" type="String" optional="false"/>
+       	 <attribute name="partyId" mode="IN" type="String" optional="true"/>
+       	<attribute name="incidentDate" mode="IN" type="Timestamp" optional="false"/>   
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>  
+    </service>
+    <service name="cancelTranporterRecovery" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="cancelTranporterRecovery">
+        <description>Cancel Transporter Recovery based on Fines and Penalties</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>   
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="true"/> 
+         <attribute name="recoveryId" mode="IN" type="String" optional="false"/> 
+    </service>
+    <service name="getOrderDetails" engine="java" auth="true" 
+        location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="getOrderDetails">
+        <description>Get Order Details</description>        
+        <attribute name="orderId" mode="IN" type="String" optional="true"/>   
+        <attribute name="orderHeader" mode="OUT" type="Map" optional="true"/>
+        <attribute name="orderItemsList" mode="OUT" type="List" optional="true"/>
+        <attribute name="productsList" mode="OUT" type="List" optional="true"/>
+        <attribute name="orderRoleList" mode="OUT" type="List" optional="true"/>
+        <attribute name="shipmentDetailsMap" mode="OUT" type="Map" optional="true"/>
+    </service>
+    <service name="createMilkTankerReceiptEntryTS" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="createMilkTankerReceiptEntryTS" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="billToPartyId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="String" optional="false"/>
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="dcNo" mode="IN" type="String" optional="false"/>
+		<attribute name="sealCheck" mode="IN" type="String" optional="false"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="false"/>
+        <attribute name="entryDate" mode="IN" type="String" optional="false"/>
+        <attribute name="entryTime" mode="IN" type="String" optional="false"/>
+	 	<attribute name="productId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="vehicleStatusId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="isCipChecked" mode="IN" type="String" optional="true"/>
+	 	
+	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="getTankerRecordNumber" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="getTankerRecordNumber" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleId" mode="OUT" type="String" optional="true"></attribute>
+	 	<attribute name="reqStatusId" mode="IN" type="String" optional="true"></attribute>
+	 	<!-- <attribute name="milkTransferId" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="partyId" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="partyName" mode="OUT" type="String" optional="true"/> -->
+	 	<auto-attributes mode="OUT" entity-name="MilkTransfer" optional="true"></auto-attributes>
+	 	<attribute name="sendTimeStr" mode="OUT" type="String" optional="true"></attribute>
+	 	<attribute name="sendDateStr" mode="OUT" type="String" optional="true"></attribute>
+	 	<attribute name="milkTransfer" mode="OUT" type="Map" optional="false"></attribute>
+	 	<attribute name="milkTransferItem" mode="OUT" type="Map" optional="true"></attribute>
+	 	
+    </service>
+    <service name="updateTankerSalesCIP" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+		<attribute name="isCipChecked" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateInternalMilkTransferTareWeightTS" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+		<!-- GrossWeightEnty -->
+		<attribute name="tareDate" mode="IN" type="String" optional="false"/>
+		<attribute name="tareTime" mode="IN" type="String" optional="false"/>
+		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    <service name="updateInternalMilkTransferGrsWeightTS" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+		<!-- GrossWeightEnty -->
+		<attribute name="grossDate" mode="IN" type="String" optional="false"/>
+		<attribute name="grossTime" mode="IN" type="String" optional="false"/>
+		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="false"/>
+		
+		<attribute name="sealCheck" mode="IN" type="String" optional="false"/>
+		<attribute name="driverName" mode="IN" type="String" optional="false"/>
+    </service>
+    
+    <service name="updateInternalMilkTransferQCTS" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+		<!-- GrossWeightEnty -->
+		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
+		<attribute name="qcComments" mode="IN" type="String" optional="true"/>
+		<!-- Product -->
+		<attribute name="productId" mode="IN" type="String" optional="false"/>
+		<!-- Quality Control -->
+		<attribute name="testDate" mode="IN" type="String" optional="false"/>
+		<attribute name="testTime" mode="IN" type="String" optional="false"/>
+		<!-- Dispatch Quality -->
+		<attribute name="sendCob" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="sendTemp" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendAcid" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendOrganismTest" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateInternalMilkTransferAQCTS" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
+		<attribute name="qcComments" mode="IN" type="String" optional="true"/>
+		<attribute name="productId" mode="IN" type="String" optional="false"/>
+		<attribute name="testDate" mode="IN" type="String" optional="false"/>
+		<attribute name="testTime" mode="IN" type="String" optional="false"/>
+		<attribute name="recdCob" mode="IN" type="String" optional="false"/>
+		<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdAcid" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdOrganismTest" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="finalizeOrders" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="finalizeOrders" auth="true"> <!-- here shipmentIds or shipmentId are manadatory fields -->
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="tripId" mode="IN" type="String" optional="true"/>
+        <attribute name="estimatedShipDate" mode="IN" type="String" optional="true"/>
+        <attribute name="shipmentId" mode="IN" type="String" optional="true"/>
+          <attribute name="shipmentIds" mode="IN" type="List" optional="true"/>
+        <attribute name="shipmentTypeId" mode="IN" type="String" optional="true"/>
+          <attribute name="statusId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="getOrderReturnItems" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getOrderReturnItems" auth="true">
+        <attribute name="boothId" mode="IN" type="String" optional="true"/>
+        <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
+       <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>   -->
+       	<attribute name="shipmentId" mode="IN" type="String" optional="true"/>    
+         <attribute name="supplyDate" mode="IN" type="String" optional="true"/> 
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="orderReturnList" mode="OUT" type="List" optional="true"/>
+        <attribute name="vehcileId" mode="OUT" type="String" optional="true"/>
+        <attribute name="returnId" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="createShipmentForTankerSalesOrder" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="createShipmentForTankerSalesOrder" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="billToPartyId" mode="IN" type="String" optional="false"/>
+        
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderItemSeqId" mode="IN" type="String" optional="false"/>
+        
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="vehicleStatusId" mode="IN" type="String" optional="true"/>
+	 	
+	 	<attribute name="shipQty" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="insuranceQty" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="dcNo" mode="IN" type="String" optional="true"/>
+		<attribute name="routeId" mode="IN" type="String" optional="false"/>
+        
+        <attribute name="sendDate" mode="IN" type="String" optional="false"/>
+		<attribute name="sendTime" mode="IN" type="String" optional="false"/>
+        <!-- <attribute name="entryDate" mode="IN" type="String" optional="false"/>
+        <attribute name="entryTime" mode="IN" type="String" optional="false"/> -->
+	 	
+	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="raiseInvoiceFromShipment" engine="java"
+                location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="raiseInvoiceFromShipment" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="receivedKgSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="receivedKgFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
+	 	<attribute name="shipmentId" mode="INOUT" type="String" optional="true"/>
+    </service>
+</services>
