@@ -95,7 +95,10 @@
 	
 	<InvoiceType invoiceTypeId="PTC_TRNSPORTOR_INV" parentTypeId="PURCHASE_INVOICE" description="Procurement Transportation Expenses" hasTable="N" />
 	
-	<InvoiceItemType invoiceItemTypeId="PTC_MRGN"  hasTable="N"  description="TOLL CHARGES" defaultGlAccountId="681009" />
+	<InvoiceType invoiceTypeId="MILK_OUT" parentTypeId="PURCHASE_INVOICE" description="Procurement Purchase Expenses" hasTable="N" />
+	<InvoiceItemType invoiceItemTypeId="PUR_MRGN"  hasTable="N"  description="PURCHASE CHARGES" defaultGlAccountId="681009" />
+	
+	<InvoiceItemType invoiceItemTypeId="PTC_MRGN"  hasTable="N"  description="PTC CHARGES" defaultGlAccountId="681009" />
 	<InvoiceItemTypeMap invoiceItemMapKey="PTC_MRGN_ADDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_MRGN" />
 	
 	<InvoiceItemType invoiceItemTypeId="PTC_TOLL"  hasTable="N"  description="TOLL CHARGES" defaultGlAccountId="681009" />
