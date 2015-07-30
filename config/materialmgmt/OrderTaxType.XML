@@ -8,5 +8,7 @@
     <OrderTaxType orderTaxTypeId="301" taxType="VAT_PUR" taxRate="5.5" fromDate="2014-01-01 00:00:00"/>
     <OrderTaxType orderTaxTypeId="400" taxType="SER_PUR" taxRate="12.36" fromDate="2014-01-01 00:00:00"/>
     <OrderTaxType orderTaxTypeId="102" taxType="EXCISE_DUTY_PUR" taxRate="10.3" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="500" taxType="SER_SALE"  taxRate="14.000000"  fromDate="2015-06-01 00:00:00.0"/>
+ 	<OrderTaxTypeComponentMap componentRate="14.000000" componentType="SERVICE_TAX_SALE" orderTaxTypeId="500"/>
 </entity-engine-xml>
 
