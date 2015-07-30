@@ -573,6 +573,17 @@
 		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendOrganismTest" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="updateInternalMilkTransferLoadDetails" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+		<!-- LoadEnty -->
+		<attribute name="loadDate" mode="IN" type="String" optional="false"/>
+		<attribute name="loadTime" mode="IN" type="String" optional="false"/>
+	 	<attribute name="silo" mode="IN" type="String" optional="false"/>
+    </service>
+    
     <service name="updateInternalMilkTransferAQC" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>

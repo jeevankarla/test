@@ -131,6 +131,11 @@ $(function() {
        		   sendSedimentTest:""
        	   }}).form()) return;
     		action = "updateInternalMilkTransferQC";
+    	}else if(displayScreen == "ISSUE_LOAD"){
+    		if(!$("#milkReceiptEntry").validate({messages:{
+    			loadDate:"" ,loadTime:"" , milkTransferId:"" , tankerName:"",silo:""
+       	   }}).form()) return;
+    		action = "updateInternalMilkTransferLoadDetails";
     	}else if(displayScreen == "ISSUE_AQC"){
     		if(!$("#milkReceiptEntry").validate({messages:{
         		   testDate:"" ,testTime:"" , milkTransferId:"" , tankerName:"",sendTemp:"",

@@ -726,16 +726,21 @@
         <response name="success" type="view" value="MilkTankerIssuesQC"/>
         <response name="error" type="view" value="MilkTankerIssuesQC"/>
     </request-map>
+    <request-map uri="MilkTankerIssueLoadDetails">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssueLoadDetails"/>
+        <response name="error" type="view" value="MilkTankerIssueLoadDetails"/>
+    </request-map>
      <request-map uri="MilkTankerIssuesGrossWeight">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="MilkTankerIssuesGrossWeight"/>
         <response name="error" type="view" value="MilkTankerIssuesGrossWeight"/>
     </request-map>
-    <request-map uri="MilkTankerIssuesAQC">
+ <!-- <request-map uri="MilkTankerIssuesAQC">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="MilkTankerIssuesAQC"/>
         <response name="error" type="view" value="MilkTankerIssuesAQC"/>
-    </request-map>
+    </request-map> -->
     
     <request-map uri="createInternalMilkTransferAjax">
         <security https="true" auth="true"/>
@@ -768,6 +773,13 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
     </request-map> 
+    <request-map uri="updateInternalMilkTransferLoadDetails">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateInternalMilkTransferLoadDetails"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
      <request-map uri="updateInternalMilkTransferAQC">
         <security https="true" auth="true"/>
         <event type="service"  invoke="updateInternalMilkTransferAQC"/>        
@@ -991,6 +1003,7 @@
     <view-map name="MilkTankerIssuesCIP" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesCIP"/>
     <view-map name="MilkTankerIssuesTareWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesTareWeight"/>
     <view-map name="MilkTankerIssuesQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesQC"/>
+    <view-map name="MilkTankerIssueLoadDetails" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssueLoadDetails"/>
     <view-map name="MilkTankerIssuesGrossWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesGrossWeight"/>
     <view-map name="MilkTankerIssuesAQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesAQC"/>
     

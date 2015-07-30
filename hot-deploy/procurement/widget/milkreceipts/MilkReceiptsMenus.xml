@@ -161,14 +161,18 @@
             <link target="MilkTankerIssuesQC">
 			</link>
       	</menu-item>
+      	<menu-item name="MilkTankerIssueLoadDetails" title="Tanker Load Details" >
+            <link target="MilkTankerIssueLoadDetails">
+			</link>
+      	</menu-item>
       	<menu-item name="MilkTankerIssuesGrossWeight" title="Gross weight Details" >
             <link target="MilkTankerIssuesGrossWeight">
 			</link>
       	</menu-item>
-      	<menu-item name="MilkTankerIssuesAQC" title="Ack QC" >
+    <!--<menu-item name="MilkTankerIssuesAQC" title="Ack QC" >
             <link target="MilkTankerIssuesAQC">
 			</link>
-      	</menu-item>				
+      	</menu-item> -->				
 	</menu>
 	<menu name="MilkTransferReturnsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		
