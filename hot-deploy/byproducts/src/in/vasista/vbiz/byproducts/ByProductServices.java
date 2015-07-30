@@ -5960,6 +5960,7 @@ public class ByProductServices {
 		      String partyId = "";
 		      String facilityId = "";
 		      String customTimePeriodId = "";
+		      String periodName = "";
 		      String partyIdFrom = "Company";
 		      String periodTypeId = "SALES_MONTH";
 		      Timestamp invoiceDate = (Timestamp) context.get("invoiceDate");
@@ -5988,6 +5989,15 @@ public class ByProductServices {
 		                    return ServiceUtil.returnError("Error getting Custom Time Period"+facilityId);
 		              }
 			    	  customTimePeriodId=(String)resultMap.get("customTimePeriodId");
+			    	  try{
+				    	  GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+				    	  if (UtilValidate.isNotEmpty(customTimePeriod) && UtilValidate.isNotEmpty(customTimePeriod.getString("periodName"))) {
+				    		  periodName=(String)customTimePeriod.getString("periodName");
+							}
+			    	  }catch(Exception e){
+				    			Debug.logError(e.toString(), module);
+				    			return ServiceUtil.returnError(e.toString());
+				    		}
 				    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));   
 				    	  List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
 				    	  if (UtilValidate.isEmpty(periodBillingList)) {
@@ -6029,6 +6039,11 @@ public class ByProductServices {
 				            createInvoiceMap.put("invoiceDate", UtilDateTime.getDayStart(invoiceDate));
 			                createInvoiceMap.put("dueDate", UtilDateTime.getDayStart(dueDate));
 				            createInvoiceMap.put("invoiceTypeId", "SHOPEE_RENT");
+							if (UtilValidate.isNotEmpty(periodName)) {
+				            createInvoiceMap.put("invoiceMessage", "Shoppe rent for the Month of "+periodName);
+							}else{
+					            createInvoiceMap.put("invoiceMessage", "Shoppe rent for the Month");
+							}
 				            createInvoiceMap.put("statusId", "INVOICE_IN_PROCESS");
 				            createInvoiceMap.put("userLogin", userLogin);
 				         
@@ -6052,8 +6067,25 @@ public class ByProductServices {
 				            //to do tax calculation based on the configuration
 				            BigDecimal serviceTaxAmount=BigDecimal.ZERO;
 				            BigDecimal basicAmount = BigDecimal.ZERO;
+				    		List condList=FastList.newInstance();
+				            BigDecimal taxRate = BigDecimal.ZERO;
+				    		try{
+				    			condList.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, "SER_SALE"));
+				    			condList.add(EntityCondition.makeCondition("componentType", EntityOperator.EQUALS, "SERVICE_TAX_SALE"));
+				    			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				    			List<GenericValue> taxRateComponent = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, UtilMisc.toList("-fromDate"), null, false);
+				    			//taxRateComponent = EntityUtil.filterByDate(taxRateComponent, fromDate);
+				    			if(UtilValidate.isNotEmpty(taxRateComponent)){
+				    				GenericValue taxRateValue = EntityUtil.getFirst(taxRateComponent);
+				    				taxRate = taxRateValue.getBigDecimal("taxRate");
+				    			}
+				    		}catch(Exception e){
+				    			Debug.logError(e.toString(), module);
+				    			return ServiceUtil.returnError(e.toString());
+				    		}
+				    		taxRate=BigDecimal.ONE.add(taxRate.divide(new BigDecimal("100")));
 				            if(rateAmount.intValue()>0){
-				            	basicAmount = rateAmount.divide(new BigDecimal(1.1236), rounding);
+				            	basicAmount = rateAmount.divide(taxRate, rounding);
 				            	serviceTaxAmount = rateAmount.subtract(basicAmount); 
 				            	
 				            	resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
