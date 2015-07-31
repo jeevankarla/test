@@ -175,6 +175,7 @@ under the License.
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="entryType" type="String" mode="IN" optional="true"/>
         <attribute name="contraFinAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
     </service>
     <service name="postFinAccountTransToGl" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountGlPostServices.xml" invoke="postFinAccountTransToGl">

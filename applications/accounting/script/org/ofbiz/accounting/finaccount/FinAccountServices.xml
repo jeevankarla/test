@@ -298,7 +298,7 @@ under the License.
 				<result-to-result result-name="finAccountTransId"/>
 				<result-to-field result-name="finAccountTransId" field="finAccountTransId1"/>
 			</call-service>
-			<if-not-empty field="parameters.comments">
+			<if-not-empty field="parameters.inFavourOf">
 				<if-not-empty field="finAccountTransId1">
 		        	<entity-one entity-name="FinAccountTransAttribute" value-field="newEntity">
 		                <field-map field-name="finAccountTransId" from-field="finAccountTransId1"/>
@@ -308,12 +308,12 @@ under the License.
 				       	<make-value entity-name="FinAccountTransAttribute" value-field="newEntity"/>
 				        	<set field="newEntity.finAccountTransId" from-field="finAccountTransId1"/>
 				        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
-				        	<set field="newEntity.attrValue" from-field="parameters.comments"/>
+								<set field="newEntity.attrValue" from-field="parameters.inFavourOf"/>
 				        <create-value value-field="newEntity"/>
 			        <else>
 				        <set field="newEntity.finAccountTransId" from-field="finAccountTransId1"/>
 			        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
-			        	<set field="newEntity.attrValue" from-field="parameters.comments"/>
+							<set field="newEntity.attrValue" from-field="parameters.inFavourOf"/>
 			       		<store-value value-field="newEntity"/>
 			        </else>
         			</if-empty>
