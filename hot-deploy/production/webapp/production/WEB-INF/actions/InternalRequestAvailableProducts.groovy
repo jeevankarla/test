@@ -102,13 +102,11 @@ if(UtilValidate.isNotEmpty(facilityId)){
 		if(UtilValidate.isNotEmpty(facility)){
 			inMap.put("facilityId",facility.get("facilityId"));
 		}
-		
 	}
 
 }
 inMap.put("userLogin",userLogin);
 inMap.put("ownerPartyId","Company");
-
 prodInvMap = [:];
 productIds.each{eachProd ->
 	inMap.put("productId",eachProd);
@@ -166,8 +164,10 @@ custRequestItems.each{ eachItem ->
 	if(UtilValidate.isNotEmpty(custReqParty.partyId)){
 		tempMap.partyIdFrom = custReqParty.partyId;
 	}
-   if(UtilValidate.isEmpty(parameters.partyFrom) && context.get("partyId")==custReqParty.partyId){
-	custRequestItemsList.add(tempMap);
+   if(UtilValidate.isEmpty(parameters.partyFrom) && UtilValidate.isNotEmpty(context.get("partyId"))){
+	   if((context.get("partyId")).contains(custReqParty.partyId)){
+		   custRequestItemsList.add(tempMap);
+	   }
    }else if(UtilValidate.isNotEmpty(parameters.partyFrom) && parameters.partyFrom==custReqParty.partyId){
 	custRequestItemsList.add(tempMap);
    }else if(UtilValidate.isEmpty(parameters.partyFrom) && UtilValidate.isEmpty(context.get("partyId"))){

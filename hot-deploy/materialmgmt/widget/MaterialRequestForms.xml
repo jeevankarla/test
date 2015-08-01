@@ -34,14 +34,14 @@
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="orderBy" value="-custRequestDate"/>
-            <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
+            <!-- <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" /> -->
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
         </actions>
     </form>
 
-    <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
+    <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="custRequestId"  title="${uiLabelMap.MaterialMangement_CustRequestId}" widget-style="buttontext">
             <hyperlink description="${custRequestId}" target="ViewMaterialRequest">
@@ -551,7 +551,7 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
    		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
-   		  <field name="partyId" title="From Department">
+   		  <field name="fromPartyId" title="From Department">
 			<drop-down allow-empty="true" >
 				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
 			</drop-down>
@@ -569,7 +569,7 @@
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="inputFields.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
             <field-map field-name="inputFields.itemStatusId" value="CRQ_DRAFT"/>
-            <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
+            <!-- <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" /> -->
             <field-map field-name="orderBy" value="-custRequestId"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1057,7 +1057,7 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
    		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
-   		  <field name="partyId" title="From Department">
+   		  <field name="fromPartyId" title="From Department">
 			<drop-down allow-empty="true" >
 				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
 			</drop-down>

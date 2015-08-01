@@ -22,8 +22,9 @@ list=result.listIt;
 if(UtilValidate.isNotEmpty(parameters.partyFrom)){
 	parameters.partyIdFrom=parameters.partyFrom;
 }
+List partyIdFromList = FastList.newInstance();
 if(UtilValidate.isNotEmpty(context.get("partyId"))){
-	parameters.partyIdFrom = context.get("partyId");
+	partyIdFromList = context.get("partyId");
 }
 List resultList=FastList.newInstance();
    GenericValue custRequest=null;
@@ -46,8 +47,12 @@ List resultList=FastList.newInstance();
 			if(UtilValidate.isNotEmpty(custReqParty.partyId)){
 				tempMap.partyIdFrom = custReqParty.partyId;
 				}
-			if(UtilValidate.isEmpty(parameters.partyIdFrom)){
+			if(UtilValidate.isEmpty(parameters.partyIdFrom) && UtilValidate.isEmpty(partyIdFromList)){
 			 resultList.add(tempMap);
+			}else if(UtilValidate.isNotEmpty(partyIdFromList) && UtilValidate.isEmpty(parameters.partyIdFrom)){
+				if(partyIdFromList.contains(custReqParty.partyId)){
+					resultList.add(tempMap);
+				}
 			}else if(UtilValidate.isNotEmpty(parameters.partyIdFrom) && parameters.partyIdFrom==custReqParty.partyId){
 			 resultList.add(tempMap);
 			}

@@ -75,12 +75,20 @@ List<String> needProductsList = EntityUtil.getFieldListFromEntityList(workEffort
 List productIds = FastList.newInstance();
 if(changeFlag == "InnerScreen"){
 	partyId = parameters.partyId;
+	fromPartyId=parameters.partyIdFrom;
+	fromParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", fromPartyId), false);
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
 	if(partyId.contains("SUB")){
 		roleTypeId = "DIVISION";
 	}else{
 		roleTypeId = parameters.roleTypeId;
 	}
+	if(fromPartyId.contains("SUB")){
+		fromPartRoleTypeId = "DIVISION";
+	}else{
+		fromPartRoleTypeId = parameters.roleTypeId;
+	}
+	fromPartyRole=null;
 	partyRole = null;
 	if(party){
 		partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
@@ -90,7 +98,16 @@ if(changeFlag == "InnerScreen"){
 		displayGrid = false;
 		return result;
 	}
+	if(fromParty){
+		fromPartyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", fromPartyId, "roleTypeId", fromPartRoleTypeId), false);
+	}
+	if(!fromParty || !fromPartyRole){
+		context.errorMessage = fromPartyId+" incorrect for the transaction !!";
+		displayGrid = false;
+		return result;
+	}
 	context.party = party;
+	context.fromParty=fromParty;
 	partyIdFrom = party.partyId;
 	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
 		                               EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND);
