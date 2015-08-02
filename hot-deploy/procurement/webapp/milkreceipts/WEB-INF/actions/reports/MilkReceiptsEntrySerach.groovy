@@ -155,8 +155,8 @@ if(UtilValidate.isEmpty(shiftDate)){
 
 def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd){
 	  List condList=FastList.newInstance();
-	  condList.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
-	  condList.add(EntityCondition.makeCondition("estimatedStartDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
+	  condList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
+	  condList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
 	  cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	  shiftList = EntityUtil.filterByCondition(milkTransferDetailsList, cond);
 	  shiftList.each{eachShift->
@@ -260,5 +260,3 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	}
 }
 context.milkDetailslist=milkDetailslist;
-
-

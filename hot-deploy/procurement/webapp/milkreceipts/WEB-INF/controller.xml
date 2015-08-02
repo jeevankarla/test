@@ -596,6 +596,10 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="ptcBankReportCSV"/> 
     </request-map>
+    <request-map uri="PurchaseBillingReportMR.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="PurchaseBillingReportMRpdf"/> 
+    </request-map>
     <request-map uri="createMRTransporterMarginReport">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="populateMRPeriodBilling"/>
@@ -997,6 +1001,7 @@
 	<view-map name="MilkQcReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkQcReportPDF" content-type="application/pdf"/>
     <view-map name="ptcBankReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcBankReportCSV" type="screencsv" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportCSV" content-type="text/csv"/> 
+    <view-map name="PurchaseBillingReportMRpdf" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#PurchaseBillingReportMRpdf" content-type="application/pdf"/>
     
     <!-- View Maps of tanker Issues -->
     <view-map name="MilkTankerIssues" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesCIP"/>
