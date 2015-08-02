@@ -275,6 +275,45 @@
 					</table>
 				</form>
 			</tr>
+		
+			<tr class="alternate-row"> 
+			<form id="PurchaseBillingReportMR" name="PurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>PurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
+				<table class="basic-table" cellspacing="5">
+					<tr class="alternate-row">
+						<td width="20%"><span class='h3'> Purchase Billing Report</span></td>
+						<td width="25%">
+							 <span class='h3'>Time Period </span>
+		                    <select name="customTimePeriodId" class='h4'>
+		                    <#if timePeriodList?has_content>	
+		                        <#list timePeriodList as timePeriod>    
+		                			  <#if ((timePeriod.fromDate)?has_content) && ((timePeriod.thruDate)?has_content)>
+		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.fromDate, "MMMdd")/>
+		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.thruDate, "MMMdd yyyy")/>
+				                  	    <option value='${timePeriod.customTimePeriodId}' >
+				                    		${fromDate}-${thruDate}
+				                  		 </option>
+				                  	 </#if>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+						<td width="30%">
+							 <span class='h3'>Union/ Chilling Center </span>
+		                    <select name="partyId" id="partyId">
+		                    <#if unionsList?has_content>	
+		                        <#list unionsList as unionIds>    
+				                  	    <option value='${unionIds.partyId}' >
+				                    		${unionIds.partyId}
+				                  		 </option>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+				    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+					</tr>
+				</table>
+			</form>
+		</tr>
 			
        </table>
     </div>
