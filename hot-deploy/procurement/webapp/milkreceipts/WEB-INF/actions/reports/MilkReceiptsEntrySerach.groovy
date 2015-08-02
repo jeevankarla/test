@@ -260,5 +260,3 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	}
 }
 context.milkDetailslist=milkDetailslist;
-
-

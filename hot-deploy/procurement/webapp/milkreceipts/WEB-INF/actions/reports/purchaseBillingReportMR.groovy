@@ -19,7 +19,6 @@ import java.util.Calendar;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

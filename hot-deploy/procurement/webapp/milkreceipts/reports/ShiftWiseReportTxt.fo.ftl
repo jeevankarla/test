@@ -41,7 +41,6 @@ under the License.
                 <#assign shiftTime = ShiftWiseTimeMap.get(shiftType)>
                 <fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" font-size = "11pt">MILK RECEIVED DURING ${shiftType} SHIFT(${shiftTime})  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shiftDate, "dd-MMM-yyyy")}</fo:block>
         	</fo:static-content>
-        	 
         	<#assign ShiftWiseRecordsList = shift.getValue()>
         	      
         	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">

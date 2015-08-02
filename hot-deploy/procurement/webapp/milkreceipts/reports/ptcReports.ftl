@@ -276,7 +276,7 @@
 				</form>
 			</tr>
 		
-			<tr class="alternate-row"> 
+		 <tr class="alternate-row"> 
 			<form id="PurchaseBillingReportMR" name="PurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>PurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">
 					<tr class="alternate-row">
