@@ -750,7 +750,7 @@
 	<ProcurementPrice procPriceChartId="T10" productId="23" fatPercent="0.0" snfPercent=".1" price="0.12" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
 	<ProcurementPrice procPriceChartId="T10" productId="23" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR"/>	
 
-	<ProcurementPriceChart procPriceChartId="T11" partyId="SAD" fromDate="2014-04-01 00:00:00" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" billQuality="DISP_QLTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	<ProcurementPriceChart procPriceChartId="T11" partyId="_NA_" fromDate="2014-04-01 00:00:00" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" billQuality="DISP_QLTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
 
 
 	<ProcurementPrice procPriceChartId="T11" productId="23" price="24.50" fatPercent="3.5" snfPercent="8.5" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
@@ -769,8 +769,8 @@
  	<ProcurementPrice procPriceChartId="T11" productId="23" fatPercent="0.1" snfPercent="0.0" price="0.15" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
  	
  	
-	<ProcurementPrice procPriceChartId="T11" productId="23" fatPercent="0.0" snfPercent=".1" price="0.12" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
-	<ProcurementPrice procPriceChartId="T11" productId="23" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR"/>	
+	<ProcurementPrice procPriceChartId="T11" productId="23" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="T11" productId="23" fatPercent="0.1" snfPercent="0" price="0.12" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR"/>	
 	
 	
 	

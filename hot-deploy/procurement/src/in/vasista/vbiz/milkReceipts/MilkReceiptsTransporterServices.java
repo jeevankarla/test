@@ -427,11 +427,11 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 			    		return ServiceUtil.returnError("Unable to Make Payment Process For PTC Billing! "); 
 					}   
 					result.putAll(ptcPaymentResult);
-					Map updateInvoiceResult = updatePTCBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));  
+					/*Map updateInvoiceResult = updatePTCBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));  
 					if(ServiceUtil.isError(updateInvoiceResult)){
 						Debug.logError("Error while updating invoice Status to Paid ::"+ServiceUtil.getErrorMessage(updateInvoiceResult),module);
 						return ServiceUtil.returnError("Error while updating invoice Status to Paid ::"+ServiceUtil.getErrorMessage(updateInvoiceResult));
-					}
+					}*/
 			    }
 				if("REJECT_PAYMENT".equalsIgnoreCase(statusId)){
 					Map ptcPaymentCancelResult=cancelPTCTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));

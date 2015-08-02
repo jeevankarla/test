@@ -514,7 +514,7 @@
         <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="${toBeIssuedQty}"> </text></field>
         <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp; showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
         <field name="issueThruTransfer" widget-style="buttontext" title="Issue thru Transfers" use-when= "showTransferButton == &quot;Y&quot;">
-            <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${productId}','${facilityId}','${quantity}','${toBeIssuedQty}','${custRequestId}','${custRequestItemSeqId}');" description="Issue thru Transfer">
+            <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${productId}','${facilityId}','${quantity}','${toBeIssuedQty}','${custRequestId}','${custRequestItemSeqId}','${fromPartyId}');" description="Issue thru Transfer">
             </hyperlink>
         </field>
     </form>

@@ -29,9 +29,11 @@ condList.add(EntityCondition.makeCondition("ownerFacilityId", EntityOperator.EQU
 condList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "SILO"));
 EntityCondition cond = EntityCondition.makeCondition(condList, EntityJoinOperator.AND);
 List plantFacilities = delegator.findList("FacilityGroupAndMemberAndFacility", cond, null, null, null, false);
-if(UtilValidate.isNotEmpty(plantFacilities)){
-	List<String> facilityIds = EntityUtil.getFieldListFromEntityList(plantFacilities, "facilityId", false);
-	facilityIds.add(ownerFacilityId);
+
+List<String> facilityIds = EntityUtil.getFieldListFromEntityList(plantFacilities, "facilityId", false);
+facilityIds.add(ownerFacilityId);
+if(UtilValidate.isNotEmpty(facilityIds)){
+	
 	List prodFacilityConditionList = UtilMisc.toList(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 	prodFacilityConditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds));
 	EntityCondition prodFacCondition = EntityCondition.makeCondition(prodFacilityConditionList,EntityJoinOperator.AND);
@@ -41,9 +43,11 @@ if(UtilValidate.isNotEmpty(plantFacilities)){
 	if(UtilValidate.isNotEmpty(prodFacilityList)){
 		for(GenericValue prodFacility in prodFacilityList){
 			String facilityId = (String) prodFacility.get("facilityId");
+			GenericValue facilityDetails = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+			String ownerPartyId = (String) facilityDetails.get("ownerPartyId");
 			Map inMap = FastMap.newInstance();
 			inMap.put("userLogin",userLogin);
-			inMap.put("ownerPartyId","Company");
+			inMap.put("ownerPartyId",ownerPartyId);
 			inMap.put("facilityId",facilityId);
 			inMap.put("productId",productId);
 			
@@ -59,7 +63,11 @@ if(UtilValidate.isNotEmpty(plantFacilities)){
 		}
 	}	
 }
+GenericValue prodDetails = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
 productFacilityComponentDetails.put("productFacilityDetailsList",productFacilityDetailsList);
+productFacilityComponentDetails.put("prodDetails",prodDetails);
+
+productFacilityComponentDetails.put("partyIdTo","");
 
 resultReturn.put("productFacilityComponentDetails",productFacilityComponentDetails);
 

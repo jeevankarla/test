@@ -3643,6 +3643,7 @@ public class MilkReceiptServices {
  				MilkTransferItem.set("milkTransferId",milkTransferId);
  				MilkTransferItem.set("receivedFat",sendFat);
  				MilkTransferItem.set("receivedSnf",sendSnf);
+ 				milkTransfer.set("receiveDate",grossDate);
  				MilkTransferItem.set("receivedTemparature",(BigDecimal) MilkTransferItem.get("sendTemparature"));
  				MilkTransferItem.set("receivedAcidity",(BigDecimal) MilkTransferItem.get("sendAcidity"));
  				

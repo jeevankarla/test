@@ -2130,6 +2130,7 @@ public class ProductionServices {
 		  	  String facilityId = "";
 		  	  String shipmentTypeId = "";
 		  	  String tankerNo = (String)paramMap.get("tankerNo");
+		  	  String partyIdTo = (String)paramMap.get("partyIdTo");
 		  	  if(UtilValidate.isEmpty(tankerNo)){
 		  		  Debug.logError("Vehicle Number should not be empty ", module);
 	  			  request.setAttribute("_ERROR_MESSAGE_", "Vehicle Number should not be empty ");
@@ -2160,9 +2161,11 @@ public class ProductionServices {
 		  		  MilkTransfer = delegator.makeValue("MilkTransfer");
 		  		  MilkTransfer.set("containerId", tankerNo);
 		  		  MilkTransfer.set("statusId","MXF_INIT");
+		  		  MilkTransfer.set("partyIdTo",partyIdTo);
 		  		  MilkTransfer.set("sendDate",UtilDateTime.nowTimestamp());
 		  		  MilkTransfer.set("createdByUserLogin", userLogin.getString("userLoginId"));
 		  		  MilkTransfer.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
+		  		  
 		  		  delegator.createSetNextSeqId(MilkTransfer);
 		  	  }catch(GenericEntityException e){
 		  		  Debug.logError("Error while initiating Transfer ::"+e , module);

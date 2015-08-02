@@ -327,6 +327,9 @@ public class MilkReceiptBillingServices {
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("defaultRate"))){
 		    	    							defaultRate = (BigDecimal)priceResult.get("defaultRate");
 		    	    						}
+		    	    						if(UtilValidate.isNotEmpty(priceResult.get("price"))){
+		    	    							price = (BigDecimal)priceResult.get("price");
+		    	    						}
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("uomId"))){
 		    	    							uomId = (String)priceResult.get("uomId");
 		    	    						}
@@ -338,6 +341,12 @@ public class MilkReceiptBillingServices {
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("snfPremium"))){
 		    	    							snfPremiumRate = (BigDecimal)priceResult.get("snfPremium");
 		    	    						}
+		    	    						if(price.compareTo(BigDecimal.ZERO)==0){
+		    	    							fatPremiumRate = BigDecimal.ZERO;
+		    	    							snfPremiumRate = BigDecimal.ZERO;
+		    	    							defaultRate    = BigDecimal.ZERO;
+		    	    						}
+		    	    						
 		    	    						
 		    	    						String billQuantity = "ACK_QTY";
 		    	    						// Here we are taking Dispatch Quality ,Because KMF Billing is done with dispatch QLTY and acknowledged QTY
@@ -366,6 +375,14 @@ public class MilkReceiptBillingServices {
 		    	    	    						if(UtilValidate.isNotEmpty(priceResult.get("snfPremium"))){
 		    	    	    							snfPremiumRate = (BigDecimal)priceResult.get("snfPremium");
 		    	    	    						}
+		    	    	    						if(UtilValidate.isNotEmpty(priceResult.get("price"))){
+				    	    							price = (BigDecimal)priceResult.get("price");
+				    	    						}
+		    	    	    						if(price.compareTo(BigDecimal.ZERO)==0){
+				    	    							fatPremiumRate = BigDecimal.ZERO;
+				    	    							snfPremiumRate = BigDecimal.ZERO;
+				    	    							defaultRate    = BigDecimal.ZERO;
+				    	    						}
 		    	    	    					}
 		    	    						}
 		    	    						// Here we are taking billing qty as per recieved. Based on uomId we need to handle it
@@ -751,11 +768,11 @@ public class MilkReceiptBillingServices {
 	    		return ServiceUtil.returnError("Unable to Make Payment Process For Purchase Billing! "); 
 			}   
 			result.putAll(purchasePaymentResult);
-			Map updatePurchaseInvoiceBilling = updatePurchaseBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));
+			/*Map updatePurchaseInvoiceBilling = updatePurchaseBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));
 			if(ServiceUtil.isError(updatePurchaseInvoiceBilling)){
 				Debug.logError("Error while processing invoices :"+updatePurchaseInvoiceBilling,module);
 				return ServiceUtil.returnError("Error while processing invoices :"+ServiceUtil.getErrorMessage(updatePurchaseInvoiceBilling));
-			}
+			}*/
 	       }
 		if("REJECT_PAYMENT".equalsIgnoreCase(statusId)){
 			Map purchasePaymentCancelResult=cancelPurchaseBillingPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
