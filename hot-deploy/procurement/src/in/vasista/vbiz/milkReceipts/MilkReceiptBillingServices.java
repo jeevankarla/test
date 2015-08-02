@@ -329,7 +329,7 @@ public class MilkReceiptBillingServices {
 		    	    						}
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("price"))){
 		    	    							price = (BigDecimal)priceResult.get("price");
-		    	    						}
+		    	    					 	}
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("uomId"))){
 		    	    							uomId = (String)priceResult.get("uomId");
 		    	    						}

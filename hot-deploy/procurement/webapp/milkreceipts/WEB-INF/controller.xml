@@ -928,7 +928,7 @@
 	<view-map name="PtcAdjustmentAdditions" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PtcAdjustmentAdditions"/>
 	<view-map name="FindPtcAdjustment" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindPtcAdjustment"/>
 	<view-map name="MilkFinalization" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkFinalization"/>
-	<!-- Report View Mappings -->
+	<!-- Report View Mappings --> 
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>
 	<view-map name="GenerateMlkRecptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#GenerateMlkRecptsBilling"/>
     <view-map name="mrPurchaseBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRPurchaseBilling"/>

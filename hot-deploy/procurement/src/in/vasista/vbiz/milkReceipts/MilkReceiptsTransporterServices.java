@@ -432,7 +432,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 						Debug.logError("Error while updating invoice Status to Paid ::"+ServiceUtil.getErrorMessage(updateInvoiceResult),module);
 						return ServiceUtil.returnError("Error while updating invoice Status to Paid ::"+ServiceUtil.getErrorMessage(updateInvoiceResult));
 					}*/
-			    }
+			    } 
 				if("REJECT_PAYMENT".equalsIgnoreCase(statusId)){
 					Map ptcPaymentCancelResult=cancelPTCTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
 					try{

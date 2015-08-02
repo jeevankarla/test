@@ -614,7 +614,7 @@ $( "#"+fromDateId ).datepicker({
       			</#if>
 				<label>${velhicleStatus}</label>
 	  		</div>
-    </div>
+    </div> 
 	<div class="screenlet-body">
 		<#assign setDate = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "dd-MM-yyyy")).replace(':','')>
 		<#assign setTime = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "HH:mm")).replace(':','')>

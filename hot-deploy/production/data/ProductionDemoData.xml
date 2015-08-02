@@ -49,7 +49,7 @@
 	<Enumeration description="Gain Variance" enumCode="GAIN" enumId="GAIN_VARIANCE" enumTypeId="VARIANCE_TYPE" sequenceId="02"/>
 	<Enumeration description="Leakage" enumCode="VAR_LEAKAGE" enumId="VAR_LEAKAGE" enumTypeId="IID_REASON" sequenceId="10"/>
 	<Enumeration description="Blend" enumCode="VAR_BLEND" enumId="VAR_BLEND" enumTypeId="IID_REASON" sequenceId="09"/>
-	
+	 
 	<VarianceReason varianceReasonId="VAR_BLEND" varianceTypeId="GAIN_VARIANCE" description="Blend" />
     <VarianceReason varianceReasonId="VAR_DAMAGED" varianceTypeId="LOSS_VARIANCE" description="Damaged" />
     <VarianceReason varianceReasonId="VAR_FOUND" varianceTypeId="GAIN_VARIANCE" description="Found" />

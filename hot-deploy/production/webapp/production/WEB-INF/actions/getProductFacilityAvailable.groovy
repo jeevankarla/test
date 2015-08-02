@@ -50,7 +50,7 @@ if(UtilValidate.isNotEmpty(facilityIds)){
 			inMap.put("ownerPartyId",ownerPartyId);
 			inMap.put("facilityId",facilityId);
 			inMap.put("productId",productId);
-			
+			 
 			Map inventoryAvailable = dispatcher.runSync("getProductInventoryOpeningBalance", inMap);
 			invQty = inventoryAvailable.get("inventoryCount");
 			if(invQty>0){

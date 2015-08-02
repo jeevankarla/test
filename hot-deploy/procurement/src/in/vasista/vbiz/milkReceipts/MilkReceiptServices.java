@@ -3646,7 +3646,7 @@ public class MilkReceiptServices {
  				milkTransfer.set("receiveDate",grossDate);
  				MilkTransferItem.set("receivedTemparature",(BigDecimal) MilkTransferItem.get("sendTemparature"));
  				MilkTransferItem.set("receivedAcidity",(BigDecimal) MilkTransferItem.get("sendAcidity"));
- 				
+ 				 
  				MilkTransferItem.set("receivedLR",(BigDecimal) MilkTransferItem.get("sendLR"));
  				MilkTransferItem.set("receivedCob",(String) MilkTransferItem.get("sendCob"));
  				//MilkTransferItem.set("recdOrganoLepticTest",(String)MilkTransferItem.get("sendOrganoLepticTest"));

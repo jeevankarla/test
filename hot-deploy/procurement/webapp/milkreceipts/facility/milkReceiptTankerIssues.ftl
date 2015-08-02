@@ -381,7 +381,7 @@ function fetchTankerRecordNumber(){
            				$('[name=partyIdTo]').val();
 	           			$('[name=partyName]').val('');
 	           			$('[name=partyName]').removeattr("readonly");
-           				
+           				 
            				populateVehicleSpan();	
            			}          	   
            }else{

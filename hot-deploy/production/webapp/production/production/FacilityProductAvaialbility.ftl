@@ -205,7 +205,7 @@
 		var prodDetails = productFacilityComponentDetailsMap['prodDetails'];
 		if(typeof(prodDetails) != 'undefined'){12411
 			prodName = prodDetails['productName'];
-		}
+		} 
 		message += "<form action='IssueRequestThroughTransfer'  method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		message += "<tr class='h3'><td>Indent Qty </td><td>"+reqQty+"</td><input type='hidden' name='reqQty' value='"+reqQty+"'/></tr>";
 		message += "<tr class='h3'><td>Remaining Qty </td><td>"+toBeIssuedVal+"</td><input type='hidden' name='toBeIssued' value='"+toBeIssuedVal+"'/></tr>";
