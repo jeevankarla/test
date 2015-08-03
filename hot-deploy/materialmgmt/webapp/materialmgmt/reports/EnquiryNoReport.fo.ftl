@@ -22,7 +22,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-            margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
+            margin-top="0.1in" margin-bottom=".5in" margin-left=".5in" margin-right=".5in">
         <fo:region-body margin-top="2in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
@@ -41,8 +41,301 @@ under the License.
               <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>                 
                 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    Enquiry Sequence No: ${enquirySequenceNo?if_exists}       </fo:block>	
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    Enquiry Sequence No: ${enquirySequenceNo?if_exists}       </fo:block>
 				   <fo:block font-family="Courier,monospace">
+				       <#assign productQtyList = productQtyMap.entrySet()>
+				   		<fo:table border-style="solid">
+				   			<fo:table-column column-width="100pt"/>
+					     	<fo:table-column column-width="75pt"/>
+					     	<fo:table-column column-width="100pt"/>
+                            <#if productQtyList?has_content>
+                            	<#list productQtyList as prodQty>
+                                <fo:table-column column-width="80pt"/>
+                                </#list>  
+                            </#if>
+					     	<fo:table-body>
+					     	 	<fo:table-row border-style="solid">
+					     	 		<fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">STATUS</fo:block>
+					     	 		</fo:table-cell>
+					     	 	</fo:table-row>
+					     	 	<fo:table-row>
+					     	 		<fo:table-cell >
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell >
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">MATERIALS
+					     	 		</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<#if productQtyList?has_content>
+                            	      <#list productQtyList as productEntry>
+                                      	<#assign productId=productEntry.getKey()>
+		                           		 <#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
+                                    <fo:table-cell border-style="solid">
+					     	 		 <fo:block text-align="left" font-size="11pt" >${product.description}</fo:block>
+					     	 		</fo:table-cell>
+					     	 		  </#list>
+					     	 		</#if>
+					     	 	</fo:table-row>
+                                <fo:table-row >
+                                <fo:table-cell >
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell >
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+                                    <fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">REQ QTY</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<#if productQtyList?has_content>
+                            	      <#list productQtyList as productEntry>
+                                      	<#assign productId=productEntry.getKey()>
+		                           		 <#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
+		                           		 <#assign productEntryValue=productEntry.getValue()> 
+		                                 <#if product.quantityUomId?has_content>
+											<#assign uomId =  product.quantityUomId>
+		                                    <#assign uom = delegator.findOne("Uom", {"uomId" : uomId}, true)?if_exists/>
+		                                    <#assign unit=uom.description>
+		                                  <#else>
+		                                    <#assign unit = "">       
+										 </#if> 
+                                    <fo:table-cell border-style="solid">
+					     	 		 <fo:block text-align="center" font-size="11pt" >${productEntryValue?if_exists} ${unit?if_exists}</fo:block>
+					     	 		</fo:table-cell>
+					     	 		  </#list>
+					     	 		</#if>
+                                </fo:table-row>
+                                <fo:table-row >
+                                <fo:table-cell >
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell >
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+                                    <fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">LAST PO DATE</fo:block>
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">/RATE</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<#if productQtyList?has_content>
+                            	      <#list productQtyList as productEntry>
+                                      	<#assign productId=productEntry.getKey()>
+                                    <fo:table-cell border-style="solid">
+					     	 		 <fo:block text-align="center" font-size="11pt" >${poDateMap.get(productId)?if_exists}</fo:block>
+					     	 		</fo:table-cell>
+					     	 		  </#list>
+					     	 		</#if>
+                                </fo:table-row>
+					     	 	<#list partyDetList as partyNameList>
+					     	 	<fo:table-row border-style="solid">
+					     	 		<fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}</fo:block>
+											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.get("partyId")}]</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell border-style="solid">
+											<#assign status = delegator.findOne("StatusItem", {"statusId" : statusMap.get(partyNameList.get("partyId"))}, true)?if_exists/>
+											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${status.description?if_exists}]</fo:block>
+					     	 		</fo:table-cell>
+                                    <fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center"  font-weight="bold" font-size="11pt">BASIC PRICE/TOT COST (including tax)</fo:block>
+					     	 		</fo:table-cell>
+                                    <#if productQtyList?has_content>
+                            	      <#list productQtyList as productEntry>
+                                      	<#assign productId=productEntry.getKey()>
+                                        <#assign partyProdPriceMap={}>
+	                                    <#if productPriceMap.get(productId)?has_content>
+			  					        <#assign partyProdPriceMap=productPriceMap.get(productId)>
+                                      <#assign price=0>
+                                      <#assign amount=0>
+                                      <#assign statusId="">
+                                      <#assign price=partyProdPriceMap.get(partyNameList.get("partyId")).get("price")?if_exists>
+                                      <#assign amount=partyProdPriceMap.get(partyNameList.get("partyId")).get("amount")?if_exists>
+                                      <#assign statusId=partyProdPriceMap.get(partyNameList.get("partyId")).get("itemStatus")?if_exists>
+                                       <#if price?has_content && price gt 0>
+                                    <fo:table-cell border-style="solid">
+					     	 		 <fo:block text-align="center" font-size="11pt" >${price?if_exists} /</fo:block>
+                                     <fo:block text-align="center" font-size="11pt" >${amount?if_exists}</fo:block>
+                                     <#assign status = delegator.findOne("StatusItem", {"statusId" : statusId}, true)/>
+                                     <fo:block text-align="center" font-size="11pt" >[${status.description?if_exists}]</fo:block>
+					     	 		</fo:table-cell>
+					     	 		   <#else>
+                                          <fo:table-cell border-style="solid">
+                                             <fo:block text-align="center" font-size="11pt" ></fo:block>
+                                          </fo:table-cell>
+                                       </#if>
+					     	 		</#if>
+					     	 		  </#list>
+					     	 		</#if>
+					     	 	</fo:table-row>
+					     	 	</#list>
+					     	</fo:table-body>
+				   		</fo:table>
+				   </fo:block>
+                   <#if partyFinalMap?has_content>   	
+				 <#assign partyIdsList =partyFinalMap.entrySet()>		   
+				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
+					<fo:block font-family="Courier,monospace">
+	                    <fo:table>
+					     <fo:table-column column-width="80pt"/>
+                            <#if termTypeIdList?has_content>
+                            	<#list termTypeIdList as termTypeId>
+                                <fo:table-column column-width="90pt"/>
+                                </#list>  
+                            </#if>
+					      <fo:table-body>
+					      <fo:table-row  border-style="solid">
+					     	 		<fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<fo:table-cell >
+					     	 		<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="11pt">TERMS</fo:block>
+					     	 		</fo:table-cell>
+					     	 	</fo:table-row>
+					     	 	<fo:table-row>
+					     	 		<fo:table-cell border-style="solid">
+					     	 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt"></fo:block>
+					     	 		</fo:table-cell>
+                                    <#if termTypeIdList?has_content>
+                            		<#list termTypeIdList as termTypeId>
+                                  	<#assign termType=delegator.findOne("TermType",{"termTypeId":termTypeId},true)>
+					                  <fo:table-cell border-style="solid">
+					                      <fo:block text-align="left" font-size="11pt" font-weight="bold">${termType.description}</fo:block>
+					                      <fo:block text-align="left" font-size="11pt" font-weight="bold">--------------</fo:block>
+					                      <fo:block text-align="center" font-size="10pt" font-weight="bold">Item No|Value</fo:block>
+					                  </fo:table-cell>
+                               		</#list>  
+                            </#if>
+					     	 	</fo:table-row>
+					      	<#list partyIdsList as partyNameList>
+					     	 	<fo:table-row>
+					      		<fo:table-cell border-style="solid">
+                                 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyNameList.getKey(), false)>
+					     	 	 <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyName?if_exists}</fo:block> 
+								<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.getKey()?if_exists}]</fo:block>
+					     	 		</fo:table-cell>
+					     	 		<#assign partyIdList = partyNameList.getValue()>
+                                    <#list partyIdList as partyIdValue>
+                                     <#assign partyIdsValue=partyIdValue.entrySet()>
+                                      <#list partyIdsValue as value>
+                                      <#assign termValues= value.getValue()> 
+					     	 		 <fo:table-cell border-style="solid">
+											<fo:block>
+                                            	<fo:table>
+                                            	<fo:table-column column-width="30pt"/>
+                                                <fo:table-column column-width="60pt"/>
+                                            	    <fo:table-body>
+                                                        <#list termValues as values>
+                                            			<fo:table-row >
+									          		<#assign TermType=delegator.findOne("TermType",{"termTypeId":values.get("termTypeId")},true)>
+													<#if (TermType.parentTypeId == "FEE_PAYMENT_TERM") || (TermType.parentTypeId == "DELIVERY_TERM")>
+                                                        <#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_"> 
+															<fo:table-cell border-style="solid">
+																	 <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
+															</fo:table-cell>
+															<fo:table-cell border-style="solid">
+																	 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
+															</fo:table-cell>
+														<#else>	
+															<fo:table-cell >
+																	 <fo:block text-align="center"  font-size="10pt" ></fo:block>
+															</fo:table-cell>
+															<fo:table-cell >
+																	 <fo:block text-align="center"  font-size="10pt" >${TermType.description}</fo:block>
+															</fo:table-cell>
+														</#if>
+                                                    <#elseif values.get("termTypeId")=="INC_TAX"  || (TermType.parentTypeId == "OTHERS")>	
+                                                    	<#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_">
+											          		<fo:table-cell border-style="solid">
+											                      <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
+											                  </fo:table-cell>
+											                <#else>
+																<fo:table-cell >
+											                      <fo:block text-align="center"  font-size="10pt" ></fo:block>
+											                  </fo:table-cell>
+		                                                </#if>  
+										                  <#if values.get("uomId")=="PERCENT">
+			                                                  <#if values.get("description")?has_content && values.get("quoteItemSeqId")!="_NA_">
+											                  <fo:table-cell border-style="solid">
+											                      <fo:block text-align="right"  font-size="11pt" > ${values.get("description")?if_exists} <#if values.get("termValue")?has_content>${values.get("termValue")?if_exists}</#if> %</fo:block>
+											                  </fo:table-cell>
+											                  <#else>
+			                                                   <fo:table-cell >
+											                      <fo:block text-align="center"  font-size="11pt" >${values.get("description")?if_exists} <#if values.get("termValue")?has_content>${values.get("termValue")?if_exists}</#if> %</fo:block>
+											                  </fo:table-cell>
+		                                                   </#if>
+														  <#else>
+		                                                   <#if values.get("description")?has_content && values.get("quoteItemSeqId")!="_NA_">
+		                                                     <fo:table-cell border-style="solid">
+										                      <fo:block text-align="right"  font-size="11pt" > ${values.get("description")?if_exists} <#if values.get("termValue")?has_content>${values.get("termValue")?if_exists}</#if> INR</fo:block>
+										                  </fo:table-cell>
+		                                                  <#else>
+		                                                      <fo:table-cell >
+										                      <fo:block text-align="center"  font-size="11pt" > ${values.get("description")?if_exists} <#if values.get("termValue")?has_content>${values.get("termValue")?if_exists}</#if> INR</fo:block>
+										                  </fo:table-cell>
+		                                                  </#if>
+		                                                  </#if>			
+													<#else>		
+														<#if values.get("quoteItemSeqId")?has_content && values.get("quoteItemSeqId")!="_NA_">
+											          		<fo:table-cell border-style="solid">
+											                      <fo:block text-align="center"  font-size="10pt" >${values.get("quoteItemSeqId")?if_exists}</fo:block>
+											                  </fo:table-cell>
+											                <#else>
+																<fo:table-cell >
+											                      <fo:block text-align="center"  font-size="10pt" ></fo:block>
+											                  </fo:table-cell>
+		                                                </#if>  
+										                  <#if values.get("uomId")=="PERCENT">
+			                                                  <#if values.get("termValue")?has_content && values.get("quoteItemSeqId")!="_NA_">
+											                  <fo:table-cell border-style="solid">
+											                      <fo:block text-align="right"  font-size="11pt" > ${values.get("termValue")?if_exists} %</fo:block>
+											                  </fo:table-cell>
+											                  <#else>
+			                                                   <fo:table-cell >
+											                      <fo:block text-align="center"  font-size="11pt" >${values.get("termValue")?if_exists} %</fo:block>
+											                  </fo:table-cell>
+		                                                   </#if>
+														  <#else>
+		                                                   <#if values.get("termValue")?has_content && values.get("quoteItemSeqId")!="_NA_">
+		                                                     <fo:table-cell border-style="solid">
+										                      <fo:block text-align="right"  font-size="11pt" > ${values.get("termValue")?if_exists} INR</fo:block>
+										                  </fo:table-cell>
+		                                                  <#else>
+		                                                      <fo:table-cell >
+										                      <fo:block text-align="center"  font-size="11pt" > ${values.get("termValue")?if_exists} INR</fo:block>
+										                  </fo:table-cell>
+		                                                  </#if>
+		                                                  </#if>	
+                                                   </#if>
+									          		</fo:table-row>
+                                                        </#list>
+                                            		</fo:table-body>
+                                                </fo:table>
+                                            </fo:block>
+					     	 		</fo:table-cell>
+                                   </#list>
+                                   </#list>
+					      	</fo:table-row>
+					      	</#list>
+					      </fo:table-body>
+					      </fo:table>
+					 </fo:block> 
+					 </#if> 
+                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        				   
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+				   <#if signature?has_content>
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       ${signature?if_exists}                         PRE AUDITOR</fo:block>
+                    <#else>				   
+					<fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>
+					</#if>   
+				<#-- <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
 	                     <fo:table-column column-width="100pt"/>
 					     <fo:table-column column-width="170pt"/>
@@ -157,52 +450,6 @@ under the License.
 	                          </fo:table-body> 
 					     </fo:table> 					   
 					  </fo:block>  
-			<#--	   <fo:block font-family="Courier,monospace">
-	                    <fo:table>
-					      <fo:table-column column-width="200pt"/>
-					      <#list partyDetList as partyNameList>					      
-					      <fo:table-column column-width="200pt"/>
-					      </#list> 					                					      
-					          <fo:table-body>
-					          		<fo:table-row border-style="solid">
-					          		<fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >TERMS</fo:block>
-					                  </fo:table-cell>
-					                  <fo:table-cell >
-					                      <fo:block text-align="right" font-weight="bold" font-size="11pt" >VENDOR NAME</fo:block>
-					                  </fo:table-cell>
-					          		</fo:table-row>
-					              <fo:table-row>
-					                  <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" ></fo:block>
-					                  </fo:table-cell>	                                      				                  
-    								  <#list partyDetList as partyNameList>
-    								  <fo:table-cell border-style="solid">
-						                  <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
-						              </fo:table-cell>
-    								  </#list>    									    								
-					              </fo:table-row>
-					              <#if allTermsMap?has_content>
-                                  <#assign allTermsList = allTermsMap.entrySet()>                                
-					              <#list allTermsList as termList>
-                                  <#assign termTypeId=termList.getKey()>					              
-					              <fo:table-row>
-					                  <fo:table-cell border-style="solid">
-					                      <fo:block text-align="left" font-size="11pt" font-weight="bold">${termTypeId?if_exists}</fo:block>
-					                  </fo:table-cell>
-                                       <#assign termVal=termList.getValue()>
-                                       <#assign eachTermList = termVal.entrySet()>                                
-	                                   <#list eachTermList as term>
-    								   <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${term.getValue()?if_exists}</fo:block>
-					                   </fo:table-cell>
-					                   </#list>  		
-		                         </fo:table-row>
-					            </#list> 
-                               </#if>					  
-					          </fo:table-body>
-					   </fo:table>
-				   </fo:block> 	-->
 				 <#if finalMap?has_content>   	
 				 <#assign termsList=finalMap.entrySet()>		   
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
@@ -358,10 +605,6 @@ under the License.
 				   </fo:block>
 				   </#if>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        				   
-                  <#-- <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="13pt" >VENDOR NAME</fo:block>
-			       <#list partyDetList as partyNameList>
-						 <fo:block text-align="left" font-size="11pt" font-weight="bold">${partyNameList.get("partyName")}</fo:block>
-    				</#list>   -->
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
@@ -369,10 +612,9 @@ under the License.
 				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       ${signature?if_exists}                         PRE AUDITOR</fo:block>
                     <#else>				   
 					<fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>
-					</#if>
+					</#if> -->
 			    </fo:flow>	
 		 </fo:page-sequence>	
-		 <#-- </#if>   --> 	
 		<#else>
 			<fo:page-sequence master-reference="main">
 	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">

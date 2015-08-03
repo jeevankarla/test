@@ -41,6 +41,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 dctx = dispatcher.getDispatchContext();
 userLogin= context.userLogin;
 organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : "INTERNAL_ORGANIZATIO"], ["groupName", "partyId"]);
+context.put("organisationList",organisationList);
 //departmentList = delegator.findByAnd("PartyRelationshipAndDetail", [roleTypeIdFrom : "INTERNAL_ORGANIZATIO",roleTypeIdTo : "DIVISION"], ["groupName", "partyId"]);
 // sub division here
 inputMap = [:];

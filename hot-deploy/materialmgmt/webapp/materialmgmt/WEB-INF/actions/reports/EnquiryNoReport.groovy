@@ -109,6 +109,7 @@ if(UtilValidate.isNotEmpty(productIds)){
     }
 }	
 context.productPriceMap=productPriceMap;
+//Debug.log("productpriceMap#####################"+productPriceMap);
 context.statusMap=statusMap;
 /*conditionList=[];
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,productIds));
@@ -141,6 +142,7 @@ context.poDateMap=poDateMap;
 allTermsMap=[:];
 termTypeDetails = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
 termTypeIds = EntityUtil.getFieldListFromEntityList(termTypeDetails, "termTypeId", true);
+context.termTypeIdList=termTypeIds;
 /*termTypeIds.each{eachTermType->
 	termDetailsMap=[:];	
 	termTypeDetails = delegator.findOne("TermType", ["termTypeId" : eachTermType], false);
@@ -180,7 +182,7 @@ quoteIds.each{quoteId->
 //Debug.log("quotesMap==================="+quotesMap);
 
 //quoteTermsList=delegator.findList("QuoteTermAndItemAndQuote", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
-finalMap=[:];
+/*finalMap=[:];
 termTypeIds.each{termType->
 	tempList=[];
 		partyIds.each{partyId->
@@ -195,6 +197,23 @@ termTypeIds.each{termType->
 		finalMap.put(termType, tempList);	
 	}
 }
-context.finalMap=finalMap;
+context.finalMap=finalMap;*/
+partyFinalMap=[:];
+partyIds.each{partyId->
+	tempList=[];
+		termTypeIds.each{termType->
+		tempMap=[:];
+		quoteTerms=quotesMap.get(partyId);
+		quoteTerms=EntityUtil.filterByCondition(quoteTerms,EntityCondition.makeCondition([EntityCondition.makeCondition("termTypeId",EntityOperator.EQUALS,termType)],EntityOperator.AND));
+				tempMap.put(termType, quoteTerms);
+			if(UtilValidate.isNotEmpty(tempMap)){
+				tempList.add(tempMap);
+			}
+			
+		partyFinalMap.put(partyId, tempList);
+	}
+}
+
+context.partyFinalMap=partyFinalMap;
 
 

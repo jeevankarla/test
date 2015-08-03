@@ -76,7 +76,7 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>ReceiptId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='receiptId' name='receiptId' value='"+receiptId+"'/></td><input class='h4' type='hidden' readonly id='statusIdTo' name='statusIdTo' value='SR_QUALITYCHECK'/></tr>";
 		
 		message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Department :</td><td align='left' width='50%'><select name='partyId' id='partyId'  class='h4'>"+
-					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
+					"<#if organisationList?has_content><#list organisationList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
 					"</select></td></tr>";
 		
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
@@ -91,7 +91,7 @@
 		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>ShipmentId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='shipmentId' name='shipmentId' value='"+shipmentId+"'/></td><input class='h4' type='hidden' readonly id='statusIdTo' name='statusIdTo' value='SR_QUALITYCHECK'/></tr>";
 		
 		message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Department :</td><td align='left' width='50%'><select name='partyId' id='partyId'  class='h4'>"+
-					"<#if finalDepartmentList?has_content><#list finalDepartmentList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
+					"<#if organisationList?has_content><#list organisationList as department><option value='${department.partyId?if_exists}' >${department.groupName?if_exists}</option></#list></#if>"+            
 					"</select></td></tr>";
 		
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
