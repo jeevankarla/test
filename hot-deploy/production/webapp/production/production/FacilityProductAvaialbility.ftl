@@ -191,7 +191,7 @@
 		});
 		return productTestComponentDetails;
 	}	
-	function showProductFacilityAvailableForm(productId,ownerFacilityId,reqQty,toBeIssued,custRequestId,custRequestItemSeqId) {	
+	function showProductFacilityAvailableForm(productId,ownerFacilityId,reqQty,toBeIssued,custRequestId,custRequestItemSeqId,requestedParty) {	
 		var message = "";
 		var noOfFacilities=0;
 		var totIssuedQty =0;
@@ -202,10 +202,14 @@
 		}
 		productFacilityComponentDetailsMap = getProductFacilityAvailable(productId,ownerFacilityId);
 		var productFacilityDetailsList = productFacilityComponentDetailsMap['productFacilityDetailsList'];
+		var prodDetails = productFacilityComponentDetailsMap['prodDetails'];
+		if(typeof(prodDetails) != 'undefined'){12411
+			prodName = prodDetails['productName'];
+		}
 		message += "<form action='IssueRequestThroughTransfer'  method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		message += "<tr class='h3'><td>Indent Qty </td><td>"+reqQty+"</td><input type='hidden' name='reqQty' value='"+reqQty+"'/></tr>";
 		message += "<tr class='h3'><td>Remaining Qty </td><td>"+toBeIssuedVal+"</td><input type='hidden' name='toBeIssued' value='"+toBeIssuedVal+"'/></tr>";
-		message += "<tr class='h3'><td>product </td><td>"+productId+"</td><input type='hidden' name='productId' value='"+productId+"'/></tr>";
+		message += "<tr class='h3'><td>product </td><td>"+prodName+" - "+productId+"</td><input type='hidden' name='productId' value='"+productId+"'/><input type='hidden' name='partyIdTo' value='"+requestedParty+"'/></tr>";
 		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";
 		message += "<tr class='h2'><td>Silo/Tank/Floor</td><td>Available Qty</td> <td>Issue Qty</td> </tr>";
 		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";

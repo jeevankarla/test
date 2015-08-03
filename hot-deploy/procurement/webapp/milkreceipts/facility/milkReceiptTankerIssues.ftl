@@ -370,7 +370,6 @@ function fetchTankerRecordNumber(){
            				$('#dcNo').val('');
            				$('#product').val('');
           				$('#productId').val('');
-           				$('#partyId').val('');
            				$('#tankerName').val('');
            				$('#tankerNo').val('');
            				$('#milkTransferId').val('');
@@ -378,6 +377,10 @@ function fetchTankerRecordNumber(){
            				$('span#productToolTip').addClass("tooltip");
 						$('span#productToolTip').removeClass("tooltipWarning");
 						$('span#productToolTip').html('none');
+           				
+           				$('[name=partyIdTo]').val();
+	           			$('[name=partyName]').val('');
+	           			$('[name=partyName]').removeattr("readonly");
            				
            				populateVehicleSpan();	
            			}          	   
@@ -436,6 +439,15 @@ function fetchTankerRecordNumber(){
 	           		if(typeof(productId)!= "undefined"){
 	           			$('[name=product]').val(productId);
 	           			populateProductSpan();
+	           		}
+           		}
+           		if($('[name=partyName]').length !=0 &&  typeof(milkTransferId)!='undefined'){
+	           		var partyIdTo = result['partyIdTo'];
+	           		if(typeof(partyIdTo)!= "undefined"){
+	           			$('[name=partyIdTo]').val(partyIdTo);
+	           			$('[name=partyName]').val(partyIdTo);
+	           			$('[name=partyName]').attr("readonly","readonly");
+	           			populatePartySpan();
 	           		}
            		}
            		if($('[name=dcNo]').length !=0){

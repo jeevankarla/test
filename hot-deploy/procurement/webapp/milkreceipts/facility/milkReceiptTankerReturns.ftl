@@ -601,10 +601,10 @@ $( "#"+fromDateId ).datepicker({
       				<#assign velhicleStatus = "VEHICLE  TARE WEIGHT DETAILS">
       			</#if>
       			<#if displayScreen == "RETURN_QC">
-      				<#assign velhicleStatus = "RETURN QUALITY CONTROL DETAILS">
+      				<#assign velhicleStatus = " QUALITY CONTROL DETAILS">
       			</#if>
       			<#if displayScreen == "RETURN_AQC">
-      				<#assign velhicleStatus = "ISUUING ACK QUALITY CONTROL DETAILS">
+      				<#assign velhicleStatus = "ACK QUALITY CONTROL DETAILS">
       			</#if>
       			<#if displayScreen == "RETURN_UNLOAD">
       				<#assign velhicleStatus = "UN-LOAD AND SILO DETAILS">
@@ -645,7 +645,7 @@ $( "#"+fromDateId ).datepicker({
 					        </#if>
 					        <#if displayScreen !="RETURN_QC">
 					        	<tr>
-					        			<td id="displayRecievedFrom" align ="left"><span class="h3">UNION/CHILLING CENTER :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h3">DEPARTMENT :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
 					        	</tr> 	
 					        	<tr>
 								    <td align='left'><span class="h3">DC No </span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
@@ -755,7 +755,7 @@ $( "#"+fromDateId ).datepicker({
 		        					</td>
 						        </tr>
 	        					<tr>
-	                         		<td><span class="h3">UNION/CHILLING CENTER :</span></td><td>
+	                         		<td><span class="h3">DEPARTMENT :</span></td><td>
 	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
 	                         		<input type="hidden" size="6" maxlength="6" name="partyId" required="required"/>
 	                   			</tr>

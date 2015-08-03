@@ -112,7 +112,7 @@ for(vehicle in vehiclesList){
 context.put("vehItemsJSON",vehItemsJSON);
 context.put("vehicleCodeJson",vehicleCodeJson);
 
-List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"), null, null, null, true);
+List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"INTERNAL_ORGANIZATIO"), null, null, null, true);
 
 JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();

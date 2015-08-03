@@ -64,6 +64,6 @@
     
     
     <ProductCategory  productCategoryId="ISSUE_THRU_TRANSFER"/>
-	<ProductCategoryMember productCategoryId="ISSUE_THRU_TRANSFER" productId="TONEDMILK" fromDate="2010-01-01 00:00:00"/> 
+	<ProductCategoryMember productCategoryId="ISSUE_THRU_TRANSFER" productId="75" fromDate="2010-01-01 00:00:00"/> 
     
 </entity-engine-xml>

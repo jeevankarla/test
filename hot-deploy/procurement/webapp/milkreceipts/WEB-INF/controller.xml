@@ -909,12 +909,11 @@
     </request-map>
     
     <!-- View Mappings -->
-	    
+	<view-map name="main" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptDashboard" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptDashboard"/>
     <view-map name="milkReceiptEntriesCsv" type="screencsv" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#milkReceiptEntriesCsv" content-type="text/csv"/>
     <view-map name="FinalizeMilkReceipts" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FinalizeMilkReceipts"/>
     <view-map name="updateMilkRecord" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#UpdateMilkRecord"/>
-    <view-map name="main" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptEntry"/>
 	<view-map name="MilkReceiptFacility" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptFacility"/>
 	<view-map name="MilkReceiptEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptEntry"/>
 	<view-map name="ReceiveMilkReceipts" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ReceiveMilkReceipts"/>
