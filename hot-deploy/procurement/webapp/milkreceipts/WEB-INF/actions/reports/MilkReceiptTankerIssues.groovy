@@ -133,7 +133,7 @@ for(union in unionsList){
 		
 		unionCodeJson.put(union.get("partyId"),unionDetJson);
 		
-} 
+}
 context.put("partyCodeJson",unionCodeJson);
 context.put("partyItemsJSON",unionItemsJSON);
 

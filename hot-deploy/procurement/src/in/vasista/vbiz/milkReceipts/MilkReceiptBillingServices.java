@@ -329,7 +329,7 @@ public class MilkReceiptBillingServices {
 		    	    						}
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("price"))){
 		    	    							price = (BigDecimal)priceResult.get("price");
-		    	    					 	}
+		    	    						}
 		    	    						if(UtilValidate.isNotEmpty(priceResult.get("uomId"))){
 		    	    							uomId = (String)priceResult.get("uomId");
 		    	    						}
@@ -346,7 +346,6 @@ public class MilkReceiptBillingServices {
 		    	    							snfPremiumRate = BigDecimal.ZERO;
 		    	    							defaultRate    = BigDecimal.ZERO;
 		    	    						}
-		    	    						
 		    	    						
 		    	    						String billQuantity = "ACK_QTY";
 		    	    						// Here we are taking Dispatch Quality ,Because KMF Billing is done with dispatch QLTY and acknowledged QTY

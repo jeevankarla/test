@@ -538,7 +538,7 @@
       <field name="facilityId">
       	<drop-down allow-empty="true">
       	  <list-options key-name="facilityId" list-name="facilityGroupAndMemberAndFacility" description="${description}"/>
-      	</drop-down> 
+      	</drop-down>
       </field>
       <field name="recordDateTime" > <date-find/></field>
       <!-- <field name="date"><date-time type="date"/></field> -->

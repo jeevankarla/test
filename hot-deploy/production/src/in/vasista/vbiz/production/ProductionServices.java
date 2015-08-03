@@ -2135,7 +2135,7 @@ public class ProductionServices {
 		  		  Debug.logError("Vehicle Number should not be empty ", module);
 	  			  request.setAttribute("_ERROR_MESSAGE_", "Vehicle Number should not be empty ");
 	  			  return "error";
-		  	  } 
+		  	  }
 		  	  GenericValue MilkTransfer = null;
 		  	  
 		  	  try{
@@ -2241,6 +2241,7 @@ public class ProductionServices {
 		  				  if(UtilValidate.isNotEmpty(shipmentId) ){
 		  					  MilkTransfer.set("productId",(String)paramMap.get("productId"));
 		  					  MilkTransfer.set("shipmentId", shipmentId);
+		  					  Debug.log("MilkTransfer=========="+MilkTransfer);
 		  					  try{
 		  						  delegator.store(MilkTransfer);
 		  					  }catch(Exception e){
