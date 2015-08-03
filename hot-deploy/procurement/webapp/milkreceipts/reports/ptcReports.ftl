@@ -284,12 +284,12 @@
 						<td width="25%">
 							 <span class='h3'>Time Period </span>
 		                    <select name="customTimePeriodId" class='h4'>
-		                    <#if timePeriodList?has_content>	
-		                        <#list timePeriodList as timePeriod>    
-		                			  <#if ((timePeriod.fromDate)?has_content) && ((timePeriod.thruDate)?has_content)>
-		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.fromDate, "MMMdd")/>
-		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.thruDate, "MMMdd yyyy")/>
-				                  	    <option value='${timePeriod.customTimePeriodId}' >
+		                    <#if purchaseTimePeriodList?has_content>	
+		                        <#list purchaseTimePeriodList as purTimePeriod>    
+		                			  <#if ((purTimePeriod.fromDate)?has_content) && ((purTimePeriod.thruDate)?has_content)>
+		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(purTimePeriod.fromDate, "MMMdd")/>
+		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(purTimePeriod.thruDate, "MMMdd yyyy")/>
+				                  	    <option value='${purTimePeriod.customTimePeriodId}' >
 				                    		${fromDate}-${thruDate}
 				                  		 </option>
 				                  	 </#if>

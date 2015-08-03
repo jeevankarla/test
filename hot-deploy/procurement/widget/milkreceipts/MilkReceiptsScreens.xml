@@ -356,6 +356,10 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>
                 	<order-by field-name="-fromDate"/>
                 </entity-condition> 
+                <entity-condition list="purchaseTimePeriodList" entity-name="CustomTimePeriod">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+                	<order-by field-name="-fromDate"/>
+                </entity-condition> 
             	 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
         	</actions>
             <widgets>
