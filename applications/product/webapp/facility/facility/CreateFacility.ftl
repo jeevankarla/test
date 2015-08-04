@@ -51,6 +51,76 @@ function makeDatePicker(fromDateId ,thruDateId){
 			facId = facId.toUpperCase();
 			$("#facilityId").val(facId);
 		}
+		var sequenceNum = $("#sequenceNum").val();
+		if(sequenceNum != null || sequenceNum != undefined){
+			sequenceNum = sequenceNum.toUpperCase();
+			$("#sequenceNum").val(sequenceNum);
+		}
+		var facilityName = $("#facilityName").val();
+		if(facilityName != null || facilityName != undefined){
+			facilityName = facilityName.toUpperCase();
+			$("#facilityName").val(facilityName);
+		}
+		var description = $("#description").val();
+		if(description != null || description != undefined){
+			description = description.toUpperCase();
+			$("#description").val(description);
+		}
+		var firstName = $("#firstName").val();
+		if(firstName != null || firstName != undefined){
+			firstName = firstName.toUpperCase();
+			$("#firstName").val(firstName);
+		}
+		var middleName = $("#middleName").val();
+		if(middleName != null || middleName != undefined){
+			middleName = middleName.toUpperCase();
+			$("#middleName").val(middleName);
+		}
+		var lastName = $("#lastName").val();
+		if(lastName != null || lastName != undefined){
+			lastName = lastName.toUpperCase();
+			$("#lastName").val(lastName);
+		}
+		var groupName = $("#groupName").val();
+		if(groupName != null || groupName != undefined){
+			groupName = groupName.toUpperCase();
+			$("#groupName").val(groupName);
+		}
+		var address1 = $("#address1").val();
+		if(address1 != null || address1 != undefined){
+			address1 = address1.toUpperCase();
+			$("#address1").val(address1);
+		}
+		var address2 = $("#address2").val();
+		if(address2 != null || address2 != undefined){
+			address2 = address2.toUpperCase();
+			$("#address2").val(address2);
+		}
+		var city = $("#city").val();
+		if(city != null || city != undefined){
+			city = city.toUpperCase();
+			$("#city").val(city);
+		}
+		var postalCode = $("#postalCode").val();
+		if(postalCode != null || postalCode != undefined){
+			postalCode = postalCode.toUpperCase();
+			$("#postalCode").val(postalCode);
+		}
+		var fdrNumber = $("#fdrNumber").val();
+		if(fdrNumber!= null || fdrNumber != undefined){
+			fdrNumber = fdrNumber.toUpperCase();
+			$("#fdrNumber").val(fdrNumber);
+		}
+		var bankName = $("#bankName").val();
+		if(bankName != null || bankName != undefined){
+			bankName = bankName.toUpperCase();
+			$("#bankName").val(bankName);
+		}
+		var branchName = $("#branchName").val();
+		if(branchName != null || branchName != undefined){
+			branchName = branchName.toUpperCase();
+			$("#branchName").val(branchName);
+		}
 	}
 	function hideorShowBankDtls(){
 	  var paymentMethodTypeId =$( "#paymentMethodTypeId option:selected" ).val();
@@ -87,7 +157,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	 if( (amRoute).length < 1 &&(pmRoute).length < 1) {
+				    	 <#--  if( (amRoute).length < 1 &&(pmRoute).length < 1) {
 					    	$('#amRoute').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					           	$('#amRoute').css('background', 'white').focus(); 
@@ -97,7 +167,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 					           	$('#pmRoute').css('background', 'white').focus(); 
 					       	}, 800);
 					    	return false;
-				    	}
+				    	} -->
+				    	
+
 				    	if( (categoryTypeEnum).length < 1 ) {
 					    	$('#categoryTypeEnum').css('background', 'yellow'); 
 					       	setTimeout(function () {
@@ -228,7 +300,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    </td>
 						</tr>
  						 <tr>
-						    <td class="label"><b>AM Route*</b></td>
+						    <td class="label"><b>AM Route</b></td>
 						    <td>
 						     <select name="amRoute" id="amRoute">
 						     <option selected="selected" value='${facility.parentFacilityId?if_exists}'></option>
@@ -240,7 +312,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	        				 </td>
 						</tr>
 						<tr>
-						    <td class="label"><b>PM Route*</b></td>
+						    <td class="label"><b>PM Route</b></td>
 						    <td>
 						     <select name="pmRoute" id="pmRoute">
 						     <option selected="selected" value='${facility.parentFacilityId?if_exists}'></option>
@@ -267,20 +339,20 @@ function makeDatePicker(fromDateId ,thruDateId){
 						<tr>
 						  <td class="label"><b> Sequence</b></td>
 						   <td>
-		            	   <input class="h3" type="text" size="18" maxlength="20" name="sequenceNum" id="sequenceNum"  />
+		            	   <input class="h3" type="text" size="18" maxlength="20" name="sequenceNum" id="sequenceNum"  onblur="javascript: changeToUpperCase();" />
 			          	 </td>
 					 </tr>
 					   <tr>
 				        <td class="label"><b> Booth Name*</b></td>
 				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="facilityName" id="facilityName"  />
+        		 			<input class="h3" type="text" size="18" maxlength="100" name="facilityName" id="facilityName"  onblur="javascript: changeToUpperCase();" />
           				</td>
 				        </tr>
 				        <tr>
 				        <tr>
 				            <td class="label"><b> Description</b></td>
 				            <td>
-	        				   <input class="h3" type="text" size="18" maxlength="255" name="description" id="description"  />
+	        				   <input class="h3" type="text" size="18" maxlength="255" name="description" id="description"   onblur="javascript: changeToUpperCase();" />
 	          				</td>
 				        </tr>
 				         <tr>
@@ -290,17 +362,17 @@ function makeDatePicker(fromDateId ,thruDateId){
 	          				</td>
 				        </tr>
 				        <tr>
-   							<td class="label">Rate Amount</td>
+   							<td class="label">Shoppee Rent Amount</td>
 							 <td>
 								 <input type="text" name="rateAmount" id="rateAmount" size="10" maxlength="60" />
 							 </td>
  						 </tr>
-				        <tr>
+				       <#-- <tr>
 				           <td class="label"><b> Maximum Credit</b></td>
 				           <td>
 	            			<input class="h3" type="text" size="18" maxlength="20" name="maximumCredit" id="maximumCredit" />
 	          				</td>
-				        </tr>
+				        </tr>-->
 				         <tr>
 				          	<td class="label"><b> Date of Commissioning</b></td>
 						    <td>
@@ -311,8 +383,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 				          	<td class="label"><b> Margin Allowed On Milk</b></td>
 						    <td>
 				              <select name="marginOnMilk" id="marginOnMilk" >
-					        	<option value="DEFAULT_PRICE">DEFAULT_PRICE</option> 
-					        	<option value="MRP_PRICE">MRP_PRICE</option>            
+					        	<option value="DEFAULT_PRICE">Default Price</option> 
+					        	<option value="MRP_PRICE">MRP Price</option>            
 					          </select>   
 						  </td>
 						 </tr>
@@ -320,12 +392,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 				          	<td class="label"><b> Margin Allowed On Product</b></td>
 						    <td>
 				               <select name="marginOnProduct"  id="marginOnProduct"  >
-							        	<option value="DEFAULT_PRICE">DEFAULT_PRICE</option>   
-							        	<option value="MRP_PRICE">MRP_PRICE</option>             
+							        	<option value="DEFAULT_PRICE">Default Price</option>   
+							        	<option value="MRP_PRICE">MRP Price</option>             
 							   </select>
 						  </td>
 						 </tr>
-						  <tr>
+						 
+						 <#--<tr>
 				          	<td class="label"><b>${uiLabelMap.UseEcs}</b></td>
 						    <td>
 				              <select name="useEcs" >
@@ -334,7 +407,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						        	<option value="N">N</option>              
 						      </select>
 						  </td>
-						 </tr>
+						 </tr>-->
 	                      </table>
                     </fieldset>  
                  </section>
@@ -343,24 +416,24 @@ function makeDatePicker(fromDateId ,thruDateId){
             	<fieldset>
 				    <table cellpadding="2" cellspacing="1">
 					         <tr>
-		          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>owner Details</div></td>
+		          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Owner Details</div></td>
 					        </tr>
 		       				<tr>
 					          	<td class="label"><b>First Name</b></td></td>
 							    <td>
-		            			   <input class="h3" type="text" size="18" maxlength="20" name="firstName" id="firstName" />
+		            			   <input class="h3" type="text" size="18" maxlength="20" name="firstName" id="firstName"  onblur="javascript: changeToUpperCase();"/>
 		          				</td>
 					        </tr>
 					         <tr>
 					            <td class="label"><b>Middle Name</b></td></td>
 		       	  				<td>
-		            			   <input class="h3" type="text" size="18" maxlength="20" name="middleName" id="middleName" />
+		            			   <input class="h3" type="text" size="18" maxlength="20" name="middleName" id="middleName"  onblur="javascript: changeToUpperCase();" />
 		          				</td>
 					        </tr>
 					         <tr>
 					            <td class="label"><b>Last Name</b></td></td>
 		       	  				<td>
-		            				<input class="h3" type="text" size="18" maxlength="20" name="lastName" id="lastName" />
+		            				<input class="h3" type="text" size="18" maxlength="20" name="lastName" id="lastName"  onblur="javascript: changeToUpperCase();"/>
 		          				</td>
 					        </tr>
 					         <tr>
@@ -372,7 +445,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					         <tr>
 					            <td class="label"><b>Group Name</b></td></td>
 		          				<td>
-									<input class="h3" type="text" size="18" maxlength="20" name="groupName" id="groupName" />
+									<input class="h3" type="text" size="18" maxlength="20" name="groupName" id="groupName"  onblur="javascript: changeToUpperCase();" />
 		          				</td>
 		          				<input type="hidden" name="stateProvinceGeoId" id="stateProvinceGeoId" size="30" maxlength="60" value="IND" autocomplete="off"/>
 	          				<tr>
@@ -384,29 +457,29 @@ function makeDatePicker(fromDateId ,thruDateId){
 									<tr>
 									    <td class="label"><b> Address1</b></td>
 									    <td>
-									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="address1" id="address1" size="30" maxlength="60" autocomplete="off"  onblur="javascript: changeToUpperCase();" />
 									    </td>
 									</tr>
 									<tr>
 									    <td class="label"><b> Address2</b></td>
 									    <td>
-									      	<input type="text" name="address2" id="address2" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="address2" id="address2" size="30" maxlength="60" autocomplete="off"  onblur="javascript: changeToUpperCase();"/>
 									    </td>
 									</tr>
 									<tr>
 									    <td class="label"><b> City</b></td>
 									    <td>
-									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="city" id="city" size="30" maxlength="60" autocomplete="off"  onblur="javascript: changeToUpperCase();"/>
 									    </td>
 									</tr>
 									<tr>
 									    <td class="label"><b> Postal Code</b></td>
 									    <td>
-									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" autocomplete="off" />
+									      	<input type="text" name="postalCode" id="postalCode" size="30" maxlength="60" autocomplete="off"  onblur="javascript: changeToUpperCase();"/>
 									    </td>
 									</tr>
 									<tr>
-									    <td class="label"><b> email Address</b></td>
+									    <td class="label"><b> Email Address</b></td>
 									    <td>
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
@@ -473,35 +546,35 @@ function makeDatePicker(fromDateId ,thruDateId){
 								         <tr>
 					          				 <td class="label"><b>FDR NO</b></td>
 										     <td>
-										      	<input type="text" name="fdrNumber" id="fdrNumber" size="30" maxlength="60" autocomplete="off" />
+										      	<input type="text" name="fdrNumber" id="fdrNumber" size="30" maxlength="60" autocomplete="off" onblur="javascript: changeToUpperCase();"/>
 										    </td>
 								        </tr>
 								         <tr>
-					          				 <td class="label"><b>bank Name</b></td>
+					          				 <td class="label"><b>Bank Name</b></td>
 										     <td>
-										      	<input type="text" name="bankName" id="bankName" size="30" maxlength="60" autocomplete="off"/>
+										      	<input type="text" name="bankName" id="bankName" size="30" maxlength="60" autocomplete="off" onblur="javascript: changeToUpperCase();"/>
 										    </td>
 								        </tr>
 								        <tr>
 					          				 <td class="label"><b>Branch Name</b></td>
 										     <td>
-										      	<input type="text" name="branchName" id="branchName" size="30" maxlength="60" autocomplete="off"/>
+										      	<input type="text" name="branchName" id="branchName" size="30" maxlength="60" autocomplete="off" onblur="javascript: changeToUpperCase();"/>
 										    </td>
 								        </tr>
 								        <tr>
-					          				 <td class="label"><b>Acrrued balance in the deposit</b></td>
+					          				 <td class="label"><b>Accrued Balance in the Deposit</b></td>
 										     <td>
-										      	<input type="text" name="amount" id="amount" size="30" maxlength="60" autocomplete="off"/>
+										      	<input type="text" name="amount" id="amount" size="30" maxlength="60" autocomplete="off" onblur="javascript: changeToUpperCase();"/>
 										    </td>
 								        </tr>
 								        <tr>
-					          				 <td class="label"><b>Date of opening of the deposit</b></td>
+					          				 <td class="label"><b>Date of Opening of the Deposit</b></td>
 										     <td>
 										      	<input type="text" name="fDateStr" id="fDateStr" size="30" maxlength="60" autocomplete="off"/>
 										    </td>
 								        </tr>
 								         <tr>
-					          				 <td class="label"><b>Date of closure of the deposit</b></td>
+					          				 <td class="label"><b>Date of Closure of the Deposit</b></td>
 										     <td>
 										      	<input type="text" name="tDateStr" id="tDateStr" size="30" maxlength="60" autocomplete="off"/>
 										    </td>
