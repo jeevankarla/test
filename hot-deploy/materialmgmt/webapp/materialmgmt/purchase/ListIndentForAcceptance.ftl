@@ -45,6 +45,8 @@ under the License.
             	var productNo = $(productIdObj).val();
             	var quantityObj = $(domObj).find("[name='quantity']");
             	var quantityRcvd = $(quantityObj).val();
+            	var facilityIdObj = $(domObj).find("[name='facilityId']");
+            	var facilityId = $(facilityIdObj).val();
             	
             	var appendStr = "<input type=hidden name=custRequestId_o_"+index+" value="+indentId+" />";
             	$("#updateRequestStatusForm").append(appendStr);
@@ -56,6 +58,10 @@ under the License.
             	$("#updateRequestStatusForm").append(appendStr3);
             	var appendStr4 = "<input type=hidden name=quantity_o_"+index+" value="+quantityRcvd+" />";
             	$("#updateRequestStatusForm").append(appendStr4);
+            	if(facilityId != undefined){
+            		var appendStr5 = "<input type=hidden name=facilityId_o_"+index+" value="+facilityId+" />";
+            		$("#updateRequestStatusForm").append(appendStr5);
+            	}
             	index = index+1;
             }
             
@@ -92,6 +98,9 @@ under the License.
           <td>Indent Date</td>
           <td>From Department</td>
           <td>Material Name - [Code][UOM]</td>
+          <#if custRequestTypeId == "INTERNAL_INDENT">
+          <td>Facility</td>
+          </#if>
           <td>quantity</td>
           
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllIndents" name="checkAllIndents" onchange="javascript:toggleRequestId(this);"/></td>
@@ -120,6 +129,15 @@ under the License.
               	<#assign product = (delegator.findOne("Product", {"productId" : eachItem.productId}, false))!>
               	<#assign uom = (delegator.findOne("Uom", {"uomId" : product.quantityUomId}, false))!>
               	<td>${product.productName?if_exists} - [${eachItem.productId?if_exists}][${uom.description?if_exists}]</td>
+				<#if custRequestTypeId == "INTERNAL_INDENT">
+				<#assign facilitiesList = eachItem.get("facility")>
+          		<td><select id="facilityId" name="facilityId">
+          				<#list facilitiesList as facility>
+							<option value="${facility.facilityId}">${facility.facilityName?if_exists}</option>
+                        </#list>
+          		    </select>	
+          		</td>
+          		</#if>
               	<td>${eachItem.quantity?if_exists}</td>
            		<td><input type="checkbox" id="indentCheckBoxId_${eachItem_index}" name="indentCheckBoxId"/></td>
             </tr>

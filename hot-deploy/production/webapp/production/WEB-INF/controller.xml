@@ -90,6 +90,14 @@
        <response name="error" type="request" value="json"/>       
     </request-map>
     
+    <request-map uri="getProductInventoryOpeningBalance">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getProductInventoryOpeningBalance"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    
     <request-map uri="createProductionRunSingle">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProductionRun"/>

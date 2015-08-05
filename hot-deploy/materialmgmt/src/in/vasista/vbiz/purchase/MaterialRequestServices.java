@@ -1311,6 +1311,7 @@ public class MaterialRequestServices {
 		       String fromPartyId = "";
 		       String productId = "";
 		       String quantityStr="";
+		       String fromFacilityId = "";
 		   BigDecimal quantity = BigDecimal.ZERO;
 
 		       Map statusCtx = FastMap.newInstance();
@@ -1343,6 +1344,9 @@ public class MaterialRequestServices {
 			request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 			return "error";	 
 			}	 
+			if (paramMap.containsKey("facilityId" + thisSuffix)) {
+				fromFacilityId = (String) paramMap.get("facilityId" + thisSuffix);
+				}
 			if(UtilValidate.isNotEmpty(quantityStr)){
 			quantity = new BigDecimal(quantityStr);
 			}
@@ -1369,8 +1373,12 @@ public class MaterialRequestServices {
 			if(UtilValidate.isNotEmpty(tenantConfigCheck)){
 				condList.clear();
 				EntityCondition condition=null;
-				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, fromPartyId));
-				condList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT"));
+				if(UtilValidate.isNotEmpty(fromFacilityId)){
+					condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, fromFacilityId));
+				}else{
+					condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, fromPartyId));
+					condList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT"));
+				}
 				condList.add(EntityCondition.makeCondition("enableDeptInvCheck", EntityOperator.EQUALS, "Y"));
 				condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
 				        GenericValue facilityCheckParty= null;
