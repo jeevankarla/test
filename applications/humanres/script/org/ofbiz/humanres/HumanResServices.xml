@@ -295,6 +295,52 @@
         	<set field="lookedUpValue.thruDate" type="Timestamp" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(parameters.thruDate)}"/>
         	<if-not-empty field="parameters.terminationTypeId">   
              	<store-value value-field="lookedUpValue"/>
+                <if>
+          			<condition>
+          				<or>
+		          		   <if-compare operator="equals" value="RETIRE" field="parameters.terminationTypeId"/>
+		                   <if-compare operator="equals" value="DEATH" field="parameters.terminationTypeId"/>
+		                   <if-compare operator="equals" value="RESIGN" field="parameters.terminationTypeId"/>
+          				   <if-compare operator="equals" value="SUSPENDED" field="parameters.terminationTypeId"/>
+          				   <if-compare operator="equals" value="ABSCOND" field="parameters.terminationTypeId"/>
+          				   <if-compare operator="equals" value="TERM" field="parameters.terminationTypeId"/>
+          				</or>
+          			</condition>
+          			<then>
+          				<set field="closedThruDate" from-field="parameters.thruDate"/>
+          				<entity-and entity-name="UserLogin" list="userLoginValueList">
+			            	<field-map field-name="partyId" from-field="parameters.partyIdTo"/>
+			        	</entity-and>			        	
+			        	<first-from-list entry="userLoginValue" list="userLoginValueList"/>
+			        	<if-not-empty field="userLoginValue">
+	          				<entity-and entity-name="UserLoginSecurityGroup" list="securityGroupList">
+				            	<field-map field-name="userLoginId" from-field="userLoginValue.userLoginId" />
+				        	</entity-and>
+				        	<if-not-empty field="securityGroupList">
+					        	<iterate entry="securityGroup" list="securityGroupList">
+					        		<if-not-empty field="securityGroup">
+	        				       		<now-timestamp field="nowTimeStamp"/>
+					            		<if-compare-field field="parameters.thruDate" to-field="nowTimeStamp" operator="less-equals" type="String">
+								        	<set field="userLoginValue.disabledDateTime" from-field="nullField" />
+								        	<set field="userLoginValue.enabled" value="N"/>
+					            			<set field="userLoginValue.hasLoggedOut" value="Y"/>
+								       		<store-value value-field="userLoginValue"/>
+									   		<set field="securityGroup.thruDate" from-field="parameters.thruDate" />
+								 			<store-value value-field="securityGroup"/>
+					            		</if-compare-field>
+					            		<if-compare-field field="parameters.thruDate" to-field="nowTimeStamp" operator="greater" type="String">
+								        	<set field="userLoginValue.enabled" value="Y"/>
+								        	<set field="userLoginValue.disabledDateTime" from-field="parameters.thruDate" />
+								        	<store-value value-field="userLoginValue"/>
+					            			<set field="securityGroup.thruDate" from-field="nullField" />
+							 		 		<store-value value-field="securityGroup"/>
+					            		</if-compare-field> 
+					            	</if-not-empty>
+					            </iterate>
+					        </if-not-empty>
+				         </if-not-empty>
+        			</then> 
+        		</if>
              	<set field="responseMessage" value="Updated successfully."/>
         	<field-to-result field="responseMessage" result-name="successMessage"/>
             <else>
