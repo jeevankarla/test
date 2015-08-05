@@ -634,16 +634,16 @@
 	
 		   var declareColumn = [
 		   			{id:"cDeclareProductName", name:"Product", field:"cDeclareProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
 					{id:"declareCrates", name:"Crates", field:"declareCrates", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: cratesFormatter, validator: cratesValidator, sortable:false},
+					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"cell-title", formatter: quantityFormatter, validator: quantityValidator, sortable:false},
 					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"toFacilityId", name:"Move To", field:"toFacilityId", width:120, minWidth:120, cssClass:"cell-title", regexMatcher:"contains", availableTags: availFacTagsGrid2, editor: AutoCompleteEditor, formatter: facilityFormatter, sortable:false}
 			];
 			
 			var declaredColumn = [
 		   			{id:"cDeclareProductName", name:"Product", field:"cDeclareProductName", width:240, minWidth:240, cssClass:"readOnlyColumnClass", focusable :false, editor:FloatCellEditor, sortable:false, toolTip:""},
-					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"readOnlyColumnClass", focusable :false, sortable:false},
 					{id:"declareCrates", name:"Crates", field:"declareCrates", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"readOnlyColumnClass", focusable :false, sortable:false},
+					{id:"declareQuantity", name:"Quantity", field:"declareQuantity", width:80, minWidth:80, editor:FloatCellEditor, cssClass:"readOnlyColumnClass", focusable :false, sortable:false},
 					{id:"declareUom", name:"UOM", field:"declareUom", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false},
 					{id:"toFacilityId", name:"Move To", field:"toFacilityId", width:120, minWidth:120, cssClass:"readOnlyColumnClass", focusable :false, sortable:false}
 			];
@@ -673,7 +673,7 @@
 		
 		// wire up model events to drive the grid
         if (data2.length > 0) {			
-			$(grid2.getCellNode(0, 1)).click();
+			$(grid2.getCellNode(0, 2)).click();
 		}else{
 			$(grid2.getCellNode(0,0)).click();
 		}
@@ -750,7 +750,7 @@
     	});
         grid2.onCellChange.subscribe(function(e,args) {
         
-        if (args.cell == 0 || args.cell == 1) {
+        if (args.cell == 0 || args.cell == 2) {
 				var prod = data2[args.row]["cDeclareProductId"];
 				var prodConversionData = conversionData[prod];
 				var calcQty = 0;
@@ -759,9 +759,13 @@
 				if(prodConversionData['CRATE']){
                  	convValue = prodConversionData['CRATE'];
 				}
+				if(prodConversionData['LtrKg']){
+                 	ltrKg = prodConversionData['LtrKg'];
+				}
 				var calculateQty = 0;
-				if(convValue != 'undefined' && convValue != null && calcQty>0){
-					declareCrates = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
+				if(ltrKg != 'undefined' && ltrKg != null && ltrKg>0){
+					declareboxes =convValue*ltrKg;
+					declareCrates = parseFloat(Math.round((calcQty/declareboxes)*1000)/1000);
 					data2[args.row]["declareCrates"] = declareCrates;
 				}
 				if(isNaN(declareCrates)){
@@ -770,7 +774,7 @@
 				grid2.updateRow(args.row);
 
 			} 
-        if (args.cell == 2) {
+        if (args.cell == 1) {
 				var prod = data2[args.row]["cDeclareProductId"];
                 var prodConversionData = conversionData[prod];
 				
@@ -779,14 +783,13 @@
 				var convValue = 1;
 				if(prodConversionData['CRATE']){
 					convValue = prodConversionData['CRATE'];
-					if(prodConversionData['BOX']){
-						var box = prodConversionData['BOX'];
-						convValue = parseInt(box*convValue);
-					}
-                }								
-				var calculateQty = 0;
-				if(convValue != 'undefined' && convValue != null && calcQty>0){
-					calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
+					LtrKg = prodConversionData['LtrKg'];
+                }	
+                var totBoxes = parseInt(calcQty*convValue);
+               	var calculateQty = 0;
+                if(prodConversionData['LtrKg']){
+                	ltrKg = prodConversionData['LtrKg'];
+                	calculateQty = parseFloat(Math.round((ltrKg*totBoxes)*100)/100);
 					data2[args.row]["declareQuantity"] = calculateQty;
 				}
 				if(isNaN(calculateQty)){
