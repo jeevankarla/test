@@ -41,7 +41,7 @@
 	<EnumerationType description="Order Prupose Type" enumTypeId="PROC_ORD_PUR_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Milk Procurement" enumCode="MILK_PROCUREMENT" enumId="MILK_PROCUREMENT" sequenceId="01" enumTypeId="PROC_ORD_PUR_TYPE"/>
 	
-	<PeriodType description="Procurement Billing Period" periodTypeId="PROC_BILL_MONTH" periodLength="1" uomId="TF_mon"/>
+	<PeriodType description="Purchase Billing Period" periodTypeId="PROC_BILL_MONTH" periodLength="1" uomId="TF_mon"/>
 	
     <StatusType statusTypeId="MILK_XFER_STTS" description="MILK TRANSFER"/>
     <StatusItem statusId ="MXF_INPROCESS" statusTypeId="MILK_XFER_STTS" statusCode = "INPROCESS" description ="IN PROCESS" />

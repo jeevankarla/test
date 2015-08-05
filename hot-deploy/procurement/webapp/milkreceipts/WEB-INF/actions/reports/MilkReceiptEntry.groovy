@@ -236,7 +236,10 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_OUT") || (
 		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_CIP"));
 	}
 	if(displayScreen=="VEHICLE_OUT"){
-		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_VEHICLE_TARWEIGHT"));
+		List<String> statusList = FastList.newInstance();
+		statusList.add("MR_VEHICLE_TARWEIGHT");
+		statusList.add("MR_VEHICLE_QCREJECT");
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,statusList));
 	}
 	conList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
 	EntityCondition ecl = EntityCondition.makeCondition(conList,EntityOperator.AND);

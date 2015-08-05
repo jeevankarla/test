@@ -180,7 +180,7 @@ public class MilkReceiptBillingServices {
 		milkTrnasferCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDateTime));
 		milkTrnasferCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDateTime));
 		//
-		milkTrnasferCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("MXF_INIT","MXF_INPROCESS","MXF_REJECT")));
+		milkTrnasferCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MXF_APPROVED"));
 		if(UtilValidate.isNotEmpty(partyId)){
 			milkTrnasferCondList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
 		}
@@ -551,8 +551,13 @@ public class MilkReceiptBillingServices {
         	String productKeyStr = productKey.toString();
         	Map tempProdMap = FastMap.newInstance();
         	tempProdMap.putAll((Map)productWiseAmtMap.get(productKey));
-        	BigDecimal quantity = (BigDecimal)tempProdMap.get("quantity");
+        	//BigDecimal quantity = (BigDecimal)tempProdMap.get("quantity");
+        	BigDecimal quantity = BigDecimal.ONE;
         	BigDecimal amount = (BigDecimal)tempProdMap.get("amount");
+        	/*BigDecimal unitPrice = BigDecimal.ZERO;
+        	if(UtilValidate.isNotEmpty(quantity) && UtilValidate.isNotEmpty(amount) && quantity.compareTo(BigDecimal.ZERO)==1){
+        		unitPrice = amount.divide(quantity, 8,BigDecimal.ROUND_HALF_UP);
+        	}*/
         	invItemInMap.put("amount",amount);
         	invItemInMap.put("quantity",quantity);
         	invItemInMap.put("productId",productKeyStr);
@@ -756,6 +761,8 @@ public class MilkReceiptBillingServices {
 				Debug.logError("Error while processing invoices :"+updatePurchaseInvoiceBilling,module);
 				return ServiceUtil.returnError("Error while processing invoices :"+ServiceUtil.getErrorMessage(updatePurchaseInvoiceBilling));
 			}
+			result = ServiceUtil.returnSuccess("Billing successfully Approved for "+periodBillingId);
+			
 		}
 		if("APPROVED_PAYMENT".equalsIgnoreCase(statusId)){
 			Map purchasePaymentResult=createPurchaseBillingPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
@@ -766,6 +773,7 @@ public class MilkReceiptBillingServices {
 	    		Debug.logError("Unable to Make Payment Process For Purchase Billing"+e, module);
 	    		return ServiceUtil.returnError("Unable to Make Payment Process For Purchase Billing! "); 
 			}   
+			result = ServiceUtil.returnSuccess("Payment Approved successfully for "+periodBillingId);
 			result.putAll(purchasePaymentResult);
 			/*Map updatePurchaseInvoiceBilling = updatePurchaseBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));
 			if(ServiceUtil.isError(updatePurchaseInvoiceBilling)){
@@ -782,6 +790,7 @@ public class MilkReceiptBillingServices {
 	    		Debug.logError("Unable To Cancel Purchase Bill Payment"+e, module);
 	    		return ServiceUtil.returnError("Unable To Cancel Purchase Bill Payment.. "); 
 			}   
+			result = ServiceUtil.returnSuccess("Payment Rejected successfully for "+periodBillingId);
 			result.putAll(purchasePaymentCancelResult);
 	       }
 		return result;
