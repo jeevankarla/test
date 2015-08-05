@@ -128,11 +128,12 @@ if(UtilValidate.isNotEmpty(milkTransferAndItemList)){
 	 productIds = new HashSet(EntityUtil.getFieldListFromEntityList(milkTransferAndItemList, "productId", false));
 }
 Map allProdProcPriceMap =FastMap.newInstance();
-BigDecimal totQuantity= BigDecimal.ZERO;
-BigDecimal totAmount= BigDecimal.ZERO;
+
 
 if(UtilValidate.isNotEmpty(productIds)){
 	productIds.each{eachProductId->
+		BigDecimal totQuantity= BigDecimal.ZERO;
+		BigDecimal totAmount= BigDecimal.ZERO;
 		BigDecimal price=BigDecimal.ZERO;
 		Map eachProductMap =FastMap.newInstance();
 		Map PremAndDeductionMap =FastMap.newInstance();
@@ -247,16 +248,17 @@ if(UtilValidate.isNotEmpty(productIds)){
 		if(UtilValidate.isNotEmpty(prodMilkTransferList)){
 			sno=1;
 			prodMilkTransferList.each{eachDateMilkReeceipt->
+				BigDecimal unitPrice = BigDecimal.ZERO;
 				Map eachVehicleMap =FastMap.newInstance();
 				
 				receiveDate=eachDateMilkReeceipt.receiveDate;
 				dcNo=eachDateMilkReeceipt.dcNo;
 				vehicleId=eachDateMilkReeceipt.containerId;
-				receivedQuantity=eachDateMilkReeceipt.receivedQuantity;
+				BigDecimal receivedQuantity=eachDateMilkReeceipt.receivedQuantity;
 				if(UtilValidate.isNotEmpty(receivedQuantity)){
 				totQuantity=totQuantity+receivedQuantity;
 				}
-				unitPrice=eachDateMilkReeceipt.unitPrice;
+				milkUnitPrice=eachDateMilkReeceipt.unitPrice;
 				fatPremium =eachDateMilkReeceipt.fatPremium	;
 				snfPremium =eachDateMilkReeceipt.snfPremium;
 				billQuality=eachDateMilkReeceipt.billQuality;
@@ -268,25 +270,27 @@ if(UtilValidate.isNotEmpty(productIds)){
 					fatPercent=eachDateMilkReeceipt.receivedFat;
 				}
 				if(UtilValidate.isNotEmpty(fatPremium)){
-					unitPrice=fatPremium+snfPremium+price;
+					unitPrice=fatPremium+snfPremium+milkUnitPrice;
 				}
-					
 				BigDecimal vehicleTotAmt =BigDecimal.ZERO;
 				BigDecimal actualAmt =BigDecimal.ZERO;
 				BigDecimal fatPremAmt =BigDecimal.ZERO;
 				BigDecimal snfPremAmt =BigDecimal.ZERO;
 				if(UtilValidate.isNotEmpty(unitPrice)){
-					actualAmt=receivedQuantity*unitPrice;
+					actualAmt=receivedQuantity*milkUnitPrice;
+					actualAmt=actualAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 					vehicleTotAmt=vehicleTotAmt+actualAmt;
 					eachVehicleMap.put("actualAmt",actualAmt);
 				}
 				if(UtilValidate.isNotEmpty(fatPremium)){
 					fatPremAmt=receivedQuantity*fatPremium;
+					fatPremAmt=fatPremAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 					vehicleTotAmt=vehicleTotAmt+fatPremAmt;
 					eachVehicleMap.put("fatPremAmt",fatPremAmt);
 				}
 				if(UtilValidate.isNotEmpty(snfPremium)){
 					snfPremAmt=receivedQuantity*snfPremium;
+					snfPremAmt=snfPremAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 					vehicleTotAmt=vehicleTotAmt+snfPremAmt;
 					eachVehicleMap.put("snfPremAmt",snfPremAmt);
 				}
@@ -307,14 +311,15 @@ if(UtilValidate.isNotEmpty(productIds)){
 			}
 		}
 		eachProductMap.put("vehicleWiseDetailsMap", vehicleWiseDetailsMap);
+		eachProductMap.put("totQuantity", totQuantity);
+		eachProductMap.put("totAmount", totAmount);
 		
 		allProdProcPriceMap.put(eachProductId,eachProductMap);
 	}
 }
-context.allProdProcPriceMap=allProdProcPriceMap;	
+context.allProdProcPriceMap=allProdProcPriceMap;
 
-context.totQuantity=totQuantity;
-context.totAmount=totAmount;
+
 
 
 

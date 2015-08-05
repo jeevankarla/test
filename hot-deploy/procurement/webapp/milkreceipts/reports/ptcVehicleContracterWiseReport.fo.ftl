@@ -135,12 +135,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 				               <#if totContractSubTotMap?has_content>
 				                 <#assign totContractSubTotals = totContractSubTotMap.get(partyId)?if_exists>
 								  <fo:table-row border-style="dotted">
-									  <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">  </fo:block></fo:table-cell>       		
-							          <fo:table-cell number-columns-spanned="2"><fo:block text-align="center"  font-weight="bold"  font-size="12pt" > Sub Total</fo:block></fo:table-cell>       		
+  								  <fo:table-cell ><fo:block text-align="center"   font-size="12pt"></fo:block>		</fo:table-cell>
+			                    <#assign vehiclePartyIds = eachcontractorVehicle.getValue().get("partyIds").entrySet()?if_exists>											
+			              		  <#list vehiclePartyIds as vehiclePartyId>
+	                                <fo:table-cell ><fo:block text-align="center"   font-size="12pt"></fo:block></fo:table-cell>       		
+	                               </#list>							          
+	                               <fo:table-cell ><fo:block text-align="center"  font-weight="bold"  font-size="12pt" > Sub Total</fo:block></fo:table-cell>       		
 							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorAmt')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+							        <#assign fenalities= eachcontractorVehicle.getValue().get("fineRecoveryMap").entrySet()?if_exists>											
+			                        <#if fenalities?has_content>
 							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorAdditions')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
 							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorDedutions')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
 							          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totContractSubTotals.get('contractorTotAmt')?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+						             </#if> 
 						           </fo:table-row>
 						         </#if> 
    		                            </fo:table-body>   
