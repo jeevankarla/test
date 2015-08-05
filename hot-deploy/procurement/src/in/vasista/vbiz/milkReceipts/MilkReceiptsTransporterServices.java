@@ -410,6 +410,11 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				}
 				if("APPROVED".equalsIgnoreCase(statusId)){
 					Map ptcInvoiceResult=createPTCInvoice(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+					if(ServiceUtil.isError(ptcInvoiceResult)){
+						result.putAll(ptcInvoiceResult);
+						return result;
+					}
+					result = ServiceUtil.returnSuccess("Billing  approved successfully for "+periodBillingId);
 					result.putAll(ptcInvoiceResult);
 				}
 				if("APPROVED_PAYMENT".equalsIgnoreCase(statusId)){
@@ -426,6 +431,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 			    		Debug.logError("Unable to Make Payment Process For PTC Billing"+e, module);
 			    		return ServiceUtil.returnError("Unable to Make Payment Process For PTC Billing! "); 
 					}   
+					result = ServiceUtil.returnSuccess("Payment Approved successfully for "+periodBillingId);
 					result.putAll(ptcPaymentResult);
 					/*Map updateInvoiceResult = updatePTCBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_PAID"));  
 					if(ServiceUtil.isError(updateInvoiceResult)){
@@ -441,7 +447,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 			        }catch (GenericEntityException e) {
 			    		Debug.logError("Unable To Cancel DTC Bill Payment"+e, module);
 			    		return ServiceUtil.returnError("Unable To Cancel DTC Bill Payment.. "); 
-					}   
+					}
+					result = ServiceUtil.returnSuccess("Payment rejected successfully for "+periodBillingId);
 					result.putAll(ptcPaymentCancelResult);
 			       }
 				
@@ -758,9 +765,9 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 		            Debug.logError(e, "Error in calling 'generatePtcMargin' service", module);
 		            return ServiceUtil.returnError(e.getMessage());
 		        } 
+			    result = ServiceUtil.returnSuccess("Billing Successfully Generated  :"+periodBillingId);
 		        result.put("periodBillingId", periodBillingId);
-		        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-		    	return result;
+		        return result;
 		    }
 		 
 		  public static Map<String, Object>  populatePtcCommissiions(DispatchContext dctx, Map<String, ? extends Object> context, List masterList, String periodBillingId)  {
@@ -863,7 +870,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 						masterResultMap = getPtcMasterList(dctx,inMap);
 						if(ServiceUtil.isError(masterResultMap)){
 							Debug.logError("Error while Preparing masterList ::"+masterResultMap,module);
-							return ServiceUtil.returnError("Error while Preparing masterLis ::"+ServiceUtil.getErrorMessage(masterResultMap));
+							return ServiceUtil.returnError("Error while Preparing masterList ::"+ServiceUtil.getErrorMessage(masterResultMap));
 						}
 						masterList.addAll((List)masterResultMap.get("masterList"));
 						if(UtilValidate.isEmpty(masterList)){
@@ -974,6 +981,38 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					Debug.logError("No Records found" ,module);
 					return ServiceUtil.returnError("No records found");
 				}
+				List<String> tempContractorVehicleIdsList = FastList.newInstance();
+				try{
+					List tempContractorCondList = FastList.newInstance();
+					tempContractorCondList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
+					tempContractorCondList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,"TEMP_CONTRACTOR"));
+					tempContractorCondList.add(
+			        				EntityCondition.makeCondition(
+			        				EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate),EntityOperator.OR,
+			        				EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate",EntityOperator.GREATER_THAN,fromDate),EntityOperator.AND,EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN,thruDate))
+			        		));
+					tempContractorCondList.add(
+			        EntityCondition.makeCondition(
+			        		   EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),
+			        		   EntityOperator.OR,
+			        		   EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,thruDate)
+			        		));
+			        EntityCondition tempContractorcondition = EntityCondition.makeCondition(tempContractorCondList);
+			        List tempcontractorVehiclesList = delegator.findList("VehicleRole",tempContractorcondition, null, null, null, true);
+			        tempContractorVehicleIdsList = EntityUtil.getFieldListFromEntityList(tempcontractorVehiclesList, "vehicleId", false);
+				}catch(GenericEntityException e){
+					Debug.logError("Error while getting tempContractor vehicle List :"+e,module);
+				}
+				if(UtilValidate.isNotEmpty(tempContractorVehicleIdsList)){
+					List tempContractorTransfer = EntityUtil.filterByCondition(milkTransferList,EntityCondition.makeCondition("containerId",EntityOperator.IN,tempContractorVehicleIdsList) );
+					HashSet tempContrTrnVehicleList  = (new HashSet(EntityUtil.getFieldListFromEntityList(tempContractorTransfer, "containerId", false))); 
+					if(UtilValidate.isNotEmpty(tempContrTrnVehicleList)){
+						Debug.logError("Billing could not generated for Temp contractor vehicles . Please check Milk Finalization.This  Period tempContractor vehicleList is :"+tempContrTrnVehicleList, customTimePeriodId);
+						return ServiceUtil.returnError("Billing could not generated for Temp contractor vehicles . Please check Milk Finalization.This  Period tempContractor vehicleList is :"+tempContrTrnVehicleList);
+					}
+				}
+				
+				
 				if(UtilValidate.isNotEmpty(milkTransferList)){
 					List<String> partyKeys = EntityUtil.getFieldListFromEntityList(milkTransferList,"partyId", false);
 					Set<String> partyIds = new HashSet(partyKeys);
@@ -1384,23 +1423,20 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 						Debug.logError("Error while creating PTCINVOICE"+e,module);
 						return ServiceUtil.returnError("Error while creating PTCINVOICE"+e.getMessage());
 					}
-					
-					
 					return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
 				}
 				
 				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-				
 				Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 				Map fineRecoveryResultMap =(Map) getFineRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
-				
 				Map partyWiseRecvoryMap= FastMap.newInstance();
 				partyWiseRecvoryMap.putAll((Map)fineRecoveryResultMap.get("contractorRecoveryInfoMap"));
 				Map partyVehicleMap = FastMap.newInstance();
-				partyVehicleMap.putAll((Map)fineRecoveryResultMap.get("partyVehicleMap"));
-			   
+				if(UtilValidate.isNotEmpty(fineRecoveryResultMap) && UtilValidate.isNotEmpty(fineRecoveryResultMap.get("partyVehicleMap"))){
+					partyVehicleMap.putAll((Map)fineRecoveryResultMap.get("partyVehicleMap"));
+				}
 				List<Strings> ptcAdditionTypeIds  = FastList.newInstance();
 				List<Strings> ptcDeductionTypeIds  = FastList.newInstance();
 				ptcAdditionTypeIds.addAll((List)fineRecoveryResultMap.get("ptcAdditionTypeIds"));
@@ -1414,8 +1450,16 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				//Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
 				Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
 		//		Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("roundedContractorRecoveryInfoMap");
-				
+				if(UtilValidate.isEmpty(totalPartyTradingTotalMap)){
+					Debug.logError("No Contracter found For Invoice Raise ",module);
+					return ServiceUtil.returnError("No Contracter found For Invoice Raise ");
+				}
 				if(UtilValidate.isNotEmpty(totalPartyTradingTotalMap)){
+					HashSet<String> contractersSet =new  HashSet(totalPartyTradingTotalMap.keySet());
+					if(UtilValidate.isNotEmpty(contractersSet) && contractersSet.contains("TEMP_CONTRACTOR")){
+						Debug.logError("We can not raise invoice against Temporary contractor. Please check Milk Finalization. ",module);
+						return ServiceUtil.returnError("We can not raise invoice against Temporary contractor. Please check Milk Finalization.");
+					}
 					Iterator partyMarginsIter = totalPartyTradingTotalMap.entrySet().iterator();
 					try{
 						while (partyMarginsIter.hasNext()) {
@@ -1453,13 +1497,15 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					                // call service for creation invoice);
 					                invoiceId = (String) createInvoiceResult.get("invoiceId");
 					                Map<String, Object> resMap = null;
-				                    resMap = dispatcher.runSync("createInvoiceItem", 
-				                    		UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "PTC_MRGN","quantity",quantity,"amount", totalMargin,"userLogin", userLogin));
+				                    
+					                resMap = dispatcher.runSync("createInvoiceItem", 
+				                    		UtilMisc.toMap("invoiceId", invoiceId,
+				                    				"invoiceItemTypeId", "PTC_MRGN",
+				                    				"quantity",quantity,"amount", totalMargin,"userLogin", userLogin));
 				                    if (ServiceUtil.isError(result)) {
 				                    	//generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 				                    }
-				                    
 				                    if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
 				                    	Map tempPartyRecoveries = FastMap.newInstance();
 				                    	tempPartyRecoveries.putAll((Map)partyWiseRecvoryMap.get(partyIdTo));
@@ -1610,8 +1656,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				Map inMap= FastMap.newInstance();
 				inMap.put("fromDate", monthBegin);
 				inMap.put("thruDate", monthEnd);
-				Map partyVehicleMap=(Map)getMdContractorWiseVehicle(dctx,inMap).get("contractorWiseMap");
-				
+				Map partyVehicleMap= FastMap.newInstance();
+				partyVehicleMap =(Map)getMdContractorWiseVehicle(dctx,inMap).get("contractorWiseMap");
 				if(UtilValidate.isNotEmpty(partyVehicleMap)){	
 				   for ( Object partyVehicleKey : partyVehicleMap.keySet() ) {
 					   String  partyId=partyVehicleKey.toString();
@@ -1671,18 +1717,28 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 		        	Debug.logError("Error while getting unions information"+e, module);
 		        	return ServiceUtil.returnError("Error while getting unions information"+e.getMessage());
 		        }
-		        
 		        List contractorsList = FastList.newInstance();
 		        try{
 		        	conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
 			        conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,unionIdsList));
 			        
-			        EntityCondition condition = EntityCondition.makeCondition(conditionList);
 			        
+			        
+			        conditionList.add(
+			        				EntityCondition.makeCondition(
+			        				EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate),EntityOperator.OR,
+			        				EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate",EntityOperator.GREATER_THAN,fromDate),EntityOperator.AND,EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN,thruDate))
+			        		));
+			        conditionList.add(
+			        EntityCondition.makeCondition(
+			        		   EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),
+			        		   EntityOperator.OR,
+			        		   EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,thruDate)
+			        		));
+			        EntityCondition condition = EntityCondition.makeCondition(conditionList);
 			        contractorsList = delegator.findList("VehicleRole",condition, null, null, null, true);
-			        contractorsList = EntityUtil.filterByDate(contractorsList, fromDate);
+			        
 		        }catch(Exception e){
-		        	
 		        	Debug.logError("Error while getting contractors List "+e, module);
 		        	return ServiceUtil.returnError("Error while getting contractors List"+e.getMessage());
 		        }
@@ -1698,8 +1754,6 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 		        	List<String> contractorVehiclesList = FastList.newInstance();
 		        	conditionList.clear();
 		        	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,contractorId));
-		        	conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate));
-		        	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,thruDate)));
 		        	EntityCondition contractorVehicleCondition = EntityCondition.makeCondition(conditionList);
 		        	List<GenericValue> contractorVehicles = EntityUtil.filterByCondition(contractorsList, contractorVehicleCondition); 
 		        	List<String> contractorVehicleIdsList = FastList.newInstance();
@@ -1708,7 +1762,9 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 		        	List<String> newVehiclesList = new ArrayList<String>(tempVehiclesSet);
 		        	contractorWiseMap.put(contractorId, newVehiclesList);
 		        }
-		        
+		        if(UtilValidate.isEmpty(contractorWiseMap)){
+		        	contractorWiseMap = FastMap.newInstance();
+		        }
 		        result.put("contractorWiseMap", contractorWiseMap);
 		        return result;
 			}//end of service
@@ -1732,8 +1788,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		        	try{
 		        		List<GenericValue> ptcBillingCommissions = FastList.newInstance();
+		        		
 		        		ptcBillingCommissions = delegator.findList("PtcBillingCommissionAndMilkTransfer", condition, null,null, null, false);	        		
-	                	
 		        		if(!UtilValidate.isEmpty(ptcBillingCommissions)){
 	                		if(UtilValidate.isNotEmpty(partyAndVehicleListMap)){
 	                			for(Object partyKey : partyAndVehicleListMap.keySet()){
@@ -1748,6 +1804,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	                				List<GenericValue> partyPtcBillingCommissions = FastList.newInstance();
 	                				
 	                				partyPtcBillingCommissions = EntityUtil.filterByCondition(ptcBillingCommissions, condition);
+	                				
 	                				if(UtilValidate.isNotEmpty(partyPtcBillingCommissions)){
 		                				for(GenericValue partyCommission : partyPtcBillingCommissions){
 		                					//here we are storing quantity and commission in partyWiseCommissionMap 
