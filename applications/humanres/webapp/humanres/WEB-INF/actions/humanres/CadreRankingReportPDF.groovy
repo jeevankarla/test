@@ -88,24 +88,24 @@ if(UtilValidate.isNotEmpty(employementIds)){
 			deptName  = "-";
 		}
 		//Debug.log("deptName====="+partyId+"=========="+deptName);
-		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : partyId]));
 		designationId = "";
-		gradeLevel = "";
-		if(UtilValidate.isNotEmpty(emplPositionAndFulfillments)){
-			designationId = emplPositionAndFulfillments[0].emplPositionTypeId;
-			if(UtilValidate.isNotEmpty(designationId)){
-				emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : designationId], true);
-				gradeLevel = 0;
-				if(UtilValidate.isNotEmpty(emplPositionType.get("gradeLevel"))){
-					gradeLevel=emplPositionType.get("gradeLevel");
-				}
-				if(UtilValidate.isNotEmpty(emplPositionType.get("description"))){
-					designationId = emplPositionType.description;
-				}
-			}
-		}else{
-			designationId  = "-";
+		gradeLevel = 0;
+		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : partyId]));
+		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
+		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
+			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
 			gradeLevel = 0;
+			if(UtilValidate.isNotEmpty(emplPositionType.get("gradeLevel"))){
+				gradeLevel=emplPositionType.get("gradeLevel");
+			}
+			if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && UtilValidate.isNotEmpty(emplPositionAndFulfillment.getString("name"))){
+				designationId = emplPositionAndFulfillment.getString("name");
+			}else if (emplPositionType != null) {
+				designationId = emplPositionType.getString("description");
+			}
+			else {
+				designationId = emplPositionAndFulfillment.getString("emplPositionId");
+			}
 		}
 		cadreMap.put("partyId",partyId);
 		cadreMap.put("Name",partyName);
@@ -119,7 +119,7 @@ if(UtilValidate.isNotEmpty(employementIds)){
 }
 if(parameters.departmentFlag){
 	if(UtilValidate.isNotEmpty(cadreEmployeeList)){
-		cadreEmployeeList =UtilMisc.sortMaps(cadreEmployeeList, UtilMisc.toList("deptName"));
+		cadreEmployeeList =UtilMisc.sortMaps(cadreEmployeeList, UtilMisc.toList("deptName","gradeSorting"));
 	}
 	context.put("cadreEmployeeList",cadreEmployeeList);
 }else{
