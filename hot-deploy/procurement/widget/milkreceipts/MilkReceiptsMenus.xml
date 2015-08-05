@@ -14,17 +14,14 @@
         <menu-item name="MRTransporters" title="Transporters">
         	<link target="mrTransporters"/>
         </menu-item>
-        <menu-item name="MRTransporterTimePeriod" title="Time Period">
+       <!--  <menu-item name="MRTransporterTimePeriod" title="Time Period">
             <condition>
 	        	<or>
 	        		<if-has-permission permission="MILKRECEIPT"  action="_TMPERIOD"/>
 	        	</or>        		
 	        </condition> 
         	<link target="mrTransporterTimePeriod"/>
-        </menu-item>     
-        <menu-item name="MRTransporterBilling" title="Transporter Billing">
-        	<link target="mrTransporterBilling"/>
-        </menu-item>  
+        </menu-item>    -->  
         <menu-item name="TransporterAdjustments" title="Transporter Adjustments">
          	<condition>
          		<or>
@@ -34,7 +31,15 @@
          	</condition>
         	 <link target="PtcAdjustmentDeductions"/>
          </menu-item>
+         <menu-item name="MRTransporterBilling" title="Transporter Billing">
+        	<link target="mrTransporterBilling"/>
+        </menu-item>  
       </menu>
+      <menu name="MilkreceiptTimePeriodTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+		<menu-item name="mrTransporterTimePeriod" title="Time Period">
+			<link target="mrTransporterTimePeriod"></link>
+		</menu-item>
+     </menu>
     <menu name="FindMilkReceiptsTankerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="SearchMilkReceiptsTankerEntry" title="Search Milk Receipts ">
 			<link target="FindMilkReceiptsTankerEntry"></link>
@@ -97,6 +102,14 @@
             </condition>
 			<link target="mrTransporters"></link>
         </menu-item>
+        <menu-item name="MRTransporterTimePeriod" title="Time Period">
+            <condition>
+	        	<or>
+	        		<if-has-permission permission="MILKRECEIPT"  action="_TMPERIOD"/>
+	        	</or>        		
+	        </condition> 
+        	<link target="mrTransporterTimePeriod"/>
+        </menu-item> 
         <menu-item name="Billing" title="Billing">
             <condition>
                 <or>

@@ -134,7 +134,8 @@
 	<InvoiceItemTypeMap invoiceItemMapKey="PTC_MILKCOST_DEDN" invoiceTypeId="PTC_TRNSPORTOR_INV" invoiceItemTypeId="PTC_MILKCOST" />
 	
    
-   	<PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" periodLength="1" uomId="TF_mon"/>
+   <PeriodType description="Milk Receipt Billing Types" periodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
+   <PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    
    <EnumerationType enumTypeId="MILK_PRCH_PURP" description="Milk Purchase Purpose" hasTable="N"></EnumerationType>
    
