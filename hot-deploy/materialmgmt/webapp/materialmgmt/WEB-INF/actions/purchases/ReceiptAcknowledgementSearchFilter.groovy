@@ -46,7 +46,29 @@ conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOpera
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 CustRequestAndItemAndAttribute = delegator.findList("CustRequestAndItemAndAttribute", condition, null, orderBy, null, false);
 if(UtilValidate.isNotEmpty(CustRequestAndItemAndAttribute)){
-   context.indentItems = CustRequestAndItemAndAttribute;
+	if(custRequestTypeId=="INTERNAL_INDENT"){
+		tempList=[];
+		CustRequestAndItemAndAttribute.each{items->
+			tempMap = [:];
+			tempMap.custRequestId=items.custRequestId;
+			tempMap.custRequestItemSeqId=items.custRequestItemSeqId;
+			tempMap.custRequestDate=items.custRequestDate;
+			tempMap.custRequestName=items.custRequestName;
+			tempMap.productId = items.productId;
+			tempMap.fromPartyId=items.fromPartyId;
+			tempMap.quantity = items.quantity;
+			productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId",EntityOperator.EQUALS,items.productId),UtilMisc.toSet("facilityId"),null,null,false);
+			prodFacilityIds = EntityUtil.getFieldListFromEntityList(productFacility, "facilityId", true);
+			ecl = EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodFacilityIds),
+				                                 EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,items.fromPartyId)],EntityOperator.AND);               
+			facilityList = delegator.findList("Facility",ecl,null,null,null,false);
+			tempMap.put("facility",facilityList);
+			tempList.add(tempMap);
+		}
+		context.indentItems = tempList;
+	}else{
+		context.indentItems = CustRequestAndItemAndAttribute;
+	}
 }
 
 	

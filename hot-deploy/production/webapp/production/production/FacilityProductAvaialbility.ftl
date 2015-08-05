@@ -191,7 +191,21 @@
 		});
 		return productTestComponentDetails;
 	}	
-	function showProductFacilityAvailableForm(productId,ownerFacilityId,reqQty,toBeIssued,custRequestId,custRequestItemSeqId,requestedParty) {	
+	var ownerFacilityId='';
+	function setFormValues(thisValue) {
+		var varform = $(thisValue).parent().parent();
+		var facilityObj=$(varform).find("[name='"+"facilityId"+"']");
+		var facilityId =$(facilityObj).val();
+		ownerFacilityId=facilityId;
+	}
+	function showProductFacilityAvailableForm(custRequestId,custRequestItemSeqId,fromPartyId,productId,quantity,issuedQty,tempQty) {	
+		var custRequestId=custRequestId;
+		var custRequestItemSeqId=custRequestItemSeqId;
+		var fromPartyId=fromPartyId;
+		var productId=productId;
+		var reqQty = quantity;
+		var issuedQty=issuedQty;
+		var toBeIssued=parseInt(reqQty)-parseInt(issuedQty);
 		var message = "";
 		var noOfFacilities=0;
 		var totIssuedQty =0;
@@ -200,16 +214,25 @@
 		if(typeof(toBeIssuedVal) == 'undefined' || toBeIssuedVal==''){
 			toBeIssuedVal = reqQty;
 		}
+		
+		if(typeof(ownerFacilityId) == 'undefined' || ownerFacilityId==''){
+			alert('You need to select facility.');
+			return false;
+		}
 		productFacilityComponentDetailsMap = getProductFacilityAvailable(productId,ownerFacilityId);
 		var productFacilityDetailsList = productFacilityComponentDetailsMap['productFacilityDetailsList'];
+		if(typeof(productFacilityDetailsList) == 'undefined' || ((typeof(productFacilityDetailsList) != 'undefined') && (productFacilityDetailsList.length==0))){
+			alert("Product Not Available..!");
+			return false;
+		}
 		var prodDetails = productFacilityComponentDetailsMap['prodDetails'];
-		if(typeof(prodDetails) != 'undefined'){12411
+		if(typeof(prodDetails) != 'undefined'){
 			prodName = prodDetails['productName'];
 		}
 		message += "<form action='IssueRequestThroughTransfer'  method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		message += "<tr class='h3'><td>Indent Qty </td><td>"+reqQty+"</td><input type='hidden' name='reqQty' value='"+reqQty+"'/></tr>";
 		message += "<tr class='h3'><td>Remaining Qty </td><td>"+toBeIssuedVal+"</td><input type='hidden' name='toBeIssued' value='"+toBeIssuedVal+"'/></tr>";
-		message += "<tr class='h3'><td>product </td><td>"+prodName+" - "+productId+"</td><input type='hidden' name='productId' value='"+productId+"'/><input type='hidden' name='partyIdTo' value='"+requestedParty+"'/></tr>";
+		message += "<tr class='h3'><td>product </td><td>"+prodName+" - "+productId+"</td><input type='hidden' name='productId' value='"+productId+"'/><input type='hidden' name='partyIdTo' value='"+fromPartyId+"'/></tr>";
 		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";
 		message += "<tr class='h2'><td>Silo/Tank/Floor</td><td>Available Qty</td> <td>Issue Qty</td> </tr>";
 		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";

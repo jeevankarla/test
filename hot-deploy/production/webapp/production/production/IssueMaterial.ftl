@@ -46,6 +46,7 @@ function issueSelected(){
 	 var paramMap='finallist';
 	 var finallist=[];
 	 var index = 0;
+	 var submitCount=0;
 	 var issueSelectedRequests = 'issueSelectedRequests';
 	 var issueMaterial = 'issueMaterial';	
 	 var action;
@@ -58,9 +59,36 @@ function issueSelected(){
  	 var tempQtyObj=$(varform).find("[name='"+"tempQty"+"']");
  	 var facilityObj=$(varform).find("[name='"+"facilityId"+"']");
  	 var shipmentTypeObj = $(varform).find("[name='"+"shipmentTypeId"+"']");
+ 	 var qohObj = $(varform).find("[name='"+"QOH"+"']");
+ 	 var issuedQtyObj = $(varform).find("[name='"+"issuedQty"+"']");
+ 	 var quantityObj = $(varform).find("[name='"+"quantity"+"']");
+ 	 var qoh = $(qohObj).val();
+ 	 var facilityId =$(facilityObj).val();
+ 	 if(facilityId == undefined || facilityId == ''){
+ 	  	submitCount=submitCount+1;
+ 	 	alert("Please select Facility..!");
+ 	 	return false;
+ 	 }
+ 	 if(qoh<=0){
+ 	 	submitCount=submitCount+1;
+ 	 	alert("Quantity not available to Isuue..!");
+ 	 	return false;
+ 	 }
  	 var shipmentTypeId = $(shipmentTypeObj).val();
  	 var tempQty=$(tempQtyObj).val();
- 	 var facilityId =$(facilityObj).val();
+ 	 if(tempQty<0){
+ 	 	submitCount=submitCount+1;
+ 	 	alert("Please check QtyToIssue..!");
+ 	 	return false;
+ 	 }
+ 	 var issuedQty = $(issuedQtyObj).val();
+ 	 var quantity = $(quantityObj).val();
+ 	 var totalQty = parseInt(issuedQty)+parseInt(tempQty);
+ 	 if(totalQty>quantity){
+ 	 	submitCount=submitCount+1;
+ 	 	alert("Please check QtyToIssue.!");
+ 	 	return false;
+ 	 }
    	 var issuance=$(this).val();
      var inputElementIdSplit = issuance.split('_');
    	 var appendStr = "<input type=hidden name=custRequestId_o_"+index+" value="+inputElementIdSplit[0]+" />";
@@ -74,7 +102,38 @@ function issueSelected(){
     });
      action= issueSelectedRequests;
      jQuery('#submitIssuance').attr("action", action);
-     jQuery('#submitIssuance').submit();
+    if(submitCount==0){
+     	jQuery('#submitIssuance').submit();
+     }
+}
+function getInvAvailBalance(element){
+	var curreElem = $(element);
+ 	var varform = curreElem.parent().parent().parent();
+	var facilityObj=$(varform).find("[name='"+"facilityId"+"']");
+	var facilityId =$(facilityObj).val();
+	var productIdObj=$(varform).find("[name='"+"productId"+"']");
+	var productId =$(productIdObj).val();
+	var partyIdFromObj=$(varform).find("[name='"+"partyIdFrom"+"']");
+	var partyIdFrom =$(partyIdFromObj).val();
+	var qohObj = $(varform).find("[name='"+"QOH"+"']");
+	$.ajax({
+         type: "POST",
+         url: 'getProductInventoryOpeningBalance',
+         data: {productId : productId,
+                ownerPartyId : partyIdFrom,
+                facilityId : facilityId},
+         dataType: 'json',
+         success: function(result) {
+           if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+        	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
+           }else{               			
+        	    invQty = result["inventoryCount"];
+        	    $(qohObj).val(invQty);
+        	    $(qohObj).attr("readOnly","readOnly");
+           }
+         } 
+    });
+	
 }
 
 </script>
@@ -83,7 +142,7 @@ function issueSelected(){
 
 <#assign flag = "false">
 <#list custRequestItemsList as custRequestItem>
-<#if (custRequestItem.QOH >= 1) >
+<#if (custRequestItem.QOH >= 0) >
 <#assign flag = "true">
 </#if>
 </#list>

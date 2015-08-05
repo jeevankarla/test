@@ -80,10 +80,10 @@ conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.
 conditionItemIssue = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime","-custRequestId"), null, false);
 String facilityId = "";
-List facilityList = FastList.newInstance();
+/*List facilityList = FastList.newInstance();
 if(UtilValidate.isNotEmpty(context.get("facilityList"))){
 	facilityList = context.get("facilityList");
-	if(UtilValidate.isNotEmpty(facilityList) && (facilityList.size() == 1)){
+	if(UtilValidate.isNotEmpty(facilityList)){
 		facility = EntityUtil.getFirst(context.get("facilityList"));
 		if(UtilValidate.isNotEmpty(facility)){
 			facilityId = facility.get("facilityId");
@@ -113,7 +113,7 @@ productIds.each{eachProd ->
 	invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", inMap);
 	invQty = invCountMap.get("inventoryCount");
 	prodInvMap.putAt(eachProd, invQty);
-}
+}*/
 custRequestItemsList = [];
 custRequestItems.each{ eachItem ->
 	String productId = eachItem.productId;
@@ -127,9 +127,9 @@ custRequestItems.each{ eachItem ->
 	tempMap.putAt("productId", eachItem.productId);
 	tempMap.putAt("quantity", eachItem.quantity);
 	tempMap.putAt("statusId", eachItem.itemStatusId);
-	if(UtilValidate.isNotEmpty(facilityId)){
-		tempMap.putAt("facilityId", facilityId);
-	}
+	/*if(UtilValidate.isNotEmpty(context.get("facilityList"))){
+		tempMap.putAt("facilityList", context.get("facilityList"));
+	}*/
 	
 	List custRequstParty=delegator.findList("CustRequestParty",EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,eachItem.custRequestId),null,null,null,false);
 	custReqParty=EntityUtil.getFirst(custRequstParty);
@@ -140,9 +140,9 @@ custRequestItems.each{ eachItem ->
 	filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
 	
 	invAvail = 0;
-	if(prodInvMap.get(eachItem.productId)){
+	/*if(prodInvMap.get(eachItem.productId)){
 		invAvail = prodInvMap.get(eachItem.productId);
-	}
+	}*/
 	issuedQty=0;
 	custReqIssuenceList = EntityUtil.filterByCondition(itemIssuanceList,filterIssuenceCond);
 	custReqIssuenceList.each{custRequestIssueItem->

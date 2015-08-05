@@ -482,9 +482,10 @@
    <form name="ListProductionIssueRequests" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  paginate-target="StoreProductIssue">
         <row-actions>
-        	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
+            <set field="flag" value="N"/>
+        	<!-- <set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
         	<set field="custmQuantity" value="${quantity-(QOH+issuedQty)}"/>
-        	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/>
+        	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/> -->
         	<entity-one value-field="product" entity-name="Product">
 				<field-map field-name="productId" from-field="productId"/>
 			</entity-one>
@@ -492,6 +493,20 @@
 				<field-map field-name="uomId" from-field="product.quantityUomId"/>
 			</entity-one>
 			<set field="dec" from-field="uom.description"/>
+			<entity-and entity-name="Facility"  list="facilitiesList">
+				<field-map field-name="ownerPartyId" from-field="partyIdFrom"/>
+			</entity-and>
+			<set field="facilityIds" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(facilitiesList, 'facilityId', true);}" type="List"/>
+			<entity-condition entity-name="ProductFacility" list="proFacilityList">
+				<condition-list combine="and">
+					<condition-expr field-name="productId" operator="equals" from-field="productId"/>
+					<condition-expr field-name="facilityId" operator="in" from-field="facilityIds"/>
+				</condition-list>
+			</entity-condition>
+			<set field="prodFacilityIds" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(proFacilityList, 'facilityId', true);}" type="List"/>
+			<entity-condition entity-name="Facility" list="finalFacilityList">
+				<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityIds"/>
+			</entity-condition>
         </row-actions>
         <field name="shipmentTypeId"><hidden value="PRODUCTION_SHIPMENT"/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
@@ -500,21 +515,22 @@
         <field name="fromPartyId" title="Requested Department">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="partyIdFrom" title="Issue Department">
+        <field id-name="partyIdFrom" name="partyIdFrom" title="Issue Department">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+        <field id-name="productId" name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
-        <field name="facilityId" title="facility"><display></display></field>
+        <field name="facilityId" title="facility" event="onchange" action="javascript:getInvAvailBalance(this);"><drop-down allow-empty="true"><list-options key-name="facilityId" list-name="finalFacilityList" description="${facilityName}"/></drop-down></field>
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
          <field name="quantity" title="Req. Qty"><display/></field>
           <field name="issuedQty" title="IssuedQty" ><display/></field>  
-         <field name="QOH" title="InventoryAvailable" ><display/></field>
-        <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="${toBeIssuedQty}"> </text></field>
-        <field name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="flag == &quot;Y&quot; &amp;&amp; showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
-        <field name="issueThruTransfer" widget-style="buttontext" title="Issue thru Transfers" use-when= "showTransferButton == &quot;Y&quot;">
-            <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${productId}','${facilityId}','${quantity}','${toBeIssuedQty}','${custRequestId}','${custRequestItemSeqId}','${fromPartyId}');" description="Issue thru Transfer">
+         <field name="QOH" title="InventoryAvailable" ><text default-value="0" size="10" read-only="true"></text> </field>
+        <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="0"> </text></field>
+        <field id-name="checkIssuance" name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
+        <field name="issueThruTransfer" widget-style="buttontext" title="Issue thru Transfers" use-when= "showTransferButton == &quot;Y&quot;" event="onclick" action="javascript:setFormValues(this);">
+            <!-- <display  description="Transfer"/> -->
+            <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${custRequestId}','${custRequestItemSeqId}','${fromPartyId}','${productId}','${quantity}','${issuedQty}','${tempQty}');" description="Issue thru Transfer">
             </hyperlink>
         </field>
     </form>
