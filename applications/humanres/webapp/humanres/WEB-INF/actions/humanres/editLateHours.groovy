@@ -192,26 +192,160 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		for(GenericValue workedHoliday: workedHolidaysListTemp){
 			Date tempDate = workedHoliday.getDate("date");
 			String encashFlag = "encashFlag";	
-			Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate,"encashFlag",encashFlag));
-			if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
-				Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
-				if(UtilValidate.isNotEmpty(punchDetails)){
-					String totalTime = (String)punchDetails.get("totalTime");
-					if(UtilValidate.isNotEmpty(totalTime)){
-						totalTime = totalTime.replace(" Hrs", "");
-						List<String> timeSplit = StringUtil.split(totalTime, ":");
-						if(UtilValidate.isNotEmpty(timeSplit)){
-							 int hours = Integer.parseInt(timeSplit.get(0));
-							 int minutes = Integer.parseInt(timeSplit.get(1));
-							 //if(((hours*60)+minutes) >=210){
-							 if(((hours*60)+minutes) >=465){
-								 workedHolidaysList.add(workedHoliday);
-							 }
+			
+			Timestamp date = UtilDateTime.toTimestamp(tempDate);
+			Timestamp fromDateStart = UtilDateTime.getDayStart(date);
+			Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
+			Timestamp previousDayStart = UtilDateTime.getDayStart(previousDayEnd);
+			
+			Timestamp nextDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, 1));
+			Timestamp nextDayStart = UtilDateTime.getDayStart(nextDayEnd);
+			
+			int k = 0;
+			List<GenericValue> leavesList = FastList.newInstance();
+			List<GenericValue> punchOutdeatils = FastList.newInstance();
+			String weeklyOffFlag = "false";
+			
+			
+			List condList1 = UtilMisc.toList(
+			EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			//conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, previousDayEnd));
+			condList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, previousDayEnd), EntityOperator.OR,
+					EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nextDayEnd)));
+			condList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO, previousDayStart),EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nextDayStart))));
+			EntityCondition cond1 = EntityCondition.makeCondition(condList1, EntityOperator.AND);
+			leavesList = delegator.findList("EmplLeave", cond1, null, null, null, false);
+			
+			String previousDayStr=UtilDateTime.toDateString(previousDayStart ,"yyyy-MM-dd");
+			String nextDayStr=UtilDateTime.toDateString(nextDayStart ,"yyyy-MM-dd");
+			
+			Timestamp monthBegin = UtilDateTime.getMonthStart(previousDayStart, timeZone, locale);
+			Timestamp monthEnd = UtilDateTime.getMonthEnd(nextDayStart, timeZone, locale);
+			
+			String emplWeeklyOff = "SUNDAY";
+			GenericValue employeeDetails = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId",partyId),false);
+			if(UtilValidate.isNotEmpty(employeeDetails) && UtilValidate.isNotEmpty(employeeDetails.getString("weeklyOff"))){
+				emplWeeklyOff = employeeDetails.getString("weeklyOff");
+			}
+			List weeklyOffDaysList = FastList.newInstance();
+			
+			Calendar c3=Calendar.getInstance();
+			c3.setTime(UtilDateTime.toSqlDate(monthBegin));
+			Calendar c4=Calendar.getInstance();
+			c4.setTime(UtilDateTime.toSqlDate(monthEnd));
+			while(c4.after(c3)){
+				Timestamp c3Time = new Timestamp(c3.getTimeInMillis());
+				String monthDayName = (c3.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
+				Timestamp c3TimeStart = UtilDateTime.getDayStart(c3Time);
+				if(monthDayName.equals(emplWeeklyOff)){
+					weeklyOffDaysList.add(c3Time);
+				}
+				c3.add(Calendar.DATE,1);
+			}
+			
+			List datesList = FastList.newInstance();
+			datesList = UtilMisc.toList(previousDayStart,nextDayStart);
+			
+			if(UtilValidate.isNotEmpty(datesList)){
+				for(int j=0;j<datesList.size();j++){
+					Timestamp punchDate = (Timestamp)datesList.get(j);
+					List conditionList1 = FastList.newInstance();
+					conditionList1.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, (UtilDateTime.toSqlDate(punchDate))));
+					conditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					conditionList1.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "IN"));
+					EntityCondition condition1=EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
+					List<GenericValue> punchINdeatils = delegator.findList("EmplPunch", condition1 , null, null, null, false );
+					if(UtilValidate.isNotEmpty(punchINdeatils)){
+						
+						GenericValue punchINrecord = EntityUtil.getFirst(punchINdeatils);
+						String shiftType = punchINrecord.getString("shiftType");
+						
+						Timestamp nextInPunchDate = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(punchDate, 1));
+						List conditionList2 = FastList.newInstance();
+						if(shiftType.equals("SHIFT_NIGHT")){
+							conditionList2.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(nextInPunchDate)));
+						}else{
+							conditionList2.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(punchDate)));
+						}
+						conditionList2.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+						conditionList2.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, shiftType));
+						conditionList2.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
+						EntityCondition condition2=EntityCondition.makeCondition(conditionList2,EntityOperator.AND);
+						punchOutdeatils = delegator.findList("EmplPunch", condition2 , null, null, null, false );
+						if(UtilValidate.isNotEmpty(punchOutdeatils)){
+							k = k + 1;
+						}
+					}else{
+						if(weeklyOffDaysList.contains(punchDate)){
+							k = k + 1;
+						}
+					}
+				}
+			}
+			String punchRecords = String.valueOf(k);
+			
+			if(UtilValidate.isEmpty(leavesList) && (punchRecords.equals("2"))){
+				Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate,"encashFlag",encashFlag));
+				if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
+					List punchDetailsList = (List)punMap.get("punchDataList");
+					
+					int minimumTime = 0;
+					int hours = 0;
+					int minutes = 0;
+					int totalMinutes = 0;
+					int index = 0;
+					
+					if(UtilValidate.isNotEmpty(punchDetailsList)){
+						Map firstPunchDetails = (Map) punchDetailsList.get(0);
+						String totalPunchTime = (String)firstPunchDetails.get("totalTime");
+						if(UtilValidate.isNotEmpty(totalPunchTime)){
+							totalPunchTime = totalPunchTime.replace(" Hrs", "");
+							List<String> punchTimeSplit = StringUtil.split(totalPunchTime, ":");
+							if(UtilValidate.isNotEmpty(punchTimeSplit)){
+								hours = Integer.parseInt(punchTimeSplit.get(0));
+								minutes = Integer.parseInt(punchTimeSplit.get(1));
+								totalMinutes = (hours*60)+minutes;
+								minimumTime = totalMinutes;
+								index = 0;
+							}
+						}
+						for (int j = 0; j < punchDetailsList.size(); ++j) {
+							Map punchDetails = (Map) punchDetailsList.get(j);
+							String totalTime = (String)punchDetails.get("totalTime");
+							if(UtilValidate.isNotEmpty(totalTime)){
+								totalTime = totalTime.replace(" Hrs", "");
+								List<String> timeSplit = StringUtil.split(totalTime, ":");
+								if(UtilValidate.isNotEmpty(timeSplit)){
+									hours = Integer.parseInt(timeSplit.get(0));
+									minutes = Integer.parseInt(timeSplit.get(1));
+									totalMinutes = (hours*60)+minutes;
+									if(totalMinutes >225){
+										index = j;
+										workedHolidaysList.add(workedHoliday);
+									}
+								}
+							}
 						}
 					}
 					
+					/*if(UtilValidate.isNotEmpty(punchDetails)){
+						String totalTime = (String)punchDetails.get("totalTime");
+						if(UtilValidate.isNotEmpty(totalTime)){
+							totalTime = totalTime.replace(" Hrs", "");
+							List<String> timeSplit = StringUtil.split(totalTime, ":");
+							if(UtilValidate.isNotEmpty(timeSplit)){
+								 int hours = Integer.parseInt(timeSplit.get(0));
+								 int minutes = Integer.parseInt(timeSplit.get(1));
+								 //if(((hours*60)+minutes) >=210){
+								 Debug.log("465================"+((hours*60)+minutes));
+								 if(((hours*60)+minutes) >=465){
+									 workedHolidaysList.add(workedHoliday);
+								 }
+							}
+						}
+					}*/
+					
 				}
-				
 			}
 		}
 		
