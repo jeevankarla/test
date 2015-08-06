@@ -413,6 +413,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintChecks"/>
     </request-map>
+     <request-map uri="printContraChecks.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintContraChecks"/>
+    </request-map>
 
     <request-map uri="quickSendPayment">
         <security https="true" auth="true"/>
@@ -3635,6 +3639,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintDepositReceipt"/>
     </request-map>
+    <request-map uri="printContraReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintContraReceipt"/>
+    </request-map>
     <request-map uri="viewDepositTransactions">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewDepositTransactions"/>
@@ -4067,6 +4075,7 @@ under the License.
     <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <view-map name="ManualTransaction" type="screen" page="component://accounting/widget/PaymentScreens.xml#ManualTransaction"/>
     <view-map name="PrintChecks" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintChecks" content-type="application/pdf" encoding="none"/>
+    <view-map name="PrintContraChecks" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintContraChecks" content-type="application/pdf" encoding="none"/>
     <view-map name="FindSalesInvoicesByDueDate" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindSalesInvoicesByDueDate"/>
     <view-map name="FindPurchaseInvoicesByDueDate" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPurchaseInvoicesByDueDate"/>
 	
@@ -4460,6 +4469,7 @@ under the License.
 	<view-map name="PrintReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="PrintAdvAndDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintAdvAndDepositReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>
+	<view-map name="PrintContraReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintContraReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindAdhocSalePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindAdhocSalePayment"/>

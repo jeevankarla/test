@@ -497,8 +497,15 @@ under the License.
                 <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field>
+        <field name="printVoucher" widget-style="buttontext">
+            <hyperlink target="printContraReport.pdf" description="Print Voucher" target-window="_blank">
+                <parameter param-name="finAccountTransId"/>
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field>
     	<field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
-            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+            <hyperlink target="printContraChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="finAccountTransId"/>
              <parameter param-name="amount"/>
@@ -525,8 +532,15 @@ under the License.
                 <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field>
-    	<!-- <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
-            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+         <field name="printVoucher" widget-style="buttontext">
+            <hyperlink target="printContraReport.pdf" description="Print Voucher" target-window="_blank">
+                <parameter param-name="finAccountTransId"/>
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field>
+    	 <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printContraChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="finAccountTransId"/>
              <parameter param-name="amount"/>
@@ -534,7 +548,7 @@ under the License.
              <parameter param-name="transactionDate"/>
              <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
-        </field>  -->
+        </field>  
     </form>
     <form name="ListBatchContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
       default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
@@ -628,7 +642,8 @@ under the License.
             </drop-down>
         </field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>         
-        <field name="comments" title="Cheque in favour"><text/></field>
+        <field name="inFavourOf" title="Cheque in favour"><text/></field>
+        <field name="comments" title="Comments"><text/></field>
         <field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="InterUnitContraEntry" type="single" target="preCreateInterUnitContraEntry"

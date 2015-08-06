@@ -367,9 +367,9 @@ under the License.
 		                            		<fo:block  text-align="left"  ></fo:block>  
 		                       			</fo:table-cell>
 		                       		</#if>
-		                     		<#if cheqInFavour?has_content>
+		                     		<#if comments?has_content>
 		                    		<fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="left" >Cheque in favour:${cheqInFavour?if_exists}</fo:block>  
+		                            		<fo:block   text-align="left" >Comments: &#160;${comments?if_exists}</fo:block>  
 		                       		</fo:table-cell>
 		                       		<#else>
 		                       			<fo:table-cell>
@@ -460,6 +460,23 @@ under the License.
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
+            				</fo:table-row>
+            				<fo:table-row>
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  white-space-collapse="false">&#160;</fo:block>  
+                       			</fo:table-cell>
+                       			</fo:table-row>
+            				<fo:table-row>
+                				
+                       			<#if cheqInFavour?has_content>
+		                    		<fo:table-cell>
+		                            		<fo:block  keep-together="always" text-align="left" >Cheque in favour:&#160;${cheqInFavour?if_exists}</fo:block>  
+		                       		</fo:table-cell>
+		                       		<#else>
+		                       			<fo:table-cell>
+		                            		<fo:block  text-align="left"  ></fo:block>  
+		                       			</fo:table-cell>
+		                       		</#if>
             				</fo:table-row>
 		  					</#if>
 		  					<fo:table-row>

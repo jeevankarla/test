@@ -600,6 +600,26 @@ under the License.
             </widgets>
         </section>
     </screen>
+     <screen name="PrintContraChecks">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/PrintContraChecks.groovy"/>
+                <entity-condition entity-name="InvoiceItemType" list="PayrolGroup">
+                    <condition-expr field-name="parentTypeId" value="PAYROL"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="FindSalesInvoicesByDueDate">
         <section>
             <actions>
@@ -970,6 +990,39 @@ under the License.
 					<widgets>
 						<platform-specific>
                 			<html><html-template location="component://byproducts/webapp/byproducts/reports/PrintDepositReceiptAlt.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="loanRecovery" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://byproducts/webapp/byproducts/reports/employeeLoanRecoveryReceipt.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+        </section>
+    </screen>
+      <screen name="PrintContraReceipt">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/printContraReceipt.groovy"/>
+            </actions>
+            <widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="contraCheque" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://byproducts/webapp/byproducts/reports/PrintContraReceiptAlt.fo.ftl"/></html>
 	            		</platform-specific>
 					</widgets>
 				</section>
