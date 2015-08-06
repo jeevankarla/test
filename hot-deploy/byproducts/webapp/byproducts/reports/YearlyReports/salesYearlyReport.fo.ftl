@@ -45,11 +45,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="110pt"/>
-                    <fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="160pt"/> 
                	    <fo:table-column column-width="170pt"/>
-            		<fo:table-column column-width="72pt"/> 		
-            		<fo:table-column column-width="92pt"/>
+            		<fo:table-column column-width="67pt"/> 		
+            		<fo:table-column column-width="87pt"/>
             		<fo:table-column column-width="87pt"/>
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="110pt"/>
