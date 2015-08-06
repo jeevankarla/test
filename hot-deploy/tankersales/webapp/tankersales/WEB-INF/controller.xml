@@ -392,7 +392,18 @@
         <response name="success" type="view" value="FindTankerSalesShipment"/>
         <response name="error" type="view" value="FindTankerSalesShipment"/>
     </request-map>
-    
+    <request-map uri="partyCustomTimePeriod">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="partyCustomTimePeriod"/>
+    </request-map>
+    <request-map uri="TimePeriod">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="TimePeriod"/>
+    </request-map>
+    <request-map uri="TankerSalesPeriodSearch">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="TankerSalesPeriodSearch"/>
+    </request-map>
     <!-- <request-map uri="FindTankerSalesEntries">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="FindTankerSalesEntries"/>
@@ -406,6 +417,10 @@
     
     <!-- View Mappings -->
     
+    <view-map name="partyCustomTimePeriod" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#partyCustomTimePeriod"/>
+ 	<view-map name="TimePeriod" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#TimePeriod"/>
+    <view-map name="TankerSalesPeriodSearch" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#TankerSalesPeriodSearch"/>
+	
     <!-- <view-map name="ApproveMilkReceipts" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#ApproveTankerSales" />
     <view-map name="FindTankerSalesEntries" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#FindTankerSalesEntries"/> -->
     <view-map name="FindTankerSalesShipment" type="screen" page="component://tankersales/widget/TankerSalesScreens.xml#FindTankerSalesShipment" />

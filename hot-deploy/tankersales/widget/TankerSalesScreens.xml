@@ -141,7 +141,7 @@
     <screen name="FindTankerSaleSO">
         <section>
            <actions>
-               <set field="titleProperty" value="Find Purchase Order"/>              
+               <set field="titleProperty" value="Find Tanker Sales Orders"/>              
 		   	   <set field="tabButtonItem" value="FindTankerSaleSO" />	
 		       <set field="tabButtonItem2" value="FindTankerSaleSO"/>
 		       <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -193,7 +193,7 @@
           <screen name="CreateTSSO">
               <section>
                   <actions>
-                      <set field="titleProperty" value="Find Purchase Order"/>              
+                      <set field="titleProperty" value="Find Tanker Sales Orders"/>              
       			      <set field="tabButtonItem" value="FindTankerSaleSO" />	
                       <set field="targetRequest" value="FindTankerSaleSO"/>
                       <set field="parameters.roleTypeId" value="SUPPLIER"/>
@@ -224,7 +224,7 @@
     <screen name="CreateNewTSSO">
               <section>
                   <actions>
-                      <set field="titleProperty" value="Find Purchase Order"/>              
+                      <set field="titleProperty" value="Find Tanker Sales Orders"/>              
       			      <set field="tabButtonItem" value="FindTankerSaleSO" />	
                       <set field="targetRequest" value="FindTankerSaleSO"/>
                       <set field="parameters.roleTypeId" value="SUPPLIER"/>
@@ -241,6 +241,7 @@
        	            			<widgets>
        	            				<container style="full" >
        	                        		<screenlet title="Create New SO">
+       	                        			<platform-specific><html><html-template location="component://tankersales/webapp/tankersales/tankersales/hideFields.ftl"/></html></platform-specific>
        	                        			<include-form location="component://tankersales/widget/TankerSalesForms.xml" name="SOInformation"/>
        	                        		</screenlet>
        
@@ -638,6 +639,110 @@
            </widgets>            
     	</section>
     </screen>
-    
-    
+    <screen name="partyCustomTimePeriod">
+        <section>
+           	<actions>
+				<set field="titleProperty" value="partyCustomTimePeriod"/> 
+				<set field="tabButtonItem" value="partyCustomTimePeriod" />
+				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/appendRoute.js" global="true"/> 
+				<set field="tabButtonItem2" value="partyCustomTimePeriod" />				
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/customPeriodBilling.groovy"/>
+                <entity-condition list="periodTypes" entity-name="PeriodType">
+                	<condition-list combine="and">
+                	<condition-expr field-name="periodTypeId" operator="like" value="INST_%"/>
+                	<condition-expr field-name="periodTypeId" operator="not-equals" value="INST_DAILY_BILL"/>	
+                	</condition-list>
+                </entity-condition>
+			</actions>
+            <widgets>
+                <decorator-screen name="TankerSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">
+                      <include-menu name="TankerSalesBillingTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                      	<section>
+                        	<widgets>
+								<container style="button-bar">
+									<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/NewCustomBilling.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showBillingGenerateForm();" text="Generate Institution Billing" style="buttontext create"  link-type="anchor"/>
+								</container>	
+								<screenlet title="Billing List">				
+									<include-form name="ListFacilityTimePeriod" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								</screenlet>
+							</widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="TimePeriod">
+		<section>
+			<actions>
+				<set field="titleProperty" value="TimePeriod" />
+				<set field="tabButtonItem" value="partyCustomTimePeriod" />
+				<set field="tabButtonItem2" value="TimePeriod" />
+				<entity-condition list="TimePeriods" entity-name="CustomTimePeriod">
+            	<condition-expr field-name="periodTypeId" operator="like" value="INST%"/>
+               </entity-condition>
+				<entity-condition list="periodTypes" entity-name="PeriodType">
+            	<condition-expr field-name="periodTypeId" operator="like" value="INST%"/>
+              </entity-condition>
+			</actions>
+			<widgets>
+				<decorator-screen name="TankerSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">
+                       <include-menu name="TankerSalesBillingTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+              		<section>
+							<widgets>
+								<screenlet title="Time Periods">
+									<include-form name="ListTimePeriods" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								</screenlet>
+								<section>
+									<widgets>
+										<screenlet title="New Time Period">
+											<include-form name="CreateTimePeriod" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										</screenlet>
+									</widgets>
+								</section>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="TankerSalesPeriodSearch">
+        <section>
+            <actions>
+            <set field="tabButtonItem" value="facilityCustomTimePeriod"/>
+            <set field="titleProperty" value="TankerSalesPeriodSearch"/> 
+			<set field="tabButtonItem2" value="TankerSalesPeriodSearch" />
+            <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+            <entity-condition list="periodTypes" entity-name="PeriodType">
+            	<condition-expr field-name="periodTypeId" operator="like" value="INST%"/>
+            </entity-condition>
+            <set field="periodTypes" from-field="periodTypes"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="TankerSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">
+                       <include-menu name="TankerSalesBillingTabBar" location="component://tankersales/widget/TankerSalesMenus.xml"/>
+                      	<section>
+                        	<widgets>
+                        	<link target="createInstBillingConfig" text="Create" style="buttontext"></link>
+                        		<screenlet title="Inst Billing Period Search">
+                        			<include-form name="CreateInstBillingPeriodSearchForm" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Inst Billing Period Search Result">
+                        			<include-form name="InstBillingPeriodSearchResultForm" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

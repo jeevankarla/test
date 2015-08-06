@@ -24,6 +24,8 @@
         <attribute name="ShipToPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="fat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="unitPrice" mode="IN" type="BigDecimal" optional="true"/>
     </service>   
     <service name="ChangeOrderStatus" engine="java" auth="true"
@@ -252,7 +254,7 @@
 		
 		<attribute name="sendTemp" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendAcid" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="true"/>
 		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="sendOrganismTest" mode="IN" type="String" optional="true"/>
@@ -270,7 +272,7 @@
 		<attribute name="recdCob" mode="IN" type="String" optional="false"/>
 		<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdAcid" mode="IN" type="BigDecimal" optional="false"/>
-		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="true"/>
 		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="recdOrganismTest" mode="IN" type="String" optional="true"/>
@@ -311,7 +313,9 @@
 	 	
 	 	<attribute name="shipQty" mode="IN" type="BigDecimal" optional="true"/>
 	 	<attribute name="insuranceQty" mode="IN" type="BigDecimal" optional="true"/>
-        <attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+        
+        <attribute name="tankerNo" mode="IN" type="String" optional="true"/>
+        <attribute name="extTankerName" mode="IN" type="String" optional="true"/>
 		
 		<attribute name="dcNo" mode="IN" type="String" optional="true"/>
 		<attribute name="routeId" mode="IN" type="String" optional="false"/>

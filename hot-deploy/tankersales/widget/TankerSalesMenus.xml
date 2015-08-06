@@ -33,7 +33,12 @@
        <menu-item name="TankerSalesShipment" title="Tanker Sales Shipments">
 			<link target="FindTankerSalesShipment"></link>
 	   </menu-item>
-       
+	   <!--
+       <menu-item name="partyCustomTimePeriod" title="Tanker Sales Billing">
+            <link target="partyCustomTimePeriod">
+            </link>
+        </menu-item>
+        -->
       	<!-- <menu-item name="SearchTankerSalesEntries" title="Search Tanker Sales">
 			<link target="FindTankerSalesEntries"></link>
 		</menu-item>
@@ -117,4 +122,15 @@
 			<link target="MilkFinalization"></link>
 		</menu-item> -->			
 	  </menu>
+	  <menu name="TankerSalesBillingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="partyCustomTimePeriod" title="Reports">
+        	<link target="partyCustomTimePeriod"/>
+        </menu-item> 
+         <menu-item name="TimePeriod" title="Time Period">
+        	<link target="TimePeriod"/>
+        </menu-item>      
+        <menu-item name="TankerSalesPeriodSearch" title="Billing generation">
+        	<link target="TankerSalesPeriodSearch"/>
+        </menu-item>
+      </menu>
 </menus>

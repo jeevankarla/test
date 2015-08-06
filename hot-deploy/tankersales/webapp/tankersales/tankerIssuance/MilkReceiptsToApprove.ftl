@@ -42,17 +42,22 @@ under the License.
           <#--<td>From</td>-->
           <td>Ship To</td>
           <td>Milk Type</td>
-          <td>Silo</td>
-          <td>Received Qty(Kgs)</td>
-          <td>Received Qty(Ltrs)</td>
-          <td>Received Fat</td>
-          <td>Received Snf</td>
-          <td>Received KgFat</td>
-          <td>Received KgSnf</td>
+          <#--<td>Silo</td>-->
+          <td>Qty</td>
+          <#--<td>Received Qty(Ltrs)</td>-->
+          <td>Des Fat</td>
+          <td>Des Snf</td>
+          <td>Des KgFat</td>
+          <td>Des KgSnf</td>
+          <td>Ack Fat</td>
+          <td>Ack Snf</td>
+          <td>Ack KgFat</td>
+          <td>Ack KgSnf</td>
           <td>Vehicle Number</td>
           <td>Received Date</td>
           <td>Status</td>
           <td>Raise Invoice</td>
+          <td>Amount</td>
 		  <#--<td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllReceipts" name="checkAllReceipts" onchange="javascript:toggleRequestId(this);"/></td>-->
         </tr>
       </thead>
@@ -70,6 +75,11 @@ under the License.
 				<input type=hidden name=quantity value='${eachItem.receivedQuantity?if_exists}'>
 				<input type=hidden name=productId value='${eachItem.productId?if_exists}'>
 				<input type=hidden name=shipmentId value='${eachItem.shipmentId?if_exists}'>
+				
+				<input type=hidden name=fat value='${eachItem.fat?if_exists}'>
+				<input type=hidden name=snf value='${eachItem.snf?if_exists}'>
+				<input type=hidden name=receivedFat value='${eachItem.receivedFat?if_exists}'>
+				<input type=hidden name=receivedSnf value='${eachItem.receivedSnf?if_exists}'>
 				
               	<td>${eachItem.milkTransferId?if_exists}</td>
               	<#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : eachItem.partyId}, false))!>
@@ -103,14 +113,21 @@ under the License.
 				</select>
                 </td>
                 </#if>
-                <td>${eachItem.siloId?if_exists}</td>
+                <#--<td>${eachItem.siloId?if_exists}</td>-->
               	<td>${eachItem.receivedQuantity?if_exists}</td>
-				<td>${eachItem.receivedQuantityLtrs?if_exists}</td>
+				<#--<td>${eachItem.receivedQuantityLtrs?if_exists}</td>-->
+				
+				<td>${eachItem.fat?if_exists}</td>
+				<td>${eachItem.snf?if_exists}</td>
+				<td>${eachItem.sendKgFat?if_exists}</td>
+				<td>${eachItem.sendKgSnf?if_exists}</td>
+				
 				<td>${eachItem.receivedFat?if_exists}</td>
 				<td>${eachItem.receivedSnf?if_exists}</td>
 				<td>${eachItem.receivedKgFat?if_exists}</td>
 				<td>${eachItem.receivedKgSnf?if_exists}</td>
-				<td>${eachItem.containerId?if_exists}</td>
+				<#assign vehicle = (delegator.findOne("Vehicle",{"vehicleId" : eachItem.containerId},false))!>
+				<td>${vehicle.vehicleNumber?if_exists}[${eachItem.containerId?if_exists}]</td>
 				<#if eachItem.receiveDate?has_content>
 				<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.receiveDate, "dd/MM/yyyy")}</td>
 				<#else>
@@ -118,11 +135,43 @@ under the License.
                 </#if>
                 <#assign statusItem = (delegator.findOne("StatusItem",{"statusId" : eachItem.statusId},false))!>
                 <td>${statusItem.description?if_exists}</td>
-                <#if eachItem.statusId == "MXF_RECD">
-                	<td>
-                		<a href="javascript:document.listMilkReceipts_${eachItem_index}.submit()" class="buttontext">Raise Invoice</a>
-                	</td>
-				</#if>
+                
+				
+				<#if eachItem.shipmentId?has_content>
+					<#assign shipmentId = eachItem.shipmentId>
+					<#if xferInvoiceMap.get("${shipmentId}")?has_content>
+						<#assign invMap = xferInvoiceMap.get("${shipmentId}")>
+						<#assign invoiceId = invMap.get("invoiceId")>
+						<#assign invAmount = invMap.get("invoiceAmount")>
+						<td>${invoiceId}</td>
+						<td>${invAmount}</td>
+					<#else>
+						<#if eachItem.statusId == "MXF_RECD">
+		                	<td>
+		                		<a href="javascript:document.listMilkReceipts_${eachItem_index}.submit()" class="buttontext">Raise Invoice</a>
+		                	</td>
+		                	<td>
+		                		&#160;
+		                	</td>
+		                <#else>
+		                	<td>
+		                		&#160;
+		                	</td>
+		                	<td>
+		                		&#160;
+		                	</td>
+		                	
+						</#if>
+					</#if>
+				<#else>
+                	<#if eachItem.statusId == "MXF_RECD">
+	                	<td>
+	                		<a href="javascript:document.listMilkReceipts_${eachItem_index}.submit()" class="buttontext">Raise Invoice</a>
+	                	</td>
+					</#if>
+                </#if>
+				
+				
 				<#--<td><input type="checkbox" id="receiptCheckBoxId_${eachItem_index}" name="receiptCheckBoxId"/></td>-->
             </tr>
             </form>

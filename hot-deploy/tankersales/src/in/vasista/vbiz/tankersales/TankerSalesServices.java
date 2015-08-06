@@ -23,8 +23,9 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.party.party.PartyHelper;
-
+import java.util.Calendar;
 //import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+
 
 
 
@@ -2047,7 +2048,15 @@ public class TankerSalesServices {
     	updateVehStatusInMap.put("replaceVehicleStatusString", replaceVehicleStatusString);
     	Map updateVehStatResultMap = FastMap.newInstance();
 		if(vehicleStatusId.equalsIgnoreCase("TS_CIP")){
-			updateVehStatusInMap.put("estimatedStartDate", UtilDateTime.nowTimestamp());
+			
+			Timestamp now = UtilDateTime.nowTimestamp();
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(now.getTime());
+			cal.set(Calendar.SECOND, 0);  
+			cal.set(Calendar.MILLISECOND, 0);
+			now = new Timestamp(cal.getTime().getTime());
+			
+			updateVehStatusInMap.put("estimatedStartDate", now);
  	        try{
  	        	updateVehStatResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", updateVehStatusInMap);
  	        	Debug.log("updateVehStatResultMap ======"+updateVehStatResultMap);
@@ -2437,6 +2446,10 @@ public class TankerSalesServices {
    	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
    	 	
    	 	String tankerNo = (String) context.get("tankerNo");
+   	 	Debug.log("tankerNo ========="+tankerNo);
+   	 	String extTankerName = (String) context.get("extTankerName");
+   	 	Debug.log("extTankerName ========="+extTankerName);
+   	 	
    	 	String sendDateStr = (String) context.get("sendDate");
    	 	String sendTime = (String) context.get("sendTime");
    	 	/*String entryDateStr = (String) context.get("entryDate");*/
@@ -2456,6 +2469,61 @@ public class TankerSalesServices {
 	 	String orderId = (String) context.get("orderId");
 	 	String orderItemSeqId = (String) context.get("orderItemSeqId");
 	 	
+	 	// Check if they choose existing Tanker or given an external Tanker No.
+	 	
+	 	if(UtilValidate.isEmpty(tankerNo)){
+	 		
+	 		if(UtilValidate.isEmpty(extTankerName)){
+	 			Debug.logError("No Tanker Was Selected",module);
+	 			resultMap = ServiceUtil.returnError("No Tanker Was Selected");
+	 			return resultMap;
+	 		}
+	 		
+	 		List<GenericValue> existingExtVehicles = FastList.newInstance();
+	        try{
+	        	existingExtVehicles = delegator.findList("Vehicle", EntityCondition.makeCondition("vehicleNumber", EntityOperator.EQUALS, extTankerName), null, null, null, false);
+	        }
+	        catch (Exception e) {
+		 		Debug.logError(e, "Error creating invoice for shipment !", module);
+		 		return ServiceUtil.returnError("Failed to create invoice for the shipment " + e);	  
+	        }
+	 		
+	        if(UtilValidate.isNotEmpty(existingExtVehicles)){
+	        	tankerNo = (EntityUtil.getFirst(existingExtVehicles)).getString("vehicleId");
+	        }
+	        else{
+	        	GenericValue vehicle = delegator.makeValue("Vehicle");   
+		 		vehicle.set("vehicleName", extTankerName);
+		 		vehicle.set("vehicleNumber", extTankerName);
+		 		Debug.log("vehicle ========="+vehicle);
+		 		try {
+		 			delegator.createSetNextSeqId(vehicle);
+	            } catch (GenericEntityException e) {
+	                ServiceUtil.returnError(e.getMessage());
+	            }
+		 		
+		 		tankerNo = vehicle.getString("vehicleId");
+		 		Debug.log("tankerNo ========="+tankerNo);
+		 		
+		 		GenericValue vehicleRole = delegator.makeValue("VehicleRole");   
+		 		vehicleRole.set("vehicleId", tankerNo);
+		 		vehicleRole.set("roleTypeId", "EXTERNAL_VEHICLE");
+		 		vehicleRole.set("partyId", partyIdTo);
+		 		vehicleRole.set("facilityId", "SONAI_DAIRY");
+		 		vehicleRole.set("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+		 		Debug.log("vehicleRole ========="+vehicleRole);
+		 		try {
+		 			vehicleRole.create();
+	            } catch (GenericEntityException e) {
+	                ServiceUtil.returnError(e.getMessage());
+	            }
+	        }
+	        
+	 		
+	 		
+	 	}
+	 	
+	 	Debug.log("tankerNo ===2222======"+tankerNo);
 	 	//we need to check the transfer status of the give tanker
  		Map tankerInMap = FastMap.newInstance();
  		tankerInMap.put("tankerNo", tankerNo);
@@ -2463,6 +2531,7 @@ public class TankerSalesServices {
  		tankerInMap.put("reqStatusId","MXF_INIT");
  		
  		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
+ 		Debug.log("getTankerDetailsMap ========="+getTankerDetailsMap);
  		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
  			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
  			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
@@ -2473,6 +2542,7 @@ public class TankerSalesServices {
 	 	if(UtilValidate.isEmpty(productId)){
 	 		try{
 	 			GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId), false);
+	 			Debug.log("orderItem ========="+orderItem);
 		 		productId = orderItem.getString("productId");
 	 		}catch(GenericEntityException e){
 	 			Debug.logError("Error while fetching OrderItem :: "+orderId,module);
@@ -2686,14 +2756,91 @@ public class TankerSalesServices {
 	    Timestamp SoDate = (Timestamp) context.get("SoDate");
 	  	String billToPartyId = (String) context.get("billToPartyId");
 	  	String ShipToPartyId = (String) context.get("ShipToPartyId");
+	  	if(UtilValidate.isEmpty(billToPartyId)){
+	  		billToPartyId = ShipToPartyId;
+	  	}
+	  	
 	    Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
 	    String productId = (String) context.get("productId");
 	    BigDecimal quantity = (BigDecimal) context.get("quantity");
 	    BigDecimal unitPrice = (BigDecimal) context.get("unitPrice");
 	    
+	    BigDecimal fatPercent = (BigDecimal) context.get("fat");
+	    BigDecimal snfPercent = (BigDecimal) context.get("snf");
+	    
+	    if(UtilValidate.isEmpty(fatPercent)){
+	    	fatPercent = new BigDecimal(3.5);
+	    }
+	    if(UtilValidate.isEmpty(snfPercent)){
+	    	snfPercent = new BigDecimal(8.5);
+	    }
+	    Debug.log("fatPercent ====="+fatPercent);
+	    Debug.log("snfPercent ====="+snfPercent);
+	    
 	    String billFromPartyId="Company";
-	    String productStoreId = "9000";
-
+	    String productStoreId = "STORE";
+	    
+	    // Calculate Order Price Based on set Parameters(KG Fat and KG Snf)
+	    
+        List componentPriceList = FastList.newInstance();
+        BigDecimal fatPremium = BigDecimal.ZERO;
+        BigDecimal snfPremium = BigDecimal.ZERO;
+        BigDecimal payablePrice = BigDecimal.ZERO;
+        BigDecimal fatPrice = BigDecimal.ZERO;
+        BigDecimal snfPrice = BigDecimal.ZERO;
+        BigDecimal kgFatPrice = BigDecimal.ZERO;
+        BigDecimal kgSnfPrice = BigDecimal.ZERO;
+        
+	    Map priceCtx = FastMap.newInstance();
+		priceCtx.put("userLogin",userLogin);
+		priceCtx.put("productId",productId);
+		priceCtx.put("partyId",billToPartyId);
+	    priceCtx.put("priceDate",effectiveDate);
+		priceCtx.put("fatPercent", fatPercent);
+		priceCtx.put("snfPercent", snfPercent);
+		//Map priceResult = PriceServices.getProcurementProductPrice(dctx,priceCtx);
+		Debug.log("priceCtx ====="+priceCtx);
+		try{
+			Map servResult = dispatcher.runSync("calculateProcurementProductPrice", priceCtx);
+			Debug.log("create Order Result ====="+servResult);
+			if(UtilValidate.isNotEmpty(servResult.get("componentPriceList"))){
+				componentPriceList = (List) servResult.get("componentPriceList");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("fatPremium"))){
+				fatPremium = (BigDecimal) servResult.get("fatPremium");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("snfPremium"))){
+				snfPremium = (BigDecimal) servResult.get("snfPremium");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("payablePrice"))){
+				payablePrice = (BigDecimal) servResult.get("payablePrice");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("kgSnfPrice"))){
+				kgSnfPrice = (BigDecimal) servResult.get("kgSnfPrice");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("kgFatPrice"))){
+				kgFatPrice = (BigDecimal) servResult.get("kgFatPrice");
+			}
+			
+			if (ServiceUtil.isError(servResult)) {
+				Debug.logError("Error getting procurement Price ", module);
+				return ServiceUtil.returnError("Error getting procurement Price : ");
+			}
+	   	}catch (Exception e) {
+	 		Debug.logError(e, "Error getting procurement Price !", module);
+	 		return ServiceUtil.returnError("Error getting procurement Price " + e);	  
+	  	}
+	    
+		BigDecimal totalUnitPrice = BigDecimal.ZERO;
+		if(!productId.equals("RAW_MILK")){
+			totalUnitPrice = kgFatPrice.add(kgSnfPrice);
+		}
+		else{
+			totalUnitPrice = payablePrice;
+		}
+		Debug.log("payablePrice ====="+payablePrice);
+		Debug.log("totalUnitPrice ====="+totalUnitPrice);
+		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,"INR");
   		try {
   			cart.setOrderType("SALES_ORDER");
@@ -2712,10 +2859,9 @@ public class TankerSalesServices {
 		
   		try{
         	ShoppingCartItem cartItem = null;
-        	cartItem = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, unitPrice,
+        	cartItem = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null, quantity, totalUnitPrice,
 			           null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 			           cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE);
-      	
 
 			cart.addItemToEnd(cartItem);
 			 
@@ -2768,12 +2914,196 @@ public class TankerSalesServices {
 	 	BigDecimal quantity = (BigDecimal) context.get("quantity");
    	 	BigDecimal receivedKgSnf = (BigDecimal) context.get("receivedKgSnf");
 	 	BigDecimal receivedKgFat = (BigDecimal) context.get("receivedKgFat");
+	 	
+	 	BigDecimal fat = (BigDecimal) context.get("fat");
+	 	BigDecimal snf = (BigDecimal) context.get("snf");
+	 	
+	 	BigDecimal receivedFat = (BigDecimal) context.get("receivedFat");
+	 	BigDecimal receivedSnf = (BigDecimal) context.get("receivedSnf");
+	 	
+	 	
+	 	// Calculate Price
+	 	
+	 	if(UtilValidate.isEmpty(fat)){
+	    	fat = new BigDecimal(3.5);
+	    }
+	    if(UtilValidate.isEmpty(snf)){
+	    	snf = new BigDecimal(8.5);
+	    }
+	    Debug.log("fatPercent ====="+fat);
+	    Debug.log("snfPercent ====="+snf);
+	    
+	    String billFromPartyId="Company";
+	    String productStoreId = "STORE";
+	    
+	    // Calculate Order Price Based on set Parameters(KG Fat and KG Snf)
+	    
+	    BigDecimal minSnf = new BigDecimal(7.5);
+        BigDecimal maxSnf = new BigDecimal(12.0);
+	    
+        List componentPriceList = FastList.newInstance();
+        BigDecimal fatPremium = BigDecimal.ZERO;
+        BigDecimal snfPremium = BigDecimal.ZERO;
+        BigDecimal payablePrice = BigDecimal.ZERO;
+        BigDecimal kgFatPrice = BigDecimal.ZERO;
+        BigDecimal kgSnfPrice = BigDecimal.ZERO;
+        
+	    Map priceCtx = FastMap.newInstance();
+		priceCtx.put("userLogin",userLogin);
+		priceCtx.put("productId",productId);
+		priceCtx.put("partyId",partyIdTo);
+	    priceCtx.put("priceDate",UtilDateTime.nowTimestamp());
+		priceCtx.put("fatPercent", fat);
+		priceCtx.put("snfPercent", snf);
+		//Map priceResult = PriceServices.getProcurementProductPrice(dctx,priceCtx);
+		Debug.log("priceCtx ====="+priceCtx);
+		try{
+			Map servResult = dispatcher.runSync("calculateProcurementProductPrice", priceCtx);
+			Debug.log("create Order Result ====="+servResult);
+			if(UtilValidate.isNotEmpty(servResult.get("componentPriceList"))){
+				componentPriceList = (List) servResult.get("componentPriceList");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("fatPremium"))){
+				fatPremium = (BigDecimal) servResult.get("fatPremium");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("snfPremium"))){
+				snfPremium = (BigDecimal) servResult.get("snfPremium");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("payablePrice"))){
+				payablePrice = (BigDecimal) servResult.get("payablePrice");
+				Debug.log("create Order Result ====="+payablePrice);
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("kgSnfPrice"))){
+				kgSnfPrice = (BigDecimal) servResult.get("kgSnfPrice");
+			}
+			if(UtilValidate.isNotEmpty(servResult.get("kgFatPrice"))){
+				kgFatPrice = (BigDecimal) servResult.get("kgFatPrice");
+			}
+			if (ServiceUtil.isError(servResult)) {
+				Debug.logError("Error getting procurement Price ", module);
+				return ServiceUtil.returnError("Error getting procurement Price : ");
+			}
+	   	}catch (Exception e) {
+	 		Debug.logError(e, "Error getting procurement Price !", module);
+	 		return ServiceUtil.returnError("Error getting procurement Price " + e);	  
+	  	}
+	    
+		BigDecimal totalUnitPrice = BigDecimal.ZERO;
+		if(!productId.equals("RAW_MILK")){
+			totalUnitPrice = kgFatPrice.add(kgSnfPrice);
+		}
+		else{
+			totalUnitPrice = payablePrice;
+		}
+		
+		Debug.log("payablePrice ====="+payablePrice);
+		Debug.log("totalUnitPrice ====="+totalUnitPrice);
+	 	
+		// create the invoice record
+        String invoiceId = null;
+        
+		Map<String, Object> createInvoiceContext = FastMap.newInstance();
+        createInvoiceContext.put("partyId", partyIdTo);
+        createInvoiceContext.put("partyIdFrom", partyId);
+        createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
+        /*createInvoiceContext.put("dueDate", dueDate);*/
+        createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
+        // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
+        createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+        createInvoiceContext.put("purposeTypeId", "TANKERSALES_INVOICE");
+        createInvoiceContext.put("shipmentId", shipmentId);
+        createInvoiceContext.put("currencyUomId", "INR");
+        createInvoiceContext.put("userLogin", userLogin);
+         
+        // store the invoice first
+        try{
+        	Map<String, Object> createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
+        	Debug.log("createInvoiceResult ====="+createInvoiceResult);
+            if (ServiceUtil.isError(createInvoiceResult)) {
+            	Debug.logError("Error creating invoice for shipment : "+shipmentId, module);
+				return ServiceUtil.returnError("Error creating invoice for shipment : "+shipmentId);
+            }
+            invoiceId = (String) createInvoiceResult.get("invoiceId");
+            Debug.log("invoiceId ====="+invoiceId);
+	   	}catch (Exception e) {
+		 		Debug.logError(e, "Error creating invoice for shipment !", module);
+		 		return ServiceUtil.returnError("Failed to create invoice for the shipment " + e);	  
+	  	}
+	 	
+        List<GenericValue> shipmentItems = FastList.newInstance();
+        try{
+        	shipmentItems = delegator.findList("ShipmentItem", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+        }
+        catch (Exception e) {
+	 		Debug.logError(e, "Error creating invoice for shipment !", module);
+	 		return ServiceUtil.returnError("Failed to create invoice for the shipment " + e);	  
+        }
+        
+        for (GenericValue currentValue : shipmentItems) {
+        	Debug.log("currentValue ====="+currentValue);
+            BigDecimal billingAmount = totalUnitPrice;
+            Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+            createInvoiceItemContext.put("invoiceId", invoiceId);
+            createInvoiceItemContext.put("invoiceItemSeqId", currentValue.get("shipmentItemSeqId"));
+            createInvoiceItemContext.put("invoiceItemTypeId", "INV_FPROD_ITEM");
+            createInvoiceItemContext.put("quantity", quantity);
+            createInvoiceItemContext.put("amount", billingAmount);
+            createInvoiceItemContext.put("productId", productId);
+            createInvoiceItemContext.put("unitPrice", billingAmount);
+            createInvoiceItemContext.put("unitListPrice", billingAmount);
+            createInvoiceItemContext.put("userLogin", userLogin);
+            
+            try{
+            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+            	Debug.log("createInvoiceItemResult ====="+createInvoiceItemResult);
+                if (ServiceUtil.isError(createInvoiceItemResult)) {
+                	Debug.logError("Error creating invoice item for shipment !", module);
+    		 		return ServiceUtil.returnError("Failed to create invoice item for the shipment ");	
+                }
+	        }catch (Exception e) {
+		 		Debug.logError(e, "Error creating invoice item for shipment !", module);
+		 		return ServiceUtil.returnError("Failed to create invoice item for the shipment " + e);	  
+		  	}
+            
+            // create the ShipmentItemBilling record
+            GenericValue shipmentItemBilling = delegator.makeValue("ShipmentItemBilling", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", currentValue.get("shipmentItemSeqId")));
+            shipmentItemBilling.put("shipmentId", shipmentId);
+            shipmentItemBilling.put("shipmentItemSeqId", currentValue.get("shipmentItemSeqId"));
+            Debug.log("shipmentItemBilling ====="+shipmentItemBilling);
+            try {
+            	shipmentItemBilling.create();
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
+            }
+            
+        }
+        
+        
+        
+        
+        Debug.log("shipmentId ====="+shipmentId);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+	 	
    	 	
-	 	Map inputCtx = FastMap.newInstance();
+	 	/*Map inputCtx = FastMap.newInstance();
 		
 		inputCtx.put("shipmentId", shipmentId);
-		inputCtx.put("userLogin", userLogin);
-		try{
+		inputCtx.put("userLogin", userLogin);*/
+		/*try{
 			Map result = dispatcher.runSync("createInvoicesFromShipment", inputCtx);
 			if (ServiceUtil.isError(result)) {
 				Debug.logError("Error creating invoice for shipment : "+shipmentId, module);
@@ -2782,189 +3112,7 @@ public class TankerSalesServices {
 	   	}catch (Exception e) {
 		 		Debug.logError(e, "Error creating invoice for shipment !", module);
 		 		return ServiceUtil.returnError("Failed to create invoice for the shipment " + e);	  
-	  	}
-	 	//we need to check the transfer status of the give tanker
- 		/*Map tankerInMap = FastMap.newInstance();
- 		tankerInMap.put("tankerNo", tankerNo);
- 		tankerInMap.put("userLogin", userLogin);
- 		tankerInMap.put("reqStatusId","MXF_INIT");
- 		
- 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
- 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
- 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
- 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
- 			return resultMap;
- 		}
-	 	
-	 	
-	 	if(UtilValidate.isEmpty(productId)){
-	 		try{
-	 			GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId), false);
-		 		productId = orderItem.getString("productId");
-	 		}catch(GenericEntityException e){
-	 			Debug.logError("Error while fetching OrderItem :: "+orderId,module);
-	 			return ServiceUtil.returnError("Error while fetching OrderItem :: "+orderId);
-	 		}
-	 	}
-	 	
-	 	BigDecimal shipQty = (BigDecimal) context.get("shipQty");
-	 	BigDecimal insuranceQty = (BigDecimal) context.get("insuranceQty");
-	 	
-	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
-	 	Timestamp sendDate = UtilDateTime.nowTimestamp();
- 		if(UtilValidate.isNotEmpty(sendDateStr)){
- 			if(UtilValidate.isNotEmpty(sendTime)){
- 				sendDateStr = sendDateStr.concat(sendTime);
- 			}
- 			try {
- 				sendDate = new java.sql.Timestamp(sdf.parse(sendDateStr).getTime());
-			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + sendDateStr, module);
-			} catch (NullPointerException e) {
-				Debug.logError(e, "Cannot parse date string: " + sendDateStr, module);
-			}
- 		}
- 		
-	 	
- 		String shipmentId = null;
- 		Map<String, Object> newShipResp = FastMap.newInstance();
-	 	Map<String, Object> newShipment = FastMap.newInstance();
-        newShipment.put("originFacilityId", "SONAI_DAIRY");
-        newShipment.put("primaryOrderId", orderId);
-        newShipment.put("shipmentTypeId", "TANKER_SALES");
-        newShipment.put("statusId", "SHIPMENT_INPUT");
-        newShipment.put("routeId", routeId);
-        newShipment.put("userLogin", userLogin);
-        newShipment.put("partyIdTo", partyIdTo);
-        newShipment.put("partyIdFrom", partyId);
-        newShipment.put("estimatedShipDate", sendDate);
-        newShipment.put("vehicleId", tankerNo);
-        
-        try{
-        	newShipResp = dispatcher.runSync("createShipment", newShipment);
-        	shipmentId = (String)newShipResp.get("shipmentId");
-  	 		if (ServiceUtil.isError(newShipResp)) {
-  	 			String errMsg =  ServiceUtil.getErrorMessage(newShipResp);
-  	 			Debug.logError(errMsg , module);
-  	 			return ServiceUtil.returnError(" Error While Creating Shipment !");
-  	 		}
-  	 	}catch (Exception e) {
-  	 		Debug.logError(e, "Error While Creating Shipment !", module);
-  	 		return ServiceUtil.returnError("Failed to create a new shipment " + e);	  
-	  	}
-	 	
-        Map<String,Object> itemInMap = FastMap.newInstance();
-        itemInMap.put("shipmentId",shipmentId);
-        itemInMap.put("userLogin",userLogin);
-        itemInMap.put("productId",productId);
-        itemInMap.put("quantity",shipQty);
-        String shipmentItemSeqId = null;
-        try{
-        	newShipResp = dispatcher.runSync("createShipmentItem",itemInMap);
-        	shipmentItemSeqId = (String)newShipResp.get("shipmentItemSeqId");
-  	 		if (ServiceUtil.isError(newShipResp)) {
-  	 			String errMsg =  ServiceUtil.getErrorMessage(newShipResp);
-  	 			Debug.logError(errMsg , module);
-  	 			return ServiceUtil.returnError(" Error While Creating Shipment Item !");
-  	 		}
-  	 	}catch (Exception e) {
-  	 		Debug.logError(e, "Error While Creating Shipment !", module);
-  	 		return ServiceUtil.returnError("Failed to create a new shipment item " + e);	  
-	  	}
-        
-        Map<String,Object> orderShipmentMap = FastMap.newInstance();
-        orderShipmentMap.put("shipmentId",shipmentId);
-        orderShipmentMap.put("shipmentItemSeqId",shipmentItemSeqId);
-        orderShipmentMap.put("orderId",orderId);
-        orderShipmentMap.put("orderItemSeqId",orderItemSeqId);
-        orderShipmentMap.put("shipGroupSeqId",shipmentItemSeqId);
-        orderShipmentMap.put("quantity",shipQty);
-        orderShipmentMap.put("userLogin",userLogin);
-        try{
-        	newShipResp = dispatcher.runSync("createOrderShipment",orderShipmentMap);
-  	 		if (ServiceUtil.isError(newShipResp)) {
-  	 			String errMsg =  ServiceUtil.getErrorMessage(newShipResp);
-  	 			Debug.logError(errMsg , module);
-  	 			return ServiceUtil.returnError(" Error While Creating Order Shipment !");
-  	 		}
-  	 	}catch (Exception e) {
-  	 		Debug.logError(e, "Error While Creating Order Shipment !", module);
-  	 		return ServiceUtil.returnError("Failed to create a new order shipment " + e);	  
-	  	}
-        
-	 	try{
-	 		
-	 		//creating vehicle trip
-	 		Map vehicleTripMap = FastMap.newInstance();
-	 		vehicleTripMap.put("vehicleId", tankerNo);
-	 		vehicleTripMap.put("partyId", partyId);
-	 		vehicleTripMap.put("shipmentId", shipmentId);
-	 		vehicleTripMap.put("userLogin",userLogin);
-	 		vehicleTripMap.put("estimatedStartDate", sendDate);
-	 		Map vehicleTripResultMap = dispatcher.runSync("createVehicleTrip", vehicleTripMap);
-	 		if(ServiceUtil.isError(vehicleTripResultMap)){
-	 			Debug.logError("Error While Creating vehicleTrip :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
-	 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip ");
-	 			return resultMap;
-	 		}
-	 		String sequenceNum = (String)vehicleTripResultMap.get("sequenceNum");
-	 		
-	 		Map vehicleTripStatusMap = FastMap.newInstance();
-	 		vehicleTripStatusMap.putAll(vehicleTripResultMap);
-	 		vehicleTripStatusMap.put("statusId","TS_SHIPMENT_PLANNED");
-	 		if(UtilValidate.isNotEmpty(vehicleStatusId)){
-	 			vehicleTripStatusMap.put("statusId",vehicleStatusId);
-	 		}
-	 		vehicleTripStatusMap.put("userLogin",userLogin);
-	 		
-	 		vehicleTripStatusMap.put("estimatedStartDate",sendDate);
-	 		vehicleTripStatusMap.remove("responseMessage");
-	 		Map vehicleStatusResultMap = dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
-	 		if(ServiceUtil.isError(vehicleTripResultMap)){
-	 			Debug.logError("Error While Creating vehicleTripStatus :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
-	 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip Status");
-	 			return resultMap;
-	 		}
-	 		
-	 		GenericValue newTransfer = null; 
-	 		if(UtilValidate.isNotEmpty(milkTransferId)){
-		 		try{
-		 			newTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId",milkTransferId),false);
-		 			
-		 		}catch(GenericEntityException e){
-		 			Debug.logError("Error while getting Transfer Details for :: "+milkTransferId,module);
-		 			return ServiceUtil.returnError("Error while getting Transfer Details for :: "+milkTransferId);
-		 		}
-		 	}
-	 		
-	 		if(UtilValidate.isEmpty(newTransfer)){
-	 			newTransfer = delegator.makeValue("MilkTransfer");
-	 		}
-	 		newTransfer.set("containerId", tankerNo);
-	 		newTransfer.set("sequenceNum", sequenceNum);
-	 		newTransfer.set("sendDate", sendDate);
-	 		newTransfer.set("dcNo", shipmentId);
-	 		newTransfer.set("productId",productId);
-	 		newTransfer.set("quantity",shipQty);
-	 		newTransfer.set("partyId", partyId);
-	 		newTransfer.set("insuranceQty", insuranceQty);
-	 		newTransfer.set("shipmentId", shipmentId);
- 			newTransfer.set("statusId", "MXF_INPROCESS");
-	 		newTransfer.set("partyIdTo", partyIdTo);
-	 		newTransfer.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
-	 		newTransfer.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
-	 		if(UtilValidate.isEmpty(milkTransferId)){
-	 			delegator.createSetNextSeqId(newTransfer);
-	 		}else{
-	 			delegator.createOrStore(newTransfer);
-	 		}
-	 		resultMap = ServiceUtil.returnSuccess("Successfully Created Tanker Receipt with Record Number :"+newTransfer.get("milkTransferId"));
-	 		
-	 	}catch (Exception e) {
-			// TODO: handle exception
-	 		Debug.logError("Error while creating record==========="+e,module);
-	 		resultMap = ServiceUtil.returnError("Error while creating record==========="+e.getMessage());
-		}*/
+	  	}*/
 	 	
 	 	resultMap.put("shipmentId", shipmentId);
 	 	resultMap.put("milkTransferId", milkTransferId);
@@ -2972,6 +3120,7 @@ public class TankerSalesServices {
     	return resultMap;
    
    	}
+   	
    	/*public static Map<String, Object> getTankerSalesProductPrice(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
     	Map<String, Object> result = FastMap.newInstance();

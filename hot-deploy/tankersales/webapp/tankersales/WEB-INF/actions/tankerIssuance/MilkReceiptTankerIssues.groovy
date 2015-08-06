@@ -101,8 +101,9 @@ for(vehicle in vehiclesList){
 		vehObjectJson.put("value",vehicle.get("vehicleId"));
 		String label = vehicle.get("vehicleId");
 		if(UtilValidate.isNotEmpty(vehicle.get("vehicleName"))){
-				label = label.concat("-").concat(vehicle.get("vehicleName"));
-			}
+			//label = label.concat("-").concat(vehicle.get("vehicleName"));
+			label = vehicle.get("vehicleName") + " ["+ label + "]";
+		}
 		
 		vehObjectJson.put("label",label);
 		vehItemsJSON.add(vehObjectJson);
@@ -198,11 +199,9 @@ context.put("orderItemsJSON",orderItemsJSON);
 		
 		shipmentIds=[];
 		conditionList.clear();
-		//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 		conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "TANKER_SALES"));
-		
 		EntityCondition shipCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond, null,UtilMisc.toList("routeId"), null, false);
+		List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond, null, null, null, false);
 		shipmentIds.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
 		
 		conditionList.clear();
@@ -218,10 +217,13 @@ context.put("orderItemsJSON",orderItemsJSON);
 				if(UtilValidate.isNotEmpty(tempVehicleTripStatusList)){
 					 vehicleTripStatusMap=[:];
 					 statusList=EntityUtil.getFieldListFromEntityList(tempVehicleTripStatusList, "statusId", false);
-					
-					 GenericValue vehicleTripStatus=EntityUtil.getFirst(tempVehicleTripStatusList);
+					 
+					 List<GenericValue> statusItemList = delegator.findList("StatusItem",EntityCondition.makeCondition("statusId", EntityOperator.IN, statusList), null, UtilMisc.toList("-sequenceId"), null, true);
+					 latestStatusId = (EntityUtil.getFirst(statusItemList)).get("statusId");
+					 //GenericValue vehicleTripStatus=EntityUtil.getFirst(tempVehicleTripStatusList);
 					 //vehicleTripStatusMap.putAll(vehicleTripStatus);
 					
+					 GenericValue vehicleTripStatus = EntityUtil.getFirst(EntityUtil.filterByCondition(tempVehicleTripStatusList, EntityCondition.makeCondition("statusId",EntityOperator.EQUALS , latestStatusId)));
 					 vehicleTripStatusList.add(vehicleTripStatus);//only needs to get one valid status for each shipment which is recent one
 					
 				 }
@@ -235,12 +237,34 @@ context.put("orderItemsJSON",orderItemsJSON);
 		List<GenericValue> qcClearedShipList = EntityUtil.filterByCondition(vehicleTripStatusList, EntityCondition.makeCondition("statusId",EntityOperator.EQUALS , "TS_QC"))
 		List<GenericValue> grossWtClearedShipList = EntityUtil.filterByCondition(vehicleTripStatusList, EntityCondition.makeCondition("statusId",EntityOperator.EQUALS , "TS_GROSS_WEIGHT"))
 		
+		List planningClearedVehicles = EntityUtil.getFieldListFromEntityList(planningClearedShipList, "vehicleId", false);
+		List cipClearedVehicles = EntityUtil.getFieldListFromEntityList(cipClearedShipList, "vehicleId", false);
+		List tareWtClearedVehicles = EntityUtil.getFieldListFromEntityList(tareWtClearedShipList, "vehicleId", false);
+		List qcClearedVehicles = EntityUtil.getFieldListFromEntityList(qcClearedShipList, "vehicleId", false);
+		List grossWtClearedVehicles = EntityUtil.getFieldListFromEntityList(grossWtClearedShipList, "vehicleId", false);
 		
-		context.put("planningClearedShipList",EntityUtil.filterByCondition(vehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(planningClearedShipList, "vehicleId", false))));
-		context.put("cipClearedShipList",EntityUtil.filterByCondition(vehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(cipClearedShipList, "vehicleId", false))));
-		context.put("tareWtClearedShipList",EntityUtil.filterByCondition(vehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(tareWtClearedShipList, "vehicleId", false))));
-		context.put("qcClearedShipList",EntityUtil.filterByCondition(vehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(qcClearedShipList, "vehicleId", false))));
-		context.put("grossWtClearedShipList",EntityUtil.filterByCondition(vehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(grossWtClearedShipList, "vehicleId", false))));
+		inProcessVehiclesList = [];
+		inProcessVehiclesList.addAll(cipClearedVehicles);
+		inProcessVehiclesList.addAll(tareWtClearedVehicles);
+		inProcessVehiclesList.addAll(qcClearedVehicles);
+		inProcessVehiclesList.addAll(grossWtClearedVehicles);
+		
+		planningClearedVehicles.removeAll(inProcessVehiclesList);
+		
+		List allVehCondList = FastList.newInstance();
+		allVehCondList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.IN, UtilMisc.toList("TRANS_VEHICLE", "EXTERNAL_VEHICLE")));
+		allVehCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate)));
+		EntityCondition allVehCondition = EntityCondition.makeCondition(allVehCondList);
+		List allVehicleRoleList = delegator.findList("VehicleRole",allVehCondition, null, null, null, true);
+		
+		Set allVehicleIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(allVehicleRoleList, "vehicleId", false));
+		List<GenericValue> allVehiclesList = delegator.findList("Vehicle",EntityCondition.makeCondition("vehicleId",EntityOperator.IN,allVehicleIdsSet), null, null, null, true);
+		
+		context.put("cipClearedShipList",EntityUtil.filterByCondition(allVehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(cipClearedShipList, "vehicleId", false))));
+		context.put("tareWtClearedShipList",EntityUtil.filterByCondition(allVehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(tareWtClearedShipList, "vehicleId", false))));
+		context.put("qcClearedShipList",EntityUtil.filterByCondition(allVehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(qcClearedShipList, "vehicleId", false))));
+		context.put("grossWtClearedShipList",EntityUtil.filterByCondition(allVehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , EntityUtil.getFieldListFromEntityList(grossWtClearedShipList, "vehicleId", false))));
+		context.put("planningClearedShipList", EntityUtil.filterByCondition(allVehiclesList, EntityCondition.makeCondition("vehicleId",EntityOperator.IN , planningClearedVehicles)));
 		
 		List<GenericValue> routesList = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"TS_ROUTE"), null, null, null, true);
 
@@ -265,3 +289,44 @@ context.put("orderItemsJSON",orderItemsJSON);
 		}
 		context.put("routeListJSON",routeListJSON);
 		context.put("routesObjectJson",routesObjectJson);
+		
+		
+		
+		
+		List extVehCondList = FastList.newInstance();
+		extVehCondList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"EXTERNAL_VEHICLE"));
+		extVehCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate)));
+		EntityCondition extVehCondition = EntityCondition.makeCondition(extVehCondList);
+		List extVehicleRoleList = delegator.findList("VehicleRole",extVehCondition, null, null, null, true);
+		
+		Set extVehicleIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(extVehicleRoleList, "vehicleId", false));
+		List<GenericValue> extVehiclesList = delegator.findList("Vehicle",EntityCondition.makeCondition("vehicleId",EntityOperator.IN,extVehicleIdsSet), null, null, null, true);
+		
+		extVehicleIdsList = EntityUtil.getFieldListFromEntityList(extVehiclesList, "vehicleId", true);
+		context.put("extVehicleIdsList", extVehicleIdsList);
+		
+		JSONObject extVehicleCodeJson = new JSONObject();
+		JSONArray extVehItemsJSON = new JSONArray();
+		for(vehicle in extVehiclesList){
+				JSONObject extVehObjectJson = new JSONObject();
+				extVehObjectJson.put("value",vehicle.get("vehicleName"));
+				String label = vehicle.get("vehicleId");
+				if(UtilValidate.isNotEmpty(vehicle.get("vehicleName"))){
+					//label = label.concat("-").concat(vehicle.get("vehicleName"));
+					
+					label = vehicle.get("vehicleName") + " ["+ label + "]";
+				}
+				
+				extVehObjectJson.put("label",label);
+				extVehItemsJSON.add(extVehObjectJson);
+				
+				JSONObject extVehDetJson = new JSONObject();
+				extVehDetJson.put("vehicleId",vehicle.get("vehicleName"));
+				extVehDetJson.put("vehicleName",vehicle.get("vehicleName"));
+				extVehicleCodeJson.put(vehicle.get("vehicleName"),extVehDetJson);
+				
+		}
+		context.put("extVehItemsJSON",extVehItemsJSON);
+		context.put("extVehicleCodeJson",extVehicleCodeJson);
+		
+		
