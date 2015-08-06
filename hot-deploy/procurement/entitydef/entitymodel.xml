@@ -72,6 +72,8 @@
       <field name="snfPercent" type="fixed-point"></field>  
       <field name="useTotalSolids" type="indicator"></field>
       <field name="price" type="currency-precise"></field>
+      <field name="fatPrice" type="currency-precise"></field>
+      <field name="snfPrice" type="currency-precise"></field>
       <field name="uomId" type="id"/>
       <!--  price based on TS value-->
       <field name="tsValue" type="fixed-point"></field>

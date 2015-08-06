@@ -336,7 +336,8 @@
     </service>
     <service name="calculateProcurementProductPrice" engine="java"
                 location="in.vasista.vbiz.procurement.PriceServices" invoke="getProcurementProductPrice" auth="true">
-        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
         <attribute name="priceDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
         <attribute name="productId" mode="IN" type="String" optional="false"/>        
         <attribute name="fatPercent" mode="IN" type="BigDecimal" optional="true"/>
@@ -352,7 +353,16 @@
         <attribute name="sourRate" mode="OUT" type="BigDecimal" optional="true"/>
         <attribute name="priceChartMap" mode="OUT" type="Map" optional="true"/> 
         <attribute name="snfPercentList" mode="OUT" type="List" optional="true"/>
-        <attribute name="uomId" mode="OUT" type="String" optional="true" ></attribute>                 
+        <attribute name="uomId" mode="OUT" type="String" optional="true" ></attribute>  
+        <attribute name="fatPremium" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="snfPremium" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="fatPrice" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="snfPrice" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="kgFatPrice" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="kgSnfPrice" mode="OUT" type="BigDecimal" optional="true"/>
+        
+        <attribute name="payablePrice" mode="OUT" type="BigDecimal" optional="true"/>
+                       
     </service>
     
      <service name="calculateProcurementProductPriceSADF" engine="java"
