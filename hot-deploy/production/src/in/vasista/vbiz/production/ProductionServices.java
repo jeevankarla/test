@@ -135,13 +135,14 @@ public class ProductionServices {
         Map<String, Object> result = FastMap.newInstance();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue facility = null;
+		List<String> productIds = FastList.newInstance();
         try {
             facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
             
             if(UtilValidate.isEmpty(productId)){
             	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
             	if(UtilValidate.isNotEmpty(productFacility)){
-            		productId = (EntityUtil.getFirst(productFacility)).getString("productId");
+            		productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
             	}
             	
             }
@@ -164,25 +165,29 @@ public class ProductionServices {
         List conditionList = FastList.newInstance();
         conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN, effectiveDate));
         conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-        conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+        if(UtilValidate.isEmpty(productId)){
+            conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+        }else{
+            conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+        }
+   	 	//conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
         EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-        
 
         BigDecimal inventoryCount = BigDecimal.ZERO;
         BigDecimal inventoryKgFat = BigDecimal.ZERO;
         BigDecimal inventoryKgSnf = BigDecimal.ZERO;
+        String invProductId="";
         EntityListIterator eli = null;
         Map openingBalanceMap = FastMap.newInstance();
         
         try {
             eli = delegator.find("InventoryItemAndDetail", condition, null, null, UtilMisc.toList("effectiveDate"), null);
-            
             GenericValue inventoryTrans;
             while ((inventoryTrans = eli.next()) != null) {
             	BigDecimal quantityOnHandDiff = inventoryTrans.getBigDecimal("quantityOnHandDiff");
                 BigDecimal fatPercent = inventoryTrans.getBigDecimal("fatPercent");
                 BigDecimal snfPercent = inventoryTrans.getBigDecimal("snfPercent");
-                
+                invProductId = inventoryTrans.getString("productId");
                 BigDecimal kgFat =BigDecimal.ZERO;
                 BigDecimal kgSnf =BigDecimal.ZERO;
                 kgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(inventoryCount, fatPercent);
@@ -198,6 +203,7 @@ public class ProductionServices {
             fatPercent = ProcurementNetworkServices.calculateFatOrSnf(inventoryKgFat, inventoryCount);
             snfPercent = ProcurementNetworkServices.calculateFatOrSnf(inventoryKgSnf, inventoryCount);
             
+            openingBalanceMap.put("invProductId",invProductId);
             openingBalanceMap.put("fat",fatPercent);
             openingBalanceMap.put("snf",snfPercent);
             openingBalanceMap.put("kgFat",inventoryKgFat);
