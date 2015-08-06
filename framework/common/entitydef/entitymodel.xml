@@ -388,6 +388,9 @@ under the License.
       <relation type="one" fk-name="PER_TYPE_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
+      <relation type="one" fk-name="PER_TYPE_PARENT" rel-entity-name="PeriodType">
+        <key-map field-name="parentPeriodTypeId" rel-field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="StandardTimePeriod"
             package-name="org.ofbiz.common.period"
