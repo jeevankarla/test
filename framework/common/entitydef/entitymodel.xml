@@ -380,12 +380,16 @@ under the License.
             package-name="org.ofbiz.common.period"
             title="Period Type Entity">
       <field name="periodTypeId" type="id-ne"></field>
+      <field name="parentPeriodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="periodLength" type="numeric"></field>
       <field name="uomId" type="id"></field>
       <prim-key field="periodTypeId"/>
       <relation type="one" fk-name="PER_TYPE_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PER_TYPE_PARENT" rel-entity-name="PeriodType">
+        <key-map field-name="parentPeriodTypeId" rel-field-name="periodTypeId"/>
       </relation>
     </entity>
     <entity entity-name="StandardTimePeriod"

@@ -25,21 +25,25 @@
             </widgets>
         </section>
     </screen>
-    <screen name="MRTransporterTimePeriod">
+    <screen name="mrTransporterTimePeriod">
  	   <section>
 		  <actions>
-			<set field="titleProperty" value="MILK RECEIPTS"/>	
-			<set field="tabButtonItem" value="MRTransporterMargins"/>
-			<set field="tabButtonItem2" value="MRTransporterTimePeriod" />
-			<entity-condition list="TimePeriods" entity-name="CustomTimePeriod">
-           		<condition-expr field-name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>
+		    <set field="titleProperty" value="MILK RECEIPTS"/>	
+            <set field="tabButtonItem" value="MRTransporterTimePeriod"/> 
+			<set field="tabButtonItem3" value="mrTransporterTimePeriod" />
+	        <entity-condition list="periodTypes" entity-name="PeriodType">
+            	<condition-expr field-name="parentPeriodTypeId" operator="equals" value="MILK_RCPT_BILL_TYPE"/>
+            </entity-condition>
+            <set field="periodIdTypes" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(periodTypes, 'periodTypeId', true);}" type="List"/>
+            <entity-condition list="TimePeriods" entity-name="CustomTimePeriod">
+			    <condition-expr field-name="periodTypeId" operator="in" from-field="periodIdTypes"/>
            	    <order-by field-name="-customTimePeriodId" />
 	        </entity-condition>
 		 </actions>
  		 <widgets>
 			 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
                 <decorator-section name="body">
-                     <include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                     <include-menu name="MilkreceiptTimePeriodTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
             	  <section>
 					<widgets>
 						<screenlet title="Time Periods">
