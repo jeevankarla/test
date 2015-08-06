@@ -3635,6 +3635,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintDepositReceipt"/>
     </request-map>
+    <request-map uri="printContraReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintContraReceipt"/>
+    </request-map>
     <request-map uri="viewDepositTransactions">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewDepositTransactions"/>
@@ -4460,6 +4464,7 @@ under the License.
 	<view-map name="PrintReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="PrintAdvAndDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintAdvAndDepositReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>
+	<view-map name="PrintContraReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintContraReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindAdhocSalePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindAdhocSalePayment"/>

@@ -98,7 +98,12 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 			}
 			
 			if(UtilValidate.isNotEmpty(finAccountTransId)){
+				
+				finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 				finAccountTransAttrDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "INFAVOUR_OF"], false);
+				if(UtilValidate.isEmpty(finAccountTransAttrDetails)){
+				finAccountTransAttrDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransAttributeDetails.attrValue, attrName : "INFAVOUR_OF"], false);
+				}
 				if(UtilValidate.isNotEmpty(finAccountTransAttrDetails)){
 					attrValue = finAccountTransAttrDetails.attrValue;
 				}

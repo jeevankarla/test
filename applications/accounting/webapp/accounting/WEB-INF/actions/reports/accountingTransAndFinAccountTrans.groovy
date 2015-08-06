@@ -46,12 +46,24 @@ if(UtilValidate.isNotEmpty(acctgTransId)){
 	accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
 }else{
 	if(UtilValidate.isNotEmpty(finAccountTransId)){
+		finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+		
 		finTransAttr = delegator.findOne("FinAccountTransAttribute",[finAccountTransId : finAccountTransId,attrName:"INFAVOUR_OF"] , false);
+		if(UtilValidate.isEmpty(finTransAttr)){
+			finTransAttr = delegator.findOne("FinAccountTransAttribute",[finAccountTransId : finAccountTransAttributeDetails.attrValue,attrName:"INFAVOUR_OF"] , false);
+		}
+		finTransEntries = delegator.findOne("FinAccountTrans",[finAccountTransId : finAccountTransId] , false);
+		
 		String cheqInFavour="";
+		String comments="";
 		if(finTransAttr){
 		cheqInFavour=finTransAttr.attrValue;
 		}
+		if(finTransEntries){
+			comments=finTransEntries.comments;
+			}
 		context.cheqInFavour=cheqInFavour;
+		context.comments=comments;
 		accountingTransList = delegator.findList("AcctgTrans",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS , finAccountTransId)  , null, null, null, false );
 		if(UtilValidate.isNotEmpty(accountingTransList)){
 			accountingTransEntries = EntityUtil.getFirst(accountingTransList);
