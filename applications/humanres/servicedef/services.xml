@@ -1042,6 +1042,13 @@ under the License.emplpunch
         <attribute name="oldJoiningDate" mode="IN" type="String" optional="true"/>
         <attribute name="newJoiningDate" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="updateEmployeeAppointmentDate" engine="java" default-entity-name="Employment"
+             location="in.vasista.vbiz.humanres.HumanresService" invoke="updateEmployeeAppointmentDate" auth="true">
+        <description>Update Employee Joining Date</description>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="oldAppointmentDate" mode="IN" type="String" optional="true"/>
+        <attribute name="newAppointmentDate" mode="IN" type="String" optional="true"/>
+    </service>
 
     <service name="createJobRequisition" engine="simple" default-entity-name="JobRequisition"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createJobRequisition" auth="true">

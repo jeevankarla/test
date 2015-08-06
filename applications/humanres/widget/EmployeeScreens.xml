@@ -772,6 +772,65 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="EditAppointmentDate">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Employee Appointment Date"/>
+                <set field="tabButtonItem" value="EmplPositionView"/>
+   				<set field="partyId" from-field="parameters.partyId"/>
+   				<set field="oldAppointmentDate" from-field="parameters.appointmentDate"/>
+   				<set field="joiningDate" from-field="parameters.joiningDate"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                 
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                      
+            </actions>
+            <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+		                    <widgets>   
+                    			<section>
+                    	    		<condition>
+                            			<if-compare field="hasEmployeeEditPermission" operator="equals" value="true" type="Boolean"/>
+                            		</condition>  
+		                            <widgets>                      
+	    		                        <section>
+	    		                            <widgets>
+	    		                                <container style="lefthalf">
+	    		                                    <include-screen name="EditAppointmentDateView"/>
+	    		                                </container>
+	    		                            </widgets>
+	    		                        </section>
+	    		                    </widgets>		
+		                    		<fail-widgets>
+				                        <section>
+	    		                            <widgets>
+	    		                                <container style="lefthalf">
+	    		                                    <include-screen name="EditAppointmentDateView"/>
+	    		                                </container>
+	    		                            </widgets>
+	    		                        </section>
+				                   </fail-widgets>
+		            			</section>			                        
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>		  		                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditJoiningDateView">
 	    <section>
 	        <actions>
@@ -780,6 +839,18 @@ under the License.
 	        <widgets>
 	             <platform-specific>
 						<html><html-template location="component://humanres/webapp/humanres/humanres/editEmployeeJoiningDate.ftl"></html-template></html>                         
+	            </platform-specific>   
+	        </widgets>
+	    </section>
+    </screen>
+    <screen name="EditAppointmentDateView">
+	    <section>
+	        <actions>
+				
+	        </actions>            
+	        <widgets>
+	             <platform-specific>
+						<html><html-template location="component://humanres/webapp/humanres/humanres/editEmployeeAppointmentDate.ftl"></html-template></html>                         
 	            </platform-specific>   
 	        </widgets>
 	    </section>

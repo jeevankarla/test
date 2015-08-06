@@ -758,8 +758,8 @@
 		<field name="shiftType" title="${uiLabelMap.ShiftType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${shiftType}"></display-entity></field>
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
 		<field name="presentEpf" title="PF Number"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${presentEpf}"></display-entity></field>
-       	<field name="doj" title="D.O.J"><display description="${doj}"></display></field>
-        <field name="passportExpiryDate" title="Passport Expiry Date"><display default-value="${passportExpiryDate}"></display></field>
+<!--        	<field name="doj" title="D.O.J"><display description="${doj}"></display></field>
+ -->        <field name="passportExpiryDate" title="Passport Expiry Date"><display default-value="${passportExpiryDate}"></display></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>
    </form>
     
@@ -1106,7 +1106,17 @@
          <!-- <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field> -->
-        <field name="appointmentDate" entry-name="employment.appointmentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+<!--         <field name="appointmentDate" entry-name="employment.appointmentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+ -->        
+         <field name="appointmentDate" entry-name="employment.appointmentDate">
+            <hyperlink target="editAppointmentDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}">
+                <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
+                <parameter param-name="joiningDate" from-field="employmentData.employment.fromDate"/>
+                <parameter param-name="appointmentDate" from-field="employmentData.employment.appointmentDate"/>
+            </hyperlink>
+        </field>
+        
+        <field name="appointmentDateDescription" title="Date of joining at kmf"><display/></field>
         <field name="joiningDate" entry-name="employment.fromDate">
             <hyperlink target="editJoiningDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.fromDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
@@ -1114,6 +1124,7 @@
                 <parameter param-name="appointmentDate" from-field="employmentData.employment.appointmentDate"/>
             </hyperlink>
         </field>
+        <field name="joiningDateDescription" title="Date of joining this Unit"><display/></field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     	<field name="location" title="Current Location"><display description="${location}"/></field>
         <field name="locationGeoId" title="New Location">

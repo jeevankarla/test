@@ -2501,9 +2501,19 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editJoiningDate"/>
     </request-map>
+    <request-map uri="editAppointmentDate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editAppointmentDate"/>
+    </request-map>
     <request-map uri="updateEmployeeJoiningDate">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmployeeJoiningDate"/>
+        <response name="success" type="view" value="EmployeeProfile"/>
+        <response name="error" type="view" value="EmployeeProfile"/>
+    </request-map>
+    <request-map uri="updateEmployeeAppointmentDate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmployeeAppointmentDate"/>
         <response name="success" type="view" value="EmployeeProfile"/>
         <response name="error" type="view" value="EmployeeProfile"/>
     </request-map>
@@ -2889,5 +2899,7 @@ under the License.
 	<!-- SalaryDisbursement --> 
 	<view-map name="ExcludeSalaryDisbursement" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursement"></view-map>
 	<view-map name="ExcludeSalaryDisbursementInit" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursementInit"></view-map>
-	<view-map name="editJoiningDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditJoiningDate"/> 
+	<view-map name="editJoiningDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditJoiningDate"/>
+	<view-map name="editAppointmentDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditAppointmentDate"/> 
+	 
 </site-conf>
