@@ -57,7 +57,6 @@ import java.text.ParseException;
 formDateTime=UtilDateTime.nowTimestamp();
 thruDateTime=UtilDateTime.nowTimestamp();
 finAccountTransId=parameters.finAccountTransId;
-Debug.log("finAccountTransId=================="+finAccountTransId);
 reportTypeFlag = context.reportTypeFlag;
 	finAccountFinalTransList = [];
 	finAccountTransMap = [:];
@@ -69,28 +68,20 @@ reportTypeFlag = context.reportTypeFlag;
 	cheqInFavour="";
 	tempMap = [:];
 	finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
-	Debug.log("finAccountTransAttributeDetails============1111==============="+finAccountTransAttributeDetails);
 	
 	if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
 	finAccountTranscheqInFavour= delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransAttributeDetails.finAccountTransId, attrName : "INFAVOUR_OF"], false);
-	if(UtilValidate.isEmpty(finAccountTranscheqInFavour)){
-		finAccountTranscheqInFavour= delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransAttributeDetails.attrValue, attrName : "INFAVOUR_OF"], false);
-	}
-Debug.log("finAccountTranscheqInFavour============222==============="+finAccountTranscheqInFavour);
+		if(UtilValidate.isEmpty(finAccountTranscheqInFavour)){
+			finAccountTranscheqInFavour= delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransAttributeDetails.attrValue, attrName : "INFAVOUR_OF"], false);
+		}
 
 	}
-	Debug.log("finAccountTransAttributeDetails==========3333================="+finAccountTransAttributeDetails);
 	transIds=[];
 	transIds.add(finAccountTransAttributeDetails.finAccountTransId);
 	transIds.add(finAccountTransAttributeDetails.attrValue);
-	Debug.log("transIds========================"+transIds);
-	Debug.log("finAccountTranscheqInFavour========================"+finAccountTranscheqInFavour);
-	
 	if(finAccountTranscheqInFavour){
 		cheqInFavour=finAccountTranscheqInFavour.attrValue;
 	}
-	Debug.log("cheqInFavour========================"+cheqInFavour);
-	
 	context.cheqInFavour=cheqInFavour;
 	transIds.each{ finAccountTransId ->
 		finAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : finAccountTransId], false);
@@ -241,7 +232,6 @@ Debug.log("finAccountTranscheqInFavour============222==============="+finAccount
 		}
 	
 	}
-	Debug.log("finAccountFinalTransList========================="+finAccountFinalTransList);
 	
 	context.put("finAccountFinalTransList",finAccountFinalTransList);
 	

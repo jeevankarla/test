@@ -600,6 +600,26 @@ under the License.
             </widgets>
         </section>
     </screen>
+     <screen name="PrintContraChecks">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/PrintContraChecks.groovy"/>
+                <entity-condition entity-name="InvoiceItemType" list="PayrolGroup">
+                    <condition-expr field-name="parentTypeId" value="PAYROL"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="FindSalesInvoicesByDueDate">
         <section>
             <actions>

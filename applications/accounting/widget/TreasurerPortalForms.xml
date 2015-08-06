@@ -505,7 +505,7 @@ under the License.
             </hyperlink>
         </field>
     	<field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
-            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+            <hyperlink target="printContraChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="finAccountTransId"/>
              <parameter param-name="amount"/>
@@ -540,7 +540,7 @@ under the License.
             </hyperlink>
         </field>
     	 <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
-            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+            <hyperlink target="printContraChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="finAccountTransId"/>
              <parameter param-name="amount"/>
