@@ -417,9 +417,7 @@ public class HumanresService {
 									}
 								}
 					    	}else{
-					    		if(!holidays.contains(tempDate)){
-					    			k = 2;
-								}
+					    		k = 2;
 					    	}
 					    	
 					    	String punchRecords = String.valueOf(k);
