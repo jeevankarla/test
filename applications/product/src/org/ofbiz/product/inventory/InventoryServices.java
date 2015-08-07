@@ -1375,6 +1375,7 @@ public class InventoryServices {
             	if(UtilValidate.isNotEmpty(productFacility)){
             		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
             	}
+            	
             }
             
         } catch (GenericEntityException e) {

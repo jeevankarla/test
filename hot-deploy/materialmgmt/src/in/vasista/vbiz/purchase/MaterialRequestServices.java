@@ -1404,6 +1404,7 @@ public class MaterialRequestServices {
 				if(UtilValidate.isNotEmpty(facilityCheckParties)){
 				   facilityCheckParty = EntityUtil.getFirst(facilityCheckParties);
 				   facilityId=facilityCheckParty.getString("facilityId");
+				   
 				   try {
 			               Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", productId,
 			                       "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
