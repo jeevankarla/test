@@ -883,14 +883,28 @@ public class MaterialRequestServices {
            }
             // We need to get facilityId from ProductFacility 
             if(UtilValidate.isEmpty(facilityId)){
-            	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
-            	if(UtilValidate.isEmpty(productFacility)){
-            		return ServiceUtil.returnError("Product not configured to any ProductFacility");
+            	List facilityIds = FastList.newInstance(); 
+            	if(shipmentTypeId.equals("ISSUANCE_SHIPMENT")){
+            		List conditionList = FastList.newInstance(); 
+            		conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
+            		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+    				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    				List<GenericValue> facilities = delegator.findList("Facility", condition, null, null, null, false);
+    				if(UtilValidate.isNotEmpty(facilities)){
+    					facilityIds = EntityUtil.getFieldListFromEntityList(facilities, "facilityId", true);
+    				}
             	}
-            	GenericValue prodFacility = EntityUtil.getFirst(productFacility);
-            	facilityId = prodFacility.getString("facilityId");
+            	List conList = FastList.newInstance();
+            	conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            	if(UtilValidate.isNotEmpty(facilityIds)){
+            		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+            	}
+            	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
+            	List<GenericValue> productFacility = delegator.findList("ProductFacility", con, null, null, null, false);
+            	if(UtilValidate.isNotEmpty(productFacility)){
+            		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
+            	}
             }
-            
             Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", facilityId);
             // Call issuance service
             
@@ -926,6 +940,9 @@ public class MaterialRequestServices {
             // OB inventory Items
             conditionList.clear();
             conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            if(UtilValidate.isNotEmpty(facilityId)){
+            	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+            }
             conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
             if(UtilValidate.isNotEmpty(inventoryItemIdsExl)){
             	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.NOT_IN, inventoryItemIdsExl));

@@ -1258,11 +1258,27 @@ public class InventoryServices {
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
             
             if(UtilValidate.isEmpty(facilityId)){
-            	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+            	List facilityIds = FastList.newInstance(); 
+            	if(ownerPartyId.equalsIgnoreCase("Company")){
+            		List conditionList = FastList.newInstance(); 
+            		conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
+            		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+    				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    				List<GenericValue> facilities = delegator.findList("Facility", condition, null, null, null, false);
+    				if(UtilValidate.isNotEmpty(facilities)){
+    					facilityIds = EntityUtil.getFieldListFromEntityList(facilities, "facilityId", true);
+    				}
+            	}
+            	List conList = FastList.newInstance();
+            	conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            	if(UtilValidate.isNotEmpty(facilityIds)){
+            		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+            	}
+            	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
+            	List<GenericValue> productFacility = delegator.findList("ProductFacility", con, null, null, null, false);
             	if(UtilValidate.isNotEmpty(productFacility)){
             		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
             	}
-            	
             }
             
         } catch (GenericEntityException e) {
@@ -1338,11 +1354,27 @@ public class InventoryServices {
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
             
             if(UtilValidate.isEmpty(facilityId)){
-            	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+            	List facilityIds = FastList.newInstance(); 
+            	if(ownerPartyId.equalsIgnoreCase("Company")){
+            		List conditionList = FastList.newInstance(); 
+            		conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
+            		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+    				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    				List<GenericValue> facilities = delegator.findList("Facility", condition, null, null, null, false);
+    				if(UtilValidate.isNotEmpty(facilities)){
+    					facilityIds = EntityUtil.getFieldListFromEntityList(facilities, "facilityId", true);
+    				}
+            	}
+            	List conList = FastList.newInstance();
+            	conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            	if(UtilValidate.isNotEmpty(facilityIds)){
+            		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+            	}
+            	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
+            	List<GenericValue> productFacility = delegator.findList("ProductFacility", con, null, null, null, false);
             	if(UtilValidate.isNotEmpty(productFacility)){
             		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
             	}
-            	
             }
             
         } catch (GenericEntityException e) {
@@ -1358,7 +1390,6 @@ public class InventoryServices {
         	Debug.logError("Product with code "+productId+" doesn't exists", module);
         	return ServiceUtil.returnError("Product with code "+productId+" doesn't exists");
         }
-        
         
         List conditionList = FastList.newInstance();
         conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
