@@ -116,13 +116,13 @@
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Milk Conversion Report</span></td>
 							
-							<td width="25%">
+							<td width="35%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="convFromDate"   name="convFromDate"/>
 									To   <input  type="text" size="18pt" id="convThruDate"   name="convThruDate"/>
 								 </span>
 							</td>
-						    <td width="30%"><span class='h3'></span></td>
+						    <td width="35%"><span class='h3'></span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
@@ -135,12 +135,12 @@
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Stock Processing Register Report</span></td>
 							
-							<td width="25%">
+							<td width="35%">
 							     <span class='h3'>
 									Date <input  type="text" size="18pt" id="milkProcessRegDate"   name="fromDate"/>
 								 </span>
 							</td>
-						    <td width="30%"><span class='h3'></span></td>
+						    <td width="35%"><span class='h3'></span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
@@ -152,13 +152,13 @@
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="20%"><span class='h3'>Material Balance Report</span></td>
-							<td width="25%">
+							<td width="35%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="mateBalanceFromDate"   name="mateBalanceFromDate"/>
 									To   <input  type="text" size="18pt" id="mateBalanceThruDate"   name="mateBalanceThruDate"/>
 								 </span>
 							</td>
-						    <td width="30%"><span class='h3'></span></td>
+						    <td width="35%"><span class='h3'></span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
@@ -169,12 +169,23 @@
 					 <table class="basic-table" cellspacing="5">
 						 <tr class="alternate-row">
 						 <td width="20%"><span class='h3'>Temperature Record </span></td>
-						 <td width="25%">
+						 <td width="35%">
 						 <span class='h3'>
 						 Date <input type="text" size="18pt" id="temperatureDate" name="temperatureDate"/>
 						 </span>
 						 </td>
-						 <td width="30%"><span class='h3'></span></td>
+						 <td width="35%">
+								 <span class='h3'>Floor </span>
+			                    <select name="facilityId" id="facilityId">
+			                    <#if floorList?has_content>	
+			                        <#list floorList as facilityId>    
+					                  	    <option value='${facilityId}' >
+					                    		${facilityId}
+					                  		 </option>
+			                		</#list>    
+			                	</#if>	    
+			                    </select>
+							</td>
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						 </tr>
 					 </table>

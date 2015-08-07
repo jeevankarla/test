@@ -32,6 +32,11 @@ import org.ofbiz.service.ServiceUtil;
 if(UtilValidate.isNotEmpty(parameters.temperatureDate)){
 	context.reportDate = parameters.temperatureDate;
 }
+if(UtilValidate.isNotEmpty(parameters.facilityId)){
+	facilityId = parameters.facilityId;
+	context.facilityId=facilityId;
+}
+
 SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss");
 List conditionList = FastList.newInstance()
 
@@ -62,6 +67,7 @@ if(UtilValidate.isNotEmpty(workShiftTypePeriodAndMap)){
 				Debug.logError(e, "Cannot parse date string: " + e, "");
 			}
 		}
+		List siloIds=FastList.newInstance();
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("recordDateTime",EntityOperator.BETWEEN,UtilMisc.toList(recordDateTimeStart,recordDateTimeEnd)));
 		if(shiftTypeId.indexOf("NIGHT")!=-1){
@@ -81,7 +87,17 @@ if(UtilValidate.isNotEmpty(workShiftTypePeriodAndMap)){
 															EntityCondition.makeCondition("recordDateTime",EntityOperator.BETWEEN,UtilMisc.toList(nextDayStart,nextDayShiftEnd))));
 			
 		}
-		
+		if(UtilValidate.isNotEmpty(facilityId)){
+			condList =[];
+			condList.add(EntityCondition.makeCondition("ownerFacilityId", EntityOperator.EQUALS , facilityId));
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			siloList = delegator.findList("FacilityGroupAndMemberAndFacility", cond, null, null, null, false);
+			siloIds = EntityUtil.getFieldListFromEntityList(siloList, "facilityId", false);
+			if(UtilValidate.isNotEmpty(siloIds)){
+				conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, siloIds));
+			}
+				
+		}
 		EntityCondition condition =  EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		List facilityTemperature = delegator.findList("FacilityTemperature",condition,UtilMisc.toSet("facilityId","recordDateTime","temperature","comments"),UtilMisc.toList("recordDateTime"),null,false);
 		facilityTemperature.each{facility->
