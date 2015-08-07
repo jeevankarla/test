@@ -35,7 +35,6 @@ String fromDate = null;
 String thruDate = null;
 String hideSearch = parameters.hideSearch;
 List milkDetailslist = FastList.newInstance();
-Debug.log("hide search ==========="+hideSearch);
 if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	fromDate = parameters.fromDate;
 	thruDate = parameters.thruDate;
@@ -86,10 +85,45 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	if(UtilValidate.isNotEmpty(parameters.createdByUserLogin)){
 		conditionList.add(EntityCondition.makeCondition("createdByUserLogin", EntityOperator.EQUALS ,parameters.createdByUserLogin));
 	}
-	Debug.log("conditionList ==========="+conditionList);
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	milkDetailslist = delegator.findList("MilkTransfer",condition,null,UtilMisc.toList("-createdStamp"),null,false);
-	Debug.log("milkDetailslist ==========="+milkDetailslist);
 }
-context.milkDetailslist=milkDetailslist;
+
+xferInvoiceMap = [:];
+for(int i=0; i<milkDetailslist.size(); i++){
+	milkXfer = milkDetailslist.get(i);
+	shipmentId = null;
+	if(UtilValidate.isNotEmpty(milkXfer.get("shipmentId"))){
+		shipmentId = milkXfer.get("shipmentId");
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL ,"INVOICE_CANCELLED"));
+		EntityCondition invcondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		
+		invoiceAndItemList = delegator.findList("InvoiceAndItem",invcondition,UtilMisc.toSet("invoiceId","quantity","amount"),UtilMisc.toList("-invoiceId"),null,false);
+		
+		if(UtilValidate.isNotEmpty(invoiceAndItemList)){
+			invIntMap = [:];
+			totalAmount = BigDecimal.ZERO;
+			for(int j=0; j<invoiceAndItemList.size(); j++){
+				eachItem = invoiceAndItemList.get(j);
+				totalAmount = totalAmount.add( (eachItem.getBigDecimal("quantity")).multiply(eachItem.getBigDecimal("amount"))   );
+				invIntMap.put("invoiceId", eachItem.get("invoiceId"));
+			}
+			
+			invIntMap.put("invoiceAmount", totalAmount);
+			
+			tempInvMap = [:];
+			tempInvMap.putAll(invIntMap);
+			
+			xferInvoiceMap.put(shipmentId, tempInvMap);
+		}
+		
+		
+	}
+	
+}
+
+context.xferInvoiceMap = xferInvoiceMap;
+context.milkDetailslist = milkDetailslist;
 

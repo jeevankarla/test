@@ -129,9 +129,10 @@ $(document).ready(function() {
   $('#recdSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
   $('#sendSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
   
+  <#--
   $('#recdSnf').attr("readonly","readonly");
   $('#sendSnf').attr("readonly","readonly");
-  
+  -->
   
   $('#tareWeight').autoNumeric({mDec: 2 ,mRound: 'A' ,	aSep:'' , autoTab : true}).trigger('focusout');
   $('#grossWeight').autoNumeric({mDec: 2 ,mRound: 'A' ,	aSep:'' , autoTab : true}).trigger('focusout');
@@ -184,20 +185,20 @@ $(document).ready(function() {
 	
 	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)} ;
 	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)} ;
+	
+	<#--
 	$("#sendFat").blur(function() {
 		var action = "getSnfFromLactoReading";
 		var fat = $('[name=sendFat]').val();
 		var clr = $('[name=sendCLR]').val();
 		populateSnf(fat,clr,'sendSnf');
 	});
-	
 	$("#recdFat").blur(function() {
 		var action = "getSnfFromLactoReading";
 		var fat = $('[name=recdFat]').val();
 		var clr = $('[name=recdCLR]').val();
 		populateSnf(fat,clr,'recdSnf');
 	});
-	
 	function populateSnf(fat,lr,fieldName){
 		var snfQty = 0;
 		var dataString = {"fatQty": fat,
@@ -221,7 +222,7 @@ $(document).ready(function() {
 	        }
     	});
 	}
-	
+	-->
 	$("input").keyup(function(e){
 	  		
 	  		if(e.target.name == "orderId"){
@@ -248,6 +249,11 @@ $(document).ready(function() {
 	  			$('[name=tankerName]').val(($('[name=tankerName]').val()).toUpperCase());
 	  			populateVehicleName();
 				populateVehicleSpan();
+	  		}
+	  		if(e.target.name == "extTankerName"){
+	  			$('[name=extTankerName]').val(($('[name=extTankerName]').val()).toUpperCase());
+	  			populateExtVehicleName();
+				populateExtVehicleSpan();
 	  		}
 	  		
 	  		if(e.target.name == "partyName"){
@@ -454,6 +460,182 @@ function populateVehicleSpan(){
 	}
 
 }
+function populateExtVehicleSpan(){
+	var extVehicleCodeJson = ${StringUtil.wrapString(extVehicleCodeJson)}
+	var tempExtVehJson = extVehicleCodeJson[$('[name=extTankerName]').val()];
+	if(tempExtVehJson){
+		$('span#extTankerToolTip').addClass("tooltip");
+		$('span#extTankerToolTip').removeClass("tooltipWarning");
+		var vehicleName = tempExtVehJson["vehicleName"];
+		
+		var vehicleId = tempExtVehJson["vehicleId"];
+		if(!vehicleName){
+			vehicleName = vehicleId;
+		}
+		$('span#extTankerToolTip').html(vehicleName);
+		$('[name=extTankerName]').val(vehicleId);
+		
+		fetchExtTankerRecordNumber();
+		
+	}else{
+		//$('[name=extTankerNo]').val('');
+		$('span#extTankerToolTip').removeClass("tooltip");
+		$('span#extTankerToolTip').addClass("tooltipWarning");
+		$('span#extTankerToolTip').html('Choose From Suggested Ids or a new vechicle is created');
+	}
+
+}
+
+function fetchExtTankerRecordNumber(){
+	var action = "getTankerRecordNumber";
+	var tankerNo = $('#extTankerNo').val();
+	var dataString = {"tankerNo": tankerNo};
+	var displayScreen = $('[name="displayScreen"]').val();
+	$.ajax({
+         type: "POST",
+         url: action,
+         data: dataString,
+         dataType: 'json',
+         success: function(result) { 
+           if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
+           			
+           			var displayScreen = $('[name=displayScreen]').val();
+           			$('span#extTankerIdToolTip').removeClass("tooltip");
+	  				$('span#extTankerIdToolTip').addClass("tooltipWarning");
+	  				$('span#extTankerIdToolTip').html('none');
+	  				$('span#partyIdFromToolTip').removeClass("tooltip");
+	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
+	  				$('span#partyIdFromToolTip').html('none');
+	  				           	   
+           }else{
+           		var  milkTransferId= result['milkTransferId'];
+           		var displayScreen = $('[name=displayScreen]').val();
+	   			if(displayScreen == "ISSUE_GRSWEIGHT"){
+	   				tareWeight = result['tareWeight'];
+	   				$('#tareWeightToolTip').val(tareWeight);
+	   			}
+	   			if(displayScreen == "ISSUE_TARWEIGHT"){	
+           			var isCipCheckedVal = result['isCipChecked'];
+	   				 if(isCipCheckedVal == 'Y' && isCipCheckedVal != 'undefined'){
+	   				 	$('#isCipChecked').val(isCipCheckedVal);
+	   				 	$('#isCipCheckedDes').html("");
+	   				 }else{
+	   				 	$('#isCipChecked').val('');
+	   				    $('#isCipCheckedDes').html("CIP Not Done Please Contact QC Department");
+	   				 }
+	   				 
+	   			}	
+	   			if(displayScreen == "ISSUE_AQC"){
+	   				
+	   				var milkTransfer = result['milkTransfer'];
+	   				if(typeof(milkTransfer)!= "undefined"){
+	   				  
+	   				  $('#sendFat').val(milkTransfer['fat']);
+	   				  $('#sendSnf').val(milkTransfer['snf']);
+	   				  
+	   				  
+	   				}
+	   				
+	   				
+	   			}
+           		if($('[name=sealCheck]').length !=0){
+           			if(displayScreen == "ISSUE_GRSWEIGHT"){
+           				var isSealChecked = result['isSealChecked'];
+           				if(typeof(isSealChecked)!= "undefined"){
+           					if(isSealChecked == 'Y'){
+           						$('#sealCheckY').val('Y');
+           						$('#sealCheckY').attr('checked', true);
+           					}
+           					if(isSealChecked == 'N'){
+           						$('#sealCheckN').val('N');
+           						$('#sealCheckN').attr('checked', true);
+           					}
+           					
+           				}
+           			}
+           		
+           		}
+           		
+           		
+           		if($('[name=product]').length !=0){
+	           		var productId = result['productId'];
+	           		if(typeof(productId)!= "undefined"){
+	           			$('[name=product]').val(productId);
+	           			populateProductSpan();
+	           		}
+           		}
+           		if($('[name=dcNo]').length !=0){
+           			var dcNo = result['dcNo'];
+           			if(typeof(dcNo)!= "undefined"){
+           				$('[name=dcNo]').val(dcNo);
+           			}
+           		
+           		}
+           		if($('#displayScreen').val() != "RETURN_QC"){
+	           		if($('[name=sendDate]').length !=0){
+	           			var sendDate = result['sendDateStr'];
+	           			if(typeof(sendDate)!= "undefined"){
+	           				$('[name=sendDate]').val(sendDate);
+	           			}
+	           		
+	           		}
+           		}
+           		if($('[name=sendTime]').length !=0){
+           			var sendTime = result['sendTimeStr'];
+           			if(typeof(sendTime)!= "undefined"){
+           				$('[name=sendTime]').val(sendTime);
+           			}
+           		
+           		}
+           		
+           		var partyId = result['partyIdTo'];
+           		partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+           		var tempPartyJson = partyCodeJson[''+partyId];
+           		var partyName ;
+               	if(tempPartyJson){	
+               		partyName = tempPartyJson["partyName"];
+	  				if(!partyName){
+	  					partyName = partyId;
+	  				}
+	  				partyName = partyName+' ['+partyId+']'
+	  			}	
+	  			$('#partyIdTo').val(partyId);
+           		if(milkTransferId){
+           			$('[name = milkTransferId]').val(milkTransferId);
+           			if(displayScreen != "ISSUE_CIP"){
+           				$('span#extTankerIdToolTip').addClass("tooltip");
+	  					$('span#extTankerIdToolTip').removeClass("tooltipWarning");
+	  					$('span#extTankerIdToolTip').html(milkTransferId);
+	  					
+	  					$('span#partyIdFromToolTip').addClass("tooltip");
+	  					$('span#partyIdFromToolTip').removeClass("tooltipWarning");
+	  					$('span#partyIdFromToolTip').html(partyName);
+	  					
+           			}
+	  				
+	  				
+	  			}else{
+	  				$('span#extTankerIdToolTip').removeClass("tooltip");
+	  				$('span#extTankerIdToolTip').addClass("tooltipWarning");
+	  				$('span#extTankerIdToolTip').html('none');
+	  				
+	  				$('span#partyIdFromToolTip').removeClass("tooltip");
+	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
+	  				$('span#partyIdFromToolTip').html('none');
+	  			}
+           }
+           
+         },
+          error: function() {
+        	 		
+        	 		$('span#extTankerIdToolTip').removeClass("tooltip");
+	  				$('span#extTankerIdToolTip').addClass("tooltipWarning");
+	  				$('span#extTankerIdToolTip').html('none');
+        	 } 
+          
+    });
+}
+
 function fetchTankerRecordNumber(){
 	var action = "getTankerRecordNumber";
 	var tankerNo = $('#tankerNo').val();
@@ -626,6 +808,17 @@ function populateVehicleName(){
 					    }
 				});
 }
+function populateExtVehicleName(){
+	var availableTags = ${StringUtil.wrapString(extVehItemsJSON)!'[]'};
+				$("#extTankerNo").autocomplete({					
+						source:  availableTags,
+						select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $("#extTankerNo").val(selectedValue);
+					        populateExtVehicleSpan();
+					    }
+				});
+}
 function populatePartyName(){
 	var availableTags = ${StringUtil.wrapString(partyItemsJSON)!'[]'};
 				$("#partyIdTo").autocomplete({					
@@ -734,13 +927,20 @@ $( "#"+fromDateId ).datepicker({
 						        	</td>
 						        </tr>
 						        <tr>
-					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
-					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h1" id ="tankerToolTip">none</span></td>
-					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
-					        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
-					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
-					        	</td>
-					        </tr>
+						        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
+						        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h1" id ="tankerToolTip">none</span></td>
+						        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
+						        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
+						        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
+						        	</td>
+						        	<td>&#160;</td>
+						        	<td align='left'><span class="h3">External Vehicle &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span> 
+						        		<input  name="extTankerName" size="10pt" type="text" id="extTankerNo"  autocomplete="off" required="required" /><span class="tooltip h1" id ="extTankerToolTip">Use this field only for tankers sent by the customers</span></td>
+						        		
+						        		<input  name="extMilkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
+						        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" />
+						        	</td>
+						        </tr>
 					        </#if>
 					        <#--
 	          				<tr>
@@ -845,7 +1045,7 @@ $( "#"+fromDateId ).datepicker({
 				        					<option value="">SELECT</option>
 				        					<#if planningClearedShipList?has_content>
 					        					<#list planningClearedShipList as vehicle>
-					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName}</option>
+					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName} [${vehicle.vehicleId}]</option>
 					        					</#list>
 				        					</#if>
 	          							</select>
@@ -928,7 +1128,7 @@ $( "#"+fromDateId ).datepicker({
 				        					<option value="">SELECT</option>
 				        					<#if qcClearedShipList?has_content>
 					        					<#list qcClearedShipList as vehicle>
-					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName}</option>
+					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName} [${vehicle.vehicleId}]</option>
 					        					</#list>
 				        					</#if>
 	          							</select>
@@ -984,7 +1184,7 @@ $( "#"+fromDateId ).datepicker({
 				        					<option value="">SELECT</option>
 				        					<#if cipClearedShipList?has_content>
 					        					<#list cipClearedShipList as vehicle>
-					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName}</option>
+					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName} [${vehicle.vehicleId}]</option>
 					        					</#list>
 				        					</#if>
 	          							</select>
@@ -1062,7 +1262,7 @@ $( "#"+fromDateId ).datepicker({
 				        					<option value="">SELECT</option>
 				        					<#if tareWtClearedShipList?has_content>
 					        					<#list tareWtClearedShipList as vehicle>
-					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName}</option>
+					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName} [${vehicle.vehicleId}]</option>
 					        					</#list>
 				        					</#if>
 	          							</select>
@@ -1116,7 +1316,7 @@ $( "#"+fromDateId ).datepicker({
 					        	<tr>
 					        		<td align='right' ><span class="h3">Temp</span> </td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
 					        		<td align='left' > <span class="h3">Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
+					        		<#--<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>-->
 					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
 					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
 					        	</tr>
@@ -1150,7 +1350,7 @@ $( "#"+fromDateId ).datepicker({
 				        					<option value="">SELECT</option>
 				        					<#if grossWtClearedShipList?has_content>
 					        					<#list grossWtClearedShipList as vehicle>
-					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName}</option>
+					        						<option value="${vehicle.vehicleId}">${vehicle.vehicleName} [${vehicle.vehicleId}]</option>
 					        					</#list>
 				        					</#if>
 	          							</select>
@@ -1194,7 +1394,7 @@ $( "#"+fromDateId ).datepicker({
 					        	<tr>
 					        		<td align='right' ><span class="h3">Temp</span> </td><td><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
 					        		<td align='left' > <span class="h3">Acidity% </span></td><td><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
+					        		<#--<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>-->
 					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
 					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
 					        	</tr>

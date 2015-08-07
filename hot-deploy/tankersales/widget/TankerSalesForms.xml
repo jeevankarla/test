@@ -291,17 +291,26 @@
 	<form name="SOInformation" title="" type="single" target="CreateNewTankerSaleSO" header-row-style="header-row" default-table-style="basic-table">
     	<field name="orderTypeId" ><hidden value="SALES_ORDER"/></field>  
 		<field name="SoDate" title="SO Date"><date-time type="date" ></date-time></field>
-        <field name="billToPartyId" title="Bill To Party"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- <field name="billToPartyId" title="Bill To Party"><lookup target-form-name="LookupPartyName"/></field> -->
         <field name="ShipToPartyId" title="Ship To Party"><lookup target-form-name="LookupName"/></field>
         <field name="effectiveDate" title="Estimated Delivery Date"><date-time type="date" ></date-time></field>
-        <field name="productId" title="Product">
+        <field name="productId" id-name="productId" event="onchange" action="javascript:refreshFields();">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${productName}" entity-name="ProductAndCategoryMember">
+        			<entity-constraint name="productCategoryId" value="TANKER_SALES_PRDT"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <!-- <field name="productId" title="Product">
 		<drop-down allow-empty="true">
                <option key="RAW_MILK" description="RAW MILK"/>
                <option key="WHOLE_MILK" description="WHOLE MILK"/>
           </drop-down>
-	   </field>
+	   </field> -->
+	   <field name="fat" id-name="fat"><text></text></field>
+	   <field name="snf" id-name="snf"><text></text></field>
        <field name="quantity" title="Quantity"><text size="15" maxlength="60"/></field>
-       <field name="unitPrice" title="Price"><text size="15" maxlength="60"/></field>
+       <!-- <field name="unitPrice" title="Price"><text size="15" maxlength="60"/></field> -->
 	   <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -8,7 +8,7 @@
 	
 	<Enumeration enumId="TANKER_SALES_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" description="Tanker Sales" enumCode="Tanker Sales Channel"/> 
 	
-	<RoleType description="Calendar Owner" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_OWNER"/>
+	
 	
 	
 	

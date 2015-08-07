@@ -251,6 +251,7 @@ public class PriceServices {
         BigDecimal fatMinQualityToPremum = BigDecimal.ZERO;
         List<EntityCondition> procPriceEcList = FastList.newInstance();
         String useBaseSnf = "Y";
+        String useBaseFat = "Y";
         if (UtilValidate.isEmpty(fatPercent)) {
         	fatPercent = BigDecimal.ZERO;
         }else{
@@ -259,6 +260,7 @@ public class PriceServices {
         		GenericValue priceChartIdDetails = delegator.findOne("ProcurementPriceChart",UtilMisc.toMap("procPriceChartId",priceChartId), false);
         		if(UtilValidate.isNotEmpty(priceChartIdDetails)){
         			useBaseSnf = (String)priceChartIdDetails.get("useBaseSnf");
+        			useBaseFat= (String)priceChartIdDetails.get("useBaseFat");
         		}
         	}catch (GenericEntityException e) {
         		Debug.logError("Error while getting useBaseSnf Value=======>"+e.getMessage(),module);
@@ -290,7 +292,7 @@ public class PriceServices {
         	snfPercent = BigDecimal.ZERO;
         }
          //Don't merge the below Line, this is specific to APDairy	
-          snfPercent = snfPercent.setScale(1, rounding);
+        snfPercent = snfPercent.setScale(1, rounding);
         	
         Timestamp priceDate = (Timestamp) context.get("priceDate");
         if (UtilValidate.isEmpty(priceDate)) {
@@ -303,7 +305,10 @@ public class PriceServices {
         BigDecimal sourRate = BigDecimal.ZERO;
         //BigDecimal sourPrice = BigDecimal.ZERO;
         BigDecimal price = BigDecimal.ZERO;
+        BigDecimal payablePrice = BigDecimal.ZERO;
         BigDecimal premium = BigDecimal.ZERO;  
+        BigDecimal snfPremium = BigDecimal.ZERO;
+        BigDecimal fatPremium = BigDecimal.ZERO;
         result.put("defaultRate", defaultRate);
         result.put("sourRate", sourRate);
         //result.put("sourPrice", sourPrice);
@@ -344,8 +349,11 @@ public class PriceServices {
    		 	if(UtilValidate.isEmpty(productPrices)){
    		 		Debug.logInfo("No sour Price configuration found (" + procPriceEc + ")", module);
    		 	}
-   		 	GenericValue productSourPrice = EntityUtil.getFirst(productPrices);
-   		 	result.put("sourRate", productSourPrice.getBigDecimal("price"));   		 	
+   		 	else{
+   		 		GenericValue productSourPrice = EntityUtil.getFirst(productPrices);
+   		 		result.put("sourRate", productSourPrice.getBigDecimal("price"));  
+   		 	}
+   		 	 		 	
 	        // Check for minimum quality  		 	
    		 	procPriceEcList.clear();
    	        procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
@@ -381,7 +389,7 @@ public class PriceServices {
    		 		}
    		 	} 	        
 	        
-	        procPriceEcList.clear();
+   		 	procPriceEcList.clear();
    	        procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
    	        procPriceEcList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
    	        procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, procurementPriceTypeId));
@@ -399,10 +407,16 @@ public class PriceServices {
    		 	if (productPrice.getBoolean("useTotalSolids") != null) {
    		 		useTotalSolids = productPrice.getBoolean("useTotalSolids").booleanValue();
    		 	}
+   		 	
+   		 	BigDecimal fatPrice = productPrice.getBigDecimal("fatPrice");
+   		 	BigDecimal snfPrice = productPrice.getBigDecimal("snfPrice");
+     	
 	   		defaultRate = productPrice.getBigDecimal("price");
 	        result.put("defaultRate", defaultRate);
 	        result.put("useTotalSolids", productPrice.getString("useTotalSolids"));
-   		 	// lets get the base Snf percent from price chart 
+   		 	
+	        BigDecimal baseSnfPercent = snfPercent;
+	        // lets get the base Snf percent from price chart 
    		 	procPriceEcList.clear();
 	        procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
 	        procPriceEcList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -410,27 +424,49 @@ public class PriceServices {
 	        procPriceEcList.add(EntityCondition.makeCondition("price", EntityOperator.EQUALS, BigDecimal.ZERO));
 	        procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
 	        List<GenericValue> baseSnfPrices = delegator.findList("ProcurementPrice", procPriceEc, null, null, null, true);
-	        
-		 	if(UtilValidate.isEmpty(baseSnfPrices)){
+
+	        if(UtilValidate.isEmpty(baseSnfPrices)){
 		 		Debug.logError("No valid base snf set for the  product (" + procPriceEc + ")", module);
-		 		return ServiceUtil.returnError("No valid product price found (" + procPriceEc + ")");  
+		 		//return ServiceUtil.returnError("No valid product price found (" + procPriceEc + ")");  
 		 	}
-		 	GenericValue baseSnfPrice = EntityUtil.getFirst(baseSnfPrices);
-   	        BigDecimal baseSnfPercent = baseSnfPrice.getBigDecimal("snfPercent");
-   	        
+		 	else{
+		 		GenericValue baseSnfPrice = EntityUtil.getFirst(baseSnfPrices);
+	   	        baseSnfPercent = baseSnfPrice.getBigDecimal("snfPercent");
+		 	}
+		 	
    	        if("N".equalsIgnoreCase(useBaseSnf)){
    	        	baseSnfPercent = snfPercent;
    	        }
+   		 	
+   	        // get the rate based on fat percent  or total solids
+		 	procPriceEcList.clear();
+	        procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
+	        procPriceEcList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	        procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, "PROC_PRICE_FAT_DED"));
+	        procPriceEcList.add(EntityCondition.makeCondition("price", EntityOperator.EQUALS, BigDecimal.ZERO));
+	        procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
+	   		 
+	        List<GenericValue> baseFatPrices = delegator.findList("ProcurementPrice", procPriceEc, null, null, null, true);
+	   		
+	        BigDecimal baseFatPercent = fatPercent;
+		 	if(UtilValidate.isNotEmpty(baseFatPrices)){
+		 		GenericValue baseFatPrice = EntityUtil.getFirst(baseFatPrices);
+		 		baseFatPercent = baseFatPrice.getBigDecimal("fatPercent");
+		 	}
+	        if("N".equalsIgnoreCase(useBaseFat)){
+	        	baseFatPercent = fatPercent;
+	        }
    	     
-   		 	// get the rate based on fat percent  or total solids
-   		 	BigDecimal fatSolidsDecimal = fatPercent.divide(new BigDecimal(100));
+   	     	BigDecimal fatSolidsDecimal = fatPercent.divide(new BigDecimal(100));
    		 	if (useTotalSolids) {
    		 		// Use total solids instead. 
    		 		// Note: for total solids we need to take the base snf. If snf is below the default, then
    		 		// the deductions will be applied below
    		 		fatSolidsDecimal = (fatPercent.add(baseSnfPercent)).divide(new BigDecimal(100));
    		 	}
-    		price = fatSolidsDecimal.multiply(defaultRate);  
+    		price = fatSolidsDecimal.multiply(defaultRate);
+    		payablePrice = defaultRate;
+    		
    		 	procPriceEcList.clear();    		
     		if (snfPercent.compareTo(baseSnfPercent) < 0) {
     			//Handle any deduction logic (slab-based)   
@@ -443,7 +479,9 @@ public class PriceServices {
    		 		if(!UtilValidate.isEmpty(productPrices)){
    		 			premium = productPrices.get(0).getBigDecimal("price");
    		 			premium = premium.multiply(new BigDecimal(-1));
+   		 			snfPremium = premium;
    		 			price = price.add(premium);
+   		 			payablePrice = payablePrice.add(premium);
    		 		}
    		 		else {
    		 			// should not come here, throw warning
@@ -460,17 +498,77 @@ public class PriceServices {
    		 		if(!UtilValidate.isEmpty(productPrices)){
    		    		BigDecimal tempDecimal = (snfPercent.subtract(baseSnfPercent)).divide(productPrices.get(0).getBigDecimal("snfPercent"));    		   		 			
    		 			premium = tempDecimal.multiply(productPrices.get(0).getBigDecimal("price"));
+   		 			snfPremium = premium;
    		 			price = price.add(premium);
+   		 			payablePrice = payablePrice.add(premium);
    		 		} 		 	
         	}
+    		procPriceEcList.clear();    
+    		if (fatPercent.compareTo(baseFatPercent) < 0) {
+    			//Handle any deduction logic (slab-based)   
+    			procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
+    			procPriceEcList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    			procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, "PROC_PRICE_FAT_DED"));
+    			procPriceEcList.add(EntityCondition.makeCondition("fatPercent", EntityOperator.LESS_THAN_EQUAL_TO, fatPercent));
+    			procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
+   	        	productPrices = delegator.findList("ProcurementPrice", procPriceEc, null, UtilMisc.toList("-fatPercent"), null, true);
+   		 		if(!UtilValidate.isEmpty(productPrices)){
+   		 			/*BigDecimal tempDecimal = (baseFatPercent.subtract(fatPercent)).divide(productPrices.get(0).getBigDecimal("fatPercent"));    		   		 			
+		 			fatPremium = tempDecimal.multiply(productPrices.get(0).getBigDecimal("price"));
+   		 			fatPremium = fatPremium.multiply(new BigDecimal(-1));
+   		 			payablePrice = price.add(fatPremium);*/
+   		 			
+   		 			fatPremium = productPrices.get(0).getBigDecimal("price");
+		 			fatPremium = fatPremium.multiply(new BigDecimal(-1));
+		 			price = price.add(fatPremium);
+		 			payablePrice = payablePrice.add(fatPremium);
+   		 		}
+   		 		else {
+   		 			// should not come here, throw warning
+   		           Debug.logWarning("Did not find FAT Deduction record for fatPercent=" + fatPercent, module);   		 			
+   		 		}
+    		} else if ((fatPercent.compareTo(baseFatPercent)) > 0 && (fatPercent.compareTo(fatMinQualityToPremum) >=0)) {
+    			//Handle any FAT Premium logic (not slab-based)      
+    			// fatPremium applicable when fatPercent is greater than MaxQualityFat and fatPercent is greater than 10 
+    			procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
+    			procPriceEcList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    			procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, "PROC_PRICE_FAT_PRM"));    				
+    			procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
+    			productPrices = delegator.findList("ProcurementPrice", procPriceEc, null, null, null, true);
+   		 		if(!UtilValidate.isEmpty(productPrices)){
+   		    		BigDecimal tempDecimal = (fatPercent.subtract(baseFatPercent)).divide(productPrices.get(0).getBigDecimal("fatPercent"));
+   		 			fatPremium = tempDecimal.multiply(productPrices.get(0).getBigDecimal("price"));
+   		 			price = price.add(fatPremium);
+   		 			payablePrice = payablePrice.add(fatPremium);
+   		 		} 	
+   		 		 		 		
+   		 		
+        	}
+    		
+        	BigDecimal kgFatPrice = BigDecimal.ZERO;
+        	BigDecimal kgSnfPrice = BigDecimal.ZERO;
+        	if( (UtilValidate.isNotEmpty(fatPrice))   && (UtilValidate.isNotEmpty(snfPrice))           ){
+        		kgFatPrice = (fatPercent.divide(new BigDecimal(100))).multiply(fatPrice);
+        		kgSnfPrice = (snfPercent.divide(new BigDecimal(100))).multiply(snfPrice);
+        		price = kgFatPrice.add(kgSnfPrice);
+        	}
+        	result.put("fatPrice", fatPrice);
+            result.put("snfPrice", snfPrice);
+            result.put("kgFatPrice", kgFatPrice);
+            result.put("kgSnfPrice", kgSnfPrice);
+    		
+    		//price = price.add(componentPriceTotal);
     		//::TODO:: need to handle any incentives??
     	} catch (GenericEntityException e) {
            Debug.logError(e, module);
            return ServiceUtil.returnError(e.getMessage());
     	}	     
-    	
-        result.put("price", price);
-        result.put("premium", premium);        
+        
+    	result.put("price", price);
+        result.put("premium", premium);  
+        result.put("fatPremium", fatPremium);
+        result.put("snfPremium", snfPremium);
+        result.put("payablePrice", payablePrice);
 		if (Debug.infoOn()) {
 			Debug.logInfo("result =" + result, module);
 		}        
@@ -748,6 +846,9 @@ public class PriceServices {
         Timestamp priceDate = (Timestamp) context.get("priceDate");
         String uomId = null;
         String lrFormulaId=null;
+        result.put("fatPremium", BigDecimal.ZERO);
+        result.put("snfPremium", BigDecimal.ZERO);
+        result.put("payablePrice", BigDecimal.ZERO);
         // pass in this flag to, get special  premium price
         String isPremiumChart = (String) context.get("isPremiumChart");
         if (UtilValidate.isEmpty(priceDate)) {
@@ -846,7 +947,28 @@ public class PriceServices {
    		 		if(UtilValidate.isNotEmpty(result.get("uomId"))){
    		 			uomId = (String)result.get("uomId"); 
    		 		}
-   		 		
+	   		 	if(UtilValidate.isNotEmpty(result.get("fatPremium"))){
+			 		result.put("fatPremium", result.get("fatPremium"));
+		 		}
+	   		 	if(UtilValidate.isNotEmpty(result.get("snfPremium"))){
+		 			result.put("snfPremium", result.get("snfPremium"));
+		 		}
+	   		 	if(UtilValidate.isNotEmpty(result.get("fatPrice"))){
+			 		result.put("fatPrice", result.get("fatPrice"));
+		 		}
+	   		 	if(UtilValidate.isNotEmpty(result.get("snfPrice"))){
+		 			result.put("snfPrice", result.get("snfPrice"));
+		 		}
+	   		 	if(UtilValidate.isNotEmpty(result.get("kgFatPrice"))){
+			 		result.put("kgFatPrice", result.get("kgFatPrice"));
+		 		}
+	   		 	if(UtilValidate.isNotEmpty(result.get("kgSnfPrice"))){
+		 			result.put("kgSnfPrice", result.get("kgSnfPrice"));
+		 		}
+		   		if(UtilValidate.isNotEmpty(result.get("payablePrice"))){
+			 		result.put("payablePrice", result.get("payablePrice"));
+		 		}
+		   		
    		 		price = (BigDecimal)result.get("price");
    		 		premium = (BigDecimal)result.get("premium");
    		 		useTotalSolids = (String)result.get("useTotalSolids");   		 		
@@ -862,6 +984,7 @@ public class PriceServices {
         result.put("premium", premium);  
         result.put("lrFormulaId", lrFormulaId);
         result.put("useTotalSolids", useTotalSolids);
+        
 		if (Debug.infoOn()) {
 			Debug.logInfo("result =" + result, module);
 		}        
@@ -1197,6 +1320,7 @@ public class PriceServices {
 	   		        productPrices = delegator.findList("ProcurementPrice", procPriceEc, null, null, null, true);
 	   			 	if(UtilValidate.isEmpty(productPrices)){
 	   			 		Debug.logInfo("No Default Price set (" + procPriceEc + ")", module);
+	   			 		return ServiceUtil.returnError("No Default product price found");  
 	   			 	}
 	   			 	GenericValue productDefaultPrice = EntityUtil.getFirst(productPrices);
 	   			 	result.put("defaultRate", productDefaultPrice.getBigDecimal("price"));
