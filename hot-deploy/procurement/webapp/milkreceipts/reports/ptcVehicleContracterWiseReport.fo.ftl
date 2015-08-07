@@ -56,14 +56,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
             <fo:table-column column-width="80pt"/>
         <#-->    <fo:table-column column-width="50pt"/> -->
           <#list partyIds as partyId>
-            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="30pt"/>
           </#list>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="100pt"/>
             <#if recoveryTypeIds?has_content> 
             <fo:table-column column-width="80pt"/>
              <fo:table-column column-width="80pt"/>
-		    <fo:table-column column-width="100pt"/>
+		    <fo:table-column column-width="110pt"/>
 		    </#if>
 		          
        	<fo:table-body>
@@ -99,14 +99,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcTankerWiseReport.pdf")}
 							  <fo:table-column column-width="80pt"/>
 					         <#-->  <fo:table-column column-width="50pt"/> -->
 							    <#list partyIds as partyId>
-                               <fo:table-column column-width="50pt"/>
+                               <fo:table-column column-width="30pt"/>
                                 </#list>
                               <fo:table-column column-width="80pt"/>
-                              <fo:table-column column-width="120pt"/>
+                              <fo:table-column column-width="100pt"/>
                               <#if recoveryTypeIds?has_content> 
 			                  <fo:table-column column-width="80pt"/>
 			             	  <fo:table-column column-width="80pt"/>
-			                  <fo:table-column column-width="100pt"/>
+			                  <fo:table-column column-width="110pt"/>
 		                     </#if>
                               
 		                       <fo:table-body>

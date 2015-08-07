@@ -1,4 +1,4 @@
-import org.ofbiz.base.conversion.NumberConverters.BigDecimalToString;
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -19,6 +19,7 @@ import java.util.Calendar;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,13 +40,13 @@ import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 import org.ofbiz.party.party.PartyHelper;
 
-dctx = dispatcher.getDispatchContext();
 
+dctx = dispatcher.getDispatchContext();
 
 customTimePeriodId=parameters.customTimePeriodId;
 if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
 	Debug.logError("customTimePeriod Cannot Be Empty","");
-	context.errorMessage = "No Shed Has Been Selected.......!";
+	context.errorMessage = "customTimePeriod Cannot Be Empty.......!";
 	return;
 }
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
@@ -74,7 +75,7 @@ if(UtilValidate.isNotEmpty(partyId)){
 	if(UtilValidate.isNotEmpty(partyToName)){
 		context.partyToName = partyToName;
 	}
-
+/*
 	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 	address1="";address2="";city="";postalCode="";
 	 if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
@@ -94,7 +95,7 @@ if(UtilValidate.isNotEmpty(partyId)){
 			postalCode=partyPostalAddress.postalCode;
 			context.postalCode = postalCode;
 		 }
-	  }
+	  }*/
 	 tinCstKstDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId)  , null, null, null, false );
 	 if(UtilValidate.isNotEmpty(tinCstKstDetails)){
 		 tinDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
@@ -107,16 +108,14 @@ if(UtilValidate.isNotEmpty(partyId)){
 	 }
 }
 
-
 containerIds=null;
 conditionList =[];
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_APPROVED"));
 conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS , "INTERNAL"));
 if(UtilValidate.isNotEmpty(partyId)){
 	context.partyId = partyId;
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId));
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
-	
 }
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
@@ -133,7 +132,11 @@ Map allProdProcPriceMap =FastMap.newInstance();
 if(UtilValidate.isNotEmpty(productIds)){
 	productIds.each{eachProductId->
 		BigDecimal totQuantity= BigDecimal.ZERO;
+		BigDecimal totActualAmt= BigDecimal.ZERO;
+		BigDecimal totFatPremAmt= BigDecimal.ZERO;
+		BigDecimal totSnfPremamt= BigDecimal.ZERO;
 		BigDecimal totAmount= BigDecimal.ZERO;
+		
 		BigDecimal price=BigDecimal.ZERO;
 		Map eachProductMap =FastMap.newInstance();
 		Map PremAndDeductionMap =FastMap.newInstance();
@@ -147,7 +150,6 @@ if(UtilValidate.isNotEmpty(productIds)){
 			vehicleId=priceChart.containerId;
 		}
 		procurementPriceList = delegator.findList("ProcurementPrice", EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS , procPriceChartId), null, null, null, false);
-		
 		fatSnfDedProcPriceList =EntityUtil.filterByCondition(procurementPriceList,EntityCondition.makeCondition("procurementPriceTypeId",EntityOperator.EQUALS,"PROC_PRICE_SLAB1"));
 		if(UtilValidate.isNotEmpty(fatSnfDedProcPriceList)){
 			fatSnfDedProcPriceList = EntityUtil.getFirst(fatSnfDedProcPriceList);
@@ -255,6 +257,7 @@ if(UtilValidate.isNotEmpty(productIds)){
 				dcNo=eachDateMilkReeceipt.dcNo;
 				vehicleId=eachDateMilkReeceipt.containerId;
 				BigDecimal receivedQuantity=eachDateMilkReeceipt.receivedQuantity;
+				
 				if(UtilValidate.isNotEmpty(receivedQuantity)){
 				totQuantity=totQuantity+receivedQuantity;
 				}
@@ -280,18 +283,21 @@ if(UtilValidate.isNotEmpty(productIds)){
 					actualAmt=receivedQuantity*milkUnitPrice;
 					actualAmt=actualAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 					vehicleTotAmt=vehicleTotAmt+actualAmt;
+					totActualAmt=totActualAmt+actualAmt;
 					eachVehicleMap.put("actualAmt",actualAmt);
 				}
 				if(UtilValidate.isNotEmpty(fatPremium)){
 					fatPremAmt=receivedQuantity*fatPremium;
 					fatPremAmt=fatPremAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 					vehicleTotAmt=vehicleTotAmt+fatPremAmt;
+					totFatPremAmt=totFatPremAmt+fatPremAmt;
 					eachVehicleMap.put("fatPremAmt",fatPremAmt);
 				}
 				if(UtilValidate.isNotEmpty(snfPremium)){
 					snfPremAmt=receivedQuantity*snfPremium;
 					snfPremAmt=snfPremAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 					vehicleTotAmt=vehicleTotAmt+snfPremAmt;
+					totSnfPremamt=totSnfPremamt+snfPremAmt;
 					eachVehicleMap.put("snfPremAmt",snfPremAmt);
 				}
 				eachVehicleMap.put("recdDate",receiveDate);
@@ -304,7 +310,6 @@ if(UtilValidate.isNotEmpty(productIds)){
 				eachVehicleMap.put("vehicleTotAmt",vehicleTotAmt);
 				totAmount=totAmount+vehicleTotAmt;
 			//	vehicleWiseDetails.add(eachVehicleMap);
-				
 				vehicleWiseDetailsMap.put(sno,eachVehicleMap);
 				sno=sno+1;
 				
@@ -312,6 +317,9 @@ if(UtilValidate.isNotEmpty(productIds)){
 		}
 		eachProductMap.put("vehicleWiseDetailsMap", vehicleWiseDetailsMap);
 		eachProductMap.put("totQuantity", totQuantity);
+		eachProductMap.put("totActualAmt", totActualAmt);
+		eachProductMap.put("totFatPremAmt", totFatPremAmt);
+		eachProductMap.put("totSnfPremamt", totSnfPremamt);
 		eachProductMap.put("totAmount", totAmount);
 		
 		allProdProcPriceMap.put(eachProductId,eachProductMap);
