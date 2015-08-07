@@ -39,7 +39,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "temperatureRecordReport.pdf")}
 				 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                ${uiLabelMap.KMFDairyHeader}             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                          ${uiLabelMap.KMFDairySubHeader}                   Page - <fo:page-number/> </fo:block> 
-                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace"  font-weight="bold"  white-space-collapse="false">TEMPERATURE RECORDED ON ${reportDate?upper_case?if_exists}</fo:block>
+                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace"  font-weight="bold"  white-space-collapse="false">TEMPERATURE RECORDED ON ${reportDate?upper_case?if_exists} <#if facilityId?has_content> FOR ${facilityId?if_exists}</#if></fo:block>
 				<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 				<fo:block>
                     <fo:table>
