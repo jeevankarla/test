@@ -67,7 +67,7 @@ vehicleId=parameters.vehicleId;
 
 containerIds=null;
 conditionList =[];
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_APPROVED"));
 if(UtilValidate.isNotEmpty(vehicleId) && (!"all".equals(vehicleId))){
 	context.vehicleId = vehicleId;
     conditionList.add(EntityCondition.makeCondition("containerId", EntityOperator.EQUALS , vehicleId));
@@ -75,8 +75,8 @@ if(UtilValidate.isNotEmpty(vehicleId) && (!"all".equals(vehicleId))){
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-List<String> orderBy = UtilMisc.toList("-receiveDate");
-milkVehicleTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null, orderBy, null, false);
+List<String> orderBy = UtilMisc.toList("receiveDate");
+milkVehicleTransferList = delegator.findList("MilkTransfer", condition, null, orderBy, null, false);
 List vehicleIds = EntityUtil.getFieldListFromEntityList(milkVehicleTransferList, "containerId", false);
 
 periodBillingId=null;

@@ -44,8 +44,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="14pt" font-weight="bold" >${uiLabelMap.KMFDairySubHeader}</fo:block>
 			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
-			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">&#160;&#160; Unions PTC Report</fo:block>
-			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
              <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">CHILLING CENTRE WISE MILK PROCUREMENT FOR<#if purposeTypeId?has_content> ${purposeTypeId} PURPOSE<#else></#if> BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}  </fo:block>
              <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
  
@@ -63,8 +61,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
 		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">IDR - CONV</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="left"  font-weight="bold"  font-size="12pt">PRODUCT NAME</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">NET WEIGHT</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG SNF </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG FAT</fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG FAT </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG SNF</fo:block></fo:table-cell>       		
 	         </fo:table-row>
 	        <#assign siNo=1>
             <#assign unionsMilkMapDetails = unionsMilkMap.entrySet()?if_exists>											
@@ -77,7 +75,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
 				<#assign productName= products.brandName>
         	 <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"   font-size="12pt">${unionsMilkMapList.getKey()}</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-size="12pt">IDR </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-size="12pt">PUR </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="left"    font-size="12pt">${productName?if_exists} </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"> <#if idrProductsDetails.getValue().get("quantity")?has_content> ${idrProductsDetails.getValue().get("quantity")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if idrProductsDetails.getValue().get("kgFat")?has_content> ${idrProductsDetails.getValue().get("kgFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
@@ -90,7 +88,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
 				<#assign productName= products.brandName>
 	         <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"  font-size="12pt">${unionsMilkMapList.getKey()}</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center" font-size="12pt">CONVERSION </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="center" font-size="12pt">CONV </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="left"   font-size="12pt">${productName} </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-size="12pt"><#if convProductsDetails.getValue().get("quantity")?has_content>${convProductsDetails.getValue().get("quantity")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-size="12pt"><#if convProductsDetails.getValue().get("kgFat")?has_content>${convProductsDetails.getValue().get("kgFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		

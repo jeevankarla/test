@@ -37,56 +37,42 @@ import in.vasista.vbiz.milkReceipts.MilkReceiptReports;
 import in.vasista.vbiz.procurement.ProcurementReports;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
-import in.vasista.vbiz.procurement.PriceServices;
+
+import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
+
 purposeTypeId=parameters.purposeTypeId;
-customTimePeriodId=parameters.customTimePeriodId;
 
-if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
-	Debug.logError("customTimePeriod Cannot Be Empty","");
-	context.errorMessage = "No Shed Has Been Selected.......!";
-	return;
+fromDate=parameters.fromDate;
+thruDate=parameters.thruDate;
+
+dctx = dispatcher.getDispatchContext();
+fromDateTime = null;
+thruDateTime = null;
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+try {
+	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
+	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
-fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-nextDateTime = UtilDateTime.getNextDayStart(thruDateTime);
-thruDate = UtilDateTime.toDateString(nextDateTime,"yyyy-MM-dd");
-fromDate = UtilDateTime.toDateString(fromDateTime,"yyyy-MM-dd");
-sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-shiftDayTimeStart = fromDate + " 05:00:00.000";
-shiftDayTimeEnd = thruDate + " 04:59:59.000";
+dayBegin = UtilDateTime.getDayStart(fromDateTime);
+dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 
-dayBegin = new java.sql.Timestamp(sdf.parse(shiftDayTimeStart).getTime());
-dayEnd = new java.sql.Timestamp(sdf.parse(shiftDayTimeEnd).getTime());
+Map inMap = FastMap.newInstance();
+inMap.put("userLogin", userLogin);
+inMap.put("shiftType", "MILK_SHIFT");
+inMap.put("fromDate", dayBegin);
+inMap.put("thruDate", dayEnd);
+Map workShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMap );
 
+fromDate=workShifts.fromDate;
+thruDate=workShifts.thruDate;
 
-context.fromDate = dayBegin;
-context.thruDate = thruDateTime;
-
-periodBillingId=null;
-List periodBillingList = FastList.newInstance();
-periodBillingList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["GENERATED","APPROVED","APPROVED_PAYMENT"]));
-periodBillingList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-periodBillingList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_PTC_TRSPT_MRGN"));
-periodBillingCond=EntityCondition.makeCondition(periodBillingList,EntityOperator.AND);
-periodBilling = delegator.findList("PeriodBilling", periodBillingCond , null, null, null, false );
-if(UtilValidate.isNotEmpty(periodBilling)){
-	periodBillingData = EntityUtil.getFirst(periodBilling);
-	periodBillingId = periodBillingData.periodBillingId;
-}
-List milkTransferIds = FastList.newInstance();
-if(UtilValidate.isNotEmpty(periodBillingId)){
-	periodBillingList.clear();
-	periodBillingList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
-	periodBillingCond=EntityCondition.makeCondition(periodBillingList,EntityOperator.AND);
-	ptcBillingCommiMilkTransfer = delegator.findList("PtcBillingCommissionAndMilkTransfer", periodBillingCond , null, null, null, false );
-	if(UtilValidate.isNotEmpty(ptcBillingCommiMilkTransfer)){
-		 milkTransferIds = EntityUtil.getFieldListFromEntityList(ptcBillingCommiMilkTransfer, "milkTransferId", false);
-	}
-}
+context.fromDate = fromDate;
+context.thruDate = dayEnd;
 	
 conditionList =[];
 if((!"All".equalsIgnoreCase(purposeTypeId)) && UtilValidate.isNotEmpty(purposeTypeId)){
@@ -94,9 +80,9 @@ if((!"All".equalsIgnoreCase(purposeTypeId)) && UtilValidate.isNotEmpty(purposeTy
    	conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS , purposeTypeId));
 }
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_APPROVED","MXF_RECD"]));
-conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.IN , milkTransferIds));
-conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+//conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.IN , milkTransferIds));
+conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 MilkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
 
@@ -111,6 +97,7 @@ BigDecimal totKgFat=BigDecimal.ZERO;
 BigDecimal totKgSnf=BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(unions)){
+	unions.sort();
 	unions.each {union->
 		idrConvDetailsMap=[:];
 		

@@ -44,20 +44,23 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
          <#assign PremAndDeductionMap=allProdProcPriceDetail.getValue().get("PremAndDeductionMap")>
          <#assign vehicleWiseDetailsMap=allProdProcPriceDetail.getValue().get("vehicleWiseDetailsMap")>
 		 <#assign totQuantity=allProdProcPriceDetail.getValue().get("totQuantity")>
+ 		 <#assign totActualAmt=allProdProcPriceDetail.getValue().get("totActualAmt")>
+ 		 <#assign totFatPremAmt=allProdProcPriceDetail.getValue().get("totFatPremAmt")>
+ 		 <#assign totSnfPremamt=allProdProcPriceDetail.getValue().get("totSnfPremamt")>
 		 <#assign totAmount=allProdProcPriceDetail.getValue().get("totAmount")>
 		 
 				<#if pageNumber != 0>	
                   <fo:block page-break-before="always" text-align="center" keep-together="always" font-weight="bold">          </fo:block>				    	                
                 </#if>
                 
-		        <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">  Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
-		        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
-				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold" >${partyName?if_exists}</fo:block>
-				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="14pt" font-weight="bold" ><#if address1?has_content>${address1?if_exists},</#if><#if city?has_content>${city?if_exists},</#if><#if postalCode?has_content>${postalCode?if_exists},</#if></fo:block>
+		        <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">   Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+		        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold" >${uiLabelMap.KMFDairyHeader}</fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="14pt" font-weight="bold" >${uiLabelMap.KMFDairySubHeader}</fo:block>
 			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> DEBIT NOTE\INVOICE IDR 66 D                     TIN NO: ${tinNumber?if_exists} </fo:block>
-  			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+  			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > &#160;&#160;  </fo:block>
 		         
       <#--    <#assign PremAndDeductionMap=allProdProcPriceDetail.getValue().get("PremAndDeductionMap")> -->
          
@@ -141,14 +144,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
                     </fo:table-body>
                 </fo:table>
               </fo:block>               	
-       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" >&#160;&#160; </fo:block>
+       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160;&#160; </fo:block>
        <fo:block  keep-together="always" text-align="left" font-size="12pt" >PAICE ${PremAndDeductionMap.get("fatPremPrice")?if_exists} FOR FAT AND ${PremAndDeductionMap.get("snfPremPrice")?if_exists?string("#0.00")} FOR SNF FOR EVERY <#if PremAndDeductionMap.get("fatPremium") == PremAndDeductionMap.get("snfPremium") > ${PremAndDeductionMap.get("snfPremium")?if_exists}%<#else>${PremAndDeductionMap.get("fatPremium")?if_exists},${PremAndDeductionMap.get("snfPremium")?if_exists}</#if> > FAT or SNF </fo:block>
        <fo:block  keep-together="always" text-align="left" font-size="12pt" >PAICE ${PremAndDeductionMap.get("snfDedPrice")?if_exists} FOR EVERY <#if PremAndDeductionMap.get("fatDed") == PremAndDeductionMap.get("snfDed") > ${PremAndDeductionMap.get("snfDed")?if_exists}%<#else>${PremAndDeductionMap.get("fatDed")?if_exists},${PremAndDeductionMap.get("snfDed")?if_exists}</#if> FAT AND SNF BELOW ${PremAndDeductionMap.get("fatProcPercent")?if_exists}% FAT and ${PremAndDeductionMap.get("snfProcPercent")?if_exists}% SNF </fo:block>
-	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" >&#160;&#160; </fo:block>
+	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160;&#160; </fo:block>
 	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt"  font-weight="bold" >&#160;&#160; Yours Account has been debited as follows </fo:block>
 	  	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">STATEMENT SHOWING MILK SOLD TO MOTHER DAIRY BANGALORE PERIOD  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}  </fo:block>
-	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" >&#160;&#160; </fo:block>
- 
+	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160;&#160; </fo:block>
    
        <fo:block >
 		 <fo:table width="100%" align="center" table-layout="fixed"  font-size="12pt" border-style="solid">
@@ -166,42 +168,42 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
 		    <fo:table-column column-width="100pt"/>
 		    
        	<fo:table-body>
-	         <fo:table-row border-style="dotted">
-		          <fo:table-cell border-style="dotted"><fo:block text-align="left"  font-weight="bold"  font-size="12pt" >SI NO</fo:block></fo:table-cell>       		
-		          <fo:table-cell  border-style="dotted"><fo:block text-align="center" font-weight="bold"  font-size="12pt">DATE</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">DC NO</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="left"  font-weight="bold"  font-size="12pt">TANKER NO</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">ACK QTY IN KG</fo:block></fo:table-cell>       		
-			     <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">DISP FAT%</fo:block></fo:table-cell>
-		         <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">DISP SNF%</fo:block></fo:table-cell>
-		         <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">UNIT PRICE</fo:block></fo:table-cell>
- 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">ACTUAL AMOUNT</fo:block></fo:table-cell>
-		         <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">FAT PREM AMT</fo:block></fo:table-cell>
-	       		 <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">SNF PREM AMT</fo:block></fo:table-cell>
-	        		        <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt"> AMOUNT</fo:block></fo:table-cell>
+	         <fo:table-row border-style="solid">
+		          <fo:table-cell border-style="solid"><fo:block text-align="left"  font-weight="bold"  font-size="12pt" >SI NO</fo:block></fo:table-cell>       		
+		          <fo:table-cell  border-style="solid"><fo:block text-align="center" font-weight="bold"  font-size="12pt">DATE</fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">DC NO</fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="solid"><fo:block text-align="left"  font-weight="bold"  font-size="12pt">TANKER NO</fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">ACK QTY IN KG</fo:block></fo:table-cell>       		
+			     <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">DISP FAT%</fo:block></fo:table-cell>
+		         <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">DISP SNF%</fo:block></fo:table-cell>
+		         <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">UNIT PRICE</fo:block></fo:table-cell>
+ 		          <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">ACTUAL AMOUNT</fo:block></fo:table-cell>
+		         <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">FAT PREM AMT</fo:block></fo:table-cell>
+	       		 <fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">SNF PREM AMT</fo:block></fo:table-cell>
+	       		<fo:table-cell border-style="solid"><fo:block text-align="right"  font-weight="bold"  font-size="12pt"> AMOUNT</fo:block></fo:table-cell>
 	        
 	         </fo:table-row>
 	         <#assign siNo=1>
         <#assign vehicleWiseDetails = vehicleWiseDetailsMap.entrySet()?if_exists>											
          <#list vehicleWiseDetails as vehicleWiseDetail>
          <#assign sno=vehicleWiseDetail.getKey()>
-				  <fo:table-row border-style="dotted">
-					  <fo:table-cell border-style="dotted"><fo:block text-align="left"   font-size="12pt">${sno?if_exists}  </fo:block></fo:table-cell>       	
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(vehicleWiseDetail.getValue().get("recdDate"), "dd-MM-yy")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="center" font-size="12pt">${vehicleWiseDetail.getValue().get("dcNo")?if_exists}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="left"    font-size="12pt">${vehicleWiseDetail.getValue().get("vehicleId")?if_exists}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("receivedQuantity")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("fatPercent")?if_exists?string("#0.0")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("snfPercent")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("unitPrice")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("actualAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("fatPremAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"    font-size="12pt">${vehicleWiseDetail.getValue().get("snfPremAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
-  					  <fo:table-cell border-style="dotted"><fo:block text-align="right"    font-size="12pt">${vehicleWiseDetail.getValue().get("vehicleTotAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+				  <fo:table-row >
+					  <fo:table-cell ><fo:block text-align="left"   font-size="12pt">${sno?if_exists}  </fo:block></fo:table-cell>       	
+  					  <fo:table-cell ><fo:block text-align="center"  font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(vehicleWiseDetail.getValue().get("recdDate"), "dd-MM-yy")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="center" font-size="12pt">${vehicleWiseDetail.getValue().get("dcNo")?if_exists}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="left"    font-size="12pt">${vehicleWiseDetail.getValue().get("vehicleId")?if_exists}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("receivedQuantity")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("fatPercent")?if_exists?string("#0.0")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("snfPercent")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("unitPrice")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("actualAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"   font-size="12pt">${vehicleWiseDetail.getValue().get("fatPremAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"    font-size="12pt">${vehicleWiseDetail.getValue().get("snfPremAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
+  					  <fo:table-cell ><fo:block text-align="right"    font-size="12pt">${vehicleWiseDetail.getValue().get("vehicleTotAmt")?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       		
 		           </fo:table-row>
 		           
 	         </#list> 
-	           <fo:table-row border-style="dotted">
+	           <fo:table-row border-style="solid">
 					  <fo:table-cell><fo:block text-align="left"    font-size="12pt">  </fo:block></fo:table-cell>       	
   					  <fo:table-cell><fo:block text-align="right" font-weight="bold"  font-size="12pt">Total  </fo:block></fo:table-cell>       		
 					  <fo:table-cell><fo:block text-align="left"    font-size="12pt">  </fo:block></fo:table-cell>       	
@@ -211,10 +213,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
 					  <fo:table-cell><fo:block text-align="right"    font-size="12pt">  </fo:block></fo:table-cell>       	
 					  <fo:table-cell><fo:block text-align="right"    font-size="12pt">  </fo:block></fo:table-cell>       	
 					  <fo:table-cell><fo:block text-align="right"    font-size="12pt">  </fo:block></fo:table-cell>       	
-					  <fo:table-cell><fo:block text-align="right"    font-size="12pt">  </fo:block></fo:table-cell>       	
-					  <fo:table-cell><fo:block text-align="right"    font-size="12pt">  </fo:block></fo:table-cell>       	
-					  <fo:table-cell><fo:block text-align="right"    font-size="12pt">  </fo:block></fo:table-cell>       	
-					  <fo:table-cell><fo:block text-align="right"  font-weight="bold"  font-size="12pt"> ${totAmount?if_exists?string("#0.00")} </fo:block></fo:table-cell>       	
+					  <fo:table-cell><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totActualAmt?if_exists?string("#0.00")}  </fo:block></fo:table-cell>       	
+					  <fo:table-cell><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totFatPremAmt?if_exists?string("#0.00")} </fo:block></fo:table-cell>       	
+					  <fo:table-cell><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totSnfPremamt?if_exists?string("#0.00")} </fo:block></fo:table-cell>       	
+					  <fo:table-cell><fo:block text-align="right"  font-weight="bold"  font-size="12pt">${totAmount?if_exists?string("#0.00")} </fo:block></fo:table-cell>       	
 		           </fo:table-row>
    		        </fo:table-body>   
            </fo:table>		

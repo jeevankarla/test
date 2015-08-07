@@ -118,9 +118,9 @@
 				<form id="PTCTankerReport" name="PTCTankerReport" mothed="post" action="<@ofbizUrl>ptcVehicleContractorWiseReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
-							<td width="20%"><span class='h3'>PTC Vehicle Contractor Wise Report</span></td>
+							<td width="23%"><span class='h3'>PTC Vehicle Contractor Wise Report</span></td>
 							
-							<td width="25%">
+							<td width="35%">
 							
 							 <span class='h3'>Time Period </span>
 	                    <select name="customTimePeriodId" class='h4'>
@@ -142,7 +142,7 @@
 									To   <input  type="text" size="18pt" id="contractorThruDate"   name="thruDate"/>
 								 </span> -->
 							</td>
-						    <td align='left' width="30%"><span class="h3">Contractor </span>
+						    <td align='left' width="35%"><span class="h3">Contractor </span>
 					            <select name="partyId" id="partyId">
 						     <option value="">All</option>  
                              <#list vehicleRoleList as vehicles>
@@ -150,7 +150,7 @@
 						     </#list>
 						     </select>
 						     </td>
-						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
 				</form>
@@ -159,8 +159,8 @@
 				<form id="PTCVehicleReport" name="PTCVehicleReport" mothed="post" action="<@ofbizUrl>ptcVehicleWiseReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
-							<td width="20%"><span class='h3'>PTC vehicle Wise Report</span></td>
-								<td width="25%">
+							<td width="23%"><span class='h3'>PTC vehicle Wise Report</span></td>
+								<td width="35%">
 								 <span class='h3'>Time Period </span>
 			                    <select name="customTimePeriodId" class='h4'>
 			                    <#if timePeriodList?has_content>	
@@ -182,7 +182,7 @@
 									To   <input  type="text" size="18pt" id="vehicleThruDate"   name="thruDate"/>
 								 </span>
 							</td>-->
-	                        <td align='left' width="30%"><span class="h3">Vehicle No </span>
+	                        <td align='left' width="35%"><span class="h3">Vehicle No </span>
 					            <select name="vehicleId" id="vehicleId">
 						     <option value="all">All</option>  
                              <#list vehicleRoleList as vehicles>
@@ -191,47 +191,7 @@
 						     </select>
 						     </td>
 						     
-						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-						</tr>
-					</table>
-				</form>
-			</tr>
-				<tr class="alternate-row"> 
-				<form id="PTCUnionsReport" name="PTCUnionsReport" mothed="post" action="<@ofbizUrl>ptcUnionsReport.pdf</@ofbizUrl>" target="_blank">
-					<table class="basic-table" cellspacing="5">
-						<tr class="alternate-row">
-							<td width="20%"><span class='h3'>Unions PTC Report</span></td>
-							<td width="25%">
-								 <span class='h3'>Time Period </span>
-			                    <select name="customTimePeriodId" class='h4'>
-			                    <#if timePeriodList?has_content>	
-			                        <#list timePeriodList as timePeriod>    
-			                			  <#if ((timePeriod.fromDate)?has_content) && ((timePeriod.thruDate)?has_content)>
-			                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.fromDate, "MMMdd")/>
-			                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriod.thruDate, "MMMdd yyyy")/>
-					                  	    <option value='${timePeriod.customTimePeriodId}' >
-					                    		${fromDate}-${thruDate}
-					                  		 </option>
-					                  	 </#if>
-			                		</#list>    
-			                	</#if>	    
-			                    </select>
-							</td>
-							
-						<#-->	<td width="25%">
-							     <span class='h3'>
-									From <input  type="text" size="18pt" id="unionsFromDate"   name="fromDate"/>
-									To   <input  type="text" size="18pt" id="unionsThruDate"   name="thruDate"/>
-								 </span>
-							</td> -->
-							<td align='left' width="30%"><span class="h3">PurposeType Id</span>
-					            <select name="purposeTypeId" id="purposeTypeId">
-						     <option value='All'>All</option>  
-						     <option value='INTERNAL' >IDR</option>
- 						     <option value='CONVERSION' >CONVERSION</option>
-						     </select>
-						    </td>
-						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
 				</form>
@@ -240,8 +200,8 @@
 				<form id="PTCBankReport" name="PTCBankReport" mothed="post" action="<@ofbizUrl>ptcBankReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
-							<td width="20%"><span class='h3'> PTC Bank Report</span></td>
-							<td width="25%">
+							<td width="23%"><span class='h3'> PTC Bank Report</span></td>
+							<td width="35%">
 								 <span class='h3'>Time Period </span>
 			                    <select name="customTimePeriodId" class='h4'>
 			                    <#if timePeriodList?has_content>	
@@ -257,7 +217,7 @@
 			                	</#if>	    
 			                    </select>
 							</td>
-							<td width="30%">
+							<td width="35%">
 								 <span class='h3'>Bank </span>
 			                    <select name="finAccountId" id="finAccountId">
 			                    <#if finAcctIdList?has_content>	
@@ -269,7 +229,7 @@
 			                	</#if>	    
 			                    </select>
 							</td>
-					        <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('PTCBankReport', '<@ofbizUrl>ptcBankReport.pdf</@ofbizUrl>');" class="buttontext"/>
+					        <td width="7%"><input type="submit" value="PDF" onClick="javascript:appendParams('PTCBankReport', '<@ofbizUrl>ptcBankReport.pdf</@ofbizUrl>');" class="buttontext"/>
 							   				 <input type="submit" value="CSV" onClick="javascript:appendParams('PTCBankReport', '<@ofbizUrl>ptcBankReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			                                                       </form>
 						</tr>
 					</table>
@@ -280,8 +240,8 @@
 			<form id="PurchaseBillingReportMR" name="PurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>PurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">
 					<tr class="alternate-row">
-						<td width="20%"><span class='h3'> Purchase Billing Report</span></td>
-						<td width="25%">
+						<td width="23%"><span class='h3'> Purchase Billing Report</span></td>
+						<td width="35%">
 							 <span class='h3'>Time Period </span>
 		                    <select name="customTimePeriodId" class='h4'>
 		                    <#if purchaseTimePeriodList?has_content>	
@@ -297,7 +257,7 @@
 		                	</#if>	    
 		                    </select>
 						</td>
-						<td width="30%">
+						<td width="35%">
 							 <span class='h3'>Union/ Chilling Center </span>
 		                    <select name="partyId" id="partyId">
 		                    <#if unionsList?has_content>	
@@ -309,12 +269,34 @@
 		                	</#if>	    
 		                    </select>
 						</td>
-				    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+				    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 					</tr>
 				</table>
 			</form>
 		</tr>
-			
+		<tr class="alternate-row"> 
+				<form id="PTCUnionsReport" name="PTCUnionsReport" mothed="post" action="<@ofbizUrl>ptcUnionsReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="23%"><span class='h3'>Union/Chilling Center Wise Report</span></td>
+							<td width="35%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="unionsFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="unionsThruDate"   name="thruDate"/>
+								 </span>
+							</td> 
+							<td align='left' width="35%"><span class="h3">PurposeType Id</span>
+					            <select name="purposeTypeId" id="purposeTypeId">
+						     <option value='All'>All</option>  
+						     <option value='INTERNAL' >IDR</option>
+ 						     <option value='CONVERSION' >CONVERSION</option>
+						     </select>
+						    </td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
        </table>
     </div>
   </div>

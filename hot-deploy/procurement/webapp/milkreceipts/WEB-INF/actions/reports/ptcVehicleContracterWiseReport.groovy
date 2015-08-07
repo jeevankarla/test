@@ -112,10 +112,10 @@ if(UtilValidate.isNotEmpty(periodBillingId)){
 Map totContractSubTotMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(milkTransferIds)){
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_APPROVED"));
 	conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.IN, milkTransferIds));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	milkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
+	milkTransferList = delegator.findList("MilkTransfer", condition, null,null, null, false);
 	
 	if(UtilValidate.isNotEmpty(milkTransferList)){
 		containerIds=EntityUtil.getFieldListFromEntityList(milkTransferList, "containerId", true);
@@ -171,6 +171,7 @@ if(UtilValidate.isNotEmpty(milkTransferIds)){
 		totalDeductions=0;
 		
 		if(UtilValidate.isNotEmpty(contractors)){
+			contractors.sort();
 			contractors.each{eachContractor->
 				contractorList=EntityUtil.filterByCondition(vehicleRoleList,EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachContractor));
 				eachVehicleMap=[:];

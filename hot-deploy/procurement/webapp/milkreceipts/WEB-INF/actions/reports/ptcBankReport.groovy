@@ -51,14 +51,14 @@ finAccountId=parameters.finAccountId;
 context.finAccountId=finAccountId;
 context.customTimePeriodId=customTimePeriodId;
 BigDecimal totAmount=BigDecimal.ZERO;
+periodBillingId="";
 
 //customTimePeriodId Number
 periodBillingId="";
 if(UtilValidate.isNotEmpty(customTimePeriodId)){
 	conditionList =[];
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS , customTimePeriodId));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED_PAYMENT"));
-	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["APPROVED_PAYMENT","GENERATED"]));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["APPROVED","GENERATED","APPROVED_PAYMENT"]));
 	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_PTC_TRSPT_MRGN"));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	periodBillingList = delegator.findList("PeriodBilling",condition , null, null, null, false);
@@ -70,7 +70,7 @@ if(UtilValidate.isNotEmpty(customTimePeriodId)){
 
 if(UtilValidate.isEmpty(customTimePeriodId)){
 	Debug.logError("customTimePeriod Cannot Be Empty","");
-	context.errorMessage = "No Shed Has Been Selected.......!";
+	context.errorMessage = " customTimePeriod Cannot Be Empty...!";
 	return;
 }
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodId], false);
@@ -81,13 +81,66 @@ dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
 context.thruDate = dayEnd;
 
+Map vehicleFineMap = FastMap.newInstance();
+List ptcContractors = FastList.newInstance();
+vehicleRoleList=[];
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
-//conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-//conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-facilityCommissionList = delegator.findList("FacilityCommission",condition , null, UtilMisc.toList("partyId"), null, false);
-contractorIds = EntityUtil.getFieldListFromEntityList(facilityCommissionList, "partyId", false);
+facilityCommissionList = delegator.findList("PtcBillingCommissionAndMilkTransfer",condition , null, null, null, false);
+if(UtilValidate.isNotEmpty(facilityCommissionList)){
+	
+	containerIds = EntityUtil.getFieldListFromEntityList(facilityCommissionList, "containerId", false);
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.IN , containerIds));
+	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
+	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	fineRecoveries = delegator.findList("FineRecovery",condition, null,null, null, false);
+	fineRecoveries.each{eachFineRecovery->
+		 String recoveryTypeId=eachFineRecovery.recoveryTypeId;
+		 BigDecimal fineAmount=eachFineRecovery.amount;
+		 if(UtilValidate.isEmpty(fineAmount)){
+			 fineAmount=BigDecimal.ZERO;
+		 }
+		vehicleId=eachFineRecovery.vehicleId;
+		ptcAddDed = delegator.findOne("Enumeration",["enumId":recoveryTypeId],false);
+		if(UtilValidate.isNotEmpty(ptcAddDed)){
+			if(UtilValidate.isEmpty(vehicleFineMap) || (UtilValidate.isNotEmpty(vehicleFineMap) && UtilValidate.isEmpty(vehicleFineMap.get(vehicleId)))){
+				Map qtyDetMap1 = FastMap.newInstance();
+				qtyDetMap1.put("ptcAdd",BigDecimal.ZERO);
+				qtyDetMap1.put("ptcDed",BigDecimal.ZERO);
+				if(("PTC_ADDN".equals(ptcAddDed.get("enumTypeId"))) ){
+					qtyDetMap1.put("ptcAdd",fineAmount);
+				}else{
+					qtyDetMap1.put("ptcDed",fineAmount);
+				}
+				vehicleFineMap.put(vehicleId, qtyDetMap1);
+			}else{
+				Map tempIssueQtyMap = FastMap.newInstance();
+				tempIssueQtyMap.putAll(vehicleFineMap.get(vehicleId));
+				if(UtilValidate.isNotEmpty(tempIssueQtyMap) &&("PTC_ADDN".equals(ptcAddDed.get("enumTypeId"))) ){
+					if(UtilValidate.isNotEmpty(fineAmount)){
+						tempIssueQtyMap.putAt("ptcAdd", tempIssueQtyMap.get("ptcAdd") + fineAmount);
+					}
+				}else{
+					if(UtilValidate.isNotEmpty(fineAmount)){
+						tempIssueQtyMap.putAt("ptcDed", tempIssueQtyMap.get("ptcDed") + fineAmount);
+					}
+				}
+				vehicleFineMap.put(vehicleId, tempIssueQtyMap);
+			}
+		}
+	}
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.IN , containerIds));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "PTC_VEHICLE"));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	vehicleRoleList = delegator.findList("VehicleRole",condition , null, null, null, false);
+	if(UtilValidate.isNotEmpty(vehicleRoleList)){
+		ptcContractors = EntityUtil.getFieldListFromEntityList(vehicleRoleList, "partyId", false);
+	}
+}
 
 finAccountParties = [];
 conditionList.clear();
@@ -100,45 +153,68 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 finAccountRoleList = delegator.findList("FinAccountRole", condition, null, null, null, false);
 finAccountParties = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", false);
 
-if(UtilValidate.isNotEmpty(facilityCommissionList)){
-	facilityCommissionList.each { facilityCommission ->
-		partyId =  facilityCommission.partyId;
-		if(UtilValidate.isNotEmpty(partyId)){
-			if(finAccountParties.contains(partyId)){
-				List<GenericValue> finAccountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition([ownerPartyId: partyId, finAccountTypeId: "BANK_ACCOUNT" ,statusId: "FNACT_ACTIVE"]), null, null, null, false);
-				if(UtilValidate.isNotEmpty(finAccountDetails)){
-					Map finAcctMap =FastMap.newInstance();
-					String partyName = "";
-					String partyPan = "";
-					String finAccountCode="";
-					BigDecimal amount=BigDecimal.ZERO;
-					
-					finAccount = EntityUtil.getFirst(finAccountDetails);
-					if(UtilValidate.isNotEmpty(finAccount.finAccountCode) && "FNACT_ACTIVE".equals(finAccount.statusId)){
-						finAccountCode = finAccount.finAccountCode;
+if(UtilValidate.isNotEmpty(ptcContractors)){
+	ptcContractors.sort();
+	ptcContractors.each { eacPtcContractor ->
+		if(finAccountParties.contains(eacPtcContractor)){
+			List<GenericValue> finAccountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition([ownerPartyId: eacPtcContractor, finAccountTypeId: "BANK_ACCOUNT" ,statusId: "FNACT_ACTIVE"]), null, null, null, false);
+			if(UtilValidate.isNotEmpty(finAccountDetails)){
+				Map finAcctMap =FastMap.newInstance();
+				String partyName = "";
+				String partyPan = "";
+				String finAccountCode="";
+				BigDecimal amount=BigDecimal.ZERO;
+				
+				finAccount = EntityUtil.getFirst(finAccountDetails);
+				if(UtilValidate.isNotEmpty(finAccount.finAccountCode) && "FNACT_ACTIVE".equals(finAccount.statusId)){
+					finAccountCode = finAccount.finAccountCode;
+				}
+				partyName = PartyHelper.getPartyName(delegator, eacPtcContractor, true);
+				
+				partyIdentificationDetails = delegator.findList("PartyIdentification", EntityCondition.makeCondition([partyId: eacPtcContractor, partyIdentificationTypeId: "PAN_NUMBER"]), null, null, null, false);
+				if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
+					partyIdentification = EntityUtil.getFirst(partyIdentificationDetails);
+					if(UtilValidate.isNotEmpty(partyIdentification.idValue)){
+						partyPan = partyIdentification.idValue;
 					}
-					partyName = PartyHelper.getPartyName(delegator, partyId, true);
-					
-					partyIdentificationDetails = delegator.findList("PartyIdentification", EntityCondition.makeCondition([partyId: partyId, partyIdentificationTypeId: "PAN_NUMBER"]), null, null, null, false);
-					if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
-						partyIdentification = EntityUtil.getFirst(partyIdentificationDetails);
-						if(UtilValidate.isNotEmpty(partyIdentification.idValue)){
-							partyPan = partyIdentification.idValue;
+				}
+				
+				BigDecimal contractAmt=BigDecimal.ZERO;
+				BigDecimal contractAdd=BigDecimal.ZERO;
+				BigDecimal contractDed=BigDecimal.ZERO;
+				
+				partyWiseVehicles = EntityUtil.filterByCondition(vehicleRoleList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eacPtcContractor));
+				partyWiseVehicles.each{eachVehicle->
+					vehicleAddDeduction=vehicleFineMap.get(eachVehicle.vehicleId);
+					if(UtilValidate.isNotEmpty(vehicleAddDeduction)){
+						if(UtilValidate.isNotEmpty(vehicleAddDeduction.ptcAdd)){
+							contractAdd=contractAdd+vehicleAddDeduction.ptcAdd;
+						}
+						if(UtilValidate.isNotEmpty(vehicleAddDeduction.ptcDed)){
+							contractDed=contractDed+vehicleAddDeduction.ptcDed;
 						}
 					}
-					if(UtilValidate.isNotEmpty(facilityCommission.totalAmount)){
-						amount = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
-						totAmount=totAmount+amount;
-					}
-					finAcctMap.put("partyId", partyId);
-					finAcctMap.put("partyName", partyName);
-					finAcctMap.put("partyPan", partyPan);
-					finAcctMap.put("finAccountCode", finAccountCode);
-					finAcctMap.put("amount", amount);
-					
-					ptcBankMap.put(partyId, finAcctMap)
-					ptcBankList.add(finAcctMap);
+					ptcCommissionAmounts = EntityUtil.filterByCondition(facilityCommissionList,EntityCondition.makeCondition("containerId",EntityOperator.EQUALS, eachVehicle.vehicleId));
+						ptcCommissionAmounts.each{eachVehicleAmt->
+						if(UtilValidate.isNotEmpty(eachVehicleAmt.commissionAmount)){
+						contractAmt=contractAmt+(eachVehicleAmt.commissionAmount);
+						}
+					}			
 				}
+				if(UtilValidate.isNotEmpty(contractAmt)){
+					amount=contractAmt+contractAdd-contractDed;
+					amount = ((new BigDecimal(amount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+					totAmount=totAmount+amount;
+				}
+				
+				finAcctMap.put("partyId", eacPtcContractor);
+				finAcctMap.put("partyName", partyName);
+				finAcctMap.put("partyPan", partyPan);
+				finAcctMap.put("finAccountCode", finAccountCode);
+				finAcctMap.put("amount", amount);
+				
+				ptcBankMap.put(eacPtcContractor, finAcctMap)
+				ptcBankList.add(finAcctMap);
 			}
 		}
 	}
@@ -154,11 +230,6 @@ if(UtilValidate.isNotEmpty(totAmount)){
 	ptcBankList.add(totAmtMap);
 }
 context.ptcBankList=ptcBankList;
-
-
-
-
-
 
 
 
