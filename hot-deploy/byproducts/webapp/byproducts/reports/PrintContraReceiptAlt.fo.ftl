@@ -68,7 +68,7 @@ under the License.
 				                             <fo:table-row>
 				                            	 <fo:table-cell>
 				                            	 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-	                                		 		<fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="13pt" keep-together="always">DEPOSIT <#if finAccountTransTypeId == "WITHDRAWAL">PAID <#else>RECEIPT </#if>VOUCHER</fo:block>
+	                                		 		<fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="15pt" keep-together="always"> <#if finAccountTransTypeId == "WITHDRAWAL">PAYMENT <#else>RECEIPT </#if>VOUCHER</fo:block>
  				                             </fo:table-cell>
  				                             </fo:table-row>	
 				                             

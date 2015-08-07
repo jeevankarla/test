@@ -73,10 +73,10 @@
 					 finalPaymentMap = [:];
 					 finalPaymentMap.putAll(tempprintPaymentMap);
 					 printPaymentsList.add(finalPaymentMap);
-					 Infvr="";
-					 Infvr=paymentRecipt.comments;
-					 Debug.log("Infvr====================="+Infvr);
-					 context.Infvr=Infvr;
+					 comments="";
+					 comments=paymentRecipt.comments;
+					 //Debug.log("Infvr====================="+Infvr);
+					 context.comments=comments;
 					 context.put("printPaymentsList",printPaymentsList);
 				 }
 			 }
@@ -87,9 +87,14 @@
  paymentGroup = delegator.findOne("FinAccountTransGroup", UtilMisc.toMap("finAccntTransGroupId", finAccntTransGroupId), false);
  abstractDetails = [:];
  tempAmount = 0;
+ Infvr="";
  if(paymentGroup.amount){
 	 tempAmount = paymentGroup.amount;
  }
+ if(paymentGroup.inFavor){
+	 Infvr = paymentGroup.inFavor;
+ }
+ context.Infvr=Infvr;
  amountInWords=UtilNumber.formatRuleBasedAmount(tempAmount,"%rupees-and-paise", locale).toUpperCase();
  abstractDetails.put("amount", tempAmount);
  abstractDetails.put("amountInWords", amountInWords);

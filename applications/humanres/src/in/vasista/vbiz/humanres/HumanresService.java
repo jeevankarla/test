@@ -896,6 +896,7 @@ public class HumanresService {
 		  	  String finAccountId = "";
 		  	  String instrumentDateStr = "";
 		  	  String contraRefNum = "";
+		  	  String inFavourOf = "";
 		  	  String loanId = "";
 		  	  String description = "";
 		  	  String partyId = "";
@@ -933,6 +934,7 @@ public class HumanresService {
 				  	finAccountId = (String) paramMap.get("finAccountId");
 				  	instrumentDateStr = (String) paramMap.get("instrumentDate");
 				  	contraRefNum = (String) paramMap.get("contraRefNum");
+				  	inFavourOf = (String) paramMap.get("inFavourOf");
 				  	description = (String) paramMap.get("description");
 			  	
 			        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
@@ -971,6 +973,7 @@ public class HumanresService {
 				             transCtxMap.put("amount", amount);
 				             transCtxMap.put("comments", description);
 				             transCtxMap.put("contraRefNum", contraRefNum);
+				             transCtxMap.put("inFavourOf", inFavourOf);
 				           	 transCtxMap.put("contraFinAccountId", loanFinAccountId);
 				             transCtxMap.put("finAccountId", finAccountId); 
 				           	 transCtxMap.put("finAccountTransTypeId", "WITHDRAWAL");
@@ -994,6 +997,7 @@ public class HumanresService {
 			  		  serviceCtx.put("finAccntTransDate", instrumentDate);
 			  		  serviceCtx.put("fromDate", instrumentDate);
 			  		  serviceCtx.put("contraRefNum", contraRefNum);
+			  		  serviceCtx.put("inFavor", inFavourOf);
 			  		  serviceCtx.put("issuingAuthority", finAccountId);
 			  		  serviceCtx.put("amount", totalAmount);
 			  		  serviceCtx.put("statusId", "FNACTTRNSGRP_CREATED");

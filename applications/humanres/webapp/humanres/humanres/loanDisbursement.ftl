@@ -110,7 +110,8 @@
 						
 		   message += "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 					  "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='contraRefNum' name='contraRefNum'/></tr>" +
-					  "<tr class='h2'><td align='left' class='h3' width='60%'>Description:</td><td align='left' width='60%'><input class='h4' type='text'  id='description' name='description'/></tr>" ;
+ 					  "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque InFavour:</td><td align='left' width='60%'><input class='h4' type='text'  id='inFavourOf' name='inFavourOf'/></tr>" +
+ 					  "<tr class='h2'><td align='left' class='h3' width='60%'>Description:</td><td align='left' width='60%'><input class='h4' type='text'  id='description' name='description'/></tr>" ;
 			
 		
 			
