@@ -2117,7 +2117,7 @@
 			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
-		<!--   <menu-item name="DepositTransfer" title="Deposit Transfer">
+		   <menu-item name="DepositTransfer" title="Deposit Transfer">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2125,7 +2125,7 @@
             </condition>
 			<link target="DepositTransfer">
 			</link>
-		 </menu-item>  -->
+		 </menu-item>  
 		 <menu-item name="IncomingAdvances" title="Advances Received">
           <condition>
 				<or>
