@@ -751,6 +751,4 @@
         <attribute name="startDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="endDate" mode="IN" type="Timestamp" optional="true" />
     </service>
-    
-    
 </services>

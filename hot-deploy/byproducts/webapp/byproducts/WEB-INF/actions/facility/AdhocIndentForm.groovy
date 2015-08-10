@@ -147,6 +147,7 @@ if(prodCatString && UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==pro
 		prodList= ProductWorker.getProductsByCategory(delegator ,productCatageoryId ,null);
 	}else{
 		prodList= ProductWorker.getProductsByCategoryList(delegator ,productCatageoryId ,effDateDayBegin);
+		
 	}
 // we should not go with primaryProductCategoryId for now comment this , use product  catagory member
 	/*exprList.clear();

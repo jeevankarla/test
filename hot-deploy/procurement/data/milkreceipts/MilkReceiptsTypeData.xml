@@ -136,7 +136,7 @@
    
    <PeriodType description="Milk Receipt Billing Types" periodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
-   
+   <PeriodType description="Purchase Billing Period" periodTypeId="MILK_RCPT_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <EnumerationType enumTypeId="MILK_PRCH_PURP" description="Milk Purchase Purpose" hasTable="N"></EnumerationType>
    
    
