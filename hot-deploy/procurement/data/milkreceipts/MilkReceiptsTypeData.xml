@@ -149,12 +149,11 @@
     <StatusItem description="Vehicle at Grossweight" sequenceId="4" statusCode="VEHICLE AT GROSS WEIGHT" statusId="MR_ISSUE_GRWEIGHT" statusTypeId="VEHICLE_INT_STATUS"/>
     <StatusItem description="Vehicle Acknowledged" sequenceId="5" statusCode="VEHICLE Acknowledged" statusId="MR_ISSUE_AQC" statusTypeId="VEHICLE_INT_STATUS"/>
    
-    <StatusValidChange condition="" statusId="MR_ISSUE_CIP" statusIdTo="MR_ISSUE_TARWEIGHT" transitionName="VEHICLE  TO GRSWEIGHT"/>
-    <StatusValidChange condition="" statusId="MR_ISSUE_TARWEIGHT" statusIdTo="MR_ISSUE_QC" transitionName="TARE WEIGHT TO QC"/>
-    <StatusValidChange condition="" statusId="MR_ISSUE_QC" statusIdTo="MR_ISSUE_LOAD" transitionName="QC TO LOAD"/>
-    <StatusValidChange condition="" statusId="MR_ISSUE_LOAD" statusIdTo="MR_ISSUE_GRWEIGHT" transitionName="QC to GROSSWEIGHT"/>
+    <StatusValidChange condition="" statusId="MR_ISSUE_TARWEIGHT" statusIdTo="MR_ISSUE_CIP" transitionName="TARE WEIGHT TO CIP"/>
+    <StatusValidChange condition="" statusId="MR_ISSUE_CIP" statusIdTo="MR_ISSUE_LOAD" transitionName="CIP  TO LOAD"/>
+    <StatusValidChange condition="" statusId="MR_ISSUE_LOAD" statusIdTo="MR_ISSUE_QC" transitionName="LOAD TO QC"/>
+    <StatusValidChange condition="" statusId="MR_ISSUE_QC" statusIdTo="MR_ISSUE_GRWEIGHT" transitionName="QC to GROSSWEIGHT"/>
     <StatusValidChange condition="" statusId="MR_ISSUE_GRWEIGHT" statusIdTo="MR_ISSUE_AQC" transitionName="GRSWEIGHT TO ACK QC"/>
-   
    
    	<StatusType statusTypeId="VEHICLE_RTN_STATUS"/>
     <StatusType parentTypeId="VEHICLE_STATUS" statusTypeId="VEHICLE_RTN_STATUS" description="MILK RECEIPT INTERNAL VEHICLE STATUS"/>
