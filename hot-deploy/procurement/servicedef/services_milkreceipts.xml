@@ -750,4 +750,15 @@
         <description>Emailing Qc Report to party</description>
         <attribute name="milkTransferId" type="String" mode="IN" optional="false"/>  
     </service>
+    <service name="updateVechicleDetails" engine="java"
+            location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateVechicleDetails">
+        <description>update Facility Rate</description>
+        <attribute name="vehicleId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="contractor" type="String" mode="IN" optional="true"/>
+        <attribute name="startDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="endDate" mode="IN" type="Timestamp" optional="true" />
+    </service>
 </services>

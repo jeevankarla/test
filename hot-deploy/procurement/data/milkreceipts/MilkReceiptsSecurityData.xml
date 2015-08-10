@@ -112,10 +112,9 @@
     <SecurityGroup description="Send Qc Report Email." groupId="MR_EMAIL_QCRPT"/>
     <SecurityGroupPermission groupId="MR_EMAIL_QCRPT" permissionId="MR_EMAIL_QCRPT"/>
     
-    
-    
     <SecurityPermission description="Billing Admin" permissionId="BILLING_ADMIN"/>
     <SecurityGroup description="Billing Admin Group" groupId="BILLING_ADMIN"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="BILLING_ADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="BILLING_ADMIN"/>
+    <SecurityGroupPermission groupId="BILLING_ADMIN" permissionId="BILLING_ADMIN"/>
 </entity-engine-xml>

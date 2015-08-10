@@ -369,8 +369,7 @@ under the License.
 	    <field name="rateTypeId" title="Rate Type"><display-entity entity-name="RateType" description="${description}"/></field>
 	    <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
 	    <field name="rateAmount" title="Amount" ><display description="${rateAmount} [${uomId}]"></display></field>
-	    <field name="thruDate"> <date-time type="date" /></field>
-	    <!-- <field name="thruDate"  use-when="thruDate!=null" title="thruDate Exist"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/> </field> -->
+	    <field name="thruDate"> <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
 	    <field name="startDate"><date-time type="date"/> </field>
 	    <field name="amount"><text size="5" /></field>
 	    <field name="endDate"><date-time type="date"/></field>
