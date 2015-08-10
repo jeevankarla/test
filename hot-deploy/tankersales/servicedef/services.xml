@@ -189,7 +189,7 @@
 	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
     </service>
-    <service name="getTankerRecordNumber" engine="java"
+    <service name="getTankerRecordNumberTS" engine="java"
                 location="in.vasista.vbiz.tankersales.TankerSalesServices" invoke="getTankerRecordNumber" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="vehicleId" mode="OUT" type="String" optional="true"></attribute>

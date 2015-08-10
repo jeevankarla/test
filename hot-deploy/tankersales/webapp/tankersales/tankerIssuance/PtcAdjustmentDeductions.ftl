@@ -162,7 +162,7 @@ function datetimepick(){
 		
 	});
 function fetchTankerRecordNumber(){
-	var action = "getTankerRecordNumber";
+	var action = "getTankerRecordNumberTS";
 	var tankerNo = $('[name=tankerNo]').val();
 	var dataString = {"tankerNo": tankerNo};
 	var displayScreen = $('[name="displayScreen"]').val();

@@ -364,6 +364,19 @@
 	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
     </service>
+    <service name="createMilkTankerIssueEntry" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTankerIssueEntry" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+        <attribute name="tareDate" mode="IN" type="String" optional="false"/>
+        <attribute name="tareTime" mode="IN" type="String" optional="false"/>
+		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="vehicleStatusId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    
     <service name="getTankerRecordNumber" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="getTankerRecordNumber" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
@@ -526,15 +539,13 @@
 		<attribute name="replaceWithStatusString" mode="IN" type="String" optional="true"/>
     </service>
     <!--  Services for update issues -->
-    <service name="updateInternalMilkTransferTareWeight" engine="java"
+    <service name="updateInternalMilkTransferCip" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
 		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
-		<!-- GrossWeightEnty -->
-		<attribute name="tareDate" mode="IN" type="String" optional="false"/>
-		<attribute name="tareTime" mode="IN" type="String" optional="false"/>
-		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="cipDate" mode="IN" type="String" optional="false"/>
+		<attribute name="cipTime" mode="IN" type="String" optional="false"/>
     </service>
     <service name="updateInternalMilkTransferGrsWeight" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
@@ -545,8 +556,6 @@
 		<attribute name="grossDate" mode="IN" type="String" optional="false"/>
 		<attribute name="grossTime" mode="IN" type="String" optional="false"/>
 		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="false"/>
-		
-		<attribute name="sealCheck" mode="IN" type="String" optional="false"/>
 		<attribute name="driverName" mode="IN" type="String" optional="false"/>
     </service>
     
@@ -556,7 +565,6 @@
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
 		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
 		<!-- GrossWeightEnty -->
-		<attribute name="sealNumber" mode="IN" type="String" optional="false"/>
 		<attribute name="qcComments" mode="IN" type="String" optional="true"/>
 		<!-- Product -->
 		<attribute name="productId" mode="IN" type="String" optional="false"/>
@@ -581,6 +589,8 @@
 		<!-- LoadEnty -->
 		<attribute name="loadDate" mode="IN" type="String" optional="false"/>
 		<attribute name="loadTime" mode="IN" type="String" optional="false"/>
+        <attribute name="dcNo" mode="IN" type="String" optional="false"/>
+		<attribute name="productId" mode="IN" type="String" optional="false"/>
 	 	<attribute name="silo" mode="IN" type="String" optional="false"/>
     </service>
     
