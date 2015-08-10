@@ -741,7 +741,7 @@
        <field name="userLogin" title="Last Modified By"><display/></field>
        
     </form>
-    <form name="FindVehicleRate" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="vehicleRateList"  default-table-style="basic-table " separate-columns="true"  target="updateVehicleRateAmount" use-row-submit="true" paginate-style="nav-pager" paginate-target="findTanker">    
+    <form name="FindVehicleRate" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="vehicleRateList"  default-table-style="basic-table " separate-columns="true"  target="updateTankerDetails" use-row-submit="true" paginate-style="nav-pager" paginate-target="findTanker">    
        <field name="vehicleId" title="Vehicle No"><display></display></field>
        <field name="partyId" title="Contractor">
        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]">
@@ -750,6 +750,11 @@
        <field name="vehicleCapacity" title="Capacity"><display></display></field>
        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
+       <field name="startDate" title="Start Date"><date-time type="date"></date-time></field>
+       <field name="endDate" title="End Date"><date-time type="date"></date-time></field>
+       <field name="roleTypeId"><hidden value="Contractor"/></field>
+       <field name="contractor"><lookup size="15"  target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+       <field name="Update"><submit/></field>
        <!-- <field name="rateAmount"><text size="12"></text></field> 
        <field name="effectiveDate"><date-time  type="date"/></field>
        <field name="update" use-when="${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_VCLERATE_UPDATE&quot;, session)))}"><submit/></field> -->

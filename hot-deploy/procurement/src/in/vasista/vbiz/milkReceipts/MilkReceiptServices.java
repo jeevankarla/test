@@ -124,6 +124,7 @@ import com.linuxense.javadbf.DBFReader;
 
 
 
+
 import in.vasista.vbiz.procurement.PriceServices;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementReports;
@@ -4898,4 +4899,144 @@ public class MilkReceiptServices {
      }        
      return result;
 }
+ public static Map<String, Object> updateVechicleDetails(DispatchContext ctx,Map<String, Object> context) {
+     Map<String, Object> finalResult = FastMap.newInstance();
+     Map<String, Object> result = FastMap.newInstance();
+     Delegator delegator = ctx.getDelegator();
+     LocalDispatcher dispatcher = ctx.getDispatcher();
+     Locale locale = (Locale) context.get("locale");
+     String vehicleId = (String) context.get("vehicleId");
+     String partyId = (String) context.get("partyId");
+     String contractor = (String) context.get("contractor");
+     Timestamp fromDate = (Timestamp) context.get("fromDate");
+     Timestamp thruDate = (Timestamp) context.get("thruDate");
+     Timestamp startDate = (Timestamp) context.get("startDate");
+     Timestamp endDate = (Timestamp) context.get("endDate");
+     GenericValue userLogin = (GenericValue) context.get("userLogin");
+     
+     if(UtilValidate.isNotEmpty(thruDate)){
+     	thruDate = UtilDateTime.getDayEnd(thruDate);
+     }
+     if(UtilValidate.isNotEmpty(fromDate)){
+     	fromDate = UtilDateTime.getDayStart(fromDate);
+     }
+     if(UtilValidate.isNotEmpty(startDate)){
+     	startDate = UtilDateTime.getDayStart(startDate);
+     }
+     if(UtilValidate.isNotEmpty(endDate)){
+     	endDate = UtilDateTime.getDayEnd(endDate);
+     }
+     if(UtilValidate.isEmpty(thruDate) && UtilValidate.isEmpty(startDate)){
+     	return ServiceUtil.returnError("No values found to update..!");
+     }
+     if(UtilValidate.isNotEmpty(thruDate)){
+     	if(thruDate.before(fromDate)){
+     		return ServiceUtil.returnError("ThruDate must greater than fromDate");
+     	}
+     }
+     if(UtilValidate.isNotEmpty(startDate)){
+     	if(startDate.compareTo(fromDate)<0 || startDate.compareTo(fromDate)==0){
+     		return ServiceUtil.returnError("startDate must greater than fromDate");
+     	}
+     	if(UtilValidate.isNotEmpty(thruDate)){
+     		if(startDate.before(thruDate)){
+     			return ServiceUtil.returnError("startDate must greater than thruDate");	
+     		}
+     	}else{
+     		thruDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayEnd(startDate),-1);
+     	}
+     }
+     if( UtilValidate.isNotEmpty(endDate)){
+     	if(UtilValidate.isEmpty(startDate)){
+     		return ServiceUtil.returnError("startDate not found..!");
+     	}else{
+     		if(endDate.before(startDate)){
+     			return ServiceUtil.returnError("endDate must greater than startDate");	
+     		}
+     	}
+     }
+     List conditionList = FastList.newInstance();
+     List<GenericValue> vehicleRoleList = FastList.newInstance();
+		try {
+			if(UtilValidate.isNotEmpty(thruDate) && UtilValidate.isEmpty(startDate)){
+				conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+		        conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
+		        conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
+		        conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,"_NA_"));
+		        EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        vehicleRoleList = delegator.findList("VehicleRole", cond, null, UtilMisc.toList("-fromDate"), null, false);
+		        GenericValue vehicleRole = EntityUtil.getFirst(vehicleRoleList);
+		        if(UtilValidate.isEmpty(vehicleRole.getTimestamp("thruDate"))){
+		        	vehicleRole.set("thruDate", thruDate);
+		        	vehicleRole.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		        	vehicleRole.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		        	vehicleRole.store();
+		        }
+				
+			}else if(UtilValidate.isNotEmpty(startDate)){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+		        conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
+		        conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
+		        conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,"_NA_"));
+				conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.NOT_EQUAL,null));
+				conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN,startDate));
+				conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN,startDate));
+				
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				vehicleRoleList = delegator.findList("VehicleRole", condition, null, null, null, false);
+				if(UtilValidate.isNotEmpty(vehicleRoleList)){
+					Debug.log("VehicleRole aleady created for the Period..!");
+					return ServiceUtil.returnError("VehicleRole already created for the Period..!");
+				}else{
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+			        conditionList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
+			        conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
+			        conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,"_NA_"));
+			        EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			        vehicleRoleList = delegator.findList("VehicleRole", cond, null, UtilMisc.toList("-fromDate"), null, false);
+			        GenericValue vehicleRole = EntityUtil.getFirst(vehicleRoleList);
+			        if(UtilValidate.isEmpty(vehicleRole.getTimestamp("thruDate"))){
+			        	vehicleRole.set("thruDate", thruDate);
+			        	vehicleRole.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			        	vehicleRole.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			        	vehicleRole.store();
+			        }
+			        if(UtilValidate.isNotEmpty(startDate)){
+			        	if(UtilValidate.isNotEmpty(contractor)){
+			        		if(!partyId.equals(contractor)){
+			        			if(partyId.equals("TEMP_CONTRACTOR")){
+			        				vehicleRole.remove();
+			        			}
+			        			partyId=contractor;
+			        		}
+			        	}
+				        GenericValue newEntity = delegator.makeValue("VehicleRole");
+				        newEntity.set("vehicleId", vehicleId);
+				        newEntity.set("facilityId", "_NA_");
+		     	        newEntity.set("roleTypeId", "PTC_VEHICLE");
+		     	        newEntity.set("partyId", partyId);
+		     	        newEntity.set("fromDate", startDate);
+		     	        if(UtilValidate.isNotEmpty(endDate)){
+		     	        newEntity.set("thruDate", endDate);
+		     	        }
+		     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+		    	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+		 		        try {
+		 					delegator.create(newEntity);
+		 				}catch (GenericEntityException e) {
+		 					Debug.logError("Error in creating Vechicle Role: "+vehicleId+ "\t"+e.toString(),module);
+		 					return ServiceUtil.returnError("Error in creating Vehicle Role: "+vehicleId+ "\t"+e.toString());
+		 				}
+			        }
+				}
+			}
+		}catch (GenericEntityException e) {
+			Debug.logError(e, module);
+         return ServiceUtil.returnError(e.getMessage());
+		} 
+		result = ServiceUtil.returnSuccess("Successfully Updated..!");
+		return result;
+ }
 }

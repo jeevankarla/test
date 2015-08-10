@@ -907,7 +907,13 @@
     	<response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
     	<response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
     </request-map>
-    
+    <request-map uri="updateTankerDetails">
+     <security https="true" auth="true"/>
+       <event type="service"  invoke="updateVechicleDetails"/>
+       <response name="success" type="view" value="findTanker"/>
+        <response name="failed" type="view" value="findTanker"/>
+        <response name="error" type="view" value="findTanker"/>
+    </request-map>
     <!-- View Mappings -->
 	<view-map name="main" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptDashboard" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptDashboard"/>
