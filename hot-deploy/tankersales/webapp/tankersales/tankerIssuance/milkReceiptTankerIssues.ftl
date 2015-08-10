@@ -487,7 +487,7 @@ function populateExtVehicleSpan(){
 }
 
 function fetchExtTankerRecordNumber(){
-	var action = "getTankerRecordNumber";
+	var action = "getTankerRecordNumberTS";
 	var tankerNo = $('#extTankerNo').val();
 	var dataString = {"tankerNo": tankerNo};
 	var displayScreen = $('[name="displayScreen"]').val();
@@ -637,7 +637,7 @@ function fetchExtTankerRecordNumber(){
 }
 
 function fetchTankerRecordNumber(){
-	var action = "getTankerRecordNumber";
+	var action = "getTankerRecordNumberTS";
 	var tankerNo = $('#tankerNo').val();
 	var dataString = {"tankerNo": tankerNo};
 	var displayScreen = $('[name="displayScreen"]').val();

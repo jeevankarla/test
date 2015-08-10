@@ -162,20 +162,21 @@
 	</menu>
 	<menu name="MilkTransferIssuesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		
-		<menu-item name="MilkIssues" title="Cip Details" >
+		
+      	<menu-item name="MilkTankerIssuesTareWeight" title="TareWeight Details" >
             <link target="milkTankerIssues">
 			</link>
       	</menu-item>
-      	<menu-item name="MilkTankerIssuesTareWeight" title="TareWeight Details" >
-            <link target="MilkTankerIssuesTareWeight">
-			</link>
-      	</menu-item>
-      	<menu-item name="MilkTankerIssuesQC" title="QC Details" >
-            <link target="MilkTankerIssuesQC">
+      	<menu-item name="MilkIssues" title="Cip Details" >
+            <link target="MilkTankerIssuesCIP">
 			</link>
       	</menu-item>
       	<menu-item name="MilkTankerIssueLoadDetails" title="Tanker Load Details" >
             <link target="MilkTankerIssueLoadDetails">
+			</link>
+      	</menu-item>
+      	<menu-item name="MilkTankerIssuesQC" title="QC Details" >
+            <link target="MilkTankerIssuesQC">
 			</link>
       	</menu-item>
       	<menu-item name="MilkTankerIssuesGrossWeight" title="Gross weight Details" >

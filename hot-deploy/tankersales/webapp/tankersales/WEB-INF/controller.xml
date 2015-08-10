@@ -162,9 +162,9 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    <request-map uri="getTankerRecordNumber">
+    <request-map uri="getTankerRecordNumberTS">
         <security https="true" auth="true"/>
-        <event type="service"  invoke="getTankerRecordNumber"/>        
+        <event type="service"  invoke="getTankerRecordNumberTS"/>        
        <response name="success" type="request" value="json"/>
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>       
