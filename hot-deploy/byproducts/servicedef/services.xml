@@ -59,6 +59,13 @@
         <attribute name="supplyDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="mJobCancelOrderForCancelledInvoices" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="mJobCancelOrderForCancelledInvoices" transaction-timeout="20000">
+        <description>Create Crate and Can Return</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="salesChannel" type="String" mode="IN" optional="true"/>
+    </service>
     
     <service name="cancelICPShipment" engine="java" 
         location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="cancelICPShipment">
