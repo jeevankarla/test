@@ -53,13 +53,13 @@ under the License.
                 <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
                 <fo:table-body>
                     <fo:table-row>
-                        <fo:table-cell>
+                        <#--<fo:table-cell>
                             <fo:block>
                             <#if logoImageUrl?exists>
                                 <fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="40px"/>
                             </#if>
                             </fo:block>
-                        </fo:table-cell>
+                        </fo:table-cell>-->
                         <fo:table-cell>
                             <#-- The title of the report -->
                             <fo:block font-weight="bold" text-decoration="underline" space-after="0.03in">

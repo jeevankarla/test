@@ -493,6 +493,7 @@
 					from-field="partyIds" />
 			</entity-condition>
 			<set field="partyIds[]" from-field="organizationPartyId" />
+				<set field="parameters.includingGrandTotals" value="Y"/>
 
 			<!-- <entity-condition entity-name="GlAccountAndHistoryTotals"
 				filter-by-date="false" list="glAccountAndHistories">
@@ -642,6 +643,7 @@
 					result-map="result">
 					<field-map field-name="organizationPartyId" />
 				</service>
+				<set field="parameters.includingGrandTotals" value="Y"/>
 				<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
 				<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
 				<set field="partyIds"
@@ -732,6 +734,7 @@
 					<select-field field-name="totalPostedDebits" />
 					<select-field field-name="totalPostedCredits" />
 				</entity-condition> -->
+				<set field="parameters.includingGrandTotals" value="N"/>
 				 <script
 				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
 				<set field="grandTotalPostedRecord" from-field="grandTotalPosted[0]" />
@@ -755,14 +758,16 @@
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 						<include-form name="TrialBalanceReport"
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-						<container style="h3">
+						<include-form name="TrialBalanceGrandTotalReport" 
+ 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
+						<!-- <container style="h3">
 							<label
 								text="${uiLabelMap.AccountingDebitFlag}: ${grandTotalPostedRecord.totalPostedDebits}" />
 						</container>
 						<container style="h3">
 							<label
 								text="${uiLabelMap.AccountingCreditFlag}: ${grandTotalPostedRecord.totalPostedCredits}" />
-						</container>
+						</container> -->
 					</decorator-section>
 				</decorator-screen>
 			</widgets>

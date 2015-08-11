@@ -111,6 +111,35 @@ import org.ofbiz.accounting.util.*;
 			 glAccountAndHistories.add(tempGlAccountAndHistoryMap);
 		 }
 	 }
+	 if(UtilValidate.isNotEmpty(parameters.includingGrandTotals)){
+		 glAccountAndHistoriesTotals=[];
+			 grandopeningC=0;
+			 grandopeningD=0
+			 grandDebits=0;
+			 grandCredits=0;
+			 grandEndingBal=0;
+			 grandTotalMap=[:];
+			 glAccountAndHistories.each{ eachglacct ->
+				 grandEndingBal=grandEndingBal+eachglacct.totalEndingBalance;
+				 grandopeningC=grandopeningC+eachglacct.openingC;
+				 grandopeningD=grandopeningD+eachglacct.openingD;
+				 grandDebits=grandDebits+eachglacct.totalPostedDebits;
+				 grandCredits=grandCredits+eachglacct.totalPostedCredits;
+			 }
+			 grandTotalMap.put("accountCode", ".");
+		 	 grandTotalMap.put("accountName", "GrandTotals");
+			 grandTotalMap.put("openingD", grandopeningD);
+			 grandTotalMap.put("openingC", grandopeningC);
+			 grandTotalMap.put("totalPostedDebits", grandDebits);
+			 grandTotalMap.put("totalPostedCredits", grandCredits);
+			 grandTotalMap.put("totalEndingBalance", grandEndingBal);
+			 if("N".equals(parameters.includingGrandTotals)){
+			 glAccountAndHistoriesTotals.add(grandTotalMap);
+			 }else if("Y".equals(parameters.includingGrandTotals)){
+			 glAccountAndHistories.add(grandTotalMap);
+			 }
+		context.glAccountAndHistoriesTotals=glAccountAndHistoriesTotals;
+	 }
   context.glAccountAndHistories = glAccountAndHistories;
   accountCodeList=[];
   if(UtilValidate.isNotEmpty(parameters.customTimePeriodId))
