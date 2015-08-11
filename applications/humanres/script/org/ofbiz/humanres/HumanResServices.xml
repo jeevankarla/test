@@ -876,6 +876,7 @@
 		<if-not-empty field="parameters.weeklyOff">
 			<set field="weeklyOffMap.weeklyOff" from-field="parameters.weeklyOff"/>
 			<set field="weeklyOffMap.partyId" from-field="parameters.partyId"/>
+			<set field="weeklyOffMap.fromDate" from-field="parameters.weeklyOffDate" type="Timestamp"/>
 			<call-service service-name="createOrUpdateWeeklyOffCalendar" in-map-name="weeklyOffMap">	
 			</call-service>
 		</if-not-empty>

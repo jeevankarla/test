@@ -458,6 +458,7 @@
 				<option key="SaturDay" />
 			</drop-down>
 		</field>
+		<field name="weeklyOffDate" title="weeklyOff From Date"><date-time type="date" ></date-time></field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}">
 			<drop-down allow-empty="false" no-current-selected-key="N">
 				<option key="Y"></option>
@@ -577,6 +578,7 @@
 			<sort-field name="nationality" /> 
 			<sort-field name="punchType" />
 			<sort-field name="weeklyOff" />
+			<sort-field name="weeklyOffDate" />
 			<sort-field name="attendanceIndn" />
 			<sort-field name="paymentMode" />
 			<sort-field name="canteenFacin" />
@@ -717,7 +719,14 @@
 				<set field="caste" value="${partyClassificationGroup.description}"/>
 			<entity-and entity-name="Employment" list="employmentList">
 				<field-map field-name="partyIdTo" value="${partyId}"/>
-			</entity-and>	
+			</entity-and>
+			<entity-condition entity-name="EmployeeWeeklyOffCalendar" list="WeeklyOffDate" filter-by-date="true">
+     			<condition-list>
+     				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
+                    <condition-expr field-name="thruDate" operator="equals" from-field="null"/>
+     			</condition-list>
+     		</entity-condition>
+     		<set field="WeekOffFromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(WeeklyOffDate[0].fromDate, &quot;dd/MM/yyyy&quot;);}"/>
 			<set field="doj" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentList[0].fromDate, &quot;dd/MM/yyyy&quot;);}"/>
      	</actions>
      	
@@ -749,6 +758,7 @@
 		<field name="nationality" title="${uiLabelMap.Nationality}" ><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
+		<field name="WeekOffFromDate" title="WeekOff FromDate"><display description="${WeekOffFromDate}"></display></field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field>
 		<field name="paymentMode" title="${uiLabelMap.PaymentMode}"><display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"></display-entity></field>
 		<field name="canteenFacin" title="${uiLabelMap.CanteenFacin}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${canteenFacin}"></display-entity></field>

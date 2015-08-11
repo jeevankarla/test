@@ -782,6 +782,7 @@ under the License.emplpunch
 		</auto-attributes>
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="caste" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="weeklyOffDate" mode="IN" type="Timestamp" optional="true"/>
     </service>
 
 	<service name="updatePreviousEmployment" engine="simple"
@@ -793,6 +794,7 @@ under the License.emplpunch
 			main-action="EMPLOYEE_EDIT" />
 		<auto-attributes mode="IN" include="pk" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />		
+		<attribute name="weeklyOffDate" mode="IN" type="Timestamp" optional="true"/>
 	</service>
 	
 	<service name="createPreviousEmployment" engine="simple"
@@ -2021,6 +2023,7 @@ under the License.emplpunch
          <description>create or update Weekly off record when changed</description>
          <attribute name="partyId" mode="IN" type="String" optional="false"/>
          <attribute name="weeklyOff" mode="IN" type="String" optional="false"/>
+         <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
     </service>
     <service name="populateWeeklyOffCalendar" engine="java"
                 location="in.vasista.vbiz.humanres.HumanresService" invoke="populateWeeklyOffCalendar" 
