@@ -44,6 +44,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.order.order.OrderChangeHelper;
@@ -7937,13 +7938,23 @@ public class ByProductNetworkServices {
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		List paymentList = FastList.newInstance();
+		String errorMsg = "";
 		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 		List<Map<String, Object>> boothPayments = (List<Map<String, Object>>) context.get("boothPayments");
 		String infoString = "makeBoothPayments:: " + "paymentChannel=" + paymentChannel 
 				+";transactionId=" + transactionId + ";paymentLocationId=" + paymentLocationId 
 				+ " " + boothPayments;
 		Debug.logInfo(infoString, module);
+		Map sendMailParams = FastMap.newInstance();
+        sendMailParams.put("sendTo", "charan@vasista.in,nagababu@vasista.in,kvarma@vasista.in");
+        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+        sendMailParams.put("subject", "CDM payment failure stack trace");
+        sendMailParams.put("contentType", "text/html");
+        sendMailParams.put("userLogin", userLogin);
+        
+		errorMsg += "InfoString-> "+infoString;
 		if (boothPayments.isEmpty()) {
+			errorMsg += "No payment amounts found; ";
 			Debug.logError("No payment amounts found; " + infoString, module);
 			return ServiceUtil.returnError("No payment amounts found; "	+ infoString);
 		}
@@ -7954,6 +7965,22 @@ public class ByProductNetworkServices {
 				try {
 					paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
 				} catch (ParseException e) {
+					StringBuilder traceError = new StringBuilder();
+				    for (StackTraceElement element : e.getStackTrace()) {
+				    	traceError.append(element.toString());
+				    	traceError.append("\n");
+				    }
+				    errorMsg += traceError;
+				    
+	                sendMailParams.put("body", errorMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+					}
 					Debug.logError("Cannot parse date string: " + paymentDateStr,module);
 					return ServiceUtil.returnError("Cannot parse date string");
 				} catch (NullPointerException e) {
@@ -8014,12 +8041,31 @@ public class ByProductNetworkServices {
 			if (paymentsList.size() > 0) {
 				GenericValue payList = (GenericValue)paymentsList.get(0);
 				Debug.logError("Duplicate payment transaction received for booth "+ (String) boothPayment.get("boothId") + " ["+ paymentChannel+ ", "+payList.getString("paymentRefNum")+", "+payList.getTimestamp("paymentDate")+"] hence skipping... Existing payment Id:"+ payList.getString("paymentId"), module);
+				errorMsg += "Duplicate payment transaction received for booth "+ (String) boothPayment.get("boothId") + " ["+ paymentChannel+ ", "+payList.getString("paymentRefNum")+", "+payList.getTimestamp("paymentDate")+"] hence skipping... Existing payment Id:"+ payList.getString("paymentId");
+				sendMailParams.put("body", errorMsg);
+	            try{
+	                Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                if(ServiceUtil.isError(resultCtxMap)){
+	                	Debug.log("Problem in calling service sendMail");
+	                }
+	            }catch(GenericServiceException e1){
+	            	Debug.log("Problem in sending email");
+				}
 				return ServiceUtil.returnError("Duplicate payment transaction received for booth "+ (String) boothPayment.get("boothId") + " ["+ paymentChannel+ ", "+payList.getString("paymentRefNum")+", "+payList.getTimestamp("paymentDate")+"] hence skipping... Existing payment Id:"+ payList.getString("paymentId"));
 			}
 			
 			try {
 				Map<String, Object> paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
 				if (ServiceUtil.isError(paymentResult)) {
+					sendMailParams.put("body", errorMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+					}
 					Debug.logError("Payment failed for: " + infoString + "["+ paymentResult + "]", module);
 					return paymentResult;
 				}
@@ -8028,8 +8074,24 @@ public class ByProductNetworkServices {
 				paymentMap.put("paymentId", (String) paymentResult.get("paymentId"));
 				paymentList.add(paymentMap);
 				Debug.logInfo("Made following payment:" + paymentCtx, module);
-			} catch (GenericServiceException e) {
+			} catch (Exception e) {
 				// TODO: handle exception
+				StringBuilder traceError = new StringBuilder();
+			    for (StackTraceElement element : e.getStackTrace()) {
+			    	traceError.append(element.toString());
+			    	traceError.append("\n");
+			    }
+			    errorMsg += traceError;
+			    
+                sendMailParams.put("body", errorMsg);
+                try{
+                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+                    if(ServiceUtil.isError(resultCtxMap)){
+                    	Debug.log("Problem in calling service sendMail");
+                    }
+                }catch(GenericServiceException e1){
+                	Debug.log("Problem in sending email");
+				}
 				Debug.logError(e, module);
 				return ServiceUtil.returnError(e.getMessage());
 			}
@@ -8049,7 +8111,6 @@ public class ByProductNetworkServices {
 			result.put("paymentList", paymentList);
 			result.put("responseCode", "001");
 		}
-		
 		return result;
 	}
 	
@@ -11437,6 +11498,53 @@ public class ByProductNetworkServices {
 			}
 		}
 		result.put("partyReturnTotals", partyReturnDetail);
+		return result;
+	}
+	
+	public static Map mJobCancelOrderForCancelledInvoices(DispatchContext dctx,Map<String, ? extends Object> context) {
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Delegator delegator = dctx.getDelegator();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		String salesChannel = (String) context.get("salesChannel");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		if(UtilValidate.isEmpty(salesChannel)){
+			salesChannel = "BYPROD_SALES_CHANNEL";
+		}
+		try {
+			List condList = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "INVOICE_CANCELLED"));
+			condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+			condList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			List<GenericValue> invoices = delegator.findList("Invoice", cond, UtilMisc.toSet("invoiceId"),null, null, false);
+			List<String> invoiceIds = EntityUtil.getFieldListFromEntityList(invoices,"invoiceId", true);
+			List<String> problematicOrderIds = FastList.newInstance();
+			if (UtilValidate.isNotEmpty(invoiceIds)) {
+				List<GenericValue> itemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds), UtilMisc.toSet("orderId"),null, null, false);
+				List<String> orderIds = EntityUtil.getFieldListFromEntityList(itemBilling,"orderId", true);
+				
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+				condList.add(EntityCondition.makeCondition("salesChannelEnumId", EntityOperator.EQUALS, salesChannel));
+				EntityCondition cond1 = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				List<GenericValue> problematicOrders = delegator.findList("OrderHeader", cond1, UtilMisc.toSet("orderId"),null, null, false);
+				problematicOrderIds = EntityUtil.getFieldListFromEntityList(problematicOrders,"orderId", true);
+			}
+			Debug.log("problematicOrderIds ###########"+problematicOrderIds.size());
+			if(UtilValidate.isNotEmpty(problematicOrderIds)){
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", problematicOrderIds,"userLogin", userLogin));
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+			 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
+				} 
+			}
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
 		return result;
 	}
 	public static Map getBoothShipment(Delegator delegator,Map<String, ? extends Object> context) {
