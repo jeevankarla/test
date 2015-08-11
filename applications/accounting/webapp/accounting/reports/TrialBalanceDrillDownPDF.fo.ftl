@@ -60,13 +60,12 @@
 		                    <fo:table-cell border-style="hidden">
 		                    	<fo:block-container position="absolute">
 		                      <fo:block font-size="14pt" keep-together="always">
-		                        ${screens.render("component://order/widget/ordermgr/OrderPrintScreens.xml#CompanyLogo")}
+		                  <#-- ${screens.render("component://order/widget/ordermgr/OrderPrintScreens.xml#CompanyLogo")}-->
 		                      </fo:block>
 		                      </fo:block-container>
 		                    </fo:table-cell>
 		                    <fo:table-cell>
-		                    <fo:block text-align="center" white-space-collapse="false"
-					          font-size="14pt" font-weight="bold" keep-together="always">&#160;<fo:inline text-decoration="underline" >Trial Balance</fo:inline></fo:block>
+								 <fo:block text-align="center" white-space-collapse="false" font-size="14pt" font-weight="bold" keep-together="always">&#160;MOTHER DAIRY,YALAHANKA KMF UNIT: GKVK POST.BANGALORE-560 065</fo:block>
 		                    </fo:table-cell>
 				       </fo:table-row>
 				       <fo:table-row>
@@ -75,8 +74,7 @@
 		                      </fo:block>
 		                    </fo:table-cell>
 		                    <fo:table-cell>
-		                    <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
-		                      </fo:block>
+								<fo:block text-align="center" white-space-collapse="false" font-size="14pt" font-weight="bold" keep-together="always">&#160;<fo:inline text-decoration="underline" >Trial Balance</fo:inline></fo:block>		                   
 		                    </fo:table-cell>
 				       </fo:table-row>
 				        <fo:table-row>
@@ -111,7 +109,7 @@
 				       </fo:table-row>
 				        <fo:table-row>
 		                    <fo:table-cell number-columns-spanned="3">
-		                    <fo:block text-align="left"  font-size="10pt" >&#160;    &#160;    &#160;${uiLabelMap.AccountingTimePeriod}   : ${(customTimePeriod.fromDate)!}  ${uiLabelMap.CommonTo}  ${(customTimePeriod.thruDate)!}</fo:block>
+		                    <fo:block text-align="center"  font-size="10pt" >&#160;    &#160;    &#160;${uiLabelMap.AccountingTimePeriod}   : ${(customTimePeriod.fromDate)!}  ${uiLabelMap.CommonTo}  ${(customTimePeriod.thruDate)!}</fo:block>
 		                   </fo:table-cell>
 				       </fo:table-row>
 					</fo:table-body>
@@ -120,13 +118,13 @@
 			<fo:block>
 				<fo:table table-layout="fixed" width="120%" space-before="0.2in"
 					margin-left=".3in" margin-right=".2in">
-					<fo:table-column column-width="12%" />
-						<fo:table-column column-width="27%" />
+					<fo:table-column column-width="10%" />
+						<fo:table-column column-width="26%" />
 						<fo:table-column column-width="8%" />
 						<fo:table-column column-width="8%" />
-						<fo:table-column column-width="8%" />
-						<fo:table-column column-width="8%" />
-						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="10%" />
+						<fo:table-column column-width="10%" />
+						<fo:table-column column-width="9%" />
 					<fo:table-body>
 						<fo:table-row>
 							<fo:table-cell border-style="solid">
@@ -167,13 +165,13 @@
 				<fo:block>
 					<fo:table table-layout="fixed" width="120%" space-before="0.2in"
 						margin-left=".3in" margin-right=".2in">
-						<fo:table-column column-width="12%" />
-						<fo:table-column column-width="27%" />
+						<fo:table-column column-width="10%" />
+						<fo:table-column column-width="26%" />
 						<fo:table-column column-width="8%" />
 						<fo:table-column column-width="8%" />
-						<fo:table-column column-width="8%" />
-						<fo:table-column column-width="8%" />
-						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="10%" />
+						<fo:table-column column-width="10%" />
+						<fo:table-column column-width="9%" />
 						<fo:table-body>
      					<#assign serialNo = 0>
      					<#assign trileBalanceListReport =trillDownTrialBalanceMap.entrySet()>

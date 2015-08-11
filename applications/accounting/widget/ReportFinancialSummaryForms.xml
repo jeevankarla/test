@@ -743,13 +743,31 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
-         <field name="openingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="openingC" widget-style="tabletextright"><display  type="currency" currency="${currencyUomId}"/></field>
-        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits}" type="currency" currency="${currencyUomId}"/></field>
-        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}" type="currency" currency="${currencyUomId}"/></field>
-        <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display description="${totalEndingBalance}" type="currency" currency="${currencyUomId}"/></field>
+         <field name="openingD" widget-style="tabletextright"><display/></field>
+        <field name="openingC" widget-style="tabletextright"><display/></field>
+        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits}"/></field>
+        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}"/></field>
+        <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}"/></field>
     </form>
-
+	<form name="TrialBalanceGrandTotalReport" type="list" list-name="glAccountAndHistoriesTotals"
+       odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+           <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
+        </actions>
+        <!-- <row-actions>
+            <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
+        </row-actions> -->
+        <field name="accountCode" widget-style="tabletextright" title="."><display description="."></display>
+            
+        </field>
+        <field name="accountName" title-area-style="tableheadwide" title="."><display description="${accountName}"/></field>
+         <field name="openingD" widget-style="tabletextright" title="Total Opening Debit"><display/></field>
+        <field name="openingC" widget-style="tabletextright" title="Total Opening Credit"><display/></field>
+        <field name="totalPostedDebits" title="Total ${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits}"/></field>
+        <field name="totalPostedCredits" title="Total ${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}"/></field>
+        <field name="totalEndingBalance" title=" Total ${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}"/></field>
+    </form>
     <form name="CashFlowStatementParameters" type="single" header-row-style="header-row" default-table-style="basic-table">
         <field name="selectedMonth" title="${uiLabelMap.CommonMonth}">
             <drop-down allow-empty="true">
