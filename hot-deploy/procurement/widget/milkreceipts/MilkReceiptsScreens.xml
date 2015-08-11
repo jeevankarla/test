@@ -1070,7 +1070,14 @@
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     	<include-menu name="MilkTransferIssuesTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
-                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerIssues.ftl"></html-template></html></platform-specific> 
+                    	<section>
+                    		<condition>
+                    			<if-has-permission permission="MR" action="_ISSUE_WGHT_ENTRY"/>
+                    		</condition>
+                    	<widgets>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerIssues.ftl"></html-template></html></platform-specific>
+                    	</widgets>
+                    	</section> 
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1171,7 +1178,14 @@
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     	<include-menu name="MilkTransferReturnsTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
-                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerReturns.ftl"></html-template></html></platform-specific> 
+                    	<section>
+                    	<condition>
+      						<if-has-permission permission="MR" action="_TRETRN_QC_ENTRY"/>
+      					</condition>
+                    	<widgets>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerReturns.ftl"></html-template></html></platform-specific>
+                    	</widgets>
+                    	</section> 
                     </decorator-section>
                 </decorator-screen>
             </widgets>
