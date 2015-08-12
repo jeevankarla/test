@@ -109,8 +109,9 @@ if(changeFlag == "InnerScreen"){
 	context.party = party;
 	context.fromParty=fromParty;
 	partyIdFrom = party.partyId;
-	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
-		                               EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND);
+	/*ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom),
+		                               EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT")],EntityOperator.AND);*/
+	ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdFrom)],EntityOperator.AND);
 	List facilityList = delegator.findList("Facility",ecl,UtilMisc.toSet("facilityId"),null,null,false);
 	List facilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
 	List productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition(EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),EntityOperator.AND,EntityCondition.makeCondition("productId",EntityOperator.IN,needProductsList)),UtilMisc.toSet("productId"),null,null,false);
