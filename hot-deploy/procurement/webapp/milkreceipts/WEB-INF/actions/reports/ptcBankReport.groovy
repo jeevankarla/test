@@ -82,7 +82,8 @@ context.fromDate = dayBegin;
 context.thruDate = dayEnd;
 
 Map vehicleFineMap = FastMap.newInstance();
-List ptcContractors = FastList.newInstance();
+//List ptcContractors = FastList.newInstance();
+Set ptcContractors=null;
 vehicleRoleList=[];
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
@@ -138,7 +139,7 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	vehicleRoleList = delegator.findList("VehicleRole",condition , null, null, null, false);
 	if(UtilValidate.isNotEmpty(vehicleRoleList)){
-		ptcContractors = EntityUtil.getFieldListFromEntityList(vehicleRoleList, "partyId", false);
+		ptcContractors = new HashSet(EntityUtil.getFieldListFromEntityList(vehicleRoleList, "partyId", false));
 	}
 }
 
@@ -230,9 +231,4 @@ if(UtilValidate.isNotEmpty(totAmount)){
 	ptcBankList.add(totAmtMap);
 }
 context.ptcBankList=ptcBankList;
-
-
-
-
-
 

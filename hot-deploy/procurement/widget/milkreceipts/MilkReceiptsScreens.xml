@@ -333,6 +333,7 @@
         		 <set field="tabButtonItem" value="MilkReceiptReports"/> 
         		 <set field="tabButtonItem3" value="ShiftWiseReport"/>
         		 <set field="reportFrequencyFlag" value="ShiftWiseReport"/>
+       		   <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
         	</actions>
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1183,14 +1184,14 @@
             </widgets>
         </section>
     </screen>
-    <screen name="MilkTankerRetunrQC">
+    <screen name="MilkTankerReturnInitiate">
         <section>
         	<actions>
         		 <set field="titleProperty" value="MILK RETURNS"/>	
-        		 <set field="displayScreen" value="RETURN_QC"/>
+        		 <set field="displayScreen" value="RETURN_INITIATE"/>
         		 <set field="tabButtonItem" value="MilkTankerReturns"/>
-        		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnQC"/> 
-        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptTankerIssues.js" global="true"/>
+        		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnInitiate"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
         	</actions>
             <widgets>
@@ -1217,7 +1218,7 @@
         		 <set field="displayScreen" value="RETURN_GRSWEIGHT"/>
         		 <set field="tabButtonItem" value="MilkTankerReturns"/>
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnGrossWeight"/> 
-        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptTankerIssues.js" global="true"/>
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
         	</actions>
             <widgets>
@@ -1230,14 +1231,14 @@
             </widgets>
         </section>
     </screen>
-    <screen name="MilkTankerRetunrAQC">
+    <screen name="MilkTankerReturnQC">
         <section>
         	<actions>
         		 <set field="titleProperty" value="MILK_RETURNS"/>	
-        		 <set field="displayScreen" value="RETURN_AQC"/>
+        		 <set field="displayScreen" value="RETURN_QC"/>
         		 <set field="tabButtonItem" value="MilkTankerReturns"/>
-        		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnAQC"/> 
-        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptTankerIssues.js" global="true"/>
+        		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnQC"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
         	</actions>
             <widgets>
@@ -1257,7 +1258,7 @@
         		 <set field="displayScreen" value="RETURN_UNLOAD"/>
         		 <set field="tabButtonItem" value="MilkTankerReturns"/>
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkReturnUnloading"/> 
-        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptTankerIssues.js" global="true"/>
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
         	</actions>
             <widgets>
@@ -1277,7 +1278,7 @@
         		 <set field="displayScreen" value="RETURN_CIP"/>
         		 <set field="tabButtonItem" value="MilkTankerReturns"/>
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkReturnCIP"/> 
-        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptTankerIssues.js" global="true"/>
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
         	</actions>
             <widgets>
@@ -1297,7 +1298,7 @@
         		 <set field="displayScreen" value="RETURN_TARWEIGHT"/>
         		 <set field="tabButtonItem" value="MilkTankerReturns"/>
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnTareWeight"/> 
-        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptTankerIssues.js" global="true"/>
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
         	</actions>
             <widgets>

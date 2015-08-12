@@ -68,7 +68,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
    conditionList.clear();
    conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
    conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["MXF_RECD","MXF_APPROVED"]));
+   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"MXF_APPROVED"));
    EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
    milkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", cond, null,null, null, false);
   
@@ -150,12 +150,11 @@ if(UtilValidate.isNotEmpty(siloIds)){
 					 receiptSiloMap.put(receiptNo,MrrDetailsMap);
 					 receiptNo++;
 				}
-				totReceiptQty=totReceiptQty+ReceiptTotQty;
-				
-				totInventoryQty=totInventoryQty+ReceiptTotQty;
-				totFatQty=totFatQty+ReceiptTotFat;
-				totSnfQty=totSnfQty+ReceiptTotSnf;
 			}
+		/*	totReceiptQty=totReceiptQty+ReceiptTotQty;
+			totInventoryQty=totInventoryQty+ReceiptTotQty;
+			totFatQty=totFatQty+ReceiptTotFat;
+			totSnfQty=totSnfQty+ReceiptTotSnf;*/
 		}
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
@@ -199,11 +198,12 @@ if(UtilValidate.isNotEmpty(siloIds)){
 				}
 		
 		}
-		 totReceiptQty=totReceiptQty+ReceiptTotQty;
-	     totInventoryQty=totInventoryQty+ReceiptTotQty;
-	     totFatQty=totFatQty+ReceiptTotFat;
-	     totSnfQty=totSnfQty+ReceiptTotSnf;
-	   }
+   }
+		totReceiptQty=totReceiptQty+ReceiptTotQty;
+		totInventoryQty=totInventoryQty+ReceiptTotQty;
+		totFatQty=totFatQty+ReceiptTotFat;
+		totSnfQty=totSnfQty+ReceiptTotSnf;
+
 	 allDetailsMap.put("receiptSiloMap",receiptSiloMap);
 	 allDetailsMap.put("totInventoryQty",totInventoryQty);
 	
