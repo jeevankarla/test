@@ -88,7 +88,7 @@
       		 <condition>
     			<if-has-permission permission="MR" action="_TANKERRETURN_VIEW"/>
     		</condition>
-            <link target="MilkTankerRetunrQC">
+            <link target="MilkTankerReturnInitiate">
 			</link>
       	</menu-item> 
       	
@@ -213,29 +213,29 @@
 	</menu>
 	<menu name="MilkTransferReturnsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		
-		<menu-item name="MilkTankerReturnQC" title="QC Details" >
-		<condition>
+		<menu-item name="MilkTankerReturnInitiate" title="Return Initiate" >
+        <condition>
       		<if-has-permission permission="MR" action="_TRETRN_QC_ENTRY"/>
       	</condition>
-            <link target="MilkTankerRetunrQC">
+            <link target="MilkTankerReturnInitiate">
 			</link>
       	</menu-item>
       	<menu-item name="MilkTankerReturnGrossWeight" title="Gross weight Details" >
             <link target="MilkTankerReturnGrossWeight">
 			</link>
       	</menu-item>
-      	<menu-item name="MilkTankerReturnAQC" title="Ack QC" >
-            <link target="MilkTankerReturnAQC">
+      	<menu-item name="MilkTankerReturnQC" title="QC" >
+            <link target="MilkTankerReturnQC">
 			</link>
       	</menu-item>
 		<menu-item name="MilkReturnUnloading" title="unloading Details" >
             <link target="MilkTankerReturnUnloading">
 			</link>
       	</menu-item>
-      	<menu-item name="MilkReturnCIP" title="Cip Details" >
+      <!-- 	<menu-item name="MilkReturnCIP" title="Cip Details" >
             <link target="MilkReturnCIP">
 			</link>
-      	</menu-item>
+      	</menu-item>-->
       	
       	<menu-item name="MilkTankerReturnTareWeight" title="TareWeight Details" >
             <link target="MilkTankerReturnTareWeight">

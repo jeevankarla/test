@@ -67,7 +67,7 @@
 <script type="application/javascript">
 	jQuery(function($) {
 	var dispatchDateFormat;
-	if($('#displayScreen').val()=="RETURN_QC"){
+ /*if($('#displayScreen').val()=="RETURN_INITIATE"){
 		$('#displayRecord').hide();
 		$('#displayRecievedFrom').hide();
 		dispatchDateFormat = $('#sendDate').datepicker( "option", "dateFormat" );
@@ -75,7 +75,7 @@
 		//$('#dispatchDate').datepicker().datepicker('setDate', new Date()); 
 		$('#sendDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 		$('#entryDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
-	}
+	}*/
 	if($('#displayScreen').val()=="VEHICLE_OUT"){
 		dispatchDateFormat = $('#exitDate').datepicker( "option", "dateFormat" );
 		$('#exitDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
@@ -88,16 +88,17 @@
 		dispatchDateFormat = $('#grossDate').datepicker( "option", "dateFormat" );
 		$('#grossDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
-	if($('#displayScreen').val()=="RETURN_QC"){
+	/*if($('#displayScreen').val()=="RETURN_INITIATE"){
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 		$('#sendDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
-	}
-	if($('#displayScreen').val()=="RETURN_AQC"){
+	}*/
+	if($('#displayScreen').val()=="RETURN_QC"){
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
 });
+var  milkTransferId;
 var productJson = ${StringUtil.wrapString(productJson)}
 var grossWeight = 0;
 $(document).ready(function() {	
@@ -148,15 +149,16 @@ $(document).ready(function() {
  		$('#dcNo').attr("readonly","readonly");
  		makeDatePicker("grossDate","fromDate");
  	}
- 	if($('#displayScreen').val()=="RETURN_QC"){
+ 	if($('#displayScreen').val()=="RETURN_INITIATE"){
  		$('#dcNo').removeAttr("readonly");
  		$('#sendDate').removeAttr("readonly");
  		$('#sendTime').removeAttr("readonly");
  		makeDatePicker("testDate","fromDate");
  		makeDatePicker("sendDate","fromDate");
  	}
- 	if($('#displayScreen').val()=="RETURN_AQC"){
+ 	if($('#displayScreen').val()=="RETURN_QC"){
  		$('#dcNo').removeAttr("readonly");
+ 		$('#product').removeAttr("readonly");
  		$('#sendDate').attr("readonly","readonly");
  		$('#sendTime').attr("readonly","readonly");
  		makeDatePicker("testDate","fromDate");
@@ -275,7 +277,11 @@ $(document).ready(function() {
 
 function populateProductSpan(){
 	var productJson = ${StringUtil.wrapString(productJson)}
+	productFacilityIdMap = ${StringUtil.wrapString(productFacilityIdMap)}
 	var tempProductJson = productJson[$('[name=product]').val()];
+	
+	var facilityIds = productFacilityIdMap[23];
+    setSiloDropdown(facilityIds);
 	if(tempProductJson){
 		$('span#productToolTip').addClass("tooltip");
 		$('span#productToolTip').removeClass("tooltipWarning");
@@ -289,6 +295,18 @@ function populateProductSpan(){
 		$('span#productToolTip').addClass("tooltipWarning");
 		$('span#productToolTip').html('product not found');
 	}
+}
+function setSiloDropdown(facilityIds){
+			var optionList = '';
+			optionList += "<option value = " + "" + " >" +" "+ "</option>";
+			var list= facilityIds;
+			if (list) {
+	        	for(var i=0 ; i<list.length ; i++){
+					var innerList=list[i];	   
+	                optionList += "<option value = " + innerList + " >" + innerList + "</option>";          			
+	      		}//end of main list for loop
+	      	   jQuery("[name=silo]").html(optionList);
+	      	 }//end of main list if
 }
 function populatePartySpan(){
 	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
@@ -347,11 +365,10 @@ function fetchTankerRecordNumber(){
          dataType: 'json',
          success: function(result) { 
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
-           			
            			var displayScreen = $('[name=displayScreen]').val();
-           			if(displayScreen == "RETURN_QC"){
-           				$('#sendDate').val('');
-           				$('#sendTime').val('');
+           			if(displayScreen == "RETURN_INITIATE"){
+           				//$('#sendDate').val('');
+           				//$('#sendTime').val('');
            				$('#dcNo').val('');
            				$('#productId').val('');
            				$('#product').val('');	
@@ -361,16 +378,14 @@ function fetchTankerRecordNumber(){
            				$('#partyId').val('');
            				$('#dcNo').val('');
            			}
-           			if(displayScreen == "RETURN_QC"){
-           				$('#sendDate').val('');
-           				$('#sendTime').val('');
+           			if(displayScreen == "RETURN_INITIATE"){
+           				//$('#sendDate').val('');
+           				//$('#sendTime').val('');
            				$('#dcNo').val('');
            				$('#productId').val('');
            				$('#product').val('');	
            				$('#partyId').val('');	
            			}
-           			
-           			
            			$('span#tankerIdToolTip').removeClass("tooltip");
 	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
 	  				$('span#tankerIdToolTip').html('none');
@@ -379,7 +394,8 @@ function fetchTankerRecordNumber(){
 	  				$('span#partyIdFromToolTip').html('none');
 	  				           	   
            }else{
-           		var  milkTransferId= result['milkTransferId'];
+           
+           	    milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
 	   			if(displayScreen == "RETURN_TARWEIGHT"){
 	   				grossWeight = result['grossWeight'];
@@ -396,7 +412,7 @@ function fetchTankerRecordNumber(){
 	   				 }
 	   				 
 	   			}	
-	   			if(displayScreen == "RETURN_AQC"){
+	   			if(displayScreen == "RETURN_QC"){
 	   				
 	   				var milkTransfer = result['milkTransfer'];
 	   				if(typeof(milkTransfer)!= "undefined"){
@@ -426,8 +442,6 @@ function fetchTankerRecordNumber(){
            			}
            		
            		}
-           		
-           		
            		if($('[name=product]').length !=0){
 	           		var productId = result['productId'];
 	           		if(typeof(productId)!= "undefined"){
@@ -470,7 +484,7 @@ function fetchTankerRecordNumber(){
 	  			}	
            		if(milkTransferId){
            			$('[name = milkTransferId]').val(milkTransferId);
-           			if(displayScreen != "RETURN_QC"){
+           			if(displayScreen != "RETURN_INITIATE"){
            				$('span#tankerIdToolTip').addClass("tooltip");
 	  					$('span#tankerIdToolTip').removeClass("tooltipWarning");
 	  					$('span#tankerIdToolTip').html(milkTransferId);
@@ -480,9 +494,9 @@ function fetchTankerRecordNumber(){
 	  					$('span#partyIdFromToolTip').html(partyName);
            			}
            			var displayScreen = $('[name=displayScreen]').val();
-           			if(displayScreen == "RETURN_QC"){
+           			if(displayScreen == "RETURN_INITIATE"){
            				alert('this tanker is already in process');
-            				populateVehicleSpan();	
+            			//	populateVehicleSpan();	
            			}
 	  				
 	  				
@@ -581,7 +595,7 @@ $( "#"+fromDateId ).datepicker({
 	
 </script>
 <div id="wrapper" style="width: 90%; height:100%"></div>
-<div name ="displayMsg" id="milkReceiptEntry_spinner"> </div>
+<div name ="displayMsg" id="milkReceiptReturnEntry_spinner"> </div>
 <div style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
@@ -600,10 +614,10 @@ $( "#"+fromDateId ).datepicker({
       			<#if displayScreen == "RETURN_TARWEIGHT">
       				<#assign velhicleStatus = "VEHICLE  TARE WEIGHT DETAILS">
       			</#if>
-      			<#if displayScreen == "RETURN_QC">
-      				<#assign velhicleStatus = " QUALITY CONTROL DETAILS">
+      			<#if displayScreen == "RETURN_INITIATE">
+      				<#assign velhicleStatus = " RETURN INITIATE DETAILS">
       			</#if>
-      			<#if displayScreen == "RETURN_AQC">
+      			<#if displayScreen == "RETURN_QC">
       				<#assign velhicleStatus = "ACK QUALITY CONTROL DETAILS">
       			</#if>
       			<#if displayScreen == "RETURN_UNLOAD">
@@ -618,7 +632,7 @@ $( "#"+fromDateId ).datepicker({
 	<div class="screenlet-body">
 		<#assign setDate = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "dd-MM-yyyy")).replace(':','')>
 		<#assign setTime = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "HH:mm")).replace(':','')>
-    	<form method="post" name="milkReceiptEntry"  id="milkReceiptEntry" >
+    	<form method="post" name="milkReceiptReturnEntry"  id="milkReceiptReturnEntry" >
       	<table style="border-spacing: 0 10px;" border="1">     
 	        <tr>
 			  <td>&nbsp;</td>
@@ -643,22 +657,14 @@ $( "#"+fromDateId ).datepicker({
 	        						<td align='left' ><span class="h3">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 					        </#if>
-					        <#if displayScreen !="RETURN_QC">
+					        <#if displayScreen !="RETURN_INITIATE">
 					        	<tr>
-					        			<td id="displayRecievedFrom" align ="left"><span class="h3">DEPARTMENT :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h3">From Section:</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
 					        	</tr> 	
 					        	<tr>
 								    <td align='left'><span class="h3">DC No </span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
 								</tr>		
-								<#if displayScreen == "RETURN_AQC">
-									<tr>
-										<td align='left'><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off"/></td>
-									</tr> 
-									<tr>
-										<td align='left'><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
-					        		</tr> 
-								</#if>
-					        </#if>
+						     </#if>
 					        	
 					        <#if displayScreen == "RETURN_CIP">
 	        						
@@ -689,31 +695,21 @@ $( "#"+fromDateId ).datepicker({
 	        						<td align='left' ><span class="h3"> Gross Weight(Kgs)</span> </td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h3">Number of compartments</span></td><td><input  type="text" size="15pt" id="numberOfCells" name="numberOfCells" autocomplete="off" required="required"/></td>
-	        					</tr>
-	        					<tr>
 							       	<td align='left'><span class="h3">Driver Name</span> </td><td><input  name="driverName" size="25" maxlength="20" id= "driverName" type="text" autocomplete="off"  required/><em>*<em></td>
 							    </tr>
-	        					<tr>
-	                   				<td><span class='h3'>Seal check:</span></td><td> <input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
-	                   			</tr>
 	        				</#if>	
 	        				<#if displayScreen == "RETURN_TARWEIGHT">
-                                <tr>
-	        						<td align='left' ><span class="h3">Is Cip Checked</span></td>
-	        						<td align='left'><input type="text" readOnly size="3pt" id="isCipChecked" name="isCipChecked" required/><em>*<em><span class="h4" id="isCipCheckedDes" name="isCipCheckedDes"/></td>
-	        					</tr> 
-	        					<tr>
-	        						<td align='left' ><span class="h3">Gross Weight(Kgs)</span></td>
-	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
-	        					</tr>
-	        					<tr>
+	        					        					<tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_RETURN_TARWEIGHT" />
 	        						<td align='left' ><span class="h3">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
+				        		<tr>
+	        						<td align='left' ><span class="h3">Gross Weight(Kgs)</span></td>
+	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
+	        					</tr>
 							    <tr>
 	        						<td align='left' ><span class="h3">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
 	        					</tr>
@@ -731,8 +727,15 @@ $( "#"+fromDateId ).datepicker({
 	        					<tr>
 	        						<td align='left' ><span class="h3">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
+					        		<tr>
+	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
+							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
+                         				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
+									</td>
+					        	</tr>
+					        	
 							    <tr>
-	        						<td align='left' ><span class='h3'>UN-LOADED TO SILO</span></td><td> 
+	        						<td align='left' ><span class='h3'>Un-Loaded To Silo</span></td><td> 
 		        						<select name="silo" required="required" id="silo" allow-empty="false">
 						        					<option value="">SELECT</option>
 						        					<#if rawMilkSilosList?has_content>
@@ -745,17 +748,18 @@ $( "#"+fromDateId ).datepicker({
 	        					</tr>
 									        					
 	        				</#if>	
-	        				<#if displayScreen == "RETURN_QC">
+	        				<#if displayScreen == "RETURN_INITIATE">
 	        					<tr>
-		        					<td align='left' ><span class="h3">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_RETURN_INITIATE" />
+		        					<td align='left' ><span class="h3">Return Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" value="${setDate}" autocomplete="off" required/></td>
 		        					
 		        				</tr>
 		        				<tr>
-		        					<td align='left' ><span class="h3">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+		        					<td align='left' ><span class="h3">Return Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" value="${setTime}" autocomplete="off" required/>
 		        					</td>
 						        </tr>
 	        					<tr>
-	                         		<td><span class="h3">DEPARTMENT :</span></td><td>
+	                         		<td><span class="h3">From Section:</span></td><td>
 	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
 	                         		<input type="hidden" size="6" maxlength="6" name="partyId" required="required"/>
 	                   			</tr>
@@ -765,73 +769,23 @@ $( "#"+fromDateId ).datepicker({
 			        				</td>
 					        	</tr>
 					        	<tr>
-							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" value="${setDate}" type="text" autocomplete="off"  required/><em>*<em></td>
+							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo"  type="text" autocomplete="off"  required/><em>*<em></td>
 							    </tr>
-	        					<tr>
-	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_RETURN_QC" />
-	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" autocomplete="off" /></td>
-	        					</tr>
-	        					<tr>
-	        						<td align='left' ><span class="h3">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
-			        					</td>
-					        	</tr>
-					        	<tr>
-	        						<td align='left' ><span class="h3">Seal Number</span></td>
-	        						<td><input  name="sealNumber"  size="10" class="onlyNumber" maxlength="8" type="text" id="sealNumber" autocomplete="off" required/>
-			        					</td>
-					        	</tr>
-					        	<tr>
+	        			       	<tr>
 	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Milk Type</span></td><td>
-							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
-                         				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required/><span class="tooltip" id ="productToolTip">none</span></td>
+							        	<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="on" value="" />
+                         				<input type="text" size="6" maxlength="6" name="product" id="product" autocomplete="on" required="required"/><span class="tooltip" id ="productToolTip">none</span></td>
 									</td>
 					        	</tr>
 	        					
-						        <tr>
-	        						<td align='left' ><span class="h1"> Dispatch Quality</span> </td>
-					        	</tr>
-					        	<tr>
-					        		<td align='right' ><span class="h3">Temp</span> </td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
-					        		<td align='left' > <span class="h3">Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
-					        	</tr>
-					        	<tr>
-					        		<td align='right' ><span class="h3"> COB(Y/N)</span> </td>
-					        		<td><select name="sendCob" required="required" id="sendCob" allow-empty="true">
-					        					<option value="">SELECT</option>
-					        					
-					        					<option value="N">NEGITIVE</option>
-            									<option value="Y">POSITIVE</option>
-          												</select></td>
-					        		<td align='left' ><span class="h3">OT</span> </td>
-					        		<td>
-					        		<select name="sendOrganoLepticTest" required="required" id="recdOrganismTest" allow-empty="true">
-					        					<option value="">SELECT</option>
-					        					<option value="NORMAL">NORMAL</option>
-            									<option value="ABNORMAL">ABNORMAL</option>
-          												</select></td>
-					        		<td align='left' ><span class="h3"> SedimentTest(+ve/-ve)</span> </td><td>
-					        		<select name="sendSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
-					        					<option value="">SELECT</option>
-					        					<option value="N">NEGITIVE</option>
-            									<option value="Y">POSITIVE</option>
-          												</select></td>
-					        	</tr>
 						    </#if>
-						    <#if displayScreen == "RETURN_AQC">
+						    <#if displayScreen == "RETURN_QC">
 	        					<tr>
-	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_RETURN_AQC" />
+	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_RETURN_QC" />
 	        						<td align='left' ><span class="h3">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
-			        					</td>
-					        	</tr>
-					        	<tr>
-	        						<td align='left' ><span class="h3">Seal Number</span></td>
-	        						<td><input  name="sealNumber"  size="10" class="onlyNumber" maxlength="8" type="text" id="sealNumber" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
@@ -852,10 +806,9 @@ $( "#"+fromDateId ).datepicker({
 					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h3"> COB(Y/N)</span> </td>
+					        		<td align='right' ><span class="h3"> COB</span> </td>
 					        		<td><select name="recdCob" required="required" id="recdCob" allow-empty="true">
 					        					<option value="">SELECT</option>
-					        					
 					        					<option value="N">NEGITIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
@@ -866,17 +819,14 @@ $( "#"+fromDateId ).datepicker({
 					        					<option value="NORMAL">NORMAL</option>
             									<option value="ABNORMAL">ABNORMAL</option>
           												</select></td>
-					        		<td align='left' ><span class="h3"> SedimentTest(+ve/-ve)</span> </td><td>
+					        		<td align='left' ><span class="h3"> SedimentTest</span> </td><td>
 					        		<select name="recdSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
 					        					<option value="">SELECT</option>
-					        					<option value="N">NEGITIVE</option>
-            									<option value="Y">POSITIVE</option>
+					        					<option value="N">ABSENT</option>
+            									<option value="Y">PRESENT</option>
           												</select></td>
 					        	</tr>
-					        	
-					        	
 						    </#if>
-						    
                             <#if displayScreen == "VEHICLE_CIP">
                                 <tr>
                                     <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
@@ -892,7 +842,7 @@ $( "#"+fromDateId ).datepicker({
                                 </tr>
                              </#if>
 	          		</table>
-	          		<#if displayScreen == "RETURN_QC">
+	          	<#if displayScreen == "RETURN_QC">
 	          			<table>
 	          					<tr>
 	          						<td> &nbsp;&nbsp;<td>
@@ -909,7 +859,6 @@ $( "#"+fromDateId ).datepicker({
 					        	</tr>
 					    </table>    	
 	          		</#if>
-	          		
 	         	 </td>  
 	        </tr>
       </table>
@@ -920,9 +869,21 @@ $( "#"+fromDateId ).datepicker({
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
 	      	<td valign = "middle" align="center">
 	      	<div class='tabletext h1'>
-	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "RETURN_QC">value="Add"<#else>value="Update"</#if>/>      
+	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "RETURN_INITIATE">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
+	      	   
+	      <#if displayScreen == "RETURN_TARWEIGHT"> 
+	        <td valign = "middle" align="center"></td>
+   		    <td valign = "middle" align="center"></td>
+	        <td>
+	        	<div class='tabletext h2'>
+	        	<#assign url = ""/>
+	            <a class="buttontext" id="hrefSub" target="_BLANK" onclick="javascript: setUrl();">Report</a>
+	      		</div>
+	        </td>
+	      </#if>
+	      	
       	</tr>
       </table>
 	       
@@ -930,3 +891,16 @@ $( "#"+fromDateId ).datepicker({
   </div>
  </div>
 </div>
+<script type='application/javascript'>
+	function setUrl(){
+		var milkTransId = $("#milkTransferId").val();
+		if(milkTransferId  ){
+			if(typeof(milkTransferId)!= "undefined"){	
+				milkTransId=milkTransferId;	
+			}
+		}
+		var urlStr = "<@ofbizUrl>MilkIncommingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
+		$("#hrefSub").attr("href",urlStr)
+		setTimeout("location.reload(true);", 20000);
+	}
+</script>

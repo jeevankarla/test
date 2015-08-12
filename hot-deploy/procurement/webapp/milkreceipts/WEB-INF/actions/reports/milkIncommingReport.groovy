@@ -57,9 +57,8 @@ milkTransferId=parameters.milkTransferId;
 milkTransferMap=[:];
 conditionList =[];
 partyId=null;
-if(UtilValidate.isNotEmpty(milkTransferId)){
+if(UtilValidate.isNotEmpty(milkTransferId) && !("undefined".equals(milkTransferId))){
 	context.milkTransferId=milkTransferId;	
-
 	conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS, milkTransferId));
 	//conditionList.add(EntityCondition.makeCondition("dcNo", EntityOperator.EQUALS, dcNo));
 	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_RECD","MXF_APPROVED"]));
@@ -68,7 +67,7 @@ if(UtilValidate.isNotEmpty(milkTransferId)){
 	MilkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
 	MilkTransferList=EntityUtil.getFirst(MilkTransferList);
 	
-	if(UtilValidate.isNotEmpty(MilkTransferList.tareWeight)){
+	if(UtilValidate.isNotEmpty(MilkTransferList.tareWeight) && !("undefined".equals(MilkTransferList.tareWeight))){
 		containerId=MilkTransferList.containerId;
 		sendDate=MilkTransferList.sendDate;
 		receiveDate=MilkTransferList.receiveDate;
@@ -76,7 +75,6 @@ if(UtilValidate.isNotEmpty(milkTransferId)){
 		ackTime=MilkTransferList.ackTime;
 		dcNo=MilkTransferList.dcNo;
 		context.dcNo=dcNo;
-		
 		sendQtyKgs=MilkTransferList.quantity;
 		receivedQuantity=MilkTransferList.receivedQuantity;
 		grossWeight	=MilkTransferList.grossWeight;

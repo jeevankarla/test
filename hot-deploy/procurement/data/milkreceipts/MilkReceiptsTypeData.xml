@@ -158,19 +158,16 @@
    
    	<StatusType statusTypeId="VEHICLE_RTN_STATUS"/>
     <StatusType parentTypeId="VEHICLE_STATUS" statusTypeId="VEHICLE_RTN_STATUS" description="MILK RECEIPT INTERNAL VEHICLE STATUS"/>
-    <StatusItem description="Vehicle at CIP" sequenceId="1" statusCode="VEHICLE AT CIP" statusId="MR_RETURN_CIP" statusTypeId="VEHICLE_RTN_STATUS"/>
     <StatusItem description="Vehicle at Tareweight" sequenceId="2" statusCode="VEHICLE AT TARE WEIGHT" statusId="MR_RETURN_TARWEIGHT" statusTypeId="VEHICLE_RTN_STATUS"/>
     <StatusItem description="Vehicle at Quality Control" sequenceId="3" statusCode="VEHICLE AT QUALITY CONTROL" statusId="MR_RETURN_QC" statusTypeId="VEHICLE_RTN_STATUS"/>
     <StatusItem description="Vehicle at Grossweight" sequenceId="4" statusCode="VEHICLE AT GROSS WEIGHT" statusId="MR_RETURN_GRWEIGHT" statusTypeId="VEHICLE_RTN_STATUS"/>
-    <StatusItem description="Vehicle Acknowledged" sequenceId="5" statusCode="VEHICLE Acknowledged" statusId="MR_RETURN_AQC" statusTypeId="VEHICLE_RTN_STATUS"/>
+    <StatusItem description="Vehicle Return Initiate" sequenceId="1" statusCode="VEHICLE AT INITIATE" statusId="MR_RETURN_INITIATE" statusTypeId="VEHICLE_RTN_STATUS"/>
     <StatusItem description="Vehicle Unloding" sequenceId="6" statusCode="VEHICLE UNLOAD" statusId="MR_RETURN_UNLOAD" statusTypeId="VEHICLE_RTN_STATUS"/>
    
-    <StatusValidChange condition="" statusId="MR_RETURN_QC" statusIdTo="MR_RETURN_GRWEIGHT" transitionName="QC to GROSS WEIGHT"/>
-    <StatusValidChange condition="" statusId="MR_RETURN_GRWEIGHT" statusIdTo="MR_RETURN_AQC" transitionName="GRSWEIGHT TO ACK QC"/>
-    
-    <StatusValidChange condition="" statusId="MR_RETURN_AQC" statusIdTo="MR_RETURN_UNLOAD" transitionName="ACK QC  TO UNLOAD"/>
-    <StatusValidChange condition="" statusId="MR_RETURN_UNLOAD" statusIdTo="MR_RETURN_CIP" transitionName="UNLOAD  TO CIP"/>
-    <StatusValidChange condition="" statusId="MR_RETURN_CIP" statusIdTo="MR_RETURN_TARWEIGHT" transitionName="CIP TO TARE WEIGHT"/>
+    <StatusValidChange condition="" statusId="MR_RETURN_INITIATE" statusIdTo="MR_RETURN_GRWEIGHT" transitionName="QC to GROSS WEIGHT"/>
+    <StatusValidChange condition="" statusId="MR_RETURN_GRWEIGHT" statusIdTo="MR_RETURN_QC" transitionName="GRSWEIGHT TO  QC"/>
+    <StatusValidChange condition="" statusId="MR_RETURN_QC" statusIdTo="MR_RETURN_UNLOAD" transitionName="QC  TO UNLOAD"/>
+    <StatusValidChange condition="" statusId="MR_RETURN_UNLOAD" statusIdTo="MR_RETURN_TARWEIGHT" transitionName="UNLOAD  TO  TARE WEIGHT"/>
      
     <RoleType  description="Vehicle Type"  roleTypeId="VEHICLE_TYPE"/>  
    	<RoleType  description="PTC Vehicle"  parentTypeId="VEHICLE_TYPE" roleTypeId="PTC_VEHICLE"/>

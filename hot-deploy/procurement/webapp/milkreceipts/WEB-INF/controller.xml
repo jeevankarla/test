@@ -589,6 +589,10 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkIncommingReportPDF"/> 
     </request-map>  
+    <request-map uri="WeighbridgeReport.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="WeighbridgeReportPDF"/> 
+    </request-map>  
     <request-map uri="ptcVehicleContractorWiseReport.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="ptcVehicleContractorWiseReportPDF"/> 
@@ -838,20 +842,20 @@
        <response name="error" type="view" value="findTanker"/>       
     </request-map>
     <!-- Milk Internal Return Requests -->
-    <request-map uri="MilkTankerRetunrQC">
+    <request-map uri="MilkTankerReturnInitiate">
     	<security auth="true" https="true"/>
-        <response name="success" type="view" value="MilkTankerRetunrQC"/>
-        <response name="error" type="view" value="MilkTankerRetunrQC"/>
+        <response name="success" type="view" value="MilkTankerReturnInitiate"/>
+        <response name="error" type="view" value="MilkTankerReturnInitiate"/>
     </request-map>
      <request-map uri="MilkTankerReturnGrossWeight">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="MilkTankerReturnGrossWeight"/>
         <response name="error" type="view" value="MilkTankerReturnGrossWeight"/>
     </request-map>
-     <request-map uri="MilkTankerReturnAQC">
+     <request-map uri="MilkTankerReturnQC">
     	<security auth="true" https="true"/>
-        <response name="success" type="view" value="MilkTankerReturnAQC"/>
-        <response name="error" type="view" value="MilkTankerReturnAQC"/>
+        <response name="success" type="view" value="MilkTankerReturnQC"/>
+        <response name="error" type="view" value="MilkTankerReturnQC"/>
     </request-map>
      <request-map uri="MilkTankerReturnUnloading">
     	<security auth="true" https="true"/>
@@ -886,9 +890,9 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
     </request-map> 
-    <request-map uri="updateMilkTransferReturnAQC">
+    <request-map uri="updateMilkTransferReturnQC">
         <security https="true" auth="true"/>
-        <event type="service"  invoke="updateMilkTransferReturnAQC"/>        
+        <event type="service"  invoke="updateMilkTransferReturnQC"/>        
        <response name="success" type="request" value="json"/>
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
@@ -1020,6 +1024,7 @@
     <view-map name="GeneratePurchaseBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GeneratePurchaseBilling"/>
    <!-- PTC Reports -->
     <view-map name="MilkIncommingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkIncommingReportPDF" content-type="application/pdf"/> 
+    <view-map name="WeighbridgeReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#WeighbridgeReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcVehicleContractorWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleContractorWiseReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcVehicleWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleWiseReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcUnionsReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcUnionsReportPDF" content-type="application/pdf"/> 
@@ -1039,9 +1044,9 @@
     <view-map name="MilkIssuesVehicleOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkIssuesVehicleOutEntry"/>
     
     <!-- Milk Tanker Return Views  -->
-    <view-map name="MilkTankerRetunrQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerRetunrQC"/>
+    <view-map name="MilkTankerReturnInitiate" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerReturnInitiate"/>
     <view-map name="MilkTankerReturnGrossWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerReturnGrossWeight"/>
-    <view-map name="MilkTankerReturnAQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerRetunrAQC"/>
+    <view-map name="MilkTankerReturnQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerReturnQC"/>
     
     <view-map name="MilkReturnUnloading" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReturnUnloading"/>
     <view-map name="MilkReturnCIP" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReturnCIP"/>

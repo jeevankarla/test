@@ -27,6 +27,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("MkrsFromDate","thruDate");
 		makeDatePicker("shiftDate","shiftDate");
 		makeDatePicker("MkrsThruDate","thruDate");
+		makeDatePicker("weighBridgeReportDate","thruDate");
 		makeDatePicker("MilkReceiptWeeklyAnalysisFromDate","thruDate");
 		makeDatePicker("MilkReceiptWeeklyAnalysisThruDate","thruDate");
 		makeDatePicker("RequiredShedwiseAbstractFromDate","thruDate");
@@ -104,14 +105,22 @@ function appendParams(formName, action) {
           		</td>
           	</form>  	   
          </tr>   
-   <#-->      <tr class="alternate-row"> 
-				<form id="MilkIncommingReport" name="MilkIncommingReport" mothed="post" action="<@ofbizUrl>MilkIncommingReport.pdf</@ofbizUrl>" target="_blank">
-				   <td>Milk Incoming Report</td>
+        <tr class="alternate-row"> 
+				<form id="WeighbridgeReport" name="WeighbridgeReport" mothed="post" action="<@ofbizUrl>WeighbridgeReport.pdf</@ofbizUrl>" target="_blank">
+				   <td>Weighbridge Report</td>
 				   <td>Party Id<input type="text" id="partyId"name="partyId">
                           dc No<input type="text" id="dcNo"name="dcNo">
-				               <input type="submit" value="Download" class="buttontext"></td>
+				                Vehicle No 
+				             <select name="vehicleId" id="vehicleId">
+                             <#list vehicleRoleList as vehicles>
+						     <option value='${vehicles.vehicleId?if_exists}' >${vehicles.vehicleId?if_exists}</option>
+						     </#list>
+						     </select>
+						     Received Date<input  type="text" size="20pt" id="weighBridgeReportDate" name="receiveDate"/>
+	               <input type="submit" value="Download" class="buttontext"></td>
+				               
 			 </form>
-		  </tr>   -->
+		  </tr>  
           <tr class="alternate-row"> 		
 			  <form id="MilkAnalysisReportTxt" name="MilkAnalysisReportTxt" mothed="post" action="<@ofbizUrl>MilkAnalysisReport.txt</@ofbizUrl>">
 			     <td> Dispatch Milk Analysis Report</td>
