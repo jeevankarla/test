@@ -94,11 +94,11 @@ if(UtilValidate.isNotEmpty(orderRoles)){
 		
 		tempMap=[:];
 		partyId = eachOrderRole.partyId;
-		orderTypeId = eachOrderRole.roleTypeId;
+		roleTypeId = eachOrderRole.roleTypeId;
 		tempMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
-		orderTypes = delegator.findOne("OrderType",["orderTypeId":orderTypeId],false);
-		if(UtilValidate.isNotEmpty(orderTypes)){
-			 orderRoleType = orderTypes.description;
+		roleTypes = delegator.findOne("RoleType",["roleTypeId":roleTypeId],false);
+		if(UtilValidate.isNotEmpty(roleTypes)){
+			 orderRoleType = roleTypes.description;
 			tempMap.put("orderRoleType",orderRoleType);
 			orderRolesList.add(tempMap);
 		}
