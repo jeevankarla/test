@@ -146,6 +146,7 @@ $(document).ready(function() {
  	if($('#displayScreen').val()=="VEHICLE_TAREWEIGHT"){
  		$('#dcNo').attr("readonly","readonly");
  		$('#grossWeightToolTip').attr("readonly","readonly");
+ 		$('#sendWeightToolTip').attr("readonly","readonly");
  		$('#netWeightToolTip').attr("readonly","readonly");
  		makeDatePicker("tareDate","fromDate");
  	}
@@ -395,8 +396,13 @@ function fetchTankerRecordNumber(){
 	   			}
            		
 	   			if(displayScreen == "VEHICLE_TAREWEIGHT"){
-	   				
+	   				var sendWeight = 0;
 	   				grossWeight = result['grossWeight'];
+	   				var  milkTransfer= result['milkTransfer'];
+
+	   				if(typeof(milkTransfer) != 'undefined'){
+	   					sendWeight = milkTransfer['dispatchWeight'];
+	   				}
 	   				 var isCipCheckedVal = result['isCipChecked'];
 	   				 if(isCipCheckedVal == 'Y' && isCipCheckedVal != 'undefined'){
 	   				 	$('#isCipChecked').val(isCipCheckedVal);
@@ -407,6 +413,7 @@ function fetchTankerRecordNumber(){
 	   				 }
 	   				 
 	   				$('#grossWeightToolTip').val(grossWeight);
+	   				$('#sendWeightToolTip').val(sendWeight);
 	   			}
            
            		if($('[name=sealCheck]').length !=0){
@@ -796,6 +803,11 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h2">Is Cip Checked</span></td>
 	        						<td align='left'><input type="text" readOnly size="3pt" id="isCipChecked" name="isCipChecked" required/><em>*<em><span class="h4" id="isCipCheckedDes" name="isCipCheckedDes"/></td>
 	        					</tr> 
+	        					
+	        					<tr>
+	        						<td align='left' ><span class="h2">Dispatch Weight(Kgs)</span></td>
+	        						<td><input  type="text" class="onlyNumber" size="15pt" id="sendWeightToolTip" autocomplete="off" value="0"/></td>
+	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h2">Gross Weight(Kgs)</span></td>
 	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
@@ -860,12 +872,12 @@ function reloadingPage(){
 					        	</tr>
 					        	<tr>
 	        						<td align='left' ><span class="h2">Seal Number</span></td>
-	        						<td> <input  name="sealNumber1"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber1" autocomplete="off" required/></td>
-	        						<td> <input  name="sealNumber2"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber2" autocomplete="off" /></td>
-	        						<td> <input  name="sealNumber3"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber3" autocomplete="off" /></td>
-	        						<td> <input  name="sealNumber4"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber4" autocomplete="off" /></td>
-			        				<td> <input  name="sealNumber5"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber5" autocomplete="off" /></td>
-			        				<td><input  name="sealNumber6"  size="12" class="onlyNumber" maxlength="7" type="text" id="sealNumber6" autocomplete="off" /></td>	
+	        						<td> <input  name="sealNumber1"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber1" autocomplete="off" required/></td>
+	        						<td> <input  name="sealNumber2"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber2" autocomplete="off" /></td>
+	        						<td> <input  name="sealNumber3"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber3" autocomplete="off" /></td>
+	        						<td> <input  name="sealNumber4"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber4" autocomplete="off" /></td>
+			        				<td> <input  name="sealNumber5"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber5" autocomplete="off" /></td>
+			        				<td><input  name="sealNumber6"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber6" autocomplete="off" /></td>	
 					        	</tr>
 					        	<tr>
 	        						<td align='left' valign='middle' nowrap="nowrap"><span class="h2">Milk Type</span></td><td>
@@ -878,46 +890,41 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h1"> Dispatch Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h2">Temp </span></td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h2"> Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h2"> CLR </span></td><td><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h2"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h2"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
-					        	</tr>
-					        	<tr>
-					        		<td align='right'><span class="h2"> COB</span> </td>
-					        			<td> <select name="sendCob" required="required" id="sendCob" allow-empty="true">
+					        		<td align='right' ><span class="h3">Temp </span><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Acidity% </span><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3"> CLR </span><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Fat% </span><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Snf% </span><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
+					        		<td align='right'><span class="h2"> COB</span><select name="sendCob" required="required" id="sendCob" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="N">NEGATIVE</option>
             									<option value="Y">POSITIVE</option>
-          												</select></td>
+          									</select></td>
 					        	</tr>
 					        	 <tr>
 	        						<td align='left'><span class="h1"> Received Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h2">Temp</span> </td><td><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
-					        		<td align='left' > <span class="h2">Acidity% </span></td><td><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h2"> CLR </span></td><td ><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h2"> Fat% </span></td><td><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h2"> Snf% </span></td><td><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
-					        	</tr>
-					        	<tr>
-					        		<td align='right' ><span class="h2"> COB(Y/N)</span> </td>
-					        		<td><select name="recdCob" required="required" id="recdCob" allow-empty="true">
+					        		<td align='right' ><span class="h2">Temp</span><input  name="recdTemp" size="7pt" maxlength="4" type="text" id="recdTemp" autocomplete="off" required/></td>
+					        		<td align='left' > <span class="h2">Acidity% </span><input  name="recdAcid" size="7pt" maxlength="5" type="text" id="recdAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h2"> CLR </span><input  name="recdCLR" size="7pt" maxlength="4" type="text" id="recdCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Fat% </span><input  name="recdFat" size="7pt" maxlength="4" type="text" id="recdFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> Snf% </span><input  name="recdSnf" size="7pt" maxlength="5" type="text" id="recdSnf" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h2"> COB</span><select name="recdCob" required="required" id="recdCob" allow-empty="true">
 					        					<option value="">SELECT</option>
-					        					
 					        					<option value="N">NEGATIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
-					        		<td align='left' ><span class="h2">OT</span> </td>
-					        		<td>
+          												
+          												
+          						</tr><tr></tr><tr>						
+					        		<td align='right' ><span class="h2">OT</span>
 					        		<select name="recdOrganoLepticTest" required="required" id="recdOrganismTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="NORMAL">NORMAL</option>
             									<option value="ABNORMAL">ABNORMAL</option>
           												</select></td>
-					        		<td align='left' ><span class="h2"> SedimentTest</span> </td><td>
+					        		<td align='left' ><span class="h2"> SedimentTest</span>
 					        		<select name="recdSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="N">ABSENT</option>
