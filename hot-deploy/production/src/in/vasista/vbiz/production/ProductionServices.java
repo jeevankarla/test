@@ -1322,7 +1322,7 @@ public class ProductionServices {
          Timestamp xferDate = null;
          try {
         	 
-        	 SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+        	 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         	 if(UtilValidate.isNotEmpty(transferDate)){
         		 try {
         			 xferDate = new java.sql.Timestamp(sdf.parse(transferDate).getTime());
@@ -1338,10 +1338,16 @@ public class ProductionServices {
         		 Debug.logError("Transfer Qty cannot be less than 1", module);
    	  			return ServiceUtil.returnError("Transfer Qty cannot be less than 1");
         	 }
-     		 
+     		 Debug.log("xferDate ############"+xferDate);
         	 List conditionList = FastList.newInstance();
         	 
-        	 if(UtilValidate.isEmpty(toFacilityId)){
+        	 Map<String, ? extends Object> serviceCtx =  UtilMisc.toMap("productId", productId, "facilityIdTo", toFacilityId, "quantity", xferQty, "userLogin", userLogin);
+             Map<String, Object> resultCtx = dispatcher.runSync("validateProductionTransfers", serviceCtx);
+        	 if (ServiceUtil.isError(resultCtx)) {
+        		 Debug.logError("Error ::"+ServiceUtil.getErrorMessage(resultCtx), module);
+                 return ServiceUtil.returnError("Error ::"+ServiceUtil.getErrorMessage(resultCtx));
+             }
+        	 /*if(UtilValidate.isEmpty(toFacilityId)){
         		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, toFacilityId));
         		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
         		 EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -1350,11 +1356,11 @@ public class ProductionServices {
              		Debug.logError("ProductId[ "+productId+" ] is not associated to store :"+toFacilityId, module);	
              		return ServiceUtil.returnError("ProductId[ "+productId+" ] is not associated to store :"+toFacilityId);
              	 }
-             }
+             }*/
              
              Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", fromFacilityId);
              
-             Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+             resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
              if (ServiceUtil.isError(resultCtx)) {
              	Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
                  return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
@@ -1410,7 +1416,7 @@ public class ProductionServices {
                  inputCtx.put("facilityId", fromFacilityId);
                  inputCtx.put("facilityIdTo", toFacilityId);
                  inputCtx.put("inventoryItemId", invItemId);
-                 inputCtx.put("sendDate", UtilDateTime.nowTimestamp());
+                 inputCtx.put("sendDate", xferDate);
                  inputCtx.put("xferQty", xferQuantity);
                  inputCtx.put("userLogin", userLogin);
                  Map resultMap = dispatcher.runSync("createInventoryTransfer", inputCtx);
@@ -2107,6 +2113,139 @@ public class ProductionServices {
          	return ServiceUtil.returnError("Error While Deleting the Recorde.");
          }
          result = ServiceUtil.returnSuccess("Record Deleted Seccessfully.!");
+         return result;
+     }
+     
+     public static Map<String, ? extends Object> validateProductionTransfers(DispatchContext dctx, Map context) {
+         Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();
+         String facilityId = (String)context.get("facilityIdTo");
+         String productId = (String)context.get("productId");
+         BigDecimal incomingQty = (BigDecimal)context.get("quantity");
+         Map<String, ? extends Object> result = ServiceUtil.returnSuccess();
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+         try {
+        	 
+        	 GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+        	 
+        	 String facilityTypeId = "";
+        	 if(UtilValidate.isNotEmpty(facility) && UtilValidate.isNotEmpty(facility.get("facilityTypeId"))){
+        		 facilityTypeId = facility.getString("facilityTypeId");
+        	 }
+        	 
+        	 GenericValue productFacility = delegator.findOne("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId), false);
+        	 
+        	 if(UtilValidate.isEmpty(productFacility)){
+        		 Debug.logError("Product is not mapped to the facility: "+facilityId, module);
+                 return ServiceUtil.returnError("Product is not mapped to the facility: "+facilityId);
+        	 }
+        	 
+        	 if(UtilValidate.isNotEmpty(facilityTypeId) && facilityTypeId.equals("SILO")){
+        		 
+        		 boolean allowFacilityBlend = Boolean.FALSE;
+        		 if(UtilValidate.isNotEmpty(facility.get("allowProductBlend")) && (facility.getString("allowProductBlend").equals("Y"))){
+            		 allowFacilityBlend = Boolean.TRUE;
+            	 }
+        		 List conditionList = FastList.newInstance();
+            	 
+            	 conditionList.clear();
+            	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+            	 conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+            	 EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	 List<GenericValue> inventoryProducts = delegator.findList("InventoryItem", invCond, UtilMisc.toSet("productId"), null, null, false);
+            	 String blendedProductId = "";
+            	 BigDecimal blendQty = null;
+            	 
+            	 if(allowFacilityBlend){
+            		 conditionList.clear();
+                	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+                	 conditionList.add(EntityCondition.makeCondition("productAssocTypeId", EntityOperator.EQUALS, "SILO_PROD_BLEND"));
+                	 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+                	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
+                	 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	 List<GenericValue> prodAssoc = delegator.findList("ProductAssoc", condition, null, null, null, false);
+                	 
+                	 if(UtilValidate.isNotEmpty(prodAssoc)){
+                		 GenericValue blendedProduct = EntityUtil.getFirst(prodAssoc);
+                		 blendedProductId = blendedProduct.getString("productIdTo");
+                		 if(UtilValidate.isNotEmpty(blendedProduct.get("quantity"))){
+                			 blendQty = blendedProduct.getBigDecimal("quantity");
+                		 }
+                	 }
+            	 }
+        		 BigDecimal facilitySize = BigDecimal.ZERO;
+            	 if(UtilValidate.isNotEmpty(facility.get("facilitySize"))){
+            		 facilitySize = facility.getBigDecimal("facilitySize");
+            	 }
+            	 
+            	 String invProductId = productId;
+        		 if(UtilValidate.isNotEmpty(blendedProductId)){
+        			 invProductId = blendedProductId;
+        		 }
+        		 
+        		 // facility capacity check
+            	 if(facilitySize.compareTo(BigDecimal.ZERO) >0){
+            		 Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", invProductId, "facilityId", facilityId);
+            		 Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
+                     if (ServiceUtil.isError(resultCtx)) {
+                    	 Debug.logError("Problem getting inventory level of the request for product Id :"+invProductId, module);
+                         return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+invProductId);
+                     }
+                     Object qohObj = resultCtx.get("quantityOnHandTotal");
+                     BigDecimal qoh = BigDecimal.ZERO;
+                     if (qohObj != null) {
+                     	qoh = new BigDecimal(qohObj.toString());
+                     }
+                     if (UtilValidate.isEmpty(incomingQty)) {
+                    	 incomingQty = BigDecimal.ZERO;
+                     }
+                     BigDecimal totalQtyInc = facilitySize.subtract(qoh.add(incomingQty));
+                     if(totalQtyInc.compareTo(BigDecimal.ZERO) < 0){
+                    	 Debug.logError("Facility capacity exceeded..!", module);
+                         return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
+                     }
+            	 }
+            	 
+            	 List<String> extProdIds = EntityUtil.getFieldListFromEntityList(inventoryProducts, "productId", true);
+            	 String extProd = "";
+            	 for(String prodId : extProdIds){
+            		 if(!prodId.equals(invProductId)){
+            			 extProd = prodId;
+                	 }
+            	 }
+            	 if(!extProdIds.contains(invProductId)){
+            		 extProdIds.add(invProductId);
+            	 }
+            	// Raw Milk Silo Check
+            	 if(allowFacilityBlend){
+            		 
+                	 if(UtilValidate.isEmpty(inventoryProducts)){
+                		 if(UtilValidate.isNotEmpty(blendedProductId)){
+            				 if(UtilValidate.isNotEmpty(blendQty)){
+                    			 Object qty = blendQty;
+                    		 }
+                    		 Object blendProdId = blendedProductId;
+                 		 }
+            		 }else{
+            			 String prodToCompare = (String)extProdIds.get(0);
+            			 if(!prodToCompare.equals(invProductId)){
+            				 Debug.logError("Already product with Id :["+prodToCompare+"] exists. Empty it, before storing new product :"+invProductId, module);
+                             return ServiceUtil.returnError("Already product with Id :["+prodToCompare+"] exists. Empty it, before storing new product :"+invProductId);
+            			 }
+            		 }
+            	 }
+            	 else{
+            		 if(extProdIds.size() > 1){
+            			 Debug.logError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+invProductId, module);
+                         return ServiceUtil.returnError("Already product with Id :["+extProd+"] exists. Empty it, before storing new product :"+invProductId);
+            		 }
+            	 }
+        	 }
+         }
+         catch(Exception e){
+         	Debug.logError(e, module);
+         	return ServiceUtil.returnError(e.toString());
+         }
          return result;
      }
      /**

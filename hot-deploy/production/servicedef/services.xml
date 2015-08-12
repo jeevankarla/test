@@ -62,7 +62,11 @@
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="INOUT" optional="true"/>
     </service>
-    
+    <service name="validateProductionTransfers" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="validateProductionTransfers">
+    	<attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+    	<attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+    	<attribute name="productId" mode="IN" type="String" optional="false"/>
+    </service>
     <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
     	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
     </service>
