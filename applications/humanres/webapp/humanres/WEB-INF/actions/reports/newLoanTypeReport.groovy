@@ -58,7 +58,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 		List conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
 		conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
-		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "LOAN_DISBURSED"));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "LOAN_APPROVED"));
 		conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDate));
 		conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
 		//conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null));
