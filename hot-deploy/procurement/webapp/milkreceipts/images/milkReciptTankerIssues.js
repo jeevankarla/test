@@ -208,8 +208,8 @@ $(function() {
              	   $('div#milkReceiptIssueEntry_spinner').html(); 
              	   $('div#milkReceiptIssueEntry_spinner').removeClass("errorMessage");           	 
              	   $('div#milkReceiptIssueEntry_spinner').addClass("messageStr");
-             	   $('div#milkReceiptIssueEntry_spinner').html('<label>succesfully updated.</label>'); 
-             	   $('div#milkReceiptIssueEntry_spinner').delay(7000).fadeOut('slow');
+             	   $('div#milkReceiptIssueEntry_spinner').html('<label><h1>succesfully updated.</h1></label>'); 
+             	   $('div#milkReceiptIssueEntry_spinner').delay(30000).fadeOut('slow');
              	   $('input[name=submitButton]').removeAttr("disabled");
              	   
                 }
@@ -226,8 +226,8 @@ function populateError(msg){
 	$("div#milkReceiptIssueEntry_spinner").fadeIn();
 	$('div#milkReceiptIssueEntry_spinner').removeClass("messageStr");
 	$('div#milkReceiptIssueEntry_spinner').addClass("errorMessage");
-	$('div#milkReceiptIssueEntry_spinner').html('<label>'+msg +'</label>');
-	$('div#milkReceiptIssueEntry_spinner').delay(7000).fadeOut('slow');
+	$('div#milkReceiptIssueEntry_spinner').html('<label><h1>'+msg +'</h1></label>');
+	$('div#milkReceiptIssueEntry_spinner').delay(30000).fadeOut('slow');
 	$('input[name=submitButton]').removeAttr("disabled");
 	
 }

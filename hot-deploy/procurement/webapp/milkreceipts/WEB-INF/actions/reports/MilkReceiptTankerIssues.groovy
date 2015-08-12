@@ -34,7 +34,23 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 List<GenericValue> productCatMembers = ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(), context);
 List productIds = EntityUtil.getFieldListFromEntityList(productCatMembers, "productId", false);
 
-
+EntityCondition condition = EntityCondition.makeCondition("facilityGroupId",EntityOperator.EQUALS,"MPU_PASTEURIZATION");
+List<GenericValue> pmSilosList  = delegator.findList("FacilityGroupMember",condition,null,null,null,false);
+pmSilosList = EntityUtil.filterByDate(pmSilosList,UtilDateTime.nowTimestamp());
+List<GenericValue> siloProductMembers = FastList.newInstance();
+if(UtilValidate.isNotEmpty(pmSilosList)){
+	List<String> facilityIds = EntityUtil.getFieldListFromEntityList(pmSilosList, "facilityId", false);
+	List siloProductCondList = FastList.newInstance();
+	siloProductCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator .IN,facilityIds));
+	condition = EntityCondition.makeCondition(siloProductCondList);
+	List siloProductFacility = delegator.findList("ProductFacility",condition,null,null,null,false);
+	List siloProductsList = FastList.newInstance();
+	siloProductsList= EntityUtil.getFieldListFromEntityList(siloProductFacility, "productId", false);
+	if(UtilValidate.isNotEmpty(siloProductsList)){
+		 siloProductMembers = delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,siloProductsList),null,null,null,false);
+	}
+	
+}
 String tempProductId = null;
 JSONObject productJson = new JSONObject();
 JSONArray productItemsJSON = new JSONArray();
@@ -43,35 +59,23 @@ for(product in productCatMembers){
 	JSONObject productDetailsJson = new JSONObject();
 	productDetailsJson.put("name",product.get("productName"));
 	productDetailsJson.put("brandName",product.get("brandName"));
-	
 	productNamesJson.put("value",product.get("productId"));
 	productNamesJson.put("label",product.get("productName")+"("+product.get("productId")+")"+ " [" + product.get("brandName") + "]");
-	List conditionList = FastList.newInstance();
-	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("validationTypeId", EntityOperator.EQUALS,"SNFFAT_CHECK"));
-	conditionList.add(EntityCondition.makeCondition("shedId", EntityOperator.EQUALS,"_NA_"));
-	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,product.get("productId")));
-	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	List fatSnfList = delegator.findList("ProcBillingValidationRule",condition,null,null,null,true);
-	
-	BigDecimal minFat = new BigDecimal(2.5);;
-	BigDecimal maxFat = new BigDecimal(12);
-	BigDecimal minSnf = new BigDecimal(7.5);
-	BigDecimal maxSnf = new BigDecimal(12);
-	if(UtilValidate.isNotEmpty(fatSnfList)){
-			Map fatSnfDetails = EntityUtil.getFirst(fatSnfList);
-			minFat = fatSnfDetails.get("minFat");
-			maxFat = fatSnfDetails.get("maxFat");
-			minSnf = fatSnfDetails.get("minSnf");
-			maxSnf = fatSnfDetails.get("maxSnf");
-		}
-	productDetailsJson.put("minFat",minFat);
-	productDetailsJson.put("maxFat",maxFat);
-	productDetailsJson.put("minSnf",minSnf);
-	productDetailsJson.put("maxSnf",maxSnf);
 	productItemsJSON.add(productNamesJson);
 	productJson.put(product.get("productId"), productDetailsJson);
 	}
+//HERE WE ARE ADDING SILO PRODUCTS
+for(product in siloProductMembers){
+	JSONObject productNamesJson = new JSONObject();
+	JSONObject productDetailsJson = new JSONObject();
+	productDetailsJson.put("name",product.get("productName"));
+	productDetailsJson.put("brandName",product.get("brandName"));
+	productNamesJson.put("value",product.get("productId"));
+	productNamesJson.put("label",product.get("productName")+"("+product.get("productId")+")"+ " [" + product.get("brandName") + "]");
+	productItemsJSON.add(productNamesJson);
+	productJson.put(product.get("productId"), productDetailsJson);
+	}
+
 context.putAt("productItemsJSON", productItemsJSON);
 context.put("productJson",productJson);
 
@@ -112,7 +116,11 @@ for(vehicle in vehiclesList){
 context.put("vehItemsJSON",vehItemsJSON);
 context.put("vehicleCodeJson",vehicleCodeJson);
 
-List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"INTERNAL_ORGANIZATIO"), null, null, null, true);
+List partyRoleTypes = FastList.newInstance();
+partyRoleTypes.add("INTERNAL_ORGANIZATIO");
+partyRoleTypes.add("UNIONS");
+partyRoleTypes.add("UNITS");
+List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes), null, null, null, true);
 
 JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();
@@ -168,5 +176,6 @@ if(UtilValidate.isNotEmpty(productFacilityDetails)){
 	}
 }
 context.putAt("productFacilityIdMap", productFacilityIdMap);
-
-
+List purposeList = FastList.newInstance();
+purposeList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "MILK_OUT_PURP")  , null, null, null, false );
+context.putAt("purposeList", purposeList);

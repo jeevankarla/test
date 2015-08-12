@@ -75,7 +75,7 @@
       //$('#sendDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	    $('#entryDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
-	if($('#displayScreen').val()=="VEHICLE_OUT"){
+	if($('#displayScreen').val()=="ISSUE_OUT"){
 		dispatchDateFormat = $('#exitDate').datepicker( "option", "dateFormat" );
 		$('#exitDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
@@ -142,7 +142,7 @@ $(document).ready(function() {
  		makeDatePicker("entryDate","fromDate");
  		//$('#dcNo').removeAttr("readonly");
  	}
- 	if($('#displayScreen').val()=="VEHICLE_OUT"){
+ 	if($('#displayScreen').val()=="ISSUE_OUT"){
  		$('#dcNo').attr("readonly","readonly");
  		makeDatePicker("exitDate","fromDate");
  	}
@@ -278,6 +278,23 @@ $(document).ready(function() {
 	}); 
 });
 
+function showSealNumber(){
+	var purposeType = $('[name=purposeTypeId]').val();
+	if(typeof(purposeType)!='undefined' && purposeType == 'INTERNALUSE' ){
+		$('[name=sealNumber1]').removeAttr("required");
+		$('[name=sealNumber1]').val('');
+		$('[name=sealNumber2]').val('');
+		$('[name=sealNumber3]').val('');
+		$('[name=sealNumber4]').val('');
+		$('[name=sealNumber5]').val('');
+		$('[name=sealNumber6]').val('');
+		$('#sealNumberRow').hide();
+		
+	}else{
+		$('#sealNumberRow').show();
+		$('[name=sealNumber1]').addAttr("required");
+	}
+}
 function populateProductSpan(){
 	var productJson = ${StringUtil.wrapString(productJson)}
 	var tempProductJson = productJson[$('[name=product]').val()];
@@ -359,32 +376,17 @@ function fetchTankerRecordNumber(){
          success: function(result) { 
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
            			var displayScreen = $('[name=displayScreen]').val();
-           			$('span#tankerIdToolTip').removeClass("tooltip");
-	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
-	  				$('span#tankerIdToolTip').html('none');
-	  				$('span#partyIdFromToolTip').removeClass("tooltip");
-	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
-	  				$('span#partyIdFromToolTip').html('none');
-	  				$('[name=partyIdTo]').val();
+	  				$('span#partyToolTip').removeClass("tooltip");
+	  				$('span#partyToolTip').addClass("tooltipWarning");
+	  				$('span#partyToolTip').html('none');
+	  				$('[name=partyIdTo]').val('');
 	  				if(displayScreen == "ISSUE_TARWEIGHT"){
            			//	$('#sendDate').val('');
            				$('#sendTime').val('');
-           				$('#dcNo').val('');
-           				$('#product').val('');
-          				$('#productId').val('');
-           				$('#tankerName').val('');
-           				$('#tankerNo').val('');
            				$('#milkTransferId').val('');
-           				$('#product').parent().show();
-           				$('span#productToolTip').addClass("tooltip");
-						$('span#productToolTip').removeClass("tooltipWarning");
-						$('span#productToolTip').html('none');
-           				
-           				$('[name=partyIdTo]').val();
+           				$('[name=partyIdTo]').val('');
 	           			$('[name=partyName]').val('');
-	           			$('[name=partyName]').removeattr("readonly");
-           				
-           				populateVehicleSpan();	
+	           			$('#partyIdTo').removeAttr("readonly");
            			}          	   
            }else{
            		var  milkTransferId= result['milkTransferId'];
@@ -405,18 +407,14 @@ function fetchTankerRecordNumber(){
 	   				 
 	   			}	
 	   			if(displayScreen == "ISSUE_AQC"){
-	   				
 	   				var milkTransfer = result['milkTransfer'];
 	   				if(typeof(milkTransfer)!= "undefined"){
 	   				  var sealNumber = milkTransfer['sealNo'];
-	   				  
 	   				  if(typeof(sealNumber)){
 	   				  	$('[name=sealNumber]').val(sealNumber);
 	   				  }
 	   				  $('#sendFat').val(milkTransfer['fat']);
 	   				  $('#sendSnf').val(milkTransfer['snf']);
-	   				  
-	   				  
 	   				}
 	   			}
            		if($('[name=sealCheck]').length !=0){
@@ -457,7 +455,6 @@ function fetchTankerRecordNumber(){
            			if(typeof(dcNo)!= "undefined"){
            				$('[name=dcNo]').val(dcNo);
            			}
-           		
            		}
            		if($('#displayScreen').val() != "RETURN_QC"){
 	           		if($('[name=sendDate]').length !=0){
@@ -465,7 +462,6 @@ function fetchTankerRecordNumber(){
 	           			if(typeof(sendDate)!= "undefined"){
 	           				$('[name=sendDate]').val(sendDate);
 	           			}
-	           		
 	           		}
            		}
            		if($('[name=sendTime]').length !=0){
@@ -473,9 +469,7 @@ function fetchTankerRecordNumber(){
            			if(typeof(sendTime)!= "undefined"){
            				$('[name=sendTime]').val(sendTime);
            			}
-           		
            		}
-           		
            		var partyId = result['partyIdTo'];
            		partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
            		var tempPartyJson = partyCodeJson[''+partyId];
@@ -493,7 +487,6 @@ function fetchTankerRecordNumber(){
            				$('span#tankerIdToolTip').addClass("tooltip");
 	  					$('span#tankerIdToolTip').removeClass("tooltipWarning");
 	  					$('span#tankerIdToolTip').html(milkTransferId);
-	  					
 	  					$('span#partyIdFromToolTip').addClass("tooltip");
 	  					$('span#partyIdFromToolTip').removeClass("tooltipWarning");
 	  					$('span#partyIdFromToolTip').html(partyName);
@@ -595,7 +588,6 @@ function populateMccNames(){
 		$("#mccCode").autocomplete({					
 			source:  availableTags
 		});
-		
 }
 
 function getProductJson(){
@@ -630,7 +622,7 @@ $( "#"+fromDateId ).datepicker({
 	
 </script>
 <div id="wrapper" style="width: 90%; height:100%"></div>
-<div name ="displayMsg" id="milkReceiptIssueEntry_spinner"> </div>
+<div name ="displayMsg" id="milkReceiptIssueEntry_spinner" style="width:30%;  height:40%"> </div>
 <div style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
@@ -639,8 +631,7 @@ $( "#"+fromDateId ).datepicker({
       			<#if displayScreen == "ISSUE_CIP">
       				<#assign velhicleStatus = "CIP DETAILS">
       			</#if>
-      			
-      			<#if displayScreen == "VEHICLE_OUT">
+      			<#if displayScreen == "ISSUE_OUT">
       				<#assign velhicleStatus = " VEHICLE OUT DETAILS">
       			</#if>
       			<#if displayScreen == "ISSUE_GRSWEIGHT">
@@ -686,9 +677,9 @@ $( "#"+fromDateId ).datepicker({
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 
 					        	</td>
 					        </tr>
-					        <#if displayScreen == "VEHICLE_OUT">
+					        <#if displayScreen == "ISSUE_OUT">
 							    <tr>
-	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
+	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_OUT" />
 	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" value="${setDate}" name="exitDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
@@ -697,7 +688,7 @@ $( "#"+fromDateId ).datepicker({
 					        </#if>
 					        <#if displayScreen !="ISSUE_TARWEIGHT" && displayScreen !="ISSUE_CIP">
 					        	<tr>
-					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Section :</span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Section/Union </span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
 					        	</tr>
 					         	<tr>
 								    <td align='left'><span class="h3">Dc No</span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
@@ -751,7 +742,7 @@ $( "#"+fromDateId ).datepicker({
 	                   			</tr>
 	                   			
                                 <tr>
-	                         		<td><span class="h3">To Section </span></td><td>
+	                         		<td><span class="h3">To Section/Union </span></td><td>
 	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyIdTo" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
 	                         		<input type="hidden" size="6" maxlength="6" name="partyIdTo" required="required"/>
 	                   			</tr>
@@ -811,13 +802,34 @@ $( "#"+fromDateId ).datepicker({
 	        			<#--	<tr>
 	                   				<td><span class='h3'>Seal check:</span></td><td> <input type="radio" name="sealCheck" id="sealCheckY" value="Y"/> YES   <input type="radio" name="sealCheck" id="sealCheckN" value="N"/> NO</td>
 	                   			</tr> -->
+	                   			
+	                   			<tr>
+	        						<td align='left' ><span class='h2'>Issue Purpose</span></td><td> 
+		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" onchange ='javascript:showSealNumber()'>
+						        					<option value="">SELECT</option>
+						        					<#list purposeList as purpose>
+						        						<option value='${purpose.enumId}'>${purpose.description}</option>
+						        					</#list>
+	          							</select>
+          						    </td>
+	        					</tr>
+	                   			<tr id='sealNumberRow'>
+	        						<td align='left' ><span class="h2">Seal Number</span></td>
+	        						<td> <input  name="sealNumber1"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber1" autocomplete="off" required/></td>
+	        						<td> <input  name="sealNumber2"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber2" autocomplete="off" /></td>
+	        						<td> <input  name="sealNumber3"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber3" autocomplete="off" /></td>
+	        						<td> <input  name="sealNumber4"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber4" autocomplete="off" /></td>
+			        				<td> <input  name="sealNumber5"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber5" autocomplete="off" /></td>
+			        				<td> <input  name="sealNumber6"  size="10" class="onlyNumber" maxlength="7" type="text" id="sealNumber6" autocomplete="off" /></td>	
+					        	</tr>
+	                   			
 	        				</#if>	
 	        				<#if displayScreen == "ISSUE_TARWEIGHT">
                                 <tr>
 	                   				<td><span class='h3'>From</span></td><td><span class='h3'> Milk Processing Section</span><input type="hidden" size="6" id="partyId" maxlength="6" name="partyId" autocomplete="off" value="MD" /></td>
 	                   			</tr>
                                 <tr>
-	                         		<td><span class="h3">To Section </span></td><td>
+	                         		<td><span class="h3">To Section/Union </span></td><td>
 	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyIdTo" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
 	                         		<input type="hidden" size="6" maxlength="6" name="partyIdTo" required="required"/>
 	                   			</tr>
@@ -894,29 +906,28 @@ $( "#"+fromDateId ).datepicker({
 	        						<td align='left' ><span class="h1"> Dispatch Quality</span> </td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h3">Temp</span> </td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
-					        		<td align='left' > <span class="h3">Acidity% </span></td><td><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
-					        		<td align='right' ><span class="h3"> CLR </span></td><td ><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Fat% </span></td><td><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
-					        		<td align='left' ><span class="h3"> Snf% </span></td><td><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3">Temp</span></td><td><input  name="sendTemp" size="7pt" maxlength="4" type="text" id="sendTemp" autocomplete="off" required/></td>
+					        		<td align='left' > <span class="h3">Acidity% </span><input  name="sendAcid" size="7pt" maxlength="5" type="text" id="sendAcid" autocomplete="off" required/></td>
+					        		<td align='right' ><span class="h3"> CLR </span><input  name="sendCLR" size="7pt" maxlength="4" type="text" id="sendCLR" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Fat% </span><input  name="sendFat" size="7pt" maxlength="4" type="text" id="sendFat" autocomplete="off" required/></td>
+					        		<td align='left' ><span class="h3"> Snf% </span><input  name="sendSnf" size="7pt" maxlength="5" type="text" id="sendSnf" autocomplete="off" required/></td>
 					        	</tr>
 					        	<tr>
-					        		<td align='right' ><span class="h3"> COB(Y/N)</span> </td>
+					        		<td align='right' ><span class="h3"> COB</span> </td>
 					        		<td><select name="sendCob" required="required" id="sendCob" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					
 					        					<option value="N">NEGITIVE</option>
             									<option value="Y">POSITIVE</option>
           												</select></td>
-					        		<td align='left' ><span class="h3">OT</span> </td>
-					        		<td>
+					        		<td align='left' ><span class="h3">OT</span> 
 					        		<select name="sendOrganoLepticTest" required="required" id="recdOrganismTest" allow-empty="true">
 					        					<option value="">SELECT</option>
 					        					<option value="NORMAL">NORMAL</option>
             									<option value="ABNORMAL">ABNORMAL</option>
           												</select></td>
-					        		<td align='left' ><span class="h3"> SedimentTest(+ve/-ve)</span> </td>
-					        		<td><select name="sendSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
+					        		<td align='left' ><span class="h3"> SedimentTest</span>
+					        		<select name="sendSedimentTest" required="required" id="recdSedimentTest" allow-empty="true">
 					        					<option value="">SELECT</option>
             									<option value="N">ABSENT</option>
 					        					<option value="Y">PRESENT</option>

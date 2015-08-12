@@ -71,6 +71,12 @@
 	<Enumeration enumId="INTERNAL" enumCode="IDR" description="Internal Dairy Pupose" enumTypeId="MILK_PRCH_PURP" sequenceId="1"></Enumeration>
 	<Enumeration enumId="CONVERSION" enumCode="CONVERSION" description="Conversion Purpose" enumTypeId="MILK_PRCH_PURP" sequenceId="2"></Enumeration>
 		
+		
+	<EnumerationType enumTypeId="MILK_OUT_PURP" description="Milk Outgoing Purpose" hasTable="N"></EnumerationType>
+	<Enumeration enumId="INTERNALUSE" enumCode="INTERNAL SECTION" description="Internal Use" enumTypeId="MILK_OUT_PURP" sequenceId="1"></Enumeration>
+	<Enumeration enumId="OUTGOING" enumCode="OUT GOING TANKER" description="Out going tanker" enumTypeId="MILK_OUT_PURP" sequenceId="2"></Enumeration>
+	<Enumeration enumId="COPACKING" enumCode="Co Packing  TANKER" description="Copacking tanker" enumTypeId="MILK_OUT_PURP" sequenceId="3"></Enumeration>
+	
 	<FacilityPartyRate partyId="MAN" facilityId="_NA_" 
 	fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="154" 
 	rateCurrencyUomId="INR" rateTypeId="DISTANCE_FROM_MD" supplyTypeEnumId="_NA_" />

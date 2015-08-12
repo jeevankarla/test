@@ -376,7 +376,14 @@
 	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
     </service>
-    
+     <service name="updateMilkTankerIssuesOut" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<attribute name="exitDate" mode="IN" type="String" optional="false"/>
+		<attribute name="exitTime" mode="IN" type="String" optional="false"/>
+    </service>
     <service name="getTankerRecordNumber" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="getTankerRecordNumber" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
@@ -557,6 +564,14 @@
 		<attribute name="grossTime" mode="IN" type="String" optional="false"/>
 		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="false"/>
 		<attribute name="driverName" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="purposeTypeId" mode="IN" type="String" optional="false"/>
+		<attribute name="sealNumber1" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber2" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber3" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber4" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber5" mode="IN" type="String" optional="true"/>
+		<attribute name="sealNumber6" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="updateInternalMilkTransferQC" engine="java"

@@ -511,6 +511,13 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>        
     </request-map>
+    <request-map uri="updateMilkTankerIssuesOut">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkTankerIssuesOut"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
     
     
     <request-map uri="getTankerRecordNumber">
@@ -721,6 +728,12 @@
         <response name="success" type="view" value="MilkTankerIssues"/>
         <response name="error" type="view" value="MilkTankerIssues"/>
     </request-map>
+    <request-map uri="MilkIssuesVehicleOutEntry">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkIssuesVehicleOutEntry"/>
+        <response name="error" type="view" value="MilkIssuesVehicleOutEntry"/>
+    </request-map>
+    
      <request-map uri="MilkTankerIssuesCIP">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="MilkTankerIssuesCIP"/>
@@ -1023,6 +1036,7 @@
     <view-map name="MilkTankerIssueLoadDetails" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssueLoadDetails"/>
     <view-map name="MilkTankerIssuesGrossWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesGrossWeight"/>
     <view-map name="MilkTankerIssuesAQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesAQC"/>
+    <view-map name="MilkIssuesVehicleOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkIssuesVehicleOutEntry"/>
     
     <!-- Milk Tanker Return Views  -->
     <view-map name="MilkTankerRetunrQC" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerRetunrQC"/>
