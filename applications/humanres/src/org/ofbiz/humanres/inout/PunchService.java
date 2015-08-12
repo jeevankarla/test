@@ -660,8 +660,13 @@ public class PunchService {
 			List conditionList1 = UtilMisc.toList(EntityCondition
 					.makeCondition("punchdate", EntityOperator.EQUALS,
 							selectedDate));
-			conditionList1.add(EntityCondition.makeCondition("partyId",
+			if(UtilValidate.isNotEmpty(empPartyIds)){
+				conditionList1.add(EntityCondition.makeCondition("partyId",
 					EntityOperator.IN, empPartyIds));
+			}else{
+				conditionList1.add(EntityCondition.makeCondition("partyId",
+						EntityOperator.EQUALS, partyId));
+			}
 			conditionList1.add(EntityCondition.makeCondition("InOut", "IN"));
 			EntityCondition condition1 = EntityCondition.makeCondition(
 					conditionList1, EntityOperator.AND);
