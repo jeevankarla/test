@@ -92,5 +92,5 @@
 	 <WorkShiftPeriod endTime="13:59:59" shiftPeriodId="201" startTime="06:00:00"/>
 	 <WorkShiftPeriod endTime="21:59:59" shiftPeriodId="202" startTime="14:00:00"/>
 	 <WorkShiftPeriod endTime="05:59:59" shiftPeriodId="203" startTime="22:00:00"/>
-    
+     <StatusValidChange statusId="IXF_EN_ROUTE" statusIdTo="IXF_CANCELLED" transitionName="In Route Transfer Cancelled"/>
 </entity-engine-xml>

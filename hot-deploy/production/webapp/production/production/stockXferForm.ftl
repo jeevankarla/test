@@ -64,12 +64,26 @@
 	
 	function datepick()
 	{		
-		$( "#transferDate").datepicker({
+		/*$( "#transferDate").datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			maxDate:0,
 			numberOfMonths: 1});
+		$('#ui-datepicker-div').css('clip', 'auto');*/
+		
+		$( "#transferDate" ).datetimepicker({
+			dateFormat:'dd-mm-yy',
+			showSecond: true,
+			timeFormat: 'hh:mm:ss',
+			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
+	        //    var nowTime = new Date(); 
+	        //    onlyDate=onlyDate+" "+nowTime.getHours()+":"+nowTime.getMinutes()+":"+nowTime.getSeconds();
+	        //    $('#transactionDate').val(onlyDate);
+	        //},
+	        changeMonth: false,
+			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
+		
 		
 	}
 	
