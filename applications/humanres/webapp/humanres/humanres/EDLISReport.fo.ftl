@@ -28,103 +28,114 @@ under the License.
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
 		</fo:layout-master-set>
-		<#if finalList?has_content>
-		<fo:page-sequence master-reference="main">
-			<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
-				<fo:block text-align="center" white-space-collapse="false">&#160;G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		  </fo:block>
-				<fo:block text-align="center" keep-together="always" white-space-collapse="false" >                                       <fo:inline  text-decoration="underline"></fo:inline></fo:block>
-				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                       EDLIS SCHEME-C AND D SCHEDULE AS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")}    Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}                </fo:block>
-				 <fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                                       POLICY NO:35767                   Page Number  : <fo:page-number/></fo:block>
-				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
-				 <fo:block font-family="Courier,monospace">
-				<fo:table >
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="190pt"/>
-					<fo:table-column column-width="110pt"/>
-					<fo:table-column column-width="140pt"/>
-					<fo:table-column column-width="150pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-body>
-					   <fo:table-row >
-					       <fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >Sl.No</fo:block>
-								</fo:table-cell>
-								<fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >Employee </fo:block>
-									<fo:block text-align="center" keep-together="always" >Code</fo:block>
-								</fo:table-cell>
-								<fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >Name Of The Employee</fo:block>
-								</fo:table-cell>
-								<fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >PF Number</fo:block>
-								</fo:table-cell>
-								<fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >Date Of Birth</fo:block>
-								</fo:table-cell>
-								<fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >Date Of Joining</fo:block>
-								</fo:table-cell>
-								<fo:table-cell >
-									<fo:block text-align="right" keep-together="always" >Salary</fo:block>
-								</fo:table-cell>
-							</fo:table-row>
-							 
-                             <fo:table-row >
-							   <fo:table-cell >
-									 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
-								</fo:table-cell>
-						   </fo:table-row>
-					</fo:table-body>
-				   </fo:table>
-				  </fo:block>
-			</fo:static-content>
-			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-				 <fo:block font-family="Courier,monospace"  font-size="10pt">
-				<#assign sno=1>
-				 <#list finalList as employeeDetails>
-				<fo:table >
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="30pt"/>
-					<fo:table-column column-width="210pt"/>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="110pt"/>
-					<fo:table-column column-width="130pt"/>
-					<fo:table-column column-width="120pt"/>
-					<fo:table-body>
-					    <fo:table-row height="14px" space-start=".15in">
-						    <fo:table-cell><fo:block text-align="center" keep-together="always">${sno?if_exists}</fo:block></fo:table-cell>    
-                            <fo:table-cell><fo:block text-align="center" keep-together="always">${employeeDetails.get("employeeCode")?if_exists}</fo:block></fo:table-cell>
-                            <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                            <fo:table-cell><fo:block text-align="left" keep-together="always">${employeeDetails.get("employeeName")?if_exists?upper_case}</fo:block></fo:table-cell>
-                            <fo:table-cell><fo:block text-align="right" keep-together="always">${employeeDetails.get("pfNumber")?if_exists}</fo:block></fo:table-cell>
-                            <fo:table-cell><fo:block text-align="right" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(employeeDetails.get("DateOfBirth") ,"dd/MM/yyyy")?if_exists}</fo:block></fo:table-cell>
-                            <fo:table-cell><fo:block text-align="right" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(employeeDetails.get("DateOfJoining") ,"dd/MM/yyyy")?if_exists}</fo:block></fo:table-cell>
-                            <fo:table-cell><fo:block text-align="right" keep-together="always">${employeeDetails.get("Salary")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                       </fo:table-row>
-					   <fo:table-row>
-                    <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                    </fo:table-row>
-					<#assign sno=sno+1>
-					</fo:table-body>
-				   </fo:table>
-				   </#list>
-				   <fo:block text-align="left" keep-together="always"  >&#160;------------------------------------------------------------------------------------------------</fo:block>
-				   </fo:block>
+		
+		<#if errorMessage?has_content>
+			<fo:page-sequence master-reference="main">
+				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		   			<fo:block font-size="14pt" text-align="center">
+		           		${errorMessage}.
+	        		</fo:block>
 				</fo:flow>
-		</fo:page-sequence>
+			</fo:page-sequence>	
 		<#else>
-				<fo:page-sequence master-reference="main">
-	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-	       		 		<fo:block font-size="14pt" text-align="center">
-	            			 No Records Found....!
-	       		 		</fo:block>
-	    			</fo:flow>
-				</fo:page-sequence>
+			<#if finalList?has_content>
+			<fo:page-sequence master-reference="main">
+				<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
+					<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
+					<fo:block text-align="center" white-space-collapse="false">&#160;G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		  </fo:block>
+					<fo:block text-align="center" keep-together="always" white-space-collapse="false" >                                       <fo:inline  text-decoration="underline"></fo:inline></fo:block>
+					<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                       EDLIS SCHEME-C AND D SCHEDULE AS FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")}    Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}                </fo:block>
+					 <fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                                       POLICY NO:35767                   Page Number  : <fo:page-number/></fo:block>
+					 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
+					 <fo:block font-family="Courier,monospace">
+					<fo:table >
+						<fo:table-column column-width="50pt"/>
+						<fo:table-column column-width="80pt"/>
+						<fo:table-column column-width="190pt"/>
+						<fo:table-column column-width="110pt"/>
+						<fo:table-column column-width="140pt"/>
+						<fo:table-column column-width="150pt"/>
+						<fo:table-column column-width="80pt"/>
+						<fo:table-body>
+						   <fo:table-row >
+						       <fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >Sl.No</fo:block>
+									</fo:table-cell>
+									<fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >Employee </fo:block>
+										<fo:block text-align="center" keep-together="always" >Code</fo:block>
+									</fo:table-cell>
+									<fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >Name Of The Employee</fo:block>
+									</fo:table-cell>
+									<fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >PF Number</fo:block>
+									</fo:table-cell>
+									<fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >Date Of Birth</fo:block>
+									</fo:table-cell>
+									<fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >Date Of Joining</fo:block>
+									</fo:table-cell>
+									<fo:table-cell >
+										<fo:block text-align="right" keep-together="always" >Salary</fo:block>
+									</fo:table-cell>
+								</fo:table-row>
+								 
+	                             <fo:table-row >
+								   <fo:table-cell >
+										 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
+									</fo:table-cell>
+							   </fo:table-row>
+						</fo:table-body>
+					   </fo:table>
+					  </fo:block>
+				</fo:static-content>
+				<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+					 <fo:block font-family="Courier,monospace"  font-size="10pt">
+					<#assign sno=1>
+					 <#list finalList as employeeDetails>
+					<fo:table >
+						<fo:table-column column-width="50pt"/>
+						<fo:table-column column-width="80pt"/>
+						<fo:table-column column-width="30pt"/>
+						<fo:table-column column-width="210pt"/>
+						<fo:table-column column-width="70pt"/>
+						<fo:table-column column-width="110pt"/>
+						<fo:table-column column-width="130pt"/>
+						<fo:table-column column-width="120pt"/>
+						<fo:table-body>
+						    <fo:table-row height="14px" space-start=".15in">
+							    <fo:table-cell><fo:block text-align="center" keep-together="always">${sno?if_exists}</fo:block></fo:table-cell>    
+	                            <fo:table-cell><fo:block text-align="center" keep-together="always">${employeeDetails.get("employeeCode")?if_exists}</fo:block></fo:table-cell>
+	                            <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+	                            <fo:table-cell><fo:block text-align="left" keep-together="always"><#if employeeDetails.get("employeeName")?has_content>${employeeDetails.get("employeeName")?if_exists?upper_case}<#else>&#160;</#if></fo:block></fo:table-cell>
+	                            <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employeeDetails.get("pfNumber")?has_content>${employeeDetails.get("pfNumber")?if_exists}<#else>&#160;</#if></fo:block></fo:table-cell>
+	                            <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employeeDetails.get("DateOfBirth")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(employeeDetails.get("DateOfBirth") ,"dd/MM/yyyy")?if_exists}<#else>&#160;</#if></fo:block></fo:table-cell>
+	                            <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employeeDetails.get("DateOfJoining")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(employeeDetails.get("DateOfJoining") ,"dd/MM/yyyy")?if_exists}<#else>&#160;</#if></fo:block></fo:table-cell>
+	                            <fo:table-cell><fo:block text-align="right" keep-together="always">${employeeDetails.get("Salary")?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+	                       </fo:table-row>
+						   <fo:table-row>
+	                    <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+	                    </fo:table-row>
+						<#assign sno=sno+1>
+						</fo:table-body>
+					   </fo:table>
+					   </#list>
+					   <fo:block text-align="left" keep-together="always"  >&#160;------------------------------------------------------------------------------------------------------------------------------</fo:block>
+					   </fo:block>
+					</fo:flow>
+			</fo:page-sequence>
+			<#else>
+					<fo:page-sequence master-reference="main">
+		    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+		       		 		<fo:block font-size="14pt" text-align="center">
+		            			 No Records Found....!
+		       		 		</fo:block>
+		    			</fo:flow>
+					</fo:page-sequence>
+			</#if>
 		</#if>
 	 </fo:root>
 </#escape>	    

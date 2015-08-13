@@ -85,6 +85,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ESIForm6thruDate","ESIForm6thruDate");
 		makeDatePicker("ESIForm7fromDate","ESIForm7fromDate");
 		makeDatePicker("ESIForm7thruDate","ESIForm7thruDate");
+		makeDatePicker("EDLISfromDate","EDLISfromDate");
+		makeDatePicker("EDLISthruDate","EDLISthruDate");
+		makeDatePicker("GSfromDate","GSfromDate");
+		makeDatePicker("GSthruDate","GSthruDate");
 		makeDatePicker("GdrFromDate","GdrFromDate");
 		makeDatePicker("CadrefromDate","CadrefromDate");
 		makeDatePicker("CadrethruDate","CadrethruDate");
@@ -1388,20 +1392,10 @@ function setOrgPartyId() {
 						<form id="GratuitySupportReport" name="GratuitySupportReport" method="post" action="<@ofbizUrl>GratuitySupportReportPdf.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="13%"><span class='h3'>Gratuity Support Report</span></td>
-									<td width="25%"><span class='h3'>Period Id
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod>
-												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
-							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							      					<#else>
-							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							                  		</option>
-							      				</#if>
-											</#list>
-										</select></span>
-									</td>	
-									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<td width="20%"><span class='h3'>Gratuity Support Report</span></td>
+									<td width="32%"><span class='h3'>From Date<input  type="text"  id="GSfromDate"   name="fromDate"/></span></td>
+									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="GSthruDate"   name="thruDate"/></span></td>
+									<td width="15%"><input type="submit" value="PDF" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
 									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 								</tr>
 							</table>	
@@ -1413,20 +1407,10 @@ function setOrgPartyId() {
 						<form id="EDLISReport" name="EDLISReport" method="post" action="<@ofbizUrl>EDLISReportPdf.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="13%"><span class='h3'>EDLIS Report</span></td>
-									<td width="25%"><span class='h3'>Period Id
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod>
-												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
-							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							      					<#else>
-							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							                  		</option>
-							      				</#if>
-											</#list>
-										</select></span>
-									</td>	
-									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<td width="20%"><span class='h3'>EDLIS Report</span></td>
+									<td width="32%"><span class='h3'>From Date<input  type="text"  id="EDLISfromDate"   name="fromDate"/></span></td>
+									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="EDLISthruDate"   name="thruDate"/></span></td>
+									<td width="15%"><input type="submit" value="PDF" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
 									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 								</tr>
 							</table>	
