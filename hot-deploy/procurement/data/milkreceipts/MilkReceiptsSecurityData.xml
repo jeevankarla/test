@@ -124,6 +124,7 @@
     <SecurityGroupPermission groupId="MR_ISSUE_WGHT_ENTRY" permissionId="MR_ISSUE_WGHT_ENTRY"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_ISSUE_WGHT_ENTRY"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_ISSUE_WGHT_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_ISSUE_OUT"/>
     
     <SecurityPermission description="Milk Transfer Issue Cip and Qc Details Permission" permissionId="MR_ISSUE_QCCIP_ENTRY"/>
     <SecurityGroup description="Milk Transfer Issue Cip and Qc Details Permission" groupId="MR_ISSUE_QCCIP_ENTRY"/>
@@ -136,24 +137,25 @@
     <SecurityGroupPermission groupId="MR_ISSUE_TLOAD_ENTRY" permissionId="MR_ISSUE_TLOAD_ENTRY"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_ISSUE_TLOAD_ENTRY"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_ISSUE_TLOAD_ENTRY"/>
+
     <!-- Internal Tanker Returns Permissions -->
-    <SecurityPermission description="Internal Tanker Returns Qc Details Entry" permissionId="MR_TRETRN_QC_ENTRY"/>
-    <SecurityGroup description="Internal Tanker Returns Qc Details Entry" groupId="MR_TRETRN_QC_ENTRY"/>
-    <SecurityGroupPermission groupId="MR_TRETRN_QC_ENTRY" permissionId="MR_TRETRN_QC_ENTRY"/>
-    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRETRN_QC_ENTRY"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRETRN_QC_ENTRY"/>
+    <SecurityPermission description="Internal Tanker Return Initiate Entry" permissionId="MR_TRETRN_ENTRY"/>
+    <SecurityGroup description="Internal Tanker Return Initiate Entry" groupId="MR_TRETRN_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_TRETRN_ENTRY" permissionId="MR_TRETRN_ENTRY"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRETRN_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRETRN_ENTRY"/>
     
     <SecurityPermission description="Internal Tanker Returns Gross and Tare Weight Details Permission" permissionId="MR_TRETURN_WGHTETRY"/>
     <SecurityGroup description="Internal Tanker Returns Gross and Tare Weight Details Permission" groupId="MR_TRETURN_WGHTETRY"/>
     <SecurityGroupPermission groupId="MR_TRETURN_WGHTETRY" permissionId="MR_TRETURN_WGHTETRY"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRETURN_WGHTETRY"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRETURN_WGHTETRY"/>
-    
-    <SecurityPermission description="Internal Tanker Returns Ack Qc Permission" permissionId="MR_TRETURN_ACKQCETY"/>
-    <SecurityGroup description="Internal Tanker Returns Ack Qc Permission" groupId="MR_TRETURN_ACKQCETY"/>
-    <SecurityGroupPermission groupId="MR_TRETURN_ACKQCETY" permissionId="MR_TRETURN_ACKQCETY"/>
-    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRETURN_ACKQCETY"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRETURN_ACKQCETY"/>
+
+    <SecurityPermission description="Internal Tanker Returns Qc Details Entry" permissionId="MR_TRETRN_QC_ENTRY"/>
+    <SecurityGroup description="Internal Tanker Returns Qc Details Entry" groupId="MR_TRETRN_QC_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_TRETRN_QC_ENTRY" permissionId="MR_TRETRN_QC_ENTRY"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRETRN_QC_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRETRN_QC_ENTRY"/>
     
     <SecurityPermission description="Internal Tanker Returns Unloading Details Permission" permissionId="MR_TRETURN_UNLOAD"/>
     <SecurityGroup description="Internal Tanker Returns Unloading Details Permission" groupId="MR_TRETURN_UNLOAD"/>

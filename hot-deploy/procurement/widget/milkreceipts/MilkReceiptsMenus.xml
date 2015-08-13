@@ -214,21 +214,30 @@
 	<menu name="MilkTransferReturnsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		
 		<menu-item name="MilkTankerReturnInitiate" title="Return Initiate" >
-        <condition>
-      		<if-has-permission permission="MR" action="_TRETRN_QC_ENTRY"/>
-      	</condition>
+           <condition>
+      	    	<if-has-permission permission="MR" action="_TRETRN_ENTRY"/>
+      	   </condition>
             <link target="MilkTankerReturnInitiate">
 			</link>
       	</menu-item>
       	<menu-item name="MilkTankerReturnGrossWeight" title="Gross weight Details" >
+      	    <condition>
+      		    <if-has-permission permission="MR" action="_TRETURN_WGHTETRY"/>
+      	    </condition>
             <link target="MilkTankerReturnGrossWeight">
 			</link>
       	</menu-item>
       	<menu-item name="MilkTankerReturnQC" title="QC" >
+      	   <condition>
+      			 <if-has-permission permission="MR" action="_TRETRN_QC_ENTRY"/>
+      	   </condition>
             <link target="MilkTankerReturnQC">
 			</link>
       	</menu-item>
-		<menu-item name="MilkReturnUnloading" title="unloading Details" >
+		<menu-item name="MilkReturnUnloading" title="Unloading Details" >
+			<condition>
+      			 <if-has-permission permission="MR" action="_TRETURN_UNLOAD"/>
+      	   </condition>
             <link target="MilkTankerReturnUnloading">
 			</link>
       	</menu-item>
@@ -238,6 +247,9 @@
       	</menu-item>-->
       	
       	<menu-item name="MilkTankerReturnTareWeight" title="TareWeight Details" >
+      		<condition>
+      			 <if-has-permission permission="MR" action="_TRETURN_WGHTETRY"/>
+      	   </condition>
             <link target="MilkTankerReturnTareWeight">
 			</link>
       	</menu-item>
