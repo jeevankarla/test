@@ -431,7 +431,7 @@ public class HumanresService {
 								if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 									List punchDetailsList = (List)punMap.get("punchDataList");
 									if(UtilValidate.isNotEmpty(punchDetailsList)){
-										Map firstPunchDetails = (Map) punchDetailsList.get(0);
+										/*Map firstPunchDetails = (Map) punchDetailsList.get(0);
 						        		String totalPunchTime = (String)firstPunchDetails.get("totalTime");
 						        		if(UtilValidate.isNotEmpty(totalPunchTime)){
 						        			totalPunchTime = totalPunchTime.replace(" Hrs", "");
@@ -460,8 +460,22 @@ public class HumanresService {
 												    }
 												}
 							        		}
+										}*/
+										
+										Map shiftWiseMap = FastMap.newInstance();
+										for (int j = 0; j < punchDetailsList.size(); ++j) {	
+											Map punchDetails = (Map) punchDetailsList.get(j);
+											String inTime = (String)punchDetails.get("inTime");
+											String outTime = (String)punchDetails.get("outTime");
+											String totalTime = (String)punchDetails.get("totalTime");
+											String inTimeVal = "inTime" + j;
+											String outTimeVal = "outTime" + j;
+											String totalTimeVal = "totalTime" + j;
+											shiftWiseMap.put(inTimeVal,inTime);
+											shiftWiseMap.put(outTimeVal,outTime);
+											shiftWiseMap.put(totalTimeVal,totalTime);
 										}
-										tempDayMap.put("punchDetails", punchDetailsList.get(index));
+										tempDayMap.put("punchDetails", shiftWiseMap);
 										tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
 										workedHolidaysList.add(tempDayMap);
 									}
