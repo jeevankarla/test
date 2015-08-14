@@ -819,6 +819,22 @@
     	<response name="success" type="view" value="CreateNewTanker"/>
     	<response name="error" type="view" value="CreateNewTanker"/>
     </request-map>
+    <request-map uri="findProductVariance">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="findProductVariance"/>
+        <response name="error" type="view" value="findProductVariance"/>         
+    </request-map>
+    <request-map uri="CreateMilkReceiptsVariance">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="CreateMilkReceiptsVariance"/>
+        <response name="error" type="view" value="CreateMilkReceiptsVariance"/>         
+    </request-map>
+    <request-map uri="createProductVarianceForFacility">
+        <security https="true" auth="true"/>     
+        <event type="service" path="" invoke="createProductVarianceForFacility"></event>                   
+        <response name="success" type="view" value="CreateMilkReceiptsVariance"/>
+        <response name="error" type="view" value="CreateMilkReceiptsVariance"/>         
+    </request-map>
     <request-map uri="findTanker">
     	<security auth="true" https="true"/>
     	<response name="success" type="view" value="findTanker"/>
@@ -1013,6 +1029,8 @@
     <view-map name="MilkReceiptsVehicleCipNew" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsVehicleCipNew"/>
     <view-map name="CreateNewTanker" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#CreateNewTanker"/>
     <view-map name="findTanker" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#findTanker"/>
+    <view-map name="findProductVariance" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#findProductVariance"></view-map>
+    <view-map name="CreateMilkReceiptsVariance" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#CreateMilkReceiptsVariance"></view-map>
     
     
     

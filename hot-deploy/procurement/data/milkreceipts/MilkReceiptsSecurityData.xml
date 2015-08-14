@@ -102,6 +102,12 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FINDTANKER_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FINDTANKER_VIEW"/>
     
+    <SecurityPermission description="Variance View Permission." permissionId="MR_VARIANCE_VIEW"/>
+    <SecurityGroup description="Variance View Permission." groupId="MR_VARIANCE_VIEW"/>
+    <SecurityGroupPermission groupId="MR_VARIANCE_VIEW" permissionId="MR_VARIANCE_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_VARIANCE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_VARIANCE_VIEW"/>
+    
     <SecurityPermission description="Create New Tanker." permissionId="MR_TANKER_CREATE"/>
     <SecurityGroup description="Create New Tanker." groupId="MR_TANKER_CREATE"/>
     <SecurityGroupPermission groupId="MR_TANKER_CREATE" permissionId="MR_TANKER_CREATE"/>
