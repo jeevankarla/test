@@ -167,7 +167,11 @@ function viewGHandSS(){
 	            	    var chDateDropDown ="";
 	            	   for(var i=0;i<workedHolidaysList.length;++i){
 	            	        tmepWork = workedHolidaysList[i];
- 	                        innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime0 +",OUT-"+ tmepWork.punchDetails.outTime0 +",Total-"+tmepWork.punchDetails.totalTime0 +",IN-"+ tmepWork.punchDetails.inTime1 +",OUT-"+ tmepWork.punchDetails.outTime1 +",Total-"+tmepWork.punchDetails.totalTime1+"<br/>";
+ 	                        if((tmepWork.punchDetails.totalTime1) != ""){
+ 	            	        	innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime0 +",OUT-"+ tmepWork.punchDetails.outTime0 +",Total-"+tmepWork.punchDetails.totalTime0 +",IN-"+ tmepWork.punchDetails.inTime1 +",OUT-"+ tmepWork.punchDetails.outTime1 +",Total-"+tmepWork.punchDetails.totalTime1+"<br/>";
+ 	            	        }else{
+ 	            	        	innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime0 +",OUT-"+ tmepWork.punchDetails.outTime0 +",Total-"+tmepWork.punchDetails.totalTime0 +"<br/>";
+	            	        }
 	            	       chDateDropDown += "<option value="+ tmepWork.date+">"+tmepWork.date+"</option>";
 	            	    }
 	            	     jQuery('#ghssDropDown').show();
