@@ -655,7 +655,7 @@ public class MilkReceiptBillingServices {
 						thruDateTime = thruDTimestampEnd;
 					}
 				}
-			}
+			}else{
 			List<GenericValue> firstShiftList = EntityUtil.filterByCondition(shiftsList, EntityCondition.makeCondition("shiftTypeId",EntityOperator.EQUALS,"MILK_SHIFT_01"));
 			if(UtilValidate.isNotEmpty(firstShiftList)){
 				GenericValue firstShift = EntityUtil.getFirst(firstShiftList);
@@ -707,6 +707,7 @@ public class MilkReceiptBillingServices {
 					}
 				}
 			}
+    	}
 		
 		
 		

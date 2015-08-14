@@ -360,6 +360,7 @@ function populateVehicleSpan(){
 	}
 
 }
+var  milkTransferId;
 function fetchTankerRecordNumber(){
 	var action = "getTankerRecordNumber";
 	var tankerNo = $('[name=tankerNo]').val();
@@ -389,7 +390,7 @@ function fetchTankerRecordNumber(){
 	           			$('#partyIdTo').removeAttr("readonly");
            			}          	   
            }else{
-           		var  milkTransferId= result['milkTransferId'];
+           		milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
 	   			if(displayScreen == "ISSUE_GRSWEIGHT"){
 	   				tareWeight = result['tareWeight'];
@@ -1034,6 +1035,17 @@ $( "#"+fromDateId ).datepicker({
 	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "ISSUE_TARWEIGHT">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
+	      	<#if displayScreen == "ISSUE_GRSWEIGHT"> 
+	        <td valign = "middle" align="center"></td>
+   		    <td valign = "middle" align="center"></td>
+	        <td>
+	        	<div class='tabletext h2'>
+	        	<#assign url = ""/>
+	            <a class="buttontext" id="hrefSub" target="_BLANK" onclick="javascript: setUrl();">Report</a>
+	      		</div>
+	        </td>
+	      </#if>
+	      	
       	</tr>
       </table>
 	       
@@ -1041,3 +1053,16 @@ $( "#"+fromDateId ).datepicker({
   </div>
  </div>
 </div>
+<script type='application/javascript'>
+	function setUrl(){
+		var milkTransId = $("#milkTransferId").val();
+		if(milkTransferId){
+			if(typeof(milkTransferId)!= "undefined"){	
+				milkTransId=milkTransferId;	
+			}
+		}
+		var urlStr = "<@ofbizUrl>MilkIncommingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
+		$("#hrefSub").attr("href",urlStr)
+		setTimeout("location.reload(true);", 20000);
+	}
+</script>
