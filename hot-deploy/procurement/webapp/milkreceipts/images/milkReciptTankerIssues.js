@@ -107,12 +107,12 @@ $(function() {
       	   }}).form()) return;
     		
     		action = "updateInternalMilkTransferCip";
-    	}else if(displayScreen == "VEHICLE_OUT"){
+    	}else if(displayScreen == "ISSUE_OUT"){
     		if(!$("#milkReceiptIssueEntry").validate({messages:{
      		   exitDate:"" , exitTime:"" , tankerName:"" 
      	   }}).form()) return;
     		
-    		action = "updateMilkTankerReceiptEntryOut";
+    		action = "updateMilkTankerIssuesOut";
     	}else if(displayScreen == "ISSUE_GRSWEIGHT"){
     		if(!$("#milkReceiptIssueEntry").validate({messages:{
       		   grossDate:"" ,grossTime:"" , milkTransferId:"" , tankerName:"",grossWeight:""

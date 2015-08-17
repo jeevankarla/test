@@ -381,6 +381,21 @@ function fetchTankerRecordNumber(){
 	  				$('span#partyToolTip').addClass("tooltipWarning");
 	  				$('span#partyToolTip').html('none');
 	  				$('[name=partyIdTo]').val('');
+	  				if(displayScreen == "ISSUE_LOAD"){
+	  					
+	  					$('span#partyIdFromToolTip').removeClass("tooltip");
+	  					$('span#partyIdFromToolTip').addClass("tooltipWarning");
+	  					$('span#partyIdFromToolTip').html('none');
+						
+						$('span#productToolTip').removeClass("tooltip");
+						$('span#productToolTip').addClass("tooltipWarning");
+						$('span#productToolTip').html('None');
+						$('#product').parent().show();
+						$('#product').removeAttr("readonly");
+	  					
+	  					$('#product').val('');
+	  				}
+	  				
 	  				if(displayScreen == "ISSUE_TARWEIGHT"){
            			//	$('#sendDate').val('');
            				$('#sendTime').val('');
@@ -681,6 +696,7 @@ $( "#"+fromDateId ).datepicker({
 					        <#if displayScreen == "ISSUE_OUT">
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_OUT" />
+	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_OUT" />
 	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" value="${setDate}" name="exitDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
@@ -1035,17 +1051,6 @@ $( "#"+fromDateId ).datepicker({
 	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "ISSUE_TARWEIGHT">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
-	      	<#if displayScreen == "ISSUE_GRSWEIGHT"> 
-	        <td valign = "middle" align="center"></td>
-   		    <td valign = "middle" align="center"></td>
-	        <td>
-	        	<div class='tabletext h2'>
-	        	<#assign url = ""/>
-	            <a class="buttontext" id="hrefSub" target="_BLANK" onclick="javascript: setUrl();">Report</a>
-	      		</div>
-	        </td>
-	      </#if>
-	      	
       	</tr>
       </table>
 	       
@@ -1053,16 +1058,3 @@ $( "#"+fromDateId ).datepicker({
   </div>
  </div>
 </div>
-<script type='application/javascript'>
-	function setUrl(){
-		var milkTransId = $("#milkTransferId").val();
-		if(milkTransferId){
-			if(typeof(milkTransferId)!= "undefined"){	
-				milkTransId=milkTransferId;	
-			}
-		}
-		var urlStr = "<@ofbizUrl>MilkIncommingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
-		$("#hrefSub").attr("href",urlStr)
-		setTimeout("location.reload(true);", 20000);
-	}
-</script>

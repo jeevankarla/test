@@ -380,6 +380,7 @@
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
 		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"></attribute>
 		<attribute name="statusId" mode="IN" type="String" optional="false"/>
 		<attribute name="exitDate" mode="IN" type="String" optional="false"/>
 		<attribute name="exitTime" mode="IN" type="String" optional="false"/>

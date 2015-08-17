@@ -118,7 +118,7 @@ context.put("vehicleCodeJson",vehicleCodeJson);
 
 List partyRoleTypes = FastList.newInstance();
 partyRoleTypes.add("INTERNAL_ORGANIZATIO");
-partyRoleTypes.add("UNIONS");
+partyRoleTypes.add("UNION");
 partyRoleTypes.add("UNITS");
 List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes), null, null, null, true);
 
