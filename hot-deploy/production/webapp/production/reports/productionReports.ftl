@@ -140,7 +140,19 @@
 									Date <input  type="text" size="18pt" id="milkProcessRegDate"   name="fromDate"/>
 								 </span>
 							</td>
-						    <td width="35%"><span class='h3'></span></td>
+						    <td width="35%">
+						    	 <span class='h3'>Shift </span>
+			                    <select name="shiftId" id="shiftId">
+	        				 <option value=""></option>
+			                    <#if allShiftsList?has_content>	
+			                        <#list allShiftsList as shiftDetails>    
+					                  	    <option value='${shiftDetails.shiftTypeId}' >
+					                    		${shiftDetails.description}
+					                  		 </option>
+			                		</#list>    
+			                	 </#if>	    
+			                    </select>
+						    </td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>

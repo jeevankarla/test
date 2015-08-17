@@ -879,39 +879,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
-		
-		String productId = null;
-		String batchNo = null;
-		String daysToStore = null;
-		String quantityStr = null;
-		String basicPriceStr = null;
-		String vatPriceStr = null;
-		String bedPriceStr = null;
-		String cstPriceStr = null;
-		String tcsPriceStr = null;
-		String serTaxPriceStr = null;
 		Timestamp effectiveDate=null;
-		BigDecimal quantity = BigDecimal.ZERO;
-		BigDecimal basicPrice = BigDecimal.ZERO;
-		BigDecimal cstPrice = BigDecimal.ZERO;
-		BigDecimal tcsPrice = BigDecimal.ZERO;
-		BigDecimal vatPrice = BigDecimal.ZERO;
-		BigDecimal bedPrice = BigDecimal.ZERO;
-		BigDecimal serviceTaxPrice = BigDecimal.ZERO;
-		//percentage fields
-		String bedPercentStr = null;
-		String vatPercentStr = null;
-		String cstPercentStr = null;
-		String tcsPercentStr = null;
-		String serviceTaxPercentStr = null;
-		
-		BigDecimal bedPercent=BigDecimal.ZERO;
-		BigDecimal vatPercent=BigDecimal.ZERO;
-		BigDecimal cstPercent=BigDecimal.ZERO;
-		BigDecimal tcsPercent=BigDecimal.ZERO;
-		BigDecimal serviceTaxPercent=BigDecimal.ZERO;
-		
-		
+
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -956,7 +925,36 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		List productIds = FastList.newInstance();
 		List indentProductList = FastList.newInstance();
 		for (int i = 0; i < rowCount; i++) {
-		  
+			String productId = null;
+			String batchNo = null;
+			String daysToStore = null;
+			String quantityStr = null;
+			String basicPriceStr = null;
+			String vatPriceStr = null;
+			String bedPriceStr = null;
+			String cstPriceStr = null;
+			String tcsPriceStr = null;
+			String serTaxPriceStr = null;
+			BigDecimal quantity = BigDecimal.ZERO;
+			BigDecimal basicPrice = BigDecimal.ZERO;
+			BigDecimal cstPrice = BigDecimal.ZERO;
+			BigDecimal tcsPrice = BigDecimal.ZERO;
+			BigDecimal vatPrice = BigDecimal.ZERO;
+			BigDecimal bedPrice = BigDecimal.ZERO;
+			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+			//percentage fields
+			String bedPercentStr = null;
+			String vatPercentStr = null;
+			String cstPercentStr = null;
+			String tcsPercentStr = null;
+			String serviceTaxPercentStr = null;
+			
+			BigDecimal bedPercent=BigDecimal.ZERO;
+			BigDecimal vatPercent=BigDecimal.ZERO;
+			BigDecimal cstPercent=BigDecimal.ZERO;
+			BigDecimal tcsPercent=BigDecimal.ZERO;
+			BigDecimal serviceTaxPercent=BigDecimal.ZERO;
+			
 			Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 			

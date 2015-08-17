@@ -13,30 +13,42 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import in.vasista.vbiz.production.ProductionServices;
-// deploy/production/src/in/vasista/vbiz/production/ProductionServices.java
+import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
+
 fromDate=parameters.fromDate;
+shiftId=parameters.shiftId;
 
 dctx = dispatcher.getDispatchContext();
 DateTime = null;
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	DateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
-	//Debug.log("fromDateTime==========================="+fromDateTime);
-	
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
 dayBegin = UtilDateTime.getDayStart(DateTime);
 dayEnd = UtilDateTime.getDayEnd(DateTime);
-context.fromDate = dayBegin;
+
+Map inMap = FastMap.newInstance();
+inMap.put("userLogin", userLogin);
+inMap.put("shiftType", "MILK_SHIFT");
+inMap.put("fromDate", dayBegin);
+//inMap.put("thruDate", dayBegin);
+inMap.put("shiftTypeId", shiftId);
+Map workShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMap );
+
+fromDate=workShifts.fromDate;
+thruDate=workShifts.thruDate;
+context.fromDate = fromDate;
+context.thruDate = dayEnd
 
 List allSilosList = FastList.newInstance();
 allSilosList = delegator.findList("Facility",EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN , ["RAWMILK","PASTEURIZATION"])  , null, null, null, false );
 allSiloIds=EntityUtil.getFieldListFromEntityList(allSilosList, "facilityId", true);
 
 conditionList =[];
-conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,allSiloIds ));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 allSiloInveAndDetailList = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);
@@ -51,8 +63,8 @@ siloIds=EntityUtil.getFieldListFromEntityList(siloFacilitiList, "facilityId", tr
 
 if(UtilValidate.isNotEmpty(siloIds)){
   /* conditionList =[];
-   conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-   conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+   conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+   conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
    conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,siloIds ));
    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
    InventoryItemAndDetailList = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);*/
@@ -66,8 +78,8 @@ if(UtilValidate.isNotEmpty(siloIds)){
    }
 
    conditionList.clear();
-   conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-   conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+   conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+   conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
    conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"MXF_APPROVED"));
    EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
    milkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", cond, null,null, null, false);
@@ -93,7 +105,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 		
 		BigDecimal openingQty = BigDecimal.ZERO;
 		
-		invCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:dayBegin, facilityId: eachSiloId, userLogin: userLogin,]);
+		invCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:fromDate, facilityId: eachSiloId, userLogin: userLogin,]);
 		invCountMapData=invCountMap.openingBalance;
 		if(UtilValidate.isNotEmpty(invCountMapData)){
 			openingQty = invCountMapData.get("quantityKgs");
@@ -157,8 +169,8 @@ if(UtilValidate.isNotEmpty(siloIds)){
 			totSnfQty=totSnfQty+ReceiptTotSnf;*/
 		}
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-		conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+		conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+		conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 		conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.EQUALS, eachSiloId));
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "IXF_COMPLETE"));
 		cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -268,8 +280,8 @@ if(UtilValidate.isNotEmpty(siloIds)){
 	 BigDecimal gainVariance=BigDecimal.ZERO;
 	 BigDecimal lossVariance=BigDecimal.ZERO;
 	 conditionList.clear();
-	 conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-	 conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	 conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	 conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachSiloId));
 	 cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	 pInvItemVariance = delegator.findList("PhysicalInventoryItemAndVariance", cond, null,null, null, false);
@@ -342,7 +354,7 @@ pmSiloIds.each{eachPmSiloId->
 	
 	BigDecimal pmSiloInventory = BigDecimal.ZERO;
 	
-	pmInvCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:dayBegin, facilityId: eachPmSiloId, userLogin: userLogin,]);
+	pmInvCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:fromDate, facilityId: eachPmSiloId, userLogin: userLogin,]);
 	if(UtilValidate.isNotEmpty(pmInvCountMap)){
 		pmInvCountMapData=pmInvCountMap.openingBalance;
 		BigDecimal pmOpeningQty = BigDecimal.ZERO;
@@ -403,8 +415,8 @@ pmSiloIds.each{eachPmSiloId->
 		}
 	}
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	conditionList.add(EntityCondition.makeCondition("sendDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.EQUALS, eachPmSiloId));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "IXF_COMPLETE"));
 	cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -514,8 +526,8 @@ pmSiloIds.each{eachPmSiloId->
 	BigDecimal pmGainVariance=BigDecimal.ZERO;
 	BigDecimal pmLossVariance=BigDecimal.ZERO;
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-	conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachPmSiloId));
 	cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	pmInvItemVariance = delegator.findList("PhysicalInventoryItemAndVariance", cond, null,null, null, false);
