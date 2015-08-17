@@ -7942,17 +7942,17 @@ public class ByProductNetworkServices {
 		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 		List<Map<String, Object>> boothPayments = (List<Map<String, Object>>) context.get("boothPayments");
 		String infoString = "makeBoothPayments:: " + "paymentChannel=" + paymentChannel 
-				+";transactionId=" + transactionId + ";paymentLocationId=" + paymentLocationId 
+				+";transactionId=" + transactionId +";paymentDate=" + paymentDateStr + ";paymentLocationId=" + paymentLocationId 
 				+ " " + boothPayments;
 		Debug.logInfo(infoString, module);
 		Map sendMailParams = FastMap.newInstance();
-        sendMailParams.put("sendTo", "charan@vasista.in,nagababu@vasista.in,kvarma@vasista.in");
+		sendMailParams.put("sendTo", "charan@vasista.in,nagababu@vasista.in,kvarma@vasista.in");
         sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
         sendMailParams.put("subject", "CDM payment failure stack trace");
         sendMailParams.put("contentType", "text/html");
         sendMailParams.put("userLogin", userLogin);
         
-		errorMsg += "InfoString-> "+infoString;
+		errorMsg += "InfoString-> "+infoString+ "\n";
 		if (boothPayments.isEmpty()) {
 			errorMsg += "No payment amounts found; ";
 			Debug.logError("No payment amounts found; " + infoString, module);
@@ -8057,6 +8057,7 @@ public class ByProductNetworkServices {
 			try {
 				Map<String, Object> paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
 				if (ServiceUtil.isError(paymentResult)) {
+					errorMsg += ServiceUtil.getErrorMessage(paymentResult);
 					sendMailParams.put("body", errorMsg);
 	                try{
 	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
