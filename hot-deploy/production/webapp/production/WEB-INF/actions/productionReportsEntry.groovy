@@ -19,3 +19,8 @@ EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOp
 milkVehicleTransferList = delegator.findList("Facility", condition, null, null, null, false);
 List floorList = EntityUtil.getFieldListFromEntityList(milkVehicleTransferList, "facilityId", false);
 context.floorList=floorList;
+
+allShiftsList = delegator.findList("WorkShiftTypePeriodAndMap",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"MILK_SHIFT"),null,UtilMisc.toList("shiftTypeId"),null,false);
+if(UtilValidate.isNotEmpty(allShiftsList)){
+	context.allShiftsList=allShiftsList;
+}
