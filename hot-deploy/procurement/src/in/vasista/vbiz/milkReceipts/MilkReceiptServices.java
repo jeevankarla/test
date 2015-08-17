@@ -3875,7 +3875,11 @@ public class MilkReceiptServices {
 					}
 					
 					GenericValue milkTrans = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId",milkTransferId), false);
-					milkTrans.set("statusId", "MXF_APPROVED");
+					if(purposeTypeId.equalsIgnoreCase("INTERNALUSE")){
+						milkTrans.set("statusId", "MXF_RECD");
+					}else{
+						milkTrans.set("statusId", "MXF_INPROCESS");
+					}
 					milkTrans.set("shipmentId",shipmentId);
 					milkTrans.store();
  				}catch(Exception e){
@@ -3910,7 +3914,6 @@ public class MilkReceiptServices {
 				milkTransfer.set("isSealChecked",sealCheck);
 			}*/
 			milkTransfer.set("driverName", driverName);
-			milkTransfer.set("statusId", "MXF_RECD");
 			milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			try{
 				delegator.store(milkTransfer);
@@ -4254,11 +4257,17 @@ public class MilkReceiptServices {
 			String statusIdCheck = (String) milkTransfer.get("statusId");
 			milkTransfer.set("statusId", "MXF_RECD");
 			milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	        	if(statusIdCheck.equalsIgnoreCase("MXF_REJECTED")){
-				 milkTransfer.set("statusId", "MXF_REJECTED");
-	        	}
- 			}
-		
+        	if(statusIdCheck.equalsIgnoreCase("MXF_REJECTED")){
+        		milkTransfer.set("statusId", "MXF_REJECTED");
+        	}
+        	try{
+        		milkTransfer.store();
+ 	        }catch (GenericEntityException e) {
+				// TODO: handle exception
+ 	        	Debug.logError("Error while updating receipt status "+e,module);
+	        	resultMap = ServiceUtil.returnError("Error while updating receipt status "+e.getMessage());
+			}
+ 		}
 		return resultMap ;
 	}// End of the service
 	

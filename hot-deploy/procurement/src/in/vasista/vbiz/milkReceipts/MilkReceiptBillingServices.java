@@ -561,6 +561,7 @@ public class MilkReceiptBillingServices {
         	invItemInMap.put("amount",amount);
         	invItemInMap.put("quantity",quantity);
         	invItemInMap.put("productId",productKeyStr);
+        	invItemInMap.put("description","Bill Qty(Kgs) : "+(BigDecimal)tempProdMap.get("quantity"));
         	try{
         		resultMap =  dispatcher.runSync("createInvoiceItem",invItemInMap);
         	}catch(Exception e){
