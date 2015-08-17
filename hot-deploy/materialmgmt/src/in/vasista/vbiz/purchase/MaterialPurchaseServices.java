@@ -3578,6 +3578,8 @@ public class MaterialPurchaseServices {
 		newProduct.put("brandName", description);
 		newProduct.put("productName", description);
 		newProduct.put("description", description);
+		newProduct.put("isVirtual", "N");
+		newProduct.put("isVariant", "Y");
 		newProduct.put("quantityIncluded",new BigDecimal(1));
 		if(!productUOMtypeId.equals(null) || UtilValidate.isNotEmpty(productUOMtypeId))
 		{	newProduct.put("quantityUomId", productUOMtypeId);	}
