@@ -1118,7 +1118,7 @@
         </field> -->
 <!--         <field name="appointmentDate" entry-name="employment.appointmentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
  -->        
-         <field name="appointmentDate" entry-name="employment.appointmentDate">
+         <field name="appointmentDate" title="Date of joining at kmf" entry-name="employment.appointmentDate">
             <hyperlink target="editAppointmentDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(appointmentDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
                 <parameter param-name="joiningDate" from-field="employmentData.employment.fromDate"/>
@@ -1126,15 +1126,13 @@
             </hyperlink>
         </field>
         
-        <field name="appointmentDateDescription" title="Date of joining at kmf"><display/></field>
-        <field name="joiningDate" entry-name="employment.fromDate">
+        <field name="joiningDate" title="Date of joining this Unit" entry-name="employment.fromDate">
             <hyperlink target="editJoiningDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.fromDate, &quot;dd/MM/yyyy&quot;);}">
                 <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
                 <parameter param-name="joiningDate" from-field="employmentData.employment.fromDate"/>
                 <parameter param-name="appointmentDate" from-field="employmentData.employment.appointmentDate"/>
             </hyperlink>
         </field>
-        <field name="joiningDateDescription" title="Date of joining this Unit"><display/></field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     	<field name="location" title="Current Location"><display description="${location}"/></field>
         <field name="locationGeoId" title="New Location">
