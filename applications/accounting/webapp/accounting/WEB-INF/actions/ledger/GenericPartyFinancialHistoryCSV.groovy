@@ -119,4 +119,120 @@ else{
 	tempcloseBalMap.put("creditValue",0);
 	}
 partyLedgerDayWiseCsvList.addAll(tempcloseBalMap);
+
+if((parameters.financialTransactions == "Y") && (UtilValidate.isNotEmpty(context.totalPartyDayWiseFinHistryOpeningBal))){
+	totalPartyDayWiseFinHistryOpeningBal=context.totalPartyDayWiseFinHistryOpeningBal;
+	partyFinHistryWiseCsvList = [];
+	if(totalPartyDayWiseFinHistryOpeningBal){
+		Iterator partyDayWiseFin = totalPartyDayWiseFinHistryOpeningBal.entrySet().iterator();
+		partyDayWiseFin.each{ partyDayWiseFinTrans ->
+			tempMap=[:];
+			tempMap.put("paymentId","***OpeningBalance");
+			if(UtilValidate.isNotEmpty(partyDayWiseFinTrans.getValue().get("openingBal"))){
+				FinOpenBal=partyDayWiseFinTrans.getValue().get("openingBal");
+				tempMap.put("debitValue",FinOpenBal.get("debitValue"));
+				tempMap.put("creditValue",FinOpenBal.get("creditValue"));
+			}
+			else{
+				tempMap.put("debitValue",0);
+				tempMap.put("creditValue",0);
+			}
+			partyFinHistryWiseCsvList.add(tempMap);
+			spaceMap = [:];
+			partyFinHistryWiseCsvList.add(spaceMap);
+			descriptionMap = [:];
+			description = "";
+			vchrCode = "";
+			finAccount=delegator.findOne("FinAccount",[finAccountId : partyDayWiseFinTrans.getKey()], false);
+			finAccountType=delegator.findOne("FinAccountType",[finAccountTypeId : finAccount.finAccountTypeId], false);
+			if(UtilValidate.isNotEmpty(finAccountType)){
+				description = finAccountType.description;
+			}
+			descriptionCode = partyDayWiseFinTrans.getKey();
+			descriptionMap.put("date", description+(descriptionCode));
+			partyFinHistryWiseCsvList.add(descriptionMap);
+			FinDayWiseTrans = partyDayWiseFinTrans.getValue().get("partyDayWiseFinHistryMap");
+			FinDayWiseTrans.each{ FinTransDaywise ->
+				FinAccTrans = FinTransDaywise.getValue();
+				FinAccTrans.each{ FinTransDay ->
+					tempFinnHisMap=[:];
+					date = FinTransDaywise.getKey();
+					description = FinTransDay.get("description");
+					invoiceId = FinTransDay.get("instrumentNo");
+					paymentId = FinTransDay.get("paymentId");
+					vchrCode = FinTransDay.get("vchrCode");
+					debitValue=FinTransDay.get("debitValue");
+					creditValue=FinTransDay.get("creditValue");
+					tempFinnHisMap.put("date", date);
+					tempFinnHisMap.put("description", description);
+					tempFinnHisMap.put("vchrCode", vchrCode);
+					tempFinnHisMap.put("invoiceId", invoiceId);
+					tempFinnHisMap.put("paymentId", paymentId);
+					tempFinnHisMap.put("debitValue", debitValue);
+					tempFinnHisMap.put("creditValue", creditValue);
+					partyFinHistryWiseCsvList.add(tempFinnHisMap);
+				}
+			}
+			spaceMap = [:];
+			partyFinHistryWiseCsvList.add(spaceMap);
+			temptranstotsMap=[:];
+			temptranstotsMap.put("paymentId","TransactionTotals");
+			if(UtilValidate.isNotEmpty(partyDayWiseFinTrans.getValue().get("FinTransMap"))){
+				FinTransTotal=partyDayWiseFinTrans.getValue().get("FinTransMap");
+				temptranstotsMap.put("debitValue",FinTransTotal.get("debitValue"));
+				temptranstotsMap.put("creditValue",FinTransTotal.get("creditValue"));
+			}
+			else{
+				temptranstotsMap.put("debitValue",0);
+				temptranstotsMap.put("creditValue",0);
+			}
+			partyFinHistryWiseCsvList.add(temptranstotsMap);
+			tempcloseBalMap=[:];
+			tempcloseBalMap.put("paymentId","ClosingBalance");
+			if(UtilValidate.isNotEmpty(partyDayWiseFinTrans.getValue().get("FinClsBalMap"))){
+				FinCloseBal=partyDayWiseFinTrans.getValue().get("FinClsBalMap");
+				tempcloseBalMap.put("debitValue",FinCloseBal.get("debitValue"));
+				tempcloseBalMap.put("creditValue",FinCloseBal.get("creditValue"));
+			}
+			else{
+				tempcloseBalMap.put("debitValue",0);
+				tempcloseBalMap.put("creditValue",0);
+			}
+			partyFinHistryWiseCsvList.add(tempcloseBalMap);
+		}
+		spaceMap = [:];
+		partyFinHistryWiseCsvList.add(spaceMap);
+		finalTotalBussinesTrMap = [:];
+		finalTotalBussinesTrMap.put("invoiceId", "***Total Business Transaction Total:");
+		if(UtilValidate.isNotEmpty(partyTotalTrasnsMap)){
+			finalTotalBussinesTrMap.put("debitValue", partyTotalTrasnsMap.get("debitValue"));
+			finalTotalBussinesTrMap.put("creditValue", partyTotalTrasnsMap.get("creditValue"));
+		}
+		partyFinHistryWiseCsvList.add(finalTotalBussinesTrMap);
+		finalTotalFinnTrMap = [:];
+		finalTotalFinnTrMap.put("invoiceId", "***Total Financial Transaction Total:");
+		if(UtilValidate.isNotEmpty(finalTotalFinnTrMap)){
+			finalTotalFinnTrMap.put("debitValue", FinTotalMap.get("debitValue"));
+			finalTotalFinnTrMap.put("creditValue", FinTotalMap.get("creditValue"));
+		}
+		partyFinHistryWiseCsvList.add(finalTotalFinnTrMap);
+		spaceMap = [:];
+		partyFinHistryWiseCsvList.add(spaceMap);
+		finalTotalTrMap = [:];
+		finalTotalTrMap.put("invoiceId", "***Total Transaction Total:");
+		if(UtilValidate.isNotEmpty(partyTrTotalMap)){
+			finalTotalTrMap.put("debitValue", partyTrTotalMap.get("debitValue"));
+			finalTotalTrMap.put("creditValue", partyTrTotalMap.get("creditValue"));
+		}
+		partyFinHistryWiseCsvList.add(finalTotalTrMap);
+		finalTotalCsMap = [:];
+		finalTotalCsMap.put("invoiceId", "***Total Closing Balance:");
+		if(UtilValidate.isNotEmpty(partyCBMap)){
+			finalTotalCsMap.put("debitValue", partyCBMap.get("debitValue"));
+			finalTotalCsMap.put("creditValue", partyCBMap.get("creditValue"));
+		}
+		partyFinHistryWiseCsvList.add(finalTotalCsMap);
+		context.partyFinHistryWiseCsvList=partyFinHistryWiseCsvList;
+	}
+}
 context.partyLedgerDayWiseCsvList=partyLedgerDayWiseCsvList;

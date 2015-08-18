@@ -4338,19 +4338,27 @@
 					default-value="${findLastClosedDateOutMap.lastClosedDate}" />
 				<set field="thruDate" from-field="parameters.thruDate" type="Timestamp"
 					default-value="${nowTimestamp}" /> -->
-					 <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
-					 <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
-					<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
-				    <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistoryCSV.groovy" />
-					
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/interUnitLedgerReport.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
+			    <script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistory.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/ledger/GenericPartyFinancialHistoryCSV.groovy" />
 			</actions>
 			<widgets>
 				<section>
+				<condition>
+					<if-compare field="parameters.financialTransactions" operator="equals" value="Y" />
+				</condition>
 					<widgets>
 						<container>
-		        				 <include-form name="PartyFinancialHistoryWithDrCrCSV"	location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+		        			<include-form name="PartyBussinessHistoryWithDrCrCSV"	location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+		        			<include-form name="PartyFinancialHistoryWithDrCrCSV"	location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 						</container>
 					</widgets>
+					 <fail-widgets>
+                     	<container>
+		        			<include-form name="PartyBussinessHistoryWithDrCrCSV"	location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+						</container>
+                    </fail-widgets>
 				</section>
 			</widgets>
 		</section>
