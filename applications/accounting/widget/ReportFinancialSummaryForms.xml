@@ -1101,15 +1101,25 @@ under the License.
         <field name="creditValue" title="Credit"><display/></field>
            	
     </form>
-      <form name="PartyFinancialHistoryWithDrCrCSV" type="list" list-name="partyLedgerDayWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
+      <form name="PartyBussinessHistoryWithDrCrCSV" type="list" list-name="partyLedgerDayWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
         <field name="date" title="Date"><display/></field>  
-        <field name="description" title="Particulars"><display/></field>  
+        <field name="description" title="Business Transactions"><display/></field>  
         <field name="invoiceId" title="Invoice Id" ><display/></field>
          <field name="vchrCode" title="Code"><display/></field>
           <field name="paymentId" title="Payment Id" ><display/></field>
         <field name="debitValue" title="Debit"><display/></field>  
         <field name="creditValue" title="Credit"><display/></field>
     </form>
+     <form name="PartyFinancialHistoryWithDrCrCSV" type="list" list-name="partyFinHistryWiseCsvList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
+        <field name="date" title="Date"><display/></field>  
+        <field name="description" title="Financial Transactions"><display/></field>  
+        <field name="invoiceId" title="Invoice Id" ><display/></field>
+        <field name="vchrCode" title="Code" ><display/></field>
+        <field name="paymentId" title="Payment Id" ><display/></field>
+        <field name="debitValue" title="Debit"><display/></field>  
+        <field name="creditValue" title="Credit"><display/></field>
+    </form>
+    
       <form name="PartyLedgerAbstractCsvHeadingForm" type="list" list-name="headingList" odd-row-style="alternate-row" paginate="false" default-table-style="basic-table hover-bar" >		                    
         <field name="partyId" title="Party Id" ><display/></field>
         <field name="heading" title=" MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BANGALORE:560065" ><display/></field>
