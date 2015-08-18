@@ -720,6 +720,12 @@ public class PunchService {
 						EmployeeId, false);
 				GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
 				emplPunchMap.put("Employee", EmployeeName);
+				String nightShiftInDate = " ";
+				java.sql.Date nightShiftOutDate = null;
+				if(emplPunchIn.getString("shiftType").equals("SHIFT_NIGHT")){
+					nightShiftInDate = emplPunchIn.getString("punchdate");
+					nightShiftOutDate = selectedDate;
+				}
 				emplPunchMap.put("inTime",(emplPunchIn.getTime("punchtime").getHours())+":"+(emplPunchIn.getTime("punchtime").getMinutes()));
 				//emplPunchMap.put("inTime", emplPunchIn.getString("punchtime"));
 				String inPunchTime = (emplPunchIn.get("punchtime")).toString();
@@ -745,9 +751,18 @@ public class PunchService {
 						Date outTime = format.parse(emplPunchOut.get(
 								"punchtime").toString());*/
 						//long timeDiff = outTime.getTime() - inTime.getTime();
-						j= j + 1;
-						emplPunchOutTimeMap.put(j,emplPunchOut.get("punchtime"));
-						emplPunchOutDateMap.put(j,emplPunchOut.get("punchdate"));
+						
+						if(emplPunchOut.getString("shiftType").equals("SHIFT_NIGHT")){
+							if(emplPunchOut.get("punchdate").equals(nightShiftOutDate)){
+								j= j + 1;
+								emplPunchOutTimeMap.put(j,emplPunchOut.get("punchtime"));
+								emplPunchOutDateMap.put(j,emplPunchOut.get("punchdate"));
+							}
+						}else{
+							j= j + 1;
+							emplPunchOutTimeMap.put(j,emplPunchOut.get("punchtime"));
+							emplPunchOutDateMap.put(j,emplPunchOut.get("punchdate"));
+						}
 					}
 				}
 			    if(UtilValidate.isNotEmpty(emplPunchOutDateMap)){

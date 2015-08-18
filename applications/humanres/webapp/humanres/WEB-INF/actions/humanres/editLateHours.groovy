@@ -209,6 +209,7 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			
 			List condList1 = UtilMisc.toList(
 			EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			condList1.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_APPROVED"));
 			//conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, previousDayEnd));
 			condList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, previousDayEnd), EntityOperator.OR,
 					EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nextDayEnd)));
