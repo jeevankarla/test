@@ -2377,7 +2377,6 @@ public class MilkReceiptServices {
 	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
-	 		Debug.log("getTankerDetailsMap========"+getTankerDetailsMap);
 	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
@@ -3400,7 +3399,6 @@ public class MilkReceiptServices {
 	 		tankerInMap.put("reqStatusId","MXF_INIT");
 	 		
 	 		Map getTankerDetailsMap = getTankerRecordNumber(dctx,tankerInMap);
-	 		Debug.log("getTankerDetailsMap========"+getTankerDetailsMap);
 	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(milkTransferId)){
 	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerNo,module);
 	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerNo);
@@ -3874,14 +3872,13 @@ public class MilkReceiptServices {
 						}
 					}
 					
-					GenericValue milkTrans = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId",milkTransferId), false);
 					if(purposeTypeId.equalsIgnoreCase("INTERNALUSE")){
-						milkTrans.set("statusId", "MXF_RECD");
+						milkTransfer.set("statusId", "MXF_RECD");
 					}else{
-						milkTrans.set("statusId", "MXF_INPROCESS");
+						milkTransfer.set("statusId", "MXF_INPROCESS");
 					}
-					milkTrans.set("shipmentId",shipmentId);
-					milkTrans.store();
+					milkTransfer.set("shipmentId",shipmentId);
+					delegator.store(milkTransfer);
  				}catch(Exception e){
  					Debug.logError("Error while creating shipment. "+e,module);
  					return ServiceUtil.returnError("Error while creating shipment. "+e.getMessage());
@@ -4070,6 +4067,10 @@ public class MilkReceiptServices {
 			milkTransfer.set("dcNo", dcNo);
 			milkTransfer.set("productId", productId);
 			milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			String purposeTypeId   = (String) context.get("purposeTypeId");
+			if(UtilValidate.isNotEmpty(purposeTypeId)){
+				milkTransfer.set("purposeTypeId", purposeTypeId);
+			}
 	        try{
 	        	delegator.store(milkTransfer);
 	        }catch(Exception e){

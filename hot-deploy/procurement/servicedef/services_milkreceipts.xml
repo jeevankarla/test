@@ -608,6 +608,7 @@
         <attribute name="dcNo" mode="IN" type="String" optional="false"/>
 		<attribute name="productId" mode="IN" type="String" optional="false"/>
 	 	<attribute name="silo" mode="IN" type="String" optional="false"/>
+	 	<attribute name="purposeTypeId" mode="IN" type="String" optional="false"/>
     </service>
     
     <service name="updateInternalMilkTransferAQC" engine="java"

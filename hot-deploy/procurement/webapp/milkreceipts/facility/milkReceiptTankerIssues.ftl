@@ -120,8 +120,8 @@ $(document).ready(function() {
   $('#recdFat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   $('#sendFat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   
-  $('#recdSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
-  $('#sendSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
+  $('#recdSnf').autoNumeric({mNum: 2,mDec: 2 , autoTab : true}).trigger('focusout');
+  $('#sendSnf').autoNumeric({mNum: 2,mDec: 2 , autoTab : true}).trigger('focusout');
   
   $('#recdSnf').attr("readonly","readonly");
   $('#sendSnf').attr("readonly","readonly");
@@ -185,12 +185,31 @@ $(document).ready(function() {
 		populateSnf(fat,clr,'sendSnf');
 	});
 	
-	$("#recdFat").blur(function() {
+	$("#sendCLR").blur(function() {
+		var action = "getSnfFromLactoReading";
+		var fat = $('[name=sendFat]').val();
+		var clr = $('[name=sendCLR]').val();
+		if(typeof(fat)!='undefined' && fat!='' && fat != null ){
+			populateSnf(fat,clr,'sendSnf');
+		}
+	});
+	
+	$("#recdCLR").blur(function() {
 		var action = "getSnfFromLactoReading";
 		var fat = $('[name=recdFat]').val();
 		var clr = $('[name=recdCLR]').val();
 		populateSnf(fat,clr,'recdSnf');
 	});
+	
+	$("#recdFat").blur(function() {
+		var action = "getSnfFromLactoReading";
+		var fat = $('[name=recdFat]').val();
+		var clr = $('[name=recdCLR]').val();
+		if(typeof(fat)!='undefined' && fat!='' && fat != null ){
+			populateSnf(fat,clr,'recdSnf');
+		}
+	});
+	
 	
 	function populateSnf(fat,lr,fieldName){
 		var snfQty = 0;
@@ -296,7 +315,7 @@ function showSealNumber(){
 	}
 }
 function populateProductSpan(){
-	var productJson = ${StringUtil.wrapString(productJson)}
+	var productJson = ${StringUtil.wrapString(productJson)};
 	var tempProductJson = productJson[$('[name=product]').val()];
 	
 	prod=$('[name=product]').val();
@@ -349,7 +368,6 @@ function populateVehicleSpan(){
 		}
 		$('span#tankerToolTip').html(vehicleName);
 		$('[name=tankerNo]').val(vehicleId);
-		
 		fetchTankerRecordNumber();
 		
 	}else{
@@ -382,10 +400,9 @@ function fetchTankerRecordNumber(){
 	  				$('span#partyToolTip').html('none');
 	  				$('[name=partyIdTo]').val('');
 	  				if(displayScreen == "ISSUE_LOAD"){
-	  					
-	  					$('span#partyIdFromToolTip').removeClass("tooltip");
-	  					$('span#partyIdFromToolTip').addClass("tooltipWarning");
-	  					$('span#partyIdFromToolTip').html('none');
+	  					$('span#partyToolTip').removeClass("tooltip");
+	  					$('span#partyToolTip').addClass("tooltipWarning");
+	  					$('span#partyToolTip').html('none');
 						
 						$('span#productToolTip').removeClass("tooltip");
 						$('span#productToolTip').addClass("tooltipWarning");
@@ -398,12 +415,20 @@ function fetchTankerRecordNumber(){
 	  				
 	  				if(displayScreen == "ISSUE_TARWEIGHT"){
            			//	$('#sendDate').val('');
-           				$('#sendTime').val('');
            				$('#milkTransferId').val('');
+           				$('[name = milkTransferId]').val('');
            				$('[name=partyIdTo]').val('');
 	           			$('[name=partyName]').val('');
 	           			$('#partyIdTo').removeAttr("readonly");
            			}          	   
+           			if(displayScreen == "ISSUE_GRSWEIGHT"){
+           			    $('#purposeTypeId').val('');
+           				$('span#purposeTypeToolTip').removeClass("tooltip");
+						$('span#purposeTypeToolTip').addClass("tooltipWarning");
+						$('span#purposeTypeToolTip').html('None');
+           			}
+           			
+           			
            }else{
            		milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
@@ -411,7 +436,28 @@ function fetchTankerRecordNumber(){
 	   				tareWeight = result['tareWeight'];
 	   				$('#tareWeightToolTip').val(tareWeight);
 	   			}
-	   			if(displayScreen == "ISSUE_TARWEIGHT"){	
+	   			
+	   			if(displayScreen == "ISSUE_LOAD"){
+  					var milkTransfer = result['milkTransfer'];
+  					if(typeof(milkTransfer)!='undefined'){
+  						var productId = milkTransfer['productId'];
+  						if(typeof(productId)!= "undefined" && productId !='' && productId != null){
+		           			$('[name=product]').val(productId);
+		           			$('#product').attr("readonly","readonly");
+		           			populateProductSpan();
+		           		}else{
+		           			
+		           			$('#product').removeAttr("readonly");
+		           			$('span#productToolTip').html('None');
+  							$('#product').val('');
+		           		}
+  					}else{
+  						$('#product').removeAttr("readonly");
+  						$('#product').val('');
+  					}
+  				}
+	   			
+	   			if(displayScreen == "ISSUE_TARWEIGHT"){
            			var isCipCheckedVal = result['isCipChecked'];
 	   				 if(isCipCheckedVal == 'Y' && isCipCheckedVal != 'undefined'){
 	   				 	$('#isCipChecked').val(isCipCheckedVal);
@@ -422,11 +468,53 @@ function fetchTankerRecordNumber(){
 	   				 }
 	   				 
 	   			}	
+	   			if(displayScreen == "ISSUE_GRSWEIGHT"){
+	   				var milkTransfer = result['milkTransfer'];
+	   				if(typeof(milkTransfer)!= "undefined"){
+	   				 var milkTransferId = milkTransfer['milkTransferId'];
+	   				 $('[name = milkTransferId]').val(milkTransferId);
+	   				 var dcNo = milkTransfer['dcNo'];
+           				if(typeof(dcNo)!= "undefined"){
+           					$('[name=dcNo]').val(dcNo);
+           				}
+	   				 var purposeTypeId = milkTransfer['purposeTypeId'];
+	   				  var partyIdTo =  milkTransfer['partyIdTo'];
+	   				  var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)};
+	   				  var tempPartyJson = partyCodeJson[''+partyIdTo];
+					  var partyName = tempPartyJson["partyName"];
+				      var partyId = tempPartyJson["partyId"];
+					  if(!partyName){
+						 partyName = partyId;
+					   }
+					  $('span#partyToolTip').addClass("tooltip");
+					  $('span#partyToolTip').removeClass("tooltipWarning");
+					  $('span#partyToolTip').html(partyName);
+					  $('[name=partyIdTo]').val(partyId);
+	   				  
+	   				  
+	   				  
+	   				  if(typeof(purposeTypeId)!="undefined" && purposeTypeId !='' && purposeTypeId != null ){
+	   				  	var purposeJson = ${StringUtil.wrapString(purposeJson)};
+	   				  	$('[name=purposeTypeId]').val(purposeTypeId);
+	   				  	var description = purposeJson[purposeTypeId];
+	  					$('span#purposeTypeToolTip').removeClass("tooltipWarning");
+						$('span#purposeTypeToolTip').addClass("tooltip");
+						$('span#purposeTypeToolTip').html(description);
+	   				  }else{
+	   				  		$('[name=purposeTypeId]').val('');
+	  						$('span#purposeTypeToolTip').removeClass("tooltip");
+							$('span#purposeTypeToolTip').addClass("tooltipWarning");
+							$('span#purposeTypeToolTip').html('None');
+	   				  
+	   				  }
+	   				  showSealNumber();
+	   				}
+	   			}
 	   			if(displayScreen == "ISSUE_AQC"){
 	   				var milkTransfer = result['milkTransfer'];
 	   				if(typeof(milkTransfer)!= "undefined"){
 	   				  var sealNumber = milkTransfer['sealNo'];
-	   				  if(typeof(sealNumber)){
+	   				  if(typeof(sealNumber)!="undefined"){
 	   				  	$('[name=sealNumber]').val(sealNumber);
 	   				  }
 	   				  $('#sendFat').val(milkTransfer['fat']);
@@ -487,7 +575,7 @@ function fetchTankerRecordNumber(){
            			}
            		}
            		var partyId = result['partyIdTo'];
-           		partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+           		partyCodeJson = ${StringUtil.wrapString(partyCodeJson)};
            		var tempPartyJson = partyCodeJson[''+partyId];
            		var partyName ;
                	if(tempPartyJson){	
@@ -503,15 +591,15 @@ function fetchTankerRecordNumber(){
            				$('span#tankerIdToolTip').addClass("tooltip");
 	  					$('span#tankerIdToolTip').removeClass("tooltipWarning");
 	  					$('span#tankerIdToolTip').html(milkTransferId);
-	  					$('span#partyIdFromToolTip').addClass("tooltip");
-	  					$('span#partyIdFromToolTip').removeClass("tooltipWarning");
-	  					$('span#partyIdFromToolTip').html(partyName);
+	  					$('span#partyToolTip').addClass("tooltip");
+	  					$('span#partyToolTip').removeClass("tooltipWarning");
+	  					$('span#partyToolTip').html(partyName);
            			}
            				if(typeof(milkTransferId) != 'undefined'){
            					var milkTransfer = result['milkTransfer'];
            					if(typeof(milkTransfer)!='undefined'){
            						var shipmentId = milkTransfer['shipmentId'];
-           						if(typeof(shipmentId) != 'undefined'){
+           						if(typeof(shipmentId) != 'undefined' && shipmentId!='' && shipmentId!= null){
            							var productId = milkTransfer['productId'];
            							$('#productId').val(productId);
            							$('#product').val(productId);
@@ -523,12 +611,20 @@ function fetchTankerRecordNumber(){
            							$('span#productToolTip').addClass("tooltip");
 									$('span#productToolTip').removeClass("tooltipWarning");
 									$('span#productToolTip').html(productId);
+									populateProductSpan();
+									
            						}else{
-           							$('span#productToolTip').removeClass("tooltip");
-									$('span#productToolTip').addClass("tooltipWarning");
-									$('span#productToolTip').html('None');
-           							$('#product').parent().show();
-           							$('#product').attr("readonly","readonly");
+           							var productId = $('#productId').val();
+           							if(typeof(productId) =='undefined' || productId == ''){
+           								$('span#productToolTip').removeClass("tooltip");
+										$('span#productToolTip').addClass("tooltipWarning");
+										$('span#productToolTip').html('None');
+	           							$('#product').parent().show();
+	           							$('#product').attr("readonly","readonly");
+           							}else{
+           								$('#product').attr("readonly","readonly");
+           							}
+           							
            						}
            					}
            				}
@@ -536,9 +632,9 @@ function fetchTankerRecordNumber(){
 	  				$('span#tankerIdToolTip').removeClass("tooltip");
 	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
 	  				$('span#tankerIdToolTip').html('none');
-	  				$('span#partyIdFromToolTip').removeClass("tooltip");
-	  				$('span#partyIdFromToolTip').addClass("tooltipWarning");
-	  				$('span#partyIdFromToolTip').html('none');
+	  				$('span#partyToolTip').removeClass("tooltip");
+	  				$('span#partyToolTip').addClass("tooltipWarning");
+	  				$('span#partyToolTip').html('none');
 	  			}
            }
          },
@@ -705,7 +801,7 @@ $( "#"+fromDateId ).datepicker({
 					        </#if>
 					        <#if displayScreen !="ISSUE_TARWEIGHT" && displayScreen !="ISSUE_CIP">
 					        	<tr>
-					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Section/Union </span></td><td> <span class="tooltip h2" id ="partyIdFromToolTip">none</span> </td>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Section/Union </span></td><td> <span class="tooltip h2" id ="partyToolTip">none</span> </td>
 					        	</tr>
 					         	<tr>
 								    <td align='left'><span class="h3">Dc No</span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
@@ -741,6 +837,16 @@ $( "#"+fromDateId ).datepicker({
 		        						<select name="silo" required="required" id="silo" allow-empty="false">
 						        					<option value="">SELECT</option>
 						        					
+	          							</select>
+          						    </td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class='h2'>Issue Purpose</span></td><td> 
+		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" >
+						        					<option value="">SELECT</option>
+						        					<#list purposeList as purpose>
+						        						<option value='${purpose.enumId}'>${purpose.description}</option>
+						        					</#list>
 	          							</select>
           						    </td>
 	        					</tr>
@@ -821,13 +927,15 @@ $( "#"+fromDateId ).datepicker({
 	                   			</tr> -->
 	                   			
 	                   			<tr>
-	        						<td align='left' ><span class='h2'>Issue Purpose</span></td><td> 
-		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" onchange ='javascript:showSealNumber()'>
+	        						<td align='left' ><span class='h2'>Issue Purpose</span></td><td class='h2'><span class="tooltip" id ="purposeTypeToolTip">none</span>
+	        						
+	        								<input type="hidden"  id="purposeTypeId"  name="purposeTypeId" autocomplete="off" value="" /> 
+		        				    <#--		<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" onchange ='javascript:showSealNumber()'>
 						        					<option value="">SELECT</option>
 						        					<#list purposeList as purpose>
 						        						<option value='${purpose.enumId}'>${purpose.description}</option>
 						        					</#list>
-	          							</select>
+	          							</select> -->
           						    </td>
 	        					</tr>
 	                   			<tr id='sealNumberRow'>

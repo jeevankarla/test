@@ -184,6 +184,22 @@ $(document).ready(function() {
 		populateSnf(fat,clr,'recdSnf');
 	});
 	
+	$("#sendCLR").blur(function() {
+		var action = "getSnfFromLactoReading";
+		var fat = $('[name=sendFat]').val();
+		var clr = $('[name=sendCLR]').val();
+		if(typeof(fat)!='undefined' && fat!='' && fat != null ){
+			populateSnf(fat,clr,'sendSnf');
+		}
+	});
+	
+	$("#recdCLR").blur(function() {
+		var action = "getSnfFromLactoReading";
+		var fat = $('[name=recdFat]').val();
+		var clr = $('[name=recdCLR]').val();
+		populateSnf(fat,clr,'recdSnf');
+	});
+	
 	function populateSnf(fat,lr,fieldName){
 		var snfQty = 0;
 		var dataString = {"fatQty": fat,

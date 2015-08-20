@@ -179,3 +179,16 @@ context.putAt("productFacilityIdMap", productFacilityIdMap);
 List purposeList = FastList.newInstance();
 purposeList = delegator.findList("Enumeration",EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "MILK_OUT_PURP")  , null, null, null, false );
 context.putAt("purposeList", purposeList);
+JSONObject purposeJson = new JSONObject();
+if(UtilValidate.isNotEmpty(purposeList)){
+	for(purposeDet in purposeList ){
+		String purposeTypeId = (String) purposeDet.get("enumId"); 
+		String description = (String) purposeDet.get("description");
+		if(UtilValidate.isNotEmpty(purposeTypeId)){
+			purposeJson.put(purposeTypeId,description);
+		}
+		
+		
+	}
+}
+context.putAt("purposeJson", purposeJson);
