@@ -135,7 +135,8 @@
 	function validateIssuingQty(){
 		
 		var reqQty = $('[name=toBeIssued]').val();
-		var reqQtyNumVal = parseFloat(reqQty.replace(",",""));
+		reqQty = reqQty.replace(",","");
+		var reqQtyNumVal = parseFloat(reqQty);
 		var issuedQty = 0;
 		var add_ele = document.getElementsByClassName('addAll');
 		for (var i = 0; i < add_ele.length; ++i) {
@@ -205,7 +206,9 @@
 		var productId=productId;
 		var reqQty = quantity;
 		var issuedQty=issuedQty;
-		var toBeIssued=parseInt(reqQty)-parseInt(issuedQty);
+		reqQty = reqQty.replace(",","");
+		issuedQty = issuedQty.replace(",","");
+		var toBeIssued=parseFloat(reqQty)-parseFloat(issuedQty);
 		var message = "";
 		var noOfFacilities=0;
 		var totIssuedQty =0;
