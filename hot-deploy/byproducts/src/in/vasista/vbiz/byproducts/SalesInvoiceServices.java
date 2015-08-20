@@ -852,7 +852,11 @@ public class SalesInvoiceServices {
 			}
 			if(UtilValidate.isNotEmpty(categoryType) && (categoryType.equals("ICE_CREAM_NANDINI")|| categoryType.equals("ICP_NANDINI_CHANNEL"))){
 				if(UtilValidate.isNotEmpty(includeBellarySales) && (includeBellarySales.equals("Y"))){
-				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("ICP_NANDINI_CHANNEL","ICP_BELLARY_CHANNEL")));	
+						if(UtilValidate.isNotEmpty(IcpStocktrnsflag) && IcpStocktrnsflag.equals("Y")){
+							conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("ICP_NANDINI_CHANNEL","ICP_BELLARY_CHANNEL","ICP_TRANS_CHANNEL")));	
+						}else{
+							conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("ICP_NANDINI_CHANNEL","ICP_BELLARY_CHANNEL")));	
+						}
 				}else{
 					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
 				}
