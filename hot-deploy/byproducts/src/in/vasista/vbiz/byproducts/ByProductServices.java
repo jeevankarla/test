@@ -88,7 +88,14 @@ public class ByProductServices {
 	
 	public static final String module = ByProductServices.class.getName();
 	
-	
+	public static String stackTraceToString(Throwable e) {
+	    StringBuilder sb = new StringBuilder();
+	    for (StackTraceElement element : e.getStackTrace()) {
+	        sb.append(element.toString());
+	        sb.append("\n");
+	    }
+	    return sb.toString();
+	}
 	public static Map<String, Object> getProdStoreProducts(DispatchContext ctx, Map<String, ? extends Object> context) {
     	Delegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");	
@@ -507,9 +514,16 @@ public class ByProductServices {
         List shipmentIds = (List) context.get("shipmentIds");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
+        String errorMsg="";
         Map<String ,Object>result = ServiceUtil.returnSuccess();
         int orderCounter = 0;
         double elapsedSeconds;
+        Map sendMailParams = FastMap.newInstance();
+        sendMailParams.put("sendTo", "nagababu@vasista.in,kvarma@vasista.in,charan@vasista.in");
+        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+        sendMailParams.put("subject", "Truck Sheet failure stack trace");
+        sendMailParams.put("contentType", "text/html");
+        sendMailParams.put("userLogin", userLogin);  
         Timestamp startTimestamp = UtilDateTime.nowTimestamp();
         for(int shipNo=0 ; shipNo <shipmentIds.size() ;  shipNo++){
      	    String shipmentId = (String)shipmentIds.get(shipNo);
@@ -530,6 +544,21 @@ public class ByProductServices {
 	   		    if (ServiceUtil.isError(result)) {
 	   			   String errMsg =  ServiceUtil.getErrorMessage(result);
     			   shipment.set("statusId", "GENERATION_FAIL");
+    			   String infoString = "runSubscriptionAutoCreateByprodOrders::runSubscriptionAutoCreateByprodOrdersInternal:: " + "shipmentId=" + shipmentId 
+    						+";routeId=" + routeId ;
+    				Debug.logInfo(infoString, module);
+    				String failedMsg="";
+    				failedMsg+="InfoString-> "+infoString;
+    				failedMsg+="Error Msg ->"+errMsg;
+   	   				sendMailParams.put("body", failedMsg);
+	                   try{
+	                       Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                       if(ServiceUtil.isError(resultCtxMap)){
+	                       	Debug.log("Problem in calling service sendMail");
+	                       }
+	                   }catch(GenericServiceException e1){
+	                   	Debug.log("Problem in sending email");
+	   				}
     			   shipment.store();
 	   			   Debug.logError(errMsg +" #### falid trucksheet for routeId::"+routeId, module);
 	   			 
@@ -540,8 +569,28 @@ public class ByProductServices {
 	   		    }
 	   		  
      	    }catch(Exception e){
-     	    	 String errMsg =  e.toString();
+     	    	 
 	     	     shipment.set("statusId", "GENERATION_FAIL");
+	     	    String infoString = "runSubscriptionAutoCreateByprodOrders:: " + "shipmentId=" + shipmentId;
+				Debug.logInfo(infoString, module);
+				String failedMsg="";
+				failedMsg += "InfoString->[ "+infoString+"]";
+				String errMsg =  e.toString();
+                try{
+                errorMsg =stackTraceToString(e);
+                }catch (Exception e1) {
+ 					// TODO: handle exception
+ 				}
+                failedMsg+=errorMsg;
+	     	    sendMailParams.put("body", failedMsg);
+                try{
+                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+                    if(ServiceUtil.isError(resultCtxMap)){
+                    	Debug.log("Problem in calling service sendMail");
+                    }
+                }catch(GenericServiceException e1){
+                	Debug.log("Problem in sending email");
+				}
 	     	     try{
 	     	    	shipment.store(); 
 	     	     }catch(Exception e1){
@@ -562,6 +611,13 @@ public class ByProductServices {
         List<GenericValue> subscriptionList=FastList.newInstance();
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
         List stopShipList = (List)context.get("stopShipList");
+    	String errorMsg="";
+    	Map sendMailParams = FastMap.newInstance();
+        sendMailParams.put("sendTo", "nagababu@vasista.in,kvarma@vasista.in,charan@vasista.in");
+        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+        sendMailParams.put("subject", "Truck Sheet failure stack trace");
+        sendMailParams.put("contentType", "text/html");
+        sendMailParams.put("userLogin", userLogin);
         Timestamp estimatedDeliveryDate = (Timestamp) context.get("estimatedDeliveryDate");
         //List shipmentIds = (List) context.get("shipmentIds");
         List excludeInvoiceForFacilityIds = (List) context.get("excludeInvoiceForFacilityIds");
@@ -581,6 +637,11 @@ public class ByProductServices {
     	   }
        }catch (GenericEntityException e) {
       		Debug.logError(e, "Error fetching PO Numbers", module);
+          try{
+          errorMsg =stackTraceToString(e);
+          }catch (Exception e1) {
+				// TODO: handle exception
+			}
       		return ServiceUtil.returnError("Error fetching PO Numbers : " + e);         	
        }
     	   String shipmentId = (String)context.get("shipmentId");
@@ -594,7 +655,12 @@ public class ByProductServices {
 	           	}
            }catch (GenericEntityException e) {
 	       		Debug.logError(e, "Error getting shipment " + shipmentId, module);
-	       		return ServiceUtil.returnError("Error getting shipment " + shipmentId + ": " + e);         	
+              try{
+              errorMsg =stackTraceToString(e);
+              }catch (Exception e1) {
+					// TODO: handle exception
+				}
+	       	 return ServiceUtil.returnError("Error getting shipment " + shipmentId + ": " + e);         	
            }
            String routeId = shipment.getString("routeId");
            String tripId = shipment.getString("tripNum");
@@ -623,7 +689,28 @@ public class ByProductServices {
            		subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
            }catch (GenericEntityException e) {
                Debug.logError(e, "Problem getting Subscription Products", module);
+               String failedMsg="";
+               try{
+               errorMsg =stackTraceToString(e);
+               }catch (Exception e1) {
+					// TODO: handle exception
+				}
+               
                shipment.set("statusId", "GENERATION_FAIL");
+               String infoString = "runSubscriptionAutoCreateByprodOrdersInternal:: " + "shipmentId=" + shipmentId 
+						+";routeId=" + routeId+";tripId=" + tripId+";shipmentTypeId=" + shipmentTypeId +";subscriptionTypeId=" + subscriptionTypeId  ;
+				Debug.logInfo(infoString, module);
+				failedMsg += "InfoString-> ["+infoString+"]";
+				failedMsg +=errorMsg;
+               sendMailParams.put("body", failedMsg);
+               try{
+                   Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+                   if(ServiceUtil.isError(resultCtxMap)){
+                   	Debug.log("Problem in calling service sendMail");
+                   }
+               }catch(GenericServiceException e1){
+               	Debug.log("Problem in sending email");
+				}
     		  	try{
     		  		shipment.store();
     		  	}catch (Exception ex) {
@@ -703,6 +790,7 @@ public class ByProductServices {
    					if (ServiceUtil.isError(result)) {
                    		Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
                    		generationFailed = true;
+       	    			errorMsg="Unable to generate order: " + ServiceUtil.getErrorMessage(result);
                    		break;
                    	}
                		
@@ -732,6 +820,7 @@ public class ByProductServices {
    				if (ServiceUtil.isError(result)) {
    	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
    	    			generationFailed = true;
+   	    			errorMsg="Unable to generate order: " + ServiceUtil.getErrorMessage(result);
    	    			//return result;
    	    		}  
 
@@ -781,6 +870,22 @@ public class ByProductServices {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
    			shipment.set("statusId", "GENERATION_FAIL");
+   		 String infoString = "runSubscriptionAutoCreateByprodOrdersInternal:: " + "shipmentId=" + shipmentId 
+					+";routeId=" + routeId+";tripId=" + tripId+";shipmentTypeId=" + shipmentTypeId +";subscriptionTypeId=" + subscriptionTypeId  ;
+			Debug.logInfo(infoString, module);
+            String failedMsg="";
+
+            failedMsg += "InfoString-> ["+infoString+"]";
+            failedMsg +=errorMsg;
+   			sendMailParams.put("body", failedMsg);
+            try{
+                Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+                if(ServiceUtil.isError(resultCtxMap)){
+                	Debug.log("Problem in calling service sendMail");
+                }
+            }catch(GenericServiceException e1){
+            	Debug.log("Problem in sending email");
+			}
    		}else {
    			shipment.set("statusId", "GENERATED");	
    		}
@@ -797,6 +902,21 @@ public class ByProductServices {
       		  		String errMsg =  ServiceUtil.getErrorMessage(result);
       		  		Debug.logError(errMsg , module);
 	      		  	shipment.set("statusId", "GENERATION_FAIL");
+	                String failedMsg="";
+	      		  String infoString = "runSubscriptionAutoCreateByprodOrdersInternal:: " + "shipmentId=" + shipmentId 
+							+";routeId=" + routeId ;
+					Debug.logInfo(infoString, module);
+		            failedMsg += "InfoString-> ["+infoString+"]";
+		            failedMsg +=errMsg;
+	      		  sendMailParams.put("body", failedMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+					}
 	     		  	shipment.store();
 	                return result;
       		  	}
@@ -922,6 +1042,13 @@ public class ByProductServices {
         Timestamp estimatedDeliveryDate = (Timestamp) context.get("estimatedDeliveryDate");
         String shipmentId = (String) context.get("shipmentId");
         String geoTax = (String) context.get("geoTax");
+		String errorMsg="";
+		Map sendMailParams = FastMap.newInstance();
+        sendMailParams.put("sendTo", "charan@vasista.in,nagababu@vasista.in,kvarma@vasista.in");
+        sendMailParams.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+        sendMailParams.put("subject", "Truck Sheet failure stack trace");
+        sendMailParams.put("contentType", "text/html");
+        sendMailParams.put("userLogin", userLogin);
         List excludeInvoiceForFacilityIds = (List) context.get("excludeInvoiceForFacilityIds");
         List<GenericValue> subscriptionProductsList = UtilGenerics.checkList(context.get("subscriptionProductsList"));
         Map<String, Object> resultMap = FastMap.newInstance();
@@ -956,6 +1083,11 @@ public class ByProductServices {
 			
 		}catch(GenericEntityException e){
 			Debug.logError("No partyRole found for given partyId:"+ partyId, module);
+              try{
+              errorMsg =stackTraceToString(e);
+              }catch (Exception e1) {
+					// TODO: handle exception
+				}
 			return ServiceUtil.returnError("No partyRole found for given partyId");
 		}
 		
@@ -976,9 +1108,29 @@ public class ByProductServices {
         try {
             cart.setUserLogin(userLogin, dispatcher);
         } catch (Exception exc) {
+              try{
+              errorMsg =stackTraceToString(exc);
+              }catch (Exception e1) {
+					// TODO: handle exception
+				}
             Debug.logError("Error setting userLogin in the cart: " + exc.getMessage(), module);
             try{
             	 shipment.set("statusId", "GENERATION_FAIL");
+            	 String failedMsg="";
+            	 String infoString = "createSalesOrderSubscriptionProductType:: "  + "partyId=" + partyId + "shipmentId=" + shipmentId 
+         				+";facilityId=" + facilityId + ";PONumber=" + PONumber;
+         		Debug.logInfo(infoString, module);
+         		failedMsg += "InfoString-> ["+infoString+"]";
+         		failedMsg +=errorMsg;
+            	 sendMailParams.put("body", failedMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+			}
       		  	shipment.store();
             }catch (Exception e) {
 				// TODO: handle exception
@@ -1087,7 +1239,26 @@ public class ByProductServices {
                 } catch (Exception exc) {
                     Debug.logError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage(), module);
                     try{
+                    errorMsg =stackTraceToString(exc);
+                    }catch (Exception e1) {
+     					// TODO: handle exception
+     				}
+                    try{
                     	shipment.set("statusId", "GENERATION_FAIL");
+                    	String failedMsg="";
+                    	 String infoString = "createSalesOrderSubscriptionProductType:: " + "productId=" + subscriptionProduct.getString("productId")+";shipmentId="+shipmentId;
+                  		Debug.logInfo(infoString, module);
+                  		failedMsg += "InfoString-> ["+infoString+"]";
+                  		failedMsg +=errorMsg;
+                    	 sendMailParams.put("body", failedMsg);
+			                try{
+			                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+			                    if(ServiceUtil.isError(resultCtxMap)){
+			                    	Debug.log("Problem in calling service sendMail");
+			                    }
+			                }catch(GenericServiceException e1){
+			                	Debug.log("Problem in sending email");
+					}
              		  	shipment.store();
                     }catch (Exception e) {
                     	// TODO: handle exception
@@ -1110,9 +1281,28 @@ public class ByProductServices {
         	}
 		} catch (GeneralException e) {
 			// TODO Auto-generated catch block
+             try{
+             errorMsg =stackTraceToString(e);
+             }catch (Exception e1) {
+					// TODO: handle exception
+				}
 			Debug.logError(e, "Failed to add tax amount ", module);
 			try{
            	 shipment.set("statusId", "GENERATION_FAIL");
+           	 String failedMsg="";
+           	String infoString = "createSalesOrderSubscriptionProductType:: " + "shipmentId="+shipmentId+";productPriceTaxCalc=" +productPriceTaxCalc;
+      		Debug.logInfo(infoString, module);
+      		failedMsg += "InfoString-> ["+infoString+"]";
+      		failedMsg +=errorMsg;
+           	 sendMailParams.put("body", failedMsg);
+             try{
+                 Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+                 if(ServiceUtil.isError(resultCtxMap)){
+                 	Debug.log("Problem in calling service sendMail");
+                 }
+             }catch(GenericServiceException e1){
+             	Debug.log("Problem in sending email");
+		}
      		  	shipment.store();
            }catch (Exception ex) {
         	   return ServiceUtil.returnError("Failed to add tax amount  " + e);
@@ -1131,9 +1321,25 @@ public class ByProductServices {
    	  	 		Map result = dispatcher.runSync("adjustEmployeeSubsidyForOrder",empSubdCtx);  		  		 
    	  	 		if (ServiceUtil.isError(result)) {
    	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
+   	  	 			errorMsg =  ServiceUtil.getErrorMessage(result);
    	  	 			Debug.logError(errMsg , module);
    	  	 		try{
                	 shipment.set("statusId", "GENERATION_FAIL");
+               	 String failedMsg="";
+
+             	String infoString = "createSalesOrderSubscriptionProductType:: " +"shipmentId"+shipmentId+ ";orderId=" +orderId;
+          		Debug.logInfo(infoString, module);
+          		failedMsg += "InfoString-> ["+infoString+"]";
+          		failedMsg +=errorMsg;
+          		sendMailParams.put("body", failedMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+			}
          		  	shipment.store();
                 }catch (Exception e) {
                 	Debug.logError(e , module);
@@ -1144,8 +1350,28 @@ public class ByProductServices {
 
    	  	 	}catch (Exception e) {
    	  			  Debug.logError(e, "Error While Creating Employee Subsidy Milk ", module);
-   	  			try{
+   	  		  try{
+                  errorMsg =stackTraceToString(e);
+                  }catch (Exception e1) {
+   					// TODO: handle exception
+   				}
+   	  			  try{
                	 shipment.set("statusId", "GENERATION_FAIL");
+               	 String failedMsg="";
+
+               	String infoString = "createSalesOrderSubscriptionProductType::adjustEmployeeSubsidyForOrder " +"shipmentId"+shipmentId+ ";orderId=" +orderId;
+          		Debug.logInfo(infoString, module);
+          		failedMsg += "InfoString-> ["+infoString+"]";
+          		failedMsg +=errorMsg;
+               	 sendMailParams.put("body", failedMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+			}
          		  	shipment.store();
                }catch (Exception ex) {
             		Debug.logError(ex , module);
@@ -1163,6 +1389,20 @@ public class ByProductServices {
 	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
 	  	 			Debug.logError(errMsg , module);
 	  	 			shipment.set("statusId", "GENERATION_FAIL");
+	               	 String failedMsg="";
+	  	 			String infoString = "createSalesOrderSubscriptionProductType::adjustRoundingDiffForOrder " +"shipmentId="+shipmentId+ ";orderId=" +orderId;
+	          		Debug.logInfo(infoString, module);
+	          		failedMsg += "InfoString-> ["+infoString+"]";
+	          		failedMsg +=errMsg;
+	  	 		 sendMailParams.put("body", failedMsg);
+	                try{
+	                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+	                    if(ServiceUtil.isError(resultCtxMap)){
+	                    	Debug.log("Problem in calling service sendMail");
+	                    }
+	                }catch(GenericServiceException e1){
+	                	Debug.log("Problem in sending email");
+			}
   	      		  	shipment.store();
   	      		  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Order !");
 	  	 			
@@ -1170,8 +1410,28 @@ public class ByProductServices {
 
 	  	 	}catch (Exception e) {
 	  			  Debug.logError(e, "Error while Creating Order", module);
+	  			  try{
+	  	               errorMsg =stackTraceToString(e);
+	  	               }catch (Exception e1) {
+	  						// TODO: handle exception
+	  					}
 	  			 try{
 	            	 shipment.set("statusId", "GENERATION_FAIL");
+	               	 String failedMsg="";
+	            	 String infoString = "createSalesOrderSubscriptionProductType::adjustRoundingDiffForOrder " +"shipmentId="+shipmentId+ ";orderId=" +orderId;
+		          		Debug.logInfo(infoString, module);
+		          		failedMsg += "InfoString-> ["+infoString+"]";
+		          		failedMsg +=errorMsg;
+	            	 sendMailParams.put("body", failedMsg);
+		                try{
+		                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+		                    if(ServiceUtil.isError(resultCtxMap)){
+		                    	Debug.log("Problem in calling service sendMail");
+		                    }
+		                }catch(GenericServiceException e1){
+		                	Debug.log("Problem in sending email");
+				}
+		           
 	      		  	shipment.store();
 	              }catch (Exception ex) {
 	            	  Debug.logError(ex, module);        
@@ -1231,7 +1491,26 @@ public class ByProductServices {
                 }catch (Exception e) {
                     Debug.logError(e, module);
                     try{
+                        errorMsg =stackTraceToString(e);
+                        }catch (Exception e1) {
+         					// TODO: handle exception
+         				}
+                    try{
                    	    shipment.set("statusId", "GENERATION_FAIL");
+                   	 String failedMsg="";
+                   	 String infoString = "createSalesOrderSubscriptionProductType::createInvoiceForOrderAllItems " +"shipmentId"+shipmentId+ ";orderId=" +orderId;
+		          		Debug.logInfo(infoString, module);
+		          		failedMsg += "InfoString-> ["+infoString+"]";
+		          		failedMsg +=errorMsg;
+                   	 sendMailParams.put("body", failedMsg);
+		                try{
+		                    Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+		                    if(ServiceUtil.isError(resultCtxMap)){
+		                    	Debug.log("Problem in calling service sendMail");
+		                    }
+		                }catch(GenericServiceException e1){
+		                	Debug.log("Problem in sending email");
+				}
              		  	shipment.store();
                    }catch (Exception ex) {
                 	   Debug.logError(e, module);        
