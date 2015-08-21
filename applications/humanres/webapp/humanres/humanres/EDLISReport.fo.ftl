@@ -41,8 +41,10 @@ under the License.
 			<#if finalList?has_content>
 			<fo:page-sequence master-reference="main">
 				<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-					<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
-					<fo:block text-align="center" white-space-collapse="false">&#160;G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		  </fo:block>
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            		<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+    				<fo:block text-align="center" font-size="13.5pt" keep-together="always"  white-space-collapse="false" font-family="Courier,monospace">&#160;${reportHeader.description?if_exists}</fo:block>
+            		<fo:block text-align="center" font-size="13.5pt" keep-together="always"  white-space-collapse="false" font-family="Courier,monospace">&#160;${reportSubHeader.description?if_exists}</fo:block>
 					<fo:block text-align="center" keep-together="always" white-space-collapse="false" >                                       <fo:inline  text-decoration="underline"></fo:inline></fo:block>
 					<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                       EDLIS SCHEME-C AND D SCHEDULE AS FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")}    Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}                </fo:block>
 					 <fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                                       POLICY NO:35767                   Page Number  : <fo:page-number/></fo:block>

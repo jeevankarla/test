@@ -32,8 +32,10 @@ under the License.
 		<#if EncashmentList?has_content>
 		<fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
-				<fo:block text-align="center" white-space-collapse="false">&#160;                        G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")}               </fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            	<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+    			<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Courier,monospace">&#160;${reportHeader.description?if_exists}</fo:block>
+            	<fo:block text-align="right" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Courier,monospace">&#160;${reportSubHeader.description?if_exists}       Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")} &#160;&#160;&#160;&#160;</fo:block>
 				<fo:block text-align="center" keep-together="always" white-space-collapse="false" >                                       <fo:inline  text-decoration="underline">${orgName?upper_case}</fo:inline></fo:block>
 				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                               GH/SS CASH ENCASHMENT REPORT               Page Number  : <fo:page-number/></fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>

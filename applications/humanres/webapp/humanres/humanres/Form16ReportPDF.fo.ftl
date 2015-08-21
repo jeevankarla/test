@@ -70,8 +70,10 @@
 	                           	<fo:table-row >
 	                           		<fo:table-cell border-style = "solid"> 
 	                           			<fo:block  keep-together="always" text-align="center" font-family="Arial" font-size="10pt" font-weight = "bold" line-height = "18pt">&#160;</fo:block>
-	                           			<fo:block text-align="center" keep-together="always" font-size="9pt" line-height = "18pt">${uiLabelMap.KMFDairyHeader}</fo:block>
-	                           			<fo:block text-align="center" keep-together="always" font-size="9pt" line-height = "18pt">${uiLabelMap.KMFDairySubHeader}</fo:block>
+	                           			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+					            		<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+					    				<fo:block text-align="center" font-size="9pt" keep-together="always"  white-space-collapse="false" font-family="Arial" line-height = "18pt">&#160;${reportHeader.description?if_exists}</fo:block>
+					            		<fo:block text-align="center" font-size="9pt" keep-together="always"  white-space-collapse="false" font-family="Arial" line-height = "18pt">&#160;${reportSubHeader.description?if_exists}</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell border-style = "solid"> 
 	                           			<fo:block  keep-together="always" text-align="center" font-family="Arial" font-size="10pt" font-weight = "bold" line-height = "18pt">&#160;</fo:block>
