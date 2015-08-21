@@ -120,6 +120,7 @@ def populateUnitBillAbstract(unitId , customTimePeriodId){
 								BigDecimal totalSolids=BigDecimal.ZERO;
 								String productName = productKey;
 								inputFacRateAmt.put("rateTypeId", "PROC_OP_COST");
+								inputFacRateAmt.put("userLogin", userLogin);
 								inputFacRateAmt.put("productId", productDetailsMap.get(productName));
 								inputFacRateAmt.put("slabAmount",facilityDetail.facilitySize);
 								Map<String, Object> opCostAmtMap = dispatcher.runSync("getProcurementFacilityRateAmount", inputFacRateAmt);
@@ -307,6 +308,7 @@ def populateUnitBillAbstract(unitId , customTimePeriodId){
 							inputFacRateAmt.put("facilityId", center.facilityId);
 							inputFacRateAmt.put("rateTypeId", "PROC_TIP_AMOUNT");
 							inputFacRateAmt.put("productId", procProd.productId);
+							inputFacRateAmt.put("userLogin", userLogin);
 							unitRateAmount = dispatcher.runSync("getProcurementFacilityRateAmount", inputFacRateAmt);
 							BigDecimal tempTipAmt = BigDecimal.ZERO;
 							if("Y".equals(useTotalSolids)){

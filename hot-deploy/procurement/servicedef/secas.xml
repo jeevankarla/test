@@ -25,6 +25,12 @@ under the License.
     	<condition field-name="orderId" operator="is-not-empty"/>
         <action service="updatePremiumAdjestment" mode="sync"/>
     </eca>
+     <eca service="createProcurementEntry" event="commit">    	
+    	<condition field-name="producerId" operator="is-not-empty"/>
+    	<condition field-name="orderId" operator="is-not-empty"/>
+    	<condition field-name="orderItemSeqId" operator="is-not-empty"/>
+        <action service="createProducerOrderItemRole" mode="sync"/>
+    </eca>
      <eca service="updateProcurementEntry" event="commit">
     	<condition field-name="orderId" operator="is-not-empty"/>
         <action service="updatePremiumAdjestment" mode="sync"/>
@@ -53,8 +59,12 @@ under the License.
     <eca service="createBillingAdjustment" event="invoke" run-on-error="false">
     	<action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
     </eca>
-    <eca service="updateMilkTankerReceiptEntryOut" event="commit">
-        <condition field-name="milkTransferId" operator="not-equals" value="null"/>
-        <action service="sendEmailForQcReport" mode="sync" />
+     <eca service="createProcurementProducerMigr" event="invoke">
+    	<condition field-name="shedCode" operator="is-not-empty"/>
+    	<condition field-name="bmcuCode" operator="is-not-empty"/>
+    	<condition field-name="centerCode" operator="is-not-empty"/>
+    	<condition field-name="routeId" operator="is-not-empty"/>
+    	<condition field-name="producerCode" operator="is-not-empty"/>
+        <action service="checkProducerCode" mode="sync"/>
     </eca>
 </service-eca>

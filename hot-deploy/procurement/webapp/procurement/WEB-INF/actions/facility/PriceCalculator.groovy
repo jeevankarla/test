@@ -95,6 +95,9 @@ if(UtilValidate.isNotEmpty(fatPercent)&&UtilValidate.isNotEmpty(snfPercent)&&Uti
 	kgSnf = new BigDecimal(milkKgs*snfPercent/100).setScale(2,BigDecimal.ROUND_HALF_UP);
 
 	rateMap.putAt("price",rateMap.get("price"));
+	rateMap.putAt("premium",rateMap.get("fatPremium").add(rateMap.get("snfPremium")));
+	rateMap.putAt("fatPremium",rateMap.get("fatPremium"));
+	rateMap.putAt("snfPremium",rateMap.get("snfPremium"));
 	rateMap.putAt("kgFat",kgFat);
 	rateMap.putAt("kgSnf",kgSnf);
 	rateMap.putAt("productId", productId);

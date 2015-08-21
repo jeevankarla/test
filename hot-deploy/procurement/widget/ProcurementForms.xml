@@ -336,26 +336,26 @@ under the License.
             </hyperlink>
         </field>
     </form> 
-   <form name="ListRecentProcurementEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="FindProcurementEntry"
+   <form name="ListRecentProcurementEntry" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" paginate-target="FindProcurementEntry"
     	default-table-style="basic-table hover-bar" separate-columns="true" list-name="procurementEntryList" >		
-		<field name="shedCode" title="Shed"><display/></field>
-		<field name="unitCode" title="Unit"><display/></field>
+		<!-- <field name="shedCode" title="Shed"><display/></field> -->
+		<field name="unitCode" title="Unit"><display size="20"/></field>
 		<field name="transactionDate" title="${uiLabelMap.ProcurementDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>    
-        <field name="supplyTypeEnumId" title="SupplyTime"><display/></field>
-        <field name="originFacilityId" title="CenterId"><display/></field>
-        <field name="facilityCode" title="Center"><display/></field>
-        <field name="originFacilityId" title="CenterId"><display/></field>
-        <field name="productId" title="Milk Type"><display-entity entity-name="Product" description="${description}"/></field>
+        <field name="supplyTypeEnumId" title="SplyTime"><display/></field>
+        <!-- <field name="originFacilityId" title="CenterId"><display/></field> -->
+        <field name="facilityCode" title="Center"><display description="${facilityCode} [${centerName}]"/></field>
+        <!-- <field name="originFacilityId" title="CenterId"><display/></field> -->
+        <field name="productId" title="MilkType"><display-entity entity-name="Product" description="${description}"/></field>
         <field name="quantityKgs" title="QtyKgs"><display/></field>      	            	           	         	           
         <field name="fat"><display/></field>
     	<field name="snf"><display/></field>
-        <field name="totalAmount" title="GrossAmt (Rs)"><display type="accounting-number"/></field>
-        <field name="totalPremium" title="TotPremium (Rs)"><display type="accounting-number"/></field>
+        <field name="totalAmount" title="GrossAmt(Rs)"><display type="accounting-number"/></field>
+        <field name="totalPremium" title="TotPremium(Rs)"><display type="accounting-number"/></field>
         <field name="sQuantityLtrs" title="${uiLabelMap.SQuantityLtrs}"><display/></field>
         <field name="sFat" title="SFat"><display/></field>
-        <field name="sTotalAmount" title="Sour Value"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="sTotalAmount" title="SourValue"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="cQuantityLtrs" title="${uiLabelMap.CQuantityLtrs}"><display/></field>
-        <field name="createdDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;yyyy:MM:dd HH:mm:ss&quot;);}"/></field>
+        <field name="createdDate" title="CreatedDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;yyyy:MM:dd HH:mm:ss&quot;);}"/></field>
         <field name="createdByUserLoginId" title="Created By"><display/></field>
         <field name="edit" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
         	 <hyperlink target="EditProcurementEntryAlt" also-hidden="false" description="${uiLabelMap.CommonEdit}" target-type="intra-app">
@@ -368,14 +368,40 @@ under the License.
                                                                     
            </hyperlink>
         </field>        
-    </form>  
-     <form name="ListProcurementEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="FindProcurementEntry"
+    </form>
+    <form name="ListProcurementEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="FindProcurementEntry"
     	default-table-style="basic-table hover-bar" separate-columns="true" list-name="listIt"  extends="ListRecentProcurementEntry">
+		<actions>
+    		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+            <!--  <service service-name="performFind" result-map="result" result-map-list="listIt">
+                 <field-map field-name="inputFields" from-field="parameters"/>
+                 <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                 <field-map field-name="orderBy" value="-createdDate"/>
+                 <field-map field-name="viewIndex" from-field="viewIndex"/>
+             	 <field-map field-name="viewSize" from-field="viewSize"/>                  
+            </service> -->
+              <!-- <set field="listProcurementOrders" from-field="result.listIt" type="Object"/> -->
+            <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/>
+    	</actions>  
+		<row-actions>
+			<set field="centerDetails" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getCenterDtails(dctx, UtilMisc.toMap(&quot;centerId&quot;, originFacilityId)));}"  type="Object"/>
+			<set field="shedCode" value="${groovy: return centerDetails.get(&quot;shedFacility&quot;).get(&quot;facilityCode&quot;);}"/>
+			<set field="unitCode" value="${groovy: return centerDetails.get(&quot;unitFacility&quot;).get(&quot;facilityCode&quot;);}"/>
+			<set field="centerName" value="${groovy: return centerDetails.get(&quot;centerFacility&quot;).get(&quot;facilityName&quot;);}"/>
+			
+			
+			<set field="sTotalAmount" value="${groovy:  if ((sQuantityLtrs != null) &amp;&amp;  (sUnitPrice != null)) return (sQuantityLtrs)*(sUnitPrice);}"/>
+			<set field="totalPremium" value="${groovy:  if (unitPremiumPrice != null)  return   new BigDecimal((quantity)*(unitPremiumPrice)).setScale(2,BigDecimal.ROUND_HALF_UP);}"/>
+			<set field="totalAmount" value="${groovy:    return ((quantity)*(unitPrice))-((quantity)*(unitPremiumPrice)); }"/>
+		</row-actions>
+    </form> 
+    <form name="ListProducerEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="FindProducerEntry"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="listIt"  extends="ListRecentProducerEntry">
 		<actions>
     		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
              <service service-name="performFind" result-map="result" result-map-list="listIt">
                  <field-map field-name="inputFields" from-field="parameters"/>
-                 <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                 <field-map field-name="entityName" value="OrderHeaderItemProductFacilityItemRolePartyGroupAndIdentification"/>
                  <field-map field-name="orderBy" value="-createdDate"/>
                  <field-map field-name="viewIndex" from-field="viewIndex"/>
              	 <field-map field-name="viewSize" from-field="viewSize"/>                  
@@ -390,8 +416,10 @@ under the License.
 			<set field="sTotalAmount" value="${groovy:  if ((sQuantityLtrs != null) &amp;&amp;  (sUnitPrice != null)) return (sQuantityLtrs)*(sUnitPrice);}"/>
 			<set field="totalPremium" value="${groovy:  if (unitPremiumPrice != null)  return   new BigDecimal((quantity)*(unitPremiumPrice)).setScale(2,BigDecimal.ROUND_HALF_UP);}"/>
 			<set field="totalAmount" value="${groovy:    return ((quantity)*(unitPrice))-((quantity)*(unitPremiumPrice)); }"/>
+			<set field="producerAmount" value="${groovy:    return ((quantityLtrs)*(unitPrice)); }"/>	
 		</row-actions>
     </form> 
+    
      <form name="ProcumentEntriesCsv" type="list" list-name="procurementEntryList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">  
     	<row-actions>
@@ -830,7 +858,9 @@ under the License.
 	   <field name="snfPercent" title="SNF% :" position="2"><display /></field>
 	   <field name="kgFat" title="KG FAT :" position="1"><display /></field>
        <field name="kgSnf" title="KG SNF :" position="2"><display/></field>
-       <field name="premium" title="SNF DED :" position="1"><display type="accounting-number" /></field>
+       <field name="snfPremium" title="SNF DED :" position="1"><display type="accounting-number" /></field>
+       <field name="fatPremium" title="FAT DED :" position="2"><display type="accounting-number" /></field>
+       <field name="premium" title="TOT DED :" position="1"><display type="accounting-number" /></field>
        <field  name="gross" title="Gross Amount :" position="2"><display type="accounting-number" /></field>
        <field  name="defaultRate" title="Rate :" position="1"><display type="accounting-number" /></field>
 	   <field name="net" title="Net Amount :" position="2"><display type="accounting-number" /></field>
@@ -1776,7 +1806,7 @@ under the License.
 			</hyperlink>
 		</field>
     </form>
-    <form name="EditFacilityForm" type="single"  target="CreateFacility"
+    <form name="EditFacilityForm" type="single"  target="CreateProcFacility"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <row-actions>    		
     		<set field="openedDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(openedDate, &quot;dd/MM/yyyy&quot;);}"/>
@@ -2227,8 +2257,34 @@ under the License.
         </field>       
         <field name="FacilitySize" title="${uiLabelMap.ProductFacilitySize}"><display/></field>
         <field name="description"><display/></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/>
+        <!-- <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/> -->
     </form>
+    <form name="ProcFindFacilityOptions" target="FindProcFacility" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <!--<auto-fields-entity entity-name="Facility" default-field-type="hidden"/> -->
+        <field name="facilityId"><text-find/></field>
+        <field name="facilityName"><text-find/></field>
+        <field name="parentFacilityId" title="Route/Parent Facility Id"><text-find/></field>
+        <field name="facilityTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="FacilityType" key-field-name="facilityTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>        
+        <field name="ownerPartyId" title="${uiLabelMap.ProductFacilityOwner}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <form name="EcsCsvReport" type="list" list-name="ecsList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
     	<!-- BANO  PNAME   NETAMT  -->
@@ -2236,4 +2292,339 @@ under the License.
     	<field name="bankAccNum" title="BANO" ><display/></field>
     	<field name="netAmount" title="AMOUNT"><display/></field>
      </form>
+     <form name="FindFinAccountAttribute" target="FindFinAccountAttribute" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="finAccountId" title="FinAccountId" ><text/></field>
+        <field name="attrName"><text-find/></field>
+        <field name="attrValue"><text-find/></field>
+        <field name="partyId" title="${uiLabelMap.ProductFacilityOwner}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListFinAccountAttribute" type="list" list-name="finAccountAndAttributeList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	
+    	<field name="ownerPartyId" title="PartyId"><display/></field>
+    	<field name="finAccountId" title="FinAccountId" ><display/></field>
+    	<field name="finAccountName" title="FinAccountName" ><display/></field>
+    	<field name="statusId" title="StatusId" ><display/></field>
+    	<field name="fromDate" title="FromDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+    	<field name="thruDate" title="ThruDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+    </form>
+    <form name="CreateFinAccountAttribute" target="createFinAccountAttribute" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="finAccountId" id-name="finAccountId" title="FinAccountId" ><text/></field>
+        <field name="attrValue" id-name="attrValue"><text/></field>
+        <field name="attrName" id-name="attrName"><hidden value="TRANSFER_ACCOUNT"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PriceChartCSV" type="list" list-name="priceList" paginate="false" item-index-separator=","
+        		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
+        	
+        	<field name="fatsnf" title="FAT/SNF"><display></display></field>
+        	<field name="S1" title="S7.5"><display></display></field>
+        	<field name="S2" title="S7.7"><display></display></field>
+        	<field name="S3" title="S7.8"><display></display></field>
+        	<field name="S4" title="S7.9"><display></display></field>
+        	<field name="S5" title="S8.0"><display></display></field>
+        	
+        	<field name="S6" title="S8.1"><display></display></field>
+        	<field name="S7" title="S8.2"><display></display></field>
+        	<field name="S8" title="S8.3"><display></display></field>
+        	<field name="S9" title="S8.4"><display></display></field>
+        	<field name="S10" title="S8.5"><display></display></field>
+        	<field name="S11" title="S8.6"><display></display></field>
+        	<field name="S12" title="S8.7"><display></display></field>
+        	<field name="S13" title="S8.8"><display></display></field>
+        	<field name="S14" title="S8.9"><display></display></field>
+        	<field name="S15" title="S9.0"><display></display></field>
+        	
+        	<field name="S16" title="S9.1"><display></display></field>
+        	<field name="S17" title="S9.2"><display></display></field>
+        	<field name="S18" title="S9.3"><display></display></field>
+        	<field name="S19" title="S9.4"><display></display></field>
+        	<field name="S20" title="S9.5"><display></display></field>
+        	<field name="S21" title="S9.6"><display></display></field>
+        	<field name="S22" title="S9.7"><display></display></field>
+        	<field name="S23" title="S9.8"><display></display></field>
+        	<field name="S24" title="S9.9"><display></display></field>
+        	
+        	<field name="S25" title="S10.0"><display></display></field>
+        	<field name="S26" title="S10.1"><display></display></field>
+        	<field name="S27" title="S10.2"><display></display></field>
+        	<field name="S28" title="S10.3"><display></display></field>
+        	<field name="S29" title="S10.4"><display></display></field>
+        	<field name="S30" title="S10.5"><display></display></field>
+        	<field name="S31" title="S10.6"><display></display></field>
+        	<field name="S32" title="S10.7"><display></display></field>
+        	<field name="S33" title="S10.8"><display></display></field>
+        	<field name="S34" title="S10.9"><display></display></field>
+        	<field name="S35" title="S11.0"><display></display></field>
+        	
+        	<field name="S36" title="S11.1"><display></display></field>
+        	<field name="S37" title="S11.2"><display></display></field>
+        	<field name="S38" title="S11.3"><display></display></field>
+        	<field name="S39" title="S11.4"><display></display></field>
+        	<field name="S40" title="S11.5"><display></display></field>
+        	<field name="S41" title="S11.6"><display></display></field>
+        	<field name="S42" title="S11.7"><display></display></field>
+        	<field name="S43" title="S11.8"><display></display></field>
+        	<field name="S44" title="S11.9"><display></display></field>
+        	<field name="S45" title="S12.0"><display></display></field>
+        	
+     </form>
+     <form name="FindFacilityRates"  title="" type="single" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="FindFacilityRates">
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display></display></field>
+    	<!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><lookup target-form-name="LookupFacility"/></field> -->
+    	<!-- <field name="submitButton" title="Find"><submit button-type="button"/></field> -->
+    </form>
+    <form name="ListFacilityRates"  title="" type="list" list-name="rateAmountsList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" >
+    	<field name="facilityId" title="Retailer Id"><display description="${groovy: facilityId.toUpperCase()}"></display></field>
+    	<field name="facilityGroupId" title="Route Id"><display/></field>
+    	<field name="facilityName" title="Retailer Name"><display/></field>
+    	<!-- <field name="categoryTypeEnum" title="Category Type"><display/></field> --> 
+    	<field name="rateTypeId" title="Rate Type"><display-entity entity-name="RateType" key-field-name="rateTypeId" description="${description}"/></field>
+    	<field name="productId" title="Product"><display-entity entity-name="Product" key-field-name="productId" description="[${productId}]${internalName}"/></field>
+    	<field name="rateAmount"><display/></field>       
+    	<field name="fromDate" title="From Date"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(fromDate,&quot; dd/MM/yyyy&quot;)}"></display></field>
+    	<field name="thruDate" title="Thru Date"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(thruDate,&quot; dd/MM/yyyy&quot;)}"></display></field>    	    	
+    </form>
+    <form name="EditFacilityGeoPoint" type="single" target="createUpdateFacilityGeoPoint" default-map-name="geoPoint"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="facilityId"><hidden value="${facilityId}"/></field>
+        <field name="geoPointId"><hidden/></field>
+        <field name="dataSourceId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="DataSource">
+                    <entity-constraint name="dataSourceTypeId" value="GEOPOINT_SUPPLIER"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="latitude"><text/></field>
+        <field name="longitude"><text/></field>
+        <field name="elevation"><text/></field>
+        <field name="elevationUomId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="information"><text size="50" maxlength="60"/></field>
+        <field name="selectButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+    </form>  
+    <form name="EditFacilityParties" type="list" paginate-target="EditFacilityParties" title="" list-name="facilityParties"
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="facilityId" title="Facility Id"><display/></field>
+        <field name="partyId">
+            <display-entity description="${groupName} ${firstName} ${lastName}" entity-name="PartyNameView">
+            <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyId}]">
+                <parameter param-name="partyId"/>
+            </sub-hyperlink>       
+            </display-entity> 
+        </field>
+        <field name="roleTypeId" title="roleTypeId"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="facilityIdTo" title="FacilityIdTo"><display/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="removeProcPartyFromFacility" description="${uiLabelMap.CommonEdit}" also-hidden="false">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="AddPartyToFacility" type="single" target="addPartyToFacility" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="FacilityParty"/>
+        <field name="facilityId"><hidden/></field>
+        <field name="partyId">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+    </form>
+    <form name="FacilityRouteUpdate" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="updateProcFacilityRoute"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<actions>
+			<set field="routeDetails" value="${groovy:import org.ofbiz.base.util.*; return (org.ofbiz.network.NetworkServices.getBoothRoute(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;boothId&quot;,facilityId))).get(&quot;boothDetails&quot;);}" type="Object"/>
+			<set  field="routeId" value="${groovy: routeDetails.get(&quot;routeId&quot;)}"/>
+		</actions>  
+		<!-- <field name="facilityId" title="Facility Id"><display/></field> -->
+		<field name="facilityId">
+			<display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityId} [${facilityName}] "></display-entity>
+		</field>
+    	<field name="routeId" title="Route Id" >
+            <drop-down allow-empty="false">
+                 <list-options list-name="routeIdsList" key-name="facilityId" description="${facilityId} [${facilityName}]"/>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
+        <field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListFacilityRoutes" odd-row-style="alternate-row" header-row-style="header-row" type="list" target="updateFacilityRoute"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="facilityRouteList"> 
+    	<actions>
+			<entity-condition entity-name="FacilityGroupAndMemberAndFacility" list="facilityRouteList">
+			   <condition-list combine="and">
+			       <condition-expr field-name="facilityId" from-field="facilityId"/>
+    			  <condition-expr field-name="facilityGroupTypeId"  value="RT_BOOTH_GROUP"/>
+			   </condition-list>
+    		</entity-condition>
+		</actions>
+		<row-actions>
+		    <set field="routeId" from-field="ownerFacilityId"/>
+		</row-actions>
+		<field name="actionFlag"><hidden value="update"/></field>
+		<!-- <field name="facilityId" title="Facility Id"><display/></field> -->
+		<field name="facilityId">
+			<display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityId}   [${facilityName}]"></display-entity>
+		</field>
+		<field name="routeId">
+			<display-entity entity-name="Facility" key-field-name="facilityId" description="${ownerFacilityId}   [${facilityName}]"></display-entity>
+		</field>
+    	<!-- <field name="routeId" title="Route Id"><display description="${ownerFacilityId}"/></field> -->
+        <field name="fromDate" title="From Date"><display/></field>
+        <field name="thruDate" title="Thru Date"><display/></field>
+        <field name="submitButton" title="Close" separate-column="true">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="updateProcFacilityRoute">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="routeId"/>
+                <parameter param-name="actionFlag" value="delete"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>
+    </form>
+    <form name="AddFacilityContent" type="upload" focus-field-name="contentId" 
+        header-row-style="header-row" default-table-style="basic-table" target="createProcFacilityContent?facilityId=${facilityId}">
+        <field name="facilityId"><hidden/></field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field><!--        
+        
+        <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}">
+            <lookup target-form-name="LookupContent"/>
+        </field>
+        --><field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}">
+            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT">
+                <entity-options description="${description}" entity-name="ContentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="false" no-current-selected-key="CTNT_AVAILABLE">
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="CONTENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>      
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
+<!--        <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupContent"/></field>-->
+        <field name="createButton"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ListFacilityContent" type="list" list-name="facilityContentDetails" 
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="facilityId"><hidden/></field>
+        <field name="contentName">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="${uiLabelMap.CommonView}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>        
+        </field>
+<!--        <field name="mimeTypeId"><display/></field>-->
+        <field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}"><display-entity entity-name="ContentType" also-hidden="false"/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProcFacilityContent">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>   
+    </form>
+    <form name="CreateNewRateAmount" type="multi" list-name="facilityRateList" odd-row-style="alternate-row" header-row-style="header-row"
+      	default-table-style="basic-table hover-bar" separate-columns="true" target="processNewProcFacilityRateAmount">
+      	<field name="facilityId" title="Retailer Id"><lookup target-form-name="LookupFacility"/></field>
+      	<field name="productId" title="Product Id">
+              <lookup target-form-name="LookupProduct" size="10">
+                  <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${subscription.productId}" link-style="buttontext">
+                  <parameter param-name="productId" from-field="subscription.productId"/>
+              </sub-hyperlink>
+              </lookup>
+          </field>	  
+          <field name="discountAmount" title="Discount Amount"><text size="10"></text></field>
+          <field name="fromDate" title="From Date"><date-time type="date" /></field>     
+          <field name="rateTypeId" title="Rate Type">
+          	<drop-down allow-empty="false">
+          		 <entity-options description="${description}" entity-name="RateType" key-field-name="rateTypeId">
+          		 	<entity-constraint name="parentTypeId" operator="in" value="INV_ADJ_RATE_TYPE,MRGN" ></entity-constraint>
+          		 </entity-options>
+           	</drop-down>
+   	   </field>
+   	   <field name="priceActionTypeId" title="Price Action Type">
+          	<drop-down allow-empty="false">
+          		 <entity-options description="${description}" entity-name="ProductPriceActionType" key-field-name="productPriceActionTypeId">
+          		 	<entity-constraint name="productPriceActionTypeId" operator="in" value="PRICE_QUANTITY,PRICE_FLAT"/>
+          		 </entity-options>
+           	</drop-down>
+   	   </field>                            
+         <field name="submitButton" title="${uiLabelMap.ProductSubmit}" >
+              <submit button-type="button"/>
+         </field>        
+    </form>
+    <form name="FindProcPriceCharts" target="newProcPriceChart" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="procPriceChartId" title="procPriceChartId" ><text/></field>
+        <field name="regionId"><text/></field>
+        <field name="partyId" title="${uiLabelMap.ProductFacilityOwner}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListProcPriceCharts" type="list" list-name="procPriceChartList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	
+    	<field name="procPriceChartId" title="procPriceChartId"><display/></field>
+    	<field name="regionId" title="regionId" ><display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId"></display-entity></field>
+    	<field name="partyId" title="partyId" ><display/></field>
+    	<field name="productId" title="productId" ><display-entity entity-name="Product" description="${productName}" key-field-name="productId"></display-entity></field>
+    	<field name="useBaseSnf" title="useBaseSnf" ><display/></field>
+    	<field name="useBaseFat" title="useBaseFat"><display></display></field>
+    	<field name="fromDate" title="FromDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+    	<field name="thruDate" title="ThruDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+    	<field name="edit" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
+        	 <hyperlink target="procurementNewPriceChart" also-hidden="false" description="${uiLabelMap.CommonEdit}" target-type="intra-app">
+                <parameter param-name="procPriceChartId" from-field="procPriceChartId" />
+                <parameter param-name="productId" from-field="productId"/>
+                <parameter param-name="param" value="Edit"/>
+            </hyperlink>
+        </field>
+		<field name="copy" title="${uiLabelMap.CommonCopy}" widget-style="buttontext">
+        	 <hyperlink target="procurementNewPriceChart" also-hidden="false" description="${uiLabelMap.CommonCopy}" target-type="intra-app">
+                <parameter param-name="procPriceChartId" from-field="procPriceChartId"/>
+                <parameter param-name="productId" from-field="productId"/>
+                <parameter param-name="param" value="Copy"/>
+            </hyperlink>
+        </field>  
+    
+    </form>
+      
 </forms>        

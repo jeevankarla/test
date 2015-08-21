@@ -17,6 +17,7 @@
         <attribute name="qtyLtrs" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
         <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="protein" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
@@ -27,6 +28,25 @@
         <attribute name="orderId" mode="OUT" type="String" optional="false"/>
         <attribute name="orderItem" mode="OUT" type="Map" optional="false"/>
         <attribute name="invoiceId" mode="OUT" type="String" optional="true"/>
+        <attribute name="producerId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="producerCode" mode="INOUT" type="String" optional="true"/>
+        <attribute name="orderItemSeqId" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="populateProducerBillingFlag" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="populateProducerBillingFlag" auth="true" export="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+    </service>
+     <service name="createProducerOrderItemRole" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProducerOrderItemRole" auth="true" export="true">
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderItemSeqId" mode="IN" type="String" optional="false"/>
+        <attribute name="producerId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="updateProcProducerDetails" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateProcProducerDetails" auth="true" export="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="groupName" mode="IN" type="String" optional="true"/>
+        <attribute name="idValue" mode="IN" type="String" optional="true"/>
     </service>
     
      <service name="createProcurementEntryAjax" engine="java"
@@ -41,6 +61,7 @@
         <attribute name="qtyLtrs" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
         <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="protein" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
@@ -51,6 +72,9 @@
         <attribute name="orderId" mode="OUT" type="String" optional="false"/>
         <attribute name="orderItem" mode="OUT" type="Map" optional="false"/>
         <attribute name="invoiceId" mode="OUT" type="String" optional="true"/>
+        <attribute name="producerId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="producerCode" mode="INOUT" type="String" optional="true"/>
+        <attribute name="orderItemSeqId" mode="OUT" type="String" optional="true"/>
     </service>
     <service name="createProcurementSADFEntryAjax" engine="java"
                 location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcurementSADFEntryAjax" auth="true">
@@ -260,6 +284,7 @@
         <auto-attributes mode="IN" entity-name="OrderItem" include="pk" optional="false"></auto-attributes>
         <auto-attributes mode="IN" entity-name="OrderItem" include="nonpk" optional="true"></auto-attributes>
         <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="protein" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="cQuantity" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
         <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
@@ -531,6 +556,38 @@
         <attribute name="supplyTypeEnumId" mode="IN" type="String" optional="true"/>
                        
     </service>
+    <service name="getProducerPeriodTotals" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementReports" invoke="getProducerPeriodTotals" auth="true">
+        <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"/>                 
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/> <!-- can be center, route, unit -->       
+        <attribute name="partyCode" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="true"/> <!-- AM/PM -->
+        <attribute name="includeCenterTotals" mode="IN" type="Boolean" optional="true"/>       
+        <attribute name="periodTotalsMap" type="Map" mode="OUT" optional="false"/>
+        <attribute name="supplyTypeEnumId" mode="IN" type="String" optional="true"/>
+                       
+    </service>
+    
+    <service name="fetchProducerPeriodTotals" engine="java" export="true"
+                location="in.vasista.vbiz.procurement.ProcurementReports" invoke="fetchProducerPeriodTotals" auth="true">
+        <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"/>                 
+        
+        <attribute name="shedCode" mode="IN" type="String" optional="true"/> 
+        <attribute name="shedId" mode="IN" type="String" optional="true"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="false"/>
+        <attribute name="partyCode" mode="IN" type="String" optional="false"></attribute>
+
+        <attribute  name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="true"/> <!-- AM/PM -->
+  
+        <attribute name="producerDayWiseMap" type="Map" mode="OUT" optional="false"/>
+    </service>
+      
+    
     <service name="getAnnualPeriodTotals" engine="java"
                 location="in.vasista.vbiz.procurement.ProcurementReports" invoke="getAnnualPeriodTotals" auth="true">
         <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
@@ -647,6 +704,21 @@
          <attribute name="recordId" type="String" mode="OUT" optional="true"/>      
     </service>
     
+    <service name="checkProducerPolicy" engine="java" auth="true"
+        location="in.vasista.vbiz.procurement.ProcurementServices" invoke="checkProducerPolicy">
+         <description>Checking producer Policy number </description>
+         <attribute name="pmsby" type="String" mode="IN" optional="true"/>
+         <attribute name="pmjjby" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="checkProducerCode" engine="java" auth="true"
+        location="in.vasista.vbiz.procurement.ProcurementServices" invoke="checkProducerCode">
+         <description>Checking producer code already exists or not</description>
+         <attribute name="shedCode" type="String" mode="IN" optional="false"/>
+         <attribute name="bmcuCode" type="String" mode="IN" optional="false"/>
+         <attribute name="producerCode" type="String" mode="IN" optional="false"/>
+         <attribute name="centerCode" type="String" mode="IN" optional="false"/>
+         <attribute name="routeId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="updateProcurementProducerMigr" engine="simple" auth="true" transaction-timeout="300"
         location="component://procurement/script/ProcurementServices.xml" invoke="updateProcurementProducerMigr">
         <description>Create Producer Migration Entry</description>
@@ -674,6 +746,19 @@
                 location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcFaciltiyOutputEntry" auth="true">       
         <attribute name="shedCode" mode="IN" type="String" optional="false"/>
         <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="outputTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="qty" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="quantityLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="kgFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="kgSnf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="fat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/>       
+    </service>
+    <service name="createProcurementFaciltiyOutputEntry" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcFaciltiyOutputEntry" auth="true">       
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
         <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
         <attribute name="outputTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="qty" mode="IN" type="BigDecimal" optional="false"/>
@@ -819,6 +904,7 @@
 		<attribute name="cartageUomId" mode="IN" type="String" optional="true"/>
 		<attribute name="opCostUomId" mode="IN" type="String" optional="true"/>
 		<attribute name="eOpCostUomId" mode="IN" type="String" optional="true"/>
+		<attribute name="destinationFacilityCode" mode="IN" type="String" optional="true"/>
         <auto-attributes entity-name="Facility" mode="IN" optional="true"/>
         <auto-attributes entity-name="FinAccount" mode="IN" optional="true">
             <exclude field-name="finAccountId"/>
@@ -1018,5 +1104,58 @@
     	<attribute name="facilityId"  mode="IN" type="String" optional="false"/>
     </service>
     <!-- End -->
-                
+    
+    <service name="updateProducerFinAccount" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateProducerFinAccount">
+        <description>Update a Financial Account Role</description>
+        <attribute name="finAccountCode" mode="IN" type="String" optional="false"/>
+        <attribute name="disbursmentBank" mode="IN" type="String" optional="true" />
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+		<attribute name="date" mode="IN" type="String" optional="true"/>   
+		<attribute name="finAccountName" mode="IN" type="String" optional="false"/>  
+		<attribute name="finAccountBranch" mode="IN" type="String" optional="false"/>
+		<attribute name="ifscCode" mode="IN" type="String" optional="true"></attribute>   
+    </service>
+    <service name="updateCattleInformation" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateCattleInformation">
+        <description>Update a Financial Account Role</description>
+        <attribute name="cattleTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="false" />
+		<attribute name="numberOfCattle" mode="IN" type="Long" optional="false"></attribute>   
+    </service>
+    
+    <!-- <service name="updateCattleInformation" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateCattleInformation">
+        <description>Updates  Cattle Information</description>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+		<attribute name="cattleTypeId" mode="IN" type="String" optional="false"/>
+		<attribute name="numberOfCattle" mode="IN" type="BigDecimal" optional="true"/>   
+    </service> -->
+    
+    <!-- Bank Master Services -->
+    <service name="CreateBankMaster" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="CreateBankMaster" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="finAccountName" mode="IN" type="String" optional="false"/>
+        <attribute name="finAccountBranch" mode="IN" type="String" optional="false"/>
+        <attribute name="gbCode" mode="IN" type="String" optional="false"/>
+        <attribute name="bCode" mode="IN" type="String" optional="false"/>
+        <attribute name="bPlace" mode="IN" type="String" optional="false"/>
+        <attribute name="ifscNo" mode="IN" type="String" optional="true"/>
+        <attribute name="shortName" mode="IN" type="String" optional="false"/>
+        <attribute name="bankName" mode="IN" type="String" optional="true"/>
+    </service>
+    
+    <!-- New procurement price services -->
+    <service name="CreateNewPriceChart" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="CreateNewPriceChart" auth="true">
+        <attribute name="regionId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="useBaseSnf" mode="IN" type="String" optional="true"/>
+        <attribute name="useBaseFat" mode="IN" type="String" optional="true"/>
+        <attribute name="procPriceChartId" mode="OUT" type="String" optional="true"/>
+    </service>
+    
+     <!-- End -->           
 </services>

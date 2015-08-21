@@ -117,7 +117,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if adjType.getKey() <= 3 >
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                     ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                     ${(adjType.getValue()).description?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>	          
 													</fo:table-cell>
@@ -125,7 +125,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if (adjType.getKey() > 3) && (adjType.getKey() < 8)>
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                   ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                   ${(adjType.getValue()).description?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>
 													</fo:table-cell>
@@ -133,7 +133,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if (adjType.getKey() > 7) && (adjType.getKey() < 12)>
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                  ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                  ${(adjType.getValue()).description?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>
 													</fo:table-cell>

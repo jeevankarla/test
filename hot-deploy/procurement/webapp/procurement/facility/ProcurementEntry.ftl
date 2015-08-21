@@ -82,6 +82,7 @@
 		$('#qtyLtrs').autoNumeric({mDec: 2 , autoTab : true}).trigger('focusout');
 		$('#fat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
 		$('#snf').autoNumeric({mNum: 2,mDec: 2}).trigger('focusout');
+		//$('#protein').autoNumeric({mNum: 1,mDec: 2}).trigger('focusout');
 		$('#sFat').autoNumeric({mNum: 2,mDec: 1, autoTab : true}).trigger('focusout');
 		$('#sQuantity').autoNumeric({mDec: 1 , autoTab : true}).trigger('focusout');
 		$('#cQuantity').autoNumeric({mDec: 1 , autoTab : true}).trigger('focusout');
@@ -126,7 +127,11 @@
 	var recentChnage;
 	function setUpRecentList(recentChnage) {
 			recentChnage = recentChnage;
-			orderDate = (new Date((recentChnage["estimatedDeliveryDate"])["time"])).toString('yyyy-MM-dd');	
+			var orderDate = "";
+			if((recentChnage["estimatedDeliveryDate"])){
+				orderDate = (new Date((recentChnage["estimatedDeliveryDate"])["time"])).toString('yyyy-MM-dd');
+			}
+				
 			var grid;		
 			var data = [			
 					{"id":"1","orderDate":orderDate ,"purchaseTime":recentChnage['purchaseTime'], "unit":recentChnage['unitCode'], 
@@ -142,6 +147,7 @@
 	       				<#else>
 	       					"snf":recentChnage['snf'], 
 	        			</#if>
+	        			"protein":recentChnage['protein'],
 					 	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
 					 		"sQuantity":recentChnage['sQuantityLtrs']
 					 	<#else>
@@ -171,6 +177,7 @@
 	       			<#else>
 	       			{id:"snf", name:"Snf", field:"snf", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor},
 	        	</#if>
+	        	{id:"protein", name:"protein", field:"protein", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor},
 	        	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
 	        		{id:"sQuantity", name:"sQuantity", field:"sQuantity", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor}
 	        	<#else>
@@ -228,9 +235,10 @@
 			dataView2.beginUpdate();
 			dataView2.setItems(data);
 			dataView2.endUpdate();
-			
-		changeDate = (new Date((recentChnage["changeDatetime"])["time"])).toString('dd-MM-yyyy HH:mm:ss');
-		
+		var changeDate = "";	
+		if((recentChnage["changeDatetime"])){	
+			changeDate = (new Date((recentChnage["changeDatetime"])["time"])).toString('dd-MM-yyyy HH:mm:ss');
+		}
 		$('div.grid-header')
 	  .html('<label>Last Change [made by  ' + recentChnage["changeByUserLoginId"] + '   at    ' + changeDate + ' ]</label>');
 	
@@ -350,6 +358,7 @@ function clearEditEntryFields(){
 	$('[name=orderItemSeqId]').val('');
 	$('[name=fat]').val('');
 	$('[name=snf]').val('');
+	$('[name=protein]').val('');
 	$('[name=quantity]').val('');
 	$('[name=cQuantity]').val('');
 	$('[name=sQuantity]').val('');
@@ -609,6 +618,16 @@ function updateProcurementEntryInternal(formName, action, row) {
 	            </div>
 	        </td>
         </#if>
+         <td>&nbsp;</td>
+         </tr>
+         <tr>
+			<td>&nbsp;</td>
+	       	<td align='left' valign='middle' nowrap="nowrap" ><div class='h2'>Protein:</div></td>
+	        <td valign='middle'>
+	            <div class='tabletext h2'>            
+	             	<input type="text" size="5" maxlength="5" name="protein" id="protein"/>          	
+	            </div>
+	        </td>
          <td>&nbsp;</td>
          </tr>   
       </table>

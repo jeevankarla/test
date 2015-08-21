@@ -31,8 +31,19 @@ under the License.
                  <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                     <decorator-section name="body">  
                         <include-menu name="PriceCalculatorTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
-                        <screenlet title="Find Price chart">                            
+                        <screenlet title="Find Price chart">   
                             <include-form name="FindPriceChartAlt" location="component://procurement/widget/ProcurementForms.xml"/>
+                          	<section>   
+   								<widgets>              							                                   
+    									<link text="PriceChart CSV" style="buttontext" target="priceChart.csv" >
+    										<parameter param-name="categoryTypeEnum" from-field="parameters.categoryTypeEnum"/>
+										<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+										<parameter param-name="priceDate" from-field="parameters.priceDate"/>
+										<parameter param-name="productId" from-field="parameters.productId"/>
+										<parameter param-name="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/>
+    									</link>
+								</widgets>
+							</section>
                           	<platform-specific>
                            		<html><html-template location="component://procurement/webapp/procurement/facility/priceChartList.ftl"/></html>
                            </platform-specific>

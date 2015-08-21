@@ -4,18 +4,26 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 def populateChildren(facility, treeNode, enableEdit) {
 	boolean recurse = true;
 	JSONArray childNodesList= new JSONArray();
 	
-	childFacilities = delegator.findByAnd("Facility", [parentFacilityId : facility.facilityId],["facilityCode","facilityName"]);
+	/*childFacilities = delegator.findByAnd("Facility", [parentFacilityId : facility.facilityId, facilityTypeId : ],["facilityCode","facilityName"]);*/
 	
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("parentFacilityId", EntityOperator.EQUALS,facility.facilityId));
+	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.NOT_EQUAL,null));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	List childFacilities = delegator.findList("Facility",condition,null,null,null,true);
+		
 	facilitiesList = [];
 	childFacilities.each { rootFacility ->
 		facilityMap = [:];
 		facilityMap.putAll(rootFacility);
-		facilityMap.putAt("intFacCode",Integer.parseInt((String)rootFacility.get("facilityCode")));
+		/*facilityMap.putAt("intFacCode",Integer.parseInt((String)rootFacility.get("facilityCode")));*/ 
 		facilitiesList.add(facilityMap);
 	}
 	

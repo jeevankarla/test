@@ -123,6 +123,9 @@ if(UtilValidate.isNotEmpty(recentChangeJson.quantityLtrs)){
 if(UtilValidate.isNotEmpty(recentChangeJson.sQuantityLtrs)){
 	recentChangeJson.putAt("sQtyKgs", ProcurementNetworkServices.convertLitresToKG(new BigDecimal(recentChangeJson.sQuantityLtrs)));
 }
+if(UtilValidate.isNotEmpty(recentChangeJson.protein)){
+	recentChangeJson.putAt("protein", recentChangeJson.protein);
+}
 // getting tenant configuration condition for input in Ltrs and Lactometer Reading
 tenantConfigConditionList = [];
 tenantConfigConditionList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS ,"MILK_PROCUREMENT"));

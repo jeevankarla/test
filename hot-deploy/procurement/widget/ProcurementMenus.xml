@@ -36,11 +36,20 @@
             		</or>            		
            		</and>				
             </condition>        
-            <link target="EditProcFacility">
+            <link target="FacilityOverView">
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
         </menu-item>
-        <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
+        <menu-item name="FindFacilityRateAmount" title="Facility Rate Amount">
+         	<condition>
+                <or>
+					<if-has-permission permission="FACILITYSPLDISC"  action="_VIEW"/>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+				</or>
+            </condition>
+            <link target="FindFacilityRateAmount"/>
+        </menu-item>
+        <!-- <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}234">
         	<condition>
         		<and>
 	        		<not><if-empty field="ctxFacilityId"/></not>
@@ -50,7 +59,7 @@
             <link target="EditFacilityParties">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
 			<condition>				
 				<and>
@@ -344,6 +353,12 @@
                 <parameter param-name="lookupFlag" value="Y"/>
             </link>
         </menu-item>
+        <menu-item name="loan" title="Loans">
+        	<link target="procurementloan"/>
+        </menu-item>
+        <menu-item name="newProcPriceChart" title="New Price Chart">
+        	<link target="newProcPriceChart"/>
+        </menu-item>
     </menu>
     <menu name="ProcurementEntryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<actions> 
@@ -518,4 +533,165 @@
 			<link target="EditProcValidationEntry"></link>
 		</menu-item>		
 	</menu>
+	 <menu name="FacilityRateAmtTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+	        <menu-item name="recoveryForCrateLoss" title="Recovery Crate Loss">
+	            <link target="recoveryCrateLoss"> <parameter param-name="targetSubMenu" value="recoveryForCrateLoss"/></link>
+	        </menu-item>
+	        <menu-item name="discThrLeakage" title="Discount Leakage ">
+	            <link target="discountLeakage"> <parameter param-name="targetSubMenu" value="discThrLeakage"/></link>
+	        </menu-item>
+	        <menu-item name="discTPRD" title="Discount TP RD ">
+	            <link target="discountTPRD"> <parameter param-name="targetSubMenu" value="discTPRD"/></link>
+	        </menu-item>
+	        <menu-item name="discThrFlatScheme" title="Flat Scheme ">
+	            <link target="discountScheme"> <parameter param-name="targetSubMenu" value="discThrFlatScheme"/></link>
+	        </menu-item>
+	        <menu-item name="discThrTargetScheme" title="Target Scheme ">
+	            <link target="discountScheme"> <parameter param-name="targetSubMenu" value="discThrTargetScheme"/></link>
+	        </menu-item>
+	        
+       </menu>
+       <menu name="EditFacilitySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="FacilityOverView" selected-menuitem-context-field-name="subTabButtonItem">
+          <actions> 
+            <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+		</actions>    
+		  <menu-item name="FacilityOverView" title="Facility Over View">
+            <link target="FacilityOverView">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item>
+          <menu-item name="EditFacility" title="${uiLabelMap.ProductFacility}">
+            <link target="EditFacility">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item>
+          <menu-item name="CreateContactInformation" title="Contact Information">
+            <link target="ContactInformation">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item> 
+          <menu-item name="EditFacilityRoute" title="Facility Route">
+            <link target="EditProcFacilityRoute">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item>
+          <!-- <menu-item name="EditFacilityAttr" title="Facility Crate Collection Type">
+            <link target="EditFacilityAttr">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item> -->
+          <!-- <menu-item name="EditFacilityPaymentDefault" title="Facility Payment Default">
+            <link target="EditFacilityPaymentDefault">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item> -->
+          <!-- <menu-item name="EditFixedDepositDetails" title="Bank/Company Deposit">
+            <link target="EditFixedDepositDetails">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item> -->   
+           <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
+			<condition>				
+				<and>
+					<not><if-empty field="ctxFacilityId"/></not>
+					<or>
+	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+	            		<if-has-permission permission="FACILITY"  action="_UPDATE"/> 
+            		</or>             		           		
+           		</and>	          
+            </condition>         
+            <link target="EditProcFacilityContent">            
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item>
+         <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
+        	<condition>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        	</condition>        	
+            <link target="EditProcFacilityParties">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+           <menu-item name="FinancialHistory" title="Financial History">
+            <condition>
+            	<and>
+           			<if-compare field="ctxFacility.facilityTypeId" operator="equals" value="BOOTH"/>
+            		<or>
+                		<if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+						<if-compare-field field="ctxFacility.ownerPartyId" operator="equals" to-field="userLogin.partyId"/>
+					</or>
+				</and>
+            </condition>            
+            <link target="PartyFinancialHistory">
+                <parameter param-name="partyId" from-field="ctxFacility.ownerPartyId"/>
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>                
+            </link>
+        </menu-item>
+         <menu-item name="EditFacilityGeoPoint" title="${uiLabelMap.CommonGeoLocation}">  
+			<condition>
+				<and>
+					<not><if-empty field="ctxFacilityId"/></not>
+					<or>
+						<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+						<if-has-permission permission="FACILITY"  action="_GEOPOINT"/>
+					</or>            		
+            	</and>            
+            </condition>                 
+            <link target="EdiProctFacilityGeoPoint">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="FindFacilityRates" title="${uiLabelMap.Rates}">
+          <link target="FindProcFacilityRates">
+          		<parameter param-name="facilityId" from-field="ctxFacilityId"/>
+          </link>
+        </menu-item>
+        <menu-item name="FacilityFinAccountAttribute" title="${uiLabelMap.FinAccountAttribute}">
+          <link target="FindFinAccountAttribute">
+          		<parameter param-name="facilityId" from-field="ctxFacilityId"/>
+          </link>
+        </menu-item>
+    </menu> 
+    <menu name="LoanTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="loan" title="Loan">
+        	<link target="procurementloan"/>
+        </menu-item>
+        <menu-item name="loanDisbursement" title="Loan Disbursement">
+        	<link target="loanDisbursement"/>
+        </menu-item>
+        <menu-item name="loanRecovery" title="Loan Recovery">
+        	<link target="loanRecovery"/>
+        </menu-item>
+    </menu>
+    <menu name="FacilityUpdate">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="EditFacility">
+                <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="FacilityRole">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="EditProcFacilityParties">
+                <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="FacilityRates">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="FindProcFacilityRates">
+                <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="FacilityContent">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="EditFacilityContent">
+                <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+            </link>
+        </menu-item>
+    </menu>
+       
 </menus>

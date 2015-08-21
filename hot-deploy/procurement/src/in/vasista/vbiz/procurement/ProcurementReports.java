@@ -39,6 +39,9 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import in.vasista.vbiz.procurement.PriceServices;
+import in.vasista.vbiz.procurement.ProcurementNetworkServices;
+
 
 public class ProcurementReports {
  	public static final String module = ProcurementReports.class.getName();
@@ -59,6 +62,11 @@ public class ProcurementReports {
 		fieldsMap.put("qtyLtrs", ZERO);
 		fieldsMap.put("qtyKgs", ZERO);
 		fieldsMap.put("kgFat", ZERO);
+		//Zero QtyLtrs represents substandered milkQty
+		fieldsMap.put("subStandardQtyLtrs", ZERO);
+		fieldsMap.put("incQtyLtrs", ZERO);
+		fieldsMap.put("incAmt", ZERO);
+		//fieldsMap.put("subStandardQtyKgs", ZERO);
 		fieldsMap.put("zeroKgFat", ZERO);
 		fieldsMap.put("zeroKgSnf", ZERO);
 		fieldsMap.put("kgSnf", ZERO);
@@ -103,14 +111,17 @@ public class ProcurementReports {
     }
 
     private static void populateProductMap(BigDecimal qtyKgs,BigDecimal qtyLtrs, BigDecimal price, BigDecimal kgFat,BigDecimal gKgFat, BigDecimal zeroKgFat, 
-    		BigDecimal kgSnf, BigDecimal zeroKgSnf,BigDecimal sQtyLtrs,BigDecimal sQtyKgs, BigDecimal sFat,BigDecimal sKgFat, BigDecimal sPrice, BigDecimal cQtyLtrs,BigDecimal ptcQtyKgs,BigDecimal ptcQtyLtrs,BigDecimal totPrem,String ptcMilkType, Map<String, Object> productMap) {
+    		BigDecimal kgSnf, BigDecimal zeroKgSnf,BigDecimal sQtyLtrs,BigDecimal sQtyKgs, BigDecimal sFat,BigDecimal sKgFat, BigDecimal sPrice, BigDecimal cQtyLtrs,BigDecimal ptcQtyKgs,BigDecimal ptcQtyLtrs,BigDecimal totPrem,BigDecimal subStandardQtyLtrs,BigDecimal incQtyLtrs,BigDecimal incAmt,String ptcMilkType, Map<String, Object> productMap) {
     	BigDecimal totQtyLts = qtyLtrs.add((BigDecimal)productMap.get("qtyLtrs"));
     	BigDecimal totQtyKgs = qtyKgs.add((BigDecimal)productMap.get("qtyKgs"));
     	BigDecimal totPrice = (price.add((BigDecimal)productMap.get("price")));
     	BigDecimal totKgFat = kgFat.add((BigDecimal)productMap.get("kgFat")); 
     	BigDecimal totGKgFat= gKgFat.add((BigDecimal)productMap.get("gKgFat"));
     	BigDecimal totzeroKgFat = zeroKgFat.add((BigDecimal)productMap.get("zeroKgFat")); 
-    	BigDecimal totzeroKgSnf = zeroKgSnf.add((BigDecimal)productMap.get("zeroKgSnf")); 
+    	BigDecimal totzeroKgSnf = zeroKgSnf.add((BigDecimal)productMap.get("zeroKgSnf"));
+    	BigDecimal totsubStandardQtyLtrs = subStandardQtyLtrs.add((BigDecimal)productMap.get("subStandardQtyLtrs"));
+    	BigDecimal totIncQtyLtrs = incQtyLtrs.add((BigDecimal)productMap.get("incQtyLtrs"));
+    	BigDecimal totIncAmt = incAmt.add((BigDecimal)productMap.get("incAmt"));
     	BigDecimal totKgSnf = kgSnf.add((BigDecimal)productMap.get("kgSnf")); 
     	BigDecimal totFat = ZERO;
     	BigDecimal totSnf = ZERO;
@@ -140,6 +151,9 @@ public class ProcurementReports {
         productMap.put("kgFat", totKgFat); 
         productMap.put("zeroKgFat", totzeroKgFat);
         productMap.put("zeroKgSnf", totzeroKgSnf);
+        productMap.put("subStandardQtyLtrs", totsubStandardQtyLtrs);
+        productMap.put("incQtyLtrs", totIncQtyLtrs);
+        productMap.put("incAmt", totIncAmt);
         productMap.put("kgSnf", totKgSnf);  
         productMap.put("fat", totFat);
         productMap.put("snf", totSnf);
@@ -160,8 +174,14 @@ public class ProcurementReports {
         productMap.put("totPrice", totPrice.add(sTotPrice));
     }
     
-    private static void populateDayTotalsMap(GenericValue orderItem, Map<String, Object> dayTotalsMap) {
-        String supplyType = orderItem.getString("supplyTypeEnumId"); 
+    private static void populateDayTotalsMap(GenericValue orderItem, Map<String, Object> dayTotalsMap,Map<String, Object> incentiveMap) {
+    	DispatchContext ctx = (DispatchContext)incentiveMap.get("DispatchContext");
+    	
+    	Delegator delegator = ctx.getDelegator();
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+    	
+    	
+    	String supplyType = orderItem.getString("supplyTypeEnumId"); 
         String productName = orderItem.getString("productName");    
         BigDecimal quantity =BigDecimal.ZERO;
         BigDecimal qtyKgs = BigDecimal.ZERO;
@@ -196,12 +216,65 @@ public class ProcurementReports {
         BigDecimal kgFat = (qtyKgs.multiply(fat.divide(new BigDecimal(100)))).setScale(4, BigDecimal.ROUND_HALF_UP);
         BigDecimal kgSnf = (qtyKgs.multiply(snf.divide(new BigDecimal(100)))).setScale(4, BigDecimal.ROUND_HALF_UP);
         BigDecimal gKgFat = kgFat;
+        BigDecimal subStandardQtyLtrs =BigDecimal.ZERO;
+        BigDecimal incQtyLtrs =BigDecimal.ZERO;
+        BigDecimal incAmt =BigDecimal.ZERO;
+        
         BigDecimal zeroKgFat =BigDecimal.ZERO;
         BigDecimal zeroKgSnf =BigDecimal.ZERO;
         if(price.compareTo(BigDecimal.ZERO)==0){
+        //	subStandardQtyKgs = qtyKgs;
+        	//subStandardQtyLtrs=qtyLtrs;
         	zeroKgFat = kgFat;
         	zeroKgSnf = kgSnf;
         }
+        
+       //NEED TO CHECK THE FAT AND SNF RANGE FOR SUBSTANDARD QUANTITY 
+        String productIdStr = (String)orderItem.get("productId");
+        
+        if(UtilValidate.isNotEmpty(incentiveMap) && UtilValidate.isNotEmpty(incentiveMap.get(productIdStr))){
+        	Map productIncentiveMap = FastMap.newInstance();
+        	productIncentiveMap.putAll((Map)incentiveMap.get(productIdStr));
+        	BigDecimal incentiveFat = (BigDecimal) productIncentiveMap.get("fat");
+        	BigDecimal incentiveSnf = (BigDecimal) productIncentiveMap.get("snf");
+        	BigDecimal roundedSnf = snf ; 
+        	roundedSnf = roundedSnf.setScale(1,BigDecimal.ROUND_HALF_UP);
+        	if((incentiveFat.compareTo(fat)>0 )|| (incentiveSnf.compareTo(roundedSnf)>0)){
+        		subStandardQtyLtrs=qtyLtrs;
+        	}else{
+        		incQtyLtrs = qtyLtrs ;
+        	}
+        }
+        if(incQtyLtrs.compareTo(BigDecimal.ZERO)==1){
+        	// here we need to calculate IncentiveAmt 
+        	Timestamp  fromDateTime = orderItem.getTimestamp("estimatedDeliveryDate");
+        	Map incentiveRateMap = FastMap.newInstance();
+        	String facilityId = (String)orderItem.get("originFacilityId");
+        	String productId = (String)orderItem.get("productId");
+        	GenericValue userLogin = (GenericValue)incentiveMap.get("userLogin");
+        	incentiveRateMap.put("userLogin",userLogin);
+        	incentiveRateMap.put("productId",productId);
+        	incentiveRateMap.put("facilityId",facilityId);
+        	incentiveRateMap.put("rateCurrencyUomId", "INR");
+        	incentiveRateMap.put("fromDate", fromDateTime);
+        	incentiveRateMap.put("rateTypeId","PROC_PROD_INCENTIVE");
+        	try{
+	        	Map rateAmount = dispatcher.runSync("getProcurementFacilityRateAmount", incentiveRateMap);
+	        	String uomId = "VLIQ_L";
+	        	BigDecimal incRate = BigDecimal.ZERO;
+	        	if(UtilValidate.isNotEmpty(rateAmount)){
+	        		if(UtilValidate.isNotEmpty(rateAmount.get("rateAmount"))){
+	        			incRate = (BigDecimal)rateAmount.get("rateAmount");
+	        		}
+	        	}
+	        	incAmt = incAmt.add(incQtyLtrs.multiply(incRate));
+        	}catch (Exception e) {
+				// TODO: handle exception
+        		Debug.logError("Error while getting rateMap "+e, module);
+			}
+        	
+        }
+        
         BigDecimal sQtyLtrs = BigDecimal.ZERO;
         BigDecimal sQtyKgs = BigDecimal.ZERO;
         BigDecimal sFat = BigDecimal.ZERO;
@@ -245,36 +318,210 @@ public class ProcurementReports {
         Map dateMap = (Map)dayTotalsMap.get(dateKey);
         Map supplyTypeMap = (Map)dateMap.get(supplyType);
         Map productMap = (Map)supplyTypeMap.get(productName);
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
 
         productMap = (Map)supplyTypeMap.get("TOT");  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);   
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);   
         
         supplyTypeMap = (Map)dateMap.get("TOT");
         productMap = (Map)supplyTypeMap.get(productName);  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);         
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);         
         
         productMap = (Map)supplyTypeMap.get("TOT");  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);        
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);        
         
         // update dayTotals TOT
         Map dayTotalsTOTMap = (Map)dayTotalsMap.get("TOT");
         supplyTypeMap = (Map)dayTotalsTOTMap.get(supplyType);
         productMap = (Map)supplyTypeMap.get(productName);  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);    
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);    
         
         productMap = (Map)supplyTypeMap.get("TOT");  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
 
         supplyTypeMap = (Map)dayTotalsTOTMap.get("TOT");
         productMap = (Map)supplyTypeMap.get(productName);  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);    
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);    
         
         productMap = (Map)supplyTypeMap.get("TOT");  
-        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem, ptcMilkType, productMap);
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
         
         
     }
+    
+    
+    private static void populateProducerDayTotalsMap(GenericValue orderItem, Map<String, Object> dayTotalsMap, Map<String, Object> incentiveMap) {
+    	DispatchContext ctx = (DispatchContext)incentiveMap.get("DispatchContext");
+    	
+    	Delegator delegator = ctx.getDelegator();
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+    	
+    	
+    	String supplyType = orderItem.getString("supplyTypeEnumId"); 
+        String productName = orderItem.getString("productName");    
+        BigDecimal quantity =BigDecimal.ZERO;
+        BigDecimal qtyKgs = BigDecimal.ZERO;
+        BigDecimal qtyLtrs = BigDecimal.ZERO;
+        if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("quantityKgs"))){
+        	 qtyKgs = orderItem.getBigDecimal("quantityKgs").setScale(decimals, rounding);
+        }
+        if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("quantityLtrs"))){
+        	 qtyLtrs = orderItem.getBigDecimal("quantityLtrs").setScale(decimals, rounding);
+        }
+        if(qtyKgs.compareTo(BigDecimal.ZERO)==0){
+        	qtyKgs = orderItem.getBigDecimal("quantity").setScale(decimals, rounding);
+        }
+        if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("quantity"))){
+        	quantity = orderItem.getBigDecimal("quantity").setScale(decimals, rounding);
+        }
+        if(qtyLtrs.compareTo(BigDecimal.ZERO)==0){
+        	qtyLtrs = ProcurementNetworkServices.convertKGToLitre(qtyKgs);
+        }
+        
+        BigDecimal unitPrice = orderItem.getBigDecimal("unitPrice");
+        //BigDecimal price = (quantity.multiply(unitPrice)).setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal totPrem = BigDecimal.ZERO;
+        if(orderItem.getBigDecimal("unitPremiumPrice") !=null){
+        	totPrem = orderItem.getBigDecimal("unitPremiumPrice");
+        }
+        BigDecimal subStandardQtyLtrs =BigDecimal.ZERO;
+        BigDecimal grsAmt = (qtyLtrs.multiply(unitPrice.add(totPrem.negate()))).setScale(2,rounding);
+        BigDecimal premAmt = (qtyLtrs.multiply(totPrem)).setScale(2, rounding);
+        BigDecimal price = (grsAmt.add(premAmt)).setScale(2, rounding);
+        BigDecimal snf = orderItem.getBigDecimal("snf");
+        BigDecimal fat = orderItem.getBigDecimal("fat"); 
+        BigDecimal kgFat = (qtyKgs.multiply(fat.divide(new BigDecimal(100)))).setScale(4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal kgSnf = (qtyKgs.multiply(snf.divide(new BigDecimal(100)))).setScale(4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal gKgFat = kgFat;
+        BigDecimal incQtyLtrs =BigDecimal.ZERO;
+        BigDecimal incAmt =BigDecimal.ZERO;
+        
+        BigDecimal zeroKgFat =BigDecimal.ZERO;
+        BigDecimal zeroKgSnf =BigDecimal.ZERO;
+        if(price.compareTo(BigDecimal.ZERO)==0){
+        //	subStandardQtyKgs = qtyKgs;
+        	//subStandardQtyLtrs=qtyLtrs;
+        	zeroKgFat = kgFat;
+        	zeroKgSnf = kgSnf;
+        }
+        
+       //NEED TO CHECK THE FAT AND SNF RANGE FOR SUBSTANDARD QUANTITY 
+        String productIdStr = (String)orderItem.get("productId");
+        
+        if(UtilValidate.isNotEmpty(incentiveMap) && UtilValidate.isNotEmpty(incentiveMap.get(productIdStr))){
+        	Map productIncentiveMap = FastMap.newInstance();
+        	productIncentiveMap.putAll((Map)incentiveMap.get(productIdStr));
+        	BigDecimal incentiveFat = (BigDecimal) productIncentiveMap.get("fat");
+        	BigDecimal incentiveSnf = (BigDecimal) productIncentiveMap.get("snf");
+        	BigDecimal roundedSnf = snf ; 
+        	roundedSnf = roundedSnf.setScale(1,BigDecimal.ROUND_HALF_UP);
+        	if((incentiveFat.compareTo(fat)>0 )|| (incentiveSnf.compareTo(roundedSnf)>0)){
+        		subStandardQtyLtrs=qtyLtrs;
+        	}else{
+        		incQtyLtrs = qtyLtrs ;
+        	}
+        }
+        if(incQtyLtrs.compareTo(BigDecimal.ZERO)==1){
+        	// here we need to calculate IncentiveAmt 
+        	Timestamp  fromDateTime = orderItem.getTimestamp("estimatedDeliveryDate");
+        	Map incentiveRateMap = FastMap.newInstance();
+        	String facilityId = (String)orderItem.get("originFacilityId");
+        	String productId = (String)orderItem.get("productId");
+        	GenericValue userLogin = (GenericValue)incentiveMap.get("userLogin");
+        	incentiveRateMap.put("userLogin",userLogin);
+        	incentiveRateMap.put("productId",productId);
+        	incentiveRateMap.put("facilityId",facilityId);
+        	incentiveRateMap.put("rateCurrencyUomId", "INR");
+        	incentiveRateMap.put("fromDate", fromDateTime);
+        	incentiveRateMap.put("rateTypeId","PROC_PROD_INCENTIVE");
+        	try{
+	        	Map rateAmount = dispatcher.runSync("getProcurementFacilityRateAmount", incentiveRateMap);
+	        	String uomId = "VLIQ_L";
+	        	BigDecimal incRate = BigDecimal.ZERO;
+	        	if(UtilValidate.isNotEmpty(rateAmount)){
+	        		if(UtilValidate.isNotEmpty(rateAmount.get("rateAmount"))){
+	        			incRate = (BigDecimal)rateAmount.get("rateAmount");
+	        		}
+	        	}
+	        	incAmt = incAmt.add(incQtyLtrs.multiply(incRate));
+        	}catch (Exception e) {
+				// TODO: handle exception
+        		Debug.logError("Error while getting rateMap "+e, module);
+			}
+        	
+        }
+        
+        
+        
+        BigDecimal sQtyLtrs = BigDecimal.ZERO;
+        BigDecimal sQtyKgs = BigDecimal.ZERO;
+        BigDecimal sFat = BigDecimal.ZERO;
+        BigDecimal sKgFat =BigDecimal.ZERO;
+        BigDecimal sPrice = BigDecimal.ZERO;
+        BigDecimal sUnitPrice = BigDecimal.ZERO;
+        BigDecimal cQtyLtrs = BigDecimal.ZERO;
+        BigDecimal ptcQtyKgs = BigDecimal.ZERO;
+        BigDecimal ptcQtyLtrs = BigDecimal.ZERO;
+       
+        String ptcMilkType = orderItem.getString("ptcMilkType"); 
+        if(orderItem.getBigDecimal("sQuantityLtrs") !=null){
+        	sQtyLtrs = orderItem.getBigDecimal("sQuantityLtrs").setScale(2, rounding);
+        	//sQtyKgs = sQtyLtrs.multiply(new BigDecimal(1.03));
+        	sQtyKgs = ProcurementNetworkServices.convertLitresToKGSetScale(sQtyLtrs, true);
+        }
+        if(orderItem.getBigDecimal("sFat") !=null){
+        	sFat = orderItem.getBigDecimal("sFat").setScale(decimals, rounding);
+        }
+        if(orderItem.getBigDecimal("sUnitPrice") !=null){
+        	sKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(sQtyKgs,sFat);
+        	BigDecimal sKgSnf = BigDecimal.ZERO;
+        	if("Cow Milk".equalsIgnoreCase(productName)){
+        		sKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(sQtyKgs,new BigDecimal(8.0));	
+        	}
+        	
+        	sUnitPrice = orderItem.getBigDecimal("sUnitPrice");
+        	sPrice = ((sKgFat.add(sKgSnf)).multiply(sUnitPrice)).setScale(2, rounding);
+        	kgFat =kgFat.add(sKgFat);
+        }
+        if(orderItem.getBigDecimal("cQuantityLtrs") !=null){
+        	cQtyLtrs = orderItem.getBigDecimal("cQuantityLtrs").setScale(decimals, rounding);
+        }
+        if(orderItem.getBigDecimal("ptcQuantity") !=null){
+        	ptcQtyKgs = orderItem.getBigDecimal("ptcQuantity").setScale(decimals, rounding);
+        }
+        ptcQtyLtrs = ProcurementNetworkServices.convertKGToLitre(ptcQtyKgs);
+        
+        Timestamp estimatedDeliveryDate = orderItem.getTimestamp("estimatedDeliveryDate");   
+        String dateKey = UtilDateTime.toDateString(estimatedDeliveryDate, "yyyy/MM/dd");
+        Map dateMap = (Map)dayTotalsMap.get(dateKey);
+        Map supplyTypeMap = (Map)dateMap.get(supplyType);
+        Map productMap = (Map)supplyTypeMap.get(productName);
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        productMap = (Map)supplyTypeMap.get("TOT");  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        supplyTypeMap = (Map)dateMap.get("TOT");
+        productMap = (Map)supplyTypeMap.get(productName);  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        
+        productMap = (Map)supplyTypeMap.get("TOT");  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        
+        // update dayTotals TOT
+        Map dayTotalsTOTMap = (Map)dayTotalsMap.get("TOT");
+        supplyTypeMap = (Map)dayTotalsTOTMap.get(supplyType);
+        productMap = (Map)supplyTypeMap.get(productName);  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        productMap = (Map)supplyTypeMap.get("TOT");  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+
+        supplyTypeMap = (Map)dayTotalsTOTMap.get("TOT");
+        productMap = (Map)supplyTypeMap.get(productName);  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        productMap = (Map)supplyTypeMap.get("TOT");  
+        populateProductMap(qtyKgs,qtyLtrs, price, kgFat,gKgFat, zeroKgFat,kgSnf, zeroKgSnf,sQtyLtrs,sQtyKgs, sFat,sKgFat, sPrice, cQtyLtrs, ptcQtyKgs,ptcQtyLtrs, totPrem,subStandardQtyLtrs,incQtyLtrs,incAmt, ptcMilkType, productMap);
+        
+    }
+    
     
     /**
      * Get the procurement totals for the requested period. Totals are returned for the requested facility Id
@@ -310,6 +557,7 @@ public class ProcurementReports {
      */
     public static Map<String, Object> getPeriodTotals(DispatchContext ctx,  Map<String, ? extends Object> context) {
     	Delegator delegator = ctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
     	Timestamp fromDate = UtilDateTime.getDayStart((Timestamp)context.get("fromDate"));
     	String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");
 		if(UtilValidate.isEmpty(fromDate)){	
@@ -347,6 +595,49 @@ public class ProcurementReports {
             List<String> productNames = EntityUtil.getFieldListFromEntityList(productCatMembers, "productName", false);
 //Debug.logInfo("productNames=" + productNames, module);         		
             
+            /*
+             * Here we are populating Incentive Fat,Snf Ranges
+             */
+            Map incentiveMap = FastMap.newInstance();
+            
+            if(UtilValidate.isNotEmpty(productCatMembers)){
+            	for(GenericValue productCatMember : productCatMembers){
+            		String productId = (String)productCatMember.get("productId");
+            		Map inMap = FastMap.newInstance();
+	        		inMap.put("userLogin",userLogin);
+	        		inMap.put("productId",productId);
+	        		inMap.put("facilityId",facilityId);
+	        		inMap.put("priceDate",fromDate);
+	        		GenericValue priceChartList = PriceServices.fetchPriceChart(ctx,inMap);
+	        		if(UtilValidate.isNotEmpty(priceChartList)){
+	        			String procPriceChartId = (String)priceChartList.get("procPriceChartId"); 
+	        			try{
+	        				List priceCondList = FastList.newInstance();
+	        				priceCondList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+	        				priceCondList.add(EntityCondition.makeCondition("procPriceChartId",EntityOperator.EQUALS,procPriceChartId));
+	        				priceCondList.add(EntityCondition.makeCondition("procurementPriceTypeId",EntityOperator.EQUALS,"PROC_PRICE_SLAB1"));
+	        				EntityCondition priceCondition = EntityCondition.makeCondition(priceCondList);
+	        				List<GenericValue> ProcriceChartList = delegator.findList("ProcurementPrice", priceCondition, null, null, null, false);
+	        				if(UtilValidate.isNotEmpty(ProcriceChartList)){
+	        					GenericValue priceChartDetails = EntityUtil.getFirst(ProcriceChartList);
+	        					BigDecimal fat = (BigDecimal)priceChartDetails.get("fatPercent");
+	        					BigDecimal snf = (BigDecimal)priceChartDetails.get("snfPercent");
+	        					Map fatSnfMap = FastMap.newInstance();
+	        					fatSnfMap.put("fat",fat);
+	        					fatSnfMap.put("snf",snf);
+	        					incentiveMap.put(productId,fatSnfMap);
+	        				}
+	        				
+	        			}catch (Exception e) {
+							// TODO: handle exception
+	        				Debug.logError("Error while getting ",module);
+						}
+	        			
+	        		}
+            	}
+            }
+            
+            
             List conditionList= FastList.newInstance(); 
             //let filter out items which has value null fat,snf,unitPrice
             conditionList.add(EntityCondition.makeCondition("fat", EntityOperator.NOT_EQUAL, null));  
@@ -355,7 +646,9 @@ public class ProcurementReports {
             if(UtilValidate.isNotEmpty(supplyTypeEnumId)){
             	conditionList.add(EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, supplyTypeEnumId));
             }
-        	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));    		
+            //here we are excluding producer entries by checking roletypeid as null
+            conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,null));
+            conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));    		
         	conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));    		
         	conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "MILK_PROCUREMENT"));    		
 			conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDate));
@@ -364,7 +657,7 @@ public class ProcurementReports {
 			conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));	
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 Debug.logInfo("condition=" + condition, module);         		
-orderItemsIterator = delegator.find("OrderHeaderItemProductAndFacility", condition, null, null, UtilMisc.toList("estimatedDeliveryDate","supplyTypeEnumId"), null);
+orderItemsIterator = delegator.find("OrderHeaderItemProductAndFacilityAndItemRole", condition, null, null, UtilMisc.toList("estimatedDeliveryDate","supplyTypeEnumId"), null);
 //Debug.logInfo("orderItems.size()=" + orderItems.size(), module);  
   //      	Iterator<GenericValue> itemIter = orderItems.iterator();
 GenericValue orderItem= null;
@@ -392,7 +685,9 @@ GenericValue orderItem= null;
         				dayTotalsMap.put(dateKey, dateMap);                    	
                     }
                 }
-                populateDayTotalsMap(orderItem, dayTotalsMap);
+                incentiveMap.put("userLogin",userLogin);
+                incentiveMap.put("DispatchContext",ctx);
+                populateDayTotalsMap(orderItem, dayTotalsMap,incentiveMap);
                 if (includeCenterTotals.booleanValue()) {
 	                // next populate centerwise totals 
 	                facilityKey = orderItem.getString("originFacilityId");
@@ -416,7 +711,9 @@ GenericValue orderItem= null;
 	        				centerDayTotalsMap.put(dateKey, dateMap);                    	
 	                    }
 	                }
-	                populateDayTotalsMap(orderItem, centerDayTotalsMap);   
+	                incentiveMap.put("userLogin",userLogin);
+	                incentiveMap.put("DispatchContext",ctx);
+	                populateDayTotalsMap(orderItem, centerDayTotalsMap,incentiveMap);   
                 }
         	}
 		if (orderItemsIterator != null) {
@@ -433,6 +730,201 @@ GenericValue orderItem= null;
         }        
         return result;	        
     }
+    
+    /**
+     *Service for getting producer Period totals
+     *
+     *
+     ** totalsMap : {
+     *  partyId : {
+     *  	dayTotals : {date: {AM  :  {BM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								CM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								TOT: {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx}},
+     *  				  		 PM  : {BM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								CM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								TOT: {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx}},
+     *  						 TOT : {BM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								CM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								TOT: {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx}}},..,
+     *  				 TOT:  {AM  :  {BM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								CM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								TOT: {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx}},
+     *  			  			 PM  : {BM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								CM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								TOT: {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx}},
+     *  					 	TOT : {BM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								CM : {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx},
+     *  								TOT: {qtyLtrs:xx, qtyKgs:xx, kgFat:xx, kgSnf:xx, price:xx}}}
+     *  		}
+     *  	}
+     * 
+     */
+    public static Map<String, Object> getProducerPeriodTotals(DispatchContext ctx,  Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Timestamp fromDate = UtilDateTime.getDayStart((Timestamp)context.get("fromDate"));
+    	String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");
+    	String productId = (String) context.get("productId");
+    	String partyCode = (String) context.get("partyCode");
+		if(UtilValidate.isEmpty(fromDate)){	
+			Debug.logError("fromDate cannot be empty", module);
+			return ServiceUtil.returnError("fromDate cannot be empty");							
+		}	    	
+    	Timestamp thruDate = UtilDateTime.getDayEnd((Timestamp)context.get("thruDate"));
+		if(UtilValidate.isEmpty(thruDate)){	
+			Debug.logError("thruDate cannot be empty", module);
+			return ServiceUtil.returnError("thruDate cannot be empty");							
+		}	  
+    	String facilityId = (String) context.get("facilityId");
+		if(UtilValidate.isEmpty(facilityId)){	
+			Debug.logError("facilityId cannot be empty", module);
+			return ServiceUtil.returnError("facilityId cannot be empty");							
+		}  
+        Boolean includeCenterTotals = (Boolean) context.get("includeCenterTotals");
+        if (includeCenterTotals == null) {
+        	includeCenterTotals = Boolean.FALSE;
+        }		
+    	List<String> facilityIds= FastList.newInstance();    	
+    	List<GenericValue> orderItems= FastList.newInstance();
+        Map<String, Object> result = FastMap.newInstance();
+        Map partyWiseTotals = new TreeMap<String, Object>();;
+        result.put("partyWiseTotals", partyWiseTotals);
+        Map facilityAgents = ProcurementNetworkServices.getFacilityAgents(ctx, UtilMisc.toMap("facilityId", facilityId));
+        if(UtilValidate.isNotEmpty(facilityAgents)){
+        	facilityIds= (List) facilityAgents.get("facilityIds");
+        }
+        try{
+            List<GenericValue> productCatMembers = ProcurementNetworkServices.getProcurementProducts(ctx, context);
+            List<String> productNames = EntityUtil.getFieldListFromEntityList(productCatMembers, "productName", false);
+//Debug.logInfo("productNames=" + productNames, module);         		
+            
+            /*
+             * Here we are populating Incentive Fat,Snf Ranges
+             */
+            Map incentiveMap = FastMap.newInstance();
+            
+            if(UtilValidate.isNotEmpty(productCatMembers)){
+            	for(GenericValue productCatMember : productCatMembers){
+            		String productIdInc = (String)productCatMember.get("productId");
+            		Map inMap = FastMap.newInstance();
+	        		inMap.put("userLogin",userLogin);
+	        		inMap.put("productId",productIdInc);
+	        		inMap.put("facilityId",facilityId);
+	        		inMap.put("priceDate",fromDate);
+	        		GenericValue priceChartList = PriceServices.fetchPriceChart(ctx,inMap);
+	        		if(UtilValidate.isNotEmpty(priceChartList)){
+	        			String procPriceChartId = (String)priceChartList.get("procPriceChartId"); 
+	        			try{
+	        				List priceCondList = FastList.newInstance();
+	        				priceCondList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productIdInc));
+	        				priceCondList.add(EntityCondition.makeCondition("procPriceChartId",EntityOperator.EQUALS,procPriceChartId));
+	        				priceCondList.add(EntityCondition.makeCondition("procurementPriceTypeId",EntityOperator.EQUALS,"PROC_PRICE_SLAB1"));
+	        				EntityCondition priceCondition = EntityCondition.makeCondition(priceCondList);
+	        				List<GenericValue> ProcriceChartList = delegator.findList("ProcurementPrice", priceCondition, null, null, null, false);
+	        				if(UtilValidate.isNotEmpty(ProcriceChartList)){
+	        					GenericValue priceChartDetails = EntityUtil.getFirst(ProcriceChartList);
+	        					BigDecimal fat = (BigDecimal)priceChartDetails.get("fatPercent");
+	        					BigDecimal snf = (BigDecimal)priceChartDetails.get("snfPercent");
+	        					Map fatSnfMap = FastMap.newInstance();
+	        					fatSnfMap.put("fat",fat);
+	        					fatSnfMap.put("snf",snf);
+	        					incentiveMap.put(productIdInc,fatSnfMap);
+	        				}
+	        				
+	        			}catch (Exception e) {
+							// TODO: handle exception
+	        				Debug.logError("Error while getting ",module);
+						}
+	        			
+	        		}
+            	}
+            }
+            
+            
+            
+            
+            List conditionList= FastList.newInstance(); 
+            //let filter out items which has value null fat,snf,unitPrice
+            conditionList.add(EntityCondition.makeCondition("fat", EntityOperator.NOT_EQUAL, null));  
+            conditionList.add(EntityCondition.makeCondition("snf", EntityOperator.NOT_EQUAL, null));  
+            conditionList.add(EntityCondition.makeCondition("unitPrice", EntityOperator.NOT_EQUAL, null));
+            if(UtilValidate.isNotEmpty(supplyTypeEnumId)){
+            	conditionList.add(EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, supplyTypeEnumId));
+            }
+            if(UtilValidate.isNotEmpty(productId)){
+            	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            }
+            if(UtilValidate.isNotEmpty(partyCode)){
+            	conditionList.add(EntityCondition.makeCondition("idValue", EntityOperator.EQUALS, partyCode));
+            }
+        	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));    		
+        	conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));    		
+        	conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "MILK_PROCUREMENT"));    		
+			conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDate));
+			conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
+			//::TODO:: need to handle non-center facilities as well (route, unit, etc)
+			conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));	
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+Debug.logInfo("condition=" + condition, module);         		
+        	orderItems = delegator.findList("OrderHeaderItemProductFacilityItemRolePartyGroupAndIdentification", condition, null, UtilMisc.toList("estimatedDeliveryDate","supplyTypeEnumId"), null, false);
+Debug.logInfo("orderItems.size()================" + orderItems.size(), module);  
+        	Iterator<GenericValue> itemIter = orderItems.iterator();
+        	
+        	Map<String, Object> partyCenterDayTotalsMap = new TreeMap<String, Object>();
+        	while(itemIter.hasNext()) {
+                GenericValue orderItem = itemIter.next();
+                Timestamp estimatedDeliveryDate = orderItem.getTimestamp("estimatedDeliveryDate");
+                String facilityKey = facilityId; //orderItem.getString("originFacilityId");
+                String dateKey = UtilDateTime.toDateString(estimatedDeliveryDate, "yyyy/MM/dd");
+	                // next populate partywise totals 
+	                facilityKey = orderItem.getString("partyId");
+	                Map<String, Object> centerDayTotalsMap;
+	                
+	                //populating totals for all the producers
+	                if(UtilValidate.isEmpty(partyCenterDayTotalsMap)){
+		                Map<String, Object> partyDateMap = initDayMap(productNames);
+		    			partyCenterDayTotalsMap = new TreeMap<String, Object>();
+		    			partyCenterDayTotalsMap.put(dateKey, partyDateMap);
+		    			Map<String, Object> partyDayTotalsTOTMap = initDayMap(productNames);
+		    			partyCenterDayTotalsMap.put("TOT", partyDayTotalsTOTMap);
+	                }
+	                if( partyWiseTotals.get(facilityKey) == null) {
+	                	Map<String, Object> dateMap = initDayMap(productNames);
+	    				centerDayTotalsMap = new TreeMap<String, Object>();
+	    				centerDayTotalsMap.put(dateKey, dateMap);
+	    				Map<String, Object> dayTotalsTOTMap = initDayMap(productNames);
+	    				centerDayTotalsMap.put("TOT", dayTotalsTOTMap);
+	    				Map<String, Object> newFacilityMap = FastMap.newInstance();
+	    				newFacilityMap.put("dayTotals", centerDayTotalsMap);
+	    				partyWiseTotals.put(facilityKey, newFacilityMap);  
+	    				partyWiseTotals.put("dayTotals", partyCenterDayTotalsMap);
+	    				result.put("partyWiseTotals", partyWiseTotals);                	
+	                }
+	                else {
+	                    Map facilityMap = (Map)partyWiseTotals.get(facilityKey); 
+	                    centerDayTotalsMap = (Map)facilityMap.get("dayTotals");
+	                    if (centerDayTotalsMap.get(dateKey) == null) {
+	        				Map<String, Object> dateMap = initDayMap(productNames);
+	        				centerDayTotalsMap.put(dateKey, dateMap);                    	
+	                    }
+	                }
+	                if(partyCenterDayTotalsMap.get(dateKey) == null){
+                    	Map<String, Object> partyDateMap = initDayMap(productNames);
+        				partyCenterDayTotalsMap.put(dateKey, partyDateMap);
+                    }
+	                incentiveMap.put("userLogin",userLogin);
+	                incentiveMap.put("DispatchContext",ctx);
+	                populateProducerDayTotalsMap(orderItem, centerDayTotalsMap,incentiveMap);
+	                populateProducerDayTotalsMap(orderItem, partyCenterDayTotalsMap,incentiveMap);
+        	}
+    	}
+        catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }        
+        return result;	        
+    }
+    
+    
    /**
     * Service for Getting Transfer period Totals and shortages
     * @return periodTransferTotalsMap which look like this this:
@@ -456,8 +948,23 @@ GenericValue orderItem= null;
     	Delegator delegator = ctx.getDelegator();
     	LocalDispatcher dispatcher = ctx.getDispatcher();
     	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Map incentiveAmtMap = FastMap.newInstance();
     	Map<String, Object> result = FastMap.newInstance();
     	Timestamp fromDate = UtilDateTime.getDayStart((Timestamp)context.get("fromDate"));
+    	Timestamp billingDate = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+	  		billingDate = new java.sql.Timestamp(sdf.parse("2014-12-31").getTime());
+	  	} catch (ParseException e) {
+			  Debug.logError("Can not parse the Date String===>"+"2014-12-31",module);
+	  	}catch (Exception e) {
+			// TODO: handle exception
+	  		Debug.logError("Can not parse the Date String===>"+"2014-12-31",module);
+		}
+		
+    	
+    	
+    	
     	if(UtilValidate.isEmpty(fromDate)){	
 			Debug.logError("fromDate cannot be empty", module);
 			return ServiceUtil.returnError("fromDate cannot be empty");							
@@ -506,10 +1013,13 @@ GenericValue orderItem= null;
 		procurementPeriodTotals = getPeriodTotals(ctx , UtilMisc.toMap("fromDate", fromDate, "thruDate", thruDate, "facilityId", facilityId,"userLogin",userLogin));
 		Map<String, Object> amtMap = FastMap.newInstance();
 		Map<String,Object> periodDayTotalsMap = FastMap.newInstance();
+		Map<String,Object> periodProductWiseTotalsMap = FastMap.newInstance();
 		Map<String,Object> tempDayTotalsMap = FastMap.newInstance();
 		// populating Period Day Totals
 		if(!procurementPeriodTotals.isEmpty()){
 			tempDayTotalsMap = (Map)((Map)procurementPeriodTotals.get(facilityId)).get("dayTotals");
+			periodProductWiseTotalsMap.putAll((Map)((Map)tempDayTotalsMap.get("TOT")).get("TOT"));
+			/*periodProductWiseTotalsMap = */
 			for(String key : tempDayTotalsMap.keySet()){
 				periodDayTotalsMap.put(key, ((Map)((Map)tempDayTotalsMap.get(key)).get("TOT")).get("TOT"));
 			}
@@ -525,6 +1035,7 @@ GenericValue orderItem= null;
 		amtMap.put("addnAmt",  BigDecimal.ZERO);
 		amtMap.put("commAmt",  BigDecimal.ZERO);
 		amtMap.put("tipAmt", BigDecimal.ZERO);
+		amtMap.put("incAmt", BigDecimal.ZERO);
 		amtMap.put("opCost",BigDecimal.ZERO);
 		String custTimePeriodId = null;
 		BigDecimal kgFatTot = BigDecimal.ZERO;
@@ -542,11 +1053,29 @@ GenericValue orderItem= null;
 			List<GenericValue> productsList = ProcurementNetworkServices.getProcurementProducts(ctx,UtilMisc.toMap());
 			//here we are calculating tip amt 
 			BigDecimal tipAmt = BigDecimal.ZERO;
+			BigDecimal incAmt = BigDecimal.ZERO;
 			Map tempTipAmountMap = FastMap.newInstance();
 			Map productDetailsMap = FastMap.newInstance();
+			
+			Map incentiveProductDetailsMap = FastMap.newInstance();
+			
+			
 			for(GenericValue product : productsList){
+				incentiveAmtMap.put((String)product.get("brandName")+"IncAmt", BigDecimal.ZERO);
 				tempTipAmountMap.put((String)product.get("brandName")+"TipAmt", BigDecimal.ZERO);
 				productDetailsMap.put((String)product.get("productName"),product.get("productId"));
+				incentiveProductDetailsMap.put((String)product.get("productName"),product.get("brandName"));
+			}
+			// here we are populating product wise incentiveAmt
+			if(UtilValidate.isNotEmpty(periodProductWiseTotalsMap)){
+				for(String prodKey : periodProductWiseTotalsMap.keySet()){
+					if(UtilValidate.isNotEmpty(incentiveProductDetailsMap.get(prodKey))){
+						Map productWiseQuantities = FastMap.newInstance();
+						productWiseQuantities.putAll((Map)periodProductWiseTotalsMap.get(prodKey));
+						incentiveAmtMap.put(((String)incentiveProductDetailsMap.get(prodKey)).concat("IncAmt"),((BigDecimal)incentiveAmtMap.get(((String)incentiveProductDetailsMap.get(prodKey)).concat("IncAmt"))).add((BigDecimal)productWiseQuantities.get("incAmt")));
+						incAmt = incAmt.add(((BigDecimal)productWiseQuantities.get("incAmt")));
+					}
+				}
 			}
 			Map<String, Object> productTotalsMap = FastMap.newInstance();
 			BigDecimal opCost = BigDecimal.ZERO;
@@ -648,6 +1177,7 @@ GenericValue orderItem= null;
 					totAmt =  ((BigDecimal)((Map)((Map)((Map)commAndCartMap.get("FacilityBillingMap")).get(facilityId)).get("tot")).get("totAmt"));
 				}
 			 }
+			BigDecimal totProducerIncentiveAmt = BigDecimal.ZERO;
 			// for getting additon amount
 			Map<String, Object> adjustments = ProcurementServices.getPeriodAdjustmentsForAgent(ctx, UtilMisc.toMap("facilityId", facilityId, "userLogin", userLogin, "fromDate", fromDate, "thruDate", thruDate));
 			if(UtilValidate.isNotEmpty(adjustments)){
@@ -659,11 +1189,19 @@ GenericValue orderItem= null;
 					if(UtilValidate.isNotEmpty(additionsMap)){
 						for(String key: additionsMap.keySet()){
 							amtMap.put("addnAmt", ((BigDecimal)amtMap.get("addnAmt")).add(((BigDecimal)additionsMap.get(key))));
+							if(key.equalsIgnoreCase("MILKPROC_PROD_INCENT")){
+								totProducerIncentiveAmt = totProducerIncentiveAmt.add((BigDecimal)additionsMap.get(key));
+							}
+							
 						}
 					}
 				}
 			}
 			amtMap.put("grossAmt",totAmt.add((BigDecimal)amtMap.get("addnAmt")).add((BigDecimal)amtMap.get("opCost")).add((BigDecimal)amtMap.get("commAmt")).add((BigDecimal)amtMap.get("cartage")));
+			
+			/*if(totProducerIncentiveAmt.compareTo(BigDecimal.ZERO)==0){
+				amtMap.put("grossAmt",((BigDecimal)amtMap.get("grossAmt")).add(incAmt));
+			}*/
 			/*BigDecimal fatMultiple = (new BigDecimal(55)).divide(new BigDecimal(100));
 			if(kgFat.compareTo(BigDecimal.ZERO)!=0){
 				kgFatPrice = (((BigDecimal)amtMap.get("grossAmt")).multiply(fatMultiple)).divide(kgFat,4, rounding).setScale(decimals,rounding);
@@ -681,6 +1219,8 @@ GenericValue orderItem= null;
 	}
 		
 		if(UtilValidate.isNotEmpty(periodDayTotalsMap)){
+			
+			
 			BigDecimal totPrice = (BigDecimal)((Map)periodDayTotalsMap.get("TOT")).get("price");
 			BigDecimal totKgs = (BigDecimal)((Map)periodDayTotalsMap.get("TOT")).get("qtyKgs");
 			BigDecimal totKgFat = (BigDecimal)((Map)periodDayTotalsMap.get("TOT")).get("kgFat");
@@ -924,6 +1464,7 @@ GenericValue orderItem= null;
 		tempTransfersMap.put("outputEntries", tempOutputEntriesList);
 		tempTransfersMap.put("inputEntries", tempInputEntriesList);
 		tempTransfersMap.put("tmPreparationOB", tmPreparationOB);
+		tempTransfersMap.put("incentiveAmtMap",incentiveAmtMap);
 		facilityMap.put("transfers", tempTransfersMap);
 		Map<String, Object> periodTransferTotalsMap = FastMap.newInstance();
 		periodTransferTotalsMap.put(facilityId, facilityMap);
@@ -1355,6 +1896,7 @@ GenericValue orderItem= null;
 	    Timestamp sqlTimestamp = null;
 	    java.sql.Date previousDate = null;
 	  	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	  	
 	  	try {
 	  		sqlTimestamp = new java.sql.Timestamp(sdf.parse(inputDateStr).getTime());
 	  		} catch (ParseException e) {
@@ -1975,6 +2517,10 @@ GenericValue orderItem= null;
 	   	Map<String, Object> fieldsMap = FastMap.newInstance();
 		fieldsMap.put("qtyLtrs", ZERO);
 		fieldsMap.put("qtyKgs", ZERO);
+		fieldsMap.put("subStandardQtyLtrs", ZERO);
+		fieldsMap.put("incQtyLtrs", ZERO);
+		fieldsMap.put("incAmt", ZERO);
+		
 		fieldsMap.put("kgFat", ZERO);
 		fieldsMap.put("kgSnf", ZERO);
 		fieldsMap.put("fat", ZERO);		
@@ -2055,6 +2601,23 @@ GenericValue orderItem= null;
 	   Map orderItem = (Map) orderItemMap.get("orderItem");
 	   productMap.put("qtyLtrs", ((BigDecimal)orderItem.get("qtyLtrs")).add((BigDecimal)productMap.get("qtyLtrs")) );
 	   productMap.put("qtyKgs", ((BigDecimal)orderItem.get("qtyKgs")).add((BigDecimal)productMap.get("qtyKgs")) );
+	   BigDecimal subStaQtyLtrs = BigDecimal.ZERO;
+	   BigDecimal incQtyLtrs = BigDecimal.ZERO;
+	   BigDecimal incAmt = BigDecimal.ZERO;
+	   if(UtilValidate.isNotEmpty(orderItem.get("subStandardQtyLtrs"))){
+		   subStaQtyLtrs = (BigDecimal)orderItem.get("subStandardQtyLtrs");
+	   }
+	   if(UtilValidate.isNotEmpty(orderItem.get("incQtyLtrs"))){
+		   incQtyLtrs = (BigDecimal)orderItem.get("incQtyLtrs");
+	   }
+	   if(UtilValidate.isNotEmpty(orderItem.get("incAmt"))){
+		   incAmt = (BigDecimal)orderItem.get("incAmt");
+	   }
+	   
+	   productMap.put("incQtyLtrs", (incQtyLtrs).add((BigDecimal)productMap.get("incQtyLtrs")) );
+	   productMap.put("incAmt", (incAmt).add((BigDecimal)productMap.get("incAmt")) );
+	   productMap.put("subStandardQtyLtrs", (subStaQtyLtrs).add((BigDecimal)productMap.get("subStandardQtyLtrs")) );
+	   
 	   productMap.put("kgFat", ((BigDecimal)orderItem.get("kgFat")).add((BigDecimal)productMap.get("kgFat")) );
 	   productMap.put("kgSnf", ((BigDecimal)orderItem.get("kgSnf")).add((BigDecimal)productMap.get("kgSnf")) );
 	   productMap.put("fat", ZERO);		
@@ -2095,5 +2658,147 @@ GenericValue orderItem= null;
 	   
    }//End of service
    
+   /**
+    * 
+    * @param ctx
+    * @param context
+    * @return
+    */
+ 
+   public static Map<String, Object> fetchProducerPeriodTotals(DispatchContext ctx,  Map<String, ? extends Object> context) {
+	   	Delegator delegator = ctx.getDelegator();
+	   	LocalDispatcher dispatcher = ctx.getDispatcher();
+	   	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	   	Map resultMap = FastMap.newInstance();
+	   	Timestamp fromDate = UtilDateTime.getDayStart((Timestamp)context.get("fromDate"));
+	   	String supplyTypeEnumId = (String) context.get("purchaseTime");
+	   	String productId = (String) context.get("productId");
+	   	String partyCode = (String) context.get("partyCode");
+	   	String shedCode   = (String) context.get("shedCode");
+	   	String shedId   = (String) context.get("shedId");
+	   	String unitCode   = (String) context.get("unitCode");
+	   	String centerCode = (String) context.get("centerCode");
+	   	Map producerDayWiseMap = FastMap.newInstance();
+	   	if((UtilValidate.isEmpty(shedCode)&&UtilValidate.isEmpty(shedId))||UtilValidate.isEmpty(unitCode) || UtilValidate.isEmpty(centerCode)){
+	   		Debug.logError("ShedCode Or UnitCode or CenterCode is missing",module);
+	   		return ServiceUtil.returnError("ShedCode Or UnitCode or CenterCode is missing");
+	   	}
+	   	if(UtilValidate.isEmpty(partyCode)){
+	   		Debug.logError("Producer Code is missing",module);
+	   		return ServiceUtil.returnError("Producer Code is missing is missing");
+	   	}
+   		Map facilityInMap = FastMap.newInstance();
+   		facilityInMap.put("userLogin",userLogin);
+   		facilityInMap.put("shedCode",shedCode);
+   		facilityInMap.put("shedId",shedId);
+   		facilityInMap.put("unitCode",unitCode);
+   		facilityInMap.put("centerCode",centerCode);
+   		GenericValue facility= (GenericValue)(ProcurementNetworkServices.getAgentFacilityByShedCode(ctx, facilityInMap)).get("agentFacility");
+   		if(UtilValidate.isEmpty(facility)){
+	   		Debug.logError("Error while getting facility details",module);
+	   		return ServiceUtil.returnError("Error while getting facility Details :");
+   		}
+   		try{
+   			Map getProducerPeriodTotalsInMap = FastMap.newInstance();
+   			getProducerPeriodTotalsInMap.put("userLogin",userLogin);
+   			getProducerPeriodTotalsInMap.put("facilityId",facility.get("facilityId"));
+   			getProducerPeriodTotalsInMap.put("partyCode",partyCode);
+   			getProducerPeriodTotalsInMap.put("fromDate",context.get("fromDate"));
+   			getProducerPeriodTotalsInMap.put("thruDate",context.get("thruDate"));
+   			
+   			if(UtilValidate.isNotEmpty(productId)){
+   				getProducerPeriodTotalsInMap.put("productId",productId);
+   			}
+   			if(UtilValidate.isNotEmpty(supplyTypeEnumId)){
+   				getProducerPeriodTotalsInMap.put("supplyTypeEnumId",supplyTypeEnumId);
+   			}
+   			
+   			Map resultPeriodTotalsMap = getProducerPeriodTotals(ctx,getProducerPeriodTotalsInMap);
+   			List<Map> partyDayWiseTotalsList = FastList.newInstance();
+   			
+   			BigDecimal totIncome = BigDecimal.ZERO;
+   			if(UtilValidate.isNotEmpty(resultPeriodTotalsMap) && UtilValidate.isNotEmpty(resultPeriodTotalsMap.get("partyWiseTotals"))){
+   				Map partyWiseTotals = (Map)resultPeriodTotalsMap.get("partyWiseTotals");
+   				if(UtilValidate.isNotEmpty(partyWiseTotals)){
+   					partyWiseTotals.remove("dayTotals");
+   					
+   					if(UtilValidate.isNotEmpty(partyWiseTotals)){
+   						for(Object partyIdKey : partyWiseTotals.keySet()){
+   							String partyId = partyIdKey.toString();
+   							Map partyDayTotalsMap = FastMap.newInstance();
+   							partyDayTotalsMap.putAll((Map) partyWiseTotals.get(partyId));
+   							
+   							Map partyDayWiseTotalsMap = FastMap.newInstance();
+   							partyDayWiseTotalsMap.putAll((Map) partyDayTotalsMap.get("dayTotals"));
+   							for(Object dateKeyObj : partyDayWiseTotalsMap.keySet()){
+   								String dateKey = dateKeyObj.toString();
+   								Map dayWiseTotalsMap = FastMap.newInstance();
+   								dayWiseTotalsMap.putAll((Map)((Map)partyDayWiseTotalsMap.get(dateKey)));
+   								for(Object supplyTypeKey : dayWiseTotalsMap.keySet()){
+   									String supplyKey = supplyTypeKey.toString();
+   									Map supplyValuesMap = FastMap.newInstance();
+   									// SupplyType
+   									if(!supplyKey.equalsIgnoreCase("TOT") || dateKey.equalsIgnoreCase("TOT")){
+   										supplyValuesMap.putAll((Map)dayWiseTotalsMap.get(supplyKey));
+   										//product Wise Details
+   										for(Object productKeyVal : supplyValuesMap.keySet()){
+   											String productKeyString = productKeyVal.toString();
+   											if(!productKeyString.equalsIgnoreCase("TOT") || dateKey.equalsIgnoreCase("TOT")){
+   												Map productWiseValues = FastMap.newInstance();
+   												productWiseValues.putAll((Map)supplyValuesMap.get(productKeyString));
+   												BigDecimal totalQtyKgs = (BigDecimal)productWiseValues.get("totQtyKgs");
+   												if(totalQtyKgs.compareTo(BigDecimal.ZERO)>0 ){
+   													BigDecimal price = BigDecimal.ZERO;
+   													price = (BigDecimal) productWiseValues.get("price");
+   													BigDecimal incAmt = BigDecimal.ZERO;
+   													incAmt = (BigDecimal) productWiseValues.get("incAmt");
+   													
+   													Map productDayWiseMap = FastMap.newInstance();
+   													productDayWiseMap.put("date", dateKey);
+   													productDayWiseMap.put("supplyTime", supplyKey);
+   													productDayWiseMap.put("milkType", productKeyString);
+   													
+   													productDayWiseMap.put("qtyKgs", (BigDecimal) productWiseValues.get("qtyKgs"));
+   													productDayWiseMap.put("qtyLtrs",(BigDecimal) productWiseValues.get("qtyLtrs"));
+   													productDayWiseMap.put("fat", (BigDecimal) productWiseValues.get("fat"));
+   													productDayWiseMap.put("snf", (BigDecimal) productWiseValues.get("snf"));
+   													productDayWiseMap.put("price", (BigDecimal) productWiseValues.get("price"));
+   													productDayWiseMap.put("sQtyKgs", (BigDecimal) productWiseValues.get("sQtyKgs"));
+   													productDayWiseMap.put("sQtyLtrs", (BigDecimal) productWiseValues.get("sQtyLtrs"));
+   													productDayWiseMap.put("sFat", (BigDecimal) productWiseValues.get("sFat"));
+   													
+   													productDayWiseMap.put("cQtyLtrs", (BigDecimal) productWiseValues.get("cQtyLtrs"));
+   													productDayWiseMap.put("incQtyLtrs", (BigDecimal) productWiseValues.get("incQtyLtrs"));
+   													
+   													productDayWiseMap.put("price", price);
+   													productDayWiseMap.put("incAmt", incAmt);
+   													productDayWiseMap.put("amount", incAmt.add(price));
+   													
+   													partyDayWiseTotalsList.add(productDayWiseMap);
+   													
+   													if(productKeyString.equalsIgnoreCase("TOT") && dateKey.equalsIgnoreCase("TOT") && supplyKey.equalsIgnoreCase("TOT")){
+   														totIncome = incAmt.add(price);
+   													}
+   												}
+   											}
+   										}
+   									}
+   								}
+   							}
+   						}
+   					}
+   					producerDayWiseMap.put("partyDayWiseTotalsList",partyDayWiseTotalsList);
+   					producerDayWiseMap.put("totIncome", totIncome);
+   				}
+   			}
+   		}catch(Exception e){
+   			Debug.logError("Error while getting producer period totals",module);
+   			return ServiceUtil.returnError("Error while getting producer period totals");
+   		}
+   		resultMap = ServiceUtil.returnSuccess();
+   		resultMap.put("producerDayWiseMap",producerDayWiseMap);
+   		
+   		return resultMap;
+   }// End of the service
    
 }
