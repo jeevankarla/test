@@ -33,8 +33,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 <fo:page-sequence master-reference="main" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Arial" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Arial" white-space-collapse="false">UNIT: MOTHER DAIRY: G.K.V.K POST: YELAHANKA: BANGALORE: 560065</fo:block>
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Arial" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Arial" white-space-collapse="false">${reportSubHeader.description?if_exists}</fo:block>
                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
             		<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Arial" white-space-collapse="false">_______________________________________________________________________________________________________________________________</fo:block>

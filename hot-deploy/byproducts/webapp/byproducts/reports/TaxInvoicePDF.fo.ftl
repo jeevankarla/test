@@ -45,8 +45,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         <#assign purposeTypeId=invoice.get("purposeTypeId")?if_exists >
         </#if>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
-<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> MOTHER DAIRY, GKVK POST, YELAHANKA, BANGALORE 560 065</fo:block>
+<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+    <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> ${reportHeader.description?if_exists}</fo:block>	
+	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> ${reportSubHeader.description?if_exists}</fo:block>
  	<fo:block text-align="center" border-style="solid">
  	<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 		 <fo:table-column column-width="38%"/>

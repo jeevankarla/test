@@ -32,8 +32,10 @@ under the License.
 	<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold"><fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;Page - <fo:page-number/></fo:block>
 	</fo:static-content>
 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
-<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-<fo:block  keep-together="always" text-align="center" font-weight="bold" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+<fo:block  keep-together="always" text-align="center" font-weight="bold" font-size="12pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
  <#if facilityId?has_content>
 		<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">     ${facilityId?if_exists} Issue Report(Category)<#if reportTypeFlag?has_content>-${reportTypeFlag?if_exists}   </#if>                                                                    </fo:block>

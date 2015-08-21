@@ -31,8 +31,11 @@ under the License.
         <#assign storeList = prodDeptMap.entrySet()> 
 		<fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;                ${uiLabelMap.KMFDairyHeader} &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Page - <fo:page-number/></fo:block>
-				 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				
+				<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;                ${reportHeader.description?if_exists} &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Page - <fo:page-number/></fo:block>
+				 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
 				<fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------</fo:block>
                 <fo:block text-align="center" white-space-collapse="false">&#160;   TOTAL STORE ISSUE REGISTER FOR THE PERIOD BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}</fo:block>                 
              <#--   <fo:block text-align="left" keep-together="always"  >&#160;&#160;&#160;&#160;&#160;----------------------------------------------------------------------------------</fo:block> -->				
