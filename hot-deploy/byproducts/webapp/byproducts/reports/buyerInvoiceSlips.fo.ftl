@@ -94,7 +94,7 @@ under the License.
 								<#assign orderedCustomerAddr = billingAddress.get("orderedPartyAddress")>
 								<#assign shipCustomerAddr = billingAddress.get("shippingAddress")>
             					<fo:table-cell >
-            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if orderedCustomerAddr?has_content>Ship To:<#else>To: </#if> <#if shipCustomerAddr?has_content>${shipCustomerAddr.get("toName")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if orderedCustomerAddr?has_content>Shipment To:<#else>To: </#if> <#if shipCustomerAddr?has_content>${shipCustomerAddr.get("toName")?if_exists} </#if></fo:block>
             						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("address1")?if_exists} </#if></fo:block>
             						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("address2")?if_exists} </#if></fo:block>
             						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("city")?if_exists} - ${shipCustomerAddr.get("postalCode")?if_exists} </#if></fo:block>  
