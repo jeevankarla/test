@@ -91,17 +91,19 @@ under the License.
 							</fo:table-row>
 							
 							<fo:table-row border-style="solid">
+								<#assign orderedCustomerAddr = billingAddress.get("orderedPartyAddress")>
+								<#assign shipCustomerAddr = billingAddress.get("shippingAddress")>
             					<fo:table-cell >
-            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">To: <#if billingAddress?has_content>${billingAddress.get("toName")?if_exists} </#if></fo:block>
-            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address1")?if_exists} </#if></fo:block>
-            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address2")?if_exists} </#if></fo:block>
-            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </#if></fo:block>  
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if orderedCustomerAddr?has_content>Ship To:<#else>To: </#if> <#if shipCustomerAddr?has_content>${shipCustomerAddr.get("toName")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("address1")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("address2")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("city")?if_exists} - ${shipCustomerAddr.get("postalCode")?if_exists} </#if></fo:block>  
             					</fo:table-cell>
             					<fo:table-cell>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">TIN: <#if toPartyDetail?has_content>${toPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">CST: <#if toPartyDetail?has_content>${toPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">AREA CODE: </fo:block>
-            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"> <#if orderedCustomerAddr?has_content>To:${orderedCustomerAddr.get("toName")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if orderedCustomerAddr?has_content>${orderedCustomerAddr.get("address1")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if orderedCustomerAddr?has_content>${orderedCustomerAddr.get("address2")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if orderedCustomerAddr?has_content>${orderedCustomerAddr.get("city")?if_exists} - ${orderedCustomerAddr.get("postalCode")?if_exists} </#if></fo:block>  
             					</fo:table-cell>
             					<fo:table-cell>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice No: MD${invoiceNo?if_exists}</fo:block>
@@ -109,6 +111,20 @@ under the License.
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((invoice.get('invoiceDate')), "dd-MMM-yyyy")}</fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Time: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((invoice.get('createdStamp')), "HH:mm:ss")?if_exists}</fo:block>
             						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+            					</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row border-style="solid">
+            					<fo:table-cell >
+            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">TIN: <#if toPartyDetail?has_content>${toPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
+            					</fo:table-cell>
+            					<fo:table-cell>
+            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">CST: <#if toPartyDetail?has_content>${toPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block>  
+            					</fo:table-cell>
+            					<fo:table-cell>
+            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">AREA CODE: </fo:block>  
             					</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -175,7 +191,7 @@ under the License.
 					            						<#if chapterMap?has_content>
 				            								<#assign chapterDetails = chapterMap.entrySet()>
 				            								<#list chapterDetails as eachDetail>
-				            									<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${eachDetail.getKey()?if_exists}</fo:block>
+				            									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">${eachDetail.getKey()?if_exists}</fo:block>
 				            								</#list>
 				            							</#if>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>

@@ -90,7 +90,8 @@
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
-	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
+	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
+	var associatePartyAutoJSON = ${StringUtil.wrapString(associatePartyJSON)!'[]'};	
 	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
 	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
@@ -175,6 +176,11 @@
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
+			<#if changeFlag?exists && changeFlag == "IcpSalesAmul">
+				var secPartyId = $("#shipSecPartyId").val();
+				var secParty = jQuery("<input>").attr("type", "hidden").attr("name", "shipSecPartyId").val(secPartyId);
+				jQuery(formId).append(jQuery(secParty));
+			</#if>
 			<#if orderId?exists>
 				var order = '${orderId}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
