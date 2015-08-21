@@ -171,6 +171,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String partyId = (String) context.get("partyId");
 		String billToCustomer = (String) context.get("billToCustomer");
+		String shipToSecondaryPartyId = (String) context.get("shipSecPartyId");
 	  	String orderId = (String) context.get("orderId");
 	  	String PONumber = (String) context.get("PONumber");
 	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
@@ -291,8 +292,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			}
 			cart.setPlacingCustomerPartyId(partyId);
 			cart.setShipToCustomerPartyId(partyId);
-			cart.setEndUserCustomerPartyId(partyId);
-			//cart.setShipmentId(shipmentId);
+			if(UtilValidate.isNotEmpty(shipToSecondaryPartyId)){
+				cart.setShipToCustomerPartyId(shipToSecondaryPartyId);
+			}
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
 			cart.setUserLogin(userLogin, dispatcher);
@@ -860,6 +862,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		Locale locale = UtilHttp.getLocale(request);
 		String partyId = (String) request.getParameter("partyId");
 		String billToCustomer = (String)request.getParameter("billToCustomer");//using For Amul Sales
+		String shipSecPartyId = (String)request.getParameter("shipSecPartyId");//using For Amul Sales
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
@@ -1152,6 +1155,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("billToCustomer", billToCustomer);
+		processOrderContext.put("shipSecPartyId", shipSecPartyId);
 		processOrderContext.put("productIds", productIds);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);

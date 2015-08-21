@@ -115,7 +115,7 @@ public class OrderServices {
     public static Map<String, String> salesAttributeRoleMap = FastMap.newInstance();
     public static Map<String, String> purchaseAttributeRoleMap = FastMap.newInstance();
     static {
-       /* salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");*/
+    	salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");
         salesAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
         salesAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
         salesAttributeRoleMap.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");

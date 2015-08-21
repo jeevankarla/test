@@ -46,14 +46,17 @@ $(document).ready(function(){
 		$('#ui-datepicker-div').css('clip', 'auto');
 		<#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 			$("#boothId").autocomplete({ source: boothAutoJson }).keydown(function(e){
-    	<#else>
-		 	$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){ 
+		<#else>
+		 	$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){
 		</#if>
 			if (e.keyCode === 13){
 		      	 $('#boothId').autocomplete('close');
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}
+		});
+		
+		$("#shipSecPartyId").autocomplete({ source: associatePartyAutoJSON}).keydown(function(e){
 		});
 		
 		
@@ -341,9 +344,31 @@ $(document).ready(function(){
         </#if>
         </#if>
         <tr><td><br/></td></tr>
+        
+        <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
+	        <tr>
+	          <td>&nbsp;</td>
+	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Shipping Party:</div></td>
+	          <td>&nbsp;</td>
+			 	<#if shipSecParty?exists && shipSecParty?has_content>  
+		  	  		<input type="hidden" name="shipSecPartyId" id="shipSecPartyId" value="${shipSecParty.partyId.toUpperCase()}"/>  
+	          		<td valign='middle'>
+	            		<div class='tabletext h2'>
+	               			${shipSecParty.partyId.toUpperCase()} [ ${shipSecParty.groupName?if_exists} ] ${partySecondaryAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+	            		</div>
+	          		</td>       
+	       		<#else>               
+	          		<td valign='middle'>
+	          			<input type="text" name="shipSecPartyId" id="shipSecPartyId" />
+	          		</td>
+	          	</#if>
+	        </tr>
+	        <tr><td><br/></td></tr>
+        </#if>
+        
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if></div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#elseif changeFlag?exists && changeFlag=='IcpSalesAmul'>Branch:<#else>Party:</#if></div></td>
           <td>&nbsp;</td>
         <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 			<#if booth?exists && booth?has_content>  

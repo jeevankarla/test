@@ -33,23 +33,29 @@ orderIds = EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 custCondList = [];
 //give prefrence to ShipToCustomer
 custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SHIP_TO_CUSTOMER", "PLACING_CUSTOMER", "BILL_TO_CUSTOMER")));
 shipCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 orderRoles = delegator.findList("OrderRole", shipCond, null, null, null, false);
-if(UtilValidate.isEmpty(orderRoles)){
-custCondList.clear();
-custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
-custCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
-orderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
-}
 
 orderHeader.each{ eachHeader ->
 	orderId = eachHeader.orderId;
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	partyId = "";
 	if(orderParty){
-		partyId = orderParty.get(0).get("partyId");
+		placingParty = EntityUtil.filterByCondition(orderParty, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"));
+		if(placingParty){
+			partyId = placingParty.get(0).get("partyId");
+		}else{
+			shippingParty = EntityUtil.filterByCondition(orderParty, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+			if(shippingParty){
+				partyId = shippingParty.get(0).get("partyId");
+			}else{
+				billingParty = EntityUtil.filterByCondition(orderParty, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+				if(billingParty){
+					partyId = shippingParty.get(0).get("partyId");
+				}
+			}
+		}
 	}
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	tempData = [:];
@@ -61,4 +67,3 @@ orderHeader.each{ eachHeader ->
 	orderList.add(tempData);
 }
 context.orderList = orderList;
-
