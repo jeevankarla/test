@@ -34,7 +34,7 @@ dctx = dispatcher.getDispatchContext();
 effectiveDate = parameters.effectiveDate;
 priceTypeId=parameters.priceTypeId;
 changeFlag=parameters.changeFlag;
-
+shipSecPartyId = parameters.shipSecPartyId;
 productCatageoryId=parameters.productCatageoryId;
 
 if(changeFlag=="IcpSales"){
@@ -106,6 +106,10 @@ if(changeFlag != "AdhocSaleNew"){
 		displayGrid = false;
 		return result;
 	}
+	if(shipSecPartyId){
+		shipSecParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", shipSecPartyId), false);
+		context.shipSecParty = shipSecParty;
+	}
 	context.productCategoryId = parameters.productCatageoryId;
 	context.party = party;
 	context.orderTaxType = parameters.orderTaxType;
@@ -135,6 +139,15 @@ if(partyPostalAddress){
 	partyPostalAddress = EntityUtil.getFirst(partyPostalAddress);
 	partyAddress = partyPostalAddress.address1;
 	context.partyAddress = partyAddress;
+}
+
+if(shipSecPartyId){
+	secondPartyPostalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, shipSecPartyId), null,null,null, false);
+	if(secondPartyPostalAddress){
+		partyPostalAddress = EntityUtil.getFirst(secondPartyPostalAddress);
+		partyAddress = partyPostalAddress.address1;
+		context.partySecondaryAddress = partyAddress;
+	}
 }
 
 prodList=[];

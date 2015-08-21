@@ -18,6 +18,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.party.party.PartyHelper;
 
 JSONArray partyJSON = new JSONArray();
+JSONArray associatePartyJSON = new JSONArray();
 JSONObject partyNameObj = new JSONObject();
 dctx = dispatcher.getDispatchContext();
 subDivDeptFlag=parameters.subDivDeptFlag;
@@ -68,7 +69,29 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 				partyDetailsList=retailerPartyDetailsList;
 			}
 		}
-	}	
+	}
+	if(roleTypeId && roleTypeId == "EXCLUSIVE_CUSTOMER"){
+		inputMap = [:];
+		inputMap.put("userLogin", userLogin);
+		inputMap.put("roleTypeId", "GCMMF_GODOWN");
+		if(UtilValidate.isNotEmpty(parameters.partyStatusId)){
+				inputMap.put("statusId", parameters.partyStatusId);
+		}
+		associatePartyDetails = ByProductNetworkServices.getPartyByRoleType(dctx, inputMap);
+		partyAssocDetailsList = [];
+		if(UtilValidate.isNotEmpty(associatePartyDetails)){
+			partyAssocDetailsList = associatePartyDetails.get("partyDetails");
+		}
+		partyAssocDetailsList.each{eachParty ->
+			JSONObject newPartyObj = new JSONObject();
+			partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
+			newPartyObj.put("value",eachParty.partyId);
+			newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
+			//partyNameObj.put(eachParty.partyId,partyName);
+			associatePartyJSON.add(newPartyObj);
+		}
+		context.associatePartyJSON = associatePartyJSON;
+	}
 		// filter OUT depratments if this flag 
 		if(UtilValidate.isEmpty(parameters.changeFlag)){
 			// sub division here

@@ -86,12 +86,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 									    <fo:block font-weight="bold">BUYER'S NAME </fo:block>  
 									 </fo:table-cell>   
 								 </fo:table-row> 
-								  <fo:table-row> 
+								  <fo:table-row>
+								  	 
+								  	<#assign orderedCustomerAddr = billingAddress.get("orderedPartyAddress")>
+									<#assign shipCustomerAddr = billingAddress.get("shippingAddress")> 
 									 <fo:table-cell>
-									    <fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap">To: <#if billingAddress?has_content>${billingAddress.get("toName")?if_exists} </#if></fo:block>
-	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address1")?if_exists} </#if></fo:block>
-	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address2")?if_exists} </#if></fo:block>
-	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </#if></fo:block>  
+									    <fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap">To: <#if shipCustomerAddr?has_content>${shipCustomerAddr.get("toName")?if_exists} </#if></fo:block>
+	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("address1")?if_exists} </#if></fo:block>
+	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("address2")?if_exists} </#if></fo:block>
+	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if shipCustomerAddr?has_content>${shipCustomerAddr.get("city")?if_exists} - ${shipCustomerAddr.get("postalCode")?if_exists} </#if></fo:block>  
 					            	</fo:table-cell>   
 								 </fo:table-row>
 								  <fo:table-row> 
