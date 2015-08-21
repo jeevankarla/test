@@ -55,10 +55,10 @@
         <value xml:lang="en">Procurement Date</value>        
     </property>
     <property key="SQuantityLtrs">
-        <value xml:lang="en">SourQtyLts</value>        
+        <value xml:lang="en">SQtyLts</value>        
     </property>
     <property key="CQuantityLtrs">
-        <value xml:lang="en">CurdQtyLts</value>        
+        <value xml:lang="en">CQtyLts</value>        
     </property>
     <property key="CommonRates">
         <value xml:lang="en">Rates</value>        

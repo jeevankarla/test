@@ -364,6 +364,24 @@ public class Conversion {
 				request.setAttribute("_ERROR_MESSAGE_","Error while coverting mpMas To sql :"+e.getMessage());
 				return "error";
 			}
+		}else if(fileName.equalsIgnoreCase("GBMAS.DBF")){
+			try{
+				Debug.log("file name correct");
+				dbfToVbizResultMap = dispatcher.runSync("gbMasToVbiz",dbfToVbizInMap);
+				if(ServiceUtil.isError(dbfToVbizResultMap)){
+					String resultMsg = (String)dbfToVbizResultMap.get("errorMessage");
+					request.setAttribute("_ERROR_MESSAGE_", resultMsg);
+					return "error";
+				}
+			}catch (GenericServiceException e) {
+				Debug.logError("Error while coverting gbMas To vbiz "+e, module);
+				request.setAttribute("_ERROR_MESSAGE_","Error while coverting mpMas To sql :"+e.getMessage());
+				return "error";
+			}
+		}else{
+			Debug.logError("File Name MisMatch ", module);
+			request.setAttribute("_ERROR_MESSAGE_","Uploaded fileName is Wrong. Please Check the File Name ::");
+			return "error";
 		}
 		String resultMsg = (String)dbfToVbizResultMap.get("successMessage");
 		request.setAttribute("_EVENT_MESSAGE_", resultMsg);
@@ -518,14 +536,22 @@ public class Conversion {
 		// Uploading the file content - End
 	}
 	
-	public static String importExcelEntityData(HttpServletRequest request, HttpServletResponse response)  throws Exception{
+	 /**
+ 	  * DBF to Vbiz Procurement
+ 	  * 
+ 	  * 
+ 	  */
+ 	public static String uploadProcDbfFile(HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		String errorMessage ="";  
 		Map paramMap = UtilHttp.getParameterMap(request);
-		
+		String shedCode ="" ;
+		if(UtilValidate.isNotEmpty(paramMap)){
+			shedCode = (String)paramMap.get("shedCode");
+		}
 		String tmpUploadRepository = UtilProperties.getPropertyValue(
 				"general.properties", "http.upload.tmprepository",
 				"runtime/tmp");
@@ -588,66 +614,79 @@ public class Conversion {
 			Debug.logError(errorMessage, module);
 			request.setAttribute("_ERROR_MESSAGE_",errorMessage);
 			return "error";
-            	
+           	
 		}
 		// Creation & writing to the file in server - Start
 		FileOutputStream fout=null;
-		File fileCsv = new File(tmpUploadRepository + "/" +"excelToCsv.csv");
-		FileOutputStream csvOut = new FileOutputStream(fileCsv);
 		
 		try {
 			fout = new FileOutputStream(file_name);
 			fout.flush();
 			fout.write(extract_bytes);
 			
-			Workbook workbook = Workbook.getWorkbook(new File(file_name));
-			new ExcelToCSV(workbook,csvOut,null,false,IN_DATA_DIR);
-			csvOut.flush();
-			csvOut.close();
-			
 		} catch (IOException ioe_ex) {
 			Debug.logInfo(ioe_ex.getMessage(), module);			
 			request.setAttribute("_ERROR_MESSAGE_",ioe_ex.getMessage());
 			return "error";
+			          	
 		} 
 		finally{
 			fout.flush();
-			fout.close();
-			csvOut.flush();
-			csvOut.close();
+			fout.close();			
 		}
-		SlurpCSV.processFiles(IN_DATA_DIR, OUT_DATA_DIR);
-		Map entityImportDirMap = FastMap.newInstance();
-		Map resultMap = FastMap.newInstance();
-		entityImportDirMap.put("userLogin", userLogin);
-		entityImportDirMap.put("path", OUT_DATA_DIR_UPLOAD);
-		entityImportDirMap.put("recursiveImport", Boolean.TRUE);
-		try{
-			resultMap = dispatcher.runSync("entityImportDir",entityImportDirMap);
-		    if(ServiceUtil.isError(resultMap)){
-		    	emptyTmpDir(fileCsv);
-			    emptyTmpDir(new File(file_name));
-			    emptyTmpDir(new File(OUT_DATA_DIR_UPLOAD));
-			    emptyTmpDir(new File(IN_DATA_DIR));
-					String resultMsg = (String)resultMap.get("errorMessage");
+		fileName = file_name.replace(tmpUploadRepository+"/" ,"");
+		Map dbfToVbizInMap = FastMap.newInstance();
+		Map dbfToVbizResultMap = FastMap.newInstance();
+		dbfToVbizInMap.put("userLogin", userLogin);
+		dbfToVbizInMap.put("file_name", file_name);
+		dbfToVbizInMap.put("shedCode",shedCode);
+		if(fileName.equalsIgnoreCase("MPROC.DBF")){
+			try{
+				dbfToVbizResultMap = dispatcher.runSync("mProcToVbiz",dbfToVbizInMap);
+				if(ServiceUtil.isError(dbfToVbizResultMap)){
+					String resultMsg = (String)dbfToVbizResultMap.get("errorMessage");
 					request.setAttribute("_ERROR_MESSAGE_", resultMsg);
 					return "error";
 				}
-		    //empty all directories 
-		    emptyTmpDir(fileCsv);
-		    emptyTmpDir(new File(file_name));
-		    emptyTmpDir(new File(OUT_DATA_DIR_UPLOAD));
-		    emptyTmpDir(new File(IN_DATA_DIR));
-		    
 			}catch (GenericServiceException e) {
 				Debug.logError("Error while coverting mpMas To sql "+e, module);
-				request.setAttribute("_ERROR_MESSAGE_","Error while coverting mpMas To sql :"+e.getMessage());
+				request.setAttribute("_ERROR_MESSAGE_","Error while coverting MPROC To vbiz :"+e.getMessage());
 				return "error";
 			}
-		//fileName = file_name.replace(tmpUploadRepository+"/" ,"");
-		//String resultMsg = (String)resultMap.get("messages"); 
-		request.setAttribute("_EVENT_MESSAGE_", (resultMap.get("messages")).toString());
+		}else if(fileName.equalsIgnoreCase("MPADDN.DBF")){
+			try{
+				dbfToVbizResultMap = dispatcher.runSync("orderAdjustmentsFromDbfToVbiz",dbfToVbizInMap);
+				if(ServiceUtil.isError(dbfToVbizResultMap)){
+					String resultMsg = (String)dbfToVbizResultMap.get("errorMessage");
+					request.setAttribute("_ERROR_MESSAGE_", resultMsg);
+					return "error";
+				}
+			}catch (GenericServiceException e) {
+				Debug.logError("Error while coverting mpMas To sql "+e, module);
+				request.setAttribute("_ERROR_MESSAGE_","Error while coverting MPADDN To vbiz :"+e.getMessage());
+				return "error";
+			}
+		}else if(fileName.equalsIgnoreCase("MPDED.DBF")){
+			try{
+				dbfToVbizResultMap = dispatcher.runSync("orderAdjustmentsFromDbfToVbiz",dbfToVbizInMap);
+				if(ServiceUtil.isError(dbfToVbizResultMap)){
+					String resultMsg = (String)dbfToVbizResultMap.get("errorMessage");
+					request.setAttribute("_ERROR_MESSAGE_", resultMsg);
+					return "error";
+				}
+			}catch (GenericServiceException e) {
+				Debug.logError("Error while coverting Dbf To sql "+e, module);
+				request.setAttribute("_ERROR_MESSAGE_","Error while coverting MPDED To vbiz :"+e.getMessage());
+				return "error";
+			}
+		}else{
+			Debug.logError("File Name MisMatch ", module);
+			request.setAttribute("_ERROR_MESSAGE_","Uploaded fileName is Wrong. Please Check the File Name ::");
+			return "error";
+		}
+		String resultMsg = (String)dbfToVbizResultMap.get("successMessage");
+		request.setAttribute("_EVENT_MESSAGE_", resultMsg);
 		return "success";
-	}//End of the service
+	}//End of the service 
 	
 }
