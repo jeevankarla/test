@@ -216,6 +216,80 @@
     </request-map>
     
     
+    <request-map uri="EditProcFacilityRoute">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProcFacilityRoute"/>
+    </request-map>
+    <request-map uri="EditProcFacilityContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProcFacilityContent"/>
+    </request-map>
+    <request-map uri="EditProcFacilityParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProcFacilityParties"/>
+    </request-map>
+    <request-map uri="EdiProctFacilityGeoPoint">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EdiProctFacilityGeoPoint"/>
+    </request-map>
+    <request-map uri="FindProcFacilityRates">
+    	<security https="true" auth="true"/>   	 	
+        <response name="success" type="view" value="FindProcFacilityRates"/>             
+    </request-map>
+    <request-map uri="updateProcFacilityRoute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFacilityRoute"/>
+        <response name="success" type="view" value="EditProcFacilityRoute"/>
+        <response name="error" type="view" value="EditProcFacilityRoute"/>
+    </request-map>
+    <request-map uri="createProcFacilityContent">
+        <security auth="true" https="true"/>
+        <event path="component://product/script/org/ofbiz/product/storage/FacilityEvents.xml" type="simple" invoke="createFacilityContent"/>
+        <response name="success" type="request-redirect" value="EditProcFacilityContent">
+            <redirect-parameter name="facilityId"/>
+        </response>
+        <response name="error" type="view" value="EditProcFacilityContent"/>
+    </request-map>
+    <request-map uri="deleteProcFacilityContent">
+        <security auth="true" https="true"/>
+        <event invoke="deleteFacilityContent" type="service"/>
+        <response name="success" type="request-redirect" value="EditProcFacilityContent">
+            <redirect-parameter name="facilityId"/>
+        </response>
+        <response name="error" type="view" value="EditProcFacilityContent"/>
+    </request-map>
+    <request-map uri="removeProcPartyFromFacility">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removePartyFromFacility"/>
+        <response name="success" type="view" value="EditProcFacilityParties"/>
+        <response name="error" type="view" value="EditProcFacilityParties"/>
+    </request-map>
+    <request-map uri="CreateNewProcFacilityRate">
+    	<security https="true" auth="true"/>  
+        <response name="success" type="view" value="CreateNewProcFacilityRate"/>           
+    </request-map>
+    <request-map uri="processNewProcFacilityRateAmount">
+    	<security https="true" auth="true"/>  
+    	<event type="java" path="org.ofbiz.product.product.FacilityRateServices" invoke="createNewMultiFacilityRate"/>  	   	 	
+        <response name="success" type="view" value="FindProcFacilityRates"/>           
+    </request-map>
+    <request-map uri="FindProcFacilityRates">
+    	<security https="true" auth="true"/>   	 	
+        <response name="success" type="view" value="FindProcFacilityRates"/>             
+    </request-map>
+    <request-map uri="createFacilityContactMech">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createFacilityContactMech"/>   	
+    	<response name="success" type="view" value="EditFacility"/>
+    	<response name="error" type="view" value="EditFacility"/>       	
+    </request-map>
+    <request-map uri="CreateProcFacility">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProcFacility"/>
+        <response name="success" type="view" value="ProcFacilityProfile"/>
+        <response name="error" type="view" value="ProcFacilityProfile"/>
+    </request-map>
+    
     <request-map uri="FindProcFacility">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindProcFacility"/>
@@ -228,13 +302,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGeoPoint"/>
     </request-map> 
-     <request-map uri="EditFacilityParties">
+     <request-map uri="EditFacilityParty">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFacilityParties"/>
+        <response name="success" type="view" value="EditFacilityParty"/>
     </request-map>
      <request-map uri="EditFacilityContent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFacilityContent"/>
+        <response name="success" type="view" value="EditFacilityContents"/>
     </request-map>
     <request-map uri="PartyFinancialHistory">
         <security https="true" auth="true"/>
@@ -621,6 +695,10 @@
         <event type="java" path="in.vasista.vbiz.procurement.PriceServices" invoke="createPriceChart"/>
         <response name="success" type="view" value="ProcurementPriceChart"/>
         <response name="error" type="view" value="createNewPriceChart"/>
+    </request-map>
+    <request-map uri="priceChart.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="priceChartCSV"/>
     </request-map>
     <request-map uri="MilkTransfers">
         <security auth="true" https="true"/>
@@ -1073,6 +1151,148 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GBMASFoxproCsv"/>
     </request-map>
+    
+    <!-- facility -->
+    
+    <request-map uri="EditFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFacility"/>
+    </request-map>
+    <request-map uri="FacilityOverView">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcFacilityProfile"/>
+    </request-map>
+    <request-map uri="ContactInformation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ContactInformation"/>
+    </request-map>
+    <request-map uri="FacilityProfile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FacilityProfile"/>
+    </request-map>
+    <request-map uri="FindFacilityRateAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFacilityRateAmount"/>
+    </request-map>
+    <request-map uri="CreateNewRateAmount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewRateAmount"/>
+    </request-map>
+    <request-map uri="recoveryCrateLoss">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewRateAmount"/>
+    </request-map>
+    <request-map uri="discountLeakage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewRateAmount"/>
+    </request-map>
+    <request-map uri="discountScheme">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewRateAmount"/>
+    </request-map>
+    <request-map uri="discountTPRD">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewRateAmount"/>
+    </request-map>
+    <request-map uri="processNewRateAmount">
+    	<security https="true" auth="true"/>  
+    	<event type="java" path="org.ofbiz.product.product.FacilityRateServices" invoke="createNewMultiFacilityRate"/>  	   	 	
+        <response name="success" type="view" value="FindFacilityRateAmount"/>           
+    </request-map>
+    <request-map uri="FindFinAccountAttribute">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccountAttribute"/>
+    </request-map>
+    <request-map uri="CreateFinAccountAttribute">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateFinAccountAttribute"/>
+    </request-map>
+    <request-map uri="createFinAccountAttribute">
+    	<security https="true" auth="true"/>  
+    	<event type="service" invoke="createFinAccountAttribute"/>
+        <response name="success" type="view" value="FindFinAccountAttribute"/>           
+    </request-map>
+    <request-map uri="EditProcurementFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProcurementFacility"/>
+    </request-map>
+    <request-map uri="createNewProcFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProcurementFacility"/>
+    </request-map>
+    
+    <!-- Loan -->
+    <request-map uri="procurementloan">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="procurementloan"></response>
+    </request-map>
+    <request-map uri="NewLoan">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewLoan"></response>
+    </request-map>
+    <request-map uri="createEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
+    <request-map uri="getLoanTypeIdsForLoanType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="LoanTypeIdsListForLoanType.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
+    <request-map uri="deleteEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="deleteEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
+    <request-map uri="cancelEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="cancelEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
+    <request-map uri="getLoanAmountsByLoanType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getLoanAmountsByLoanType"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="loanRecovery">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="loanRecovery"></response>
+    </request-map>
+     <request-map uri="NewLoanRecovery">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewLoanRecovery"></response>
+    </request-map>
+    <request-map uri="createEmployeeLoanRecovery">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createEmployeeLoanRecovery"/>
+    	<response name="success" type="view" value="loanRecovery"/>
+    	<response name="error" type="view" value="loanRecovery"/>
+    </request-map>
+    <request-map uri="CreateNewPriceChart">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="in.vasista.vbiz.procurement.ProcurementServices" invoke="CreateNewPriceChart"/>
+    	<response name="success" type="view" value="newProcPriceChart"/>
+    	<response name="error" type="view" value="newProcPriceChart"/>
+    </request-map>
+    <request-map uri="procurementNewPriceChart">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="procurementNewPriceChart"></response>
+    </request-map>
+    <request-map uri="newProcPriceChart">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="newProcPriceChart"></response>
+    </request-map>
+    
     <!-- View Mappings --> 
     
 	<view-map name="AddSourDistribution" type="screen" page="component://procurement/widget/ProcurementScreens.xml#AddSourDistribution"/>    
@@ -1121,6 +1341,7 @@
     <view-map name="unitWiseCenterWiseMilkCollections" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#unitWiseCenterWiseMilkCollections" content-type="text/plain" encoding="none"/> 
     <view-map name="ProcurementPriceChart" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementPriceChart"/>
     <view-map name="ProcurementPriceChartAlt" type="screen" page="component://procurement/widget/ProcurementPriceScreens.xml#ProcurementPriceChartAlt"/>
+    <view-map name="priceChartCSV" type="screencsv" page="component://procurement/widget/ProcurementScreens.xml#priceChartCSV" content-type="text/csv"/>
     <view-map name="CentreWiseKgfatAccount" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#CentreWiseKgfatAccount" content-type="text/plain" encoding="none"/> 
     <view-map name="ProcurementLookupFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementLookupFacility"/>
     <view-map name="ProcurementCenterLookupFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementCenterLookupFacility"/>
@@ -1151,10 +1372,21 @@
     <view-map name="UnitWiseMilkBillSummary" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitWiseMilkBillSummary" content-type="text/plain" encoding="none"/>
     <view-map name="FindProcurementEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindProcurementEntry"/>
     <view-map name="main" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FacilityTree"/>
+    
 	<view-map name="FindProcFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindProcFacility"/>
-	<view-map name="EditProcFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditProcFacility"/>
-	<view-map name="EditFacilityParties" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityParties"/>
-	<view-map name="EditFacilityContent" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityContent"/>
+	<view-map name="EditFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacility"/>
+	<view-map name="ProcFacilityProfile" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FacilityProfile"/>
+ 	<view-map name="ContactInformation" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ContactInformation"/>
+  	<view-map name="FacilityProfile" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FacilityProfile"/>
+ 	<view-map name="FindFacilityRateAmount" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindFacilityRateAmount"/>	
+    <view-map name="CreateNewRateAmount" type="screen" page="component://procurement/widget/ProcurementScreens.xml#CreateNewRateAmount"/>
+    <view-map name="EditProcFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacility"/>
+	<view-map name="FindFinAccountAttribute" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindFinAccountAttribute"/>
+	<view-map name="CreateFinAccountAttribute" type="screen" page="component://procurement/widget/ProcurementScreens.xml#CreateFinAccountAttribute"/>
+    <view-map name="EditProcurementFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditProcurementFacility"/>
+	
+	<view-map name="EditFacilityParty" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityParties"/>
+	<view-map name="EditFacilityContents" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityContent"/>
     <view-map name="EditFacilityGeoPoint" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityGeoPoint"/>
     <view-map name="ProcurementRates" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementRates"/>
     <view-map name="PartyFinancialHistory" type="screen" page="component://procurement/widget/ProcurementScreens.xml#PartyFinancialHistory"/>
@@ -1229,5 +1461,27 @@
 	  <!-- view Mappings for RegionWise Reports -->
 	  <view-map name="ProcurementPayment" type="screenfop" page="component://procurement/widget/ProcurementReportScreens.xml#ProcurementPayment" content-type="text/plain"/>
 	  <view-map name="RegionWiseThreeYearsComparision" type="screenfop" page="component://procurement/widget/ProcurementReportScreens.xml#RegionWiseThreeYearsComparision" content-type="text/plain"/>
+	  
+	  <!-- loan view -->
+	  <view-map name="procurementloan" type="screen" page="component://procurement/widget/ProcurementLoanScreens.xml#procurementloan"></view-map>
+      <view-map name="CreateNewLoan" type="screen" page="component://procurement/widget/ProcurementLoanScreens.xml#CreateNewLoan"></view-map>
+    
+      <view-map name="loanRecovery" type="screen" page="component://procurement/widget/ProcurementLoanScreens.xml#loanRecovery"></view-map>
+      <view-map name="CreateNewLoanRecovery" type="screen" page="component://procurement/widget/ProcurementLoanScreens.xml#CreateNewLoanRecovery"></view-map>
+    
+      <view-map name="loanDisbursement" type="screen" page="component://procurement/widget/ProcurementLoanScreens.xml#loanDisbursement"></view-map>
+      
+	  <view-map name="EditProcFacilityRoute" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityRoute"/>
+      <view-map name="EditProcFacilityContent" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditProcFacilityContent"/>
+      <view-map name="EditProcFacilityParties" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditprocFacilityParties"/>
+      <view-map name="EdiProctFacilityGeoPoint" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityGeoPoint"/>
+      <view-map name="FindProcFacilityRates" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindFacilityRates"/>
+	  <view-map name="CreateNewProcFacilityRate" type="screen" page="component://procurement/widget/ProcurementScreens.xml#CreateNewFacilityRate"/>
+      <view-map name="FindProcFacilityRates" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindFacilityRates"/>
+	
+	  <view-map name="procurementNewPriceChart" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementNewPriceChart"/>
+	  <view-map name="newProcPriceChart" type="screen" page="component://procurement/widget/ProcurementScreens.xml#NewProcPriceChart"/>
+	  
+	  
 	  
 </site-conf>

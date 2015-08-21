@@ -60,6 +60,12 @@
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
         <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
     </service>
+    <service name="updateSLPTCStatus" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsSLTransporterServices" invoke="updateSLPTCStatus">
+        <description>Update Billing StatusId.</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
+    </service>
     <service name="createPtcTransporterRecovery" engine="java" auth="true" 
         location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="createPtcTransporterRecovery">
         <description>Creating Transporter Recovery.</description>
@@ -91,5 +97,21 @@
         <attribute name="recoveryId" mode="IN" type="String" optional="false"/> 
 		<attribute name="description" mode="IN" type="String" optional="true"/>  
 		<attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>   
+    </service>
+    <service name="populateSecondLevelMRPeriodBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsSLTransporterServices" invoke="populateSLPtcPeriodBilling">
+        <description>populate PTC Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="milkToPartyId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="generateSLPtcTranporterMargin" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptsSLTransporterServices" invoke="generateSLPtcTranporterMargin">
+        <description>Generate PTC Transporter Margin.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="INOUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="milkToPartyId" mode="IN" type="String" optional="true"/>
     </service> 
 </services>

@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -71,7 +72,9 @@ import java.text.ParseException;
 import java.lang.NullPointerException;
 
 
+import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementReports;
+
 import java.math.BigDecimal;
 
 
@@ -413,7 +416,117 @@ public class ProcurementNetworkServices {
 	        result.put("agentsList", agentsList);
 
 	        return result;
-	    }   
+	    }
+	  
+	  
+	  /**
+	   * 
+	   * @param ctx
+	   * @param context
+	   * @return
+	   */
+	  public static Map<String, Object> getCenterProduers(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	    	String centerId = (String)context.get("centerId");
+	    	String producerCode = (String)context.get("producerCode");
+	    	List<GenericValue> producersList = FastList.newInstance();
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	if(UtilValidate.isEmpty(centerId)){
+	    		result.put("producersList",producersList);
+	    		return result;
+	    	}
+	    	//
+	    	List<EntityCondition> condList = FastList.newInstance();
+	    	condList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,centerId));
+	    	condList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"MILK_PRODUCER"));
+	    	EntityCondition condition = EntityCondition.makeCondition(condList,EntityJoinOperator.AND);
+	    	try{
+		    	List<GenericValue> facilityProducerParties = delegator.findList("FacilityParty", condition, null, null, null, false);
+		    	if(UtilValidate.isEmpty(facilityProducerParties)){
+	    			result.put("producersList",producersList);
+		    		return result;
+		    	}
+	    		
+	    		List<String> partyIds = EntityUtil.getFieldListFromEntityList(facilityProducerParties, "partyId", false);
+	    		condList.clear();
+	    		condList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
+	    		condList.add(EntityCondition.makeCondition("partyIdentificationTypeId",EntityOperator.EQUALS,"PRODUCER_CODE"));
+	    		if(UtilValidate.isNotEmpty(producerCode)){
+	    			condList.add(EntityCondition.makeCondition("idValue",EntityOperator.EQUALS,producerCode));
+	    		}
+	    		condition = EntityCondition.makeCondition(condList,EntityJoinOperator.AND);
+	    		producersList = delegator.findList("PartyIdentificationAndPartyGroup",condition,null,null,null,false);
+	    		result.put("producersList",producersList);
+	    		
+	    	}catch (Exception e) {
+				// TODO: handle exception
+	    		Debug.log("Error while getting producers List =========="+e,module);
+	    		result.put("producersList",producersList);
+	    		return result;
+			}
+	    	 
+	        result.put("producersList", producersList);
+
+	        return result;
+	    }
+	  
+	  /**
+	   * 
+	   * @param ctx
+	   * @param context
+	   * @return producerDetails
+	   */
+	  public static Map<String, Object> getProduerDetails(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	    	String shedCode = (String)context.get("shedCode");
+	    	String centerCode = (String)context.get("centerCode");
+	    	String unitCode = (String)context.get("unitCode");
+	    	String producerCode = (String)context.get("producerCode");
+	    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+	    	if(UtilValidate.isEmpty(fromDate)){
+	    		fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	    	}
+	    	List<GenericValue> producerDetailsList = FastList.newInstance();
+	    	GenericValue producerDetails = null;
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	if(UtilValidate.isEmpty(centerCode) || UtilValidate.isEmpty(unitCode) || UtilValidate.isEmpty(shedCode) ){
+	    		result.put("producerDetails",producerDetails);
+	    		return result;
+	    	}
+	    	//
+	    	Map getFacilityDetails =  getAgentFacilityByShedCode(ctx, context);
+	    	GenericValue agentFacility= (GenericValue)(getAgentFacilityByShedCode(ctx, context)).get("agentFacility");
+	    	if(UtilValidate.isEmpty(agentFacility)){
+	    		Debug.logError("Agent Not Found ====" , module);
+	    		result.put("producerDetails",producerDetails);
+	    		return result;
+	    	}
+	    	
+	    	String facilityId = (String) agentFacility.get("facilityId");
+	    	
+	    	List conditionList = FastList.newInstance();
+	    	conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,facilityId));
+	    	conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"MILK_PRODUCER"));
+	    	conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId",EntityOperator.EQUALS,"PRODUCER_CODE"));
+	    	conditionList.add(EntityCondition.makeCondition("idValue",EntityOperator.EQUALS,producerCode));
+	    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
+	    	try{
+		    	producerDetailsList = delegator.findList("FacilityPartyPartyGroupAndIdentification",condition,null, null, null, false);
+		    	if(UtilValidate.isEmpty(producerDetailsList)){
+		    		Debug.logError("Error while getting producersList=====",module);
+		    		result.put("producerDetails",producerDetails);
+		    		return result;
+		    	} 
+		    	producerDetailsList = EntityUtil.filterByDate(producerDetailsList);
+		    	producerDetails = EntityUtil.getFirst(producerDetailsList);
+	    	}catch (Exception e) {
+				// TODO: handle exception
+	    		Debug.logError("Error While getting producersList========"+e, module);
+			}
+	        result.put("producerDetails", producerDetails);
+
+	        return result;
+	    }
 
 	  //This will  return all agents(centers) belonging to the input plant
 	  public static Map<String, Object> getPlantAgents(DispatchContext ctx, Map<String, ? extends Object> context) {
@@ -651,8 +764,8 @@ public class ProcurementNetworkServices {
 	    	GenericValue centerDeatail = null;
 	    	 Map<String, Object> result = ServiceUtil.returnSuccess();  
 	    	if(UtilValidate.isEmpty(centerId)){
-	    		Debug.logError("CenterId is  missing. UnitCode=======>"+centerId, module);	    		
-	    		result = ServiceUtil.returnError("CenterId is  missing. UnitCode=======>"+centerId);
+	    		Debug.logError("CenterId is  missing.centerId=======>"+centerId, module);	    		
+	    		result = ServiceUtil.returnError("CenterId is  missing. CenterId=======>"+centerId);
 	    		result.put("unitFacility", unitFacility);
          		return result;  
 	    	}
@@ -779,7 +892,7 @@ public class ProcurementNetworkServices {
 	     return convertKGToLitreSetScale(quantity,true) ;	    		 
 	  } 	
 	  public static BigDecimal convertKGToLitreSetScale(BigDecimal quantity,boolean setScale) {	        	
-		 BigDecimal quantityLtrs = quantity.divide(new BigDecimal("1.0295"), 2,BigDecimal.ROUND_HALF_UP);
+		 BigDecimal quantityLtrs = quantity.divide(new BigDecimal("1.03"), 1,BigDecimal.ROUND_HALF_UP);
 	    	 if(setScale == true){
 	    		 //this decimal calculation is customised as per apDairy
 	    		 BigDecimal decimalValue = BigDecimal.ZERO;
@@ -804,7 +917,7 @@ public class ProcurementNetworkServices {
 	  public static BigDecimal calculateKgFatOrKgSnf(BigDecimal qtyKgs,BigDecimal fatOrSnf ){
 	    	BigDecimal result = BigDecimal.ZERO;
 	    	if(!((UtilValidate.isEmpty(fatOrSnf))||(UtilValidate.isEmpty(qtyKgs)))){
-	    		result = (qtyKgs.multiply(fatOrSnf.divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_HALF_UP);
+	    		result = (qtyKgs.multiply(fatOrSnf.divide(new BigDecimal(100)))).setScale(4, BigDecimal.ROUND_HALF_UP);
 	    	}
 	    	return result;
 	    }
@@ -905,12 +1018,9 @@ public class ProcurementNetworkServices {
 		  /* 
      	  * formula for calculate total solids using lr,fat% 
      	  * snf = lactoReading/4+0.21*fat+0.364
-     	  * For kmf snf = [(fat+lr)/4]+0.35
      	  */
 		  	BigDecimal snfQty = BigDecimal.ZERO;
-	    	//snfQty = (lactoReading.divide(new BigDecimal(4),5,4)).add((fatQty.multiply(new BigDecimal(0.21)))).add(new BigDecimal(0.36)).setScale(2,BigDecimal.ROUND_HALF_UP);
-		  	snfQty = ((lactoReading.add(fatQty)).divide(new BigDecimal(4),5,4)).add(new BigDecimal(0.35));
-		  	snfQty = snfQty.setScale(2,BigDecimal.ROUND_HALF_UP);
+	    	snfQty = (lactoReading.divide(new BigDecimal(4),5,4)).add((fatQty.multiply(new BigDecimal(0.21)))).add(new BigDecimal(0.36)).setScale(2,BigDecimal.ROUND_HALF_UP);
 	    	return snfQty;
 	    }
 	// this  service  returns Snf value by evoluting Accounting Formula
@@ -954,7 +1064,7 @@ public class ProcurementNetworkServices {
 	    }
 	  public static BigDecimal convertLitresToKG(BigDecimal qtyLtrs ){
 		  BigDecimal qtyKgs = BigDecimal.ZERO;
-		  qtyKgs = qtyLtrs.multiply(new BigDecimal("1.0295")).setScale(2,BigDecimal.ROUND_HALF_EVEN);
+		  qtyKgs = qtyLtrs.multiply(new BigDecimal("1.03")).setScale(1,BigDecimal.ROUND_HALF_EVEN);
 		  return qtyKgs;
 		  
 	  }
@@ -964,7 +1074,7 @@ public class ProcurementNetworkServices {
 	    	//this decimal calculation is customised as per apDairy ,  this will round the qtyKgs to  0 or 0.5
 	    	  //  x= (ltr*1.03*100)/50
 	    	  // qtyKgs = = (x*50)/100
-	    	  qtyKgs = (qtyLtrs.multiply(new BigDecimal("1.0295"))).multiply(new BigDecimal("100")).divide(new BigDecimal("50")).setScale(0,rounding);
+	    	  qtyKgs = (qtyLtrs.multiply(new BigDecimal("1.03"))).multiply(new BigDecimal("100")).divide(new BigDecimal("50")).setScale(0,rounding);
 	    	  qtyKgs = qtyKgs.multiply(new BigDecimal("50")).divide(new BigDecimal("100")).setScale(1, rounding);
 	    	  
 	    	}else{
@@ -1959,4 +2069,120 @@ public class ProcurementNetworkServices {
 				result = ServiceUtil.returnSuccess("Facility CustomTimePeriod Closed Successfully");
 				return result;
 		}// end of service
+		  
+	/**
+	 * Service for sending sms in shiftwise
+	 * 	  
+	 */
+	  public static Map<String, Object>  ProcurementProducerwiseSummarySms(DispatchContext dctx, Map<String, Object> context)  {
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String supplyTypeEnumId = (String) context.get("purchaseTime");
+	        // getting all Federation sheds
+	        List<GenericValue> shedsList = FastList.newInstance();
+	        
+	        String procSmsDate = (String)context.get("procurementSmsDate");
+	        Timestamp procurementSmsDate = null;
+			if (UtilValidate.isNotEmpty(procSmsDate)) { 
+				SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+				try {
+					procurementSmsDate = new java.sql.Timestamp(sdf.parse(procSmsDate).getTime());
+					procurementSmsDate = UtilDateTime.getDayStart(procurementSmsDate);
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ procSmsDate, module);
+					return ServiceUtil.returnError("Error in parsoing procurement date");
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "+ procSmsDate, module);
+					return ServiceUtil.returnError("Error in parsoing procurement date");
+				}
+			}
+			else{
+				Debug.logError("Procurement date is empty",module);
+   	    		return ServiceUtil.returnError("Procurement date is empty");
+			}
+			
+	        try{
+	        	List conditionList = UtilMisc.toList(EntityCondition.makeCondition("mccTypeId",EntityOperator.EQUALS,"FEDERATION")); 
+	        	EntityCondition condition = EntityCondition.makeCondition(conditionList);
+	        	shedsList = delegator.findList("Facility",condition,null,null,null,false);
+	        	Map tempMap = FastMap.newInstance();
+	        	tempMap.put("totProdAmount", BigDecimal.ZERO);
+	        	List<GenericValue> procurementProducts = getProcurementProducts(dctx, UtilMisc.toMap("userLogin",userLogin));
+	        	for(GenericValue product : procurementProducts){
+	        		tempMap.put(product.get("productId"),BigDecimal.ZERO);
+	        	}
+	        	if(UtilValidate.isNotEmpty(shedsList)){
+	        		for(GenericValue shedFacility : shedsList){
+	        			String shedId = (String)shedFacility.get("facilityId");
+	        			List<String> shedUnitIds = (List)(getShedUnitsByShed(dctx,UtilMisc.toMap("shedId",shedId))).get("unitsList");
+	        			Map shedTotalsMap = FastMap.newInstance();
+	        			shedTotalsMap.putAll(tempMap);
+	        			for(String unitId : shedUnitIds){
+	        				Map unitTotalsMap = FastMap.newInstance();
+	        				unitTotalsMap.putAll(tempMap);
+	        				List centersList = ((List)((Map)getFacilityAgents(dctx,UtilMisc.toMap("userLogin", userLogin, "facilityId", unitId))).get("agentsList"));
+	        				for(Object centerId : centersList){
+	        					String centerIdStr = (String)centerId;
+	        					Map producerWiseTotals = ProcurementReports.getProducerPeriodTotals(dctx, UtilMisc.toMap("userLogin",userLogin,"facilityId",centerIdStr,"fromDate",procurementSmsDate,"supplyTypeEnumId",supplyTypeEnumId,"thruDate",UtilDateTime.getDayEnd(procurementSmsDate)));
+	        					
+	        					
+	        					
+	        					
+	        				}
+	        			}
+	        		}
+	        		
+	        	}
+	        	
+	        	
+	        }catch (GenericEntityException e) {
+				// TODO: handle exception
+	        	
+	        	
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+	        
+	        return ServiceUtil.returnSuccess("Sms successfully sent!");		
+		}
+	  
+	  // service for getting serviceTax
+	  public static Map<String, Object> getTaxPercent(DispatchContext dctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = dctx.getDelegator();
+		    	LocalDispatcher dispatcher = dctx.getDispatcher();
+		    	Map<String, Object> result = ServiceUtil.returnSuccess();
+		    	TimeZone timeZone = TimeZone.getDefault();
+				Locale locale = Locale.getDefault();
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				String customTimePeriodId = (String) context.get("customTimePeriodId");
+				BigDecimal taxPercentage = BigDecimal.ZERO;
+				GenericValue customTimePeriod;
+				String taxAuthorityRateTypeId = (String)context.get("taxAuthorityRateTypeId");
+				try {
+					customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+					
+				} catch (GenericEntityException e1) {
+					Debug.logError("Error in customTimePeriod" + e1,module);
+					return ServiceUtil.returnError("Error in customTimePeriod" + e1);
+				}
+				if(UtilValidate.isEmpty(customTimePeriod)){
+					return ServiceUtil.returnError("invalid custom time period");
+				}
+				try {
+					Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+					Timestamp dayBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+					List<GenericValue> serviceTaxList = EntityUtil.filterByDate(delegator.findList("TaxAuthorityRateProduct", EntityCondition.makeCondition("taxAuthorityRateTypeId",EntityOperator.EQUALS,taxAuthorityRateTypeId), null,null, null, false) , dayBegin);
+					GenericValue serviceTaxDetails = EntityUtil.getFirst(serviceTaxList);
+					if(UtilValidate.isNotEmpty(serviceTaxDetails)){
+						taxPercentage = serviceTaxDetails.getBigDecimal("taxPercentage");
+					}
+				}catch(GenericEntityException e){
+					Debug.logError("Error while getting ServiceTax percentage "+e,module);
+					result = ServiceUtil.returnError("Error while getting ServiceTax Percentage "+e.getMessage());
+				}
+				result.put("taxPercentage", taxPercentage);
+	    	return result;
+	    }// end of the service
+		  
 }

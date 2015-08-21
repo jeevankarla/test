@@ -641,6 +641,13 @@
        <response name="failed" type="request-redirect-noparam" value="mrTransporterBilling"/>
        <response name="error" type="request-redirect-noparam" value="mrTransporterBilling"/>
     </request-map>
+    <request-map uri="updateSLPTCStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSLPTCStatus"/>
+       <response name="success" type="request-redirect-noparam" value="SecondLevelmrTransporterBilling"/>
+       <response name="failed" type="request-redirect-noparam" value="SecondLevelmrTransporterBilling"/>
+       <response name="error" type="request-redirect-noparam" value="SecondLevelmrTransporterBilling"/>
+    </request-map>
     
     <request-map uri="PtcAdjustmentDeductions">
         <security https="true" auth="true"/>        
@@ -725,6 +732,25 @@
         <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="finalizeTankerReceipts" global-transaction="true"/>        
         <response name="success" type="view" value="MilkFinalization"/>
         <response name="error" type="view" value="MilkFinalization"/>
+    </request-map>
+    
+    <!--  -->
+    <request-map uri="SecondLevelmrTransporterBilling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SecondLevelmrTransporterBilling"/>
+        <response name="error" type="view" value="SecondLevelmrTransporterBilling"/>       
+    </request-map>
+    <request-map uri="GenerateMRSecondLevelTransporterMarginReport">
+        <security https="true" auth="true"/>        
+        <response name="success" type="view" value="GenerateMRSecondLevelTransporterMarginReport"/>   
+        <response name="failed" type="view" value="GenerateMRSecondLevelTransporterMarginReport"/>    
+    </request-map>
+    <request-map uri="createSecondLevelMRTransporterMarginReport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="populateSecondLevelMRPeriodBilling"/>
+        <response name="success" type="request" value="SecondLevelmrTransporterBilling"/>
+        <response name="failed" type="view" value="SecondLevelmrTransporterBilling"/>
+        <response name="error" type="view" value="SecondLevelmrTransporterBilling"/>
     </request-map>
     <!-- milkIssues Requests -->
     <request-map uri="milkTankerIssues">
@@ -1071,7 +1097,10 @@
     <view-map name="MilkTankerReturnTareWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerReturnTareWeight"/>
     
     
-    
+    <!--Transporters Billing DCS To BMS  -->
+    <view-map name="SecondLevelmrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#SecondLevelMRTransporterBilling"/>
+    <view-map name="GenerateMRSecondLevelTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRSecondLevelTransporterMarginReport"/>
+  
     
     
     

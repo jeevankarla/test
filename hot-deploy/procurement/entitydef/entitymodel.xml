@@ -8,7 +8,24 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
-
+	<entity entity-name="BankMaster"
+            package-name="in.vasista.vbiz.procurement.price"
+            title="Procurement Price Entity">
+      <field name="facilityId" type="id"/>            
+      <field name="gbCode" type="id"></field>
+      <field name="bCode" type="id"></field>
+      <field name="finAccountName" type="long-varchar"></field>
+      <field name="finAccountBranch" type="long-varchar"></field>  
+      <field name="bPlace" type="long-varchar"></field>  
+      <field name="ifscNo" type="long-varchar"></field>
+      <field name="shortName" type="name"></field>
+      <prim-key field="facilityId"/>        
+      <prim-key field="gbCode"/>
+      <prim-key field="bCode"/>
+      <relation type="one" fk-name="BM_facId" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity> 
     <entity entity-name="ProcurementPriceChart"
             package-name="in.vasista.vbiz.procurement.price"
             title="Procurement Price Chart Entity">
@@ -540,7 +557,7 @@
       <field name="receivedCob" type="indicator"></field><!-- Y/N chemicals present or not -->
       <field name="milkCondition" type="indicator"></field><!-- C/P chilled/Pasteurized  -->
       
-      
+      <field name="shipmentItemSeqId" type="id"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -869,7 +886,149 @@
 			<key-map field-name="acctgFormulaId" />
 		</relation>	
 	</entity>
-  
+  <view-entity entity-name="OrderHeaderItemProductAndFacilityAndItemRole"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Order Items And Facility And ItemRole View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="PD" entity-name="Product"/>
+      <member-entity entity-alias="FA" entity-name="Facility"/>
+      <member-entity entity-alias="OIR" entity-name="OrderItemRole"/>
+      <alias-all entity-alias="OIR"></alias-all>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderDate"/>      
+      <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OI" name="orderItemSeqId"/>    
+      <alias entity-alias="OH" name="originFacilityId"/>
+      <alias entity-alias="OH" name="orderEstimatedDeliveryDate" field="estimatedDeliveryDate"/>
+      <alias entity-alias="OH" name="purposeTypeId"/>
+      <alias entity-alias="OH" name="productSubscriptionTypeId"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="lactoReading"/>     
+      <alias entity-alias="OI" name="unitPrice"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="itemDescription"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="estimatedDeliveryDate"/>
+      <alias entity-alias="OI" name="changeByUserLoginId"/>
+      <alias entity-alias="OI" name="changeDatetime"/>
+      <alias entity-alias="OI" name="snf"/>
+      <alias entity-alias="OI" name="fat"/>
+      <alias entity-alias="OI" name="quantityLtrs"/>
+      <alias entity-alias="OI" name="quantityKgs"/>      
+      <alias entity-alias="OI" name="createdDate"/>
+      <alias entity-alias="OI" name="createdByUserLoginId"/>     
+      <alias entity-alias="OI" name="supplyTypeEnumId"/>
+      <alias entity-alias="OI" name="unitPremiumPrice"/>
+      <alias entity-alias="OI" name="sQuantityLtrs"/>
+      <alias entity-alias="OI" name="sFat"/>
+      <alias entity-alias="OI" name="sUnitPrice"/>
+      <alias entity-alias="OI" name="cQuantityLtrs"/>
+      <alias entity-alias="OI" name="ptcQuantity"/>
+      <alias entity-alias="OI" name="ptcMilkType"/>         
+      <alias entity-alias="PD" name="quantityIncluded"/>
+      <alias entity-alias="PD" name="productName"/>      
+      <alias entity-alias="FA" name="facilityTypeId"/>  
+      <alias entity-alias="FA" name="parentFacilityId"/>                
+      <alias entity-alias="FA" name="categoryTypeEnum"/>
+      <alias entity-alias="FA" name="facilityCode"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="PD">
+        <key-map field-name="productId"/>
+      </view-link>      
+      <view-link entity-alias="OH" rel-entity-alias="FA">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="OIR" rel-optional="true">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </view-link> 
+          
+    </view-entity>
+  <view-entity entity-name="OrderHeaderItemProductFacilityItemRolePartyGroupAndIdentification"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Order Items And Item Role And PartyGroup And PartyIdentification View Entity ">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>     
+      <member-entity entity-alias="PD" entity-name="Product"/>
+      <member-entity entity-alias="FA" entity-name="Facility"/>
+      <member-entity entity-alias="OIR" entity-name="OrderItemRole"/>
+      <member-entity entity-alias="PG" entity-name="PartyGroup"/>
+      <member-entity entity-alias="PI" entity-name="PartyIdentification"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderDate"/>      
+      <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OI" name="orderItemSeqId"/>    
+      <alias entity-alias="OH" name="originFacilityId"/>
+      <alias entity-alias="OH" name="orderEstimatedDeliveryDate" field="estimatedDeliveryDate"/>
+      <alias entity-alias="OH" name="purposeTypeId"/>
+      <alias entity-alias="OH" name="productSubscriptionTypeId"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="lactoReading"/>     
+      <alias entity-alias="OI" name="unitPrice"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="itemDescription"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="estimatedDeliveryDate"/>
+      <alias entity-alias="OI" name="changeByUserLoginId"/>
+      <alias entity-alias="OI" name="changeDatetime"/>
+      <alias entity-alias="OI" name="snf"/>
+      <alias entity-alias="OI" name="fat"/>
+      <alias entity-alias="OI" name="quantityLtrs"/>
+      <alias entity-alias="OI" name="quantityKgs"/>      
+      <alias entity-alias="OI" name="createdDate"/>
+      <alias entity-alias="OI" name="createdByUserLoginId"/>     
+      <alias entity-alias="OI" name="supplyTypeEnumId"/>
+      <alias entity-alias="OI" name="unitPremiumPrice"/>
+      <alias entity-alias="OI" name="sQuantityLtrs"/>
+      <alias entity-alias="OI" name="sFat"/>
+      <alias entity-alias="OI" name="sUnitPrice"/>
+      <alias entity-alias="OI" name="cQuantityLtrs"/>
+      <alias entity-alias="OI" name="ptcQuantity"/>
+      <alias entity-alias="OI" name="ptcMilkType"/>         
+      <alias entity-alias="PD" name="quantityIncluded"/>
+      <alias entity-alias="PD" name="productName"/>      
+      <alias entity-alias="FA" name="facilityTypeId"/>  
+      <alias entity-alias="FA" name="parentFacilityId"/>                
+      <alias entity-alias="FA" name="categoryTypeEnum"/>
+      <alias entity-alias="FA" name="facilityCode"/>
+      <alias entity-alias="OIR" name="partyId"/>
+      <alias entity-alias="PG" name="groupName"/>
+      <alias entity-alias="PI" name="idValue"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="OIR">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="OIR" rel-entity-alias="PG">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="OIR" rel-entity-alias="PI">
+        <key-map field-name="partyId"/>
+      </view-link>
+      
+      
+      <view-link entity-alias="OI" rel-entity-alias="PD">
+        <key-map field-name="productId"/>
+      </view-link>      
+      <view-link entity-alias="OH" rel-entity-alias="FA">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </view-link>     
+    </view-entity>
   
   <entity entity-name="WeighBridgeDetails" package-name="org.ofbiz.product.inventory "
 		title="Vehicle Entity">
@@ -920,5 +1079,31 @@
         	<key-map field-name="milkTransferId"/>
       	</view-link>
   	</view-entity>
+  	
+  	<view-entity entity-name="ProcurementPriceChartAndProcurementPrice"
+          package-name="in.vasista.vbiz.procurement.price"
+          title="ProcurementPriceChart and ProcurementPrice  View Entity">
+	    <member-entity entity-alias="PPC" entity-name="ProcurementPriceChart"/>
+	    <member-entity entity-alias="PP" entity-name="ProcurementPrice"/>
+	    	
+	    <alias name="procPriceChartId" entity-alias="PPC"/>
+	    <alias name="regionId" entity-alias="PPC"/>
+		<alias name="partyId" entity-alias="PPC"/>
+		<alias name="useBaseSnf" entity-alias="PPC"/>
+		<alias name="useBaseFat" entity-alias="PPC"/>
+		<alias name="fromDate" entity-alias="PPC"/>
+		<alias name="thruDate" entity-alias="PPC"/>
+		<alias name="productId" entity-alias="PP"/>
+		<alias name="procurementPriceTypeId" entity-alias="PP"/>	
+		<alias name="currencyUomId" entity-alias="PP"/>	
+		<alias name="fatPercent" entity-alias="PP"/>
+		<alias name="snfPercent" entity-alias="PP"/>
+		<alias name="useTotalSolids" entity-alias="PP"/>
+		<alias name="price" entity-alias="PP"/>		
+      	<view-link entity-alias="PPC" rel-entity-alias="PP">
+            <key-map field-name="procPriceChartId"/>
+        </view-link>
+  	</view-entity>
+  	
 	
 </entitymodel>

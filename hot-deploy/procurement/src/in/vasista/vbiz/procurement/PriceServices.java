@@ -1,5 +1,7 @@
 package in.vasista.vbiz.procurement;
 
+import in.vasista.vbiz.procurement.ProcurementNetworkServices;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 import java.util.Date;
+import java.util.Set;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -21,10 +24,12 @@ import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
@@ -52,7 +57,7 @@ public class PriceServices {
 	        // set zero to the proper scale
 	        if (decimals != -1) ZERO = ZERO.setScale(decimals);
 	    }    
-	private static GenericValue fetchPriceChart(DispatchContext dctx, Map<String, ? extends Object> context) {
+	public static GenericValue fetchPriceChart(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();		
 		GenericValue priceChart = null;
         Timestamp priceDate = (Timestamp) context.get("priceDate");
@@ -287,7 +292,7 @@ public class PriceServices {
 			}
 	       
         }
-       
+        
         if (UtilValidate.isEmpty(snfPercent)) {
         	snfPercent = BigDecimal.ZERO;
         }
@@ -409,8 +414,8 @@ public class PriceServices {
    		 	}
    		 	
    		 	BigDecimal fatPrice = productPrice.getBigDecimal("fatPrice");
-   		 	BigDecimal snfPrice = productPrice.getBigDecimal("snfPrice");
-     	
+		 	BigDecimal snfPrice = productPrice.getBigDecimal("snfPrice");
+  	
 	   		defaultRate = productPrice.getBigDecimal("price");
 	        result.put("defaultRate", defaultRate);
 	        result.put("useTotalSolids", productPrice.getString("useTotalSolids"));
@@ -442,7 +447,7 @@ public class PriceServices {
 		 	procPriceEcList.clear();
 	        procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
 	        procPriceEcList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-	        procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, "PROC_PRICE_FAT_DED"));
+	        procPriceEcList.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.IN, UtilMisc.toList("PROC_PRICE_FAT_DED","PROC_PRC_FAT_DED_PNT")));
 	        procPriceEcList.add(EntityCondition.makeCondition("price", EntityOperator.EQUALS, BigDecimal.ZERO));
 	        procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
 	   		 
@@ -453,21 +458,29 @@ public class PriceServices {
 		 		GenericValue baseFatPrice = EntityUtil.getFirst(baseFatPrices);
 		 		baseFatPercent = baseFatPrice.getBigDecimal("fatPercent");
 		 	}
-	        if("N".equalsIgnoreCase(useBaseFat)){
+	        if(("N".equalsIgnoreCase(useBaseFat)) || (useBaseFat == null)){
 	        	baseFatPercent = fatPercent;
 	        }
    	     
-   	     	BigDecimal fatSolidsDecimal = fatPercent.divide(new BigDecimal(100));
+	        BigDecimal fatSolidsDecimal = fatPercent.divide(new BigDecimal(100));
    		 	if (useTotalSolids) {
    		 		// Use total solids instead. 
    		 		// Note: for total solids we need to take the base snf. If snf is below the default, then
    		 		// the deductions will be applied below
-   		 		fatSolidsDecimal = (fatPercent.add(baseSnfPercent)).divide(new BigDecimal(100));
+	   		 	if("Y".equalsIgnoreCase(useBaseFat)){
+	   		 		fatSolidsDecimal = (baseFatPercent.add(baseSnfPercent)).divide(new BigDecimal(100));	
+	   		 	}else{
+	   		 		fatSolidsDecimal = (fatPercent.add(baseSnfPercent)).divide(new BigDecimal(100));
+	   		 	}
+   		 	}else{
+	   		 	if("Y".equalsIgnoreCase(useBaseFat)){
+	   		 		fatSolidsDecimal = (baseFatPercent).divide(new BigDecimal(100));	
+	   		 	}
    		 	}
-    		price = fatSolidsDecimal.multiply(defaultRate);
+   		 	price = fatSolidsDecimal.multiply(defaultRate);
     		payablePrice = defaultRate;
     		
-   		 	procPriceEcList.clear();    		
+    		procPriceEcList.clear();    		
     		if (snfPercent.compareTo(baseSnfPercent) < 0) {
     			//Handle any deduction logic (slab-based)   
     			procPriceEcList.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
@@ -512,7 +525,17 @@ public class PriceServices {
     			procPriceEcList.add(EntityCondition.makeCondition("fatPercent", EntityOperator.LESS_THAN_EQUAL_TO, fatPercent));
     			procPriceEc = EntityCondition.makeCondition(procPriceEcList, EntityOperator.AND);
    	        	productPrices = delegator.findList("ProcurementPrice", procPriceEc, null, UtilMisc.toList("-fatPercent"), null, true);
-   		 		if(!UtilValidate.isEmpty(productPrices)){
+   	        	
+   	        	//Handle any deduction logic (slab-based)   
+   	        	List procPriceEcList2 = FastList.newInstance();
+   	        	procPriceEcList2.add(EntityCondition.makeCondition("procPriceChartId", EntityOperator.EQUALS, priceChartId));   	        
+   	        	procPriceEcList2.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+   	        	procPriceEcList2.add(EntityCondition.makeCondition("procurementPriceTypeId", EntityOperator.EQUALS, "PROC_PRC_FAT_DED_PNT"));
+   	        	procPriceEcList2.add(EntityCondition.makeCondition("fatPercent", EntityOperator.LESS_THAN_EQUAL_TO, fatPercent));
+   	        	EntityCondition procPriceEc2 = EntityCondition.makeCondition(procPriceEcList2, EntityOperator.AND);
+   	        	
+   	        	List<GenericValue> productPrices2 = delegator.findList("ProcurementPrice", procPriceEc2, null, UtilMisc.toList("-fatPercent"), null, true);
+   	        	if(!UtilValidate.isEmpty(productPrices)){
    		 			/*BigDecimal tempDecimal = (baseFatPercent.subtract(fatPercent)).divide(productPrices.get(0).getBigDecimal("fatPercent"));    		   		 			
 		 			fatPremium = tempDecimal.multiply(productPrices.get(0).getBigDecimal("price"));
    		 			fatPremium = fatPremium.multiply(new BigDecimal(-1));
@@ -522,6 +545,13 @@ public class PriceServices {
 		 			fatPremium = fatPremium.multiply(new BigDecimal(-1));
 		 			price = price.add(fatPremium);
 		 			payablePrice = payablePrice.add(fatPremium);
+   		 		}else if(!UtilValidate.isEmpty(productPrices2)){
+   		 			premium = productPrices2.get(0).getBigDecimal("price");
+   		 			
+   		 			premium = premium.multiply(new BigDecimal(-1));
+   		 			fatPremium = premium;
+   		 			price = price.add(premium);
+   		 			payablePrice = payablePrice.add(premium);
    		 		}
    		 		else {
    		 			// should not come here, throw warning
@@ -545,7 +575,7 @@ public class PriceServices {
    		 		
         	}
     		
-        	BigDecimal kgFatPrice = BigDecimal.ZERO;
+    		BigDecimal kgFatPrice = BigDecimal.ZERO;
         	BigDecimal kgSnfPrice = BigDecimal.ZERO;
         	if( (UtilValidate.isNotEmpty(fatPrice))   && (UtilValidate.isNotEmpty(snfPrice))           ){
         		kgFatPrice = (fatPercent.divide(new BigDecimal(100))).multiply(fatPrice);
@@ -572,7 +602,7 @@ public class PriceServices {
 		if (Debug.infoOn()) {
 			Debug.logInfo("result =" + result, module);
 		}        
-        return result;
+		return result;
     }
     
     /*
@@ -891,7 +921,6 @@ public class PriceServices {
     		pricChartInMap.put("supplyTypeEnumId", supplyTypeEnumId);
     		pricChartInMap.put("isPremiumChart", isPremiumChart);
     		
-    		
     		GenericValue priceChart =  null;
     		if(UtilValidate.isNotEmpty(facilityId)){
     			pricChartInMap.put("categoryTypeEnum", categoryTypeEnum);
@@ -929,9 +958,7 @@ public class PriceServices {
 		   		 		tempSnfPercent = snfPercentList.get(i);
 		   		 		price = BigDecimal.ZERO;
 		   		 		priceInMap.put("snfPercent", tempSnfPercent);
-		   		 		
 		   		 		result = calculateProcurementProductPrice(dctx ,priceInMap);
-		   		 		
 		   		 		price = (BigDecimal)result.get("price");
 		   		 		useTotalSolids = (String)result.get("useTotalSolids");
 	   		 			tempSnfPriceMap.put(tempSnfPercent, price.setScale(2,BigDecimal.ROUND_HALF_UP));

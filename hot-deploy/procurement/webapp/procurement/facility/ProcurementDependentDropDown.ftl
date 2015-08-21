@@ -264,6 +264,9 @@
  			 	$('#timePeriodFlag').val('Y');
 			   	shedPeriodSize=shedTimePeriods.length;
 			}
+			if(periodflag=='N'){	    
+ 				 shedPeriodSize=shedTimePeriods.length;
+			}
 			for(var i=0;i<shedPeriodSize;i++){
 				shedTimePeriodList += shedTimePeriods[i];
 				shedOptionList += "<option value = " + shedTimePeriods[i]['customTimePeriodId'] + " >" + shedTimePeriods[i]['fromDate']+"-"+shedTimePeriods[i]['thruDate']+ "</option>";

@@ -59,6 +59,7 @@ if(UtilValidate.isNotEmpty(facilityDetail)){
 dctx = dispatcher.getDispatchContext();
 context.put("dctx", dctx);
 
+
 procurementProductList =[];
 procurementProductList = ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 context.put("procurementProductList", procurementProductList);

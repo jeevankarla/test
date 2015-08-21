@@ -138,7 +138,7 @@ public class DbfConversionFilter extends ContextFilter {
 		   		for (int i = 0; i < nameTokens.length; i++) {
 		   			String entityField = nameTokens[i];
 		   			Map fieldTypeMap = FastMap.newInstance();
-		   			int pos = entityField.indexOf('_');
+		   			int pos = entityField.lastIndexOf('_');
 		   			if (pos == -1) {
 		   				System.err.println("Input file '" +
 		   						"': entityField '" + entityField + "' missing _ ");

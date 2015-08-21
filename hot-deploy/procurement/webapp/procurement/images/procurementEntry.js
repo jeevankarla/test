@@ -110,6 +110,7 @@ function updateFromFields(){
 	$('input[name=quantity]').val('');
 	$('input[name=fat]').val('');
 	$('input[name=snf]').val('');
+	$('input[name=protein]').val('');
 	$('input[name=lactoReading]').val('');
 	$('input[name=qtyLtrs]').val('');
 	
@@ -151,6 +152,7 @@ function fetchProurementEntry(){
 						$('[name=orderItemSeqId]').val(orderItem["orderItemSeqId"]);
 						$('[name=fat]').val(orderItem["fat"]);
 						$('[name=snf]').val(orderItem["snf"]);
+						$('[name=protein]').val(orderItem["protein"]);
 						$('[name=quantity]').val(orderItem["quantityKgs"]);
 						$('[name=cQuantity]').val(orderItem["cQuantityLtrs"]);
 						$('[name=sQuantity]').val(orderItem["sQuantityLtrs"]);

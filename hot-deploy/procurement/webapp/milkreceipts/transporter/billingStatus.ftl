@@ -135,6 +135,42 @@
 		
 		};
 		
+		
+		function showUpdateSLStatus(billingId, statusId) {
+		var message = "";
+			 billigIdval = billingId;
+			 var statusIdVal = statusId;
+			 var optionList = '';
+			 if( statusIdVal ==="GENERATED" || statusIdVal==="APPROVED" || statusIdVal==="APPROVED_PAYMENT") {
+			
+			 }else{
+			  alert("Not a Valid change==!");
+			 return false;
+			 }
+			 alert("ok");
+			message += "<form action='updateSLPTCStatus' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
+				message += "<tr class='h3'><td align='left' class='h3' width='40%'><input type='hidden' name='periodBillingId' id='periodBillingId'/>Status:</td><td align='left' width='60%'><select name='statusId' id='statusId'>";
+						    if(statusIdVal=="GENERATED"){
+								message +="<option value ="+"'APPROVED'" + " >" +"Approve Billing"+ "</option>";
+								message +="<option value = " +"'REJECTED'" + " >" +"Reject Billing"+ "</option>"; 
+							}
+						    if(statusIdVal=="APPROVED"){
+								  message +="<option value ="+"'APPROVED_PAYMENT'" + " >" +"Approve Payment"+ "</option>";
+								  message +="<option value = " +"'REJECTED'" + " >" +"Reject Billing"+ "</option>"; 
+							}
+							if(statusIdVal=="APPROVED_PAYMENT"){
+								  message +="<option value = " +"'REJECT_PAYMENT'" + " >" +"Reject Payment"+ "</option>"; 
+						    }
+			message +="</select></td></tr>"+            
+							"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='cancelGenerateTruckSheet' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			message += "</table></form>";
+			var title = "<h2><center>Update Billing Status</center></h2>";
+			Alert(message, title);
+		
+		};
+		
+		
+		
 			function populateDate(){
 		jQuery("#periodBillingId").val(billigIdval);
 		//jQuery("#estimatedDateFormatted").val(dateFormatted);

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+	<form name="CreateLoan" id="createLoanForm" type="single" header-row-style="header-row" default-table-style="basic-table" target="createEmployeeLoan">
+     	<field name="partyId" title="Employee" id-name="partyId" event="onchange" action="javascript: hideFields(this);">
+ 			<lookup target-form-name="LookupEmployeeName"/>
+ 		</field>
+ 		<field name="loanType" title="" position="1" id-name="loanType" event="onclick" action="javascript: hideFields(this);">
+             <radio no-current-selected-key="${checkRadio}" >
+                 <option key="internal" description="Internal" />
+                 <option key="external" description="External"/>
+             </radio>
+         </field>
+     	<field name="loanTypeId" id-name="loanTypeId" title="Loan Type Id" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:loanTypesAmountChange();">
+     		<drop-down allow-empty="true">
+     			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
+     				<entity-constraint name="isExternal" operator="equals" value=""/>
+     			</entity-options>
+     		</drop-down>
+     	</field>
+     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
+     	<field name="principalAmount" id-name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
+     	<field name="interestAmount" id-name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
+     	<field name="numInterestInst" id-name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
+     	<field name="numPrincipalInst" id-name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
+     	<field name="issuedPartyId" id-name="issuedPartyId" title="Issued PartyId"><lookup target-form-name="LookupPartyName"/></field>
+     	<field name="rateOfInterest" id-name = "rateOfInterest" title="Rate Of Interest"><text></text></field>
+     	<field name="noOfMonthsToRetire" id-name = "noOfMonthsToRetire" title="No of Months to Retire"><text></text></field>
+     	<field name="numCompInterestInst" id-name = "numCompInterestInst" title="No of completed Interest Installments" required-field="true"><text></text></field>
+     	<field name="numCompPrincipalInst" id-name = "numCompPrincipalInst" title="No of completed Principal Installments" required-field="true"><text></text></field>
+     	<field name="retirementDate" id-name="retirementDate" title="Retirement Date" position="2"><text size="20"/></field>
+     	<field name="extLoanRefNum" title="External Loan Reference Number" required-field="false"><text size="20"/></field>
+     	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
+     	<field name="statusId" id-name="statusId" title="Status"><hidden/></field>
+     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
+   <form name="FindLoan" type="single" header-row-style="header-row" default-table-style="basic-table" target = "loan">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
+    	<field name="loanId" title="loanId"><text size="10"/></field>
+    	<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+    	<field name="loanTypeId" title="loanTypeId">
+    		<drop-down allow-empty="true">
+    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    	<field name="statusId" title="Status">
+            <drop-down allow-empty="true" >
+                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="EMPL_LOAN_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+    	<field name="description" title="Description"><text></text></field>
+    	<field name="extLoanRefNum" title="External Loan Ref Number"><text></text></field>
+    	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListEmployeeLoans" list-name="employeeLoanList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
+       paginate-target="loan" separate-columns="true" default-table-style="basic-table hover-bar" target="updateEmployeeLoan" >
+    	<actions>
+            <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanList.groovy"/>
+    	</actions>
+    	<field name="loanId" title="Loan Id"><display></display></field>
+    	<field name="partyId" title="Employee"><display></display></field>
+    	<field name="partyName" title="Employee Name"><display></display></field>
+    	<field name="loanTypeId" title = "Loan Type">
+          <display-entity entity-name="LoanType" key-field-name="loanTypeId" description="${description}"/>
+        </field>
+    	<field name="statusId" title = "Status">
+          <display-entity entity-name="StatusItem" key-field-name="statusId" description="${statusCode}"/>
+        </field>
+        <field name="statusId" title="Status">
+            <drop-down allow-empty="true" >
+                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="EMPL_LOAN_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+    	<field name="description" title="Description"><display></display></field>
+    	<field name="extLoanRefNum" title="ExtLoanRefNum"><display></display></field>
+    	<field name="principalAmount" title="Prncpl.Amt" ><display></display></field>
+    	<field name="interestAmount" title="Int.Amt"><display></display></field>
+    	<field name="numInterestInst" title="Int.Instm"><display></display></field>
+    	<field name="numPrincipalInst" title="Pri.Instm"><display></display></field>
+    	<field name="disbDate" title="Disbursed Date" ><display></display></field>
+    	<field name="setlDate" title="Settled Date"><date-time type="date" ></date-time></field>
+    	<field name="createdDate" title="Created Date" ><display size="50"></display></field>
+    	<field name="createdByUserLogin" title="Created By"><display></display></field>
+    	<field use-when="${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_DELETE&quot;, session)))}" name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmployeeLoan">
+                <parameter param-name="loanId" from-field="loanId"/>
+           </hyperlink>
+       </field>
+       <field use-when="statusId.equals(&quot;LOAN_APPROVED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_CANCEL&quot;, session)))} " name="deleteLink" title="Cancel" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelEmployeeLoan">
+                <parameter param-name="loanId" from-field="loanId"/>
+           </hyperlink>
+       </field>
+       <field use-when="${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_UPDATE&quot;, session)))}" name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <sort-order type="explicit">   
+        	<sort-field name="loanId"/>
+        	<sort-field name="partyId"/>
+        	<sort-field name="partyName"/>
+        	<sort-field name="loanTypeId"/>
+        	<sort-field name="description"/>
+        	<sort-field name="extLoanRefNum"/>
+        	<sort-field name="principalAmount"/>
+        	<sort-field name="interestAmount"/>
+            <sort-field name="numInterestInst"/>
+            <sort-field name="numPrincipalInst"/>
+            <sort-field name="disbDate"/>
+            <sort-field name="createdDate"/>
+            <sort-field name="createdByUserLogin"/>
+            <sort-field name="statusId"/>
+            <sort-field name="setlDate"/>
+            <sort-field name="submitButton"/>
+            <sort-field name="deleteLink"/>
+        </sort-order>
+    </form>
+    <form name="CreateLoanRecovery" type="single" header-row-style="header-row" default-table-style="basic-table" target="createEmployeeLoanRecovery">
+    	<field name="employeeId" title="Employee" required-field="true">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+    	<field name="loanTypeId" id-name="loanTypeId" title="Loan Type" tooltip="${uiLabelMap.CommonRequired}">
+    		<drop-down allow-empty="true">
+    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    	<field name="roleTypeId"><hidden value="UNITS"/></field>
+    	<field name="deducteePartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId" /></field>
+    	<field name="amount" title="Recovery Amount" required-field="true"><text size="20"/></field>
+    	<field name="description" title="Description" required-field="false"><text size="20"/></field>
+    	<field name="finAccountId"  title="Financial Account" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
+                   <entity-constraint name="organizationPartyId" value="Company"/> 
+                    <entity-constraint name="ownerPartyId" value="Company"/>
+                     <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+                <list-options key-name="finAccountId" list-name="finalFinAccntList"  description="${finAccountId}-${finAccountName}"/>
+            </drop-down>
+        </field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>
+        <field name="loanRecoveryDate" title="Loan Recovery Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
+    <form name="findLoanRecovery" type="single" header-row-style="header-row" default-table-style="basic-table" target = "loanRecovery">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
+    	<field name="loanId" title="loanId"><text size="10"/></field>
+    	<field name="loanRecoveryDate" title="Loan Recovery Date"><date-time type="date"/></field>
+    	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listEmployeeLoanRecoveries" list-name="employeeLoanRecoveryList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
+        paginate-target="loanRecovery"  separate-columns="true" default-table-style="basic-table hover-bar" group-columns="false" >
+    	<actions>
+            <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanRecoveryList.groovy"/>
+    	</actions>
+    	<field name="loanId" title="Loan Id"><display></display></field>
+    	<field name="employeeId" title="Employee"><display></display></field>
+    	<field name="partyName" title="Employee Name"><display></display></field>
+    	<field name="loanTypeId" title = "Loan Type">
+          <display-entity entity-name="LoanType" key-field-name="loanTypeId" description="${description}"/>
+        </field>
+    	<field name="principalAmount" title="Principal Amount" ><display></display></field>
+    	<field name="numPrincipalInst" title="Principal Installments"><display></display></field>
+    	<field name="interestAmount" title="Interest Amount"><display></display></field>
+    	<field name="numInterestInst" title="Interest Installments"><display></display></field>
+    	<field name="loanRecoveryDate" title="Loan Recovery Date" ><display></display></field>
+    	<field name="customTimePeriodId" title="Time Period"><display></display></field>
+    	<field name="customTimePeriodId" title ="CustomTimePeriod">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${fromDate}-${thruDate}"/>
+        </field>
+    	<field name="finAccountTransId" title="FinAccountTransId" ><display></display></field>
+    	<field name="loanRecoveryAmount" title="Loan Recovery Amount" ><display></display></field>
+    	<field name="deducteePartyId" title="Unit"><display></display></field>
+    	<field name="printVoucher" widget-style="buttontext">
+            <hyperlink target="printDepositReport.pdf" description="Print Voucher" target-window="_BLANK">
+                <parameter param-name="loanId"/>
+                <parameter param-name="employeeId"/>
+                <parameter param-name="partyName"/>
+                <parameter param-name="loanTypeId"/>
+                <parameter param-name="finAccountTransId"/>
+                <parameter param-name="deducteePartyId"/>
+                <parameter param-name="reportTypeFlag" value="loanRecovery"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="findLoanDisbursement" type="single" header-row-style="header-row" default-table-style="basic-table" target = "loanDisbursement">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
+    	<field name="loanId" title="loanId"><text size="10"/></field>
+    	<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+    	<field name="loanTypeId" title="loanTypeId">
+    		<drop-down allow-empty="true">
+    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    	<field name="description" title="Description"><text></text></field>
+    	<field name="extLoanRefNum" title="External Loan Ref Number"><text></text></field>
+    	<field name="loanDisbFlag"><hidden value="loanDisbFlag"/></field>
+    	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+    
+</forms>      

@@ -22,6 +22,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -144,3 +145,15 @@ if(parameters.hideSearch == 'Y'){
 	 parameters.sQuantity =null;
 	 parameters.cQuantity =null; 
 }
+
+Map inputMap = FastMap.newInstance();
+inputMap.put("inputFields", parameters);
+inputMap.put("entityName", "OrderHeaderItemProductAndFacility");
+inputMap.put("orderBy", "-createdDate");
+inputMap.put("viewIndex", parameters.viewIndex);
+inputMap.put("viewSize", parameters.viewSize);
+
+Map result = dispatcher.runSync("performFind",inputMap);
+listIt = result.get("listIt");
+
+context.putAt("listIt", listIt);
