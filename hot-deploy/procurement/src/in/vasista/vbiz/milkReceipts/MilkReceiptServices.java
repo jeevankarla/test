@@ -3878,6 +3878,8 @@ public class MilkReceiptServices {
 						milkTransfer.set("statusId", "MXF_INPROCESS");
 					}
 					milkTransfer.set("shipmentId",shipmentId);
+					Debug.log("purposeType==========="+purposeTypeId);
+					Debug.log("milkTrnasfer========"+milkTransfer);
 					delegator.store(milkTransfer);
  				}catch(Exception e){
  					Debug.logError("Error while creating shipment. "+e,module);
