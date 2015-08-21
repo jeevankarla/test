@@ -446,9 +446,8 @@ function fetchTankerRecordNumber(){
 		           			$('#product').attr("readonly","readonly");
 		           			populateProductSpan();
 		           		}else{
-		           			
-		           			$('#product').removeAttr("readonly");
 		           			$('span#productToolTip').html('None');
+  							$('#product').removeAttr("readonly");
   							$('#product').val('');
 		           		}
   					}else{
@@ -540,7 +539,7 @@ function fetchTankerRecordNumber(){
            		}
            		if($('[name=product]').length !=0 &&  typeof(milkTransferId)!='undefined'){
 	           		var productId = result['productId'];
-	           		if(typeof(productId)!= "undefined"){
+	           		if(typeof(productId)!= "undefined" && productId!='' && productId != null){
 	           			$('[name=product]').val(productId);
 	           			populateProductSpan();
 	           		}
@@ -599,12 +598,13 @@ function fetchTankerRecordNumber(){
            					var milkTransfer = result['milkTransfer'];
            					if(typeof(milkTransfer)!='undefined'){
            						var shipmentId = milkTransfer['shipmentId'];
+           						var productId = milkTransfer['productId'];
+           						$('#productId').val(productId);
+           						$('#product').val(productId);
+           						
            						if(typeof(shipmentId) != 'undefined' && shipmentId!='' && shipmentId!= null){
-           							var productId = milkTransfer['productId'];
-           							$('#productId').val(productId);
-           							$('#product').val(productId);
            							//$('#product').parent().hide();
-           							if(productId){
+           							if(typeof(productId)!='undefined' && productId!='' && productId != null){
            							   $('#productId').attr("readonly","readonly");
            							   $('#product').attr("readonly","readonly");
            							}
@@ -615,12 +615,12 @@ function fetchTankerRecordNumber(){
 									
            						}else{
            							var productId = $('#productId').val();
-           							if(typeof(productId) =='undefined' || productId == ''){
+           							if(typeof(productId) =='undefined' || productId == '' || productId== null){
            								$('span#productToolTip').removeClass("tooltip");
 										$('span#productToolTip').addClass("tooltipWarning");
 										$('span#productToolTip').html('None');
 	           							$('#product').parent().show();
-	           							$('#product').attr("readonly","readonly");
+	           							$('#product').removeAttr("readonly");
            							}else{
            								$('#product').attr("readonly","readonly");
            							}
