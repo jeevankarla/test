@@ -506,5 +506,10 @@
     <SecurityGroup description="Grouped Requirements Approve or Reject.!" groupId="MM_REQ_GROUP"/>
     <SecurityGroupPermission groupId="MM_REQ_GROUP"  permissionId="MM_REQ_GROUP"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_REQ_GROUP"/>
+    
+    <SecurityPermission description="Scrap Sale Tab View Permission.." permissionId="MM_SCRPSALE_VIEW"/>
+    <SecurityGroup description="Scrap Sale Tab View Permission.." groupId="MM_SCRPSALE_VIEW"/>
+    <SecurityGroupPermission groupId="MM_SCRPSALE_VIEW"  permissionId="MM_SCRPSALE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_SCRPSALE_VIEW"/>
  
 </entity-engine-xml>

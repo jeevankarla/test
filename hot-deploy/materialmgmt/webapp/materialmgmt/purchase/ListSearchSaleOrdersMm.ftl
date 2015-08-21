@@ -130,6 +130,8 @@ under the License.
 		action="cancelDepotOrderMm"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="cancelFGSOrderMm"
+	<#elseif screenFlag?exists && screenFlag=="scrapSales">
+		action="cancelScrapOrderMm"	
 	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
 		action="cancelICPStkTrOrderMm"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
@@ -147,6 +149,8 @@ under the License.
 		action="approveDepotOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="approveFGSOrderMm"
+	<#elseif screenFlag?exists && screenFlag=="scrapSales">
+		action="approveScrapOrderMm"	
 	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
 		action="approveICPStkTrOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
@@ -165,6 +169,8 @@ under the License.
 		action="createShipmentAndInvoiceForDepotOrders"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="createShipmentAndInvoiceForFGSOrdersMm"
+    <#elseif screenFlag?exists && screenFlag=="scrapSales">
+		action="createShipmentAndInvoiceForScrapOrdersMm"
 	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
 		action="createShipAndInvForICPTransferOrders"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
@@ -187,6 +193,9 @@ under the License.
     	<#elseif screenFlag?exists && screenFlag=="fgsSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
     		<input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
+        <#elseif screenFlag?exists && screenFlag=="scrapSales">
+            <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="SCRAP_SHIPMENT"/> 
+            <input class='h3' type='hidden' id='orderStatusId' name='orderStatusId' value='ORDER_COMPLETED'/>
     	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_TR_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">

@@ -106,6 +106,8 @@
 	
 	var productUOMMap = ${StringUtil.wrapString(productUOMJSON)!'{}'};
 	var uomLabelMap = ${StringUtil.wrapString(uomLabelJSON)!'{}'};
+	var availableUomTags = ${StringUtil.wrapString(uomSelectionJSON)!'{}'};
+	var newUomLabelMap = ${StringUtil.wrapString(uomLabelIdJSON)!'{}'};
 	
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
@@ -125,7 +127,12 @@
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
-						
+			var uomId="";
+			var description="";
+			<#if changeFlag?exists && changeFlag =="scrapSales">
+				var uomId= data[rowCount]["uomId"];
+				var description = data[rowCount]["description"];
+			</#if>						
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
@@ -144,6 +151,12 @@
 					var days = jQuery("<input>").attr("type", "hidden").attr("name", "daysToStore_o_" + rowCount).val(days);
 					jQuery(formId).append(jQuery(days));
 				</#if>
+                <#if changeFlag?exists && changeFlag =="scrapSales">
+					var recurringFreqUomId = jQuery("<input>").attr("type", "hidden").attr("name", "recurringFreqUomId_o_" + rowCount).val(uomId);
+					jQuery(formId).append(jQuery(recurringFreqUomId));
+					var comments = jQuery("<input>").attr("type", "hidden").attr("name", "comments_o_" + rowCount).val(description);
+					jQuery(formId).append(jQuery(comments));
+				</#if> 
    			}
 			
    			<#if changeFlag?exists && changeFlag != "IcpSales" && changeFlag != "IcpSalesAmul" && changeFlag != "IcpSalesBellary" && changeFlag != "ICPTransferSale">
@@ -246,7 +259,7 @@
 	<#else>
 		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
 	</#if>-->
-	<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+	<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "scrapSales"  || changeFlag == "InterUnitTransferSale">
 		function editClickHandlerEvent(row){
 			showUDPPriceToolTip(data[row], row);
 			 <#--updateUDPLabel();-->
@@ -371,7 +384,7 @@
 				<#if changeFlag?exists && changeFlag != "ICPTransferSale">
 					{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
 				</#if>
-			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
 				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 				<#-->
@@ -382,9 +395,15 @@
 			
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
-			{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false}
+			
+			<#if changeFlag?exists &&  changeFlag == "scrapSales">
+            {id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"cell-title", availableTags:availableUomTags,  regexMatcher:"contains", editor: AutoCompleteEditor, sortable:false, focusable :true},
+			{id:"description", name:"Description", field:"description", width:160, minWidth:160, cssClass:"cell-title", editor:LongTextCellEditor}
+			<#else>
+            {id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false}
+            </#if>
 		];
-		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title", focusable :false,
  				formatter: function (row, cell, id, def, datactx) { 
 						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
@@ -496,14 +515,17 @@
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var uomId = productUOMMap[prod];
-				var uomLabel = uomLabelMap[uomId];
+				<#if changeFlag?exists &&  changeFlag != "scrapSales">
+
+                var uomLabel = uomLabelMap[uomId];
 				data[args.row]['uomDescription'] = uomLabel;
+				</#if>
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary" || changeFlag == "ICPTransferSale">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -526,7 +548,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[args.row]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[args.row]["ltrQuantity"] = crVal;
 					</#if>
@@ -580,7 +602,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
 					calcQty = parseFloat(data[args.row]["crQuantity"]);
 				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
 				</#if>
 				var prodConversionData = conversionData[prod];
@@ -588,7 +610,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -612,7 +634,7 @@
 						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 						calculateQty = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
@@ -665,16 +687,29 @@
 				if (args.cell == 1 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
+                <#if changeFlag?exists &&  changeFlag != "scrapSales">
 				var uomId = productUOMMap[prod];
 				var uomLabel = uomLabelMap[uomId];
-				item['uomDescription'] = uomLabel;     		 		
+				item['uomDescription'] = uomLabel;    
+				</#if> 		 		
 	      		grid.invalidateRow(data.length);
 	      		grid.updateRow(args.row);
 	      		grid.updateRowCount();
 	      		grid.render();
 	      		$(grid.getCellNode(args.row, 1)).click();
 			}
-			
+           <#if changeFlag?exists &&  changeFlag == "scrapSales">
+            if (args.cell == 6 && data[args.row] != null) {
+        		var item = data[args.row];   
+				var uomLabel = data[args.row]["uomDescription"];
+				var uomId = newUomLabelMap[uomLabel];
+				item['uomId'] = uomId;    
+	      		grid.invalidateRow(data.length);
+	      		grid.updateRow(args.row);
+	      		grid.updateRowCount();
+	      		grid.render();
+			}
+		</#if> 	
 		});
 		
 		grid.onValidationError.subscribe(function(e, args) {
@@ -848,7 +883,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary"  || changeFlag == "ICPTransferSale">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				
@@ -877,7 +912,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[i]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "scrapSales">
 						crVal = parseFloat(Math.round((qty*convValue)*10000)/10000);
 						data[i]["ltrQuantity"] = crVal;
 					</#if>

@@ -243,12 +243,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 	 	 </fo:table-body> 
  	</fo:table>
  	<fo:table  table-layout="fixed" width="100%">
+ 	<#if purposeTypeId?has_content && purposeTypeId=="SCRAP_PROD_CHANNEL"> 
+ 		 <fo:table-column column-width="3%"/>
+		 <fo:table-column column-width="22%"/>
+	     <fo:table-column column-width="21%"/>
+	     <fo:table-column column-width="15%"/>
+	     <fo:table-column column-width="10%"/>
+	     <fo:table-column column-width="14%"/>
+	     <fo:table-column column-width="15%"/>
+ 	<#else>
 		 <fo:table-column column-width="3.5%"/>
 		 <fo:table-column column-width="34.5%"/>
 	     <fo:table-column column-width="23%"/>
 	     <fo:table-column column-width="10%"/>
 	     <fo:table-column column-width="14%"/>
 	     <fo:table-column column-width="15%"/>
+    </#if>
 		     <fo:table-body>
 			     <fo:table-row> 
 				     <fo:table-cell border-style="solid">   						
@@ -259,9 +269,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">Description of Goods</fo:block>
 				 	</fo:table-cell>
+				 	<#if purposeTypeId?has_content && purposeTypeId=="SCRAP_PROD_CHANNEL"> 
+				 	<fo:table-cell border-style="solid">   						
+				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
+				 	     font-weight="bold" keep-together="always">Description</fo:block>
+				 	</fo:table-cell>
+                    </#if>
 				 	 <fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
-				 	     font-weight="bold" keep-together="always">Quantity<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(UOM)<#else><#-->(Kg/Ltr)--></#if></fo:block>
+				 	     font-weight="bold" keep-together="always">Quantity<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId || purposeTypeId=="SCRAP_PROD_CHANNEL">(UOM)<#else><#-->(Kg/Ltr)--></#if></fo:block>
 				 	</fo:table-cell>
 				 	<fo:table-cell border-style="solid">   						
 				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
@@ -288,8 +304,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
         						<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachItem.get('itemDescription')?if_exists}</fo:block>
         					</fo:table-cell>
+                            <#if purposeTypeId?has_content && purposeTypeId=="SCRAP_PROD_CHANNEL"> 
+                            <fo:table-cell border-style="dotted" border-width="thin" border-color="black">
+        						<fo:block   text-align="left" font-size="11pt" >${eachItem.get('comments')?if_exists}</fo:block>
+        					</fo:table-cell>
+                            </#if>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string("#0.00")}<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})</#if> </fo:block>
+        						<fo:block   text-align="right" font-size="11pt" >${eachItem.get('quantityLtr')?if_exists?string("#0.00")}<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})<#elseif purposeTypeId=="SCRAP_PROD_CHANNEL">(${eachItem.get('recurringFreqUomId')?if_exists})</#if></fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
         						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${shipment.get('shipmentId')?if_exists}</fo:block>

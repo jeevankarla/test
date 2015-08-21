@@ -1355,4 +1355,108 @@
             </widgets>
         </section>
     </screen>
+         <screen name="ScrapProductSaleMm">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Scrap Sale"/>              
+			   <set field="tabButtonItem" value="scrapSaleMM" />	
+			   <set field="tabButtonItem2" value="ScrapProductSaleMm"/>  
+			    <set field="changeFlag" value="scrapSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+                <!-- <set field="productCategoryId" value="SCRAP_MATERIAL"/> -->
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+                <set field="parameters.roleTypeId" value="SUPPLIER"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="ScrapSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                      	<section>
+	                    	<condition>
+	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                        </condition>
+                      		<widgets>
+           						<include-screen name="AdhocSaleInnerMm"/>
+                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                          <widgets>
+      						 <include-screen name="SalesInnerScreenMm"/>
+                 		</widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProcessScrapOrdersMm">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Process Scrap Orders"/>              
+			    <set field="tabButtonItem" value="scrapSaleMM" />	
+			   <set field="tabButtonItem2" value="ProcessScrapOrdersMm"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="scrapSales"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="ScrapSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+               					<screenlet title="Scrap Orders">
+               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchSaleOrdersMm.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="FindScrapSaleMM">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Scrap Sale"/>              
+			    <set field="tabButtonItem" value="scrapSaleMM" />	
+			   <set field="tabButtonItem2" value="FindScrapSaleMM"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindScrapSaleMM"/>
+               <set field="shipmentTypeId" value="SCRAP_SHIPMENT"/>
+               <set field="screenFlag" value="scrapSales"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="ScrapSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                         <screenlet title="search-options">
+                          		<include-form name="FindScrapShipmentMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                 		 </screenlet>
+                 		 <screenlet title="search-results">
+                 			<platform-specific>
+                             			<html><html-template location="component://byproducts/webapp/byproducts/byproducts/reasonForShipmentCancel.ftl"/></html>
+                           	</platform-specific>
+                 				<include-form name="listScrapShipmentsMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                 			</screenlet>
+                      	</decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
 </screens>

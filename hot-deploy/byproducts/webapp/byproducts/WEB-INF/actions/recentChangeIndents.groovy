@@ -156,5 +156,11 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.IN,UtilMisc.toList("Milk","Milk powder","Curd","Ghee","Butter","Chocolate","INDENT","Sweets","Flavoured Milk")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 productCategory = delegator.findList("ProductCategory", condition, UtilMisc.toSet("productCategoryId"), null, null, false);
+List productCategoryIds = FastList.newInstance();
+if("scrapSales".equals(changeFlag)){
+	productCategoryIds.add("SCRAP_MATERIAL");
+}else{
 productCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+}
 context.productCategoryIds=productCategoryIds;
+

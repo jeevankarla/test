@@ -1060,6 +1060,39 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="FGSProductSaleMm"/>
     </request-map>
+    <request-map uri="processScrapProductSaleMm">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="ScrapProductSaleMm">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="ScrapProductSaleMm"/>
+    </request-map>
+    <request-map uri="approveScrapOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessScrapOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessScrapOrdersMm"/>  
+    </request-map>
+       <request-map uri="createShipmentAndInvoiceForScrapOrdersMm">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessScrapOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessScrapOrdersMm"/>  
+    </request-map>
+    <request-map uri="cancelScrapOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/> 
+        <response name="success" type="view" value="ProcessScrapOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessScrapOrdersMm"/>  
+    </request-map>
+     <request-map uri="cancelScrapShipmentMm">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindScrapSaleMM"/>
+        <response name="error" type="request" value="FindScrapSaleMM"/>
+    </request-map>
         <request-map uri="approveIUSTransferOrderMm">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
@@ -1415,7 +1448,20 @@
 		<security https="true" auth="true" /> 
 	 <response name="success" type="view" value="purchaseVatCategoryReportCSV" /> 
  	 </request-map>
- 	 
+ 	 <request-map uri="FindScrapSaleMM">
+ 	 	<security auth="true" https="true"/>
+ 	    <response name="success" type="view" value="FindScrapSaleMM"/>
+ 	 </request-map>
+ 	 <request-map uri="ScrapProductSaleMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ScrapProductSaleMm"/>   
+       <response name="failed" type="view" value="ScrapProductSaleMm"/>  
+    </request-map>
+    <request-map uri="ProcessScrapOrdersMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessScrapOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessScrapOrdersMm"/>  
+    </request-map>
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
@@ -1455,6 +1501,9 @@
      <view-map name="InterUnitStkTrMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#InterUnitStkTrMm"/>
      <view-map name="ProcessInterUnitStkTrMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#ProcessInterUnitStkTrMm"/>
      <view-map name="FindStockTranferShipmentMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindStockTranferShipmentMm"/>
+     <view-map name="FindScrapSaleMM" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindScrapSaleMM"/>
+    <view-map name="ScrapProductSaleMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#ScrapProductSaleMm"/>
+    <view-map name="ProcessScrapOrdersMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#ProcessScrapOrdersMm"/>
     
     <view-map name="newReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#newReports"/>
     <view-map name="TimePeriodsMM" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#TimePeriodsMM"/>

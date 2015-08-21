@@ -68,7 +68,7 @@ finalProdIdsList.each{ eachProdId ->
 	
 }*/
 //Debug.log("##########duplicateProdList######"+duplicateProdList);
-
+String salesChannelEnumId="";
 invoiceSlipsMap = [:];
 totVatsPercesntMap = [:];
 orderMsg="";
@@ -92,6 +92,7 @@ orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
 taxLabelFlag = "otherChannel";
 if(orderHeaders){
 	ordHdr = EntityUtil.getFirst(orderHeaders);
+	salesChannelEnumId=ordHdr.salesChannelEnumId;
 	if(ordHdr.salesChannelEnumId && (ordHdr.salesChannelEnumId == "ICP_BELLARY_CHANNEL" || ordHdr.salesChannelEnumId == "ICP_NANDINI_CHANNEL" || ordHdr.salesChannelEnumId == "ICP_AMUL_CHANNEL")){
 		taxLabelFlag = "icpChannel";
 	}
@@ -306,6 +307,26 @@ invoiceIds.each { invoiceId ->
 			tempMap.put("defaultPrice", eachItem.unitPrice);
 			if(orderSeqList){
 				orderItemSeqId = (EntityUtil.getFirst(orderSeqList)).get("orderItemSeqId");
+				if(UtilValidate.isNotEmpty(salesChannelEnumId) && salesChannelEnumId=="SCRAP_PROD_CHANNEL"){
+					ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("orderId",EntityOperator.EQUALS,orderId),EntityCondition.makeCondition("orderItemSeqId",EntityOperator.EQUALS,orderItemSeqId)],EntityOperator.AND);
+					List orderItemList= delegator.findList("OrderItem",ecl,null,null,null,false);
+					GenericValue orderItem = EntityUtil.getFirst(orderItemList);
+					recurringFreqUomId="";
+					comments="";
+					if(UtilValidate.isNotEmpty(orderItem.getString("recurringFreqUomId"))){
+						recurringFreqUomId=orderItem.getString("recurringFreqUomId");
+						uomIdValue = delegator.findOne("Uom",[uomId:recurringFreqUomId], false);
+						if(UtilValidate.isNotEmpty(uomIdValue)){
+							recurringFreqUomId=uomIdValue.description;
+							}
+					}
+					if(UtilValidate.isNotEmpty(orderItem.getString("comments"))){
+						comments=orderItem.getString("comments");
+					}
+					tempMap.put("recurringFreqUomId",recurringFreqUomId);
+					tempMap.put("comments",comments);
+				}
+				
 				batchList = EntityUtil.filterByAnd(orderItemAttributes, UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
 				if(batchList){
 					batchItem = batchList.get(0);
