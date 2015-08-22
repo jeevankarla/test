@@ -85,8 +85,12 @@ employmentsList.each{ employeeId->
 	partyDeductionsMap = [:];
 	List condList1 =[];
 	condList1.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
-	condList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromDate)));
-	condList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(thruDate)));
+	if(UtilValidate.isNotEmpty(fromDate)){
+	  condList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromDate)));
+	}
+	if(UtilValidate.isNotEmpty(thruDate)){
+	   condList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(thruDate)));
+	}
 	EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND);
 	List<GenericValue> allCustomTimePeriodList = delegator.findList("CustomTimePeriod", cond1, null, UtilMisc.toList("fromDate"), null, false);
 	allCustomTimePeriodIds = EntityUtil.getFieldListFromEntityList(allCustomTimePeriodList,"customTimePeriodId", true)

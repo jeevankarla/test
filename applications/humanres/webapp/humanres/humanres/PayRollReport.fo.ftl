@@ -96,8 +96,10 @@ under the License.
 		         				</fo:block>	
             				</fo:table-cell>
             				<fo:table-cell>
-            					<fo:block keep-together="always" white-space-collapse="false" text-indent="150pt">${partyGroup.groupName?if_exists}                            PaySlip No: ${paySlipNo?if_exists}</fo:block>
-            					<fo:block keep-together="always"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
+            					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="left">  ${reportHeader.description?if_exists}              PaySlip No: ${paySlipNo?if_exists}</fo:block>
+            					<fo:block keep-together="always" white-space-collapse="false" font-size = "10pt" text-align="center">${reportSubHeader.description?if_exists}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
             				</fo:table-cell>
             			</fo:table-row>
             		</fo:table-body>

@@ -32,8 +32,10 @@ under the License.
 		<#if ITAXFinalList?has_content>
 		<fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				<fo:block text-align="center" white-space-collapse="false">&#160; MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
-				<fo:block text-align="center" white-space-collapse="false">&#160;                             G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		   Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")}</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				<fo:block text-align="center" white-space-collapse="false">${reportHeader.description?if_exists}						          													</fo:block>
+				<fo:block text-align="center" white-space-collapse="false">&#160;                  ${reportSubHeader.description?if_exists}				 		Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")}</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                   Income Tax Monthly Statement For The Month Of ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM, yyyy")?upper_case}      Page Number : <fo:page-number/></fo:block>
 				 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
