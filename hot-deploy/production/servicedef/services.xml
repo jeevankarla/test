@@ -115,6 +115,12 @@
 		 <attribute name="facilityId" mode="IN" type="String" optional="false"/>
 		 <attribute name="recordDateTime" mode="IN" type="Timestamp" optional="false"/>
 	 </service>
-    
+    <service name="cancelProductionIssuenceForCustRequest" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="cancelProductionIssuenceForCustRequest">
+        <description>Production Issueance Cancelation to Customer Request Items</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+         <attribute name="itemIssuanceId" type="String" mode="IN" optional="false"/>
+          <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
     
 </services>
