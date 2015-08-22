@@ -32,8 +32,10 @@ under the License.
         
 		<fo:page-sequence master-reference="main">
         	<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before">        
-        		<fo:block text-align="left" white-space-collapse="false"  font-weight="bold">&#160;                                                        KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED                       Page:<fo:page-number/></fo:block>
-        		<fo:block text-align="center" keep-together="always" white-space-collapse="false"  font-weight="bold">UNIT :  MOTHER DAIRY BANGALORE - 560065</fo:block>	 	 	  
+        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+        		<fo:block text-align="right" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}                             Page:<fo:page-number/>&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;   </fo:block>
+                <fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportSubHeader.description?if_exists}</fo:block>     
         		 <fo:block text-align="center" keep-together="always"  font-weight="bold">ATTENDANCE CHECK LIST FROM ${fromDate}  TO   ${thruDate}</fo:block>
         		 <fo:block text-align="left" keep-together="always"  font-weight="bold" >--------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         		 <fo:block font-family="Courier,monospace">                

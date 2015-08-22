@@ -25,8 +25,10 @@
 				<fo:page-sequence master-reference="main">
 				 	<#-- ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, employeeValues.getKey(), false)}   -->
 	        		<fo:static-content font-size="10pt" font-family="Helvetica"  flow-name="xsl-region-before" font-weight="bold">        
-		        		<fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-						<fo:block  keep-together="always" text-align="right" font-family="Helvetica" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}                                                                                        SlipNo : ${slipNo}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+		        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+	            		<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+	    				<fo:block text-align="center" font-size="10pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;${reportHeader.description?if_exists}</fo:block>
+	            		<fo:block text-align="right" font-size="10pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;${reportSubHeader.description?if_exists}                                                                                           SlipNo : ${slipNo}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 						<#assign slipNo = slipNo + 1>
 		        		<fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-weight="bold">&#160;      </fo:block>
 		        		<fo:block text-align="right" keep-together="always" white-space-collapse="false">BONUS/EXGRATIA FOR THE PERIOD FROM  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMM yyyy").toUpperCase()} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMM yyyy").toUpperCase()}                                                                                    Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yyyy")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>	 

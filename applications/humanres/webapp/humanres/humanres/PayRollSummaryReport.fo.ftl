@@ -21,8 +21,8 @@ under the License.
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-        margin-top="0.5in" margin-bottom="0.3in" margin-left=".5in" margin-right="1in">
-          <fo:region-body margin-top="1.2in"/>
+        margin-top="0.3in" margin-bottom="0.3in" margin-left=".5in" margin-right="1in">
+          <fo:region-body margin-top="1.4in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
       </fo:simple-page-master>
@@ -37,9 +37,12 @@ under the License.
      		</#if> 
      			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" :department}, true)>
      			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", department, "userLogin", userLogin))/>
-     			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always">${partyGroup.groupName?if_exists?upper_case}  <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
-        	 	<fo:block text-align="center" white-space-collapse="false" font-weight="bold">&#160; SUMMARY OF EARNINGS AND DEDUCTIONS FOR THE MONTH OF :  ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
-        		<fo:block white-space-collapse="false" keep-together="always">&#160;${uiLabelMap.CommonPage}No: <fo:page-number/>                                                                                                                                     Date: ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MMM, yyyy"))?upper_case}</fo:block>
+     			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+	        		<fo:block text-align="center" font-size="11pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;${reportHeader.description?if_exists}</fo:block>
+                    <fo:block text-align="center" font-size="11pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;${reportSubHeader.description?if_exists}</fo:block>
+        	 	<fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="11pt">&#160; SUMMARY OF EARNINGS AND DEDUCTIONS FOR THE MONTH OF :  ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
+        		<fo:block white-space-collapse="false" keep-together="always" font-size="11pt">&#160;${uiLabelMap.CommonPage}No: <fo:page-number/>                                                                                                                                     Date: ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MMM, yyyy"))?upper_case}</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>	 	 	  
         			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">Gl Code   Earnings                                         Amount      |  Gl Code    Deductions                                          Amount</fo:block>

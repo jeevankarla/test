@@ -42,8 +42,10 @@ under the License.
  			<#assign SNo=1>
      		<fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      			<fo:static-content flow-name="xsl-region-before">
-	     			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt">${partyGroup.groupName?if_exists}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="12pt"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
+	     			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                	<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+        			<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Courier,monospace">&#160;${reportHeader.description?if_exists}</fo:block>
+                	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Courier,monospace">&#160;${reportSubHeader.description?if_exists}</fo:block>
 	     			<fo:block text-align="right" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                                                                  DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>
 	     			<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold">&#160;                   <#if (parameters.departmentFlag)?has_content>DEPARTMENT WISE EMPLOYEE CADRE RANKING <#else>  CADRE WISE EMPLOYEE RANKING REPORT </#if>FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "MMMMM,yyyy"))?upper_case}       PAGE: <fo:page-number/></fo:block>
 	     			</fo:static-content>       	 	 	  	 	

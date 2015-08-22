@@ -39,7 +39,10 @@ under the License.
   	<fo:static-content flow-name="xsl-region-before">
   		<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
   		<#assign nowDate=Static["org.ofbiz.base.util.UtilDateTime"].getDayStart(nowTimestamp, timeZone,locale)>
-  		<fo:block white-space-collapse="false" font-weight="bold" text-align="left" text-indent="60pt" keep-together="always">${partyGroup.groupName?if_exists}, <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if> </fo:block>
+  		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      
+		<fo:block text-align="center" font-size="11pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;${reportHeader.description?if_exists}</fo:block>
+        <fo:block text-align="center" font-size="11pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;${reportSubHeader.description?if_exists}</fo:block>
         <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">${finAccDetails.finAccountName?if_exists}
         <#if parameters.billingTypeId=="SP_LEAVE_ENCASH">   
         	<#assign timePeriodEnd=basicSalDate?if_exists>
