@@ -44,9 +44,11 @@ under the License.
 			                <fo:table-cell><fo:block></fo:block></fo:table-cell>
 			                    <fo:table-cell>
 			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;                                                                                                                                            UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;                                                                                                                                  Page No:<fo:page-number/></fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-weight="bold" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;
+			                    	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					            	<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-weight="bold" font-size="12pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
                                    <fo:block  keep-together="always" font-weight="bold"  text-align="center" font-size="12pt" white-space-collapse="false">SCRAP DC AND GATE PASS FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(formDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}</fo:block> 
 					            </fo:table-cell>

@@ -44,10 +44,12 @@ language governing permissions and limitations under the License. -->
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				font-weight="bold">${reportHeader.description?if_exists}</fo:block>
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
 			<fo:block text-align="center" font-weight="bold"
 				keep-together="always" white-space-collapse="false">PURCHASE ANALYSIS -REPORT(Category Wise) - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>-->
           			<fo:block text-align="left" keep-together="always"
@@ -299,10 +301,12 @@ language governing permissions and limitations under the License. -->
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				font-weight="bold">${reportHeader.description?if_exists}</fo:block>
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
 			<fo:block text-align="center" font-weight="bold"
 				keep-together="always" white-space-collapse="false">PURCHASE ANALYSIS -REPORT(Product Wise) - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>-->
           			<fo:block text-align="left" keep-together="always"
@@ -599,10 +603,12 @@ language governing permissions and limitations under the License. -->
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				font-weight="bold">${reportHeader.description?if_exists}</fo:block>
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
 			<fo:block text-align="center" font-weight="bold"
 				keep-together="always" white-space-collapse="false">PURCHASE ANALYSIS -REPORT(Detailed) - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>-->
           			<fo:block text-align="left" keep-together="always"
@@ -772,10 +778,12 @@ language governing permissions and limitations under the License. -->
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
+				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				font-weight="bold">${reportHeader.description?if_exists}</fo:block>
 			<fo:block keep-together="always" text-align="center"
 				font-family="Courier,monospace" white-space-collapse="false"
-				font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
 			<fo:block text-align="center" font-weight="bold"
 				keep-together="always" white-space-collapse="false">PURCHASE ANALYSIS - SUMMARY REPORT - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>-->
           			<fo:block text-align="left" keep-together="always"

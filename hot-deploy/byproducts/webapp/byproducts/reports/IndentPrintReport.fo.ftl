@@ -53,8 +53,10 @@ under the License.
 			            <fo:table-body>
 			                <fo:table-row>
 			                    <fo:table-cell number-columns-spanned="4">
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">${screenFlag?if_exists}  INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderHeader.get('createdStamp'), "dd-MMM-yyyy")?if_exists}</fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")?if_exists}                CST : ${companyDetail.get('CST_NUMBER')?if_exists}</fo:block>
