@@ -167,6 +167,23 @@
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
         <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
     </request-map>
+    <request-map uri="EditMilkReceipt">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="EditMilkReceiptsTankerEntry"/>
+        <response name="error" type="view" value="EditMilkReceiptsTankerEntry"/>
+    </request-map>
+    <request-map uri="EditMilkReceiptRecord">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="EditMilkReceiptRecord"/>
+        <response name="error" type="view" value="EditMilkReceiptRecord"/>
+    </request-map>
+     <request-map uri="UpdateEditMilkReceiptRecord">
+    	<security auth="true" https="true"/>
+    	<event type="service"  invoke="UpdateEditMilkReceiptRecord" />
+    	<response name="success" type="request-redirect" value="EditMilkReceiptsTankerEntry"></response>
+    	<response name="error" type="request-redirect" value="EditMilkReceiptsTankerEntry"></response>
+    </request-map>
+    
     <request-map uri="MilkReceiptsToApprove">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="ApproveMilkReceipts"/>
@@ -182,6 +199,11 @@
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
         <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
+    </request-map>
+    <request-map uri="EditMilkReceiptsTankerEntry">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="EditMilkReceiptsTankerEntry"/>
+        <response name="error" type="view" value="EditMilkReceiptsTankerEntry"/>
     </request-map>
     <request-map uri="updateSendMilkRecord">
 		<security auth="true" https="true" />
@@ -1045,6 +1067,8 @@
     
 
     <!--  View maps of kmf  -->
+    <view-map name="EditMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#EditMilkReceiptsTankerEntry"/>
+    <view-map name="EditMilkReceiptRecord" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#EditMilkReceiptRecord"/>
     <view-map name="FindMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerOutEntry"/>

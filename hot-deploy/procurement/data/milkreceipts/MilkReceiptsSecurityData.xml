@@ -168,6 +168,13 @@
     <SecurityGroupPermission groupId="MR_TRETURN_UNLOAD" permissionId="MR_TRETURN_UNLOAD"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_TRETURN_UNLOAD"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TRETURN_UNLOAD"/>
+   
+    <!--MR Edit Screens -->
+    <SecurityPermission description="Milk Receipts Edit Screen" permissionId="MR_EDIT_SCREEN"/>
+    <SecurityGroup description="Milk Receipts Edit Screen" groupId="MR_EDIT_SCREEN"/>
+    <SecurityGroupPermission groupId="MR_EDIT_SCREEN" permissionId="MR_EDIT_SCREEN"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_EDIT_SCREEN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_EDIT_SCREEN"/>
     
     
 </entity-engine-xml>

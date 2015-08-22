@@ -742,7 +742,7 @@
 							  <fo:block text-align="right" font-size="10pt"></fo:block>
 						   </fo:table-cell > 
 						   <fo:table-cell >
-							  <fo:block text-align="center" font-size="10pt">${pmSiloIssueData.getKey()?if_exists}</fo:block>
+							  <fo:block text-align="center" font-size="10pt">${pmSiloIssueData.getValue().get("recFacility")?if_exists}</fo:block>
 						   </fo:table-cell >				   
                         </fo:table-row> 
                         </#list>
