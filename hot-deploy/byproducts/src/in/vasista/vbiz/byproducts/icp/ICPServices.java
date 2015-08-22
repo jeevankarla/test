@@ -563,6 +563,38 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			}
 			
 		}
+		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(salesChannel) && salesChannel.equals("SCRAP_PROD_CHANNEL")){
+			try{
+					for (Map<String, Object> prodDesMap : productQtyList) {
+							String itemId =""; 
+							String recurringFreqUomId="";
+							String comments = "";
+							if(UtilValidate.isNotEmpty(prodDesMap.get("productId"))){
+								itemId = (String) prodDesMap.get("productId");
+							}
+							if(UtilValidate.isNotEmpty(prodDesMap.get("comments"))){
+								comments = (String) prodDesMap.get("comments");
+							}
+							if(UtilValidate.isNotEmpty(prodDesMap.get("recurringFreqUomId"))){
+								recurringFreqUomId = (String) prodDesMap.get("recurringFreqUomId");
+							}
+							if(UtilValidate.isNotEmpty(itemId)){
+								List condList = FastList.newInstance();
+								condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+								condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,itemId));
+								EntityCondition con = EntityCondition.makeCondition(condList,EntityOperator.AND);
+								List<GenericValue> orderItems = delegator.findList("OrderItem", con, null, null, null, false);
+								GenericValue orderItem = EntityUtil.getFirst(orderItems);
+								orderItem.set("recurringFreqUomId", recurringFreqUomId);
+								orderItem.set("comments", comments);
+								orderItem.store();
+							}
+					}
+			}catch (GenericEntityException e) {
+				Debug.logError("Error While Saving OrderItem comments ", module);
+				return ServiceUtil.returnError("Error While Saving OrderItem comments");
+			}
+		}
 		//store OrderMessage
 		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(orderMessage )){
 			try{
@@ -958,6 +990,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			BigDecimal tcsPercent=BigDecimal.ZERO;
 			BigDecimal serviceTaxPercent=BigDecimal.ZERO;
 			
+            String recurringFreqUomId=null;
+       		String comments=null;
+  
 			Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 			
@@ -1040,7 +1075,16 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					serviceTaxPercentStr = (String) paramMap
 							.get("serviceTaxPercent" + thisSuffix);
 				}
-
+				
+				if(salesChannel.equals("SCRAP_PROD_CHANNEL")){
+					if (paramMap.containsKey("recurringFreqUomId" + thisSuffix)) {
+						recurringFreqUomId = (String) paramMap.get("recurringFreqUomId" + thisSuffix);
+					}
+					if (paramMap.containsKey("comments" + thisSuffix)) {
+						comments = (String) paramMap.get("comments" + thisSuffix);
+					}
+				}
+				
 				try {
 					quantity = new BigDecimal(quantityStr);
 					if (UtilValidate.isNotEmpty(basicPriceStr)) {
@@ -1101,6 +1145,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				productQtyMap.put("cstPercent", cstPercent);
 				productQtyMap.put("tcsPercent", tcsPercent);
 				productQtyMap.put("serviceTaxPercent", serviceTaxPercent);
+				
+				productQtyMap.put("recurringFreqUomId", recurringFreqUomId);
+				productQtyMap.put("comments", comments);
 				
 				if(quantity.compareTo(BigDecimal.ZERO)>0){
 					indentProductList.add(productQtyMap);

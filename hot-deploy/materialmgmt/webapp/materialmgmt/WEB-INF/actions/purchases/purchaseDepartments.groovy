@@ -34,7 +34,7 @@ import java.util.SortedMap;
 import java.math.RoundingMode;
 import javolution.util.FastList;
 import org.ofbiz.entity.util.EntityTypeUtil;
-import org.ofbiz.product.inventory.InventoryWorker;
+//import org.ofbiz.product.inventory.InventoryWorker;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 

@@ -46,6 +46,22 @@ if(changeFlag=="IcpSalesAmul"){
 if(changeFlag=="IcpSalesBellary"){
 	productCatageoryId="ICE_CREAM_BELLARY";
 }
+JSONArray uomSelectionJSON = new JSONArray();
+JSONObject uomLabelIdJSON = new JSONObject();
+if(changeFlag=="scrapSales"){
+	productCatageoryId="SCRAP_MATERIAL";
+	List uomTypeIdList = UtilMisc.toList("LENGTH_MEASURE","NUMERIC_MEASURE","OTHER_MEASURE");
+	List uomList = delegator.findList("Uom",EntityCondition.makeCondition("uomTypeId",EntityOperator.IN,uomTypeIdList),null,null,null,false);
+	if(UtilValidate.isNotEmpty(uomList)){
+		uomList.each{uom->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",uom.uomId);
+			newObj.put("label","[" +uom.uomId+"] " +uom.description);
+			uomSelectionJSON.add(newObj);
+			uomLabelIdJSON.put("[" +uom.uomId+"] " +uom.description,uom.uomId);
+		}
+	}
+}
 /*if(changeFlag=="DepotSales"){
 	productCatageoryId="DEPO_STORE";
 }*/
@@ -90,7 +106,7 @@ if(changeFlag != "AdhocSaleNew"){
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
 	roleTypeId = parameters.roleTypeId;
 	partyRole = null;
-	if(changeFlag != "FgsSales"){//for StoreSales no need disable grid
+	if(changeFlag != "FgsSales" || changeFlag != "scrapSales"){//for StoreSales no need disable grid
 		if(party){
 			partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
 		}
@@ -294,3 +310,7 @@ orderAdjTypes.each{eachItem ->
 context.orderAdjItemsJSON = orderAdjItemsJSON;
 context.orderAdjLabelJSON = orderAdjLabelJSON;
 context.orderAdjLabelIdJSON = orderAdjLabelIdJSON;
+context.uomSelectionJSON = uomSelectionJSON;
+context.uomLabelIdJSON = uomLabelIdJSON;
+
+

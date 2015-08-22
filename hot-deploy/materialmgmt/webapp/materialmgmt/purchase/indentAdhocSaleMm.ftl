@@ -160,7 +160,9 @@ $(document).ready(function(){
     <#elseif changeFlag?exists && changeFlag=='DepotSales'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>DepotSaleMm</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='FgsSales'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSaleMm</@ofbizUrl>" id="indententryinit">  
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSaleMm</@ofbizUrl>" id="indententryinit"> 
+	<#elseif changeFlag?exists && changeFlag=='scrapSales'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>ScrapProductSaleMm</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTrMm</@ofbizUrl>" id="indententryinit">
     <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
@@ -191,6 +193,9 @@ $(document).ready(function(){
 		        <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="FGS_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="FGS_PRODUCT_CHANNEL"/> 
+		        <#elseif changeFlag?exists && changeFlag=='scrapSales'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="SCRAP_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="SCRAP_PROD_CHANNEL"/> 
 		        <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/>
@@ -272,6 +277,7 @@ $(document).ready(function(){
 		    	</tr>
 	    	</#if>
 	    	<tr><td><br/></td></tr>
+	    		<#if changeFlag?exists && changeFlag !='scrapSales'>
 		    	<tr>
 		      		<td>&nbsp;</td>
 		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
@@ -285,6 +291,7 @@ $(document).ready(function(){
 		      		</#if>
 					</td>
 				</tr>
+               </#if>
 		    	<tr><td><br/></td></tr>
     	</#if>
        
@@ -371,7 +378,7 @@ $(document).ready(function(){
           			 <span class="tooltip">Input party code and press Enter</span>
           		</td>
           	</#if>
-        <#elseif changeFlag?exists && changeFlag=='FgsSales' >  	
+        <#elseif changeFlag?exists && (changeFlag=='FgsSales' || changeFlag =='scrapSales')>  	
 			<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
           		<td valign='middle'>
@@ -567,7 +574,9 @@ $(document).ready(function(){
 		    <#elseif changeFlag?exists && changeFlag=='DepotSales'>
 		         <#assign formAction='processDepotSaleMm'>
 		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
-		         <#assign formAction='processFGSProductSaleMm'>     
+		         <#assign formAction='processFGSProductSaleMm'>  
+			<#elseif changeFlag?exists && changeFlag=='scrapSales'>
+		         <#assign formAction='processScrapProductSaleMm'>   
 		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         <#assign formAction='processInterUnitStkTrSaleMm'> 
 		    <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>

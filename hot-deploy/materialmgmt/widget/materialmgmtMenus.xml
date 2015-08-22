@@ -150,6 +150,13 @@
 <!-- 				<parameter param-name="organizationPartyId"  value="Company"/> -->
 			</link>
 		</menu-item>
+		<menu-item name="scrapSaleMM" title="Scrap Sale"> 
+	        <condition>
+	        		<if-has-permission permission="MM"  action="_SCRPSALE_VIEW"/>
+	        </condition>   
+      	 	<link target="FindScrapSaleMM">    
+         	</link>
+        </menu-item>
         </menu>
         
         <!-- Sub Tab Menus -->
@@ -187,6 +194,20 @@
         </menu-item>
         <menu-item name="FindStockTranferShipmentMm" title="Find Stock Transfer Shipments">
         	<link target="FindStockTranferShipmentMm" />
+        </menu-item>
+      </menu>
+      <menu name="ScrapSaleTabBarMm" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         	<menu-item name="ScrapProductSaleMm" title="Order Entry">
+        	<link target="ScrapProductSaleMm"/>
+        </menu-item>
+        <menu-item name="ProcessScrapOrdersMm" title="Process Orders">
+        	<link target="ProcessScrapOrdersMm">
+        		<parameter param-name="salesChannelEnumId" value="SCRAP_PROD_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="SCRAP_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindScrapSaleMM" title="Find Scrap Sale">
+        	<link target="FindScrapSaleMM" />
         </menu-item>
       </menu>
       <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
