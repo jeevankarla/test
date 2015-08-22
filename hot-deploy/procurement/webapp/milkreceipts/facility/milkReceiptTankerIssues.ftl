@@ -105,6 +105,7 @@
 var productJson = ${StringUtil.wrapString(productJson)}
 var tareWeight = 0;
 $(document).ready(function() {	
+	hideDiv();
   $('#recdPH').autoNumeric({mNum: 1,mDec: 1 , autoTab : true}).trigger('focusout');
   
   $('#recdTemp').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
@@ -311,7 +312,7 @@ function showSealNumber(){
 		
 	}else{
 		$('#sealNumberRow').show();
-		$('[name=sealNumber1]').addAttr("required");
+		$('[name=sealNumber1]').attr("required");
 	}
 }
 function populateProductSpan(){
@@ -730,12 +731,77 @@ $( "#"+fromDateId ).datepicker({
 		}
 	});
 }
-	
+function setVehicleId(selected){
+	var vehicleId = selected.value;
+	var check = confirm("Please Confirm The Vehicle No :"+vehicleId);
+	 if (check == false) {
+            return false;
+        }
+     $("#DetailsDiv").show();
+    $("#tankerNo").val(vehicleId);
+     var selectedValue = vehicleId;
+	$('[name=tankerName]').val(selectedValue);
+	 populateVehicleSpan();
+    $("#newVehicleDiv").hide();
+}
+function hideDiv(){
+	var displayScreen = $('[name="displayScreen"]').val()
+ 	if((displayScreen != "ISSUE_TARWEIGHT")){
+		$("#DetailsDiv").hide();
+ 	}
+}	
+function reloadingPage(){
+	setTimeout("location.reload(true);", 1000);
+}	
 	
 </script>
+<#if displayScreen != "ISSUE_TARWEIGHT" >
+<div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
+	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;> 
+		<div class="grid-header h2" style="width:100%">
+		<#if displayScreen == "ISSUE_CIP">
+			<label>VEHICLES WAITING FOR CIP</label>
+		<#elseif displayScreen == "ISSUE_LOAD">
+   			<label>VEHICLES WAITING FOR LOAD</label>
+   		<#elseif displayScreen == "ISSUE_QC">
+   			<label>VEHICLES WAITING FOR QC</label>	
+   		<#elseif displayScreen == "ISSUE_GRSWEIGHT">	
+   			<label>VEHICLES WAITING FOR GROSS WEIGHT</label>
+		<#elseif displayScreen == "VEHICLE_TAREWEIGHT">	
+   			<label>VEHICLES WAITING FOR TARE WEIGHT</label>
+   		<#elseif displayScreen == "ISSUE_OUT">	
+   			<label>VEHICLES WAITING TO EXIT</label>		
+        </#if>	
+		</div>
+	</div>
+	<div class="screenlet-body">
+	<form id="listPendingVehicles" name="listPendingVehicles" action="" method="post">
+	<table class="basic-table hover-bar h3" widht='80%' style="border-spacing: 50px 2px;" border="1"> 
+		<tr><td><h2><u>VEHICLE NO</u></h2></td>
+		    <td><h2><u>TAREWEIGHT TIME</u><h2></td>
+			<td><h2><u> TO <u><h2></td>
+		</tr>
+		 <#if vehicleList?has_content>
+         <#list vehicleList as vehicle>
+		<tr>
+            <td><h2><input type="button" id="newVehicleId" name="newVehicleId"  value="${vehicle.vehicleId}" onclick="javascript:setVehicleId(this);"/></h2></td>
+            <td><h3>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(vehicle.inTime, "dd-MM-yyyy HH:mm")}</h3></td>
+	        <td><h3>${vehicle.partyId?if_exists}</h3></td>	
+		</tr>
+        </#list>
+        <#else>
+       <tr>
+         <td><span class="h2">No Vehicles Available.</span></td>
+       </tr>
+        </#if>
+	</table>
+	</form>
+	</div>
+</div>
+</#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
 <div name ="displayMsg" id="milkReceiptIssueEntry_spinner" style="width:30%;  height:40%"> </div>
-<div style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
+<div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
       <div class="grid-header h2" style="width:100%">
@@ -783,7 +849,11 @@ $( "#"+fromDateId ).datepicker({
 	          			<table>
 	          				<tr>
 					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
-					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+					        		<#if displayScreen != "ISSUE_TARWEIGHT" >
+					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" readOnly  /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+					        		<#else>
+ 									<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
+                                    </#if>
 					        		<input  name="tankerNo" size="10pt" type="hidden"   autocomplete="off" required/></td>
 					        		<input  name="milkTransferId" size="10pt" type="hidden"   autocomplete="off"/></td>
 					        		<input  name="displayScreen" size="10pt" type="hidden" id="displayScreen" value="${displayScreen}" /> 

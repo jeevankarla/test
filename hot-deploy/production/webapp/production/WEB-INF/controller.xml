@@ -426,7 +426,7 @@
     
     <request-map uri="cancelProductionIssuenceForCustRequest">
        <security https="true" auth="true"/>
-       <event type="service" path="" invoke="cancelIssuenceForCustRequest" global-transaction="true"/>
+       <event type="service" path="" invoke="cancelProductionIssuenceForCustRequest" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="ProductionIssuance"/>
        <response name="error" type="view" value="ProductionIssuance"/>
      </request-map>

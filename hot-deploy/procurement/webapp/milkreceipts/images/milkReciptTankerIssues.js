@@ -209,7 +209,7 @@ $(function() {
              	   $('div#milkReceiptIssueEntry_spinner').removeClass("errorMessage");           	 
              	   $('div#milkReceiptIssueEntry_spinner').addClass("messageStr");
              	   $('div#milkReceiptIssueEntry_spinner').html('<label><h1>succesfully updated.</h1></label>'); 
-             	   $('div#milkReceiptIssueEntry_spinner').delay(30000).fadeOut('slow');
+             	   $('div#milkReceiptIssueEntry_spinner').delay(7000).fadeOut('slow');
              	   $('input[name=submitButton]').removeAttr("disabled");
              	   
                 }
@@ -227,14 +227,20 @@ function populateError(msg){
 	$('div#milkReceiptIssueEntry_spinner').removeClass("messageStr");
 	$('div#milkReceiptIssueEntry_spinner').addClass("errorMessage");
 	$('div#milkReceiptIssueEntry_spinner').html('<label><h1>'+msg +'</h1></label>');
-	$('div#milkReceiptIssueEntry_spinner').delay(30000).fadeOut('slow');
+	$('div#milkReceiptIssueEntry_spinner').delay(7000).fadeOut('slow');
 	$('input[name=submitButton]').removeAttr("disabled");
 	
 }
 	
 function clearFields(){
+	   var displayScreen= $('[name=displayScreen]').val(); 
 	   var frm = document.getElementsByName('milkReceiptIssueEntry')[0];
 	   frm.reset();
+	   if(typeof(displayScreen)!= 'undefined'){
+		   if((displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_LOAD") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_GRSWEIGHT")|| (displayScreen=="ISSUE_OUT")){ 
+		   	reloadingPage();
+		   }
+	   }
 }
 
 
