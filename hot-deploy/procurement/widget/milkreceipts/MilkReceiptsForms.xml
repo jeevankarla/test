@@ -536,6 +536,50 @@
 	        <sort-field name="delete"/>
        </sort-order>
     </form>
+    <form name="ListEditMilkReceipts" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="milkDetailslist"  default-table-style="basic-table " separate-columns="true"  target="EditMilkReceiptRecord" paginate-target="EditMilkReceipt">    
+       <field name="milkTransferId" title="Record No"><display/></field>
+       <field name="vehicleId" title="Vehicle Number"><display/></field>
+       <field name="partyId" separate-column="true" title="From Union"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}[${partyId}]"></display-entity></field>
+       <field name="estimatedStartDate" title="Entry Date"><display/></field>
+       <field name="receiveDate" title="TareWeight Date"><display/></field>
+       <field name="productId" title="Milk Type"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
+       <field name="siloId" title="Silo"><display></display></field>
+       <field name="receivedQuantity" title="&#160;&#160;&#160;&#160;Quantity (Kgs)" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="receivedFat" title="&#160;&#160; Fat %" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="receivedSnf" title="&#160;&#160; SNF %" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="receivedKgFat" title="&#160;&#160; KgFat" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="receivedKgSnf" title="&#160;&#160; KgSNF" widget-style="tabletextright"  widget-area-style="align-text"> <display/></field>
+       <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+       <!-- <field   name="update"  title="Edit" title-style="buttontext" separate-column="true" widget-style="button">
+          <hyperlink target="updateMilkRecord" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field>  -->
+      <field name="Edit" title="Edit"><submit/></field>
+       <!-- <field name="Edit" widget-style="buttontext">
+       		<hyperlink  description="Edit" target="EditMilkReceiptRecord" >
+       		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
+           </hyperlink>
+       </field> -->
+              <sort-order>
+	        <sort-field name="milkTransferId"/>
+   	        <sort-field name="vehicleId"/>
+   	        <sort-field name="estimatedStartDate"/>
+   	        <sort-field name="receiveDate"/>
+	        <sort-field name="partyId"/>
+	        <sort-field name="partyIdTo"/>
+	        <sort-field name="productId"/>
+	        <sort-field name="siloId"/>
+	        <sort-field name="receivedQuantity"/>
+	        <sort-field name="receivedQuantityLtrs"/>
+	        <sort-field name="receivedFat"/>
+	        <sort-field name="receivedSnf"/>
+	        <sort-field name="receivedKgFat"/>
+	        <sort-field name="receivedKgSnf"/>
+	        <sort-field name="statusId"/>
+	        <sort-field name="update"/>
+       </sort-order>
+    </form>
     
     <form name="createNewSalesEntry" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true"  target="createSalesEntry">    
        <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >

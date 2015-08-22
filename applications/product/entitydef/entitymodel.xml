@@ -2665,7 +2665,21 @@ under the License.
        		<exclude field="containerId"/>
        		<exclude field="sequenceNum"/>
        </alias-all>
-       <alias entity-alias="MTI" name="siloId"/>
+        <alias entity-alias="MTI" name="siloId"/>
+        <alias entity-alias="MTI" name="sendTemparature"/>
+        <alias entity-alias="MTI" name="receivedTemparature"/>
+        <alias entity-alias="MTI" name="sendAcidity"/>
+        <alias entity-alias="MTI" name="receivedAcidity"/>
+        <alias entity-alias="MTI" name="sendLR"/>
+        <alias entity-alias="MTI" name="receivedLR"/>
+        <alias entity-alias="MTI" name="fat"/>
+        <alias entity-alias="MTI" name="receivedFat"/>
+        <alias entity-alias="MTI" name="snf"/>
+        <alias entity-alias="MTI" name="receivedSnf"/>
+        <alias entity-alias="MTI" name="sendCob"/>
+        <alias entity-alias="MTI" name="receivedCob"/>
+        <alias entity-alias="MTI" name="recdOrganoLepticTest"/>
+        <alias entity-alias="MTI" name="receivedSedimentTest"/>
        <alias-all entity-alias="VHTPST" />
        <view-link entity-alias="MT" rel-entity-alias="VHTPST">
         <key-map field-name="containerId" rel-field-name="vehicleId"/>

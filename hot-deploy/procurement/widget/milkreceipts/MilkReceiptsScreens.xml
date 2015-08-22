@@ -15,6 +15,61 @@
             </widgets>
         </section>
     </screen>
+
+<!-- Tanker Receipts Edit Screen -->
+    <screen name="EditMilkReceiptsTankerEntry">
+		<section>
+			<actions>
+				<set field="titleProperty" value="EDIT MILK RECEIPTS" />
+				<set field="tabButtonItem" value="FindEditMilkReceipts" />
+				<set field="tabButtonItem2" value="EditMilkReceiptEntry" />
+				<set field="displayScreen" value="EDITMILKRECEIPTS"/>
+				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/EditMilkReceiptsEntries.groovy"/>
+<!-- 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/> -->
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					<include-menu name="editMilkReceiptsTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<container style="full">
+							<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/EditMilkReceipts.ftl"></html-template></html></platform-specific>														
+							<screenlet title="Received Milk List">
+								<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml"	name="ListEditMilkReceipts" />
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EditMilkReceiptRecord">
+		<section>
+			<actions>
+				<set field="titleProperty" value="EDIT MILK RECEIPTS" />
+				<set field="tabButtonItem" value="FindEditMilkReceipts" />
+				<set field="tabButtonItem2" value="EditMilkReceiptRecord" />
+				<set field="displayScreen" value="EDITMILKRECEIPTS"/>
+				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/EditMilkReceiptsEntries.groovy"/>
+<!-- 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/> -->
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					<include-menu name="editMilkReceiptRecordTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<container style="full">
+							<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/EditMilkReceiptRecord.ftl"></html-template></html></platform-specific>														
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
     
     <!-- Tanker Receipts Search Screen -->
     <screen name="FindMilkReceiptsTankerEntry">

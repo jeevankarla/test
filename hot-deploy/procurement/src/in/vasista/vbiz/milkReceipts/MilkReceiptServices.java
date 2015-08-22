@@ -109,6 +109,7 @@ import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
+import org.ofbiz.entity.util.EntityListIterator;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
@@ -5366,5 +5367,387 @@ public class MilkReceiptServices {
 		result = ServiceUtil.returnSuccess("Successfully Updated..!");
 		return result;
  }
+ 
+ 
+ public static Map<String, Object> UpdateEditMilkReceiptRecord(DispatchContext ctx,Map<String, Object> context) {
+	 Map<String, Object> finalResult = FastMap.newInstance();
+	 Map<String, Object> result = FastMap.newInstance();
+	 Delegator delegator = ctx.getDelegator();
+	 LocalDispatcher dispatcher = ctx.getDispatcher();
+     Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+     GenericValue userLogin = (GenericValue) context.get("userLogin");
+     String milkTransferId = (String)context.get("milkTransferId");
+     String sequenceNum = (String)context.get("sequenceNum");
+     String tankerNo = (String) context.get("vehicleId");
+     String fromPartyId = (String) context.get("partyId");
+	 String productId = (String) context.get("productId");
+	 String siloId = (String) context.get("siloId");
+ 
+	 BigDecimal dispatchWeight = (BigDecimal) context.get("dispatchWeight");
+	 BigDecimal grossWeight = (BigDecimal) context.get("grossWeight");
+	 BigDecimal tareWeight = (BigDecimal) context.get("tareWeight");
+	 
+	 BigDecimal sendTemp = (BigDecimal) context.get("sendTemp");
+	 BigDecimal sendAcid = (BigDecimal) context.get("sendAcid");
+	 BigDecimal sendCLR = (BigDecimal) context.get("sendCLR");
+	 BigDecimal sendFat = (BigDecimal) context.get("sendFat");
+	 BigDecimal sendSnf = (BigDecimal) context.get("sendSnf");
+	 String sendCob = (String) context.get("sendCob");
+	 
+	 BigDecimal recdTemp = (BigDecimal) context.get("recdTemp");
+	 BigDecimal recdAcid = (BigDecimal) context.get("recdAcid");
+	 BigDecimal recdCLR = (BigDecimal) context.get("recdCLR");
+	 BigDecimal recdFat = (BigDecimal) context.get("recdFat");
+	 BigDecimal recdSnf = (BigDecimal) context.get("recdSnf");
+	 String recdCob = (String) context.get("recdCob");
+	 
+	 String recdOrganoLepticTest = (String) context.get("recdOrganoLepticTest");
+	 String recdSedimentTest = (String) context.get("recdSedimentTest");
+		
+	 //need to calcultae actual weight of the milk received i.e recdQty,sendQty
+	 BigDecimal sendQty = BigDecimal.ZERO;
+	 BigDecimal recdQty = BigDecimal.ZERO;
+	 BigDecimal sendQuantityLtrs = BigDecimal.ZERO;
+	 BigDecimal recdQuantityLtrs = BigDecimal.ZERO;
+	
+	 BigDecimal sendKgFat = BigDecimal.ZERO;
+	 BigDecimal sendKgSnf = BigDecimal.ZERO;
+	 BigDecimal receivedKgFat = BigDecimal.ZERO;
+	 BigDecimal receivedKgSnf = BigDecimal.ZERO;
+     if(UtilValidate.isNotEmpty(dispatchWeight)){
+    	 sendQty=dispatchWeight;
+     }
+     if(UtilValidate.isNotEmpty(tareWeight) && UtilValidate.isNotEmpty(grossWeight)){
+		 recdQty = (grossWeight).subtract(tareWeight);
+	 }
+     if(UtilValidate.isNotEmpty(sendQty) && sendQty.compareTo(BigDecimal.ZERO)>0){
+    	 sendQuantityLtrs= ProcurementNetworkServices.convertKGToLitreSetScale(sendQty,false);	
+     }
+     if(UtilValidate.isNotEmpty(recdQty) && recdQty.compareTo(BigDecimal.ZERO)>0){
+    	 recdQuantityLtrs= ProcurementNetworkServices.convertKGToLitreSetScale(recdQty,false);	
+     }
+     if(sendQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(sendFat) && sendFat.compareTo(BigDecimal.ZERO)>0){
+		sendKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(sendQty,sendFat);
+	 }
+	 if(sendQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(sendSnf) && sendSnf.compareTo(BigDecimal.ZERO)>0){
+		 sendKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(sendQty,sendSnf);
+	 }
+	 if(recdQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(recdFat) && recdFat.compareTo(BigDecimal.ZERO)>0){
+		 receivedKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(recdQty,recdFat);
+	 }
+	 if(recdQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(recdSnf) && recdSnf.compareTo(BigDecimal.ZERO)>0){
+		 receivedKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(recdQty,recdSnf);
+	 }
+     Map vehicleTripStatusResult = FastMap.newInstance();
+	 String containerId= null;
+	 String seqNum= null;
+	 String newSeqNum= null;
+	 String partyId =null;
+	 //update MilkTransfer and milktransferitem and vehicle trip status details ==========
+		try{
+			GenericValue milkTransfer = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId", milkTransferId), false);
+
+		// vehicleTripStatus creation
+			if(UtilValidate.isNotEmpty(milkTransfer)){
+				containerId=(String) milkTransfer.get("containerId");
+				seqNum=(String) milkTransfer.get("sequenceNum");
+				partyId=(String) milkTransfer.get("partyId");
+
+				if(!containerId.equals(tankerNo) && UtilValidate.isNotEmpty(tankerNo)){
+					Map vehicleTripMap = FastMap.newInstance();
+					vehicleTripMap.put("oldTankerNo",containerId);
+					vehicleTripMap.put("newTankerNo",tankerNo);
+					vehicleTripMap.put("seqNum",seqNum);
+					vehicleTripMap.put("fromPartyId",fromPartyId);
+					vehicleTripMap.put("userLogin",userLogin);
+					try{
+					 	vehicleTripStatusResult = dispatcher.runSync("updateVehicleTripStatusAndTrip", vehicleTripMap);
+					 	if( ServiceUtil.isError(vehicleTripStatusResult)) {
+								String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+								Debug.logWarning(errMsg , module);
+							    return ServiceUtil.returnError("Error While Updating MilkTransfer Details 2: "+errMsg);
+						}else{
+							newSeqNum =(String) vehicleTripStatusResult.get("sequenceNum");
+						}
+					 }catch (GenericServiceException e) {
+							// TODO: handle exception
+					 	Debug.logError(e,module);
+					 }
+				}else if(!partyId.equals(fromPartyId) && UtilValidate.isNotEmpty(fromPartyId)){
+					 try{
+				        	GenericValue vehicleTripChangeParty = delegator.findOne("VehicleTrip", UtilMisc.toMap("vehicleId", tankerNo,"sequenceNum",seqNum), false);
+				        	vehicleTripChangeParty.set("partyId",fromPartyId);
+				        	vehicleTripChangeParty.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+				        	delegator.createOrStore(vehicleTripChangeParty);
+				        }catch (Exception e) {
+							// TODO: handle exception
+				        	Debug.logError("Error while updating party in Vehicle trip=========="+e, module);
+				        	return ServiceUtil.returnError("Error while updating  party in Vehicle trip=========="+e.getMessage());
+						}
+				}
+
+			}
+      // update MilkTransfer and milktransferitem
+		GenericValue milkTransferItem=null;
+		List<GenericValue> milkTransferItemList = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS, milkTransferId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(milkTransferItemList)){
+				milkTransferItem = EntityUtil.getFirst(milkTransferItemList);
+				String silo =(String)milkTransferItem.get("siloId");
+				BigDecimal sendLR=(BigDecimal) milkTransferItem.get("sendLR");
+				BigDecimal receivedLR=(BigDecimal) milkTransferItem.get("receivedLR");
+				BigDecimal sendTemparature=(BigDecimal) milkTransferItem.get("sendTemparature");
+				BigDecimal receivedTemparature=(BigDecimal) milkTransferItem.get("receivedTemparature");
+				BigDecimal sendAcidity=(BigDecimal) milkTransferItem.get("sendAcidity");
+				BigDecimal receivedAcidity=(BigDecimal) milkTransferItem.get("receivedAcidity");
+	    		String sendedCob = (String) milkTransferItem.get("sendCob");
+	    		String receivedCob = (String) milkTransferItem.get("receivedCob");
+	    		String receivedOrganoLepticTest = (String) milkTransferItem.get("recdOrganoLepticTest");
+	    		String receivedSedimentTest = (String) milkTransferItem.get("receivedSedimentTest");
+	    		if(!silo.equals(siloId) && UtilValidate.isNotEmpty(siloId)){
+					milkTransferItem.set("siloId", siloId);
+				}
+	    		if(!sendLR.equals(sendCLR) && UtilValidate.isNotEmpty(sendCLR)){
+					milkTransferItem.set("sendLR", sendCLR);
+				}
+	    		if(!receivedLR.equals(recdCLR) && UtilValidate.isNotEmpty(recdCLR)){
+					milkTransferItem.set("receivedLR", recdCLR);
+				}
+	    		if(!sendTemparature.equals(sendTemp) && UtilValidate.isNotEmpty(sendTemp)){
+					milkTransferItem.set("sendTemparature", sendTemp);
+				}
+	    		if(!receivedTemparature.equals(recdTemp) && UtilValidate.isNotEmpty(recdTemp)){
+					milkTransferItem.set("receivedTemparature", recdTemp);
+				}
+	    		if(!sendAcidity.equals(sendAcid) && UtilValidate.isNotEmpty(sendAcid)){
+					milkTransferItem.set("sendAcidity", sendAcid);
+				}
+	    		if(!receivedAcidity.equals(recdAcid) && UtilValidate.isNotEmpty(recdAcid)){
+					milkTransferItem.set("receivedAcidity", recdAcid);
+				}
+	    		if(!sendedCob.equals(sendCob) && UtilValidate.isNotEmpty(sendCob)){
+					milkTransferItem.set("sendCob", sendCob);
+				}
+	    		if(!receivedCob.equals(recdCob) && UtilValidate.isNotEmpty(recdCob)){
+					milkTransferItem.set("receivedCob", recdCob);
+				}
+	    		if(!receivedOrganoLepticTest.equals(recdOrganoLepticTest) && UtilValidate.isNotEmpty(recdOrganoLepticTest)){
+					milkTransferItem.set("recdOrganoLepticTest", recdOrganoLepticTest);
+				}
+	    		if(!receivedSedimentTest.equals(recdSedimentTest) && UtilValidate.isNotEmpty(recdSedimentTest)){
+					milkTransferItem.set("receivedSedimentTest", recdSedimentTest);
+				}
+			}
+			if(UtilValidate.isNotEmpty(milkTransfer)){
+				containerId=(String) milkTransfer.get("containerId");
+				seqNum=(String) milkTransfer.get("sequenceNum");
+	    		partyId = (String) milkTransfer.get("partyId");
+	    		String prodId = (String) milkTransfer.get("productId");
+	    		BigDecimal dWeight = (BigDecimal) milkTransfer.get("dispatchWeight");
+	    		BigDecimal gWeight = (BigDecimal) milkTransfer.get("grossWeight");
+	    		BigDecimal tWeight = (BigDecimal) milkTransfer.get("tareWeight");
+				BigDecimal fat = (BigDecimal)milkTransfer.get("fat");
+				BigDecimal snf = (BigDecimal)milkTransfer.get("snf");
+				BigDecimal quantity = (BigDecimal)milkTransfer.get("quantity");
+				BigDecimal receivedQuantity = (BigDecimal)milkTransfer.get("receivedQuantity");
+				BigDecimal receivedQuantityLtrs	 = (BigDecimal)milkTransfer.get("receivedQuantityLtrs	");
+				BigDecimal receivedFat = (BigDecimal)milkTransfer.get("receivedFat");
+				BigDecimal receivedSnf = (BigDecimal)milkTransfer.get("receivedSnf");
+				if(!prodId.equals(productId) && UtilValidate.isNotEmpty(productId)){
+					milkTransfer.set("productId", productId);
+					if(UtilValidate.isNotEmpty(milkTransferItem)){
+						milkTransferItem.set("receivedProductId", productId);
+					}
+				}
+				if(UtilValidate.isNotEmpty(newSeqNum)){
+					milkTransfer.set("sequenceNum", newSeqNum);
+					//milkTransferItem.set("sequenceNum", newSeqNum);
+				}
+				if(!containerId.equals(tankerNo) && UtilValidate.isNotEmpty(tankerNo)){
+					milkTransfer.set("containerId", tankerNo);
+				}
+				if(!partyId.equals(fromPartyId) && UtilValidate.isNotEmpty(fromPartyId)){
+					milkTransfer.set("partyId", fromPartyId);
+				}
+				if(!dWeight.equals(dispatchWeight) && UtilValidate.isNotEmpty(dispatchWeight)){
+					milkTransfer.set("dispatchWeight", dispatchWeight);
+				}
+				if(!gWeight.equals(grossWeight) && UtilValidate.isNotEmpty(grossWeight)){
+					milkTransfer.set("grossWeight", grossWeight);
+				}
+				if(!tWeight.equals(tareWeight) && UtilValidate.isNotEmpty(tareWeight)){
+					milkTransfer.set("tareWeight", tareWeight);
+				}
+				if(!quantity.equals(sendQty) && UtilValidate.isNotEmpty(sendQty)){
+					milkTransfer.set("quantity", sendQty);
+					milkTransfer.set("quantityLtrs", sendQuantityLtrs);
+					if(UtilValidate.isNotEmpty(milkTransferItem)){
+						milkTransferItem.set("quantity", sendQty);
+						milkTransferItem.set("quantityLtrs", sendQuantityLtrs);
+					}
+				}
+				if(!receivedQuantity.equals(recdQty) && UtilValidate.isNotEmpty(recdQty)){
+					milkTransfer.set("receivedQuantity", recdQty);
+					milkTransfer.set("receivedQuantityLtrs", recdQuantityLtrs);
+					if(UtilValidate.isNotEmpty(milkTransferItem)){
+						milkTransferItem.set("receivedQuantity", recdQty);
+						milkTransferItem.set("receivedQuantityLtrs", recdQuantityLtrs);
+					}
+				}
+				if((!fat.equals(sendFat) && UtilValidate.isNotEmpty(sendFat)) || (!snf.equals(sendSnf) && UtilValidate.isNotEmpty(sendSnf))){
+					milkTransfer.set("fat", sendFat);
+					milkTransfer.set("sendKgFat", sendKgFat);
+					milkTransfer.set("snf", sendSnf);
+					milkTransfer.set("sendKgSnf", sendKgFat);
+					if(UtilValidate.isNotEmpty(milkTransferItem)){
+						milkTransferItem.set("fat", sendFat);
+						milkTransferItem.set("sendKgFat", sendKgFat);
+						milkTransferItem.set("snf", sendSnf);
+						milkTransferItem.set("sendKgSnf", sendKgFat);
+					}
+				}
+				if((!receivedFat.equals(recdFat) && UtilValidate.isNotEmpty(recdFat)) || (!receivedSnf.equals(recdSnf) && UtilValidate.isNotEmpty(recdSnf))){
+					milkTransfer.set("receivedFat", recdFat);
+					milkTransfer.set("receivedKgFat", receivedKgFat);
+					milkTransfer.set("receivedSnf", recdSnf);
+					milkTransfer.set("receivedKgSnf", receivedKgSnf);
+					if(UtilValidate.isNotEmpty(milkTransferItem)){
+						milkTransferItem.set("receivedFat", recdFat);
+						milkTransferItem.set("receivedKgFat", receivedKgFat);
+						milkTransferItem.set("receivedSnf", recdSnf);
+						milkTransferItem.set("receivedKgSnf", receivedKgSnf);
+					}
+				}
+				milkTransfer.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+	        	milkTransferItem.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+	    	}
+			 try{
+				 milkTransferItem.store();
+			 }catch(GenericEntityException e){
+				 Debug.logError("Error While Updating milkTransferItem Details11 "+e, module);
+				  return ServiceUtil.returnError("Error While Updating milkTransferItem Details11 : "+milkTransferId);
+			 }
+			 try{
+				 milkTransfer.store();
+			 }catch(GenericEntityException e){
+				 Debug.logError("Error While Updating milkTransfer Details222 "+e, module);
+				  return ServiceUtil.returnError("Error While Updating milkTransferItem Details2221 : "+milkTransferId);
+				 
+			 }
+		}catch (Exception e) {
+			  Debug.logError(e, "Error While Updating MilkTransfer Details1 ", module);
+			  return ServiceUtil.returnError("Error While Updating MilkTransfer Details1 : "+milkTransferId);
+	 	}
+		result = ServiceUtil.returnSuccess("Successfully Updated..!");
+		return result;
+ }
+
+public static Map<String, Object> updateVehicleTripStatusAndTrip(DispatchContext dctx, Map<String, ? extends Object> context) {
+	LocalDispatcher dispatcher = dctx.getDispatcher();
+	Map<String, Object> resultMap = FastMap.newInstance();
+ 	Delegator delegator = dctx.getDelegator();
+ 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+ 	String seqNum = (String) context.get("seqNum");
+ 	String oldTankerNo = (String) context.get("oldTankerNo"); 
+ 	String newTankerNo = (String) context.get("newTankerNo"); 
+ 	String fromPartyId = (String) context.get("fromPartyId");
+	String sequenceNum = null;
+	// Getting oldVehicle Record and creating new VehicleTrip Record
+	GenericValue vehicleTrip =null;				
+	try{        	
+		vehicleTrip = delegator.findOne("VehicleTrip", UtilMisc.toMap("vehicleId", oldTankerNo,"sequenceNum",seqNum), false);
+		if(UtilValidate.isNotEmpty(vehicleTrip)){
+			String vehicleId =(String) vehicleTrip.get("vehicleId");
+			String partyId = (String) vehicleTrip.get("partyId");
+			Timestamp estimatedStartDate = (Timestamp) vehicleTrip.get("estimatedStartDate");
+			Timestamp estimatedEndDate = (Timestamp) vehicleTrip.get("estimatedEndDate");
+			Timestamp createdDate = (Timestamp) vehicleTrip.get("createdDate");
+			 String createdByUserLogin = (String) vehicleTrip.get("createdByUserLogin");
+		     try{        	
+			 		Map vehicleTripMap = FastMap.newInstance();
+			 	    Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+			 		vehicleTripMap.put("vehicleId", newTankerNo);
+			 		vehicleTripMap.put("partyId", fromPartyId);
+			 		vehicleTripMap.put("estimatedStartDate", estimatedStartDate);
+			 		vehicleTripMap.put("estimatedEndDate", estimatedEndDate);
+			 		vehicleTripMap.put("createdDate", createdDate);
+			 		vehicleTripMap.put("userLogin", userLogin);
+			 		vehicleTripMap.put("createdByUserLogin",createdByUserLogin);
+			 		Map vehicleTripResultMap = dispatcher.runSync("createVehicleTrip", vehicleTripMap);
+			 		if(ServiceUtil.isError(vehicleTripResultMap)){
+			 			Debug.logError("Error While Creating vehicleTrip :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
+			 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip ");
+			 			return resultMap;
+			 		}
+			 		sequenceNum = (String)vehicleTripResultMap.get("sequenceNum");
+				}catch(Exception e){
+					 Debug.logError("Error while creating vehicle trip details "+e, module);
+					 resultMap = ServiceUtil.returnError("Error while creating vehicle trip details");
+					 return resultMap;
+				 }
+		        vehicleTrip.remove();
+		}
+	 }catch(Exception e){
+		 Debug.logError("Error while creating vehicle trip details "+e, module);
+		 resultMap = ServiceUtil.returnError("Error while creating vehicle trip details");
+		 return resultMap;
+	 }
+  // deleting old tanker record and create new tanker in VEHICLE TRIP STATUS
+	try{
+		List conList=FastList.newInstance();
+		conList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS,oldTankerNo));
+		conList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS,seqNum));
+		EntityCondition saleCond = EntityCondition.makeCondition(conList, EntityOperator.AND);
+		List<GenericValue> vehicleTripStatusItr = delegator.findList("VehicleTripStatus", saleCond, null, null, null, false);
+		if(UtilValidate.isNotEmpty(vehicleTripStatusItr)){
+    		for(GenericValue vehicleStatusDetails : vehicleTripStatusItr){
+    			String statusId = vehicleStatusDetails.getString("statusId");
+				Timestamp estimatedStartDateVts =  vehicleStatusDetails.getTimestamp("estimatedStartDate");
+				Timestamp estimatedEndDateVts =  vehicleStatusDetails.getTimestamp("estimatedEndDate");
+				Timestamp createdDateVts =  vehicleStatusDetails.getTimestamp("createdDate");
+                String createdByUserLoginVts =  vehicleStatusDetails.getString("createdByUserLogin");
+                try{        	
+					GenericValue newVehicleTripStatus = delegator.makeValue("VehicleTripStatus");
+					newVehicleTripStatus.set("vehicleId", newTankerNo);
+					newVehicleTripStatus.set("sequenceNum", sequenceNum);
+					newVehicleTripStatus.set("statusId", statusId);
+					newVehicleTripStatus.set("estimatedStartDate", estimatedStartDateVts);
+		    		if(UtilValidate.isNotEmpty(estimatedEndDateVts)){
+		    			newVehicleTripStatus.set("estimatedEndDate", estimatedEndDateVts);
+		    		}
+		    		if(UtilValidate.isNotEmpty(createdDateVts)){
+		    			newVehicleTripStatus.set("createdDate", createdDateVts);
+		    		}
+		    		if(UtilValidate.isNotEmpty(createdByUserLoginVts)){
+		    			newVehicleTripStatus.set("createdByUserLogin", createdByUserLoginVts);
+		    		}
+		    		newVehicleTripStatus.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+		    		newVehicleTripStatus.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    		//newVehicleTripStatus.set("lastModifiedByUserLogin", userLogin);
+					delegator.create(newVehicleTripStatus);
+                }catch(Exception e){
+					Debug.logError("Error while creating VehicleTripStatus details "+e, module);
+					resultMap = ServiceUtil.returnError("Error while creating VehicleTripStatus trip details");
+					return resultMap;
+				}
+    		}
+    		 try{
+    			 delegator.removeAll(vehicleTripStatusItr);
+					//vehicleTripStatusItr.remove();
+				}catch(Exception e){
+					 Debug.logError("Error while removing old vehicle trip status details "+e, module);
+					 resultMap = ServiceUtil.returnError("Error while removing old vehicle trip status details");
+					 return resultMap;
+				}
+    		}
+	}catch(Exception e){
+		 Debug.logError("Error while creating vehicle trip status details "+e, module);
+		 resultMap = ServiceUtil.returnError("Error while creating vehicle trip status details");
+		 return resultMap;
+	}
+	
+	 resultMap.put("vehicleId", newTankerNo);
+     resultMap.put("sequenceNum", sequenceNum);
+     return resultMap;
+}
  
 }

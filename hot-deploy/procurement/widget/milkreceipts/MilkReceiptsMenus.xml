@@ -91,6 +91,15 @@
             <link target="MilkTankerReturnInitiate">
 			</link>
       	</menu-item> 
+      	<menu-item name="FindEditMilkReceipts" title="Edit Milk Receipts" >
+      	  <condition>
+	        	<or>
+	        		<if-has-permission permission="MR"  action="_EDIT_SCREEN"/>
+	        	</or>        		
+	        </condition> 
+            <link target="EditMilkReceiptsTankerEntry">
+			</link>
+      	</menu-item>
       	
       	<menu-item name="MRTransporterMargins" title="Transporters">
             <condition>
@@ -163,6 +172,21 @@
 			<link target="CreateNewTanker"></link>
 		</menu-item>
 	</menu>
+	<menu name="editMilkReceiptsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="EditMilkReceiptEntry" title="Edit Milk Receipts" >
+			<link target="EditMilkReceiptsTankerEntry"></link>
+		</menu-item>
+	</menu>
+	<menu name="editMilkReceiptRecordTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="EditMilkReceiptEntry" title="Edit Milk Receipts" >
+			<link target="EditMilkReceiptsTankerEntry"></link>
+		</menu-item>
+		<menu-item name="EditMilkReceiptRecord" title="Edit Receipt Record">
+			<link target="EditMilkReceiptRecord"></link>
+		</menu-item>
+	</menu>
+	
+	
 	<menu name="BillingAdjustmentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="PtcAdjustmentDeductions" title="${uiLabelMap.PtcAdjustmentDeductions}">
 			<link target="PtcAdjustmentDeductions"></link>

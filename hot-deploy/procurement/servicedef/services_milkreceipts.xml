@@ -27,6 +27,42 @@
                 <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"></attribute>
                 <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"></attribute>
     </service>  
+    <service name="UpdateEditMilkReceiptRecord" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="UpdateEditMilkReceiptRecord" auth="true">
+	 	<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="sequenceNum" mode="IN" type="String" optional="true"/>
+	 	
+	    <attribute name="vehicleId" mode="IN" type="String" optional="true"/>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+	    <attribute name="productId" mode="IN" type="String" optional="true"/>
+	    <attribute name="siloId" mode="IN" type="String" optional="true"/>
+		<attribute name="dispatchWeight" mode="IN" type="BigDecimal" optional="true"/>
+ 		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="true"/>
+ 		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="true"/>
+  	    <attribute name="sendTemp" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="sendAcid" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="sendCob" mode="IN" type="String" optional="true"/>
+	 	<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdAcid" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="true"/>
+		<attribute name="recdCob" mode="IN" type="String" optional="true"/>
+		<attribute name="recdOrganoLepticTest" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="recdSedimentTest" mode="IN" type="String" optional="true"/>
+    </service>  
+    <service name="updateVehicleTripStatusAndTrip" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateVehicleTripStatusAndTrip" auth="true">
+        <attribute name="oldTankerNo" mode="IN" type="String" optional="false"/>
+        <attribute name="newTankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="seqNum" mode="IN" type="String" optional="false"/>
+        <attribute name="fromPartyId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="false"/>
+	 	<attribute name="vehicleId" mode="OUT" type="String" optional="false"/>
+    </service>  
       
     <service name="updateMilkReceiptEntry" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkReceiptEntry" auth="true">
