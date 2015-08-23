@@ -259,21 +259,20 @@ public class ProductionServices {
 		            	snfPercent = productionTrans.getBigDecimal("snfPercent");
 		            	}
 		            	String inventoryTransferId = productionTrans.getString("inventoryTransferId");
+	                    String productBatchId = productionTrans.getString("productBatchId");
+
 		             	if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) <= 0) && (UtilValidate.isEmpty(inventoryTransferId))){
 		             		issuedProductsMap.put("issuedProdId",productId);
 		             		issuedProductsMap.put("issuedQty",quantityOnHandDiff);
 		             		issuedProductsMap.put("fatPercent",fatPercent);
 		             		issuedProductsMap.put("snfPercent",snfPercent);
 		             		issuedProductsList.add(issuedProductsMap);
-		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(inventoryTransferId))){
-		                    String productBatchId = productionTrans.getString("productBatchId");
-		                 	if(UtilValidate.isNotEmpty(productBatchId)){
+		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isNotEmpty(productBatchId))){
 		                    	List<GenericValue> productBatchSequence = delegator.findList("ProductBatchAndSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, productBatchId), null, UtilMisc.toList("sequenceId"), null, false);
 		                     	if(UtilValidate.isNotEmpty(productBatchSequence)){
 		                     		String batchNo = (EntityUtil.getFirst(productBatchSequence)).getString("sequenceId");
 		                 		    declareProductsMap.put("batchNo",batchNo);
 		                     	}
-		                 	}
 		             		declareProductsMap.put("declareProdId",productId);
 		             		declareProductsMap.put("declareQty",quantityOnHandDiff);
 		             		declareProductsMap.put("fatPercent",fatPercent);

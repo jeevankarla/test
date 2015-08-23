@@ -38,12 +38,18 @@ if(UtilValidate.isNotEmpty(workEffort)){
 	if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
 		inventoryItemAndDetail.each{eachDeclaredItem->
 			String productId = eachDeclaredItem.productId;
-			String returnId = eachDeclaredItem.returnId;
+			String productBatchId = eachDeclaredItem.productBatchId;
+			String ownerPartyId = eachDeclaredItem.ownerPartyId;
+			Timestamp effectiveDate = eachDeclaredItem.effectiveDate;
+			
 			BigDecimal quantityOnHandDiff = eachDeclaredItem.quantityOnHandDiff;
-     		if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(returnId))){
+     		if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isNotEmpty(productBatchId))){
                  tempMap=[:]
 				 tempMap.put("workEffortId", workEffortId);
 				 tempMap.put("productId", productId);
+				 tempMap.put("ownerPartyId", ownerPartyId);
+				 tempMap.put("productBatchId", productBatchId);
+				 tempMap.put("effectiveDate", effectiveDate);
 				 tempMap.put("quantity", quantityOnHandDiff);
                  qcProductsList.add(tempMap);
 			}
