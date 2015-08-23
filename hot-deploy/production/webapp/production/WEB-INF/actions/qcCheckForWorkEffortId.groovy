@@ -31,9 +31,9 @@ if(UtilValidate.isNotEmpty(context.get("workEffortId"))){
 			if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
 			inventoryItemAndDetail.each{eachDeclaredItem->
 				String productId = eachDeclaredItem.productId;
-				String returnId = eachDeclaredItem.returnId;
+				String productBatchId = eachDeclaredItem.productBatchId;
 				BigDecimal quantityOnHandDiff = eachDeclaredItem.quantityOnHandDiff;
-				 if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isEmpty(returnId))){
+				 if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isNotEmpty(productBatchId))){
 					  productQcTestDetails= EntityUtil.filterByCondition(productQcTest, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 					   if(UtilValidate.isEmpty(productQcTestDetails)){
 						 qcCheckForProdRun="INCOMPLETE"
