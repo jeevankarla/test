@@ -88,16 +88,33 @@ paymentGroup = delegator.findOne("FinAccountTransGroup", UtilMisc.toMap("finAccn
 	paymentDate = paymentGroup.finAccntTransDate;
 	if(UtilValidate.isNotEmpty(finAccntTransGroupId)){
 		ContraGroupMemberList = delegator.findList("FinAccountTransGroupMember",EntityCondition.makeCondition("finAccntTransGroupId", EntityOperator.EQUALS , finAccntTransGroupId)  , null, null, null, false );
-	   Debug.log("ContraGroupMemberList==================="+ContraGroupMemberList);
 		 if(UtilValidate.isNotEmpty(ContraGroupMemberList)){
 			ContraGroupMemberList.each{ paymentGroupMember ->
 				finAccountTransId = paymentGroupMember.finAccountTransId;
-				Debug.log("finAccountTransId=================="+finAccountTransId);
 				if(UtilValidate.isNotEmpty(finAccountTransId)){
+					cheqInFavour="";
+					finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+					
+					if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+					finAccountTranscheqInFavour= delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransAttributeDetails.finAccountTransId, attrName : "INFAVOUR_OF"], false);
+						if(UtilValidate.isEmpty(finAccountTranscheqInFavour)){
+							finAccountTranscheqInFavour= delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransAttributeDetails.attrValue, attrName : "INFAVOUR_OF"], false);
+						}
+				
+					}
+					transIds=[];
+					transIds.add(finAccountTransAttributeDetails.finAccountTransId);
+					transIds.add(finAccountTransAttributeDetails.attrValue);
+					if(finAccountTranscheqInFavour){
+						cheqInFavour=finAccountTranscheqInFavour.attrValue;
+					}
 					tempprintContraList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS , finAccountTransId)  , null, null, null, false );
 					tempprintContraList.each{paymentRecipt->
 						inFavor="";
 						inFavor = paymentRecipt.comments;
+						if(cheqInFavour){
+							inFavor=cheqInFavour;
+						}
 					}
 				}
 			}
