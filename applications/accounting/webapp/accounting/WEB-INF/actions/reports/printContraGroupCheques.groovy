@@ -88,11 +88,9 @@ paymentGroup = delegator.findOne("FinAccountTransGroup", UtilMisc.toMap("finAccn
 	paymentDate = paymentGroup.finAccntTransDate;
 	if(UtilValidate.isNotEmpty(finAccntTransGroupId)){
 		ContraGroupMemberList = delegator.findList("FinAccountTransGroupMember",EntityCondition.makeCondition("finAccntTransGroupId", EntityOperator.EQUALS , finAccntTransGroupId)  , null, null, null, false );
-	   Debug.log("ContraGroupMemberList==================="+ContraGroupMemberList);
 		 if(UtilValidate.isNotEmpty(ContraGroupMemberList)){
 			ContraGroupMemberList.each{ paymentGroupMember ->
 				finAccountTransId = paymentGroupMember.finAccountTransId;
-				Debug.log("finAccountTransId=================="+finAccountTransId);
 				if(UtilValidate.isNotEmpty(finAccountTransId)){
 					cheqInFavour="";
 					finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
