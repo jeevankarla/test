@@ -42,13 +42,13 @@ under the License.
             </fo:static-content>                 
                 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
 				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    Enquiry Sequence No: ${enquirySequenceNo?if_exists}       </fo:block>
-				   <fo:block font-family="Courier,monospace">
+				 <#-- <fo:block font-family="Courier,monospace">
 				       <#assign productQtyList = productQtyMap.entrySet()>
 				   		<fo:table border-style="solid">
 				   			<fo:table-column column-width="100pt"/>
 					     	<fo:table-column column-width="75pt"/>
 					     	<fo:table-column column-width="100pt"/>
-                            <#if productQtyList?has_content>
+                            <#if productQtyList?has_content >
                             	<#list productQtyList as prodQty>
                                 <fo:table-column column-width="80pt"/>
                                 </#list>  
@@ -334,14 +334,20 @@ under the License.
 				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       ${signature?if_exists}                         PRE AUDITOR</fo:block>
                     <#else>				   
 					<fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>
-					</#if>   
-				<#-- <fo:block font-family="Courier,monospace">
+					</#if> -->
+				 <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
 	                     <fo:table-column column-width="100pt"/>
 					     <fo:table-column column-width="170pt"/>
-					     <#list partyDetList as partyNameList>
-					      <fo:table-column column-width="77pt"/>					      
-					      </#list> 
+                         <#if partyDetList?has_content && (partyDetList.size() lt 11)>
+					     		<#list partyDetList as partyNameList>
+					     			 <fo:table-column column-width="77pt"/>					      
+					      		</#list> 
+                          <#else>
+                 				<#list partyDetList as partyNameList>
+					      			<fo:table-column column-width="51pt"/>					      
+					      		</#list> 
+                          </#if> 
 					         <fo:table-body>
 					             <fo:table-row height="20pt">
                                     <fo:table-cell>
@@ -356,11 +362,21 @@ under the License.
 								     </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
-						                      <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}</fo:block>
-											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.get("partyId")}]</fo:block>
-	                                        <fo:block text-align="left" font-weight="bold">-----------</fo:block>
-											<#assign status = delegator.findOne("StatusItem", {"statusId" : statusMap.get(partyNameList.get("partyId"))}, true)?if_exists/>
-											<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${status.description?if_exists}]</fo:block>
+						                      
+                                            <#if partyDetList?has_content && (partyDetList.size() lt 11)>
+	                                        	<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}</fo:block>
+												<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.get("partyId")}]</fo:block>
+	                                        	<fo:block text-align="left" >-----------</fo:block>
+	                                        	<#assign status = delegator.findOne("StatusItem", {"statusId" : statusMap.get(partyNameList.get("partyId"))}, true)?if_exists/>
+												<fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >[${status.description?if_exists}]</fo:block>
+	                                        <#else>
+                                              	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}</fo:block>
+												<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold" >[${partyNameList.get("partyId")}]</fo:block>
+                                             	<fo:block text-align="left" >------</fo:block>
+                                             	<#assign status = delegator.findOne("StatusItem", {"statusId" : statusMap.get(partyNameList.get("partyId"))}, true)?if_exists/>
+												<fo:block text-align="center" font-size="10pt" white-space-collapse="false"  >[${status.description?if_exists}]</fo:block>
+                                            </#if>
+											
 						                  	</fo:table-cell>
     									</#list>    	
 					             </fo:table-row> 
@@ -373,7 +389,7 @@ under the License.
 					                </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
 					                 <fo:table-cell border-style="solid">
-					                    <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">BASIC PRICE/TOT COST (including tax)</fo:block>
+					                    <fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">BASIC PRICE/TOT COST (incl tax)</fo:block>
 					                </fo:table-cell>
 					                </#list> 
 					            </fo:table-row> 					              		                             
@@ -386,9 +402,15 @@ under the License.
 					     <fo:table-column column-width="150pt"/>
 					     <fo:table-column column-width="40pt"/>
 					     <fo:table-column column-width="50pt"/>
-					     <#list partyDetList as partyNameList>
-					     <fo:table-column column-width="77pt"/>
-					      </#list> 				    
+					    <#if partyDetList?has_content && (partyDetList.size() lt 11)>
+					     		<#list partyDetList as partyNameList>
+					     			 <fo:table-column column-width="77pt"/>					      
+					      		</#list> 
+                          <#else>
+                 				<#list partyDetList as partyNameList>
+					      			<fo:table-column column-width="51pt"/>					      
+					      		</#list> 
+                          </#if> 				    
 					         <fo:table-body>	
                                 <#assign sno=1>					         
                            		<#assign productQtyList = productQtyMap.entrySet()>
@@ -425,13 +447,22 @@ under the License.
 		  					        <#assign priceList =  partyProdPriceMap.entrySet()>
 		  					        <#list priceList as pList>
 		  					        <#if pList.getValue().get("price")?has_content>
-		  					        <fo:table-cell border-style="solid" >
-		  					            <fo:block text-align="center" font-size="11pt" >${pList.getValue().get("price")?if_exists} /</fo:block>
-                                        <fo:block text-align="left" font-size="11pt" >${pList.getValue().get("amount")?if_exists}</fo:block>
-                                        <fo:block text-align="left" font-weight="bold">-----------</fo:block>
+                                   	 	<#if partyDetList?has_content && (partyDetList.size() lt 11)>
+		  					        	<fo:table-cell border-style="solid" >
+		  					           		<fo:block text-align="center" font-size="11pt" >${pList.getValue().get("price")?if_exists} /</fo:block>
+                                        	<fo:block text-align="left" font-size="11pt" >${pList.getValue().get("amount")?if_exists}</fo:block>
+                                        	<fo:block text-align="left" >------</fo:block>tatus = delegator.findOne("StatusItem", {"statusId" : pList.getValue().get("itemStatus")}, true)?if_exists/>
+                                        	<fo:block text-align="left" font-size="11pt" >[${status.description?if_exists}]</fo:block> 
+		  					        	</fo:table-cell> 
+		  					        	<#else>
+                                         <fo:table-cell border-style="solid" >
+		  					           		<fo:block text-align="center" font-size="10pt" >${pList.getValue().get("price")?if_exists} /</fo:block>
+                                        	<fo:block text-align="left" font-size="10pt" >${pList.getValue().get("amount")?if_exists}</fo:block>
+                                        	<fo:block text-align="left" >------</fo:block>
 											<#assign status = delegator.findOne("StatusItem", {"statusId" : pList.getValue().get("itemStatus")}, true)?if_exists/>
-                                        <fo:block text-align="left" font-size="11pt" >[${status.description?if_exists}]</fo:block> 
-		  					        </fo:table-cell> 
+                                        	<fo:block text-align="left" font-size="10pt" >[${status.description?if_exists}]</fo:block> 
+		  					        	</fo:table-cell>
+                                    	</#if>
 		  					        <#else>
 		  					        <fo:table-cell border-style="solid" >
 		  					            <fo:block text-align="center" font-size="11pt">&#160;</fo:block>
@@ -457,9 +488,15 @@ under the License.
 					<fo:block font-family="Courier,monospace">
 	                    <fo:table>
 					      <fo:table-column column-width="70pt"/>
-					     <#list partyDetList as partyNameList>					      
-					      <fo:table-column column-width="96pt"/>
-					      </#list> 
+                         <#if partyDetList?has_content && (partyDetList.size() lt 11)>
+					     	<#list partyDetList as partyNameList>					      
+					      	<fo:table-column column-width="96pt"/>
+					      	</#list> 
+					      <#else>
+							<#list partyDetList as partyNameList>					      
+					      	<fo:table-column column-width="65pt"/>
+					      	</#list> 
+                         </#if>
 					          <fo:table-body>
 					          		<fo:table-row border-style="solid">
 					          		<fo:table-cell border-style="solid">
@@ -474,11 +511,19 @@ under the License.
 					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" ></fo:block>
 					                  </fo:table-cell>	                                      				                  
     								  <#list partyDetList as partyNameList>
-    								  <fo:table-cell border-style="solid">
-						                  <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
-						                  <fo:block text-align="left" font-weight="bold" font-size="11pt" >--------------</fo:block>
-										 <fo:block text-align="center" font-weight="bold" font-size="9pt" white-space-collapse="false">Item No|TermValue</fo:block>	
-						              </fo:table-cell>
+                                      	<#if partyDetList?has_content && (partyDetList.size() lt 11)>
+    								 	 	<fo:table-cell border-style="solid">
+						                  		<fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
+						                  		<fo:block text-align="left" font-weight="bold" font-size="11pt" >--------------</fo:block>
+										 		<fo:block text-align="center" font-weight="bold" font-size="9pt" white-space-collapse="false">Item No|TermValue</fo:block>	
+						              		</fo:table-cell>
+										<#else>
+ 											<fo:table-cell border-style="solid">
+						                  		<fo:block text-align="center" font-size="10pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
+						                  		<fo:block text-align="left" font-weight="bold" font-size="10pt" >-----------</fo:block>
+										 		<fo:block text-align="center"  font-size="7pt" white-space-collapse="false">Item No|TermValue</fo:block>	
+						              		</fo:table-cell>
+                                        </#if>
     								  </#list>  
 					              </fo:table-row>
 					              <#list termsList as termTypeIds>
@@ -500,8 +545,13 @@ under the License.
 					                      <fo:block text-align="center" font-size="10pt" >
 					                      <#if partyIdsKey.getValue()?has_content>
 					                      <fo:table>
+                                                <#if partyDetList?has_content && (partyDetList.size() lt 11)>
 					      						<fo:table-column column-width="32pt"/>
 					      						<fo:table-column column-width="63pt"/>
+					      						<#else>
+                                              	<fo:table-column column-width="30pt"/>
+					      						<fo:table-column column-width="35pt"/>
+                                                </#if>
 												<fo:table-body>
 												<#assign partyValues=partyIdsKey.getValue()>
 													<#list partyValues as values>
@@ -612,7 +662,7 @@ under the License.
 				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       ${signature?if_exists}                         PRE AUDITOR</fo:block>
                     <#else>				   
 					<fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>
-					</#if> -->
+					</#if> 
 			    </fo:flow>	
 		 </fo:page-sequence>	
 		<#else>
