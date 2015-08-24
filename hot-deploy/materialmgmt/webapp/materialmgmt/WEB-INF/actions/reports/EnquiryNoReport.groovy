@@ -182,7 +182,7 @@ quoteIds.each{quoteId->
 //Debug.log("quotesMap==================="+quotesMap);
 
 //quoteTermsList=delegator.findList("QuoteTermAndItemAndQuote", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
-/*finalMap=[:];
+finalMap=[:];
 termTypeIds.each{termType->
 	tempList=[];
 		partyIds.each{partyId->
@@ -197,8 +197,8 @@ termTypeIds.each{termType->
 		finalMap.put(termType, tempList);	
 	}
 }
-context.finalMap=finalMap;*/
-partyFinalMap=[:];
+context.finalMap=finalMap;
+/*partyFinalMap=[:];
 partyIds.each{partyId->
 	tempList=[];
 		termTypeIds.each{termType->
@@ -214,6 +214,6 @@ partyIds.each{partyId->
 	}
 }
 
-context.partyFinalMap=partyFinalMap;
+context.partyFinalMap=partyFinalMap;*/
 
 
