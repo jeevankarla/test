@@ -50,7 +50,11 @@ under the License.
              	</#if>
 			    
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160; </fo:block> 
+			    <#if flag?has_content && flag=="TrankerReturns">
+	            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold" >RECEIVED FROM:      </fo:block>
+                <#else> 
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold" >DISPATCH FROM:      </fo:block>
+                </#if> 
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  <#if partyDetailsMap.get("partyName")?has_content>${partyDetailsMap.get("partyName")} <#else> </#if><#if partyDetailsMap.get("partyId")?has_content>[${partyDetailsMap.get("partyId")}] <#else> </#if>        </fo:block>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("address1")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("address1")}   <#else> </#if>     </fo:block>
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("address2")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("address2")?if_exists} <#else> </#if>     </fo:block>

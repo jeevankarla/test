@@ -102,6 +102,7 @@ var  milkTransferId;
 var productJson = ${StringUtil.wrapString(productJson)}
 var grossWeight = 0;
 $(document).ready(function() {	
+	hideDiv();
   $('#recdPH').autoNumeric({mNum: 1,mDec: 1 , autoTab : true}).trigger('focusout');
   
   $('#recdTemp').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
@@ -607,12 +608,73 @@ $( "#"+fromDateId ).datepicker({
 		}
 	});
 }
-	
+function setVehicleId(selected){
+	var vehicleId = selected.value;
+	var check = confirm("Please Confirm The Vehicle No :"+vehicleId);
+	 if (check == false) {
+            return false;
+        }
+     $("#DetailsDiv").show();
+    $("#tankerNo").val(vehicleId);
+     var selectedValue = vehicleId;
+	$('[name=tankerName]').val(selectedValue);
+	 populateVehicleSpan();
+    $("#newVehicleDiv").hide();
+}
+function hideDiv(){
+	var displayScreen = $('[name="displayScreen"]').val();
+ 	if((displayScreen != "RETURN_INITIATE")){
+		$("#DetailsDiv").hide();
+ 	}
+}	
+function reloadingPage(){
+	setTimeout("location.reload(true);", 1000);
+}	
 	
 </script>
+<#if displayScreen != "RETURN_INITIATE" >
+<div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
+	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;> 
+		<div class="grid-header h2" style="width:100%">
+		<#if displayScreen == "RETURN_GRSWEIGHT">
+			<label>VEHICLES WAITING FOR GROSS WEIGHT</label>
+		<#elseif displayScreen == "RETURN_UNLOAD">
+   			<label>VEHICLES WAITING FOR UNLOAD</label>
+   		<#elseif displayScreen == "RETURN_QC">
+   			<label>VEHICLES WAITING FOR QC</label>	
+		<#elseif displayScreen == "RETURN_TARWEIGHT">	
+   			<label>VEHICLES WAITING FOR TARE WEIGHT</label>
+        </#if>	
+		</div>
+	</div>
+	<div class="screenlet-body">
+	<form id="listPendingVehicles" name="listPendingVehicles" action="" method="post">
+	<table class="basic-table hover-bar h3" widht='80%' style="border-spacing: 50px 2px;" border="1"> 
+		<tr><td><h2><u>VEHICLE NO</u></h2></td>
+		    <td><h2><u>RETURN INITIATED TIME</u><h2></td>
+			<td><h2><u>FROM<u><h2></td>
+		</tr>
+		 <#if vehicleList?has_content>
+         <#list vehicleList as vehicle>
+		<tr>
+            <td><h2><input type="button" id="newVehicleId" name="newVehicleId"  value="${vehicle.vehicleId}" onclick="javascript:setVehicleId(this);"/></h2></td>
+            <td><h3>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(vehicle.inTime, "dd-MM-yyyy HH:mm")}</h3></td>
+	        <td><h3>${vehicle.partyId?if_exists}</h3></td>	
+		</tr>
+        </#list>
+        <#else>
+       <tr>
+         <td><span class="h2">No Vehicles Available.</span></td>
+       </tr>
+        </#if>
+	</table>
+	</form>
+	</div>
+</div>
+</#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
 <div name ="displayMsg" id="milkReceiptReturnEntry_spinner"> </div>
-<div style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
+<div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
       <div class="grid-header h2" style="width:100%">
@@ -915,7 +977,7 @@ $( "#"+fromDateId ).datepicker({
 				milkTransId=milkTransferId;	
 			}
 		}
-		var urlStr = "<@ofbizUrl>MilkIncommingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
+		var urlStr = "<@ofbizUrl>MilkTankerReturnReport?milkTransferId="+milkTransId+"</@ofbizUrl>"
 		$("#hrefSub").attr("href",urlStr)
 		setTimeout("location.reload(true);", 20000);
 	}

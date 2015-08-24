@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-	
 	var focusables = $(":focusable");
 	focusables.keyup(function(e) {  
 		var current = focusables.index(this);
@@ -185,8 +184,14 @@ function populateError(msg){
 }
 	
 function clearFields(){
+		var displayScreen= $('[name=displayScreen]').val(); 
 	   var frm = document.getElementsByName('milkReceiptReturnEntry')[0];
 	   frm.reset();
+	   if(typeof(displayScreen)!= 'undefined'){
+		   if((displayScreen=="RETURN_GRSWEIGHT") || (displayScreen=="RETURN_QC") || (displayScreen=="RETURN_UNLOAD")){ 
+		   	reloadingPage();
+		   }
+	   }
 }
 
 
