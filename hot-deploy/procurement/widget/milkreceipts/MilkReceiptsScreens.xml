@@ -1280,6 +1280,7 @@
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnGrossWeight"/> 
         		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ReturnTankersListing.groovy"/>
         	</actions>
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1300,6 +1301,7 @@
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnQC"/> 
         		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ReturnTankersListing.groovy"/>
         	</actions>
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1320,6 +1322,7 @@
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkReturnUnloading"/> 
         		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ReturnTankersListing.groovy"/>
         	</actions>
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1360,6 +1363,7 @@
         		 <set field="tabButtonItem2" from-field="parameters.tabButtonItem2" default-value="MilkTankerReturnTareWeight"/> 
         		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTankerReturns.js" global="true"/>
         		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ReturnTankersListing.groovy"/>
         	</actions>
             <widgets>
                  <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
