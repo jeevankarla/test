@@ -125,11 +125,32 @@ function getInvAvailBalance(element){
          dataType: 'json',
          success: function(result) {
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+
         	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
            }else{               			
         	    invQty = result["inventoryCount"];
         	    $(qohObj).val(invQty);
         	    $(qohObj).attr("readOnly","readOnly");
+        	    if(invQty == 0){
+        	    		$.ajax({
+					         type: "POST",
+					         url: 'getProductInventoryOpeningBalance',
+					         data: {productId : productId,
+					                ownerPartyId : "Company",
+					                facilityId : facilityId},
+					         dataType: 'json',
+					         success: function(result) {
+					           if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					        	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
+					           }else{               			
+					        	    invQty = result["inventoryCount"];
+					        	    $(qohObj).val(invQty);
+					        	    $(qohObj).attr("readOnly","readOnly");
+					           }
+					         } 
+					    });
+        	    
+        	    }
            }
          } 
     });

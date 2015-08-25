@@ -441,10 +441,18 @@
       <field name="isMilkRcpt" type="id-ne"></field>      
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="custRequestId" type="id"></field>
+      <field name="custRequestItemSeqId" type="id"></field>
+      
       <prim-key field="milkTransferId"/>
       <relation rel-entity-name="Shipment" type="one" fk-name="MILK_XFER_SHIPMENT">
       	<key-map field-name="shipmentId"/>
       </relation>
+      <relation type="one" fk-name="MILK_XFER_CSRITM" rel-entity-name="CustRequestItem">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+      
       <relation type="one" fk-name="MILK_XFER_PURTYP_ENUM" rel-entity-name="Enumeration">
           <key-map field-name="purposeTypeId" rel-field-name="enumId"/>
       </relation>

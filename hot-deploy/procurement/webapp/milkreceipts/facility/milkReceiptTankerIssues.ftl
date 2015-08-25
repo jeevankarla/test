@@ -984,7 +984,7 @@ function reloadingPage(){
 	        					<tr>
 	        						<td align='left' ><span class="h3">Net Weight(Kgs)</span></td>
 	        						
-	        						<td><input  type="text" class="onlyNumber" size="15pt" id="netWeightToolTip" autocomplete="off" value="0"/></td>
+	        						<td><input  type="text" class="onlyNumber" size="15pt" id="netWeightToolTip" autocomplete="off" value="0" readonly='readonly'/></td>
 	        					</tr>
 	        			<#--	<tr>
 	        						<td align='left' ><span class="h3">Number of compartments</span></td><td><input  type="text" size="15pt" id="numberOfCells" name="numberOfCells" autocomplete="off" required="required"/></td>

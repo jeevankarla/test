@@ -145,7 +145,7 @@
 			    var itemNumVal = parseFloat(itemVal); 
 			    issuedQty = issuedQty+itemNumVal ;
 		}
-		if(reqQtyNumVal<issuedQty){	
+	/*	if(reqQtyNumVal<issuedQty){	
 			alert('Please check the issuing Qty Details. Reason Issuing Qty exceeds requested Qty');
 			return false;
 		}else{
@@ -155,15 +155,15 @@
 			}else{
 				return true;
 			}
-		}		
+		} */		
 	}
 //disable the generate button once the form submited
 	function disableGenerateButton(){
 		   var resultVal = true;	
-		   resultVal =  validateIssuingQty();				
+		  /*  resultVal =  validateIssuingQty();				
 		   if(!resultVal){
 		   		return false;
-		   }
+		   } */
 		   
 		   $("input[type=submit]").attr("disabled", "disabled");
 		   $("#cancelButton").attr("disabled", "disabled");
@@ -184,7 +184,7 @@
              success: function(result) {
                if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
             	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
-               	alert('Product Ffacilities not found, Please contact Admin');
+               	alert('Product Facilities not found, Please contact Admin');
                }else{
                		productTestComponentDetails = result['productFacilityComponentDetails'];
                }
@@ -218,16 +218,17 @@
 			toBeIssuedVal = reqQty;
 		}
 		
-		if(typeof(ownerFacilityId) == 'undefined' || ownerFacilityId==''){
+		/* if(typeof(ownerFacilityId) == 'undefined' || ownerFacilityId==''){
 			alert('You need to select facility.');
 			return false;
-		}
-		productFacilityComponentDetailsMap = getProductFacilityAvailable(productId,ownerFacilityId);
+		} */
+		
+ 		productFacilityComponentDetailsMap = getProductFacilityAvailable(productId,ownerFacilityId);
 		var productFacilityDetailsList = productFacilityComponentDetailsMap['productFacilityDetailsList'];
-		if(typeof(productFacilityDetailsList) == 'undefined' || ((typeof(productFacilityDetailsList) != 'undefined') && (productFacilityDetailsList.length==0))){
+		/* if(typeof(productFacilityDetailsList) == 'undefined' || ((typeof(productFacilityDetailsList) != 'undefined') && (productFacilityDetailsList.length==0))){
 			alert("Product Not Available..!");
 			return false;
-		}
+		} */
 		var prodDetails = productFacilityComponentDetailsMap['prodDetails'];
 		if(typeof(prodDetails) != 'undefined'){
 			prodName = prodDetails['productName'];
@@ -236,7 +237,11 @@
 		message += "<tr class='h3'><td>Indent Qty </td><td>"+reqQty+"</td><input type='hidden' name='reqQty' value='"+reqQty+"'/></tr>";
 		message += "<tr class='h3'><td>Remaining Qty </td><td>"+toBeIssuedVal+"</td><input type='hidden' name='toBeIssued' value='"+toBeIssuedVal+"'/></tr>";
 		message += "<tr class='h3'><td>product </td><td>"+prodName+" - "+productId+"</td><input type='hidden' name='productId' value='"+productId+"'/><input type='hidden' name='partyIdTo' value='"+fromPartyId+"'/></tr>";
-		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";
+		
+		message += "<tr class='h3'><td><input type='hidden' name='custRequestId'  value='"+custRequestId+"'></td></tr>";
+		message += "<tr class='h3'><td><input type='hidden' name='custRequestItemSeqId'  value='"+custRequestItemSeqId+"'></td></tr>";
+		
+		<#-- message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";
 		message += "<tr class='h2'><td>Silo/Tank/Floor</td><td>Available Qty</td> <td>Issue Qty</td> </tr>";
 		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";
 			for(i=0; i<productFacilityDetailsList.length;i++){
@@ -258,7 +263,7 @@
 			 				
 			 	}
 		message += "<tr class='h2'><td colspan='3'>--------------------------------------------------------------------------------------------</td></tr>";
-		message += "<tr class='h3'><td>Vehicle Number</td><td><input type='text' name='tankerName' id='tankerNo' autocomplete='off'   required/></td><td><span class='tooltip h2' id ='tankerToolTip'>none</span></td>"+
+	-->	message += "<tr class='h3'><td>Vehicle Number</td><td><input type='text' name='tankerName' id='tankerNo' autocomplete='off'   required/></td><td><span class='tooltip h2' id ='tankerToolTip'>none</span></td>"+
 				"<td><input type='hidden' name='tankerNo' id='tankerNumber' value=''/> </td></tr>";	
 				 	
 		message += "<tr class='h3'><td align='right'><span align='right'><input type='submit' value='Submit' id='submitEntry' class='smallSubmit'/></span></td></td><td width='10%' align='center' class='h3'><span align='right'><button id='cancelButton' class='styled-button' value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallbutton'>${uiLabelMap.CommonCancel}</button></span></td></tr>";

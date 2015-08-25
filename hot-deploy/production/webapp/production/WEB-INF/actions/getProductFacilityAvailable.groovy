@@ -53,6 +53,11 @@ if(UtilValidate.isNotEmpty(facilityIds)){
 			
 			Map inventoryAvailable = dispatcher.runSync("getProductInventoryOpeningBalance", inMap);
 			invQty = inventoryAvailable.get("inventoryCount");
+			if(invQty == 0){
+				inMap.put("ownerPartyId","Company");
+				inventoryAvailable = dispatcher.runSync("getProductInventoryOpeningBalance", inMap);
+				invQty = inventoryAvailable.get("inventoryCount");
+			}
 			if(invQty>0){
 				Map productFacilityDetailsMap = FastMap.newInstance();
 				productFacilityDetailsMap.put("facilityId",facilityId);
@@ -67,11 +72,5 @@ GenericValue prodDetails = delegator.findOne("Product",UtilMisc.toMap("productId
 productFacilityComponentDetails.put("productFacilityDetailsList",productFacilityDetailsList);
 productFacilityComponentDetails.put("prodDetails",prodDetails);
 
-
 resultReturn.put("productFacilityComponentDetails",productFacilityComponentDetails);
-
 return resultReturn;
-
-
-
-
