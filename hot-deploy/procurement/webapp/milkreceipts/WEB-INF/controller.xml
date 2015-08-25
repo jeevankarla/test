@@ -611,6 +611,10 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkIncommingReportPDF"/> 
     </request-map>  
+    <request-map uri="MilkOutGoingReport.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="MilkOutGoingReportPDF"/> 
+    </request-map>
     <request-map uri="WeighbridgeReport.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="WeighbridgeReportPDF"/> 
@@ -1104,6 +1108,8 @@
     <view-map name="ptcBankReportCSV" type="screencsv" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportCSV" content-type="text/csv"/> 
     <view-map name="PurchaseBillingReportMRpdf" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#PurchaseBillingReportMRpdf" content-type="application/pdf"/>
     <view-map name="MilkTankerReturnReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkTankerReturnReportPDF" content-type="application/pdf"/>
+    <view-map name="MilkOutGoingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkOutGoingReportPDF" content-type="application/pdf"/>
+    
     <!-- View Maps of tanker Issues -->
     <view-map name="MilkTankerIssues" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesTareWeight"/>
     <view-map name="MilkTankerIssuesCIP" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesCIP"/>
