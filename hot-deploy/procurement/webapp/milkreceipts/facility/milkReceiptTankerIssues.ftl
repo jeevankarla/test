@@ -1254,4 +1254,5 @@ function reloadingPage(){
 		$("#hrefSub").attr("href",urlStr)
 		setTimeout("location.reload(true);", 20000);
 	}
+
 </script>

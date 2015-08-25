@@ -238,6 +238,7 @@ function clearFields(){
 	   var displayScreen= $('[name=displayScreen]').val(); 
 	   var frm = document.getElementsByName('milkReceiptIssueEntry')[0];
 	   frm.reset();
+	   
 	   if(typeof(displayScreen)!= 'undefined'){
 		   if((displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_LOAD") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_OUT")){
 		   	reloadingPage();

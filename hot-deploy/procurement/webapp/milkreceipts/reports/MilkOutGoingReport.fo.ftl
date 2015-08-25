@@ -33,7 +33,8 @@ under the License.
  <#if milkTransferMap?has_content> 
 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
-		<#assign pageNumber = 0>				
+		<#assign pageNumber = 0>			
+			
 		<fo:static-content flow-name="xsl-region-before">
 		       	 
             </fo:static-content>		
