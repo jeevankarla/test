@@ -118,6 +118,8 @@ $(function() {
       		   grossDate:"" ,grossTime:"" , milkTransferId:"" , tankerName:"",grossWeight:""
       	   }}).form()) return;
     		action = "updateInternalMilkTransferGrsWeight";
+    		var milkTransferId = $('[name=milkTransferId]').val();
+    		$("#milkTrsferId").val(milkTransferId);
     	}else if(displayScreen == "VEHICLE_TAREWEIGHT"){
     		if(!$("#milkReceiptIssueEntry").validate({messages:{
        		   tareDate:"" ,tareTime:"" , milkTransferId:"" , tankerName:"",tareWeight:""
@@ -237,7 +239,7 @@ function clearFields(){
 	   var frm = document.getElementsByName('milkReceiptIssueEntry')[0];
 	   frm.reset();
 	   if(typeof(displayScreen)!= 'undefined'){
-		   if((displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_LOAD") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_GRSWEIGHT")|| (displayScreen=="ISSUE_OUT")){ 
+		   if((displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_LOAD") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_OUT")){
 		   	reloadingPage();
 		   }
 	   }

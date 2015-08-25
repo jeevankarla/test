@@ -67,4 +67,8 @@ under the License.
     	<condition field-name="producerCode" operator="is-not-empty"/>
         <action service="checkProducerCode" mode="sync"/>
     </eca>
+    <eca service="updateMilkTankerReceiptEntryOut" event="invoke">
+    	<condition operator="is-not-empty" field-name="milkTransferId"/>
+    	<action mode="sync" service="sendEmailForQcReport"/>
+    </eca>
 </service-eca>

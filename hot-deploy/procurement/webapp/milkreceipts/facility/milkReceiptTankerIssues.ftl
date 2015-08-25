@@ -1229,6 +1229,17 @@ function reloadingPage(){
 	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "ISSUE_TARWEIGHT">value="Add"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
+	      	<#if displayScreen == "ISSUE_GRSWEIGHT"> 
+	        <td valign = "middle" align="center"></td>
+   		    <td valign = "middle" align="center"></td>
+	        <td>
+	        	<div class='tabletext h2'>
+	        	<#assign url = ""/>
+	            <a class="buttontext" id="hrefSub" target="_BLANK" onclick="javascript: setUrl();">Report</a>
+	            <input  name="milkTrsferId"  id="milkTrsferId" size="10pt" type="hidden"   autocomplete="off"/></td>
+	      		</div>
+	        </td>
+	      </#if>
       	</tr>
       </table>
 	       
@@ -1236,3 +1247,11 @@ function reloadingPage(){
   </div>
  </div>
 </div>
+<script type='application/javascript'>
+	function setUrl(){
+		var milkTransId = $("#milkTrsferId").val();
+		var urlStr = "<@ofbizUrl>MilkOutGoingReport.pdf?milkTransferId="+milkTransId+"</@ofbizUrl>"
+		$("#hrefSub").attr("href",urlStr)
+		setTimeout("location.reload(true);", 20000);
+	}
+</script>
