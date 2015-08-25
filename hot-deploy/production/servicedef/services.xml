@@ -20,7 +20,7 @@
     <service name="getProductFacilityAvailable" engine="groovy" location="component://production/webapp/production/WEB-INF/actions/getProductFacilityAvailable.groovy" invoke="" transaction-timeout="12000">
         <description>Production Test  Components</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="ownerFacilityId" type="String" mode="IN" optional="false"/>     
+        <attribute name="ownerFacilityId" type="String" mode="IN" optional="true"/>     
          <attribute name="productFacilityComponentDetails" type="Map" mode="OUT" optional="true"/>
     </service> 
     <service name="confirmProductionRunStatus" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="confirmProductionRunStatus">

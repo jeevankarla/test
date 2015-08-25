@@ -2263,26 +2263,45 @@ public class ProductionServices {
 		  	  HttpSession session = request.getSession();
 		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
-		  	  if (rowCount < 1) {
-		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
-				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
-		  		  return "error";
-		  	  }
-		  	  String custRequestId = "";
-		  	  String custRequestItemSeqId = "";
+		  	  
+		  	  String custRequestId = (String)paramMap.get("custRequestId");
+		  	  String custRequestItemSeqId = (String)paramMap.get("custRequestItemSeqId");
+		  	  
 		  	  BigDecimal toBeIssuedQty = BigDecimal.ZERO;
 		  	  String qty="";
 		  	  String facilityId = "";
 		  	  String shipmentTypeId = "";
 		  	  String tankerNo = (String)paramMap.get("tankerNo");
 		  	  String partyIdTo = (String)paramMap.get("partyIdTo");
+		  	  String productId = (String)paramMap.get("productId");
+		  	  
+		  	  
+		  	 int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1 && UtilValidate.isEmpty(custRequestId) && UtilValidate.isEmpty(custRequestItemSeqId)) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
 		  	  if(UtilValidate.isEmpty(tankerNo)){
 		  		  Debug.logError("Vehicle Number should not be empty ", module);
 	  			  request.setAttribute("_ERROR_MESSAGE_", "Vehicle Number should not be empty ");
 	  			  return "error";
 		  	  }
 		  	  GenericValue MilkTransfer = null;
+		  	  for (int i = 0; i < rowCount; i++){
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+		  			custRequestId = (String) paramMap.get("custRequestId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+		  			custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId"+thisSuffix);
+		  		  }
+		  	  }
+		  	  if(UtilValidate.isEmpty(custRequestId)){
+		  		  Debug.logError("Indent not found ",module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Indent not found ");
+	  			  return "error";
+		  	  }
 		  	  
 		  	  try{
 		  		  List tranConditionList = UtilMisc.toList(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,tankerNo));
@@ -2302,12 +2321,39 @@ public class ProductionServices {
 		  		  request.setAttribute("_ERROR_MESSAGE_", "Transfer is in process for the given vehicle. ");
 	  			  return "error";
 		  	  }
+		  	  
+		  	  // Here we are checking for already initiated transfers 
+		  	  
+		  	  try{
+		  		  List initTranConditionList = FastList.newInstance();
+		  		  initTranConditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,custRequestId));
+		  		  initTranConditionList.add(EntityCondition.makeCondition("custRequestItemSeqId",EntityOperator.EQUALS,custRequestItemSeqId));
+		  		  initTranConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,UtilMisc.toList("MXF_INPROCESS","MXF_INIT")));
+		  		  EntityCondition tranCondition = EntityCondition.makeCondition(initTranConditionList);
+		  		  
+		  	      List<GenericValue> milkTransferList = delegator.findList("MilkTransfer",tranCondition,null,null,null,false);
+		  		  MilkTransfer = EntityUtil.getFirst(milkTransferList);
+		  		  Debug.log("MilkTransfer=============="+MilkTransfer);
+		  	  }catch(GenericEntityException e){
+		  		  Debug.logError("Error while getting already initiated transfers for this indent" , module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while getting already initiated transfers for this indent");
+	  			  return "error";
+		  	  }
+		  	  if(UtilValidate.isNotEmpty(MilkTransfer)){
+		  		  Debug.logError("MilkTransfer already initiated for this indent  with transferId:"+MilkTransfer.get("milkTransferId"), module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "MilkTransfer already initiated for this indent  with transferId:"+(String)MilkTransfer.get("milkTransferId"));
+	  			  return "error";
+		  	  }
+		  	  
 		  	  String milkTransferId = "";
 		  	  try{
 		  		  MilkTransfer = delegator.makeValue("MilkTransfer");
 		  		  MilkTransfer.set("containerId", tankerNo);
 		  		  MilkTransfer.set("statusId","MXF_INIT");
+		  		  MilkTransfer.set("productId",productId);
 		  		  MilkTransfer.set("partyIdTo",partyIdTo);
+		  		  MilkTransfer.set("custRequestId",custRequestId);
+		  		  MilkTransfer.set("custRequestItemSeqId",custRequestItemSeqId);
 		  		  MilkTransfer.set("sendDate",UtilDateTime.nowTimestamp());
 		  		  MilkTransfer.set("createdByUserLogin", userLogin.getString("userLoginId"));
 		  		  MilkTransfer.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
@@ -2318,8 +2364,10 @@ public class ProductionServices {
 		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while initiating Transfer ::"+e.getMessage());
 	  			  return "error";
 		  	  }
-		  	  String createNewShipment = "Y";		
-			  for (int i = 0; i < rowCount; i++){
+		  	  //String createNewShipment = "Y";
+		  	  
+		  	  
+			 /* for (int i = 0; i < rowCount; i++){
 		  		 qty="";
 			  	 facilityId = "";
 			  	 shipmentTypeId = "";  
@@ -2354,10 +2402,10 @@ public class ProductionServices {
 			  			  return "error";
 			  		  }
 		  		  }
-		  		  /*if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)<=0)){
+		  		  if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)<=0)){
 					request.setAttribute("_ERROR_MESSAGE_", "Cannot Accept Quantity ZERO for"+custRequestId+"--!");	  		  
 			  		  return "error";
-		  		  }*/
+		  		  }
 		  		  if(toBeIssuedQty.compareTo(BigDecimal.ZERO)==1){
 		  			  try{
 							Map issuanceMapCtx = FastMap.newInstance();
@@ -2401,8 +2449,8 @@ public class ProductionServices {
 		  			createNewShipment="N";
 		  		  }	  
 		  		
-		  	}
-			    request.setAttribute("_EVENT_MESSAGE_", "successfully Issued  Selected Materials");
+		  	}*/
+			    request.setAttribute("_EVENT_MESSAGE_", "successfully Initiated  MilkTransfer :");
 				return "success";
 		}
      public static Map<String, Object> cancelProductionIssuenceForCustRequest(DispatchContext ctx, Map<String, Object> context) {

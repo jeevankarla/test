@@ -159,8 +159,7 @@ if(UtilValidate.isNotEmpty(rawMilkSilosList)){
 	prodFacilitys=EntityUtil.getFieldListFromEntityList(rawMilkSilosList, "facilityId", true);
 }
 context.putAt("rawMilkSilosList", rawMilkSilosList);
-
- productFacilityDetails ='';
+List productFacilityDetails =FastList.newInstance();
 if(UtilValidate.isNotEmpty(rawMilkSilosList)){
 	productFacilityDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.IN , prodFacilitys)  , null, null, null, false );
 }
@@ -187,8 +186,6 @@ if(UtilValidate.isNotEmpty(purposeList)){
 		if(UtilValidate.isNotEmpty(purposeTypeId)){
 			purposeJson.put(purposeTypeId,description);
 		}
-		
-		
 	}
 }
 context.putAt("purposeJson", purposeJson);

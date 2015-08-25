@@ -118,8 +118,8 @@ $(document).ready(function() {
   $('#recdFat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   $('#sendFat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
   
-  $('#recdSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
-  $('#sendSnf').autoNumeric({mNum: 2,mDec: 3 , autoTab : true}).trigger('focusout');
+  $('#recdSnf').autoNumeric({mNum: 2,mDec: 2 , autoTab : true}).trigger('focusout');
+  $('#sendSnf').autoNumeric({mNum: 2,mDec: 2 , autoTab : true}).trigger('focusout');
   
   $('#recdSnf').attr("readonly","readonly");
   $('#sendSnf').attr("readonly","readonly");
@@ -159,13 +159,14 @@ $(document).ready(function() {
  	}
  	if($('#displayScreen').val()=="RETURN_QC"){
  		$('#dcNo').removeAttr("readonly");
- 		$('#product').removeAttr("readonly");
+ 		$('#product').attr("readonly","readonly");
  		$('#sendDate').attr("readonly","readonly");
  		$('#sendTime').attr("readonly","readonly");
  		makeDatePicker("testDate","fromDate");
  	}
  	if($('#displayScreen').val()=="RETURN_UNLOAD"){
  		$('#dcNo').attr("readonly","readonly");	
+ 		$('#product').attr("readonly","readonly");
  		makeDatePicker("cipDate","fromDate");
  	}
  	
@@ -296,8 +297,9 @@ function populateProductSpan(){
 	var productJson = ${StringUtil.wrapString(productJson)}
 	productFacilityIdMap = ${StringUtil.wrapString(productFacilityIdMap)}
 	var tempProductJson = productJson[$('[name=product]').val()];
-	
-	var facilityIds = productFacilityIdMap[23];
+	prod=$('[name=product]').val();
+	var facilityIds = productFacilityIdMap[prod];
+    
     setSiloDropdown(facilityIds);
 	if(tempProductJson){
 		$('span#productToolTip').addClass("tooltip");
@@ -315,15 +317,15 @@ function populateProductSpan(){
 }
 function setSiloDropdown(facilityIds){
 			var optionList = '';
-			optionList += "<option value = " + "" + " >" +" "+ "</option>";
+			optionList += "<option value = " + "" + " >" +"SELECT"+ "</option>";
 			var list= facilityIds;
 			if (list) {
 	        	for(var i=0 ; i<list.length ; i++){
 					var innerList=list[i];	   
 	                optionList += "<option value = " + innerList + " >" + innerList + "</option>";          			
 	      		}//end of main list for loop
-	      	   jQuery("[name=silo]").html(optionList);
 	      	 }//end of main list if
+	      	 jQuery("[name=silo]").html(optionList);
 }
 function populatePartySpan(){
 	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
@@ -673,7 +675,7 @@ function reloadingPage(){
 </div>
 </#if>
 <div id="wrapper" style="width: 90%; height:100%"></div>
-<div name ="displayMsg" id="milkReceiptReturnEntry_spinner"> </div>
+<div name ="displayMsg" id="milkReceiptReturnEntry_spinner" style="width:30%;  height:40%"> </div>
 <div id="DetailsDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      

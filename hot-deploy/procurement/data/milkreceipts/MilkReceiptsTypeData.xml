@@ -174,8 +174,9 @@
    	
    	<TenantConfiguration  description="Sending QC Report to Union/Units."  propertyName="enableQcReportEmail" propertyTypeEnumId="MILK_RECEIPTS" propertyValue="N"/>
    	
-    <ShipmentType shipmentTypeId="MILK_INT_SHIPMENT" hasTable="N" description="LMS Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
-    <ShipmentType shipmentTypeId="MILK_COPACK_SHIPMENT" hasTable="N" description="LMS Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
-    <ShipmentType shipmentTypeId="MILK_OUT_SHIPMENT" hasTable="N" description="LMS Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
-    <ShipmentType shipmentTypeId="MILK_RE_SHIPMENT" hasTable="N" description="LMS Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
+    <ShipmentType shipmentTypeId="MILK_INT_SHIPMENT" hasTable="N" description="internal issue Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <ShipmentType shipmentTypeId="MILK_RETURN_SHIPMENT" hasTable="N" description="internal Return Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
+    <ShipmentType shipmentTypeId="MILK_COPACK_SHIPMENT" hasTable="N" description="Copack Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
+    <ShipmentType shipmentTypeId="MILK_OUT_SHIPMENT" hasTable="N" description="Sale Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <ShipmentType shipmentTypeId="MILK_RE_SHIPMENT" hasTable="N" description="Receipt Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
 </entity-engine-xml>

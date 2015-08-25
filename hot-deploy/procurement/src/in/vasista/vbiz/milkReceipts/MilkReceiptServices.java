@@ -3272,6 +3272,9 @@ public class MilkReceiptServices {
 						BigDecimal fat = milkTransfer.getBigDecimal("receivedFat");
 						BigDecimal snf = milkTransfer.getBigDecimal("receivedSnf");
 					
+						if(UtilValidate.isNotEmpty(milkTransfer.get("receiveDate"))){
+							dateTimeReceived = (Timestamp) milkTransfer.get("receiveDate");
+						}
 						GenericValue newEntity = delegator.makeValue("Shipment");
 				        newEntity.set("estimatedShipDate", nowTimeStamp);
 				        newEntity.set("shipmentTypeId", "MILK_RE_SHIPMENT");
@@ -3757,7 +3760,7 @@ public class MilkReceiptServices {
 			        
 			        if(UtilValidate.isNotEmpty(purposeTypeId) ){
 			        	if(purposeTypeId.equalsIgnoreCase("INTERNALUSE")){
-			        		newEntity.set("shipmentTypeId", "MILK_INT_SHIPMENT");
+			        		newEntity.set("shipmentTypeId", "PRODUCTION_SHIPMENT");
 			        	}else if(purposeTypeId.equalsIgnoreCase("COPACKING")){
 			        		newEntity.set("shipmentTypeId", "MILK_COPACK_SHIPMENT");
 			        	}else{
@@ -3799,6 +3802,13 @@ public class MilkReceiptServices {
 					itemIssueCtx.put("snfPercent", sendSnf);
 					itemIssueCtx.put("fatPercent",sendFat);
 					itemIssueCtx.put("facilityId", (String)MilkTransferItem.get("siloId"));
+					
+					String custRequestId = (String)milkTransfer.get("custRequestId");
+					String custRequestItemSeqId = (String)milkTransfer.get("custRequestItemSeqId");
+					if(UtilValidate.isNotEmpty(custRequestId) ){
+						itemIssueCtx.put("custRequestId",custRequestId);
+						itemIssueCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+					}
 					
 					resultMap.remove("shipmentItemSeqId");
 					
@@ -3872,6 +3882,78 @@ public class MilkReceiptServices {
 							return ServiceUtil.returnError("Error while decrementing inventory :"+e.getMessage());
 						}
 					}
+					try{
+					
+					// Here we are updating to respect floor 
+					String partyIdTo = (String) milkTransfer.get("partyIdTo");
+					//here we need to consider party role 
+					String floorId = "";
+					
+					
+					if(purposeTypeId.equalsIgnoreCase("INTERNALUSE") && UtilValidate.isEmpty(custRequestId)){
+						if(UtilValidate.isNotEmpty(partyIdTo)){
+							try{
+								List floorConditionList = UtilMisc.toList(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyIdTo));
+								floorConditionList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT"));
+								EntityCondition floorcond = EntityCondition.makeCondition(floorConditionList);
+								
+								List<GenericValue> floorsList = delegator.findList("Facility",floorcond,null,null,null,false);
+								GenericValue floorDetails = EntityUtil.getFirst(floorsList);
+								if(UtilValidate.isNotEmpty(floorDetails)){
+									floorId = (String) floorDetails.get("facilityId");
+								}
+							}catch(GenericEntityException e){
+								Debug.logError("Error while getting floor details ::"+e,module);
+								return ServiceUtil.returnError("Error while getting floor details ::"+e.getMessage());
+							}
+						}
+						if(UtilValidate.isEmpty(floorId)){
+							Debug.logError("Error while updating receiver end. received floor not found :",module);
+							return ServiceUtil.returnError("Error while updating receiver end. received floor not found :");
+						}
+						BigDecimal quantity = (BigDecimal)milkTransfer.get("quantity");
+						Map inventoryReceiptCtx = FastMap.newInstance();
+						inventoryReceiptCtx.put("userLogin", userLogin);
+						inventoryReceiptCtx.put("productId", productId);
+						inventoryReceiptCtx.put("snfPercent", sendSnf);
+						inventoryReceiptCtx.put("fatPercent",sendFat);
+						inventoryReceiptCtx.put("datetimeReceived", grossDate);
+						inventoryReceiptCtx.put("quantityAccepted", quantity);
+						inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
+						inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+						inventoryReceiptCtx.put("ownerPartyId", "Company");
+						inventoryReceiptCtx.put("facilityId", floorId);
+						inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
+						inventoryReceiptCtx.put("shipmentId", shipmentId);
+						Map<String, Object> receiveInventoryResult;
+						try{
+							receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
+						}catch(GenericServiceException e){
+							Debug.logError("Error while updating receiver inventory ::"+e, module);
+							return ServiceUtil.returnError("Error while updating receiver inventory ::"+e.getMessage());
+						}
+					}else{
+						
+						// here we are changing the custRequest Item status to issued
+						if(UtilValidate.isNotEmpty(custRequestId)){
+								try{
+									Map itemStatusCtx = FastMap.newInstance();
+									itemStatusCtx.put("custRequestId", custRequestId);
+									itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+									itemStatusCtx.put("userLogin", userLogin);
+									itemStatusCtx.put("description", "");
+									itemStatusCtx.put("statusId", "CRQ_ISSUED");
+									Map crqResultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
+									if (ServiceUtil.isError(crqResultCtx)) {
+										Debug.logError("Problem changing status for requested item ", module);
+										return crqResultCtx;
+									}
+								}catch(GenericServiceException e){
+									Debug.logError("Error while updating indent item status :"+e,module);
+									return ServiceUtil.returnError("Error while updating indent item status :");
+								}
+						}
+					}
 					
 					if(purposeTypeId.equalsIgnoreCase("INTERNALUSE")){
 						milkTransfer.set("statusId", "MXF_RECD");
@@ -3879,12 +3961,13 @@ public class MilkReceiptServices {
 						milkTransfer.set("statusId", "MXF_INPROCESS");
 					}
 					milkTransfer.set("shipmentId",shipmentId);
-					Debug.log("purposeType==========="+purposeTypeId);
-					Debug.log("milkTrnasfer========"+milkTransfer);
 					delegator.store(milkTransfer);
  				}catch(Exception e){
  					Debug.logError("Error while creating shipment. "+e,module);
  					return ServiceUtil.returnError("Error while creating shipment. "+e.getMessage());
+ 				}
+ 			}catch(Exception e){
+ 				Debug.logError("Error while updating gross weight details :"+e, module);
  				}
  			}
  			//here we need to create transferItem
@@ -4504,6 +4587,8 @@ public class MilkReceiptServices {
 	        MilkTransfer.set("productId",(String) context.get("productId"));
 			MilkTransfer.set("receivedFat",(BigDecimal)context.get("recdFat"));
 			MilkTransfer.set("receivedSnf",(BigDecimal)context.get("recdSnf"));
+			MilkTransfer.set("fat",(BigDecimal)context.get("recdFat"));
+			MilkTransfer.set("snf",(BigDecimal)context.get("recdSnf"));
 			MilkTransfer.set("comments", qcComments);
 			MilkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			MilkTransfer.set("receivedLR",(BigDecimal)context.get("recdCLR"));
@@ -4519,6 +4604,8 @@ public class MilkReceiptServices {
 			MilkTransferItem.set("milkTransferId",milkTransferId);
 			MilkTransferItem.set("receivedFat",(BigDecimal)context.get("recdFat"));
 			MilkTransferItem.set("receivedSnf",(BigDecimal)context.get("recdSnf"));
+			MilkTransferItem.set("fat",(BigDecimal)context.get("recdFat"));
+			MilkTransferItem.set("snf",(BigDecimal)context.get("recdSnf"));
 			MilkTransferItem.set("receivedTemparature",(BigDecimal)context.get("recdTemp"));
 			MilkTransferItem.set("receivedAcidity",(BigDecimal)context.get("recdAcid"));
 			
@@ -4787,8 +4874,208 @@ public class MilkReceiptServices {
 				return resultMap;
 			}
 			
+			// here we are trying to reduce the floor Inventory and update it to respect MPU silo inventory
 			
-	 		
+			String partyId = (String) MilkTransfer.get("partyId");
+			BigDecimal atpQty = BigDecimal.ZERO;
+			String facilityId = "";
+			// currently we are assuming one floor for each partyId
+			GenericValue floorFacilityDetails = null;
+			try{
+				List floorConditionList = FastList.newInstance();
+				floorConditionList.add( EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyId));
+				floorConditionList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"PLANT"));
+				EntityCondition floorCondition = EntityCondition.makeCondition(floorConditionList);
+				List floorsList = delegator.findList("Facility",floorCondition , null, null, null, false);
+				if(UtilValidate.isNotEmpty(floorsList)){
+					floorFacilityDetails = EntityUtil.getFirst(floorsList);
+					facilityId = (String)floorFacilityDetails.get("facilityId");
+				}
+			}catch(GenericEntityException e){
+				Debug.logError("Error while getting plant details for partyId "+partyId+" Exception "+e, module);
+				return ServiceUtil.returnError("Error while getting plant details for partyId"+partyId);
+			}
+			
+			String productId = (String) MilkTransfer.get("productId");
+			List<GenericValue> aptProdList = FastList.newInstance();
+			if(UtilValidate.isNotEmpty(facilityId)){
+				try{
+					List atpCondList = FastList.newInstance();
+					atpCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,facilityId));
+					atpCondList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+					atpCondList.add(EntityCondition.makeCondition("availableToPromiseTotal",EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+					EntityCondition atpCondtion = EntityCondition.makeCondition(atpCondList);
+					aptProdList = delegator.findList("InventoryItem", atpCondtion, null, null, null, false);
+					for(GenericValue atpProduct : aptProdList){
+						atpQty = atpQty.add((BigDecimal)atpProduct.get("availableToPromiseTotal"));
+					}
+				}catch(GenericEntityException e){
+					Debug.logError("Error while getting floor details of department :: "+e, module);
+					return ServiceUtil.returnError("Error while getting floor details of department :: "+e.getMessage());
+				}
+			}
+			
+			BigDecimal sendFat = (BigDecimal)MilkTransfer.get("receivedFat");
+			BigDecimal sendSnf = (BigDecimal)MilkTransfer.get("receivedSnf");
+			BigDecimal quantity = (BigDecimal)MilkTransfer.get("quantity");
+			String containerId = (String)MilkTransfer.get("containerId");
+			BigDecimal toBeIssuedQty = quantity;
+			//here we are trying to decrease at Sender
+			
+			if(UtilValidate.isNotEmpty(atpQty) && atpQty.compareTo(BigDecimal.ZERO)==1){
+				if(atpQty.compareTo(quantity)<0){
+					Debug.logError("You cannot make this transfer from this Silo .Available quantity is less than shipping quantity. ",module);
+					return ServiceUtil.returnError("You cannot make this transfer.Available quantity is less than shipping quantity. ");
+				}
+				
+				Timestamp nowTimeStamp= (Timestamp) UtilDateTime.nowTimestamp();
+				
+				// Creating Shipment
+				GenericValue newEntity = delegator.makeValue("Shipment");
+		        newEntity.set("estimatedShipDate", tareDate);
+		        newEntity.set("shipmentTypeId", "MILK_RETURN_SHIPMENT");
+		        newEntity.set("statusId", "GENERATED");
+		        newEntity.set("vehicleId",containerId);
+		        newEntity.set("partyIdFrom",partyId);
+		        /*newEntity.put("primaryOrderId", milkTransferId);*/
+		        newEntity.set("createdDate", nowTimeStamp);
+		        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+		        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		        String shipmentId = null;
+				try{
+					delegator.createSetNextSeqId(newEntity);            
+					shipmentId = (String) newEntity.get("shipmentId");
+				}catch(GenericEntityException e){
+					Debug.logError("Error while creating return shipment ::"+e,module);
+					return ServiceUtil.returnError("Error while creating return shipment ::"+e.getMessage());
+				}
+				// Creating shipmentItem
+				Map<String,Object> itemInMap = FastMap.newInstance();
+		        itemInMap.put("shipmentId",shipmentId);
+		        itemInMap.put("userLogin",userLogin);
+		        itemInMap.put("productId",productId);
+		        itemInMap.put("quantity",quantity);
+		        itemInMap.put("fat",sendFat);
+		        itemInMap.put("snf",sendSnf);
+		        try{
+		        	resultMap = dispatcher.runSync("createShipmentItem",itemInMap);
+		        	if (ServiceUtil.isError(resultMap)) {
+			        	Debug.logError("Problem creating shipment Item for milkTransfer :"+milkTransferId, module);
+				  		return ServiceUtil.returnError("Problem creating shipment Item for milkTransfer :"+milkTransferId);
+			        }
+		        }catch(Exception e){
+		        	Debug.logError("Error while creating shipmentItem :"+e, module);
+		        	return ServiceUtil.returnError("Error while creating shipmentItem :"+e.getMessage());
+		        }
+		        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
+				
+				
+				
+				// Creating itemIssuance
+		        shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
+		        Map itemIssueCtx = FastMap.newInstance();
+		        itemIssueCtx.put("userLogin", userLogin);
+				itemIssueCtx.put("shipmentId", shipmentId);
+				itemIssueCtx.put("shipmentItemSeqId", shipmentItemSeqId);
+				itemIssueCtx.put("productId", productId);
+				itemIssueCtx.put("quantity", quantity);
+				itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
+				itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+				itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+				itemIssueCtx.put("snfPercent", sendSnf);
+				itemIssueCtx.put("fatPercent",sendFat);
+				itemIssueCtx.put("facilityId", facilityId);
+				
+				resultMap.remove("shipmentItemSeqId");
+				
+				String itemIssuanceId ="" ;
+				Map resultCtx = FastMap.newInstance();
+				try{
+					 resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("Problem creating item issuance for requested item", module);
+						return resultCtx;
+					}
+					itemIssuanceId = (String)resultCtx.get("itemIssuanceId") ;
+			   	}catch (Exception e) {
+			 		Debug.logError(e, "Error While Creating Item Issuance !", module);
+			 		return ServiceUtil.returnError("Failed to create a Item Issuance " + e);	  
+			  	}
+				
+				// Creating InventoryDetails 
+				for(GenericValue inventoryItem : aptProdList){
+					BigDecimal issueQty = BigDecimal.ZERO;
+					if(toBeIssuedQty.compareTo(BigDecimal.ZERO) ==0 ){
+						break;
+					}
+					BigDecimal atpTotal = (BigDecimal) inventoryItem.get("availableToPromiseTotal");
+					String inventoryItemId = (String) inventoryItem.get("inventoryItemId");
+					if(toBeIssuedQty.compareTo(atpTotal)<=0){
+						issueQty = toBeIssuedQty;
+						toBeIssuedQty = BigDecimal.ZERO;
+					}else{
+						issueQty = atpTotal; 
+						toBeIssuedQty = toBeIssuedQty.subtract(atpTotal); 
+					}
+					try{
+						Map createInvDetail = FastMap.newInstance();
+						createInvDetail.put("userLogin", userLogin);
+						createInvDetail.put("inventoryItemId", inventoryItemId);
+						createInvDetail.put("itemIssuanceId", itemIssuanceId);
+						createInvDetail.put("quantityOnHandDiff", issueQty.negate());
+						createInvDetail.put("availableToPromiseDiff", issueQty.negate());
+						resultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+						if (ServiceUtil.isError(resultCtx)) {
+							Debug.logError("Problem decrementing inventory for requested item ", module);
+							return resultCtx;
+						}
+					}catch(Exception e){
+						Debug.logError("Error while decrementing inventory :"+e,module);
+						return ServiceUtil.returnError("Error while decrementing inventory :"+e.getMessage());
+					}
+				}// End of the Inventory Item Details.
+				// Here we are trying to update the silo inventory
+				
+				String siloId = "";
+				try{
+					List<GenericValue> milkTransferItems = delegator.findList("MilkTransferItem",
+							EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId),
+							null, null, null, false);
+					GenericValue milkTransferItem = EntityUtil.getFirst(milkTransferItems);
+					if(UtilValidate.isNotEmpty(milkTransferItem)){
+						siloId = (String) milkTransferItem.get("siloId");
+					}
+				}catch(GenericEntityException e){
+					Debug.logError("Error while gettin silo Details :"+e ,module);
+					return ServiceUtil.returnError("Error while gettin silo Details :"+e.getMessage());
+				}
+				
+				Map inventoryReceiptCtx = FastMap.newInstance();
+				inventoryReceiptCtx.put("userLogin", userLogin);
+				inventoryReceiptCtx.put("productId", productId);
+				inventoryReceiptCtx.put("snfPercent", sendSnf);
+				inventoryReceiptCtx.put("fatPercent",sendFat);
+				inventoryReceiptCtx.put("datetimeReceived", tareDate);
+				inventoryReceiptCtx.put("quantityAccepted", quantity);
+				inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
+				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+				inventoryReceiptCtx.put("ownerPartyId", "Company");
+				inventoryReceiptCtx.put("facilityId", siloId);
+				inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
+				inventoryReceiptCtx.put("shipmentId", shipmentId);
+				Map<String, Object> receiveInventoryResult;
+				try{
+					receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
+				}catch(GenericServiceException e){
+					Debug.logError("Error while updating silo inventory ::"+e, module);
+					return ServiceUtil.returnError("Error while updating silo inventory ::"+e.getMessage());
+				}
+				Debug.log("success fully completed ===");
+				resultMap = ServiceUtil.returnSuccess("Successfully updated ");
+			}else{
+				Debug.logError("It is a false transaction . Reason This section have only "+atpQty+" KGS",module);
+				return ServiceUtil.returnError("It is a false transaction . Reason This section have only "+atpQty+" KGS");
+			}
 	 	}
 	 	return resultMap;
 	}
