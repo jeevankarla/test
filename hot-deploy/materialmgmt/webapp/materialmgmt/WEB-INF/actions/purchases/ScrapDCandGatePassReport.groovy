@@ -65,7 +65,7 @@ if(scrapProducts){
 condition=EntityCondition.makeCondition([EntityCondition.makeCondition("estimatedShipDate",EntityOperator.GREATER_THAN_EQUAL_TO,formDate),
 	                                     EntityCondition.makeCondition("estimatedShipDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate),
 										 EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"GENERATED"),
-										 EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN,UtilMisc.toList("INTUNIT_TR_SHIPMENT","FGS_SHIPMENT"))],EntityOperator.AND);
+										 EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN,UtilMisc.toList("INTUNIT_TR_SHIPMENT","FGS_SHIPMENT","SCRAP_SHIPMENT"))],EntityOperator.AND);
 shipmentList = delegator.findList("Shipment",condition,null,null,null,false);
 shipmentIds = EntityUtil.getFieldListFromEntityList(shipmentList,"shipmentId",true);
 
@@ -138,13 +138,14 @@ orderItemsList.each{orderItem->
 			  tempMap.put("Name", partyName.get("fullName"));
 			  tempMap.put("partyId", partyId);
 			  tempMap.put("quantity", orderItem.quantity);
+			  tempMap.put("comments", orderItem.comments);
 			  tempList.add(tempMap);
 			  finalMap[orderItem.productId]=tempList;
 		  }else{
 		  	 List existingList = FastList.newInstance();
 			   existingList = finalMap[orderItem.productId];
 			   tempMap=[:];
-			 tempMap.put("orderHeader", orderHeader);
+			 tempMap.put("orderHeader", orderHead);
 			 tempMap.put("productName", productName);
 			 tempMap.put("payment", payments);
 			 tempMap.put("invoice", invoice);
@@ -152,6 +153,7 @@ orderItemsList.each{orderItem->
 			 tempMap.put("Name", partyName.get("fullName"));
 			 tempMap.put("partyId", partyId);
 			 tempMap.put("quantity", orderItem.quantity);
+			 tempMap.put("comments", orderItem.comments);
 			 existingList.add(tempMap);
 			 finalMap[orderItem.productId]=existingList;
 			 

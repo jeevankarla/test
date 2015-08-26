@@ -44,7 +44,7 @@ under the License.
 			                <fo:table-cell><fo:block></fo:block></fo:table-cell>
 			                    <fo:table-cell>
 			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;                                                                                                                                            UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;
+			                    	<fo:block  keep-together="always"  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size = "10pt">&#160;                                                                                                                                                Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
 			                    	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
                                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 					            	<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
@@ -85,7 +85,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">VEHICLE NO</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">REF.NO</fo:block>  
+					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">INVOICE NO</fo:block>  
 					            </fo:table-cell>
                                 <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">REF DATE</fo:block>  
@@ -180,23 +180,31 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${shipment.vehicleId}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
-					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">${orderHeader.orderMessage?if_exists}</fo:block>  
+				            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false"><#if invoice.invoiceId?has_content>${invoice.invoiceId?if_exists}</#if></fo:block>  
 					            </fo:table-cell>
                                 <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"><#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderHeader.orderDate, "dd/MM/yyyy")}</#if></fo:block>  
 					            </fo:table-cell>
+					            <#if productValue.get("comments")?has_content>
+                                <fo:table-cell>
+					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">${productValue.get("comments")?if_exists}</fo:block>  
+					            </fo:table-cell>
+                                <#else>
                                 <fo:table-cell>
 					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">${productValue.get("productName")?if_exists}</fo:block>  
 					            </fo:table-cell>
+					             </#if> 
                                 <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${productValue.get("quantity")?if_exists}</fo:block>  
 					            </fo:table-cell>
                                 <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"><#if orderHeader.grandTotal?has_content>${orderHeader.grandTotal?if_exists?string("##0.00")}</#if></fo:block>  
 					            </fo:table-cell>
+					            
                                 <fo:table-cell>
 					            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false">${productValue.get("Name")?if_exists}</fo:block>  
 					            </fo:table-cell>
+                               
                                 <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"><#if shipment.estimatedShipDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipment.estimatedShipDate, "dd/MM/yyyy")}</#if></fo:block>  
 					            </fo:table-cell>
