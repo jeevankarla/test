@@ -1315,6 +1315,11 @@ public class MaterialRequestServices {
 		String custRequestItemStatusId = (String) request.getParameter("custRequestItemStatusId");
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		
+		GenericValue custRequestItem = null;
+		List<GenericValue> itemIssuances = FastList.newInstance();
+		List conditionList = FastList.newInstance();
+		
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
 		Debug.logError("No rows to process, as rowCount = " + rowCount, module);
@@ -1325,6 +1330,7 @@ public class MaterialRequestServices {
 		try{
 		       String custRequestId = "";
 		       String custRequestItemSeqId = "";
+		       String itemIssuanceId="";
 		       String fromPartyId = "";
 		       String productId = "";
 		       String quantityStr="";
@@ -1367,7 +1373,12 @@ public class MaterialRequestServices {
 			if(UtilValidate.isNotEmpty(quantityStr)){
 			quantity = new BigDecimal(quantityStr);
 			}
-			statusCtx.clear();
+			if (paramMap.containsKey("itemIssuanceId" + thisSuffix)) {
+				itemIssuanceId = (String) paramMap.get("itemIssuanceId" + thisSuffix);
+			} else {
+				request.setAttribute("_ERROR_MESSAGE_", "Missing itemIssuanceId");
+			}
+			/*statusCtx.clear();
 			statusCtx.put("statusId", custRequestItemStatusId);
 			statusCtx.put("custRequestId", custRequestId);
 			statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
@@ -1379,7 +1390,53 @@ public class MaterialRequestServices {
 				request.setAttribute("_ERROR_MESSAGE_", "Problem changing request status :"+custRequestId+":"+custRequestItemSeqId);	
 				TransactionUtil.rollback();
 				return "error";
-			}
+			}*/
+			//Handiling partial issuance
+			
+			 try{
+				  GenericValue itemIssuanceAttribute = delegator.makeValue("ItemIssuanceAttribute");
+				  itemIssuanceAttribute.set("itemIssuanceId", itemIssuanceId);
+				  itemIssuanceAttribute.set("attrName", "ACKNG_QTY");
+				  itemIssuanceAttribute.set("attrValue", "Y");
+				  delegator.createOrStore(itemIssuanceAttribute);
+				}catch (Exception e) {
+				  Debug.logError(e, "Error While Creating Attribute(ACKNG_QTY) for Material Receipt Acknowledgement ", module);
+				  request.setAttribute("_ERROR_MESSAGE_", "Error While Creating Attribute(ACKNG_QTY) for Material Receipt Acknowledgement : "+itemIssuanceId);
+				  return "error";
+				}
+				  custRequestItem = delegator.findOne("CustRequestItem",UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+				  BigDecimal indentQuantity = custRequestItem.getBigDecimal("quantity");
+				  String checkStatuId = custRequestItem.getString("statusId");
+				  conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+				  conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+				  EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				  itemIssuances = delegator.findList("ItemIssuance",con, null , null, null, false);
+				  List itemIssueIds = EntityUtil.getFieldListFromEntityList(itemIssuances, "itemIssuanceId", true);
+				  List<GenericValue> issuanceAttr = delegator.findList("ItemIssuanceAttribute", EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN, itemIssueIds), null, null, null, false);
+				  List issuedList = EntityUtil.getFieldListFromEntityList(issuanceAttr, "itemIssuanceId", true);
+				  List<GenericValue> issuancedItems = EntityUtil.filterByCondition(itemIssuances, EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN, issuedList));
+				  BigDecimal totalIssueQty = BigDecimal.ZERO;
+				  for(GenericValue eachItemIssuance : issuancedItems){
+					  BigDecimal issueQty = eachItemIssuance.getBigDecimal("quantity");
+					  totalIssueQty = totalIssueQty.add(issueQty);
+				  }
+				  if((totalIssueQty.compareTo(indentQuantity)==0) || (((totalIssueQty.compareTo(indentQuantity)<0) || (totalIssueQty.compareTo(indentQuantity)>0)) && checkStatuId.equals("CRQ_ISSUED"))){
+					  statusCtx.clear();
+					  statusCtx.put("statusId", custRequestItemStatusId);
+					  statusCtx.put("custRequestId", custRequestId);
+					  statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+					  statusCtx.put("userLogin", userLogin);
+					  statusCtx.put("description", "");
+					  Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+					  if (ServiceUtil.isError(resultCtx)) {
+						  Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custRequestItemSeqId, module);
+						  request.setAttribute("_ERROR_MESSAGE_", "Problem changing request status :"+custRequestId+":"+custRequestItemSeqId);
+						  TransactionUtil.rollback();
+						  return "error";
+					  }
+				  } 
+				 
+				 
 			List<GenericValue> tenantConfigCheck = FastList.newInstance();
 			List condList=FastList.newInstance();
 			condList.add(EntityCondition.makeCondition("propertyName", EntityOperator.EQUALS, "enableDeptInvTrack"));

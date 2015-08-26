@@ -48,6 +48,9 @@ under the License.
             	var facilityIdObj = $(domObj).find("[name='facilityId']");
             	var facilityId = $(facilityIdObj).val();
             	
+            	var itemIssuanceObj = $(domObj).find("[name='itemIssuanceId']");
+				var itemIssuanceId = $(itemIssuanceObj).val();
+            	
             	var appendStr = "<input type=hidden name=custRequestId_o_"+index+" value="+indentId+" />";
             	$("#updateRequestStatusForm").append(appendStr);
             	var appendStr1 = "<input type=hidden name=custRequestItemSeqId_o_"+index+" value="+indentItemId+" />";
@@ -62,6 +65,8 @@ under the License.
             		var appendStr5 = "<input type=hidden name=facilityId_o_"+index+" value="+facilityId+" />";
             		$("#updateRequestStatusForm").append(appendStr5);
             	}
+            	var appendStr6 = "<input type=hidden name=itemIssuanceId_o_"+index+" value="+itemIssuanceId+" />";
+				$("#updateRequestStatusForm").append(appendStr6);
             	index = index+1;
             }
             
@@ -116,6 +121,7 @@ under the License.
 				<input type=hidden name=fromPartyId value='${eachItem.fromPartyId?if_exists}'>
             	<input type=hidden name=productId value='${eachItem.productId?if_exists}'>
             	<input type=hidden name=quantity value='${eachItem.quantity?if_exists}'>
+				<input type="hidden" name="itemIssuanceId" value='${eachItem.itemIssuanceId?if_exists}'>
             	<#if custRequestTypeId == "PRODUCT_REQUIREMENT">
             	<td><h2><a class="buttontext" href="<@ofbizUrl>ViewMaterialRequest?custRequestId=${eachItem.custRequestId?if_exists}</@ofbizUrl>" target="_blank"/>${eachItem.custRequestId?if_exists}</h2></td>
             	<#elseif custRequestTypeId == "INTERNAL_INDENT">
