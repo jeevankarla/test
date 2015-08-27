@@ -270,6 +270,7 @@
 		<field name="emplLeaveReasonTypeId" title="Reason"><display></display></field>                		          
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
         <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
+		<field name="leaveCountDays" title="Total no.of days"><display/></field> 
 		<field name="appliedBy" title="Applied By"><display></display></field>
 		<field name="dayFractionId" title="1st/2nd Half"><display></display></field>
         <field name="approverPartyId" field-name="approverPartyId">
