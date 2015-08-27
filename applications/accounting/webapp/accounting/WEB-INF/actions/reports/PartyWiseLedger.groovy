@@ -23,7 +23,6 @@ import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.accounting.ledger.GeneralLedgerServices;
 dctx = dispatcher.getDispatchContext();
 
-
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 reportTypeFlag = parameters.reportTypeFlag;
@@ -181,12 +180,15 @@ Map interUnitMap = FastMap.newInstance();
 Map acctgReceiveMap = FastMap.newInstance();
 Map acctgPayMap = FastMap.newInstance();
 Map unAppAmtMap = FastMap.newInstance();
+Map unAppledMap = FastMap.newInstance();
 Map closingUnAppMap = FastMap.newInstance();
 List paymentGlAccountType=FastList.newInstance();
 List PaymentGlAccountIds=FastList.newInstance();
  		paymentGlAccountType=delegator.findList("PaymentGlAccountTypeMap",null,null,null,null,false);
 		PaymentGlAccountTypeIds=EntityUtil.getFieldListFromEntityList(paymentGlAccountType,"glAccountTypeId", true);
+		unAppledMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeIds",PaymentGlAccountTypeIds));
 		unAppAmtMap = GeneralLedgerServices.getAcctgTransBalance(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"fromDate",fromDate,"thruDate",thruDate,"glAccountTypeIds",PaymentGlAccountTypeIds));
+		PaymentGlAccountTypeIds.clear();
 		PaymentGlAccountTypeIds.add("ACCOUNTS_RECEIVABLE");
 		PaymentGlAccountTypeIds.add("ACCOUNTS_PAYABLE");
 //		acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_RECEIVABLE","acctgTransTypeId","INCOMING_PAYMENT"));
@@ -234,7 +236,7 @@ List PaymentGlAccountIds=FastList.newInstance();
 				}
 			}
 		}
-		Map tempUnAppMap = unAppAmtMap.openingBalMap;
+		/*Map tempUnAppMap = unAppAmtMap.openingBalMap;
 		unAppCredit=0; unAppDebit=0;
 		if(UtilValidate.isNotEmpty(tempUnAppMap)){
 			Map resultUnAppMap = tempUnAppMap.get(partyId);
@@ -254,6 +256,31 @@ List PaymentGlAccountIds=FastList.newInstance();
 			}else{
 				closingUnAppMap[partyId]=0;
 			}
+		}*/
+		Map tempUnAppliedMap = unAppledMap.get("openingBalMap");
+		Map tempUnAppAmtMap = unAppAmtMap.get("openingBalMap");
+		unAppCredit=0;unAppDebit=0;value=0;
+		if(UtilValidate.isNotEmpty(tempUnAppliedMap)){
+			Map resultMap=tempUnAppliedMap.get(partyId);
+			if(UtilValidate.isNotEmpty(resultMap)){
+				unAppCredit=resultMap.get("credit");
+				unAppDebit=resultMap.get("debit");
+			}
+		}
+		if(UtilValidate.isNotEmpty(tempUnAppAmtMap)){
+			Map resultMap=tempUnAppAmtMap.get(partyId);
+			if(UtilValidate.isNotEmpty(resultMap)){
+				unAppCredit=unAppCredit+resultMap.get("credit");
+				unAppDebit=unAppDebit+resultMap.get("debit");
+			}
+		}
+		value=unAppDebit-unAppCredit;
+		if(UtilValidate.isEmpty(closingUnAppMap[partyId])){
+			closingUnAppMap[partyId]=value;
+		}else{
+			existBal=0;
+			existBal=closingUnAppMap[partyId];
+			closingUnAppMap[partyId]=existBal+value;
 		}
 	}
 		if(acctgTransIter){
@@ -346,6 +373,244 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	partyLedgerAbsCsv=[];
 	partyLedgerDetailedAbsCsv=[];
 	grdOpenDebit=0;grdOpenCredit=0;grdCurrDebit=0;grdCurrCredit=0;
+	grdDebit=0;grdCredit=0;grdUnAppAmt=0;
+	grdUnAppDebit=0;grdUnAppCredit=0;
+	finalMap=[:];
+	for(Map.Entry partyDetails : partyMap.entrySet()){
+		
+		partyId = partyDetails.getKey();
+		partyVal = partyDetails.getValue();
+		tempMap=[:];
+		tempAbsMap=[:];
+		tempDetailedAbsMap=[:];
+		partyName=PartyHelper.getPartyName(delegator, partyId, false);
+		name=partyName+"["+partyId+"]";
+		tempMap.glAccountId="PARTY NAME :";
+		tempMap.partyId=partyId;
+		tempMap.glAccDescription=name;
+		//for abstract csv
+		tempAbsMap.partyId=partyId;
+		tempAbsMap.name=name;
+		openDebit=0;openCredit=0;
+		openBal=0;
+		if(UtilValidate.isNotEmpty(openingBalMap.get(partyId))){
+			openBal=openingBalMap.get(partyId);
+		}
+		if(openBal>=0){
+			openDebit=openBal;
+		}else{
+			openCredit=-(openBal);
+		}
+		grdOpenDebit=grdOpenDebit+openDebit;
+		grdOpenCredit=grdOpenCredit+openCredit;
+		unAppAmt=0;unAppDebit=0;unAppCredit=0;
+		if(UtilValidate.isNotEmpty(closingUnAppMap.get(partyId))){
+			unAppAmt=closingUnAppMap.get(partyId);
+		}
+		if(unAppAmt>=0){
+			unAppDebit=unAppAmt;
+		}else{
+			unAppCredit=-(unAppAmt);
+		}
+		tempMap.isPosted="Opening Balance";
+		tempMap.credit=openCredit;
+		tempMap.debit=openDebit;
+		partyLedgerCsv.add(tempMap);
+		totDebit=0;totCredit=0;
+		partyVal.each{acctgTrans->
+			tempTransMap=[:];
+			tempTransMap.acctgTransId=acctgTrans.acctgTransId;
+			tempTransMap.acctgTransEntrySeqId=acctgTrans.acctgTransEntrySeqId;
+			tempTransMap.transactionDate=acctgTrans.transactionDate;
+			tempTransMap.acctgTransTypeId=acctgTrans.acctgTransTypeId;
+			tempTransMap.description=acctgTrans.description;
+			if(UtilValidate.isNotEmpty(acctgTrans.glAccountId)){
+				tempTransMap.glAccountId=acctgTrans.glAccountId;
+			}
+			glAccDescription="";
+			invoiceId=null;
+			paymentId=null;
+			if(UtilValidate.isNotEmpty(acctgTrans.invoiceId)){
+				invoiceId=acctgTrans.invoiceId;
+			}
+			if(UtilValidate.isNotEmpty(acctgTrans.paymentId)){
+				paymentId=acctgTrans.paymentId;
+			}
+			/*invoiceDes="";
+			 if(UtilValidate.isNotEmpty(invoiceId)){
+			 invoiceDetails = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+			 invoiceDes=invoiceDetails.description;
+			 }
+			 glAccDescription=invoiceDes;
+			 paymentDes="";
+			 if(UtilValidate.isNotEmpty(paymentId)){
+			 paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+			 paymentDes=paymentDetails.comments;
+			 }
+			 if(UtilValidate.isNotEmpty(glAccDescription) && UtilValidate.isNotEmpty(paymentDes)){
+			 glAccDescription=glAccDescription+" And "+paymentDes;
+			 }else if(UtilValidate.isEmpty(glAccDescription) && UtilValidate.isNotEmpty(paymentDes)){
+			 glAccDescription=paymentDes;
+			 }
+			 if(UtilValidate.isEmpty(glAccDescription)){
+			 glAccount=delegator.findOne("GlAccount",[glAccountId:acctgTrans.glAccountId],true);
+			 glAccDescription = glAccount.description;
+			 }*/
+			tempTransMap.glAccDescription=acctgTrans.description;
+
+			tempTransMap.invoiceId=invoiceId;
+			tempTransMap.partyId=partyId;
+			tempTransMap.paymentId=paymentId;
+			tempTransMap.isPosted=acctgTrans.isPosted;
+			//			tempTransMap.postedDate=acctgTrans.postedDate;
+			debit=0;credit=0;
+			credit=acctgTrans.credit;
+			debit=acctgTrans.debit;
+			totDebit=totDebit+debit;
+			totCredit=totCredit+credit;
+			tempTransMap.credit=credit;
+			tempTransMap.debit=debit;
+			partyLedgerCsv.add(tempTransMap);
+		}
+		//For Detailed Abs report
+		grdCurrDebit=grdCurrDebit+totDebit;
+		grdCurrCredit=grdCurrCredit+totCredit;
+		tempDetailedAbsMap.partyId=partyId;
+		tempDetailedAbsMap.name=name;
+		tempDetailedAbsMap.openDebit=openDebit;
+		tempDetailedAbsMap.openCredit=openCredit;
+		tempDetailedAbsMap.currDebit=totDebit;
+		tempDetailedAbsMap.currCredit=totCredit;
+		tempDetailedAbsMap.unAppDebit=unAppDebit;
+		tempDetailedAbsMap.unAppCredit=unAppCredit;
+		if((openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit)>0){
+			tempDetailedAbsMap.finalValue=(openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit)+"(Dr)";
+		}else if((openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit)<0){
+			tempDetailedAbsMap.finalValue=-((openDebit+totDebit+unAppDebit)-(openCredit+totCredit+unAppCredit))+"(Cr)";
+		}
+		partyLedgerDetailedAbsCsv.add(tempDetailedAbsMap);
+		
+		tempMap=[:];
+		tempMap.glAccDescription="TRANSACTION TOTAL  :";
+		totDebit=totDebit+openDebit;
+		totCredit=totCredit+openCredit;
+		tempMap.debit=totDebit;
+		grdDebit=grdDebit+totDebit;
+		tempMap.credit=totCredit;
+		grdCredit=grdCredit+totCredit;
+		partyLedgerCsv.add(tempMap);
+		tempMap=[:];
+		tempMap.partyId=partyId;
+		tempMap.glAccDescription="CLOSING TOTAL :";
+		bal=0;clsDebit=0;clsCredit=0;
+		bal=totDebit-totCredit;
+		if(bal>=0){
+			clsDebit=bal;
+		}else{
+			clsCredit=-(bal);
+		}
+		tempMap.debit=clsDebit;
+		tempMap.credit=clsCredit;
+		partyLedgerCsv.add(tempMap);
+		tempMap=[:];
+		tempMap.glAccDescription="UN-APPLIED AMOUNT :";
+		grdUnAppDebit=grdUnAppDebit+unAppDebit;
+		grdUnAppCredit=grdUnAppCredit+unAppCredit;
+		tempMap.debit=unAppDebit;
+		tempMap.credit=unAppCredit;
+		partyLedgerCsv.add(tempMap);
+		//for abstract csv
+		tempAbsMap.unAppDebit= unAppDebit;
+		tempAbsMap.unAppCredit=unAppCredit;
+		finalAmt=0;
+		finalAmt=(clsDebit+unAppDebit)-(clsCredit+unAppCredit);
+		if(finalAmt>0){
+			finalAmt=finalAmt+"(Dr)";
+		}else if(finalAmt<0){
+			finalAmt=-(finalAmt)+"(Cr)";
+		}
+		tempAbsMap.finalAmt=finalAmt;
+		tempAbsMap.debit=clsDebit;
+		tempAbsMap.credit=clsCredit;
+		partyLedgerAbsCsv.add(tempAbsMap);
+	}
+	finalMap.glAccDescription="GRAND TOTAL :";
+	finalMap.partyId=partyId;
+	finalMap.debit=grdDebit;
+	finalMap.credit=grdCredit;
+	partyLedgerCsv.add(finalMap);
+	//for abstract csv
+	tempFinalAbsMap=[:];
+	tempFinalAbsMap.name="TOTAL :";
+	if((grdDebit-grdCredit)>=0){
+		tempFinalAbsMap.debit=grdDebit-grdCredit;
+		tempFinalAbsMap.credit=0;
+	}else{
+		tempFinalAbsMap.debit=0;
+		tempFinalAbsMap.credit=-(grdDebit-grdCredit);
+	}
+	tempFinalAbsMap.unAppDebit =grdUnAppDebit;
+	tempFinalAbsMap.unAppCredit =grdUnAppCredit;
+	grdfinalAmt=0;
+	grdfinalAmt=(grdDebit+grdUnAppDebit)-(grdCredit+grdUnAppCredit);
+	if(grdfinalAmt>0){
+		grdfinalAmt=grdfinalAmt+"(Dr)";
+	}else if(grdfinalAmt<0){
+		grdfinalAmt=-(grdfinalAmt)+"(Cr)";
+	}
+	tempFinalAbsMap.finalAmt=grdfinalAmt;
+	partyLedgerAbsCsv.add(tempFinalAbsMap);
+
+	finalMap=[:];
+	balance=0;clsGrdDebit=0;clsGrdCredit=0;
+	finalMap.glAccDescription="CLOSING GRAND TOTAL :";
+	balance=grdDebit-grdCredit;
+	if(balance>=0){
+		clsGrdDebit=balance;
+	}else{
+		clsGrdCredit=-(balance);
+	}
+
+	finalMap.partyId=partyId;
+	finalMap.debit=clsGrdDebit;
+	finalMap.credit=clsGrdCredit;
+	partyLedgerCsv.add(finalMap);
+	context.partyLedgerCsv=partyLedgerCsv;
+
+	tempFinalAbsMap=[:];
+	tempFinalAbsMap.name="NET AMOUNT :";
+	tempFinalAbsMap.debit=clsGrdDebit;
+	tempFinalAbsMap.credit=clsGrdCredit;
+	if(grdUnAppAmt>=0){
+		tempFinalAbsMap.unApplied=grdUnAppAmt+"(Dr)";
+	}else{
+		tempFinalAbsMap.unApplied=-grdUnAppAmt+"(Cr)";
+	}
+	partyLedgerAbsCsv.add(tempFinalAbsMap);
+	context.partyLedgerAbsCsv=partyLedgerAbsCsv;
+	
+	//for Detailed Abs
+	tempDetailedAbsMap=[:];
+	tempDetailedAbsMap.name="TOTALS  :";
+	tempDetailedAbsMap.openDebit=grdOpenDebit;
+	tempDetailedAbsMap.openCredit=grdOpenCredit;
+	tempDetailedAbsMap.currDebit=grdCurrDebit;
+	tempDetailedAbsMap.currCredit=grdCurrCredit;
+	tempDetailedAbsMap.unAppDebit=grdUnAppDebit;
+	tempDetailedAbsMap.unAppCredit=grdUnAppCredit;
+	if((grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit)>0){
+		tempDetailedAbsMap.finalValue=(grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit)+"(Dr)";
+	}else if((grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit)<0){
+		tempDetailedAbsMap.finalValue=-((grdOpenDebit+grdCurrDebit+grdUnAppDebit)-(grdOpenCredit+grdCurrCredit+grdUnAppCredit))+"(Cr)";
+	}
+	partyLedgerDetailedAbsCsv.add(tempDetailedAbsMap);
+	context.partyLedgerDetailedAbsCsv=partyLedgerDetailedAbsCsv;
+}
+/*if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
+	partyLedgerCsv=[];
+	partyLedgerAbsCsv=[];
+	partyLedgerDetailedAbsCsv=[];
+	grdOpenDebit=0;grdOpenCredit=0;grdCurrDebit=0;grdCurrCredit=0;
 	grdDebit=0;grdCredit=0;
 	grdUnAppDebit=0;grdUnAppCredit=0;
 	finalMap=[:];
@@ -408,7 +673,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			if(UtilValidate.isNotEmpty(acctgTrans.paymentId)){
 				paymentId=acctgTrans.paymentId;
 			}
-			/*invoiceDes="";
+			invoiceDes="";
 			if(UtilValidate.isNotEmpty(invoiceId)){
 				invoiceDetails = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
 				invoiceDes=invoiceDetails.description;
@@ -427,7 +692,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 			if(UtilValidate.isEmpty(glAccDescription)){
 				glAccount=delegator.findOne("GlAccount",[glAccountId:acctgTrans.glAccountId],true);
 				glAccDescription = glAccount.description;
-			}*/
+			}
 			tempTransMap.glAccDescription=acctgTrans.description;
 			
 			tempTransMap.invoiceId=invoiceId;
@@ -567,6 +832,5 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	partyLedgerDetailedAbsCsv.add(tempDetailedAbsMap);
 	context.partyLedgerDetailedAbsCsv=partyLedgerDetailedAbsCsv;
 }
-
-
+*/
 

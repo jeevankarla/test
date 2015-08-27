@@ -313,7 +313,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         					</fo:table-cell>
                             </#if>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block   text-align="right" font-size="11pt" >${eachItem.get('quantityLtr')?if_exists?string("#0.00")}<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})<#elseif purposeTypeId=="SCRAP_PROD_CHANNEL">(${eachItem.get('recurringFreqUomId')?if_exists})</#if></fo:block>
+        						<fo:block   text-align="right" font-size="11pt" >${eachItem.get('quantityLtr')?if_exists?string("#0.00")}<#if "FGS_PRODUCT_CHANNEL"==purposeTypeId >(${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('quantityUomId')?if_exists)),7)})<#elseif purposeTypeId=="SCRAP_PROD_CHANNEL"> (${eachItem.get('recurringFreqUomId')?if_exists})</#if></fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
         						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${shipment.get('shipmentId')?if_exists}</fo:block>
