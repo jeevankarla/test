@@ -1,21 +1,18 @@
+import java.util.Locale;
 import java.sql.Timestamp;
-
-import org.ofbiz.base.util.UtilValidate;
-
-import java.sql.Timestamp;
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.party.party.PartyHelper;
-
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import in.vasista.vbiz.humanres.HumanresService
-
-import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.condition.*;
 import java.util.concurrent.TimeUnit;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.party.party.PartyHelper;
+import in.vasista.vbiz.humanres.HumanresService;
+import org.ofbiz.base.util.UtilDateTime;
+import in.vasista.vbiz.humanres.PayrollService;
 
 dctx = dispatcher.getDispatchContext();
 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -166,6 +163,7 @@ leaveList = delegator.findList("EmplLeave", condition , null, null, null, false 
 //Debug.logError("leaveList="+leaveList,"");
 
 leaveList.each { leave->
+	float leaveCount = 1;
 	JSONArray leaveJSON = new JSONArray();
 	leaveFromDate = UtilDateTime.toDateString(leave.get("fromDate"), "dd/MM/yyyy");
 	leaveJSON.add(leaveFromDate);
@@ -178,7 +176,38 @@ leaveList.each { leave->
 	if(UtilValidate.isNotEmpty(leaveType) && UtilValidate.isNotEmpty(leave.getString("dayFractionId"))){
 		leaveType = leaveType + " (" + leave.getString("dayFractionId") + ")";
 	}
+	dayFractionId = leave.get("dayFractionId");
+	leaveStartDate = leave.get("fromDate");
+	leaveEndDate = leave.get("thruDate");
+	leaveCountDays = UtilDateTime.getIntervalInDays(leaveStartDate,leaveEndDate)+1;
+	if((leave.get("leaveTypeId")).equals("CL")){
+		for(int i=1 ;i < leaveCountDays; i++){
+			nextDay = UtilDateTime.addDaysToTimestamp(leaveFromDate, 1);
+			String dayOfWeek = (UtilDateTime.getDayOfWeek(nextDay, timeZone, locale)).toString();
+			String weekDay = weekMap[dayOfWeek];
+			leaveFromDate = nextDay;
+			leaveDate = "";
+			secondSatDate = "";
+			leaveDate = UtilDateTime.toDateString(nextDay,"dd");
+			if(weekDay.equals("Saturday")){
+				secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(nextDay),0,2,timeZone,locale), -1);
+				secondSatDate = UtilDateTime.toDateString(secondSaturDay,"dd");
+			}
+			if(!leaveDate.equals(secondSatDate) && !weekDay.equals("Sunday")){
+				leaveCount = leaveCount + 1;
+			}
+		}
+		if(UtilValidate.isNotEmpty(dayFractionId)){
+			if((dayFractionId.equals("FIRST_HALF")) || (dayFractionId.equals("SECOND_HALF"))){
+				leaveCount = leaveCount - 0.5;
+			}
+		}
+	}else{
+		leaveCount = leaveCountDays;
+	}
+	
 	leaveJSON.add(leaveType);
+	leaveJSON.add(leaveCount);
 	leaveListJSON.add(leaveJSON);
 	Calendar c1=Calendar.getInstance();
 	c1.setTime(UtilDateTime.toSqlDate(leave.get("fromDate")));

@@ -67,6 +67,9 @@ under the License.
 								   <fo:table-cell number-columns-spanned="1" border-style="solid" width="40px">
 										<fo:block text-align="center" keep-together="always" font-weight="bold" >S.No</fo:block>
 									</fo:table-cell>
+									<fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
+										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Unit no</fo:block>
+									</fo:table-cell>
 									<fo:table-cell number-columns-spanned="1" border-style="solid" width="85px">
 										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">GratuityId</fo:block>
 									</fo:table-cell>
@@ -76,7 +79,7 @@ under the License.
 									<fo:table-cell number-columns-spanned="1" border-style="solid" width="200px">
 										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Employee Name</fo:block>
 									</fo:table-cell>
-									<fo:table-cell number-columns-spanned="1" border-style="solid" width="200px">
+									<fo:table-cell number-columns-spanned="1" border-style="solid" width="230px">
 										<fo:block text-align="center" keep-together="always" font-weight="bold">Designation</fo:block>
 									</fo:table-cell>
 									<fo:table-cell number-columns-spanned="1" border-style="solid" width="120px">
@@ -85,14 +88,8 @@ under the License.
 									<fo:table-cell number-columns-spanned="1" border-style="solid" width="130px">
 										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Date Of Joining</fo:block>
 									</fo:table-cell>
-									<fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
-										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Basic</fo:block>
-									</fo:table-cell>
-									<fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
-										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">DA</fo:block>
-									</fo:table-cell>
-									<fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
-										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Total</fo:block>
+									<fo:table-cell number-columns-spanned="1" border-style="solid" width="90px">
+										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Basic+DA</fo:block>
 									</fo:table-cell>
 									<fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
 										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">EL</fo:block>
@@ -139,6 +136,9 @@ under the License.
 						<fo:table-cell number-columns-spanned="1" border-style="solid" width="40px">
 							<fo:block text-align="center" keep-together="always">${sno}</fo:block>
 						</fo:table-cell>
+						<fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
+	                    	<fo:block text-align="center" keep-together="always">5</fo:block>
+	                    </fo:table-cell>
 						<fo:table-cell number-columns-spanned="1" border-style="solid" width="85px">
 	                    	<fo:block text-align="center" keep-together="always"><#if employee.get("gratuityIdNo")?has_content>${employee.get("gratuityIdNo")?if_exists}<#else>&#160;</#if></fo:block>
 	                    </fo:table-cell>
@@ -148,7 +148,7 @@ under the License.
 	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="200px">
 	                    	<fo:block text-align="left" keep-together="always">${employee.get("name")?if_exists?upper_case}</fo:block>
 	                    </fo:table-cell>
-	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="200px">
+	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="230px">
 	                    	<fo:block text-align="left" keep-together="always">${employee.get("position")?if_exists?upper_case}</fo:block>
 	                    </fo:table-cell>
 	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="120px">
@@ -157,17 +157,11 @@ under the License.
 	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="130px">
 	                    	<fo:block text-align="center" keep-together="always">${employee.get("joinDate")?if_exists?upper_case}</fo:block>
 	                    </fo:table-cell>
-	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
-	                    	<fo:block text-align="right" keep-together="always">${employee.get("amount")?if_exists}</fo:block>
-	                    </fo:table-cell>
-	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
-	                    	<fo:block text-align="right" keep-together="always">${employee.get("daAmount")?if_exists}</fo:block>
-	                    </fo:table-cell>
-	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
+	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="90px">
 	                    	<fo:block text-align="right" keep-together="always">${employee.get("total")?if_exists}</fo:block>
 	                    </fo:table-cell>
 	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
-	                    	<fo:block text-align="center" keep-together="always">${employee.get("balance")?if_exists}</fo:block>
+	                    	<fo:block text-align="right" keep-together="always">${employee.get("balance")?if_exists}</fo:block>
 	                    </fo:table-cell>
 	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
 	                    	<fo:block text-align="left" keep-together="always"></fo:block>

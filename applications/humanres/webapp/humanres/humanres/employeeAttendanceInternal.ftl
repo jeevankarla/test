@@ -54,7 +54,8 @@ $(document).ready(function() {
 		"columns": [
 			{ "title": "From Date" },			
 			{ "title": "Thru Date" },
-			{ "title": "Leave Type"}],	
+			{ "title": "Leave Type"},	
+			{ "title": "Total no. of days"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
 	} );	
