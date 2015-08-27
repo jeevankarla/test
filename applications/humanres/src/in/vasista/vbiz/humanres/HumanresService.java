@@ -1755,16 +1755,22 @@ public class HumanresService {
 	            		activeEmpWeeklyOffCalendar.set("thruDate", previousDayEnd);
 	            		activeEmpWeeklyOffCalendar.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 	            		activeEmpWeeklyOffCalendar.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	            		activeEmpWeeklyOffCalendar.store();
-						GenericValue newEntity = delegator.makeValue("EmployeeWeeklyOffCalendar");
-						newEntity.set("partyId", partyId);
-						newEntity.set("weeklyOffDay", weeklyOff);
-						newEntity.set("fromDate", fromDateStart);
-						newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-						newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-						newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-						newEntity.create();
+	            		Timestamp oldFromDate = activeEmpWeeklyOffCalendar.getTimestamp("fromDate");
+	            		String oldFromDateReq = UtilDateTime.toDateString(oldFromDate,"dd/MM/yyyy");
+						if(oldFromDate.compareTo(fromDateStart)>= 0){
+							return ServiceUtil.returnError("Weekly off mention date cannot be before "+oldFromDateReq);
+						}else{
+							activeEmpWeeklyOffCalendar.store();
+							GenericValue newEntity = delegator.makeValue("EmployeeWeeklyOffCalendar");
+							newEntity.set("partyId", partyId);
+							newEntity.set("weeklyOffDay", weeklyOff);
+							newEntity.set("fromDate", fromDateStart);
+							newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+							newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+							newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+							newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							newEntity.create();
+						}
 					}else{
 						GenericValue newEntity = delegator.makeValue("EmployeeWeeklyOffCalendar");
 						newEntity.set("partyId", partyId);

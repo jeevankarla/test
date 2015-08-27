@@ -61,10 +61,10 @@ $(document).ready(function(){
 				<td align="left" width="20%"><h4>PartyId</h4></td>
 				<td width="80%"><input type="text" name="partyId" id="partyId" value="${partyId?if_exists}" size="30" maxlength="60" readonly /></td>
 			</tr>
-			<tr><td align="left" width="15%"><h4>Existing Joining Date:</h4></td>
+			<tr><td align="left" width="30%"><h4>Existing Appointment Date:</h4></td>
 				<td width="85%"><input type="text" id="oldAppointmentDate" name="oldAppointmentDate" value="${oldAppointmentDate?if_exists}" readonly/> </td>
 			</tr>
-			<tr><td align="left" width="15%"><h4>New Joining Date:</h4></td>
+			<tr><td align="left" width="30%"><h4>New Appointment Date:</h4></td>
 				<td width="85%"><input type="text" id="newAppointmentDate" name="newAppointmentDate"/> </td>
 			</tr>
 			<tr>
