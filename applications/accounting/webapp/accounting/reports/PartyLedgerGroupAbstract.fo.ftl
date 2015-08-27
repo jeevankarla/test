@@ -143,7 +143,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                         </#if>
                         <#assign grdDebit=grdDebit+closingDebit>
                         <#assign grdCredit=grdCredit+((-1)*closingCredit)>
-                      <#if closingDebit !=0 || closingCredit !=0>
+                      <#if closingDebit !=0 || closingCredit !=0 || unAppCredit!=0 || unAppDebit!=0>
                 		<fo:table-row>
                 			<fo:table-cell>
                     			 <fo:block  keep-together="always" text-align="left"   font-size="10pt" white-space-collapse="false">${sno}</fo:block>  
