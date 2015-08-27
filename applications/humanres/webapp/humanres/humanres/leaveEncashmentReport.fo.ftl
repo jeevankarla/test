@@ -163,19 +163,36 @@ under the License.
 	                     	</fo:table-row>
                      		<fo:table-row>
                      			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                     			<fo:table-cell><fo:block text-align="left" white-space-collapse="false" >&#160;Copy</fo:block></fo:table-cell>
+                     			<fo:table-cell><fo:block text-align="left" white-space-collapse="false" >&#160;</fo:block></fo:table-cell>
                    			</fo:table-row>
                    			
                    			<fo:table-row>
-                     			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                   				<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;Manager Admin             To Manager Finance                Director MotherDairy</fo:block></fo:table-cell>
+                   				<fo:table-cell>
+                   					<fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;&#160;&#160;&#160;Asst Manager(ADMN)                      General Manager(ADMN)               Director</fo:block>
+                   				</fo:table-cell>
                    			</fo:table-row>
-                   			
+                   			<fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+	                     	</fo:table-row>
+	                     	<fo:table-row>
+                   				<fo:table-cell>
+                   					<fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;</fo:block>
+                   				</fo:table-cell>
+                   				<fo:table-cell>
+                   					<fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre auditor</fo:block>
+                   				</fo:table-cell>
+                   			</fo:table-row>
+                   			<fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+	                     	</fo:table-row>
+	                     	<fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+	                     	</fo:table-row>
+	                     	<fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+	                     	</fo:table-row>
                    			<fo:table-row>
-                     			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                     			<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;                          Notice Board     </fo:block></fo:table-cell>
+                     			<fo:table-cell>
+                     				<fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;&#160;&#160;&#160;To</fo:block>
+                     				<fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;&#160;&#160;&#160;Manager(Fin)</fo:block>
+                     			</fo:table-cell>
                    			</fo:table-row>
-                   			
                      	</fo:table-body>
                      </fo:table>
                  </fo:block>

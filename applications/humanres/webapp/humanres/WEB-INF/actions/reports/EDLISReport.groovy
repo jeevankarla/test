@@ -71,7 +71,15 @@ if(UtilValidate.isNotEmpty(customTimePeriodIdsList)){
 }
 
 List employmentList = FastList.newInstance();
-employmentList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
+employmentList.add( EntityCondition.makeCondition([
+	EntityCondition.makeCondition([
+		EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
+		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)
+		],EntityOperator.OR),
+	EntityCondition.makeCondition(
+		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate))
+	],EntityOperator.AND));
+employmentList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 EntityCondition empCondition = EntityCondition.makeCondition(employmentList, EntityOperator.AND);
 List<GenericValue> employementList = delegator.findList("EmploymentAndPerson", empCondition, null, UtilMisc.toList("birthDate"), null, false);
 
