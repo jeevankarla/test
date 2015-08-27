@@ -1638,5 +1638,16 @@ under the License.
           <key-map field-name="orderId"/>
       </relation>
     </view-entity>
+     <entity entity-name="ItemIssuanceAttribute" package-name="org.ofbiz.shipment.issuance"  title="ItemIssuance Attribute Entity">
+ 		<field name="itemIssuanceId" type="id-ne"></field>
+ 		<field name="attrName" type="id-long-ne"></field>
+ 		<field name="attrValue" type="value"></field>
+ 		<prim-key field="itemIssuanceId"/>
+ 		<prim-key field="attrName"/>
+ 		<relation type="one" fk-name="ITEM_ISSU" rel-entity-name="ItemIssuance">
+ 		<key-map field-name="itemIssuanceId"/>
+		</relation>
+ 	</entity>
+    
 </entitymodel>
 

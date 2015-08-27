@@ -46,6 +46,7 @@ function issueSelected(){
 	 var paramMap='finallist';
 	 var finallist=[];
 	 var index = 0;
+	 var submitCount=0;
 	 var issueSelectedRequests = 'issueSelectedRequests';
 	 var issueMaterial = 'issueMaterial';	
 	 var action;
@@ -57,8 +58,25 @@ function issueSelected(){
  	 var str = "#"+formId;
  	 var tempQtyObj=$(varform).find("[name='"+"tempQty"+"']");
  	 var shipmentTypeObj = $(varform).find("[name='"+"shipmentTypeId"+"']");
+ 	 var qohObj = $(varform).find("[name='"+"QOH"+"']");
+ 	 var quantityObj = $(varform).find("[name='"+"quantity"+"']");
+ 	 var issuedQtyObj = $(varform).find("[name='"+"issuedQty"+"']");
+ 	 var qoh = $(qohObj).val();
+ 	 var issuedQty = $(issuedQtyObj).val();
  	 var shipmentTypeId = $(shipmentTypeObj).val();
  	 var tempQty=$(tempQtyObj).val();
+ 	 var quantity = $(quantityObj).val();
+ 	 var totalQty = parseInt(issuedQty)+parseInt(tempQty);
+ 	 if(tempQty<=0){
+ 	 	submitCount=submitCount+1;
+ 	 	alert("Please check QtyToIssue.!");
+ 	 	return false;
+ 	 }
+ 	 if(totalQty>quantity){
+ 	 	submitCount=submitCount+1;
+ 	 	alert("Please check QtyToIssue.!");
+ 	 	return false;
+ 	 }
    	 var issuance=$(this).val();
      var inputElementIdSplit = issuance.split('_');
    	 var appendStr = "<input type=hidden name=custRequestId_o_"+index+" value="+inputElementIdSplit[0]+" />";
@@ -70,7 +88,9 @@ function issueSelected(){
     });
      action= issueSelectedRequests;
      jQuery('#submitIssuance').attr("action", action);
-     jQuery('#submitIssuance').submit();
+     if(submitCount==0){
+     	jQuery('#submitIssuance').submit();
+     }
 }
 
 </script>

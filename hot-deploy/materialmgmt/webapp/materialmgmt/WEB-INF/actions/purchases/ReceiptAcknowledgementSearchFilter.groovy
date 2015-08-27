@@ -10,6 +10,7 @@ import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import org.ofbiz.entity.finder.EntityFinderUtil.ConditionList;
 productId=parameters.productId;
 custRequestId = parameters.custRequestId;
 custRequestDate = parameters.custRequestDate;
@@ -41,11 +42,12 @@ if(UtilValidate.isNotEmpty(custRequestDate)){
 	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, custRequestDateNew));
 }
 orderBy = UtilMisc.toList("lastModifiedDate");	
-conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.EQUALS, "CRQ_ISSUED"));
+//conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.EQUALS, "CRQ_ISSUED"));
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, custRequestTypeId));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 CustRequestAndItemAndAttribute = delegator.findList("CustRequestAndItemAndAttribute", condition, null, orderBy, null, false);
 if(UtilValidate.isNotEmpty(CustRequestAndItemAndAttribute)){
+	/*
 	if(custRequestTypeId=="INTERNAL_INDENT"){
 		tempList=[];
 		CustRequestAndItemAndAttribute.each{items->
@@ -68,7 +70,50 @@ if(UtilValidate.isNotEmpty(CustRequestAndItemAndAttribute)){
 		context.indentItems = tempList;
 	}else{
 		context.indentItems = CustRequestAndItemAndAttribute;
-	}
+	}*/
+	tempList=[];
+	 CustRequestAndItemAndAttribute.each{eachCusrequest->
+	 custRequestId = eachCusrequest.custRequestId;
+	 custRequestItemSeqId = eachCusrequest.custRequestItemSeqId;
+	 conditionList.clear();
+	 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+	 conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+	 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	 itemIssuances = delegator.findList("ItemIssuance", condition, null, null, null, false);
+	 itemIssuanceIds=EntityUtil.getFieldListFromEntityList(itemIssuances,"itemIssuanceId", true);
+	 itemIssuanceAttributes = delegator.findList("ItemIssuanceAttribute",EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN , itemIssuanceIds) ,null, null, null, false );
+	 itemIssuanceIdss =EntityUtil.getFieldListFromEntityList(itemIssuanceAttributes,"itemIssuanceId", true);
+	 itemIssuancesDetails = EntityUtil.filterByCondition(itemIssuances, EntityCondition.makeCondition("itemIssuanceId", EntityOperator.NOT_IN, itemIssuanceIdss));
+		 if(UtilValidate.isNotEmpty(itemIssuancesDetails)){
+			 itemIssuancesDetails.each{eachItemIssuance->
+				 indentItemsMap = [:];
+				 itemIssuanceId = eachItemIssuance.itemIssuanceId;
+				 custRequestId = eachItemIssuance.custRequestId;
+				 custRequestItemSeqId = eachItemIssuance.custRequestItemSeqId;
+				 quantity = eachItemIssuance.quantity;
+				 custRequestName = eachCusrequest.custRequestName;
+				 custRequestDate = eachCusrequest.custRequestDate;
+				 productId = eachCusrequest.productId;
+				 fromPartyId = eachCusrequest.fromPartyId;
+				 indentItemsMap.put("custRequestId", custRequestId);
+				 indentItemsMap.put("custRequestItemSeqId", custRequestItemSeqId);
+				 indentItemsMap.put("quantity", quantity);
+				 indentItemsMap.put("custRequestName", custRequestName);
+				 indentItemsMap.put("custRequestDate", custRequestDate);
+				 indentItemsMap.put("itemIssuanceId", itemIssuanceId);
+				 indentItemsMap.put("productId", productId);
+				 indentItemsMap.put("fromPartyId", fromPartyId);
+				 productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId),UtilMisc.toSet("facilityId"),null,null,false);
+				 prodFacilityIds = EntityUtil.getFieldListFromEntityList(productFacility, "facilityId", true);
+				 ecl = EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodFacilityIds),
+				 EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,fromPartyId)],EntityOperator.AND);
+				 facilityList = delegator.findList("Facility",ecl,null,null,null,false);
+				 indentItemsMap.put("facility",facilityList);
+				 tempList.add(indentItemsMap);
+			 }
+		 }
+	 }
+	 context.indentItems = tempList;
 }
 
 	
