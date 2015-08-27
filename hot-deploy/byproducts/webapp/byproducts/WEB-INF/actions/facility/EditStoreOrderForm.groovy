@@ -56,31 +56,48 @@ conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQU
 conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, effDateDayBegin));
 conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, effDateDayEnd));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-orderHeaders = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId"), null, null, false);
+orderHeaders = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId"), UtilMisc.toList("-orderId"), null, false);
 
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+if(UtilValidate.isNotEmpty(changeFlag) && "IcpSalesAmul" != changeFlag){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+}
 if(UtilValidate.isNotEmpty(changeFlag) && "IcpSalesAmul"==changeFlag){
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SHIP_TO_CUSTOMER", "PLACING_CUSTOMER")));
 }else{
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 }
 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-partyOrders = delegator.findList("OrderRole", expr, UtilMisc.toSet("orderId"), null, null, false);
-
+partyOrders = delegator.findList("OrderRole", expr, null, UtilMisc.toList("-orderId"), null, false);
 JSONArray orderItemsJSON = new JSONArray();
-
 JSONArray orderAdjustmentJSON = new JSONArray();//Orderadjustment Json
 
 partyOrderIds = EntityUtil.getFieldListFromEntityList(partyOrders, "orderId", true);
 if(partyOrderIds){
 	updateOrderId = partyOrderIds.get(0);
-	
 	orderHeaderTemp=delegator.findOne("OrderHeader",[orderId :updateOrderId], false);
 	if(UtilValidate.isNotEmpty(orderHeaderTemp)){
 		context.orderMessage=orderHeaderTemp.orderMessage;
+	}
+	
+	orderRoles = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId));
+	if(orderRoles){
+		placingCustomer = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"));
+		shippingCustomer = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+		shippingPartyId = "";
+		placingCustomerId = "";
+		if(placingCustomer){
+			placingCustomerId = (EntityUtil.getFirst(placingCustomer)).get("partyId")
+		}
+		if(shippingCustomer){
+			shippingPartyId = (EntityUtil.getFirst(shippingCustomer)).get("partyId")
+		}
+		if(!placingCustomerId.equals(shippingPartyId) && placingCustomerId){
+			shippingCustomer = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", shippingPartyId), false);
+			context.shipSecParty = shippingCustomer;
+		}		
 	}
 	
 	conditionList.clear();
@@ -91,7 +108,6 @@ if(partyOrderIds){
 	batchNumberAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
 	daysToStoreAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "daysToStore"));
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId), null, null, null, false);
-	
 	
 	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 	productCategorySelect = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
@@ -199,12 +215,6 @@ if(partyOrderIds){
 		
 		orderAdjustmentJSON.add(newAdjObj);
 	}
-	
-	
 }
 context.dataJSON = orderItemsJSON;
 context.data2JSON = orderAdjustmentJSON;
-
-
-
-
