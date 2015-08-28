@@ -17,6 +17,7 @@ import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 
 fromDate=parameters.fromDate;
 shiftId=parameters.shiftId;
+context.shiftId = shiftId;
 
 dctx = dispatcher.getDispatchContext();
 DateTime = null;
@@ -575,7 +576,7 @@ pmSiloIds.each{eachPmSiloId->
 					
 					pmSiloIssueMap.put(issueNo, pmIssInternalMap);
 					
-					pmIssuedSiloQty=pmIssuedSiloQty+pmIssueTransQty;
+					pmIssuedSiloQty=pmIssuedSiloQty+pmIntIssQty;
 					
 					issueNo++;
 					

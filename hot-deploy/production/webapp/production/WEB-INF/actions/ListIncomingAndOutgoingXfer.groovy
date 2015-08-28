@@ -18,10 +18,11 @@ productId = parameters.productId;
 incommingTransfer = [];
 outgoingTransfer = [];
 if(facilityId){
-
+	facilityId = facilityId.toUpperCase();
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("toFacilityId", EntityOperator.EQUALS, facilityId));
 	if(productId){
+		productId = productId.toUpperCase();
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "IXF_EN_ROUTE"));

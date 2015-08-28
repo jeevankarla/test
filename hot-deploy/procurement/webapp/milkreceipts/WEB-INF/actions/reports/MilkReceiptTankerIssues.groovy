@@ -170,7 +170,10 @@ if(UtilValidate.isNotEmpty(productFacilityDetails)){
 		facilityProdIds.each{eachProdId->
 			productFacilities = EntityUtil.filterByCondition(productFacilityDetails, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
 			eachProdFacilityIds=EntityUtil.getFieldListFromEntityList(productFacilities, "facilityId", true);
-			productFacilityIdMap.putAt(eachProdId, eachProdFacilityIds);
+			inventoryItemForProducts = delegator.findList("InventoryItem",EntityCondition.makeCondition("facilityId", EntityOperator.IN , eachProdFacilityIds)  , null, null, null, false );
+			eachProdInvFacilityIds=EntityUtil.getFieldListFromEntityList(inventoryItemForProducts, "facilityId", true);
+			java.util.Collections.sort(eachProdInvFacilityIds);
+			productFacilityIdMap.putAt(eachProdId, eachProdInvFacilityIds);
 		}
 	}
 }

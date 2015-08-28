@@ -114,10 +114,10 @@ under the License.
               	<td>${status.description?if_exists}</td>
               	<td>${eachXfer.xferQtySum?if_exists}</td>
               	<#if eachXfer.qcStatusId=="QC_NOT_ACCEPT"> 
-              	<td><input type="button" name="QCDetails" onclick="javascript:showQcForm('${eachXfer.productId}', 'CreateIncomingInvTransQcDetails', 'transferGroupId', '${eachXfer.transferGroupId}');" style="buttontext" value="QCDetails" /></td>
+              	<td><input type="button" name="QCDetails" onclick="javascript:showQcForm('${eachXfer.productId}','${eachXfer.toFacilityId}','CreateIncomingInvTransQcDetails', 'transferGroupId', '${eachXfer.transferGroupId}');" style="buttontext" value="QCDetails" /></td>
               	<#else> 
               	<td>&#160;</td>
-              	<td align='center'><input type="checkbox" id="transferGroupIds" name="transferGroupIds" value="${xfer.transferGroupId}"/></td>
+              	<td align='center'><input type="checkbox" id="transferGroupIds" name="transferGroupIds" value="${eachXfer.transferGroupId}"/></td>
               	</#if>
             </tr>
             <#assign alt_row = !alt_row>
