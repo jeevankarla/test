@@ -124,7 +124,20 @@ if(UtilValidate.isNotEmpty(employementList)){
 		employee.put("pfNumber",pfNumber);
 		employee.put("sNo",sNo);
 		sNo = sNo + 1;
-		finalList.add(employee);
+		i = 0;
+		if(UtilValidate.isNotEmpty(finalList)){
+			finalList.each { employee ->
+				if((employee.employeeCode).equals(employment.partyIdTo)){
+					i = i +1;
+				}
+			}
+			if(i == 0){
+				finalList.add(employee);
+			}
+		}else{
+			finalList.add(employee);
+		}
+		
 	}
 }
 context.finalList=finalList;
