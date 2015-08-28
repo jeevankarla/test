@@ -793,7 +793,7 @@
        </field>
        <field name="vehicleCapacity" title="Capacity"><display></display></field>
        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
-       <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"></display></field>
+       <field name="thruDate"><date-time type="date"/></field>
        <field name="startDate" title="Start Date"><date-time type="date"></date-time></field>
        <field name="endDate" title="End Date"><date-time type="date"></date-time></field>
        <field name="roleTypeId"><hidden value="Contractor"/></field>

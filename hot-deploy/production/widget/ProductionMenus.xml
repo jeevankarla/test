@@ -40,6 +40,9 @@
        		<link target="findStockXfer"></link>
       	</menu-item>
       	<menu-item name="ProductionVariance" title="Variance (Loss/Gain)">
+      	<condition>
+      		<if-has-permission permission="PRO" action="_VARIANCE_VIEW"/>
+      	</condition>
 	    	<link target="findProductVariance"></link>
 	    </menu-item>
       	<menu-item name="ProductionTempRecord" title="Record Temperature">

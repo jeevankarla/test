@@ -5528,7 +5528,9 @@ public class MilkReceiptServices {
      Timestamp startDate = (Timestamp) context.get("startDate");
      Timestamp endDate = (Timestamp) context.get("endDate");
      GenericValue userLogin = (GenericValue) context.get("userLogin");
-     
+     if(UtilValidate.isNotEmpty(contractor) && contractor.equals("TEMP_CONTRACTOR")){
+    	 return ServiceUtil.returnError("Please select the contractor name other than "+contractor);
+     }
      if(UtilValidate.isNotEmpty(thruDate)){
      	thruDate = UtilDateTime.getDayEnd(thruDate);
      }
@@ -5550,9 +5552,11 @@ public class MilkReceiptServices {
      	}
      }
      if(UtilValidate.isNotEmpty(startDate)){
-     	if(startDate.compareTo(fromDate)<0 || startDate.compareTo(fromDate)==0){
+    	 if(partyId.equals("TEMP_CONTRACTOR")){
+    		 startDate = fromDate;
+    	 }else if(startDate.compareTo(fromDate)<0 || startDate.compareTo(fromDate)==0){
      		return ServiceUtil.returnError("startDate must greater than fromDate");
-     	}
+     	 }
      	if(UtilValidate.isNotEmpty(thruDate)){
      		if(startDate.before(thruDate)){
      			return ServiceUtil.returnError("startDate must greater than thruDate");	
@@ -5570,6 +5574,7 @@ public class MilkReceiptServices {
      		}
      	}
      }
+    // Debug.log("vehicleId###partyId###contractor####fromDate###thruDate###startDate##endDate"+vehicleId+"###"+partyId+"####"+contractor+"####"+fromDate+"###"+thruDate+"####"+startDate+"####"+endDate);
      List conditionList = FastList.newInstance();
      List<GenericValue> vehicleRoleList = FastList.newInstance();
 		try {
