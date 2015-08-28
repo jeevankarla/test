@@ -74,7 +74,7 @@
      <form name="FindFacilityProducts" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
     	<field name="hideSearch"><hidden value="N"/></field>
-        <field name="facilityId" title="Plant/Silo"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="facilityId" title="Plant/Silo"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>

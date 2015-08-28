@@ -111,7 +111,7 @@
 		});
 		return productTestComponentDetails;
 	}	
-	function showQcForm(productId,url,fieldName,fieldValue) {	
+	function showQcForm(productId,facilityId,url,fieldName,fieldValue) {	
 		var message = "";
 		var productTestComponentDetails = {};
 		productTestComponentDetails = getProductTestComponents(productId);
@@ -120,6 +120,7 @@
 		message += "<form action="+url+"  method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		message +="<tr>"+"<td>"+
 					"<input  type='hidden' required='required' name='"+fieldName+"' value='"+fieldValue+"' />"+
+					"<input  type='hidden' required='required' name='facilityId' value='"+facilityId+"' />"+
 					"<input  type='hidden' required='required' name='productId' value='"+productId+"' />"+
 					"</td></tr>";
 			//message += "<br/><br/>";
