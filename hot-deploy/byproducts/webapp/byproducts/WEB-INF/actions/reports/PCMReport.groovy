@@ -236,15 +236,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
 			pcmAbstractMap["milkAvgTot"]+=milkRtlAvgTotal;
 			if(milkAvgTotal<=100){
 				pcmAbstractMap["less100"]+=1;
-			}else if(milkAvgTotal>=101&&milkAvgTotal<=250){
+			}else if(milkAvgTotal>100&&milkAvgTotal<=250){
 				pcmAbstractMap["bwt101To250"]+=1;
-			}else if(milkAvgTotal>=251&&milkAvgTotal<=500){
+			}else if(milkAvgTotal>250&&milkAvgTotal<=500){
 				pcmAbstractMap["bwt251To500"]+=1;
-			}else if(milkAvgTotal>=501&&milkAvgTotal<=750){
+			}else if(milkAvgTotal>500&&milkAvgTotal<=750){
 				pcmAbstractMap["bwt501To750"]+=1;
-			}else if(milkAvgTotal>=751&&milkAvgTotal<=1000){
+			}else if(milkAvgTotal>750&&milkAvgTotal<=1000){
 				pcmAbstractMap["bwt751To1000"]+=1;
-			}else if(milkAvgTotal>=1001){
+			}else if(milkAvgTotal>1000){
 				pcmAbstractMap["above1000"]+=1;
 			}
 		}
@@ -289,15 +289,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
 		curntCatAbsMap.get("SHP_RTLR").milkAvgTot +=milkRtlAvgTotal;
 		if(milkAvgTotal<=100){
 			curntCatAbsMap.get("SHP_RTLR").less100 +=1;
-		}else if(milkAvgTotal>=101&&milkAvgTotal<=250){
+		}else if(milkAvgTotal>100&&milkAvgTotal<=250){
 			curntCatAbsMap.get("SHP_RTLR").bwt101To250 +=1;
-		}else if(milkAvgTotal>=251&&milkAvgTotal<=500){
+		}else if(milkAvgTotal>250&&milkAvgTotal<=500){
 			curntCatAbsMap.get("SHP_RTLR").bwt251To500 +=1;
-		}else if(milkAvgTotal>=501&&milkAvgTotal<=750){
+		}else if(milkAvgTotal>500&&milkAvgTotal<=750){
 			curntCatAbsMap.get("SHP_RTLR").bwt501To750 +=1;
-		}else if(milkAvgTotal>=751&&milkAvgTotal<=1000){
+		}else if(milkAvgTotal>750&&milkAvgTotal<=1000){
 			curntCatAbsMap.get("SHP_RTLR").bwt751To1000 +=1;
-		}else if(milkAvgTotal>=1001){
+		}else if(milkAvgTotal>1000){
 			curntCatAbsMap.get("SHP_RTLR").above1000 +=1;
 		}
 	 }
@@ -372,15 +372,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 				prvPcmAbstractMap["milkAvgTot"]+=prvMilkRtlAvgTotal;
 				if(prvMilkAvgTotal<=100){
 					prvPcmAbstractMap["less100"]+=1;
-				}else if(prvMilkAvgTotal>=101&&prvMilkAvgTotal<=250){
+				}else if(prvMilkAvgTotal>100&&prvMilkAvgTotal<=250){
 					prvPcmAbstractMap["bwt101To250"]+=1;
-				}else if(prvMilkAvgTotal>=251&&prvMilkAvgTotal<=500){
+				}else if(prvMilkAvgTotal>250&&prvMilkAvgTotal<=500){
 					prvPcmAbstractMap["bwt251To500"]+=1;
-				}else if(prvMilkAvgTotal>=501&&prvMilkAvgTotal<=750){
+				}else if(prvMilkAvgTotal>500&&prvMilkAvgTotal<=750){
 					prvPcmAbstractMap["bwt501To750"]+=1;
-				}else if(prvMilkAvgTotal>=751&&prvMilkAvgTotal<=1000){
+				}else if(prvMilkAvgTotal>750&&prvMilkAvgTotal<=1000){
 					prvPcmAbstractMap["bwt751To1000"]+=1;
-				}else if(prvMilkAvgTotal>=1001){
+				}else if(prvMilkAvgTotal>1000){
 					prvPcmAbstractMap["above1000"]+=1;
 				}
 			}
@@ -406,15 +406,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 				 prvCatAbsMap.get("SHP_RTLR").milkAvgTot += prvMilkRtlAvgTotal;
 				if(prvMilkAvgTotal<=100){
 					 prvCatAbsMap.get("SHP_RTLR").less100 +=1;
-				}else if(prvMilkAvgTotal>=101&&prvMilkAvgTotal<=250){
+				}else if(prvMilkAvgTotal>100&&prvMilkAvgTotal<=250){
 					 prvCatAbsMap.get("SHP_RTLR").bwt101To250 +=1;
-				}else if(prvMilkAvgTotal>=251&&prvMilkAvgTotal<=500){
+				}else if(prvMilkAvgTotal>250&&prvMilkAvgTotal<=500){
 					 prvCatAbsMap.get("SHP_RTLR").bwt251To500 +=1;
-				}else if(prvMilkAvgTotal>=501&&prvMilkAvgTotal<=750){
+				}else if(prvMilkAvgTotal>500&&prvMilkAvgTotal<=750){
 					 prvCatAbsMap.get("SHP_RTLR").bwt501To750 +=1;
-				}else if(prvMilkAvgTotal>=751&&prvMilkAvgTotal<=1000){
+				}else if(prvMilkAvgTotal>750&&prvMilkAvgTotal<=1000){
 					 prvCatAbsMap.get("SHP_RTLR").bwt751To1000 +=1;
-				}else if(prvMilkAvgTotal>=1001){
+				}else if(prvMilkAvgTotal>1000){
 					 prvCatAbsMap.get("SHP_RTLR").above1000 +=1;
 				}
 			}
