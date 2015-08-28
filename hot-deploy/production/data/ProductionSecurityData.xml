@@ -71,5 +71,22 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_TEMPE_ENTRY"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_TEMPE_ENTRY"/>
 	 
+	 <SecurityPermission description="Permission Variance (Loss/Gain) Tab View" permissionId="PRO_VARIANCE_VIEW"/>
+    <SecurityGroup description="Permission Variance (Loss/Gain) Tab View" groupId="PRO_VARIANCE_VIEW"/>
+    <SecurityGroupPermission groupId="PRO_VARIANCE_VIEW" permissionId="PRO_VARIANCE_VIEW" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_VARIANCE_VIEW"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_VARIANCE_VIEW"/>
+    
+    <SecurityPermission description="Approve IN/OUT Transfer..!" permissionId="PRO_APPROVE_XFER"/>
+    <SecurityGroup description="Approve IN/OUT Transfer..!" groupId="PRO_APPROVE_XFER"/>
+    <SecurityGroupPermission groupId="PRO_APPROVE_XFER" permissionId="PRO_APPROVE_XFER" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_APPROVE_XFER"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_APPROVE_XFER"/>
+    
+    <SecurityPermission description="Accept IN/OUT Transfer..!" permissionId="PRO_ACCEPT_XFER"/>
+    <SecurityGroup description="Accept IN/OUT Transfer..!" groupId="PRO_ACCEPT_XFER"/>
+    <SecurityGroupPermission groupId="PRO_ACCEPT_XFER" permissionId="PRO_APPROVE_XFER" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_ACCEPT_XFER"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_ACCEPT_XFER"/>
     
 </entity-engine-xml>

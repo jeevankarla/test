@@ -75,15 +75,17 @@ under the License.
 
   </div>
   <form name="listInXfer" id="listInXfer"  method="post">
+    <#if security.hasEntityPermission("PRO", "_ACCEPT_XFER", session)>
     <div align="right">
-    	<table>
-    		<tr>
-    			<td><input class="myButton" type="button" name="acceptXfer" id="acceptXfer" value="Accept" onclick="javascript:massTransferAcknowledgementSubmit(this, 'IXF_COMPLETE');"/></td>
-    			<td>&nbsp;</td>
-    			<td><input class="myButton" type="button" name="rejectXfer" id="rejectXfer" value="Reject" onclick="javascript:massTransferAcknowledgementSubmit(this, 'IXF_CANCELLED');"/></td>
-    		</tr>
-    	</table>
+        <table>
+            <tr>
+                <td><input class="myButton" type="button" name="acceptXfer" id="acceptXfer" value="Accept" onclick="javascript:massTransferAcknowledgementSubmit(this, 'IXF_COMPLETE');"/></td>
+                <td>&nbsp;</td>
+                <td><input class="myButton" type="button" name="rejectXfer" id="rejectXfer" value="Reject" onclick="javascript:massTransferAcknowledgementSubmit(this, 'IXF_CANCELLED');"/></td>
+            </tr>
+        </table>
     </div>
+    </#if>
 	
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
