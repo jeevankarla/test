@@ -246,16 +246,7 @@ $(document).ready(function() {
 	$("input").keyup(function(e){
 	  		
 	  		if(e.target.name == "grossWeight"){
-	  			
-	  			var grossWeight = $('[name=grossWeight]').val();
-	  			
-	  			if(typeof(grossWeight)!= "undefined"){	
-	  				var netWeight = grossWeight-tareWeight ;
-					$('#netWeightToolTip').val(netWeight);
-	  			}else{
-					$('#netWeightToolTip').val('0');
-	  			}
-	  			
+	  			populateNetWeight();
 	  		}
 	  		if(e.target.name == "tankerName"){
 	  			$('[name=tankerName]').val(($('[name=tankerName]').val()).toUpperCase());
@@ -305,6 +296,15 @@ $(document).ready(function() {
 	}); 
 });
 
+function populateNetWeight(){
+	var grossWeight = $('[name=grossWeight]').val();
+	if(typeof(grossWeight)!= "undefined"){	
+		var netWeight = grossWeight-tareWeight ;
+		$('#netWeightToolTip').val(netWeight);
+	}else{
+		$('#netWeightToolTip').val('0');
+	}
+}
 function showSealNumber(){
 	var purposeType = $('[name=purposeTypeId]').val();
 	if(typeof(purposeType)!='undefined' && purposeType == 'INTERNALUSE' ){
@@ -420,6 +420,10 @@ function fetchTankerRecordNumber(){
 	  					
 	  					$('#product').val('');
 	  				}
+	  				if(displayScreen == "ISSUE_GRSWEIGHT"){
+	  					$('#grossWeight').val('');
+       					$('#grossWeight').removeAttr("readonly");
+	  				}
 	  				if(displayScreen == "ISSUE_TARWEIGHT"){
 	  					$('#milkTransferId').val('');
 	  					$('span#tankerToolTip').removeClass("tooltip");
@@ -430,7 +434,11 @@ function fetchTankerRecordNumber(){
 	  					$('span#partyToolTip').html('none');
 	  					$('[name=partyIdTo]').val('');
 	  					$('[name=partyName]').val('');
+	  					
+	  					$('#tareWeight').val('');
+       					$('#tareWeight').removeAttr("readonly");
 	  				}
+	  				
 	  				if(displayScreen == "ISSUE_INIT"){
            			//	$('#sendDate').val('');
            				$('#milkTransferId').val('');
@@ -491,6 +499,18 @@ function fetchTankerRecordNumber(){
   				}
 	   			
 	   			if(displayScreen == "ISSUE_TARWEIGHT"){
+           			var milkTransfer = result['milkTransfer'];
+           			var tareweightVal = milkTransfer['tareWeight']
+       				if(typeof(tareweightVal)!= "undefined" && tareweightVal!=='' && tareweightVal != null ){
+       					
+       					$('[name=tareWeight]').val(tareweightVal);
+       					$('#tareWeight').attr("readonly","readonly");
+       				}else{
+       					$('#tareWeight').val('');
+       					$('#tareWeight').removeAttr("readonly");
+       				}
+           			
+           			
            			var isCipCheckedVal = result['isCipChecked'];
 	   				 if(isCipCheckedVal == 'Y' && isCipCheckedVal != 'undefined'){
 	   				 	$('#isCipChecked').val(isCipCheckedVal);
@@ -502,6 +522,19 @@ function fetchTankerRecordNumber(){
 	   				 
 	   			}	
 	   			if(displayScreen == "ISSUE_GRSWEIGHT"){
+	   				var milkTransfer = result['milkTransfer'];
+	   				var grossweightVal = milkTransfer['grossWeight'];
+	   				
+       				if(typeof(grossweightVal)!= "undefined" && grossweightVal!=='' && grossweightVal != null ){
+       					$('[name=grossWeight]').val(grossweightVal);
+       					$('#grossWeight').attr("readonly","readonly");
+       					populateNetWeight();
+       				}else{
+       					$('#grossWeight').val('');
+       					$('#grossWeight').removeAttr("readonly");
+       				}
+	   			
+	   			
 	   				var milkTransfer = result['milkTransfer'];
 	   				if(typeof(milkTransfer)!= "undefined"){
 	   				 var milkTransferId = milkTransfer['milkTransferId'];

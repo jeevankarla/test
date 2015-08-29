@@ -218,20 +218,7 @@ $(document).ready(function() {
 	  		
 	  		if(e.target.name == "tareWeight"){
 	  			
-	  			var tareWeight = $('[name=tareWeight]').val();
-	  			
-	  			if(typeof(grossWeight)!= "undefined"){	
-	  				var netWeight = grossWeight-tareWeight ;
-	  				$('#netWeightToolTip').val(netWeight);
-	  				if(netWeight <0){
-						alert('Please check the tareWeight . ');
-						$('[name=tareWeight]').val('');
-						$('#netWeightToolTip').val(grossWeight);
-					}
-					
-	  			}else{
-					$('#netWeightToolTip').val('0');
-	  			}
+	  			populateNetWeight();
 	  			
 	  		}
 	  		if(e.target.name == "tankerName"){
@@ -278,6 +265,23 @@ $(document).ready(function() {
 		  	}
 	}); 
 });
+function populateNetWeight(){
+
+	var tareWeight = $('[name=tareWeight]').val();
+	  			
+	if(typeof(grossWeight)!= "undefined"){	
+		var netWeight = grossWeight-tareWeight ;
+		$('#netWeightToolTip').val(netWeight);
+		if(netWeight <0){
+			alert('Please check the tareWeight . ');
+			$('[name=tareWeight]').val('');
+			$('#netWeightToolTip').val(grossWeight);
+		}
+		
+	}else{
+		$('#netWeightToolTip').val('0');
+	}
+}
 
 function populateProductSpan(){
 	var productJson = ${StringUtil.wrapString(productJson)}
@@ -372,6 +376,9 @@ function fetchTankerRecordNumber(){
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
            			var displayScreen = $('[name=displayScreen]').val();
            			if(displayScreen == "RETURN_GRSWEIGHT"){
+           				$('#grossWeight').val('');
+           				$('#grossWeight').removeAttr("readonly");
+           				
            				$('#partyId').val('');
            				$('#dcNo').val('');
            			}
@@ -394,21 +401,25 @@ function fetchTankerRecordNumber(){
            
            	    milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
+	   			
 	   			if(displayScreen == "RETURN_TARWEIGHT"){
+	   				alert('wos');
 	   				grossWeight = result['grossWeight'];
 	   				$('#grossWeightToolTip').val(grossWeight);
+	   				var milkTransfer = result['milkTransfer'];
+	   				var tareweightVal = milkTransfer['tareWeight']
+       				alert('tareWeight==='+tareweightVal);
+       				if(typeof(tareweightVal)!= "undefined" && tareweightVal!=='' && tareweightVal != null ){
+       					$('[name=tareWeight]').val(tareweightVal);
+       					$('#tareWeight').attr("readonly","readonly");
+       					populateNetWeight();
+       				}else{
+       					$('#tareWeight').val('');
+       					$('#tareWeight').removeAttr("readonly");
+       				}
+	   				
 	   			}
-	   			if(displayScreen == "RETURN_TARWEIGHT"){	
-           			var isCipCheckedVal = result['isCipChecked'];
-	   				 if(isCipCheckedVal == 'Y' && isCipCheckedVal != 'undefined'){
-	   				 	$('#isCipChecked').val(isCipCheckedVal);
-	   				 	$('#isCipCheckedDes').html("");
-	   				 }else{
-	   				 	$('#isCipChecked').val('');
-	   				    $('#isCipCheckedDes').html("CIP Not Done Please Contact QC Department");
-	   				 }
-	   				 
-	   			}	
+	   			
 	   			if(displayScreen == "RETURN_QC"){
 	   				
 	   				var milkTransfer = result['milkTransfer'];
@@ -422,6 +433,19 @@ function fetchTankerRecordNumber(){
 	   				
 	   				
 	   			}
+	   			
+	   			if(displayScreen == "RETURN_GRSWEIGHT"){
+	   					var milkTransfer = result['milkTransfer'];
+           				var grossweightVal = milkTransfer['grossWeight']
+           				if(typeof(grossweightVal)!= "undefined" && grossweightVal!=='' && grossweightVal != null ){
+           					$('[name=grossWeight]').val(grossweightVal);
+           					$('#grossWeight').attr("readonly","readonly");
+           				}else{
+           					$('#grossWeight').val('');
+           					$('#grossWeight').removeAttr("readonly");
+           				}
+           		}		
+	   			
            		if($('[name=sealCheck]').length !=0){
            			if(displayScreen == "RETURN_GRSWEIGHT"){
            				var isSealChecked = result['isSealChecked'];
@@ -434,10 +458,8 @@ function fetchTankerRecordNumber(){
            						$('#sealCheckN').val('N');
            						$('#sealCheckN').attr('checked', true);
            					}
-           					
            				}
            			}
-           		
            		}
            		if($('[name=product]').length !=0){
 	           		var productId = result['productId'];

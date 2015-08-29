@@ -2345,25 +2345,71 @@ public class ProductionServices {
 	  			  return "error";
 		  	  }
 		  	  
-		  	  String milkTransferId = "";
-		  	  try{
-		  		  MilkTransfer = delegator.makeValue("MilkTransfer");
-		  		  MilkTransfer.set("containerId", tankerNo);
-		  		  MilkTransfer.set("statusId","MXF_INIT");
-		  		  MilkTransfer.set("productId",productId);
-		  		  MilkTransfer.set("partyIdTo",partyIdTo);
-		  		  MilkTransfer.set("custRequestId",custRequestId);
-		  		  MilkTransfer.set("custRequestItemSeqId",custRequestItemSeqId);
-		  		  MilkTransfer.set("sendDate",UtilDateTime.nowTimestamp());
-		  		  MilkTransfer.set("createdByUserLogin", userLogin.getString("userLoginId"));
-		  		  MilkTransfer.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
-		  		  
-		  		  delegator.createSetNextSeqId(MilkTransfer);
-		  	  }catch(GenericEntityException e){
-		  		  Debug.logError("Error while initiating Transfer ::"+e , module);
-		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while initiating Transfer ::"+e.getMessage());
-	  			  return "error";
-		  	  }
+		  	  // here we are trying to initiate vehicle trip
+		  	  
+		  	  
+		  	  
+		  	Map vehicleTripMap = FastMap.newInstance();
+	 		vehicleTripMap.put("vehicleId", tankerNo);
+	 		vehicleTripMap.put("partyId", partyIdTo);
+	 		vehicleTripMap.put("userLogin",userLogin);
+	 		Map vehicleTripResultMap = FastMap.newInstance();
+	 		
+		 	try{	
+	 			vehicleTripResultMap = dispatcher.runSync("createVehicleTrip", vehicleTripMap);
+		 		
+		 		if(ServiceUtil.isError(vehicleTripResultMap)){
+		 			Debug.logError("Error While Creating vehicleTrip :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
+		 			request.setAttribute("_ERROR_MESSAGE_","Error while creating vehicle Trip ");
+		 			return "error";
+		 		}
+		 	}catch(GenericServiceException e){
+		 		Debug.logError("Error while creating vehicle Trip ::" +e ,module);
+		 		request.setAttribute("_ERROR_MESSAGE_","Error while creating vehicle Trip ::" +e.getMessage());
+		 		return "error";
+		 	}
+	 		String sequenceNum = (String)vehicleTripResultMap.get("sequenceNum");  
+		  	 
+	 		// Here we are initiating vehicleTrip Status
+	 		Map vehicleTripStatusMap = FastMap.newInstance();
+	 		vehicleTripStatusMap.putAll(vehicleTripResultMap);
+	 		vehicleTripStatusMap.put("statusId","MR_ISSUE_INIT");
+	 		vehicleTripStatusMap.put("userLogin",userLogin);
+	 		vehicleTripStatusMap.put("estimatedStartDate",UtilDateTime.nowTimestamp());
+	 		try{
+		 		Map vehicleStatusResultMap = dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+		 		if(ServiceUtil.isError(vehicleTripResultMap)){
+		 			Debug.logError("Error While Creating vehicleTripStatus :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
+		 			request.setAttribute("_ERROR_MESSAGE_","Error while creating vehicle Trip Status");
+		 			return "error";
+		 		}
+	 		}catch(GenericServiceException e){
+	 			Debug.logError("Error while creating vehicleTrip Status :"+e,module);
+	 			request.setAttribute("_ERROR_MESSAGE_","Error while creating vehicleTrip Status :"+e.getMessage());
+	 			return "error";
+	 		}
+	 		
+		  	  
+		  	String milkTransferId = "";
+		  	try{
+	  		  MilkTransfer = delegator.makeValue("MilkTransfer");
+	  		  MilkTransfer.set("containerId", tankerNo);
+	  		  MilkTransfer.set("sequenceNum", sequenceNum);
+	  		  MilkTransfer.set("statusId","MXF_INIT");
+	  		  MilkTransfer.set("productId",productId);
+	  		  MilkTransfer.set("partyIdTo",partyIdTo);
+	  		  MilkTransfer.set("custRequestId",custRequestId);
+	  		  MilkTransfer.set("custRequestItemSeqId",custRequestItemSeqId);
+	  		  MilkTransfer.set("sendDate",UtilDateTime.nowTimestamp());
+	  		  MilkTransfer.set("createdByUserLogin", userLogin.getString("userLoginId"));
+	  		  MilkTransfer.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
+	  		  
+	  		  delegator.createSetNextSeqId(MilkTransfer);
+		  	}catch(GenericEntityException e){
+	  		  Debug.logError("Error while initiating Transfer ::"+e , module);
+	  		  request.setAttribute("_ERROR_MESSAGE_", "Error while initiating Transfer ::"+e.getMessage());
+  			  return "error";
+		  	}
 		  	  //String createNewShipment = "Y";
 		  	  
 		  	  
