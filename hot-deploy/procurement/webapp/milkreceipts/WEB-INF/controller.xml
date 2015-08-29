@@ -167,23 +167,6 @@
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
         <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
     </request-map>
-    <request-map uri="EditMilkReceipt">
-    	<security auth="true" https="true"/>
-        <response name="success" type="view" value="EditMilkReceiptsTankerEntry"/>
-        <response name="error" type="view" value="EditMilkReceiptsTankerEntry"/>
-    </request-map>
-    <request-map uri="EditMilkReceiptRecord">
-    	<security auth="true" https="true"/>
-        <response name="success" type="view" value="EditMilkReceiptRecord"/>
-        <response name="error" type="view" value="EditMilkReceiptRecord"/>
-    </request-map>
-     <request-map uri="UpdateEditMilkReceiptRecord">
-    	<security auth="true" https="true"/>
-    	<event type="service"  invoke="UpdateEditMilkReceiptRecord" />
-    	<response name="success" type="request-redirect" value="EditMilkReceiptsTankerEntry"></response>
-    	<response name="error" type="request-redirect" value="EditMilkReceiptsTankerEntry"></response>
-    </request-map>
-    
     <request-map uri="MilkReceiptsToApprove">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="ApproveMilkReceipts"/>
@@ -199,11 +182,6 @@
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
         <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
-    </request-map>
-    <request-map uri="EditMilkReceiptsTankerEntry">
-    	<security auth="true" https="true"/>
-        <response name="success" type="view" value="EditMilkReceiptsTankerEntry"/>
-        <response name="error" type="view" value="EditMilkReceiptsTankerEntry"/>
     </request-map>
     <request-map uri="updateSendMilkRecord">
 		<security auth="true" https="true" />
@@ -484,6 +462,14 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>       
     </request-map>
+    
+    <request-map uri="createMilkTankerIssueInit">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createMilkTankerIssueInit"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
     <request-map uri="createMilkTankerIssueEntry">
         <security https="true" auth="true"/>
         <event type="service"  invoke="createMilkTankerIssueEntry"/>        
@@ -554,6 +540,41 @@
        <response name="success" type="view" value="mrTransporters"/>
        <response name="error" type="view" value="mrTransporters"/>       
     </request-map>
+    <!-- Sale Billing Requests -->
+    <request-map uri="mrSaleBilling">
+       <security https="true" auth="true"/>      
+       <response name="success" type="view" value="mrSaleBilling"/>
+       <response name="error"   type="view" value="mrSaleBilling"/>   
+    </request-map>
+    <request-map uri="cancelSaleBilling">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelSaleBilling"/>
+        <response name="success" type="request" value="mrSaleBilling"/>
+        <response name="failed" type="view" value="mrSaleBilling"/>
+        <response name="error" type="view" value="mrSaleBilling"/>
+    </request-map>
+    <request-map uri="createSaleBilling">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="populateMilkSaleBilling"/>
+        <response name="success" type="request" value="mrSaleBilling"/>
+        <response name="failed" type="view" value="mrSaleBilling"/>
+        <response name="error" type="view" value="mrSaleBilling"/>
+    </request-map>
+    <request-map uri="updateSaleBillingStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSaleBillingStatus"/>
+       <response name="success" type="request-redirect-noparam" value="mrSaleBilling"/>
+       <response name="failed" type="request-redirect-noparam" value="mrSaleBilling"/>
+       <response name="error" type="request-redirect-noparam" value="mrSaleBilling"/>
+    </request-map>
+    <request-map uri="GenerateSaleBilling">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="GenerateSaleBilling"/>   
+       <response name="failed" type="view" value="GenerateSaleBilling"/>    
+    </request-map>
+    
+    <!--  End of Sale Billing Requests -->
+    
     <request-map uri="mrPurchaseBilling">
        <security https="true" auth="true"/>      
        <response name="success" type="view" value="mrPurchaseBilling"/>
@@ -611,10 +632,6 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkIncommingReportPDF"/> 
     </request-map>  
-    <request-map uri="MilkOutGoingReport.pdf">  
-        <security https="true" auth="true"/> 
-        <response name="success" type="view" value="MilkOutGoingReportPDF"/> 
-    </request-map>
     <request-map uri="WeighbridgeReport.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="WeighbridgeReportPDF"/> 
@@ -666,13 +683,6 @@
        <response name="success" type="request-redirect-noparam" value="mrTransporterBilling"/>
        <response name="failed" type="request-redirect-noparam" value="mrTransporterBilling"/>
        <response name="error" type="request-redirect-noparam" value="mrTransporterBilling"/>
-    </request-map>
-    <request-map uri="updateSLPTCStatus">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateSLPTCStatus"/>
-       <response name="success" type="request-redirect-noparam" value="SecondLevelmrTransporterBilling"/>
-       <response name="failed" type="request-redirect-noparam" value="SecondLevelmrTransporterBilling"/>
-       <response name="error" type="request-redirect-noparam" value="SecondLevelmrTransporterBilling"/>
     </request-map>
     
     <request-map uri="PtcAdjustmentDeductions">
@@ -759,26 +769,12 @@
         <response name="success" type="view" value="MilkFinalization"/>
         <response name="error" type="view" value="MilkFinalization"/>
     </request-map>
-    
-    <!--  -->
-    <request-map uri="SecondLevelmrTransporterBilling">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="SecondLevelmrTransporterBilling"/>
-        <response name="error" type="view" value="SecondLevelmrTransporterBilling"/>       
-    </request-map>
-    <request-map uri="GenerateMRSecondLevelTransporterMarginReport">
-        <security https="true" auth="true"/>        
-        <response name="success" type="view" value="GenerateMRSecondLevelTransporterMarginReport"/>   
-        <response name="failed" type="view" value="GenerateMRSecondLevelTransporterMarginReport"/>    
-    </request-map>
-    <request-map uri="createSecondLevelMRTransporterMarginReport">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="populateSecondLevelMRPeriodBilling"/>
-        <response name="success" type="request" value="SecondLevelmrTransporterBilling"/>
-        <response name="failed" type="view" value="SecondLevelmrTransporterBilling"/>
-        <response name="error" type="view" value="SecondLevelmrTransporterBilling"/>
-    </request-map>
     <!-- milkIssues Requests -->
+    <request-map uri="milkTankerIssueInitiation">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="MilkTankerIssuesInit"/>
+        <response name="error" type="view" value="MilkTankerIssuesInit"/>
+    </request-map>
     <request-map uri="milkTankerIssues">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="MilkTankerIssues"/>
@@ -1005,10 +1001,7 @@
         <response name="failed" type="view" value="findTanker"/>
         <response name="error" type="view" value="findTanker"/>
     </request-map>
-    <request-map uri="MilkTankerReturnReport">  
-        <security https="true" auth="true"/> 
-        <response name="success" type="view" value="MilkTankerReturnReportPDF"/> 
-    </request-map>
+    
     <!-- View Mappings -->
 	<view-map name="main" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptDashboard" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptDashboard"/>
@@ -1033,6 +1026,7 @@
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>
 	<view-map name="GenerateMlkRecptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#GenerateMlkRecptsBilling"/>
     <view-map name="mrPurchaseBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRPurchaseBilling"/>
+    <view-map name="mrSaleBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRSaleBilling"/>
     <view-map name="ShiftWiseReportTxt" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ShiftWiseReportTxt" content-type="text/plain"/>
     <view-map name="ShiftWiseReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#ShiftWiseReport"/>
     <view-map name="PTCReports" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PTCReports"/>
@@ -1074,8 +1068,6 @@
     
 
     <!--  View maps of kmf  -->
-    <view-map name="EditMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#EditMilkReceiptsTankerEntry"/>
-    <view-map name="EditMilkReceiptRecord" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#EditMilkReceiptRecord"/>
     <view-map name="FindMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerOutEntry"/>
@@ -1097,6 +1089,8 @@
     <view-map name="mrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#MRTransporterBilling"/>
     <view-map name="GenerateMRTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRTransporterMarginReport"/>
     <view-map name="GeneratePurchaseBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GeneratePurchaseBilling"/>
+    <view-map name="GenerateSaleBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateSaleBilling"/>
+    
    <!-- PTC Reports -->
     <view-map name="MilkIncommingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkIncommingReportPDF" content-type="application/pdf"/> 
     <view-map name="WeighbridgeReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#WeighbridgeReportPDF" content-type="application/pdf"/> 
@@ -1107,10 +1101,10 @@
     <view-map name="ptcBankReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcBankReportCSV" type="screencsv" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportCSV" content-type="text/csv"/> 
     <view-map name="PurchaseBillingReportMRpdf" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#PurchaseBillingReportMRpdf" content-type="application/pdf"/>
-    <view-map name="MilkTankerReturnReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkTankerReturnReportPDF" content-type="application/pdf"/>
-    <view-map name="MilkOutGoingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkOutGoingReportPDF" content-type="application/pdf"/>
     
     <!-- View Maps of tanker Issues -->
+    <view-map name="MilkTankerIssuesInit" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesInit"/>
+    <view-map name="MilkTankerIssues" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesTareWeight"/>
     <view-map name="MilkTankerIssues" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesTareWeight"/>
     <view-map name="MilkTankerIssuesCIP" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesCIP"/>
     <view-map name="MilkTankerIssuesTareWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerIssuesTareWeight"/>
@@ -1130,10 +1124,7 @@
     <view-map name="MilkTankerReturnTareWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkTankerReturnTareWeight"/>
     
     
-    <!--Transporters Billing DCS To BMS  -->
-    <view-map name="SecondLevelmrTransporterBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#SecondLevelMRTransporterBilling"/>
-    <view-map name="GenerateMRSecondLevelTransporterMarginReport" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateMRSecondLevelTransporterMarginReport"/>
-  
+    
     
     
     

@@ -412,6 +412,18 @@
 	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
 	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
     </service>
+    <service name="createMilkTankerIssueInit" engine="java"
+    	 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTankerIssueEntry" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+        <attribute name="tareDate" mode="IN" type="String" optional="false"/>
+        <attribute name="tareTime" mode="IN" type="String" optional="false"/>
+	 	<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    
      <service name="updateMilkTankerIssuesOut" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateInternalMilkTransfer" auth="true">
 		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>

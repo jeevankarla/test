@@ -774,6 +774,31 @@
 	
 	
 	
+	<ProcurementPriceChart procPriceChartId="T01" partyId="MD" fromDate="2014-04-01 00:00:00" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" billQuality="DISP_QLTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+
+
+	<ProcurementPrice procPriceChartId="T01" productId="75" price="24.50" fatPercent="3.5" snfPercent="8.5" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="T01" productId="75" price="24.50" fatPercent="3.0" snfPercent="8.0" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="2.99" snfPercent="7.99" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+ 	
+	
+	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="0.1" snfPercent="0.0" price="0.15" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="T01" productId="75" fatPercent="0.1" snfPercent="0" price="0.12" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR"/>	
+	
+	
+	
+	
 	
 </entity-engine-xml>
 

@@ -118,7 +118,7 @@ custRequestItemsList = [];
 custRequestItems.each{ eachItem ->
 	String productId = eachItem.productId;
 	
-	
+	String fromPartyId = eachItem.fromPartyId;
 	tempMap = [:];
 	tempMap.putAt("custRequestId", eachItem.custRequestId);
 	tempMap.putAt("custRequestItemSeqId", eachItem.custRequestItemSeqId);
@@ -130,6 +130,19 @@ custRequestItems.each{ eachItem ->
 	/*if(UtilValidate.isNotEmpty(context.get("facilityList"))){
 		tempMap.putAt("facilityList", context.get("facilityList"));
 	}*/
+	
+	boolean issueThruWeighBridge = false;
+	List fromPartyIssuThruList = FastList.newInstance();
+	
+	List issueConditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,fromPartyId));
+	issueConditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"ISSUE_THRU_WEIGHBRDG"));
+	
+	EntityCondition issueCondition = EntityCondition.makeCondition(issueConditionList,EntityJoinOperator.AND);
+	fromPartyIssuThruList = delegator.findList("PartyRole",issueCondition,null,null,null,false);
+	
+	if(UtilValidate.isNotEmpty(fromPartyIssuThruList)){
+			issueThruWeighBridge = true;
+	}
 	
 	List custRequstParty=delegator.findList("CustRequestParty",EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,eachItem.custRequestId),null,null,null,false);
 	custReqParty=EntityUtil.getFirst(custRequstParty);
@@ -157,7 +170,7 @@ custRequestItems.each{ eachItem ->
 	tempMap.putAt("QOH", invAvail);
 	tempMap.putAt("issuedQty", issuedQty);
 	tempMap.put("showTransferButton","N");
-	if(UtilValidate.isNotEmpty(issueThruTransferProductIdsList)&& issueThruTransferProductIdsList.contains(productId)){
+	if(issueThruWeighBridge && UtilValidate.isNotEmpty(issueThruTransferProductIdsList)&& issueThruTransferProductIdsList.contains(productId)){
 		tempMap.put("showTransferButton","Y");
 	}
 	

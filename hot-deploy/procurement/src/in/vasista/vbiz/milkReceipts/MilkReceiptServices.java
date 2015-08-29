@@ -3410,41 +3410,6 @@ public class MilkReceiptServices {
 	 		}
 	 		// we need to create vehicle trip and vehicle trip status
 	 		
-	 		//creating vehicle trip
-	 		Map vehicleTripMap = FastMap.newInstance();
-	 		vehicleTripMap.put("vehicleId", tankerNo);
-	 		vehicleTripMap.put("partyId", partyId);
-	 		vehicleTripMap.put("userLogin",userLogin);
-	 		Map vehicleTripResultMap = dispatcher.runSync("createVehicleTrip", vehicleTripMap);
-	 		
-	 		if(ServiceUtil.isError(vehicleTripResultMap)){
-	 			Debug.logError("Error While Creating vehicleTrip :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
-	 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip ");
-	 			return resultMap;
-	 		}
-	 		String sequenceNum = (String)vehicleTripResultMap.get("sequenceNum");
-	 		Map vehicleTripStatusMap = FastMap.newInstance();
-	 		vehicleTripStatusMap.putAll(vehicleTripResultMap);
-	 		vehicleTripStatusMap.put("statusId","MR_VEHICLE_IN");
-	 		if(UtilValidate.isNotEmpty(vehicleStatusId)){
-	 			vehicleTripStatusMap.put("statusId",vehicleStatusId);
-	 		}
-	 		vehicleTripStatusMap.put("userLogin",userLogin);
-	 		Timestamp tareDate = UtilDateTime.nowTimestamp();
-	 		if(UtilValidate.isNotEmpty(tareDateStr)){
-	 			if(UtilValidate.isNotEmpty(tareTime)){
-	 				tareDateStr = tareDateStr.concat(tareTime);
-	 			}
-	 			tareDate = new java.sql.Timestamp(sdf.parse(tareDateStr).getTime());
-	 		}
-	 		vehicleTripStatusMap.put("estimatedStartDate",tareDate);
-	 		vehicleTripStatusMap.remove("responseMessage");
-	 		Map vehicleStatusResultMap = dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
-	 		if(ServiceUtil.isError(vehicleTripResultMap)){
-	 			Debug.logError("Error While Creating vehicleTripStatus :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
-	 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip Status");
-	 			return resultMap;
-	 		}
 	 		GenericValue newTransfer = null; 
 	 		if(UtilValidate.isNotEmpty(milkTransferId)){
 		 		try{
@@ -3455,14 +3420,101 @@ public class MilkReceiptServices {
 		 			return ServiceUtil.returnError("Error while getting Transfer Details for :: "+milkTransferId);
 		 		}
 		 	}
-	 		
+	 		String sequenceNum = "";
 	 		if(UtilValidate.isNotEmpty(newTransfer)){
 	 			String existedStatus = (String) newTransfer.get("statusId");
+	 			sequenceNum = (String)newTransfer.get("sequenceNum");
 	 			if(UtilValidate.isNotEmpty(existedStatus) && !existedStatus.equalsIgnoreCase("MXF_INIT")){
 	 				Debug.logError("This tanker is already in process . ",module);
 	 				return ServiceUtil.returnError("This tanker is already in process . ");
 	 			}
 	 		}
+	 		
+	 		boolean createVehicleStatus = true;
+	 		if(UtilValidate.isNotEmpty(sequenceNum)){
+	 			createVehicleStatus = false;
+	 		}
+	 		if(createVehicleStatus){
+	 			Map vehicleTripMap = FastMap.newInstance();
+		 		vehicleTripMap.put("vehicleId", tankerNo);
+		 		vehicleTripMap.put("partyId", partyId);
+		 		vehicleTripMap.put("userLogin",userLogin);
+		 		Map vehicleTripResultMap = FastMap.newInstance();
+		 		vehicleTripResultMap = dispatcher.runSync("createVehicleTrip", vehicleTripMap);
+		 		if(ServiceUtil.isError(vehicleTripResultMap)){
+		 			Debug.logError("Error While Creating vehicleTrip :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
+		 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip ");
+		 			return resultMap;
+		 		}
+		 		sequenceNum = (String)vehicleTripResultMap.get("sequenceNum");
+	 		}
+	 		
+	 		
+	 		Timestamp tareDate = UtilDateTime.nowTimestamp();
+ 	        try{
+ 		 		if(UtilValidate.isNotEmpty(tareDateStr)){
+ 		 			if(UtilValidate.isNotEmpty(tareTime)){
+ 		 				tareDateStr = tareDateStr.concat(tareTime);
+ 		 			}
+ 		 			tareDate = new java.sql.Timestamp(sdf.parse(tareDateStr).getTime());
+ 		 		}
+ 	        	
+ 	        }catch(ParseException e){
+ 	        	Debug.logError(e, "Cannot parse date string: " + tareDateStr, module);
+ 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+	 			return resultMap;
+ 	        }
+	 		
+	 		// here based on status id we have to create new trip status 
+	 		
+	 		Map vehicleTripStatusMap = FastMap.newInstance();
+	 		vehicleTripStatusMap.put("vehicleId", tankerNo);
+	 		vehicleTripStatusMap.put("sequenceNum", sequenceNum);
+	 		vehicleTripStatusMap.put("statusId","MR_VEHICLE_IN");
+	 		if(UtilValidate.isNotEmpty(vehicleStatusId)){
+	 			vehicleTripStatusMap.put("statusId",vehicleStatusId);
+	 		}
+	 		vehicleTripStatusMap.put("userLogin",userLogin);
+	 		vehicleTripStatusMap.put("estimatedStartDate",tareDate);
+	 		Map vehicleStatusResultMap = FastMap.newInstance(); 
+	 		Debug.log("vehicleStatusId========"+vehicleStatusId);
+	 		
+	 		if(UtilValidate.isNotEmpty(vehicleStatusId) && vehicleStatusId.equalsIgnoreCase("MR_ISSUE_INIT")){
+	 			Debug.log("Hello==========="+vehicleTripStatusMap);
+	 			try{
+		 			vehicleStatusResultMap = dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+			 		if(ServiceUtil.isError(vehicleStatusResultMap)){
+			 			Debug.logError("Error While Creating vehicleTripStatus :: "+ServiceUtil.getErrorMessage(vehicleStatusResultMap),module);
+			 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip Status");
+			 			return resultMap;
+			 		}	
+	 			}catch(GenericServiceException e){
+	 				Debug.logError("Error while creating vehicleTripStatus ::"+e,module);
+	 				return ServiceUtil.returnError("Error while creating vehicleTripStatus ::"+e.getMessage());
+	 			}
+	 					
+	 			
+	 		}else{
+	 			Debug.log("CAse ==========="+vehicleTripStatusMap);
+	 			try{
+	 				String replaceVehicleStatusString = "MR_ISSUE_";
+	 				vehicleTripStatusMap.put("replaceVehicleStatusString", replaceVehicleStatusString);
+		 			vehicleStatusResultMap = dispatcher.runSync("updateReceiptVehicleTripStatus", vehicleTripStatusMap);
+			 		if(ServiceUtil.isError(vehicleStatusResultMap)){
+			 			Debug.logError("Error While updating vehicleTripStatus :: "+vehicleStatusResultMap,module);
+			 			resultMap = ServiceUtil.returnError("Error while updating vehicle Trip Status"+ServiceUtil.getErrorMessage(vehicleStatusResultMap));
+			 			return resultMap;
+			 		}	
+	 			}catch(GenericServiceException e){
+	 				Debug.logError("Error while updating vehicleTripStatus ::"+e,module);
+	 				return ServiceUtil.returnError("Error while updating vehicleTripStatus ::"+e.getMessage());
+	 			}
+	 			
+	 		}
+	 		
+	 		
+	 		//creating vehicle trip
+	 		
 	 		if(UtilValidate.isEmpty(newTransfer)){
 	 			newTransfer = delegator.makeValue("MilkTransfer");
 	 		}
@@ -3470,8 +3522,12 @@ public class MilkReceiptServices {
 	 		newTransfer.set("sequenceNum", sequenceNum);
 	 		//newTransfer.set("tareDate", tareDate);
 	 		newTransfer.set("partyId", partyId);
-	 		newTransfer.set("tareWeight", tareWeight);
- 			newTransfer.set("statusId", "MXF_INPROCESS");
+	 		newTransfer.set("statusId", "MXF_INPROCESS");
+	 		if(UtilValidate.isNotEmpty(vehicleStatusId) && vehicleStatusId.equalsIgnoreCase("MR_ISSUE_INIT")){
+	 			newTransfer.set("statusId", "MXF_INIT");
+ 			}else{
+ 				newTransfer.set("tareWeight", tareWeight);
+ 			}
 	 		newTransfer.set("partyIdTo", partyIdTo);
 	 		newTransfer.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
 	 		newTransfer.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
