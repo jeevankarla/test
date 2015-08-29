@@ -377,7 +377,11 @@
 	function setupGrid1() {
 		
 		var columns = [
+			<#if changeFlag == "scrapSales">
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, sortable:false ,toolTip:""},
+			<#else>
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+            </#if>
 			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary" || changeFlag == "ICPTransferSale">
 				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},

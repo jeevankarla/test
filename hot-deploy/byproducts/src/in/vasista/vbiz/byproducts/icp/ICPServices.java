@@ -565,31 +565,31 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		}
 		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(salesChannel) && salesChannel.equals("SCRAP_PROD_CHANNEL")){
 			try{
-					for (Map<String, Object> prodDesMap : productQtyList) {
-							String itemId =""; 
-							String recurringFreqUomId="";
-							String comments = "";
-							if(UtilValidate.isNotEmpty(prodDesMap.get("productId"))){
-								itemId = (String) prodDesMap.get("productId");
-							}
-							if(UtilValidate.isNotEmpty(prodDesMap.get("comments"))){
-								comments = (String) prodDesMap.get("comments");
-							}
-							if(UtilValidate.isNotEmpty(prodDesMap.get("recurringFreqUomId"))){
-								recurringFreqUomId = (String) prodDesMap.get("recurringFreqUomId");
-							}
-							if(UtilValidate.isNotEmpty(itemId)){
-								List condList = FastList.newInstance();
-								condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-								condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,itemId));
-								EntityCondition con = EntityCondition.makeCondition(condList,EntityOperator.AND);
-								List<GenericValue> orderItems = delegator.findList("OrderItem", con, null, null, null, false);
-								GenericValue orderItem = EntityUtil.getFirst(orderItems);
-								orderItem.set("recurringFreqUomId", recurringFreqUomId);
-								orderItem.set("comments", comments);
-								orderItem.store();
-							}
+				List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				//condList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,itemId));
+				EntityCondition con = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				List<GenericValue> orderItems = delegator.findList("OrderItem", con, null, UtilMisc.toList("-orderItemSeqId"), null, false);
+				int countVal=0;
+				for (GenericValue orderItem : orderItems) {
+					if(UtilValidate.isNotEmpty(productQtyList)){
+						Map prodDesMap = (Map)productQtyList.get(countVal);
+						String recurringFreqUomId="";
+						String comments = "";
+						if(UtilValidate.isNotEmpty(prodDesMap.get("comments"))){
+							comments = (String) prodDesMap.get("comments");
+						}
+						if(UtilValidate.isNotEmpty(prodDesMap.get("recurringFreqUomId"))){
+							recurringFreqUomId = (String) prodDesMap.get("recurringFreqUomId");
+						}
+						orderItem.set("comments", comments);
+						orderItem.set("recurringFreqUomId", recurringFreqUomId);
+						orderItem.store();
 					}
+					countVal=countVal+1;
+				}
+							
+					
 			}catch (GenericEntityException e) {
 				Debug.logError("Error While Saving OrderItem comments ", module);
 				return ServiceUtil.returnError("Error While Saving OrderItem comments");
@@ -1148,7 +1148,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				
 				productQtyMap.put("recurringFreqUomId", recurringFreqUomId);
 				productQtyMap.put("comments", comments);
-				
 				if(quantity.compareTo(BigDecimal.ZERO)>0){
 					indentProductList.add(productQtyMap);
 				}
