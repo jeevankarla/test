@@ -62,6 +62,7 @@
     <StatusValidChange condition="" statusId="MR_VEHICLE_QCREJECT" statusIdTo="MR_VEHICLE_OUT" transitionName="QC REJECT TO OUT"/>
    
    <Enumeration description="PTC Transporter Margin Period Billing" enumCode="PB_PTC_TRSPT_MRGN" enumId="PB_PTC_TRSPT_MRGN" sequenceId="03" enumTypeId="PBILLING_TYPE"/>
+   <Enumeration description="Sale Period Billing" enumCode="PB_SALE_MRGN" enumId="PB_SALE_MRGN" sequenceId="03" enumTypeId="PBILLING_TYPE"/>
    
     <RoleType createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" description="Transport Booth" hasTable="N" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PTC_VEHICLE"/>
    
@@ -137,12 +138,14 @@
    <PeriodType description="Milk Receipt Billing Types" periodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="Purchase Billing Period" periodTypeId="PROC_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
+   <PeriodType description="Sale Billing Period" periodTypeId="SALE_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <EnumerationType enumTypeId="MILK_PRCH_PURP" description="Milk Purchase Purpose" hasTable="N"></EnumerationType>
    <EnumerationType enumTypeId="MILK_OUT_PURP" description="Milk Outgoing Purpose" hasTable="N"></EnumerationType>
    
    
    	<StatusType statusTypeId="VEHICLE_INT_STATUS"/>
     <StatusType parentTypeId="VEHICLE_STATUS" statusTypeId="VEHICLE_INT_STATUS" description="MILK RECEIPT INTERNAL VEHICLE STATUS"/>
+    <StatusItem description="Vehicle Initiated" sequenceId="0" statusCode="VEHICLE INITIATED" statusId="MR_ISSUE_INIT" statusTypeId="VEHICLE_INT_STATUS"/>
     <StatusItem description="Vehicle at CIP" sequenceId="1" statusCode="VEHICLE AT CIP" statusId="MR_ISSUE_CIP" statusTypeId="VEHICLE_INT_STATUS"/>
     <StatusItem description="Vehicle at Tareweight" sequenceId="2" statusCode="VEHICLE AT TARE WEIGHT" statusId="MR_ISSUE_TARWEIGHT" statusTypeId="VEHICLE_INT_STATUS"/>
     <StatusItem description="Vehicle at Quality Control" sequenceId="3" statusCode="VEHICLE AT QUALITY CONTROL" statusId="MR_ISSUE_QC" statusTypeId="VEHICLE_INT_STATUS"/>
@@ -150,6 +153,7 @@
     <StatusItem description="Vehicle at Grossweight" sequenceId="4" statusCode="VEHICLE AT GROSS WEIGHT" statusId="MR_ISSUE_GRWEIGHT" statusTypeId="VEHICLE_INT_STATUS"/>
     <StatusItem description="Vehicle Acknowledged" sequenceId="5" statusCode="VEHICLE Acknowledged" statusId="MR_ISSUE_AQC" statusTypeId="VEHICLE_INT_STATUS"/>
    
+    <StatusValidChange condition="" statusId="MR_ISSUE_INIT" statusIdTo="MR_ISSUE_TARWEIGHT" transitionName="INIT TO TAREWEIGHT"/>
     <StatusValidChange condition="" statusId="MR_ISSUE_TARWEIGHT" statusIdTo="MR_ISSUE_CIP" transitionName="TARE WEIGHT TO CIP"/>
     <StatusValidChange condition="" statusId="MR_ISSUE_CIP" statusIdTo="MR_ISSUE_LOAD" transitionName="CIP  TO LOAD"/>
     <StatusValidChange condition="" statusId="MR_ISSUE_LOAD" statusIdTo="MR_ISSUE_QC" transitionName="LOAD TO QC"/>
@@ -178,5 +182,9 @@
     <ShipmentType shipmentTypeId="MILK_RETURN_SHIPMENT" hasTable="N" description="internal Return Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
     <ShipmentType shipmentTypeId="MILK_COPACK_SHIPMENT" hasTable="N" description="Copack Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
     <ShipmentType shipmentTypeId="MILK_OUT_SHIPMENT" hasTable="N" description="Sale Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
-    <ShipmentType shipmentTypeId="MILK_RE_SHIPMENT" hasTable="N" description="Receipt Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>	
+    <ShipmentType shipmentTypeId="MILK_RE_SHIPMENT" hasTable="N" description="Receipt Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    
+    <!-- Give this role to dept need prod thru weighbridge -->
+    <RoleType  description="Issuing thru weighbridge"  roleTypeId="ISSUE_THRU_WEIGHBRDG"/>
+    <PartyRole partyId="INT10" roleTypeId="ISSUE_THRU_WEIGHBRDG" fromDate ="2015-01-01 00:00:00" />	
 </entity-engine-xml>

@@ -20,7 +20,7 @@ jQuery(document).ready(function() {
 				return false;
 			}
 		}
-		if(prevElName == "exitTime" ||prevElName == "entryTime" || prevElName == "testTime" || prevElName == "sendTime" || prevElName == "grossTime" || prevElName == "tareTime" || prevElName == "cipTime"){
+		if(prevElName == "exitTime" ||prevElName == "entryTime" || prevElName == "testTime" || prevElName == "sendTime" || prevElName == "grossTime" || prevElName == "tareTime" ||prevElName == "issueTime" || prevElName == "cipTime"){
     		var tempTime = prevEl.val();
     		if(tempTime.length==0){
 				alert('invalid Time formate. length should be 4');
@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
     		}
 		}
 		// auto tab  for time tabs and those which need only number input
-    	if(curentElName == "recdMBRT" || curentElName == "exitTime" || curentElName == "cipTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells" || curentElName == "sealNumber"  ){
+    	if(curentElName == "recdMBRT" || curentElName == "exitTime" ||curentElName == "issueTime" || curentElName == "cipTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells" || curentElName == "sealNumber"  ){
     		if(e.which == 110 || e.which == 190){
     			$(this).val( $(this).val().replace('.',''));
     		}
@@ -100,8 +100,13 @@ jQuery(document).ready(function() {
 $(function() {
     $('#submitEntry').click (function (){
     	var displayScreen = $('[name=displayScreen]').val();
-    	var action = "createMilkTankerIssueEntry";
-    	if(displayScreen == "ISSUE_CIP"){
+    	var action = "createMilkTankerIssueInit";
+    	if(displayScreen == "ISSUE_TARWEIGHT"){
+    		if(!$("#milkReceiptIssueEntry").validate({messages:{
+     			  entryDate:"" ,entryTime:"" , tankerName:"", partyIdTo:"",isCipChecked:""
+        	   }}).form()) return;
+    		action = "createMilkTankerIssueEntry";
+    	}else if(displayScreen == "ISSUE_CIP"){
     		if(!$("#milkReceiptIssueEntry").validate({messages:{
    			  entryDate:"" ,entryTime:"" , tankerName:"", partyIdTo:"",isCipChecked:""
       	   }}).form()) return;

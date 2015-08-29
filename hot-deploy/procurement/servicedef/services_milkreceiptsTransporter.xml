@@ -36,6 +36,36 @@
         <description>Cancel Purchase Billing.</description>        
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
     </service>
+    
+    <!-- Services for sale Billing  -->
+    <service name="populateMilkSaleBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="populateMilkSaleBilling">
+        <description>populate Sale Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+     <service name="updateSaleBillingStatus" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="updateSaleBillingStatus">
+        <description>Update Sale Billing StatusId.</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
+    </service>
+     <service name="cancelSaleBillingInvoice" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="cancelSaleBillingInvoice">
+        <description>Cancel SaleBilling Invoice.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <service name="cancelSaleBilling" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="cancelSaleBilling">
+        <description>Cancel Sale Billing.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <!-- End of the sale billing def -->
+    
+    
+    
+    
     <service name="generatePtcTranporterMargin" engine="java" auth="true" transaction-timeout="3000"
         location="in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices" invoke="generatePtcTranporterMargin">
         <description>Generate PTC Transporter Margin.</description>

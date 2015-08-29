@@ -79,9 +79,13 @@
 		dispatchDateFormat = $('#exitDate').datepicker( "option", "dateFormat" );
 		$('#exitDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
-	if($('#displayScreen').val()=="ISSUE_TARWEIGHT"){
-	$('#displayRecord').hide();
+	if($('#displayScreen').val()=="ISSUE_INIT"){
+		$('#displayRecord').hide();
 		$('#displayRecievedFrom').hide();
+		dispatchDateFormat = $('#tareDate').datepicker( "option", "dateFormat" );
+		$('#tareDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
+	}
+	if($('#displayScreen').val()=="ISSUE_TARWEIGHT"){
 		dispatchDateFormat = $('#tareDate').datepicker( "option", "dateFormat" );
 		$('#tareDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
@@ -148,6 +152,9 @@ $(document).ready(function() {
  		makeDatePicker("exitDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_TARWEIGHT"){
+ 		makeDatePicker("tareDate","fromDate");
+ 	}
+ 	if($('#displayScreen').val()=="ISSUE_INIT"){
  		makeDatePicker("tareDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_GRSWEIGHT"){
@@ -413,8 +420,18 @@ function fetchTankerRecordNumber(){
 	  					
 	  					$('#product').val('');
 	  				}
-	  				
 	  				if(displayScreen == "ISSUE_TARWEIGHT"){
+	  					$('#milkTransferId').val('');
+	  					$('span#tankerToolTip').removeClass("tooltip");
+	  					$('span#tankerToolTip').addClass("tooltipWarning");
+	  					$('span#tankerToolTip').html('none');
+	  					$('span#partyToolTip').removeClass("tooltip");
+	  					$('span#partyToolTip').addClass("tooltipWarning");
+	  					$('span#partyToolTip').html('none');
+	  					$('[name=partyIdTo]').val('');
+	  					$('[name=partyName]').val('');
+	  				}
+	  				if(displayScreen == "ISSUE_INIT"){
            			//	$('#sendDate').val('');
            				$('#milkTransferId').val('');
            				$('[name = milkTransferId]').val('');
@@ -433,6 +450,22 @@ function fetchTankerRecordNumber(){
            }else{
            		milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
+	   			if(displayScreen == "ISSUE_INIT"){
+	  					alert('This record is already in process');
+	  					$('#milkTransferId').val('');
+	  					$('span#tankerToolTip').removeClass("tooltip");
+	  					$('span#tankerToolTip').addClass("tooltipWarning");
+	  					$('span#tankerToolTip').html('none');
+	  					$('span#partyToolTip').removeClass("tooltip");
+	  					$('span#partyToolTip').addClass("tooltipWarning");
+	  					$('span#partyToolTip').html('none');
+	  					$('[name=partyIdTo]').val('');
+	  					$('[name=partyName]').val('');
+	  					
+	  					$('[name=tankerName]').val('');	
+	  					return false;
+	  					
+	  				}
 	   			if(displayScreen == "ISSUE_GRSWEIGHT"){
 	   				tareWeight = result['tareWeight'];
 	   				$('#tareWeightToolTip').val(tareWeight);
@@ -588,9 +621,9 @@ function fetchTankerRecordNumber(){
            		if(milkTransferId){
            			$('[name = milkTransferId]').val(milkTransferId);
            			if(displayScreen != "ISSUE_CIP"){
-           				$('span#tankerIdToolTip').addClass("tooltip");
-	  					$('span#tankerIdToolTip').removeClass("tooltipWarning");
-	  					$('span#tankerIdToolTip').html(milkTransferId);
+           				$('span#tankerToolTip').addClass("tooltip");
+	  					$('span#tankerToolTip').removeClass("tooltipWarning");
+	  					
 	  					$('span#partyToolTip').addClass("tooltip");
 	  					$('span#partyToolTip').removeClass("tooltipWarning");
 	  					$('span#partyToolTip').html(partyName);
@@ -630,9 +663,9 @@ function fetchTankerRecordNumber(){
            					}
            				}
 	  			}else{
-	  				$('span#tankerIdToolTip').removeClass("tooltip");
-	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
-	  				$('span#tankerIdToolTip').html('none');
+	  				$('span#tankerToolTip').removeClass("tooltip");
+	  				$('span#tankerToolTip').addClass("tooltipWarning");
+	  				$('span#tankerToolTip').html('none');
 	  				$('span#partyToolTip').removeClass("tooltip");
 	  				$('span#partyToolTip').addClass("tooltipWarning");
 	  				$('span#partyToolTip').html('none');
@@ -641,9 +674,9 @@ function fetchTankerRecordNumber(){
          },
           error: function() {
         	 		
-        	 		$('span#tankerIdToolTip').removeClass("tooltip");
-	  				$('span#tankerIdToolTip').addClass("tooltipWarning");
-	  				$('span#tankerIdToolTip').html('none');
+        	 		$('span#tankerToolTip').removeClass("tooltip");
+	  				$('span#tankerToolTip').addClass("tooltipWarning");
+	  				$('span#tankerToolTip').html('none');
         	 } 
           
     });
@@ -746,7 +779,7 @@ function setVehicleId(selected){
 }
 function hideDiv(){
 	var displayScreen = $('[name="displayScreen"]').val()
- 	if((displayScreen != "ISSUE_TARWEIGHT")){
+ 	if((displayScreen != "ISSUE_INIT")){
 		$("#DetailsDiv").hide();
  	}
 }	
@@ -755,7 +788,7 @@ function reloadingPage(){
 }	
 	
 </script>
-<#if displayScreen != "ISSUE_TARWEIGHT" >
+<#if displayScreen != "ISSUE_INIT" >
 <div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;> 
 		<div class="grid-header h2" style="width:100%">
@@ -806,6 +839,9 @@ function reloadingPage(){
 	<div class="screenlet" background:transparent;border: #F97103 solid 0.1em;>      
       <div class="grid-header h2" style="width:100%">
       			<#assign velhicleStatus = displayScreen+ "  ::VEHICLE ENTRY DETAILS">
+      			<#if displayScreen=="ISSUE_INIT">
+      				<#assign velhicleStatus = "VEHICLE INITIATION DETAILS">
+      			</#if>
       			<#if displayScreen == "ISSUE_CIP">
       				<#assign velhicleStatus = "CIP DETAILS">
       			</#if>
@@ -849,7 +885,7 @@ function reloadingPage(){
 	          			<table>
 	          				<tr>
 					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
-					        		<#if displayScreen != "ISSUE_TARWEIGHT" >
+					        		<#if displayScreen != "ISSUE_INIT" >
 					        		<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" readOnly  /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
 					        		<#else>
  									<input  name="tankerName" size="10pt" type="text" id="tankerNo"  autocomplete="off" required="required" /><span class="tooltip h2" id ="tankerToolTip">none</span></td>
@@ -869,12 +905,12 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h3">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 					        </#if>
-					        <#if displayScreen !="ISSUE_TARWEIGHT" && displayScreen !="ISSUE_CIP">
+					        <#if displayScreen !="ISSUE_INIT" && displayScreen !="ISSUE_CIP" && displayScreen !="ISSUE_TARWEIGHT">
 					        	<tr>
 					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Section/Union </span></td><td> <span class="tooltip h2" id ="partyToolTip">none</span> </td>
 					        	</tr>
 					         	<tr>
-								    <td align='left'><span class="h3">Dc No</span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
+								    <td align='left'><span class="h3">Dc No</span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required='required' /><em>*<em></td>
 								</tr>	
 								<#--<#if displayScreen == "ISSUE_QC">
 									<tr>
@@ -1019,8 +1055,27 @@ function reloadingPage(){
 					        	</tr>
 	                   			
 	        				</#if>	
-	        				<#if displayScreen == "ISSUE_TARWEIGHT">
+	        				<#if displayScreen == "ISSUE_INIT" >
+                                
                                 <tr>
+	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="vehicleStatusId" value="MR_ISSUE_INIT" />
+	        						<td align='left' ><span class="h3">Issue Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
+	        					</tr>
+	        					<tr>
+	        						<td align='left' ><span class="h3">Issue Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+					        	</tr>
+                                <tr>
+	                         		<td><span class="h3">To Section/Union </span></td><td>
+	                         		<input type="text" size="6" maxlength="6" name="partyName" id="partyIdTo" autocomplete="on" required="required"/><span class="tooltip" id ="partyToolTip">none</span></td>
+	                         		<input type="hidden" size="6" maxlength="6" name="partyIdTo" required="required"/>
+	                   			</tr>
+	        					<tr>
+	                   				<td><span class='h3'>From</span></td><td><span class='h3'> Milk Processing Section</span><input type="hidden" size="6" id="partyId" maxlength="6" name="partyId" autocomplete="off" value="MD" /></td>
+	                   			</tr>
+							    
+	        				</#if>
+	        				<#if displayScreen == "ISSUE_TARWEIGHT" >
+	        					<tr>
 	                   				<td><span class='h3'>From</span></td><td><span class='h3'> Milk Processing Section</span><input type="hidden" size="6" id="partyId" maxlength="6" name="partyId" autocomplete="off" value="MD" /></td>
 	                   			</tr>
                                 <tr>
@@ -1039,7 +1094,7 @@ function reloadingPage(){
 	        					<tr>
 	        						<td align='left' ><span class="h3">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
-							    <tr>
+	        					<tr>
 	        						<td align='left' ><span class="h3">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
 	        					</tr>
 	        				</#if>
@@ -1226,7 +1281,7 @@ function reloadingPage(){
       		<td>&nbsp;</td><td>&nbsp;</td> <td>&nbsp;</td><td>&nbsp;</td>
 	      	<td valign = "middle" align="center">
 	      	<div class='tabletext h1'>
-	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "ISSUE_TARWEIGHT">value="Add"<#else>value="Update"</#if>/>      
+	 			<input type="submit" align="right"  class="button" name="submitButton"  id="submitEntry" <#if displayScreen == "ISSUE_INIT">value="Create"<#else>value="Update"</#if>/>      
 	      		</div>
 	      	</td>
 	      	<#if displayScreen == "ISSUE_GRSWEIGHT"> 

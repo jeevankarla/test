@@ -35,8 +35,11 @@ String displayScreen = parameters.displayScreen;
 if(UtilValidate.isEmpty(displayScreen)){
 	displayScreen = context.displayScreen;
 }
-if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_GRSWEIGHT") || (displayScreen=="ISSUE_OUT") ||(displayScreen=="ISSUE_LOAD")){
+if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="ISSUE_TARWEIGHT") || (displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_GRSWEIGHT") || (displayScreen=="ISSUE_OUT") ||(displayScreen=="ISSUE_LOAD")){
 	List conList = FastList.newInstance();
+	if(displayScreen=="ISSUE_TARWEIGHT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_ISSUE_INIT"));
+	}
 	if(displayScreen=="ISSUE_CIP"){
 		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MR_ISSUE_TARWEIGHT"));
 	}
@@ -59,7 +62,7 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="ISSUE_CIP") || (di
 	List vehicleList = FastList.newInstance();
 	vehicleTripStatus.each{trip->
 		tempMap=[:];
-		vehicleInTime = delegator.findOne("VehicleTripStatus",[vehicleId:trip.vehicleId,sequenceNum:trip.sequenceNum,statusId:"MR_ISSUE_TARWEIGHT"],false);
+		vehicleInTime = delegator.findOne("VehicleTripStatus",[vehicleId:trip.vehicleId,sequenceNum:trip.sequenceNum,statusId:"MR_ISSUE_INIT"],false);
 		List milkTransferList = delegator.findList("MilkTransfer",EntityCondition.makeCondition([EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,trip.vehicleId),
 																							 EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,trip.sequenceNum)],EntityOperator.AND),UtilMisc.toSet("partyIdTo"),null,null,false);
 		String partyId="";

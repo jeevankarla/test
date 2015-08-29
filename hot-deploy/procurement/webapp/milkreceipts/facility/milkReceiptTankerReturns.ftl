@@ -67,15 +67,6 @@
 <script type="application/javascript">
 	jQuery(function($) {
 	var dispatchDateFormat;
- /*if($('#displayScreen').val()=="RETURN_INITIATE"){
-		$('#displayRecord').hide();
-		$('#displayRecievedFrom').hide();
-		dispatchDateFormat = $('#sendDate').datepicker( "option", "dateFormat" );
-		
-		//$('#dispatchDate').datepicker().datepicker('setDate', new Date()); 
-		$('#sendDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
-		$('#entryDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
-	}*/
 	if($('#displayScreen').val()=="VEHICLE_OUT"){
 		dispatchDateFormat = $('#exitDate').datepicker( "option", "dateFormat" );
 		$('#exitDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
@@ -88,11 +79,6 @@
 		dispatchDateFormat = $('#grossDate').datepicker( "option", "dateFormat" );
 		$('#grossDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 	}
-	/*if($('#displayScreen').val()=="RETURN_INITIATE"){
-		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
-		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
-		$('#sendDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
-	}*/
 	if($('#displayScreen').val()=="RETURN_QC"){
 		dispatchDateFormat = $('#testDate').datepicker( "option", "dateFormat" );
 		$('#testDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
@@ -385,14 +371,6 @@ function fetchTankerRecordNumber(){
          success: function(result) { 
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
            			var displayScreen = $('[name=displayScreen]').val();
-           			if(displayScreen == "RETURN_INITIATE"){
-           				//$('#sendDate').val('');
-           				//$('#sendTime').val('');
-           				$('#dcNo').val('');
-           				$('#productId').val('');
-           				$('#product').val('');	
-           				$('#partyId').val('');	
-           			}
            			if(displayScreen == "RETURN_GRSWEIGHT"){
            				$('#partyId').val('');
            				$('#dcNo').val('');

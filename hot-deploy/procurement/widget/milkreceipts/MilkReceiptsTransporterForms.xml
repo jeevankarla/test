@@ -112,6 +112,44 @@
             </hyperlink>
         </field>     
     </form>
+    <!-- Forms for sale Billing -->
+    
+    <form name="GenerateSaleBilling" type="single" target="createSaleBilling" header-row-style="header-row" 
+		default-table-style="basic-table" >
+		<field name="billingTypeId"><hidden value="PB_PROC_MRGN"/></field>
+		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
+        	<drop-down>																						
+            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  filter-by-date="false" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}">
+                	 <entity-constraint name="periodTypeId" operator="equals" value="SALE_BILL_MONTH"/>
+                 	 <entity-constraint name="isClosed" operator="equals" value="N"/>
+                 	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
+                 	 <entity-order-by field-name="-thruDate"/>
+           	 	</entity-options>
+			</drop-down>
+		</field>
+		<field name="submitButton" title="${uiLabelMap.Generate}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+    <form name="listSaleBilling" list-name="listSaleBilling" title="" type="list" paginate-target="Commissions"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="periodBillingId"><hidden/></field>       
+        <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}" />
+        </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="updateSaleBillingStatus" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
+            </hyperlink>
+        </field>
+         <field name="cancelSaleBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelSaleBilling" description="${uiLabelMap.CommonCancel}" >
+                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
+            </hyperlink>
+        </field>     
+    </form>
+    <!-- End -->
+    
     <form name="ListTimePeriods" type="list" list-name="TimePeriods"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="customTimePeriodId" title="custom Time Period Id"><display/></field>

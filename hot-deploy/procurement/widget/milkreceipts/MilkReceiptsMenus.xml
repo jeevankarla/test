@@ -160,6 +160,9 @@
 		<menu-item name="purchaseBilling" title="Purchase Billing">
 			<link target="mrPurchaseBilling"></link>
 		</menu-item>
+		<menu-item name="saleBilling" title="Sale Billing">
+			<link target="mrSaleBilling"></link>
+		</menu-item>
 	</menu>
 	<menu name="findTankerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="findTanker" title="Find Tanker">
@@ -200,6 +203,10 @@
 	</menu>
 	<menu name="MilkTransferIssuesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		
+		<menu-item name="MilkTankerIssuesInitiation" title="Issue  Initiation" >
+            <link target="milkTankerIssueInitiation">
+			</link>
+      	</menu-item>
 		
       	<menu-item name="MilkTankerIssuesTareWeight" title="TareWeight Details" >
       	<condition>
