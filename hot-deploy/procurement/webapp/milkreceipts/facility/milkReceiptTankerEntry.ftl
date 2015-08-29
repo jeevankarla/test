@@ -227,21 +227,7 @@ $(document).ready(function() {
 	$("input").keyup(function(e){
 	  		
 	  		if(e.target.name == "tareWeight"){
-	  			
-	  			var tareWeight = $('[name=tareWeight]').val();
-	  			
-	  			if(typeof(tareWeight)!= "undefined"){	
-	  				var netWeight = grossWeight-tareWeight ;
-					$('#netWeightToolTip').val(netWeight);
-					if(netWeight <0){
-						alert('Please check the tareWeight . ');
-						$('[name=tareWeight]').val('');
-						$('#netWeightToolTip').val(grossWeight);
-					}
-	  			}else{
-					$('#netWeightToolTip').val('0');
-	  			}
-	  			
+	  			populateNetWeight();
 	  		}
 	  		if(e.target.name == "tankerName"){
 	  			
@@ -290,6 +276,22 @@ $(document).ready(function() {
 	}); 
 });
 
+function populateNetWeight(){
+	var tareWeight = $('[name=tareWeight]').val();
+	alert('tareWeight======='+tareWeight);
+	 alert('grossWeight======='+grossWeight); 			
+	if(typeof(tareWeight)!= "undefined" ){	
+		var netWeight = grossWeight-tareWeight ;
+		$('#netWeightToolTip').val(netWeight);
+		if(netWeight <0){
+			alert('Please check the tareWeight . ');
+			$('[name=tareWeight]').val('');
+			$('#netWeightToolTip').val(grossWeight);
+		}
+	}else{
+		$('#netWeightToolTip').val('0');
+	}
+}
 function populateProductSpan(){
 	var productJson = ${StringUtil.wrapString(productJson)}
 	var tempProductJson = productJson[$('[name=product]').val()];
@@ -375,8 +377,14 @@ function fetchTankerRecordNumber(){
            				$('#partyId').val('');	
            			}
            			if(displayScreen == "VEHICLE_GRSWEIGHT"){
+           				$('#grossWeight').val('');
+           				$('#grossWeight').removeAttr("readonly");
            				$('#partyId').val('');
            				$('#dcNo').val('');
+           			}
+           			if(displayScreen == "VEHICLE_TAREWEIGHT"){
+           				$('#tareWeight').val('');
+           				$('#tareWeight').removeAttr("readonly");
            			}
            			if(displayScreen == "VEHICLE_IN"){
            				$('#sendDate').val('');
@@ -398,9 +406,8 @@ function fetchTankerRecordNumber(){
            }else{
            		var  milkTransferId= result['milkTransferId'];
            		var displayScreen = $('[name=displayScreen]').val();
-           		 
+           		var  milkTransfer= result['milkTransfer'];
            	    if(displayScreen != "VEHICLE_OUT"){
-		   			var  milkTransfer= result['milkTransfer'];
 		   			if(typeof(milkTransfer) != 'undefined'){
 	   					var trnStatusId =  milkTransfer['statusId'];
 	   					if(typeof(trnStatusId) != 'undefined'){
@@ -412,8 +419,20 @@ function fetchTankerRecordNumber(){
 	   			}
            		
 	   			if(displayScreen == "VEHICLE_TAREWEIGHT"){
-	   				var sendWeight = 0;
 	   				grossWeight = result['grossWeight'];
+	   				var tareweightVal = milkTransfer['tareWeight']
+           				if(typeof(tareweightVal)!= "undefined" && tareweightVal!=='' && tareweightVal != null ){
+           					$('[name=tareWeight]').val(tareweightVal);
+           					$('#tareWeight').attr("readonly","readonly");
+           					populateNetWeight();
+           				}else{
+           					$('#tareWeight').val('');
+           					$('#tareWeight').removeAttr("readonly");
+           				}
+	   				
+	   				var sendWeight = 0;
+	   				
+	   				
 	   				var  milkTransfer= result['milkTransfer'];
 
 	   				if(typeof(milkTransfer) != 'undefined'){
@@ -434,6 +453,14 @@ function fetchTankerRecordNumber(){
            
            		if($('[name=sealCheck]').length !=0){
            			if(displayScreen == "VEHICLE_GRSWEIGHT"){
+           				var grossweightVal = milkTransfer['grossWeight']
+           				if(typeof(grossweightVal)!= "undefined" && grossweightVal!=='' && grossweightVal != null ){
+           					$('[name=grossWeight]').val(grossweightVal);
+           					$('#grossWeight').attr("readonly","readonly");
+           				}else{
+           					$('#grossWeight').val('');
+           					$('#grossWeight').removeAttr("readonly");
+           				}
            				var isSealChecked = result['isSealChecked'];
            				if(typeof(isSealChecked)!= "undefined"){
            					if(isSealChecked == 'Y'){
