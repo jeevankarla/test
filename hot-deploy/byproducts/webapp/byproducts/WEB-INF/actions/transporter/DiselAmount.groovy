@@ -49,7 +49,7 @@ conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("t
 					EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())));
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-List<String> orderBy = UtilMisc.toList("createdDate");
+List<String> orderBy = UtilMisc.toList("facilityId");
 facilityRateList = delegator.findList("FacilityRate", condition, null, orderBy, null, false);
 //facilityRateList = EntityUtil.filterByDate(facilityRateList);
 context.facilityRateList=facilityRateList;
