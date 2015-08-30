@@ -447,7 +447,12 @@
      	<response name="error" type="view" value="ProductionReceiptAcknowledgements"/>
      </request-map>
      <request-map uri="ProductionLookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="ProductionLookupFacility"/></request-map>
-     
+     <request-map uri="setRequestItemStatus">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="setRequestItemStatus"></event>
+       <response name="success" type="view" value="ProductionIssuanceRequest"/>
+       <response name="error" type="view" value="ProductionIssuanceRequest"/>
+     </request-map>
     <!-- View Mappings -->
     
     <view-map name="ProductionRunTrends" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionRunTrends"/>
