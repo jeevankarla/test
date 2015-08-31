@@ -122,5 +122,10 @@
          <attribute name="itemIssuanceId" type="String" mode="IN" optional="false"/>
           <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
-    
+    <service name="setRequestItemStatus" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="setRequestItemStatus">
+        <description>Set cust Request status change wrapper service</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

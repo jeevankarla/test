@@ -89,4 +89,16 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_ACCEPT_XFER"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_ACCEPT_XFER"/>
     
+    <SecurityPermission description="Cancel Production Indent" permissionId="PRO_CANCEL_INDENT"/>
+    <SecurityGroup description="Cancel Production Indent!" groupId="PRO_CANCEL_INDENT"/>
+    <SecurityGroupPermission groupId="PRO_CANCEL_INDENT"  permissionId="PRO_CANCEL_INDENT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_CANCEL_INDENT"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_CANCEL_INDENT"/>
+    
+    <SecurityPermission description="Close Production Indent" permissionId="PRO_CLOSE_INDENT"/>
+    <SecurityGroup description="Close Production Indent!" groupId="PRO_CLOSE_INDENT"/>
+    <SecurityGroupPermission groupId="PRO_CLOSE_INDENT"  permissionId="PRO_CLOSE_INDENT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_CLOSE_INDENT"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_CLOSE_INDENT"/>
+    
 </entity-engine-xml>

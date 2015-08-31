@@ -2616,6 +2616,32 @@ public class ProductionServices {
 	         }
 	        return result;
 	   }  
-     
+     public static Map<String, Object> setRequestItemStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
+ 		Delegator delegator = ctx.getDelegator();
+ 		LocalDispatcher dispatcher = ctx.getDispatcher();
+ 		String statusId = (String) context.get("statusId");
+ 		String custRequestId = (String) context.get("custRequestId");
+ 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
+ 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+ 		Map result = ServiceUtil.returnSuccess();
+ 		try{
+ 			Map statusCtx = FastMap.newInstance();
+ 				statusCtx.put("statusId", statusId);
+ 				statusCtx.put("custRequestId", custRequestId);
+ 				statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+ 				statusCtx.put("userLogin", userLogin);
+ 				statusCtx.put("description", "");
+ 				Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+ 				if (ServiceUtil.isError(resultCtx)) {
+ 					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custRequestItemSeqId, module);
+ 					return resultCtx;
+ 				}
+ 		} catch (Exception e) {
+ 			// TODO: handle exception
+ 			Debug.logError(e, module);
+ 			return ServiceUtil.returnError(e.getMessage());
+ 		}
+ 		return result;
+ 	} 
      
 }

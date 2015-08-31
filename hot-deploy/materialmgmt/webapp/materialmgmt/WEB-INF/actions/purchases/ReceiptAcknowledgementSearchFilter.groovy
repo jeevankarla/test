@@ -81,9 +81,17 @@ if(UtilValidate.isNotEmpty(CustRequestAndItemAndAttribute)){
 	 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	 itemIssuances = delegator.findList("ItemIssuance", condition, null, null, null, false);
 	 itemIssuanceIds=EntityUtil.getFieldListFromEntityList(itemIssuances,"itemIssuanceId", true);
+	 shipmentIds = EntityUtil.getFieldListFromEntityList(itemIssuances,"shipmentId", true);
+	 shipmentCond = EntityCondition.makeCondition([EntityCondition.makeCondition("shipmentId",EntityOperator.IN,shipmentIds),
+		                                           EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"SHIPMENT_CANCELLED")],EntityOperator.AND);
+	 shipmentList = delegator.findList("Shipment",shipmentCond,UtilMisc.toSet("shipmentId"),null,null,false);
+	 shipmentIds.clear();
+	 shipmentIds=EntityUtil.getFieldListFromEntityList(shipmentList,"shipmentId", true);
 	 itemIssuanceAttributes = delegator.findList("ItemIssuanceAttribute",EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN , itemIssuanceIds) ,null, null, null, false );
 	 itemIssuanceIdss =EntityUtil.getFieldListFromEntityList(itemIssuanceAttributes,"itemIssuanceId", true);
-	 itemIssuancesDetails = EntityUtil.filterByCondition(itemIssuances, EntityCondition.makeCondition("itemIssuanceId", EntityOperator.NOT_IN, itemIssuanceIdss));
+	 itemIssueCond = EntityCondition.makeCondition([EntityCondition.makeCondition("itemIssuanceId", EntityOperator.NOT_IN, itemIssuanceIdss),
+		 											EntityCondition.makeCondition("shipmentId",EntityOperator.IN,shipmentIds)],EntityOperator.AND);
+	 itemIssuancesDetails = EntityUtil.filterByCondition(itemIssuances, itemIssueCond);
 		 if(UtilValidate.isNotEmpty(itemIssuancesDetails)){
 			 itemIssuancesDetails.each{eachItemIssuance->
 				 indentItemsMap = [:];

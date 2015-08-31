@@ -257,13 +257,13 @@
         </field>
         <field name="lastModifiedDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastModifiedDate, &quot;dd-MM-yyyy HH:mm:ss&quot;);}"/></field>
         <field name="createdByUserLogin" ><display/></field>
-        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_SUBMITTED&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CLOSE_INDENT&quot;, session)))}" name="close" title="Close Indent" widget-style="button" >
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_SUBMITTED&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;PRO&quot;, &quot;_CLOSE_INDENT&quot;, session)))}" name="close" title="Close Indent" widget-style="button" >
         	<hyperlink target="setRequestStatus" description="Close">
         		<parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_COMPLETED"/>
         	</hyperlink>
         </field>
-        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot; &amp;&amp;((${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_INDENT&quot;, session)))}) || (createdByUserLogin.equals(&quot;${userLogin.userLoginId}&quot;)))" name="cancel" widget-style="buttontext">
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot; &amp;&amp;((${groovy:((security.hasEntityPermission(&quot;PRO&quot;, &quot;_CANCEL_INDENT&quot;, session)))}) || (createdByUserLogin.equals(&quot;${userLogin.userLoginId}&quot;)))" name="cancel" widget-style="buttontext">
             <hyperlink target="setRequestStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_CANCELLED"/>
@@ -509,8 +509,12 @@
 			</entity-condition>
         </row-actions>
         <field name="shipmentTypeId"><hidden value="PRODUCTION_SHIPMENT"/></field>
-        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
-        <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}" widget-style="buttontext">
+        <hyperlink description="${custRequestId}" target="ViewProductionRequest">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+        <field name="custRequestItemSeqId" ><hidden/></field>
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
         <field name="fromPartyId" title="Requested Department">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
@@ -525,13 +529,20 @@
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
          <field name="quantity" title="Req. Qty"><display/></field>
           <field name="issuedQty" title="IssuedQty" ><display/></field>  
-         <field name="QOH" title="InventoryAvailable" ><text default-value="0" size="10" read-only="true"></text> </field>
+         <field name="QOH" title="Inv. Available" ><text default-value="0" size="6" read-only="true"></text> </field>
         <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="0"> </text></field>
-        <field id-name="checkIssuance" name="checkIssuance"  title="Issue ${uiLabelMap.MaterialMangement_Product}" use-when="showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
+        <field id-name="checkIssuance" name="checkIssuance"  title="Select" use-when="showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
         <field name="issueThruTransfer" widget-style="buttontext" title="Issue thru Transfers" use-when= "showTransferButton == &quot;Y&quot;" event="onclick" action="javascript:setFormValues(this);">
             <!-- <display  description="Transfer"/> -->
             <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${custRequestId}','${custRequestItemSeqId}','${fromPartyId}','${productId}','${quantity}','${issuedQty}','${tempQty}');" description="Issue thru Transfer">
             </hyperlink>
+        </field>
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_SUBMITTED&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;PRO&quot;, &quot;_CLOSE_INDENT&quot;, session)))}" name="close" title="Close" widget-style="button" >
+        	<hyperlink target="setRequestItemStatus" description="Close">
+        		<parameter param-name="custRequestId"/>
+        		<parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="statusId" value="CRQ_COMPLETED"/>
+        	</hyperlink>
         </field>
     </form>
     <form name="SearchReceiptAcknowledgement" type="single" target="searchReceiptAcknowledgement">
