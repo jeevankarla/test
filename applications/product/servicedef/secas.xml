@@ -153,12 +153,12 @@ under the License.
    		<condition field-name="consolidateInventoryReceive" operator="is-not-empty"/>
         <condition field-name="consolidateInventoryReceive" operator="not-equals" value="Y"/>
         <action service="consolidateInventoryForRawMilk" mode="sync"/>
-   </eca>
+   </eca>-->
    
    <eca service="processStockXfer" event="commit">
    		<action service="consolidateInventoryForRawMilk" mode="sync"/>
    </eca>
-     -->
+     
     <!-- Set the average cost of product --><!--
     <eca service="receiveInventoryProduct" event="commit">
         <action service="updateProductAverageCostOnReceiveInventory" mode="sync"/>
