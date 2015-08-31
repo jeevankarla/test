@@ -200,6 +200,16 @@
         <response name="success" type="view" value="FindMilkReceiptsTankerEntry"/>
         <response name="error" type="view" value="FindMilkReceiptsTankerEntry"/>
     </request-map>
+    <request-map uri="FindTankerIssues">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="FindTankerIssues"/>
+        <response name="error" type="view" value="FindTankerIssues"/>
+    </request-map>
+    <request-map uri="tankerIssuesFind">
+    	<security auth="true" https="true"/>
+        <response name="success" type="view" value="FindTankerIssues"/>
+        <response name="error" type="view" value="FindTankerIssues"/>
+    </request-map>
     <request-map uri="EditMilkReceiptsTankerEntry">
     	<security auth="true" https="true"/>
         <response name="success" type="view" value="EditMilkReceiptsTankerEntry"/>
@@ -1126,6 +1136,7 @@
     <view-map name="EditMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#EditMilkReceiptsTankerEntry"/>
     <view-map name="EditMilkReceiptRecord" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#EditMilkReceiptRecord"/>
     <view-map name="FindMilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsTankerEntry"/>
+    <view-map name="FindTankerIssues" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindTankerIssues"/>
     <view-map name="MilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptsTankerOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerOutEntry"/>
     <view-map name="MilkReceiptsQCEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsQCEntry"/>

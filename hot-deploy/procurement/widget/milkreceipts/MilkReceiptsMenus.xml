@@ -84,6 +84,13 @@
             <link target="milkTankerIssues">
 			</link>
       	</menu-item> 
+      	<menu-item name="FindTankerIssues" title="Find Tanker Issues" >
+      		<condition>
+    			<if-has-permission permission="MR" action="_FTISSUES_VIEW"/>
+    		</condition>
+            <link target="FindTankerIssues">
+			</link>
+      	</menu-item>
       	<menu-item name="MilkTankerReturns" title="Internal Tanker Returns" >
       		 <condition>
     			<if-has-permission permission="MR" action="_TANKERRETURN_VIEW"/>
