@@ -300,15 +300,38 @@ under the License.
 
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
-        <!-- set the effectiveDate; if from an ItemIssuance lookup the issuedDateTime -->
-        <if-not-empty field="parameters.itemIssuanceId">
+        <!-- <if-not-empty field="parameters.itemIssuanceId">
             <entity-one entity-name="ItemIssuance" value-field="itemIssuance"/>
             <set field="newEntity.effectiveDate" from-field="itemIssuance.issuedDateTime"/>
             <else>
                 <now-timestamp field="newEntity.effectiveDate"/>
             </else>
+        </if-not-empty> -->
+        
+        <if-not-empty field="parameters.effectiveDate">
+        	<set field="newEntity.effectiveDate" from-field="parameters.effectiveDate"/>
+        <else>
+        	<if-not-empty field="parameters.itemIssuanceId">
+        		<entity-one entity-name="ItemIssuance" value-field="itemIssuance"/>
+        		<set field="newEntity.effectiveDate" from-field="itemIssuance.issuedDateTime"/>
+        	</if-not-empty>
+        	<if-not-empty field="parameters.receiptId">
+        		<entity-one entity-name="ShipmentReceipt" value-field="shipmentReceipt"/>
+        		<set field="newEntity.effectiveDate" from-field="shipmentReceipt.datetimeReceived"/>
+        	</if-not-empty>
+        	<if-not-empty field="parameters.physicalInventoryId">
+        		<entity-one entity-name="PhysicalInventory" value-field="physicalInventory"/>
+        		<set field="newEntity.effectiveDate" from-field="physicalInventory.physicalInventoryDate"/>
+        	</if-not-empty>
+        	<if-not-empty field="parameters.inventoryTransferId">
+        		<entity-one entity-name="InventoryTransfer" value-field="inventoryTransfer"/>
+        		<set field="newEntity.effectiveDate" from-field="inventoryTransfer.sendDate"/>
+        	</if-not-empty>
+        	<if-empty field="newEntity.effectiveDate">
+        		<now-timestamp field="newEntity.effectiveDate"/>
+        	</if-empty>
+        </else>
         </if-not-empty>
-
         <!-- if availableToPromiseDiff or quantityOnHandDiff are empty set to 0 -->
         <if-empty field="newEntity.availableToPromiseDiff"><set field="newEntity.availableToPromiseDiff" value="0" type="BigDecimal"/></if-empty>
         <if-empty field="newEntity.quantityOnHandDiff"><set field="newEntity.quantityOnHandDiff" value="0" type="BigDecimal"/></if-empty>
@@ -492,14 +515,19 @@ under the License.
             <string-to-list string="Can only create an InventoryItemVariance for a Non-Serialized Inventory Item" list="error_list"/>
         </if-compare>
         <check-errors/>
-
-        <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+		<entity-one value-field="physicalInventory" entity-name="PhysicalInventory">
+			<field-map field-name="physicalInventoryId" from-field="parameters.physicalInventoryId"/>
+		</entity-one>
+		<!-- instead of updating InventoryItem, add an InventoryItemDetail -->
         <set from-field="parameters.inventoryItemId" field="createDetailMap.inventoryItemId"/>
         <set from-field="parameters.physicalInventoryId" field="createDetailMap.physicalInventoryId"/>
         <set from-field="parameters.availableToPromiseVar" field="createDetailMap.availableToPromiseDiff"/>
         <set from-field="parameters.quantityOnHandVar" field="createDetailMap.quantityOnHandDiff"/>
         <set from-field="parameters.varianceReasonId" field="createDetailMap.reasonEnumId"/>
         <set from-field="parameters.comments" field="createDetailMap.description"/>
+        <if-not-empty field="physicalInventory">
+        	<set from-field="physicalInventory.physicalInventoryDate" field="createDetailMap.effectiveDate"/>
+        </if-not-empty>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
 
         <make-value value-field="newEntity" entity-name="InventoryItemVariance"/>

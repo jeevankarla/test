@@ -66,4 +66,7 @@
     <ProductCategory  productCategoryId="ISSUE_THRU_TRANSFER"/>
 	<ProductCategoryMember productCategoryId="ISSUE_THRU_TRANSFER" productId="75" fromDate="2010-01-01 00:00:00"/> 
     
+    <Enumeration enumId="PRUN_CHECK" enumTypeId="TENANTCONF_TYPE" description="Production Run Check"/>
+	<TenantConfiguration propertyName="enableInputPrunIssueDate" propertyTypeEnumId="PRUN_CHECK" propertyValue="Y" description="Enable Production Run Issue Date"/>
+	
 </entity-engine-xml>

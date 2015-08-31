@@ -1953,7 +1953,7 @@ public class ProductionRunServices {
         String productionRunTaskId = (String)context.get("workEffortId");
         String productId = (String)context.get("productId");
         BigDecimal quantity = (BigDecimal)context.get("quantity");
-
+        Timestamp dateTimeProduced = (Timestamp)context.get("dateTimeProduced");
         // Optional input fields
         String facilityId = (String)context.get("facilityId");
         String currencyUomId = (String)context.get("currencyUomId");
@@ -1980,6 +1980,9 @@ public class ProductionRunServices {
                             "statusId", "INV_AVAILABLE");
                     serviceContext.put("facilityId", facilityId);
                     serviceContext.put("datetimeReceived", UtilDateTime.nowDate());
+                    if(UtilValidate.isNotEmpty(dateTimeProduced)){
+                    	serviceContext.put("datetimeReceived", dateTimeProduced);
+                    }
                     serviceContext.put("comments", "Created by production run task " + productionRunTaskId);
                     if (unitCost != null) {
                         serviceContext.put("unitCost", unitCost);
@@ -1993,6 +1996,9 @@ public class ProductionRunServices {
                     serviceContext.put("workEffortId", productionRunTaskId);
                     serviceContext.put("availableToPromiseDiff", BigDecimal.ONE);
                     serviceContext.put("quantityOnHandDiff", BigDecimal.ONE);
+                    if(UtilValidate.isNotEmpty(dateTimeProduced)){
+                    	serviceContext.put("effectiveDate", dateTimeProduced);
+                    }
                     serviceContext.put("userLogin", userLogin);
                     resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
                     serviceContext.clear();
@@ -2016,6 +2022,9 @@ public class ProductionRunServices {
                         "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
                 serviceContext.put("facilityId", facilityId);
                 serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+                if(UtilValidate.isNotEmpty(dateTimeProduced)){
+                	serviceContext.put("datetimeReceived", dateTimeProduced);
+                }
                 serviceContext.put("comments", "Created by production run task " + productionRunTaskId);
                 if (unitCost != null) {
                     serviceContext.put("unitCost", unitCost);
@@ -2030,6 +2039,9 @@ public class ProductionRunServices {
                 serviceContext.put("workEffortId", productionRunTaskId);
                 serviceContext.put("availableToPromiseDiff", quantity);
                 serviceContext.put("quantityOnHandDiff", quantity);
+                if(UtilValidate.isNotEmpty(dateTimeProduced)){
+                	serviceContext.put("effectiveDate", dateTimeProduced);
+                }
                 serviceContext.put("userLogin", userLogin);
                 resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
                 serviceContext.clear();

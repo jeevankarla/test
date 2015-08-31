@@ -200,6 +200,7 @@ under the License.
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="issuedInputDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="failIfItemsAreNotAvailable" type="String" mode="IN" optional="true"/>
         <attribute name="failIfItemsAreNotOnHand" type="String" mode="IN" optional="true"/>
@@ -257,6 +258,7 @@ under the License.
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="dateTimeProduced" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="unitCost" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
         <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="true"/>

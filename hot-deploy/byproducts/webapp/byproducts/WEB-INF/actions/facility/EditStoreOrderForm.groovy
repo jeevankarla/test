@@ -61,9 +61,7 @@ orderHeaders = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId")
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-if(UtilValidate.isNotEmpty(changeFlag) && "IcpSalesAmul" != changeFlag){
-	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-}
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 if(UtilValidate.isNotEmpty(changeFlag) && "IcpSalesAmul"==changeFlag){
 	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SHIP_TO_CUSTOMER", "PLACING_CUSTOMER")));
 }else{

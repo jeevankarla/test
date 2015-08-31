@@ -107,11 +107,19 @@ under the License.
         <description>Create an createInventoryItemDetail - note that the quantityOnHand and availableToPromise are relative (positive or negative) and will be added to the corresponding value on the given InventoryItem</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
-            <exclude field-name="effectiveDate"/>
         </auto-attributes>
         <override name="inventoryItemDetailSeqId" mode="OUT"/>
     </service>
-      <!--   <service name="populateLMSPeriodSalesSummary" engine="java" transaction-timeout="500"
+    
+    <service name="checkPopulateEffectiveDate" default-entity-name="InventoryItemDetail" engine="java"
+                location="org.ofbiz.product.inventory.InventoryServices" invoke="checkPopulateEffectiveDate" auth="true">
+        <description>Create an createInventoryItemDetail - note that the quantityOnHand and availableToPromise are relative (positive or negative) and will be added to the corresponding value on the given InventoryItem</description>
+        <attribute name="inventoryItemId" mode="IN" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true" />
+        <!-- <attribute name="effectiveDate" mode="OUT" type="String" optional="true"></attribute> -->
+    </service>
+    
+    <!--   <service name="populateLMSPeriodSalesSummary" engine="java" transaction-timeout="500"
         location="org.ofbiz.network.LMSSalesHistoryServices" invoke="populateLMSPeriodSalesSummary">
         <description>populate Period Sales Summary</description>
         <attribute name="fromDate" mode="IN" type="Date" optional="true"/>
@@ -254,6 +262,7 @@ under the License.
         <attribute name="getInventoryOnlyWithUnitCost" type="String" mode="IN" optional="true"/>
         <attribute name="inventoryCount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="inventoryCost" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="inventoryATP" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
     <service name="getProductInventoryByOwner" engine="java"
                 location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventoryByOwner" auth="true" use-transaction="false">

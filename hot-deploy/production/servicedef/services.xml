@@ -75,6 +75,7 @@
     	 <attribute name="facilityId" mode="IN" type="String" optional="false"/>
     	 <attribute name="variance" mode="IN" type="BigDecimal" optional="false"/>
     	 <attribute name="inventoryItemId" mode="IN" type="String" optional="true"/>
+    	 <attribute name="varianceDate" mode="IN" type="String" optional="true"/>
     	 <attribute name="varianceTypeId" mode="IN" type="String" optional="false"/>
     	 <attribute name="varianceReasonId" mode="IN" type="String" optional="false"/>
     	 <attribute name="comment" mode="IN" type="String" optional="true"/>

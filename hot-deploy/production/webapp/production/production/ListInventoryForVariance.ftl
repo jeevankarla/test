@@ -42,7 +42,29 @@ under the License.
 	
 	jQuery(document).ready( function() {
       $("#varianceTypeId").trigger("onchange");
+      datepick(undefined);
     });
+	
+	function datepick(thisObj)
+	{	
+		var rowObj = $(thisObj).parent();
+		var varId = $(rowObj).find('[name=varianceDate]').attr('id');
+		
+		$("#"+varId).datetimepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		timeFormat: 'hh:mm:ss',
+		changeMonth: false,
+		numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+		if(varId){
+			var dateExists = $("#"+varId).val();
+			if(!dateExists){
+				$("#"+varId).datepicker().datepicker("setDate", new Date());
+			}
+		}
+	}
 	
     function changeBatchQty(thisObj){
     	var selectVal = $(thisObj).val();
@@ -67,7 +89,6 @@ under the License.
 		}    	
     }
     function changeVarianceType(thisObj){
-    	
     	var index = 0;
     	$('#varianceTab tr').each(function (i, row) {
 			if(index != 0){
@@ -89,7 +110,6 @@ under the License.
 		    	}
 			}
 			index++;
-        	
     	});
     }
 //]]>
@@ -116,12 +136,14 @@ under the License.
           <td>Type</td>
           <td>Variance Reason</td>
           <td>Variance Qty</td>
+          <td>Date</td>
           <td>Comment</td>
           <td></td>
         </tr>
       </thead>
       <tbody>
         <#assign alt_row = false>
+        <#assign index=0>
         <#list facilityInventoryList as eachProd>
         	<form name="inventoryVarianceForm" id="inventoryVarianceForm"  method="post" action='createProductVarianceForFacility'>
         	<input type='hidden' name='productId' id='productId' value='${eachProd.productId?if_exists}'>
@@ -155,10 +177,12 @@ under the License.
               		</select>
               	</td>
               	<td><input type='text' name='variance' id='variance' size='8'></td>
+              	<td><input type='text' name='varianceDate' id='varianceDate_${index}' onmouseover="datepick(this)"></td>
               	<td><input type='text' name='comment' id='comment'/></td>
               	<td><input type="submit" value="Submit" id="button1" class="smallSubmit" /></td>
             </tr>
             </form>
+            <#assign index = index+1>
             <#assign alt_row = !alt_row>
         </#list>
       </tbody>

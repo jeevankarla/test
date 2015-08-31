@@ -378,8 +378,6 @@ public class ProductionServices {
 		  	  
 	  		  String productionRunId = (String)ProductionNetworkServices.getRootProductionRun(delegator, workEffortId);
 	  		  
-	  		  Debug.log("productionRunId #####"+productionRunId);
-	  		  
 	  		  GenericValue productionRun = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId), false);
 	  		  
 	  		  if(UtilValidate.isEmpty(productionRun)){
@@ -387,7 +385,13 @@ public class ProductionServices {
 				  request.setAttribute("_ERROR_MESSAGE_", "Primary Production run doesn't exist for Task: "+workEffortId);	  		  
 		  		  return "error";
 	  		  }
-	  		  
+	  		
+	  		  boolean enableInputPrunIssueDate = Boolean.FALSE;
+	  		  GenericValue tenantConfigEnableCancelAfterShipDate = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PRUN_CHECK", "propertyName","enableInputPrunIssueDate"), false);
+	  		  if (UtilValidate.isNotEmpty(tenantConfigEnableCancelAfterShipDate) && (tenantConfigEnableCancelAfterShipDate.getString("propertyValue")).equals("Y")) {
+				 enableInputPrunIssueDate = Boolean.TRUE;
+	  		  }
+
 	  		  String productionFloorId = productionRun.getString("facilityId"); 
 	  		
 	  		  for (int i = 0; i < rowCount; i++){
@@ -423,6 +427,9 @@ public class ProductionServices {
 	                inputCtx.put("productId", productId);
 	                inputCtx.put("facilityId", facilityId);
 	                inputCtx.put("quantity", quantity);
+	                if(enableInputPrunIssueDate){
+	                	inputCtx.put("issuedInputDate", productionRun.getTimestamp("estimatedStartDate"));
+	                }
 	                inputCtx.put("workEffortId", workEffortId);
 	                inputCtx.put("userLogin", userLogin);
 	                Map resultCtx = dispatcher.runSync("issueProductionRunTaskComponent", inputCtx);
@@ -496,8 +503,15 @@ public class ProductionServices {
 		  		  return "error";
 	  		  }
 	  		  
+	  		  boolean enableInputPrunIssueDate = Boolean.FALSE;
+	  		  GenericValue tenantConfigEnableCancelAfterShipDate = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PRUN_CHECK", "propertyName","enableInputPrunIssueDate"), false);
+	  		  if (UtilValidate.isNotEmpty(tenantConfigEnableCancelAfterShipDate) && (tenantConfigEnableCancelAfterShipDate.getString("propertyValue")).equals("Y")) {
+				 enableInputPrunIssueDate = Boolean.TRUE;
+	  		  }
+	  		  
 	  		  String facilityId = productionRun.getString("facilityId"); 
-	  		
+	  		  
+	  		  String transferDateStr = UtilDateTime.toDateString(productionRun.getTimestamp("estimatedStartDate"), "dd-MM-yyyy HH:mm:ss");
 	  		  /*GenericValue returnHeader = delegator.makeValue("ReturnHeader");
 	  		  returnHeader.set("returnHeaderTypeId", "PRODUCTION_RETURN");
 	  		  returnHeader.set("statusId", "RTN_INITIATED");
@@ -539,6 +553,9 @@ public class ProductionServices {
 			  		Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productId", productId, "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 	                serviceContext.put("facilityId", facilityId);
 	                serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+	                if(enableInputPrunIssueDate){
+	                	serviceContext.put("datetimeReceived", productionRun.getTimestamp("estimatedStartDate"));
+			  		}
 	                serviceContext.put("userLogin", userLogin);
 	                Map<String, Object> resultService = dispatcher.runSync("createInventoryItem", serviceContext);
 	                if(ServiceUtil.isError(resultService)){
@@ -554,6 +571,9 @@ public class ProductionServices {
 	                serviceContext.put("inventoryItemId", inventoryItemId);
 	                serviceContext.put("availableToPromiseDiff", quantity);
 	                serviceContext.put("quantityOnHandDiff", quantity);
+	                if(enableInputPrunIssueDate){
+	                	serviceContext.put("effectiveDate", productionRun.getTimestamp("estimatedStartDate"));
+			  		}
 	                serviceContext.put("workEffortId", workEffortId);
 	                serviceContext.put("userLogin", userLogin);
 	                resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
@@ -587,6 +607,9 @@ public class ProductionServices {
 		  		  inputCtx.put("statusId", "IXF_REQUESTED");
 		  		  inputCtx.put("transferGroupTypeId", transferGroupTypeId);
 		  		  inputCtx.put("workEffortId", workEffortId);
+		  		  if(enableInputPrunIssueDate){
+		  			  inputCtx.put("transferDate", transferDateStr);
+		  		  }
 		  		  inputCtx.put("comments", description);
 		  		  inputCtx.put("userLogin", userLogin);
 		  		  Map resultCtx = dispatcher.runSync("createStockXferRequest", inputCtx);
@@ -669,6 +692,17 @@ public class ProductionServices {
 	  			  return "error";
 	  		  }
 	  		  
+	  		  if(UtilValidate.isEmpty(productionRunId)){
+	  			  productionRunId = (String)ProductionNetworkServices.getRootProductionRun(delegator, workEffortId);
+	  		  }
+	  		  GenericValue productionRun = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId), false);
+	  		  
+	  		  boolean enableInputPrunIssueDate = Boolean.FALSE;
+	  		  GenericValue tenantConfigEnableCancelAfterShipDate = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PRUN_CHECK", "propertyName","enableInputPrunIssueDate"), false);
+	  		  if (UtilValidate.isNotEmpty(tenantConfigEnableCancelAfterShipDate) && (tenantConfigEnableCancelAfterShipDate.getString("propertyValue")).equals("Y")) {
+				 enableInputPrunIssueDate = Boolean.TRUE;
+	  		  }
+	  		  
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  
 		  		  String productId = "";
@@ -694,6 +728,9 @@ public class ProductionServices {
 		  		  inputCtx.put("facilityId", toFacilityId);
 		  		  inputCtx.put("quantity", quantity);
 		  		  inputCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+		  		  if(enableInputPrunIssueDate){
+		  			  inputCtx.put("dateTimeProduced", productionRun.getTimestamp("estimatedStartDate"));
+		  		  }
 		  		  inputCtx.put("workEffortId", workEffortId);
 		  		  inputCtx.put("userLogin", userLogin);
 		  		  Map resultCtx = dispatcher.runSync("productionRunTaskProduce", inputCtx);
@@ -813,14 +850,24 @@ public class ProductionServices {
 	  	String productId = (String) context.get("productId");
 	  	String batchId = (String) context.get("inventoryItemId");
 	  	String facilityId = (String) context.get("facilityId");
+	  	String varianceDateStr = (String) context.get("varianceDate");
 	  	BigDecimal variance = (BigDecimal) context.get("variance");
 	  	String varianceTypeId = (String) context.get("varianceTypeId");
 	  	String comment = (String) context.get("comment");
 	  	String varianceReasonId = (String) context.get("varianceReasonId");
 	  	Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 	  	String inventoryItemId = "";
+	  	Timestamp varianceDate = UtilDateTime.nowTimestamp();
 	  	try{
-	  		
+	  		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	       	 if(UtilValidate.isNotEmpty(varianceDateStr)){
+	       		 try {
+	       			varianceDate = new java.sql.Timestamp(sdf.parse(varianceDateStr).getTime());
+         		 } catch (ParseException e) {
+         			Debug.logError(e, "Cannot parse date string: "+ varianceDateStr, module);			
+         			return ServiceUtil.returnError("Cannot parse date string: "+ varianceDateStr);
+         		 }
+	       	 }
 	  		if(UtilValidate.isEmpty(variance)){
 	  			Debug.logError("variance cannot be empty ", module);
 				return ServiceUtil.returnError("variance cannot be empty");
@@ -865,7 +912,7 @@ public class ProductionServices {
 	  			
 	  			Map inputCtx = FastMap.newInstance();
 	  			inputCtx.put("userLogin", userLogin);
-	  			inputCtx.put("physicalInventoryDate", nowTimestamp);
+	  			inputCtx.put("physicalInventoryDate", varianceDate);
 	  			inputCtx.put("generalComments", comment);
 	  			try{
 	  				result = dispatcher.runSync("createPhysicalInventory", inputCtx);
@@ -915,7 +962,7 @@ public class ProductionServices {
 	                
 	                Map inputCtx = FastMap.newInstance();
 		  			inputCtx.put("userLogin", userLogin);
-		  			inputCtx.put("physicalInventoryDate", nowTimestamp);
+		  			inputCtx.put("physicalInventoryDate", varianceDate);
 		  			inputCtx.put("generalComments", comment);
 		  			try{
 		  				result = dispatcher.runSync("createPhysicalInventory", inputCtx);
@@ -1333,12 +1380,10 @@ public class ProductionServices {
         	 }else{
         		 xferDate = UtilDateTime.nowTimestamp();
         	 }
-     		 
         	 if(xferQty.compareTo(BigDecimal.ZERO)<1){
         		 Debug.logError("Transfer Qty cannot be less than 1", module);
    	  			return ServiceUtil.returnError("Transfer Qty cannot be less than 1");
         	 }
-     		 Debug.log("xferDate ############"+xferDate);
         	 List conditionList = FastList.newInstance();
         	 
         	 Map<String, ? extends Object> serviceCtx =  UtilMisc.toMap("productId", productId, "facilityIdTo", toFacilityId, "quantity", xferQty, "userLogin", userLogin);
