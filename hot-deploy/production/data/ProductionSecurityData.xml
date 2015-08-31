@@ -85,7 +85,7 @@
     
     <SecurityPermission description="Accept IN/OUT Transfer..!" permissionId="PRO_ACCEPT_XFER"/>
     <SecurityGroup description="Accept IN/OUT Transfer..!" groupId="PRO_ACCEPT_XFER"/>
-    <SecurityGroupPermission groupId="PRO_ACCEPT_XFER" permissionId="PRO_APPROVE_XFER" />
+    <SecurityGroupPermission groupId="PRO_ACCEPT_XFER" permissionId="PRO_ACCEPT_XFER" />
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_ACCEPT_XFER"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_ACCEPT_XFER"/>
     

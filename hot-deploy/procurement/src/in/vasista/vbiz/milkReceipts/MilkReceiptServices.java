@@ -3276,7 +3276,7 @@ public class MilkReceiptServices {
 							dateTimeReceived = (Timestamp) milkTransfer.get("receiveDate");
 						}
 						GenericValue newEntity = delegator.makeValue("Shipment");
-				        newEntity.set("estimatedShipDate", nowTimeStamp);
+				        newEntity.set("estimatedShipDate", dateTimeReceived);
 				        newEntity.set("shipmentTypeId", "MILK_RE_SHIPMENT");
 				        newEntity.set("statusId", "GENERATED");
 				        newEntity.set("vehicleId",containerId);
