@@ -315,6 +315,10 @@ under the License.
         		<entity-one entity-name="ItemIssuance" value-field="itemIssuance"/>
         		<set field="newEntity.effectiveDate" from-field="itemIssuance.issuedDateTime"/>
         	</if-not-empty>
+        	<if-not-empty field="parameters.shipmentId">
+        		<entity-one entity-name="Shipment" value-field="shipment"/>
+        		<set field="newEntity.effectiveDate" from-field="shipment.estimatedShipDate"/>
+        	</if-not-empty>
         	<if-not-empty field="parameters.receiptId">
         		<entity-one entity-name="ShipmentReceipt" value-field="shipmentReceipt"/>
         		<set field="newEntity.effectiveDate" from-field="shipmentReceipt.datetimeReceived"/>
