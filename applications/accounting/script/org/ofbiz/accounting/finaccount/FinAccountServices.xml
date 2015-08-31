@@ -283,7 +283,10 @@ under the License.
 				<set field="createFinAccountTransMap.amount" from-field="parameters.amount"/>			
 			</if-not-empty>		
 			<set field="createFinAccountTransMap.finAccountId" from-field="parameters.finAccountId"/>
-			<set field="createFinAccountTransMap.partyId" from-field="finAccount.ownerPartyId"/>			
+			<set field="createFinAccountTransMap.partyId" from-field="parameters.partyId"/>	
+			<if-empty field="parameters.partyId">
+			<set field="createFinAccountTransMap.partyId" from-field="finAccount.ownerPartyId"/>
+			</if-empty>		
 			<set field="createFinAccountTransMap.transactionDate" from-field="parameters.transactionDate"/>
 			<set field="createFinAccountTransMap.entryDate" from-field="parameters.entryDate"/>	
 			<set field="createFinAccountTransMap.reasonEnumId" value="FATR_CONTRA"/>	
