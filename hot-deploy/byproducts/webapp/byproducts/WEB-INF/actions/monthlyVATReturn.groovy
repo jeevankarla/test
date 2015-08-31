@@ -92,10 +92,15 @@ amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayB
 shipmentIds.addAll(amShipmentIds);
 pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
 shipmentIds.addAll(pmShipmentIds);
-List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
-if(UtilValidate.isNotEmpty(adhocShipments)){
-	shipmentIds.addAll(adhocShipments);
+maxIntervalDays=UtilDateTime.getIntervalInDays(dayBegin,dayEnd);
+for(k = 1;k<=maxIntervalDays;k++){
+	Timestamp currDay=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(dayBegin, k));
+	List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(currDay, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
+	if(UtilValidate.isNotEmpty(adhocShipments)){
+		shipmentIds.addAll(adhocShipments);
+	}
 }
+
 if(UtilValidate.isNotEmpty(shipmentIds)){
 	resultMap = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]).get("productTotals");
 }
