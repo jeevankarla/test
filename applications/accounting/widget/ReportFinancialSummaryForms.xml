@@ -726,7 +726,28 @@ under the License.
         <field name="skipDecorator"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+     <form name="ListTrialBalance" type="list" list-name="glAccountAndHistories"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-title-style="">
+        <actions>
+           <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
+        </actions>
+        <!-- <row-actions>
+            <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
+        </row-actions> -->
+        <field name="accountCode">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
+         <field name="openingD" widget-style="tabletextright"><display/></field>
+        <field name="openingC" widget-style="tabletextright"><display/></field>
+        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits} " type="currency" currency="${currencyUomId}"/></field>
+        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}" type="currency" currency="${currencyUomId}"/></field>
+    </form>
     <form name="TrialBalanceReport" type="list" list-name="glAccountAndHistories"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
