@@ -2378,7 +2378,6 @@ public class ProductionServices {
 		  		  
 		  	      List<GenericValue> milkTransferList = delegator.findList("MilkTransfer",tranCondition,null,null,null,false);
 		  		  MilkTransfer = EntityUtil.getFirst(milkTransferList);
-		  		  Debug.log("MilkTransfer=============="+MilkTransfer);
 		  	  }catch(GenericEntityException e){
 		  		  Debug.logError("Error while getting already initiated transfers for this indent" , module);
 		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while getting already initiated transfers for this indent");
@@ -2418,6 +2417,7 @@ public class ProductionServices {
 	 		// Here we are initiating vehicleTrip Status
 	 		Map vehicleTripStatusMap = FastMap.newInstance();
 	 		vehicleTripStatusMap.putAll(vehicleTripResultMap);
+	 		vehicleTripStatusMap.remove("responseMessage");
 	 		vehicleTripStatusMap.put("statusId","MR_ISSUE_INIT");
 	 		vehicleTripStatusMap.put("userLogin",userLogin);
 	 		vehicleTripStatusMap.put("estimatedStartDate",UtilDateTime.nowTimestamp());
