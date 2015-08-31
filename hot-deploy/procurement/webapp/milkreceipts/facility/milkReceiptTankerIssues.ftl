@@ -833,7 +833,7 @@ function reloadingPage(){
    			<label>VEHICLES WAITING FOR QC</label>	
    		<#elseif displayScreen == "ISSUE_GRSWEIGHT">	
    			<label>VEHICLES WAITING FOR GROSS WEIGHT</label>
-		<#elseif displayScreen == "VEHICLE_TAREWEIGHT">	
+		<#elseif displayScreen == "ISSUE_TARWEIGHT">	
    			<label>VEHICLES WAITING FOR TARE WEIGHT</label>
    		<#elseif displayScreen == "ISSUE_OUT">	
    			<label>VEHICLES WAITING TO EXIT</label>		
