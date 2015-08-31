@@ -69,9 +69,16 @@ public class CreateWeighBridgeData {
     	Map<String, Object> result = FastMap.newInstance();
     	String productId = "";
     	Locale locale = Locale.getDefault();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     	
     	Timestamp entryDate = UtilDateTime.nowTimestamp();
+    	Debug.log("username========="+username);
+    	Debug.log("password========="+password);
+    	Debug.log("tenantId========="+tenantId);
+    	Debug.log("date========="+date);
+    	Debug.log("vehicleId========="+vehicleId);
+    	Debug.log("weight========="+weight);
+    	Debug.log("weighmentType========="+weighmentType);
     	
     	try {
     		entryDate = UtilDateTime.toTimestamp(sdf.parse(date)); 
@@ -83,7 +90,7 @@ public class CreateWeighBridgeData {
 			Debug.logError("Cannot parse date string: "+ e, CreateWeighBridgeData.class.getName());
 			return Response.serverError().entity("Cannot parse date string: "+ date).build();
 		}
- 
+    	Debug.log("entryDate=========="+entryDate);
         if (username == null  || password == null || tenantId ==null) {
             Debug.logError("Problem reading http header(s): login.username  or tenantId", CreateWeighBridgeData.class.getName());        	
             return Response.serverError().entity("username Or password Or tennatId is missing").build();
@@ -137,6 +144,7 @@ public class CreateWeighBridgeData {
         
         List vehicleTripStatusCondList = FastList.newInstance();
     	vehicleTripStatusCondList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
+    	vehicleTripStatusCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.LIKE,"MR_%"));
     	vehicleTripStatusCondList.add(EntityCondition.makeCondition("estimatedStartDate",EntityOperator.LESS_THAN_EQUAL_TO,entryDate));
     	vehicleTripStatusCondList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
     	
@@ -144,12 +152,15 @@ public class CreateWeighBridgeData {
     	List<GenericValue> vehicleTripStatusList = FastList.newInstance();
     	
         // Here  we are trying to get the vehicle status pending 
-        try{
+    	Debug.log("vehicleTripStatusCond===================="+vehicleTripStatusCond);
+    	try{
         	vehicleTripStatusList = delegator.findList("VehicleTripStatus", vehicleTripStatusCond, null, null, null, false);
         }catch(Exception e){
         	Debug.logError("Error While getting previous status of the vehicle  "+e, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Error While getting previous status of the vehicle").build();
         }	
+    	Debug.log("vehicleTripStatusList===========Size========="+vehicleTripStatusList.size());
+    	
         if(UtilValidate.isEmpty(vehicleTripStatusList)){
         	Debug.logError("Previous status not found for vehicle :"+vehicleId, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Previous status not found for vehicle :"+vehicleId).build();
@@ -157,8 +168,9 @@ public class CreateWeighBridgeData {
         
         GenericValue vehicleStatus = EntityUtil.getFirst(vehicleTripStatusList);
         String sequenceNum = (String)vehicleStatus.get("sequenceNum");
-        
+        Debug.log("vehicleStatus===================="+vehicleStatus);
         List MilkTransferCondList = FastList.newInstance();
+        Debug.log("vehicleStatus========"+vehicleStatus);
         
         MilkTransferCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId));
         MilkTransferCondList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
@@ -172,7 +184,7 @@ public class CreateWeighBridgeData {
         	Debug.logError("Error while getting Milk TrasnsfersList :"+e, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Error while getting Milk TrasnsfersList :").build();
         }
-        
+        Debug.log("MilkTransfer========"+MilkTransfer);
         if(UtilValidate.isEmpty(MilkTransfer)){
         	Debug.logError("No valid Transfer Found to Store weight :", CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("No valid Transfer Found to Store weight :").build();

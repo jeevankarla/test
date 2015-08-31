@@ -844,7 +844,7 @@ function reloadingPage(){
 	<form id="listPendingVehicles" name="listPendingVehicles" action="" method="post">
 	<table class="basic-table hover-bar h3" widht='80%' style="border-spacing: 50px 2px;" border="1"> 
 		<tr><td><h2><u>VEHICLE NO</u></h2></td>
-		    <td><h2><u>TAREWEIGHT TIME</u><h2></td>
+		    <td><h2><u>INITIATION TIME</u><h2></td>
 			<td><h2><u> TO <u><h2></td>
 		</tr>
 		 <#if vehicleList?has_content>
