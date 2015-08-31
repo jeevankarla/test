@@ -278,8 +278,6 @@ $(document).ready(function() {
 
 function populateNetWeight(){
 	var tareWeight = $('[name=tareWeight]').val();
-	alert('tareWeight======='+tareWeight);
-	 alert('grossWeight======='+grossWeight); 			
 	if(typeof(tareWeight)!= "undefined" ){	
 		var netWeight = grossWeight-tareWeight ;
 		$('#netWeightToolTip').val(netWeight);
