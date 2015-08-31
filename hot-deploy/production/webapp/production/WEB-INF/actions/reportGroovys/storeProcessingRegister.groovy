@@ -402,6 +402,7 @@ pmSiloIds.each{eachPmSiloId->
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,eachPmSiloId));
 	conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
+	conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 	cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	pmSiloInvDetailList = EntityUtil.filterByCondition(allSiloInveAndDetailList, cond);
 	if(UtilValidate.isNotEmpty(pmSiloInvDetailList)){
@@ -481,26 +482,26 @@ pmSiloIds.each{eachPmSiloId->
 	if(UtilValidate.isNotEmpty(issuedInvDetails)){
 		issueNo=1;
 	   issuedInvDetails.each{eachinventoryItemDetail->
-		/* BigDecimal issuedQty = (BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff");
+		   
+		   // PM issued Qty through production
+		   BigDecimal pmissueProdnQty = (BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff");
 		   workEffortId=eachinventoryItemDetail.workEffortId;
 		   siloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,workEffortId));
-			if(UtilValidate.isNotEmpty(siloWorkList)){
+		   if(UtilValidate.isNotEmpty(siloWorkList)){
 			   String receivedFacilityId = siloWorkList[0].get("facilityId");
-			   if(UtilValidate.isEmpty(IssuedSiloMap) || (UtilValidate.isNotEmpty(IssuedSiloMap) && UtilValidate.isEmpty(IssuedSiloMap.get(receivedFacilityId)))){
-				   Map qtyDetMap = FastMap.newInstance();
-				   qtyDetMap.put("qty",issuedQty);
-				   issuedTotQty=issuedTotQty+issuedQty;
-				   IssuedSiloMap.put(receivedFacilityId, qtyDetMap);
-			   }else{
-				   Map tempQtyMap = FastMap.newInstance();
-				   tempQtyMap.putAll(IssuedSiloMap.get(receivedFacilityId));
-				   tempQtyMap.putAt("qty", tempQtyMap.get("qty") + issuedQty);
-				   issuedTotQty=(issuedTotQty+ issuedQty);
-				   
-				   IssuedSiloMap.put(receivedFacilityId, tempQtyMap);
-				   }
-			}*/
-			if(eachinventoryItemDetail.quantityOnHandDiff<0 && UtilValidate.isNotEmpty(eachinventoryItemDetail.inventoryTransferId)){
+			   if(UtilValidate.isNotEmpty(receivedFacilityId) && pmissueProdnQty<0){
+				   Map pmIssProductioMap = FastMap.newInstance();
+				   pmIssProductioMap.put("qty",pmissueProdnQty);
+				   pmIssProductioMap.put("recFacility",receivedFacilityId);
+				   pmSiloIssueMap.put(issueNo, pmIssProductioMap);
+				   pmIssuedSiloQty=pmIssuedSiloQty+pmissueProdnQty;
+				   issueNo++;
+			   }
+		   }
+			  
+		
+		  // PM Material Transfer Issues
+		  	if(eachinventoryItemDetail.quantityOnHandDiff<0 && UtilValidate.isNotEmpty(eachinventoryItemDetail.inventoryTransferId)){
 				BigDecimal pmIssueTransQty=BigDecimal.ZERO;
 				pmIssueTransQty=eachinventoryItemDetail.quantityOnHandDiff;
 				inventoryTransferId=eachinventoryItemDetail.inventoryTransferId;

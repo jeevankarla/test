@@ -13,8 +13,37 @@ function makeDatePicker(fromDateId ,thruDateId){
 			}
 		});
 			}
+  //one year restriction
+  function makeDatePickerMr(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+		dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		date = $(this).datepicker('getDate');
+		y = date.getFullYear(),
+		m = date.getMonth();
+		d = date.getDate();
+		    var maxDate = new Date(y+1, m, d);
+		
+		$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+		//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+		}
+		});
+		$( "#"+thruDateId ).datepicker({
+	    dateFormat:'MM d, yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function( selectedDate ) {
+		//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+		}
+		});
+	}	
 			
 	$(document).ready(function(){
+		makeDatePickerMr("deptMilkIssueFromDate","deptMilkIssueThruDate");
+		makeDatePickerMr("weighBridgeReportDate","");
+
 		makeDatePicker("milkAnalysisDate","");
 		makeDatePicker("UnitWiseMilkReceiptFromDate","thruDate");
 		makeDatePicker("UnitWiseMilkReceiptThruDate","thruDate");
@@ -27,7 +56,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("MkrsFromDate","thruDate");
 		makeDatePicker("shiftDate","shiftDate");
 		makeDatePicker("MkrsThruDate","thruDate");
-		makeDatePicker("weighBridgeReportDate","thruDate");
 		makeDatePicker("MilkReceiptWeeklyAnalysisFromDate","thruDate");
 		makeDatePicker("MilkReceiptWeeklyAnalysisThruDate","thruDate");
 		makeDatePicker("RequiredShedwiseAbstractFromDate","thruDate");
@@ -108,7 +136,13 @@ function appendParams(formName, action) {
         <tr class="alternate-row"> 
 				<form id="WeighbridgeReport" name="WeighbridgeReport" mothed="post" action="<@ofbizUrl>WeighbridgeReport.pdf</@ofbizUrl>" target="_blank">
 				   <td>Weighbridge Report</td>
-				   <td>Party Id<input type="text" id="partyId"name="partyId">
+				   <td>
+				             Party Id 
+				             <select name="partyId" id="partyId">
+                             <#list mtPartyIds as partyId>
+						     <option value='${partyId?if_exists}' >${partyId?if_exists}</option>
+						     </#list>
+						     </select>
                           dc No<input type="text" id="dcNo"name="dcNo">
 				                Vehicle No 
 				             <select name="vehicleId" id="vehicleId">
@@ -135,7 +169,37 @@ function appendParams(formName, action) {
 				   <input type="submit" value="Download" class="buttontext"/>
 				 </td>
 			  </form>
-		  </tr>  	   
+		  </tr> 
+     	<#--	<tr class="alternate-row"> 
+				<form id="deptWiseMilkIssueReport" name="deptWiseMilkIssueReport" mothed="post" action="<@ofbizUrl>deptWiseMilkIssueReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="23%"><span class='h3'>Department Wise Milk Issue Register</span></td>
+							<td width="35%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="deptMilkIssueFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="deptMilkIssueThruDate"   name="thruDate"/>
+								 </span>
+							</td> 
+							<td align='left' width="35%"><span class="h3">Department</span>
+					           <select name="deptId" id="deptId">
+                             <#list milkProdDeptIds as deptId>
+						     <option value='${deptId?if_exists}' >${deptId?if_exists}</option>
+						     </#list>
+						     </select>	
+						     <span class="h3">Product</span>
+					           <select name="productId" id="productId">
+                             <#list productIdsCats as productId>
+						     <option value='${productId?if_exists}' >${productId?if_exists}</option>
+						     </#list>
+						     </select>	
+						     	</td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+			 	   -->
 		</table>
     </div>
     </div>
