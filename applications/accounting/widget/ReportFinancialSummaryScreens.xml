@@ -320,7 +320,7 @@
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
 							</link>
-							<include-form name="TrialBalanceReport"
+							<include-form name="ListTrialBalance"
 								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 							<container style="h3">
 								<label
