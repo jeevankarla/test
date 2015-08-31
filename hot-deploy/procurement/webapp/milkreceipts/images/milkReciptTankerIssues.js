@@ -245,7 +245,7 @@ function clearFields(){
 	   frm.reset();
 	   
 	   if(typeof(displayScreen)!= 'undefined'){
-		   if((displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_LOAD") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_OUT")){
+		   if((displayScreen=="ISSUE_TARWEIGHT") || (displayScreen=="ISSUE_CIP") || (displayScreen=="ISSUE_LOAD") || (displayScreen=="ISSUE_QC") || (displayScreen=="ISSUE_OUT")){
 		   	reloadingPage();
 		   }
 	   }

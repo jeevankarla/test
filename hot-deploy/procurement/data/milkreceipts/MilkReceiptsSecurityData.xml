@@ -176,5 +176,10 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_EDIT_SCREEN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_EDIT_SCREEN"/>
     
+    <SecurityPermission description="Find Tanker Issues View..!" permissionId="MR_FTISSUES_VIEW"/>
+    <SecurityGroup description="Find Tanker Issues View..!" groupId="MR_FTISSUES_VIEW"/>
+    <SecurityGroupPermission groupId="MR_FTISSUES_VIEW" permissionId="MR_FTISSUES_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FTISSUES_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FTISSUES_VIEW"/>
     
 </entity-engine-xml>

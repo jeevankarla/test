@@ -864,5 +864,62 @@
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
-    
+    <form name="ListTankerIssues" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="milkDetailslist"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
+       <field name="milkTransferId" title="Record No"><display/></field>
+       <field name="containerId" title="Vehicle Number"><display/></field>
+  		<field name="partyIdTo" separate-column="true" title="To"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
+  		<field name="dcNo" title="DC No"><display></display></field>      
+       <field name="vehicleEntryDate" title="Entry Date"><display/></field>
+       <field name="purposeTypeId" title="Purpose"><display/></field>
+       <field name="receiveDate" title="TareWeight Date"><display/></field>
+       <field name="tareWeight" title="TareWeight"><display></display></field>
+       <field name="productId" title="Milk Type"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
+       <field name="siloId" title="Silo"><display></display></field>
+       <field name="receivedQuantity" title="&#160;&#160;&#160;&#160;Quantity (Kgs)" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+  <!-- <field name="receivedQuantityLtrs" title="Recd.Qty(Ltrs)"><display default-value="${quantity/1.03}"/></field>  -->
+       <field name="fat" title="&#160;&#160; Fat %" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="snf" title="&#160;&#160; SNF %" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="receivedKgFat" title="&#160;&#160; KgFat" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>
+       <field name="receivedKgSnf" title="&#160;&#160; KgSNF" widget-style="tabletextright"  widget-area-style="align-text"> <display/></field>
+       <field name="contractorId" title="Contractor"> <display/></field>
+       <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+       <!-- <field   name="update"  title="Edit" title-style="buttontext" separate-column="true" widget-style="button">
+          <hyperlink target="updateMilkRecord" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field>  -->
+       <field name="report" use-when="!statusId.equals(&quot;MXF_INPROCESS&quot;)" widget-style="buttontext">
+       		<hyperlink  description="Report" target="MilkOutGoingReport.pdf" target-window="_blank">
+       		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
+           </hyperlink>
+       </field>
+       <field  name="delete" use-when="statusId.equals(&quot;MXF_RECD&quot;)" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
+            <hyperlink  description="delete" target-type="plain">
+            	<parameter param-name="hideSearch" value="N"/>
+           </hyperlink>
+        </field> 
+       <sort-order>
+	        <sort-field name="milkTransferId"/>
+   	        <sort-field name="containerId"/>
+   	        <sort-field name="contractorId"/>
+   	        <sort-field name="vehicleEntryDate"/>
+   	        <sort-field name="purposeTypeId"/>
+   	        <sort-field name="receiveDate"/>
+   	        <sort-field name="tareWeight"/>
+	        <sort-field name="partyId"/>
+	        <sort-field name="partyIdTo"/>
+	        <sort-field name="dcNo"/>
+	        <sort-field name="productId"/>
+	        <sort-field name="siloId"/>
+	        <sort-field name="receivedQuantity"/>
+	        <sort-field name="receivedQuantityLtrs"/>
+	        <sort-field name="fat"/>
+	        <sort-field name="snf"/>
+	        <sort-field name="receivedKgFat"/>
+	        <sort-field name="receivedKgSnf"/>
+	        <sort-field name="statusId"/>
+	        <sort-field name="update"/>
+	        <sort-field name="delete"/>
+       </sort-order>
+    </form>
 </forms>
