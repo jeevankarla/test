@@ -291,8 +291,8 @@ public class ProductionServices {
 		            EntityCondition conditionForReturn = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	            	List<GenericValue> inventoryTransferGroup = delegator.findList("InventoryTransferGroup", conditionForReturn, null, null, null, false);
 	            	if(UtilValidate.isNotEmpty(inventoryTransferGroup)){
-                 		String transferGroupId = (EntityUtil.getFirst(inventoryTransferGroup)).getString("transferGroupId");
-    	            	returnItems = delegator.find("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, null);
+	               	    List<String> transferGroupIds = EntityUtil.getFieldListFromEntityList(inventoryTransferGroup, "transferGroupId", true);
+    	            	returnItems = delegator.find("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.IN, transferGroupIds), null, null, null, null);
 		            	if(UtilValidate.isNotEmpty(returnItems)){
 				            GenericValue returnTrans;
 				            while ((returnTrans = returnItems.next()) != null) {
