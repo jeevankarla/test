@@ -576,6 +576,7 @@ under the License.
         <!-- create record for InventoryItemDetail entity -->
         <get-related-one value-field="shipmentReceipt" relation-name="InventoryItem" to-value-field="inventoryItem"/>
         <set field="inventoryItemDetailMap.inventoryItemId" from-field="inventoryItem.inventoryItemId"/>
+        <set field="inventoryItemDetailMap.receiptId" from-field="shipmentReceipt.receiptId"/>
         <set field="inventoryItemDetailMap.quantityOnHandDiff" value="${-1 * inventoryItem.quantityOnHandTotal}" type="BigDecimal"/>
         <set field="inventoryItemDetailMap.availableToPromiseDiff" value="${-1 * inventoryItem.availableToPromiseTotal}" type="BigDecimal"/>
         <call-service service-name="createInventoryItemDetail" in-map-name="inventoryItemDetailMap"/>

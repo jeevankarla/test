@@ -470,7 +470,61 @@ public class InventoryServices {
 
         return ServiceUtil.returnSuccess();
     }
-
+    public static Map<String, ? extends Object> checkPopulateEffectiveDate(DispatchContext dctx, Map context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+        String inventoryItemId = (String)context.get("inventoryItemId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        BigDecimal quantityOnHandDiff = (BigDecimal)context.get("quantityOnHandDiff");
+        BigDecimal availableToPromiseDiff = (BigDecimal) context.get("availableToPromiseDiff");
+        Map<String, Object> result = FastMap.newInstance();
+        if(UtilValidate.isNotEmpty(effectiveDate)){
+        	
+        	if(availableToPromiseDiff.compareTo(BigDecimal.ZERO)<0){
+        		GenericValue inventoryItem = null;
+                try {
+                    inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
+                    String productId = inventoryItem.getString("productId");
+                    String facilityId = inventoryItem.getString("facilityId");
+                    Map inventoryDetails = (Map)getProductInventoryOpeningBalance(dctx, UtilMisc.toMap("effectiveDate", effectiveDate, "userLogin", userLogin, "productId", productId, "facilityId", facilityId));
+                    BigDecimal totalInventory = (BigDecimal)inventoryDetails.get("inventoryCount");
+                    BigDecimal checkInv = totalInventory.add(availableToPromiseDiff);
+                    if(checkInv.compareTo(BigDecimal.ZERO)<0){
+                    	Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
+        	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    }
+                    
+                    List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId), null, UtilMisc.toList("effectiveDate"), null, false);
+                    
+                    if(UtilValidate.isNotEmpty(inventoryItemDetails)){
+                    	Timestamp createdDate = (EntityUtil.getFirst(inventoryItemDetails)).getTimestamp("effectiveDate");
+                    	if((UtilDateTime.getDayStart(createdDate)).compareTo(UtilDateTime.getDayStart(effectiveDate))> 0){
+                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
+            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    	}
+                    	
+                    	List<GenericValue> inventoryFilteredList = EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN, effectiveDate));
+                    	BigDecimal invTotalTillDate = BigDecimal.ZERO;
+                    	for(GenericValue eachInventoryDetails : inventoryFilteredList){
+                    		invTotalTillDate = invTotalTillDate.add(eachInventoryDetails.getBigDecimal("availableToPromiseDiff"));
+                    	}
+                    	BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
+                    	if(effectiveDateInvCheck.compareTo(BigDecimal.ZERO)<0){
+                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
+            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    	}
+                    }
+                    
+                } catch (Exception e) {
+                	Debug.logError(e, module);
+                    return ServiceUtil.returnError("Error fetching data " + e);
+                }
+        	}
+        }
+        return result;
+    }
+    
     /** In spite of the generic name this does the very specific task of checking availability of all back-ordered items and sends notices, etc */
     public static Map<String, Object> checkInventoryAvailability(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
@@ -1313,6 +1367,7 @@ public class InventoryServices {
 
         BigDecimal inventoryCost = BigDecimal.ZERO;
         BigDecimal inventoryCount = BigDecimal.ZERO;
+        BigDecimal inventoryATP = BigDecimal.ZERO;
         EntityListIterator eli = null;
         try {
             eli = delegator.find("InventoryItemAndDetail", condition, null, null, UtilMisc.toList("effectiveDate"), null);
@@ -1320,11 +1375,13 @@ public class InventoryServices {
             GenericValue inventoryTrans;
             while ((inventoryTrans = eli.next()) != null) {
                 BigDecimal quantityOnHandDiff = inventoryTrans.getBigDecimal("quantityOnHandDiff");
+                BigDecimal availableToPromiseDiff = inventoryTrans.getBigDecimal("availableToPromiseDiff");
                 BigDecimal unitCost = BigDecimal.ZERO;
                 if(UtilValidate.isNotEmpty(inventoryTrans.get("unitCost"))){
                 	unitCost = inventoryTrans.getBigDecimal("unitCost");
                 }
                 inventoryCount = inventoryCount.add(quantityOnHandDiff);
+                inventoryATP = inventoryATP.add(availableToPromiseDiff);
                 BigDecimal lotCost = quantityOnHandDiff.multiply(unitCost);
                 inventoryCost = inventoryCost.add(lotCost);
             }
@@ -1337,6 +1394,7 @@ public class InventoryServices {
         }
         result.put("inventoryCount", inventoryCount);
         result.put("inventoryCost", inventoryCost);
+        result.put("inventoryATP", inventoryATP);
         return result;
     }
     

@@ -73,7 +73,9 @@ under the License.
     <eca service="balanceInventoryItems" event="commit">
         <action service="updateProductIfAvailableFromShipment" mode="sync"/>
     </eca>
-
+	<eca service="createInventoryItemDetail" event="commit">
+        <action service="checkPopulateEffectiveDate" mode="sync"/>
+    </eca>
     <!-- Product Price Change ECAs -->
     <eca service="createProductPrice" event="commit">
         <action service="saveProductPriceChange" mode="sync"/>

@@ -188,6 +188,9 @@ under the License.
                     </calculate>
                     <set field="createDetailMap.reasonEnumId" from-field="parameters.reasonEnumId"/>
                     <set field="createDetailMap.description" from-field="parameters.description"/>
+                    <if-not-empty field="parameters.issuedInputDate">
+                    	<set field="createDetailMap.effective" from-field="parameters.issuedInputDate"/>
+                    </if-not-empty>
                     <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                     <clear-field field="createDetailMap"/>
                     <set field="balanceInventoryItemsInMap.inventoryItemId" from-field="lastNonSerInventoryItem.inventoryItemId"/>
@@ -199,6 +202,9 @@ under the License.
                     <set field="createInvItemInMap.productId" from-field="productId"/>
                     <set field="createInvItemInMap.facilityId" from-field="workEffort.facilityId"/>
                     <set field="createInvItemInMap.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM"/>
+                    <if-not-empty field="parameters.issuedInputDate">
+                    	<set field="createInvItemInMap.datetimeReceived" from-field="parameters.issuedInputDate"/>
+                    </if-not-empty>
                     <call-service service-name="createInventoryItem" in-map-name="createInvItemInMap">
                         <result-to-field result-name="inventoryItemId" field="createInvItemOutMap.inventoryItemId"/>
                     </call-service>
@@ -221,6 +227,9 @@ under the License.
                     </calculate>
                     <set field="createDetailMap.reasonEnumId" from-field="parameters.reasonEnumId"/>
                     <set field="createDetailMap.description" from-field="parameters.description"/>
+                    <if-not-empty field="parameters.issuedInputDate">
+                    	<set field="createDetailMap.effectiveDate" from-field="parameters.issuedInputDate"/>
+                    </if-not-empty>
                     <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                     <clear-field field="createDetailMap"/>
                 </else>
@@ -315,6 +324,9 @@ under the License.
                             </calculate>
                             <set field="createDetailMap.reasonEnumId" from-field="parameters.reasonEnumId"/>
                             <set field="createDetailMap.description" from-field="parameters.description"/>
+                    		<if-not-empty field="parameters.issuedInputDate">
+                    			<set field="createDetailMap.effectiveDate" from-field="parameters.issuedInputDate"/>
+                    		</if-not-empty>
                             <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                             <clear-field field="createDetailMap"/>
 
