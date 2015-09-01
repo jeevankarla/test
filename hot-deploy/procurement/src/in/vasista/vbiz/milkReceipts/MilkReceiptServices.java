@@ -3846,41 +3846,6 @@ public class MilkReceiptServices {
 			        }
 			        BigDecimal shipQty = grossWeight.subtract(tareWeight);
 			        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
-			        Map itemIssueCtx = FastMap.newInstance();
-			        itemIssueCtx.put("userLogin", userLogin);
-					itemIssueCtx.put("shipmentId", shipmentId);
-					itemIssueCtx.put("shipmentItemSeqId", shipmentItemSeqId);
-					itemIssueCtx.put("productId", productId);
-					itemIssueCtx.put("quantity", shipQty);
-					itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
-					itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
-					itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
-					itemIssueCtx.put("snfPercent", sendSnf);
-					itemIssueCtx.put("fatPercent",sendFat);
-					itemIssueCtx.put("facilityId", (String)MilkTransferItem.get("siloId"));
-					
-					String custRequestId = (String)milkTransfer.get("custRequestId");
-					String custRequestItemSeqId = (String)milkTransfer.get("custRequestItemSeqId");
-					if(UtilValidate.isNotEmpty(custRequestId) ){
-						itemIssueCtx.put("custRequestId",custRequestId);
-						itemIssueCtx.put("custRequestItemSeqId", custRequestItemSeqId);
-					}
-					
-					resultMap.remove("shipmentItemSeqId");
-					
-					String itemIssuanceId ="" ;
-					Map resultCtx = FastMap.newInstance();
-					try{
-						 resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
-						if (ServiceUtil.isError(resultCtx)) {
-							Debug.logError("Problem creating item issuance for requested item", module);
-							return resultCtx;
-						}
-						itemIssuanceId = (String)resultCtx.get("itemIssuanceId") ;
-				   	}catch (Exception e) {
-				 		Debug.logError(e, "Error While Creating Item Issuance !", module);
-				 		return ServiceUtil.returnError("Failed to create a Item Issuance " + e);	  
-				  	}
 					
 					List<GenericValue> receiptInventoryItems = FastList.newInstance();
 					List invConditionList = FastList.newInstance();
@@ -3906,6 +3871,8 @@ public class MilkReceiptServices {
 						Debug.logError("You cannot make this transfer from this Silo .Available quantity is less than shipping quantity. ",module);
 						return ServiceUtil.returnError("You cannot make this transfer.Available quantity is less than shipping quantity. ");
 					}
+					String custRequestId = (String)milkTransfer.get("custRequestId");
+					String custRequestItemSeqId = (String)milkTransfer.get("custRequestItemSeqId");
 					BigDecimal toBeIssuedQty = shipQty;
 					for(GenericValue inventoryItem : receiptInventoryItems){
 						BigDecimal issueQty = BigDecimal.ZERO;
@@ -3921,6 +3888,45 @@ public class MilkReceiptServices {
 							issueQty = atpTotal; 
 							toBeIssuedQty = toBeIssuedQty.subtract(atpTotal); 
 						}
+						
+						Map itemIssueCtx = FastMap.newInstance();
+				        itemIssueCtx.put("userLogin", userLogin);
+						itemIssueCtx.put("shipmentId", shipmentId);
+						itemIssueCtx.put("shipmentItemSeqId", shipmentItemSeqId);
+						itemIssueCtx.put("productId", productId);
+						itemIssueCtx.put("quantity", issueQty);
+						itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
+						itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+						itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+						itemIssueCtx.put("snfPercent", sendSnf);
+						itemIssueCtx.put("fatPercent",sendFat);
+						itemIssueCtx.put("facilityId", (String)MilkTransferItem.get("siloId"));
+						itemIssueCtx.put("inventoryItemId", inventoryItemId);
+						if(UtilValidate.isNotEmpty(custRequestId) ){
+							itemIssueCtx.put("custRequestId",custRequestId);
+							itemIssueCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+						}
+						
+						resultMap.remove("shipmentItemSeqId");
+						
+						String itemIssuanceId ="" ;
+						Map resultCtx = FastMap.newInstance();
+						try{
+							 resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
+							if (ServiceUtil.isError(resultCtx)) {
+								Debug.logError("Problem creating item issuance for requested item", module);
+								return resultCtx;
+							}
+							itemIssuanceId = (String)resultCtx.get("itemIssuanceId") ;
+					   	}catch (Exception e) {
+					 		Debug.logError(e, "Error While Creating Item Issuance !", module);
+					 		return ServiceUtil.returnError("Failed to create a Item Issuance " + e);	  
+					  	}
+						
+						
+						
+						
+						
 						try{
 							Map createInvDetail = FastMap.newInstance();
 							createInvDetail.put("userLogin", userLogin);
