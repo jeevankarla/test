@@ -890,7 +890,11 @@
         	
 			<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
         	<entity-condition entity-name="Facility" distinct="true" list="facilityList">
+        		<condition-list combine="and">
+        		<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+        		<condition-expr field-name="facilityTypeId" operator="equals" value="STORE"/>
         		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
+        		</condition-list>
         	</entity-condition>
     	</actions>
     	<field name="productId" title="Product" required-field="true" >
