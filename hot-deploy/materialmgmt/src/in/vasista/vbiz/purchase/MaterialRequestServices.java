@@ -2,6 +2,7 @@ package in.vasista.vbiz.purchase;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -804,6 +805,7 @@ public class MaterialRequestServices {
         String shipmentTypeId = (String) context.get("shipmentTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String createNewShipment = (String)context.get("createNewShipment");
+        Timestamp issuedDateTime = (Timestamp) context.get("issuedDateTime");
         String shipmentId = "";	
         try {
         	 if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)==0)){
@@ -981,6 +983,8 @@ public class MaterialRequestServices {
                 itemIssuanceCtx.put("custRequestId", custRequestId);
                 itemIssuanceCtx.put("custRequestItemSeqId", custRequestItemSeqId);
                 itemIssuanceCtx.put("quantity", issueQuantity);
+                itemIssuanceCtx.put("issuedDateTime", issuedDateTime);
+                
                 // Call issuance service
                 resultCtx = dispatcher.runSync("createIssuanceForCustRequestItem",itemIssuanceCtx);
                // Debug.log("===itemIssuanceId=="+resultCtx.get("itemIssuanceId")+"==Shipment="+resultCtx.get("shipmentId"));
@@ -1012,6 +1016,7 @@ public class MaterialRequestServices {
 		String shipmentId = (String) context.get("shipmentId");
 		BigDecimal requestedQuantity = BigDecimal.ZERO;
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Timestamp issuedDateTime = (Timestamp) context.get("issuedDateTime");
 		GenericValue custRequestItem=null;
 		Map result = ServiceUtil.returnSuccess();
 		try{
@@ -1062,6 +1067,9 @@ public class MaterialRequestServices {
 			itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
 			itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
 			itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+			if(UtilValidate.isNotEmpty(issuedDateTime)){
+				 itemIssueCtx.put("issuedDateTime", issuedDateTime);
+			}
 			Map resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
 			if (ServiceUtil.isError(resultCtx)) {
 				Debug.logError("Problem creating item issuance for requested item", module);
@@ -1085,6 +1093,9 @@ public class MaterialRequestServices {
 			createInvDetail.put("itemIssuanceId", itemIssuanceId);
 			createInvDetail.put("quantityOnHandDiff", quantity.negate());
 			createInvDetail.put("availableToPromiseDiff", quantity.negate());
+			if(UtilValidate.isNotEmpty(issuedDateTime)){
+				 itemIssueCtx.put("effectiveDate", issuedDateTime);
+			}
 			resultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
 			if (ServiceUtil.isError(resultCtx)) {
 				Debug.logError("Problem decrementing inventory for requested item ", module);
@@ -1469,6 +1480,12 @@ public class MaterialRequestServices {
 			               serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
 			               serviceContext.put("userLogin", userLogin);
 			               Map<String, Object> resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+			               if (ServiceUtil.isError(resultService)) {
+								  Debug.logError("Error while creating InventoryItem: " + facilityId, module);
+								  request.setAttribute("_ERROR_MESSAGE_", "Error while creating InventoryItem: " + facilityId);
+								  TransactionUtil.rollback();
+								  return "error";
+							  }
 			               String inventoryItemId = (String)resultService.get("inventoryItemId");
 			               serviceContext.clear();
 			               serviceContext.put("inventoryItemId", inventoryItemId);
@@ -1478,6 +1495,12 @@ public class MaterialRequestServices {
 			               serviceContext.put("quantityOnHandDiff", quantity);
 			               serviceContext.put("userLogin", userLogin);
 			               resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+			               if (ServiceUtil.isError(resultService)) {
+								  Debug.logError("Error while creating InventoryItemDetail.", module);
+								  request.setAttribute("_ERROR_MESSAGE_", "Error while creating InventoryItemDetail.");
+								  TransactionUtil.rollback();
+								  return "error";
+							  }
 			           }catch (Exception e) {
 			        	   Debug.logError(e, "Canot add inventory to dept: " + e.toString(), module);
 			           } 
@@ -1898,12 +1921,25 @@ public class MaterialRequestServices {
 		  	  HttpSession session = request.getSession();
 		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	  String issuedDateTimeStr = (String) request.getParameter("issuedDate");
 		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		  	  if (rowCount < 1) {
 		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
 		  		  return "error";
 		  	  }
+		  	Timestamp issuedDateTime = null;
+			DateFormat givenFormatter = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+	        if(UtilValidate.isNotEmpty(issuedDateTimeStr)){
+		        try {
+		        Date givenIssueDate = (Date)givenFormatter.parse(issuedDateTimeStr);
+		        issuedDateTime = new java.sql.Timestamp(givenIssueDate.getTime());
+		        }catch (ParseException e) {
+			  		Debug.logError(e, "Cannot parse date string: " + issuedDateTimeStr, module);
+			  	} catch (NullPointerException e) {
+		  			Debug.logError(e, "Cannot parse date string: " + issuedDateTimeStr, module);
+			  	}
+	        }
 		  	  String custRequestId = "";
 		  	  String custRequestItemSeqId = "";
 		  	  BigDecimal toBeIssuedQty = BigDecimal.ZERO;
@@ -1956,6 +1992,7 @@ public class MaterialRequestServices {
 						issuanceMapCtx.put("shipmentTypeId", shipmentTypeId);
 						issuanceMapCtx.put("userLogin", userLogin);
 						issuanceMapCtx.put("locale", locale);
+						issuanceMapCtx.put("issuedDateTime", issuedDateTime);
 						resultCtx = dispatcher.runSync("issueProductForRequest", issuanceMapCtx);
 						if (ServiceUtil.isError(resultCtx)) {
 							Debug.logError("Issuance Failed in Service for Indent : " + custRequestId+":"+custRequestItemSeqId, module);

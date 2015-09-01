@@ -58,6 +58,8 @@
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_INDENT_ENTRY"/>
     <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="ORDERMGR_CRQ_ADMIN"/>
 	 <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="ORDERMGR_CRQ_CREATE"/>
+	 <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="PRO_INDENT_ENTRY" permissionId="ACCTG_PREF_VIEW"/>
     
      <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="ORDERMGR_CRQ_ADMIN"/>
 	 <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="ORDERMGR_CRQ_CREATE"/>

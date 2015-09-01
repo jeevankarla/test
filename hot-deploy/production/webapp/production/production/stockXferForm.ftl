@@ -75,6 +75,8 @@
 			dateFormat:'dd-mm-yy',
 			showSecond: true,
 			timeFormat: 'hh:mm:ss',
+			minDate: '-1d',
+		      maxDate: '0d',
 			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
 	        //    var nowTime = new Date(); 
 	        //    onlyDate=onlyDate+" "+nowTime.getHours()+":"+nowTime.getMinutes()+":"+nowTime.getSeconds();
@@ -105,7 +107,7 @@
 			message += "<form name='xferForm' id='xferForm' method='post' action='createStockXferRequest'><input type='hidden' name='transferGroupTypeId' value='INTERNAL_XFER'>";
 			message += "<table cellspacing=10 cellpadding=10 style='background-repeat:no-repeat; width:450px;margin:0;'>" ;
 			message += "<tr><td align='left'><h2>Product</h2></td><td>&nbsp;</td><td align='left'><input type='hidden' name='productId' id='productId' value='"+prodId+"'><input type='hidden' name='statusId' id='statusId' value='IXF_REQUESTED'><h3>"+prodName+"</h3></td></tr>";
-			message += "<tr><td align='left'><h2>Date</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='text' name='transferDate' id='transferDate' onmouseover='datepick()'></h3></td></tr>";
+			message += "<tr><td align='left'><h2>Date</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='text' name='transferDate' id='transferDate' onmouseover='datepick()' readOnly></h3></td></tr>";
 			message += "<tr><td align='left'><h2>From Plant/Silo</h2></td><td>&nbsp;</td><td align='left'><h3><select style='width:150px;' id='fromFacilityId' name='fromFacilityId'>";
 			for(var i=0;i<fromFacility.length;i++){
 				var facId = fromFacility[i]['facilityId'];
