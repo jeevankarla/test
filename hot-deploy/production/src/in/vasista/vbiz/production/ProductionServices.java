@@ -1186,31 +1186,8 @@ public class ProductionServices {
         		 if(UtilValidate.isNotEmpty(blendedProductId)){
         			 invProductId = blendedProductId;
         		 }
-        		 
-        		 // facility capacity check
-            	 if(facilitySize.compareTo(BigDecimal.ZERO) >0){
-            		 Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", invProductId, "facilityId", facilityId);
-            		 Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
-                     if (ServiceUtil.isError(resultCtx)) {
-                    	 Debug.logError("Problem getting inventory level of the request for product Id :"+invProductId, module);
-                         return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+invProductId);
-                     }
-                     Object qohObj = resultCtx.get("quantityOnHandTotal");
-                     BigDecimal qoh = BigDecimal.ZERO;
-                     if (qohObj != null) {
-                     	qoh = new BigDecimal(qohObj.toString());
-                     }
-                     if (UtilValidate.isEmpty(incomingQty)) {
-                    	 incomingQty = BigDecimal.ZERO;
-                     }
-                     BigDecimal totalQtyInc = facilitySize.subtract(qoh.add(incomingQty));
-                     if(totalQtyInc.compareTo(BigDecimal.ZERO) < 0){
-                    	 Debug.logError("Facility capacity exceeded..!", module);
-                         return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
-                     }
-            	 }
-            	 
-            	 // productFacility check
+
+        		 // productFacility check
             	 List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
             	 List<String> productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
             	 if(!productIds.contains(invProductId)){
@@ -1329,13 +1306,13 @@ public class ProductionServices {
                 if (atpAvl != null) {
                 	atpAvl = new BigDecimal(atpAvl.toString());
                 }
-                BigDecimal totalQOHQtyInc = facilitySize.subtract(qohAvl.add(qohDiff));
+                BigDecimal totalQOHQtyInc = facilitySize.subtract(qohAvl);
                 if(totalQOHQtyInc.compareTo(BigDecimal.ZERO) < 0){
                	 	Debug.logError("Facility capacity exceeded..!", module);
                     return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
                 }
                 
-                BigDecimal totalATPQtyInc = facilitySize.subtract(atpAvl.add(atpDiff));
+                BigDecimal totalATPQtyInc = facilitySize.subtract(atpAvl);
                 if(totalATPQtyInc.compareTo(BigDecimal.ZERO) < 0){
                	 	Debug.logError("Facility capacity exceeded..!", module);
                     return ServiceUtil.returnError("Facility capacity exceeded..!"+facilityId);
