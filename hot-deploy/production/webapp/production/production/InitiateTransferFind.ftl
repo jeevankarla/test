@@ -44,6 +44,11 @@ var facilityName;
 	}
  $(document).ready(function(){
 	    $("#facilityId").autocomplete({ source:facilityJson }).keydown(function(e){});	
+	    $("input").keyup(function(e){
+	  		if(e.target.name == "facilityId"){
+	  			$('[name=facilityId]').val(($('[name=facilityId]').val()).toUpperCase());
+	  		}
+	  		}); 
 	});
 </script>
 <div class="screenlet">
