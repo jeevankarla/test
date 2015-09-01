@@ -1749,18 +1749,38 @@ public class ProductionServices {
      				if(UtilValidate.isNotEmpty(quantityStr)){
      					quantity = new BigDecimal(quantityStr);
      				}
-     			    List conditionList = FastList.newInstance();
-     			    conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
-     			    conditionList.add(EntityCondition.makeCondition("fromPartyId",EntityOperator.EQUALS,partyId));
-     			    conditionList.add(EntityCondition.makeCondition("itemStatusId",EntityOperator.IN,UtilMisc.toList("CRQ_DRAFT","CRQ_SUBMITTED","CRQ_ACCEPTED","CRQ_ISSUED")));
-     			    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-     				List<GenericValue> custRequestItemList = delegator.findList("CustRequestAndItemAndAttribute",condition, null, null, null, false);
-     				
-     				if(UtilValidate.isNotEmpty(custRequestItemList)){
-     					Debug.logError(productId +" is aleady in process.", module);
-     	 				request.setAttribute("_ERROR_MESSAGE_", productId +" is aleady in process.");
-     	 				TransactionUtil.rollback();
-     	 		  		return "error";
+     				boolean allowmultipleIndent = true;
+     				List<GenericValue> partyIndentList = FastList.newInstance();
+     				try{
+     					List indentAllowCondtionList = UtilMisc.toList(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyIdFrom));
+     					indentAllowCondtionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"NO_MULTI_INDENT"));
+     					
+     					EntityCondition indEntityCondition = EntityCondition.makeCondition(indentAllowCondtionList);
+     					partyIndentList= delegator.findList("PartyRole", indEntityCondition, null, null, null, false);
+     				}catch(GenericEntityException e){
+     					Debug.log("Error while getting issueing party role :"+e,module);
+     					request.setAttribute("_ERROR_MESSAGE_","Error while getting issueing party role :");
+     					
+     					return "error";
+     				}
+     				if(UtilValidate.isNotEmpty(partyIndentList)){
+     					allowmultipleIndent = false;
+     				}
+     				Debug.logInfo("allowmultipleIndent================="+allowmultipleIndent,module);
+     				if(!allowmultipleIndent){
+	     			    List conditionList = FastList.newInstance();
+	     			    conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+	     			    conditionList.add(EntityCondition.makeCondition("fromPartyId",EntityOperator.EQUALS,partyId));
+	     			    conditionList.add(EntityCondition.makeCondition("itemStatusId",EntityOperator.IN,UtilMisc.toList("CRQ_DRAFT","CRQ_SUBMITTED","CRQ_ACCEPTED","CRQ_ISSUED")));
+	     			    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	     				List<GenericValue> custRequestItemList = delegator.findList("CustRequestAndItemAndAttribute",condition, null, null, null, false);
+	     				
+	     				if(UtilValidate.isNotEmpty(custRequestItemList)){
+	     					Debug.logError(productId +" is aleady in process.", module);
+	     	 				request.setAttribute("_ERROR_MESSAGE_", productId +" is aleady in process.");
+	     	 				TransactionUtil.rollback();
+	     	 		  		return "error";
+	     				}
      				}
      				
      				Map<String,Object> itemInMap = FastMap.newInstance();
