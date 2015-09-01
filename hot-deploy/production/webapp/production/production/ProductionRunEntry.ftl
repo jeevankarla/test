@@ -65,8 +65,8 @@
 		 $("#startDate").datetimepicker({
 			dateFormat:'dd-mm-yy',
 			changeMonth: true,
-		    minDate: startDateFrom,
-		   // maxDate: startDateTo
+		    minDate: '-1d',
+		    maxDate: '0d'
 		 });	
 				
 		$('#ui-datepicker-div').css('clip', 'auto');
@@ -198,7 +198,7 @@
 				      				<div class='tabletext h3'>${productionRunData.estimatedStartDate?if_exists}</div>
 				      			</td>
 				      		<#else>
-				      			<td><b>:</b><input class='h3' type="text" name="startDate"  id="startDate" onmouseover='datetimepick()'    required='required' /></td>
+				      			<td><b>:</b><input class='h3' type="text" name="startDate"  id="startDate" onmouseover='datetimepick()'  readOnly  required='required' /></td>
 					      	</#if>
 					      	
 					      	<#if productionRunId?exists>

@@ -36,6 +36,25 @@ function checkAllIndentApprovalStatus(master){
 	     });
      }
  }
+ function datetimepick(){
+		
+		var currentTime = new Date();
+	 	// First Date Of the month 
+	 	var startDateFrom = new Date(0,0,currentTime.getDate()+1);
+	 	// Last Date Of the Month 
+	 	var startDateTo = new Date(currentTime.getFullYear(),currentTime.getMonth() +1,0);
+	  
+		 $("#issuedDate").datetimepicker({
+			dateFormat:'dd-mm-yy',
+			changeMonth: true,
+		      minDate: '-1d',
+		      maxDate: '0d'
+		 });	
+				
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+		//$('#startDate').val('2015-04-21 10:50:20');	
+	}
 
 function issueSelected(){
 	 var issuanceList = $('input[name=checkIssuance]:checked');
@@ -96,7 +115,6 @@ function issueSelected(){
          appendStr += "<input type=hidden name=toBeIssuedQty_o_"+index+"  value="+tempQty+" />";
          appendStr += "<input type=hidden name=shipmentTypeId_o_"+index+" value="+shipmentTypeId+" />";
          appendStr += "<input type=hidden name=facilityId_o_"+index+" value="+facilityId+" />";
-         
  	$("#submitIssuance").append(appendStr);
  	index = index+1;
     });
@@ -169,13 +187,15 @@ function getInvAvailBalance(element){
 </#list>
 <#if flag == "true">
 <div align="right">
-  <form name="submitIssuance" id="submitIssuance"  method="post" align="right">
-
-   <td align="right" >    
+  <form name="submitIssuance" id="submitIssuance"  method="post" >
+  <tr>
+    <td ><label class="h3">Issue Date :</label><input class='h3' type="text" size="15pt"  id="issuedDate" name="issuedDate" onmouseover='datetimepick()' readOnly/>
+	</td>
+   <td >    
       <input id="submitButton" type="button"  onclick="javascript:issueSelected();" value="Issue Selected"/>
-      <input type="checkbox" id="bulkCheckBox" name="submitBulkStatus" onchange="javascript:checkAllIndentApprovalStatus(this);">Select All</input>   
+      <input type="checkbox" id="bulkCheckBox" name="submitBulkStatus" onchange="javascript:checkAllIndentApprovalStatus(this);"><label class="h3">Select All</label></input>   
   </td>
-    
+    </tr>
  <#-- </form>
    <form name="submitBulkRejectStatus" id="ListIndentReject"  method="post" action="makeMassReject">-->
 

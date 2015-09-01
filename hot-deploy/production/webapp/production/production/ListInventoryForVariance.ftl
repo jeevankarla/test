@@ -54,6 +54,8 @@ under the License.
 		dateFormat:'dd-mm-yy',
 		showSecond: true,
 		timeFormat: 'hh:mm:ss',
+		minDate: '-1d',
+		maxDate: '0d',
 		changeMonth: false,
 		numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
@@ -177,7 +179,7 @@ under the License.
               		</select>
               	</td>
               	<td><input type='text' name='variance' id='variance' size='8'></td>
-              	<td><input type='text' name='varianceDate' id='varianceDate_${index}' onmouseover="datepick(this)"></td>
+              	<td><input type='text' name='varianceDate' id='varianceDate_${index}' onmouseover="datepick(this)" readOnly></td>
               	<td><input type='text' name='comment' id='comment'/></td>
               	<td><input type="submit" value="Submit" id="button1" class="smallSubmit" /></td>
             </tr>

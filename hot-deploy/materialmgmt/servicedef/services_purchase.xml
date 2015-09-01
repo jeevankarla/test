@@ -131,6 +131,7 @@
         <attribute name="shipmentTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="shipmentId" mode="OUT" type="String" optional="true"/>
         <attribute name="createNewShipment" mode="IN" type="String" optional="true"/>
+        <attribute name="issuedDateTime" mode="IN" type="Timestamp" optional="true"/>
     </service>
     
     <service name="createRequirementForCustRequestItem" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="createRequirementForCustRequestItem">
@@ -150,7 +151,7 @@
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="true"/>
         <attribute name="shipmentId" type="String" mode="OUT" optional="true"/>
-        
+        <attribute name="issuedDateTime" mode="IN" type="Timestamp"  optional="true"/>
     </service>
      <service name="draftEnquiryForApprovedRequirements" engine="java"
                 location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="draftEnquiryForApprovedRequirements">
