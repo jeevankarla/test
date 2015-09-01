@@ -166,7 +166,17 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 if (showAllFacilities && "Y".equals(showAllFacilities)) {
 			 facilityList = delegator.findList("Facility", null, null, null, null, false);
 		 } else {
-			 facilityList = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+		 	 List condList = FastList.newInstance();
+			  condList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,"Company"));
+			  condList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"STORE"));
+			  EntityCondition con = EntityCondition.makeCondition(condList,EntityOperator.AND);
+		 	 	companyFacilities = delegator.findList("Facility",con,null,null,null,false);
+			  companyFacilityIds = EntityUtil.getFieldListFromEntityList(companyFacilities, "facilityId", true);
+			  condList.clear();
+			  condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, companyFacilityIds));
+			  condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			  EntityCondition condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			 facilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
 		 }
 		 facilityIterator = facilityList.iterator();
 		 dispatcher = request.getAttribute("dispatcher");
