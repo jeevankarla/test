@@ -149,8 +149,15 @@ if (workEffortId) {
 	workEffortDetail = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
 	productionFloorId = workEffortDetail.facilityId;
 	
+	excludeFacility = delegator.findList("Facility", EntityCondition.makeCondition("allowProductBlend", EntityOperator.EQUALS, "Y"), UtilMisc.toSet("facilityId"), null, null, false);
+	
+	excludeFacilityIds = EntityUtil.getFieldListFromEntityList(excludeFacility, "facilityId", true);
+	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, prodConfigFacilityIds));
+	if(excludeFacilityIds){
+		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, excludeFacilityIds));
+	}
 	conditionList.add(EntityCondition.makeCondition("ownerFacilityId", EntityOperator.EQUALS, productionFloorId));
 	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	productionFloorFacility = delegator.findList("FacilityGroupAndMemberAndFacility", condExpr, UtilMisc.toSet("facilityId", "facilityName"), null, null, false);
@@ -240,6 +247,6 @@ if (workEffortId) {
 	request.setAttribute("declareProductItemsJSON", declareProductItemsJSON);
 	request.setAttribute("declareDisplayButton", declareDispBtn);
 	request.setAttribute("conversionJSON", conversionJSON);
-	
+
 }
 return "success";
