@@ -184,7 +184,7 @@ under the License.
         <field name="quantity" title="${uiLabelMap.Quantity}"><display/></field>
         <field name="effectiveDate" title="${uiLabelMap.ProductionDeclrareDate}"><display/></field>
         <field use-when="&quot;${qcCheck}&quot;.equals(&quot;INCOMPLETE&quot;)" name="QC Details" widget-style="buttontext">
-           <hyperlink  target-type="plain" description="QC Details"  target="javascript: showQcForm('${productId}', 'CreateProductionRunQcDetails', 'workEffortId', '${workEffortId}');" ></hyperlink>
+           <hyperlink  target-type="plain" description="QC Details"  target="javascript: showQcForm('${productId}','', 'CreateProductionRunQcDetails', 'workEffortId', '${workEffortId}');" ></hyperlink>
         </field>
     </form>
 </forms>
