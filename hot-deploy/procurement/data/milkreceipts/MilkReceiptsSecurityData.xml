@@ -182,4 +182,16 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FTISSUES_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FTISSUES_VIEW"/>
     
+    <SecurityPermission description="Milk Receipt Delete Permission.!" permissionId="MR_RECEIPT_DELETE"/>
+    <SecurityGroup description="Milk Receipt Delete Permission.!" groupId="MR_RECEIPT_DELETE"/>
+    <SecurityGroupPermission groupId="MR_RECEIPT_DELETE" permissionId="MR_RECEIPT_DELETE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_RECEIPT_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_RECEIPT_DELETE"/>
+    
+    <SecurityPermission description="Tanker Issue Delete Permission.!" permissionId="MR_ISSUE_DELETE"/>
+    <SecurityGroup description="Tanker Issue Delete Permission.!" groupId="MR_ISSUE_DELETE"/>
+    <SecurityGroupPermission groupId="MR_ISSUE_DELETE" permissionId="MR_ISSUE_DELETE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_ISSUE_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_ISSUE_DELETE"/>
+    
 </entity-engine-xml>

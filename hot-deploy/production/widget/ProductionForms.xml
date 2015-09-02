@@ -117,6 +117,17 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
+        <row-actions>
+        	<entity-condition entity-name="InventoryTransferGroupMember" list="invTranGrpMember">
+        		<condition-expr field-name="transferGroupId" operator="equals" from-field="transferGroupId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="InventoryTransferGroup" list="invTranGroup">
+        		<condition-expr field-name="transferGroupId" operator="equals" from-field="transferGroupId"/>
+        	</entity-condition>
+        	<set field="createdByUserLogin" from-field="invTranGrpMember[0].createdByUserLogin" />
+        	<set field="createdDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invTranGrpMember[0].createdDate,&quot;dd-MM-yyyy&quot;);}"/>
+        	<set field="comments" from-field="invTranGroup[0].comments"/>
+        </row-actions>
         <field name="transferGroupId" title="Transfer Id">
         	<display />
         </field>
@@ -135,6 +146,9 @@
         <field name="xferQtySum" title="Xfer Qty">
         	<display />
         </field>
+        <field name="comments"><display></display></field>
+        <field name="createdDate"><display></display></field>
+        <field name="createdByUserLogin" title="Created By"><display></display></field>
     </form>
     
     <form name="FindProductVariance" target="findProductVariance" title="" type="single" default-map-name="parameters"
@@ -528,7 +542,7 @@
         <field name="facilityId" title="facility" event="onchange" action="javascript:getInvAvailBalance(this);"><drop-down allow-empty="true"><list-options key-name="facilityId" list-name="finalFacilityList" description="${facilityName}"/></drop-down></field>
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
          <field name="quantity" title="Req. Qty"><display/></field>
-          <field name="issuedQty" title="IssuedQty" ><display/></field>  
+          <field name="issuedQty" title="IssuedQty" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>  
          <field name="QOH" title="Inv. Available" ><text default-value="0" size="6" read-only="true"></text> </field>
         <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="0"> </text></field>
         <field id-name="checkIssuance" name="checkIssuance"  title="Select" use-when="showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
