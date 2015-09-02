@@ -83,7 +83,6 @@ public class InventoryServices {
         GenericValue newItem = null;
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-
         try {
             inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
         } catch (GenericEntityException e) {
@@ -130,7 +129,7 @@ public class InventoryServices {
                 // at this point we have already made sure that the xferQty is less than or equals to the atp, so if less that just create a new inventory record for the quantity to be moved
                 // NOTE: atp should always be <= qoh, so if xfer < atp, then xfer < qoh, so no need to check/handle that
                 // however, if atp < qoh && atp == xferQty, then we still need to split; oh, but no need to check atp == xferQty in the second part because if it isn't greater and isn't less, then it is equal
-                if (xferQty.compareTo(atp) < 0 || atp.compareTo(qoh) < 0) {
+                if (xferQty.compareTo(atp) <= 0 || atp.compareTo(qoh) <= 0) {
                     BigDecimal negXferQty = xferQty.negate();
                     // NOTE: new inventory items should always be created calling the
                     //       createInventoryItem service because in this way we are sure
@@ -140,7 +139,7 @@ public class InventoryServices {
                     newItem = GenericValue.create(inventoryItem);
                     newItem.set("availableToPromiseTotal", BigDecimal.ZERO);
                     newItem.set("quantityOnHandTotal", BigDecimal.ZERO);
-
+                    
                     delegator.createSetNextSeqId(newItem);
 
                     results.put("inventoryItemId", newItem.get("inventoryItemId"));
@@ -150,7 +149,6 @@ public class InventoryServices {
                             "inventoryItemId", newItem.get("inventoryItemId"), "userLogin", userLogin);
                     Map<String, Object> createUpdateDetailMap = UtilMisc.toMap("availableToPromiseDiff", negXferQty, "quantityOnHandDiff", negXferQty,
                             "inventoryItemId", inventoryItem.get("inventoryItemId"), "userLogin", userLogin);
-
                     try {
                         Map<String, Object> resultNew = dctx.getDispatcher().runSync("createInventoryItemDetail", createNewDetailMap);
                         if (ServiceUtil.isError(resultNew)) {
@@ -190,6 +188,7 @@ public class InventoryServices {
                 if (atp.compareTo(BigDecimal.ZERO) != 0) {
                     Map<String, Object> createDetailMap = UtilMisc.toMap("availableToPromiseDiff", atp.negate(),
                             "inventoryItemId", inventoryItemToClear.get("inventoryItemId"), "userLogin", userLogin);
+                    
                     try {
                         Map<String, Object> result = dctx.getDispatcher().runSync("createInventoryItemDetail", createDetailMap);
                         if (ServiceUtil.isError(result)) {
@@ -235,10 +234,9 @@ public class InventoryServices {
         GenericValue destinationFacility = null;
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-
+        
         try {
-            inventoryTransfer = delegator.findByPrimaryKey("InventoryTransfer",
-                    UtilMisc.toMap("inventoryTransferId", inventoryTransferId));
+            inventoryTransfer = delegator.findByPrimaryKey("InventoryTransfer", UtilMisc.toMap("inventoryTransferId", inventoryTransferId));
             inventoryItem = inventoryTransfer.getRelatedOne("InventoryItem");
             //destinationFacility = inventoryTransfer.getRelatedOne("ToFacility");
             destinationFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryTransfer.getString("facilityIdTo")), false);
