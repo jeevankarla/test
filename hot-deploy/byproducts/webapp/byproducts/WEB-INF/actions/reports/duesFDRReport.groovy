@@ -177,4 +177,5 @@ ownerPartyList.each{ eachPartyId ->
 	
 	
 }
+duesFDRList = UtilMisc.sortMaps(duesFDRList, UtilMisc.toList("diffAmount"));
 context.duesFDRList = duesFDRList;
