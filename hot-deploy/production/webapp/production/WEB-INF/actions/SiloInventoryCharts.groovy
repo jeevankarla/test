@@ -35,8 +35,12 @@ if(facilityId){
 		categorySiloFacility = EntityUtil.filterByCondition(plantFacilities, EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, eachType));
 		facilityIds = EntityUtil.getFieldListFromEntityList(categorySiloFacility, "facilityId", true);
 		JSONArray categorySiloData = new JSONArray();
-		inventoryItems = delegator.findList("InventoryItem", EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds), null, null, null, false);
-
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+		condList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+		condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		inventoryItems = delegator.findList("InventoryItem", condExpr, null, null, null, false);
+		
 		invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItems, "productId", true);
 		products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, invProductIds), UtilMisc.toSet("productId", "productName"), null, null, false);
 		productsDescList.addAll(products);
