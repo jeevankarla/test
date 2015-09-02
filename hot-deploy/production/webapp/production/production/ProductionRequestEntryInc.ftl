@@ -224,6 +224,7 @@
 		var columns = [
 				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 				{id:"quantity", name:"Quantity", field:"quantity", width:120, minWidth:120,maxLength:6, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, validator: requiredFieldValidator},
+				{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
 		];
 		
 			var options = {
@@ -334,20 +335,20 @@
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
-        	if (args.cell == 1 && data[args.row] != null) {
+          	if (args.cell == 1 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
 				var uomId = productUOMMap[prod];
 				var uomLabel = uomLabelMap[uomId];
-				getProductInventory(prod);
-				item['inventoryQty'] = quantityAvailability;
+				//getProductInventory(prod);
+				//item['inventoryQty'] = quantityAvailability;
 				item['uomDescription'] = uomLabel;     		 		
 	      		grid.invalidateRow(data.length);
 	      		grid.updateRow(args.row);
 	      		grid.updateRowCount();
 	      		grid.render();
 	      		$(grid.getCellNode(args.row, 1)).click();
-			}
+			} 
 			
 		});
 		
