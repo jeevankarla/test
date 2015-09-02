@@ -155,7 +155,7 @@ $(document).ready(function() {
  		makeDatePicker("tareDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_INIT"){
- 		makeDatePicker("tareDate","fromDate");
+ 		//makeDatePicker("tareDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_GRSWEIGHT"){
  		$('#dcNo').attr("readonly","readonly");
@@ -1092,7 +1092,7 @@ function reloadingPage(){
                                 
                                 <tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="vehicleStatusId" value="MR_ISSUE_INIT" />
-	        						<td align='left' ><span class="h3">Issue Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h3">Issue Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required="required" readonly="readonly"/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h3">Issue Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>

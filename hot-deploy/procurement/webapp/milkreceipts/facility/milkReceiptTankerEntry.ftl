@@ -136,7 +136,7 @@ $(document).ready(function() {
 
 	if($('#displayScreen').val()=="VEHICLE_IN"){
  		makeDatePicker1("sendDate","fromDate");
- 		makeDatePicker("entryDate","fromDate");
+ 		//makeDatePicker("entryDate","fromDate");
  		$('#dcNo').removeAttr("readonly");
  	}
  	if($('#displayScreen').val()=="VEHICLE_OUT"){
@@ -779,7 +779,7 @@ function reloadingPage(){
 					        	
 					        <#if displayScreen == "VEHICLE_IN">
 		                        <tr>
-	        						<td align='left' ><span class="h2">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" value="${setDate}" name="entryDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" value="${setDate}" name="entryDate" autocomplete="off" required="required" readonly="readonly"/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h2">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
