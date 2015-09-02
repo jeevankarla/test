@@ -138,10 +138,10 @@ $(document).ready(function() {
  	}
  	if($('#displayScreen').val()=="RETURN_INITIATE"){
  		$('#dcNo').removeAttr("readonly");
- 		$('#sendDate').removeAttr("readonly");
- 		$('#sendTime').removeAttr("readonly");
- 		makeDatePicker("testDate","fromDate");
- 		makeDatePicker("sendDate","fromDate");
+ 		//$('#sendDate').removeAttr("readonly");
+ 		//$('#sendTime').removeAttr("readonly");
+ 	//	makeDatePicker("testDate","fromDate");
+ 		//makeDatePicker("sendDate","fromDate");
  	}
  	if($('#displayScreen').val()=="RETURN_QC"){
  		$('#dcNo').removeAttr("readonly");
@@ -831,7 +831,7 @@ function reloadingPage(){
 	        				<#if displayScreen == "RETURN_INITIATE">
 	        					<tr>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_RETURN_INITIATE" />
-		        					<td align='left' ><span class="h3">Return Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" value="${setDate}" autocomplete="off" required/></td>
+		        					<td align='left' ><span class="h3">Return Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" value="${setDate}" autocomplete="off" required="required" readonly="readonly"/></td>
 		        					
 		        				</tr>
 		        				<tr>
