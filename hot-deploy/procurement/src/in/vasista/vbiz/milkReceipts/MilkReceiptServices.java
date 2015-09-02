@@ -2263,90 +2263,92 @@ public class MilkReceiptServices {
    	 	String tankerNo = (String) context.get("tankerNo");
    	 	String milkTransferId ="";
    	 	String reqStatusId = (String)context.get("reqStatusId");
-		try{
-	   	 	List transfersCondList = FastList.newInstance();
-			transfersCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,tankerNo));
-			List statusList = UtilMisc.toList("MXF_INPROCESS");
-			statusList.add("MXF_REJECTED");
-			if(UtilValidate.isNotEmpty(reqStatusId)){
-				statusList.add(reqStatusId);
-			}
-			transfersCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,statusList));
-			EntityCondition transferCondtion = EntityCondition.makeCondition(transfersCondList,EntityJoinOperator.AND) ;
-	        List orderBy = UtilMisc.toList("-milkTransferId");
-			List transfersList = delegator.findList("MilkTransfer", transferCondtion,null, orderBy, null, false);
-			if(UtilValidate.isNotEmpty(transfersList)){
-				GenericValue transferRecord = EntityUtil.getFirst(transfersList);
-			 	String mtStatusId = (String) transferRecord.get("statusId");
-				milkTransferId =(String)transferRecord.get("milkTransferId"); 
-				resultMap = ServiceUtil.returnSuccess();
-				resultMap.put("dcNo", transferRecord.get("dcNo"));
-				resultMap.put("productId", transferRecord.get("productId"));
-				resultMap.put("milkTransferId", transferRecord.get("milkTransferId"));
-				resultMap.put("vehicleId", transferRecord.get("containerId"));
-				
-				BigDecimal grossWeight = new BigDecimal(0);
-				if(UtilValidate.isNotEmpty(transferRecord.get("grossWeight"))){
-					grossWeight = (BigDecimal)transferRecord.get("grossWeight");
-				}
-				BigDecimal tareWeight = new BigDecimal(0);
-				if(UtilValidate.isNotEmpty(transferRecord.get("tareWeight"))){
-					tareWeight = (BigDecimal)transferRecord.get("tareWeight");
-				}
-				resultMap.put("grossWeight", grossWeight);
-				resultMap.put("tareWeight", tareWeight);
-				resultMap.put("sequenceNum", transferRecord.get("sequenceNum"));
-				resultMap.put("partyId", transferRecord.get("partyId"));
-				resultMap.put("partyIdTo", transferRecord.get("partyIdTo"));
-				resultMap.put("isSealChecked",transferRecord.get("isSealChecked"));
-				resultMap.put("isCipChecked",transferRecord.get("isCipChecked"));
-				
-				resultMap.put("milkTransfer",transferRecord);
-				List<GenericValue> milkTransferItemsList = FastList.newInstance();
-				try{
-					milkTransferItemsList = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
-				}catch(Exception e){
-					Debug.logError("Error while getting transferItems List ::"+e,module);
-					return ServiceUtil.returnError("Error while getting transferItems List ::"+e.getMessage());
-				}
-				
-				if(UtilValidate.isNotEmpty(milkTransferItemsList)){
-					GenericValue milkTransferItem = EntityUtil.getFirst(milkTransferItemsList);
-					resultMap.put("milkTransferItem",milkTransferItem);
-				}
-				if(UtilValidate.isNotEmpty((Timestamp)transferRecord.get("sendDate"))){
-					java.sql.Date sendDateFormat = new java.sql.Date(((Timestamp)transferRecord.get("sendDate")).getTime());
-					String sendDateStr = UtilDateTime.toDateString(sendDateFormat,"dd-MM-yyyy");
-					String sendTimeStr = UtilDateTime.toDateString(sendDateFormat,"HHmm");
-					resultMap.put("sendDateStr", sendDateStr);
-					resultMap.put("sendTimeStr", sendTimeStr);
-				}
-				if(mtStatusId.equalsIgnoreCase("MXF_REJECTED")){
-	 	        	List vehicleTripCond = FastList.newInstance();
-	 	        	vehicleTripCond.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,transferRecord.get("containerId")));
-	 	        	vehicleTripCond.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,transferRecord.get("sequenceNum")));
-	 	        	vehicleTripCond.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
-	 	        	EntityCondition vehicleTripCondion = EntityCondition.makeCondition(vehicleTripCond,EntityJoinOperator.AND) ;
-	 	   			List vehicleTripStatusList = delegator.findList("VehicleTripStatus", vehicleTripCondion,null, null, null, false);
-	 		 		if(UtilValidate.isEmpty(vehicleTripStatusList)){
-	 					resultMap = ServiceUtil.returnError("No record Found");
-	
-	 		 		  }
- 	        	}
-
-				return resultMap;
-			}else{
-				resultMap = ServiceUtil.returnError("No record Found");
-				return resultMap;
-			}
-		}catch (GenericEntityException e) {
-			// TODO: handle exception
-			Debug.logError("Error while getting tankerDetails "+e, module);
-			resultMap = ServiceUtil.returnError("Error while getting tankerDetails");
-			return resultMap;
-		}
+		// here we are checking vehicleTripStatus
    	 	
+   	 	String sequenceNum = "";
+   	 	List<GenericValue> vehicleTripStatusListTest = FastList.newInstance();
+   	 	try{
+   	 		List vehicleTripConditionList = UtilMisc.toList(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,tankerNo));
+   	 		vehicleTripConditionList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
+   	 		vehicleTripConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.LIKE,"MR_%"));
+   	 		EntityCondition vehicleTripCondition = EntityCondition.makeCondition(vehicleTripConditionList);
+   	 		
+   	 		vehicleTripStatusListTest = delegator.findList("VehicleTripStatus", vehicleTripCondition,null,null,null,false);
+   	 	}catch(GenericEntityException e){
+   	 		Debug.logError("Error while getting vehicle trip status ::"+e,module);
+   	 		return ServiceUtil.returnError("Error while getting vehicle trip status ::"+e.getMessage());
+   	 	}
    	 	
+   	 	if(UtilValidate.isEmpty(vehicleTripStatusListTest)){
+   	 		Debug.logError("No record Found",module);
+   	 		resultMap = ServiceUtil.returnError("No record Found");
+   	 		return resultMap;
+   	 	}
+   	 	GenericValue vehicleTripStatusTest = EntityUtil.getFirst(vehicleTripStatusListTest);
+   	 	sequenceNum = (String) vehicleTripStatusTest.get("sequenceNum");
+   	 	List<GenericValue> transfersList = FastList.newInstance();
+   	 	try{
+   	 		List transfersCondList = FastList.newInstance();
+   	 		transfersCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,tankerNo));
+   	 		transfersCondList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
+   	 		EntityCondition transferCondtion = EntityCondition.makeCondition(transfersCondList,EntityJoinOperator.AND) ;
+   	 		List orderBy = UtilMisc.toList("-milkTransferId");
+   	 		transfersList = delegator.findList("MilkTransfer", transferCondtion,null, orderBy, null, false);
+   	 	}catch(GenericEntityException e){
+   	 		Debug.logError("Error while getting MilkTransfer Details ::"+e,module);
+   	 		return ServiceUtil.returnError("Error while getting MilkTransfer Details ::"+e.getMessage());
+   	 	}
+   	 	if(UtilValidate.isEmpty(transfersList)){
+   	 		resultMap = ServiceUtil.returnError("No record Found");
+   	 		return resultMap;
+   	 	}else{
+	   	 	GenericValue transferRecord = EntityUtil.getFirst(transfersList);
+		 	String mtStatusId = (String) transferRecord.get("statusId");
+			milkTransferId =(String)transferRecord.get("milkTransferId"); 
+			resultMap = ServiceUtil.returnSuccess();
+			resultMap.put("dcNo", transferRecord.get("dcNo"));
+			resultMap.put("productId", transferRecord.get("productId"));
+			resultMap.put("milkTransferId", transferRecord.get("milkTransferId"));
+			resultMap.put("vehicleId", transferRecord.get("containerId"));
+			
+			BigDecimal grossWeight = new BigDecimal(0);
+			if(UtilValidate.isNotEmpty(transferRecord.get("grossWeight"))){
+				grossWeight = (BigDecimal)transferRecord.get("grossWeight");
+			}
+			BigDecimal tareWeight = new BigDecimal(0);
+			if(UtilValidate.isNotEmpty(transferRecord.get("tareWeight"))){
+				tareWeight = (BigDecimal)transferRecord.get("tareWeight");
+			}
+			resultMap.put("grossWeight", grossWeight);
+			resultMap.put("tareWeight", tareWeight);
+			resultMap.put("sequenceNum", transferRecord.get("sequenceNum"));
+			resultMap.put("partyId", transferRecord.get("partyId"));
+			resultMap.put("partyIdTo", transferRecord.get("partyIdTo"));
+			resultMap.put("isSealChecked",transferRecord.get("isSealChecked"));
+			resultMap.put("isCipChecked",transferRecord.get("isCipChecked"));
+			
+			resultMap.put("milkTransfer",transferRecord);
+			List<GenericValue> milkTransferItemsList = FastList.newInstance();
+			try{
+				milkTransferItemsList = delegator.findList("MilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
+			}catch(Exception e){
+				Debug.logError("Error while getting transferItems List ::"+e,module);
+				return ServiceUtil.returnError("Error while getting transferItems List ::"+e.getMessage());
+			}
+			
+			if(UtilValidate.isNotEmpty(milkTransferItemsList)){
+				GenericValue milkTransferItem = EntityUtil.getFirst(milkTransferItemsList);
+				resultMap.put("milkTransferItem",milkTransferItem);
+			}
+			if(UtilValidate.isNotEmpty((Timestamp)transferRecord.get("sendDate"))){
+				java.sql.Date sendDateFormat = new java.sql.Date(((Timestamp)transferRecord.get("sendDate")).getTime());
+				String sendDateStr = UtilDateTime.toDateString(sendDateFormat,"dd-MM-yyyy");
+				String sendTimeStr = UtilDateTime.toDateString(sendDateFormat,"HHmm");
+				resultMap.put("sendDateStr", sendDateStr);
+				resultMap.put("sendTimeStr", sendTimeStr);
+			}
+   	 	}
+   	 	return resultMap;
 	}
 	
 	
@@ -2643,7 +2645,7 @@ public class MilkReceiptServices {
 				milkTransfer.set("quantity", sendQty);
 				milkTransfer.set("quantityLtrs", quantityLtrs);
 				milkTransfer.set("receivedQuantityLtrs", receivedQuantityLtrs);
-				
+				milkTransfer.set("statusId", "MXF_RECD");
 				milkTransfer.set("receivedQuantity", recdQty);
 				milkTransfer.set("receiveDate",tareDate);
 				milkTransfer.set("receivedKgFat", receivedKgFat);
@@ -2724,8 +2726,8 @@ public class MilkReceiptServices {
 				String statusIdCheck = (String) milkTransfer.get("statusId");
 				milkTransfer.set("statusId", "MXF_RECD");
 				milkTransfer.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
- 	        	if(statusIdCheck.equalsIgnoreCase("MXF_REJECTED")){
-					 milkTransfer.set("statusId", "MXF_REJECTED");
+ 	        	if(statusIdCheck.equalsIgnoreCase("MXF_REJECTED") || statusIdCheck.equalsIgnoreCase("MXF_APPROVED")){
+					 milkTransfer.set("statusId", statusIdCheck);
 		 	    }
 	 		}else if(statusId.equalsIgnoreCase("MR_VEHICLE_UNLOAD")){
 	 			String cipDateStr = (String) context.get("cipDate"); 
