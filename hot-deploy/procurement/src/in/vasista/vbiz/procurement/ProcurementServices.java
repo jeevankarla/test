@@ -3696,11 +3696,23 @@ public static Map<String, Object> approveValidationEntries(DispatchContext dctx,
 	    		 if(UtilValidate.isNotEmpty(milkTransferList)){
 	    			 delegator.removeAll(milkTransferList);
 	    		 }
+	    		 List<GenericValue> milkTransferAttributeList = delegator.findList("MilkTransferAttribute", EntityCondition.makeCondition("milkTransferId", EntityOperator.EQUALS, milkTransferId), null, null, null, false);
+	    		 if(UtilValidate.isNotEmpty(milkTransferAttributeList)){
+	    			 delegator.removeAll(milkTransferAttributeList);
+	    		 }
 	    		 if(UtilValidate.isNotEmpty(milkTransferAdviceList)){
 	    			 delegator.removeAll(milkTransferAdviceList);
 	    		 }
 				 milkRecord = delegator.findOne("MilkTransfer", false, UtilMisc.toMap("milkTransferId",milkTransferId));
 				 if(UtilValidate.isNotEmpty(milkRecord)){
+					 List condList = FastList.newInstance();
+					 condList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,milkRecord.getString("containerId")));
+					 condList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,milkRecord.getString("sequenceNum")));
+					 EntityCondition condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+					 List<GenericValue> vehicleTripStatusList = delegator.findList("VehicleTripStatus", condition, null, null, null, false);
+					 if(UtilValidate.isNotEmpty(vehicleTripStatusList)){
+						 delegator.removeAll(vehicleTripStatusList);
+					 }
 					 milkRecord.remove(); 
 				 }				
 			}catch(GenericEntityException e){

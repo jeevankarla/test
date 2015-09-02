@@ -510,9 +510,15 @@
        		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
            </hyperlink>
        </field>
-       <field  name="delete" use-when="statusId.equals(&quot;MXF_RECD&quot;)" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
+       <field  name="delete" use-when="statusId.equals(&quot;MXF_RECD&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_RECEIPT_DELETE&quot;, session)))}" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
             <hyperlink  description="delete" target-type="plain">
-            	<parameter param-name="hideSearch" value="N"/>
+            	<parameter param-name="milkTransferId" value="${parameters.milkTransferId}"/>
+            	<parameter param-name="fromDate" value="${parameters.fromDate}"/>
+            	<parameter param-name="partyId" value="${parameters.partyId}"/>
+            	<parameter param-name="productId" value="${parameters.productId}"/>
+            	<parameter param-name="siloId" value="${parameters.siloId}"/>
+            	<parameter param-name="shiftId" value="${parameters.shiftId}"/>
+            	<parameter param-name="vehicleId" value="${parameters.vehicleId}"/>
            </hyperlink>
         </field> 
        <sort-order>
@@ -893,11 +899,16 @@
        		<parameter param-name="milkTransferId" from-field="milkTransferId"/>
            </hyperlink>
        </field>
-       <field  name="delete" use-when="statusId.equals(&quot;MXF_RECD&quot;)" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
+      <!--  <field  name="delete" use-when="!statusId.equals(&quot;MXF_RECD&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_ISSUE_DELETE&quot;, session)))}" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
             <hyperlink  description="delete" target-type="plain">
-            	<parameter param-name="hideSearch" value="N"/>
+            	<parameter param-name="fromDate" value="${parameters.fromDate}"/>
+            	<parameter param-name="partyId" value="${parameters.partyId}"/>
+            	<parameter param-name="productId" value="${parameters.productId}"/>
+            	<parameter param-name="siloId" value="${parameters.siloId}"/>
+            	<parameter param-name="shiftId" value="${parameters.shiftId}"/>
+            	<parameter param-name="vehicleId" value="${parameters.vehicleId}"/>
            </hyperlink>
-        </field> 
+        </field>  -->
        <sort-order>
 	        <sort-field name="milkTransferId"/>
    	        <sort-field name="containerId"/>
