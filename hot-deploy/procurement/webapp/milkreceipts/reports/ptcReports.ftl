@@ -274,6 +274,45 @@
 				</table>
 			</form>
 		</tr>
+		
+		<tr class="alternate-row"> 
+			<form id="SaleBillingReportMR" name="SaleBillingReportMR" mothed="post" action="<@ofbizUrl>SaleBillingReportMR.pdf</@ofbizUrl>" target="_blank">
+				<table class="basic-table" cellspacing="5">
+					<tr class="alternate-row">
+						<td width="23%"><span class='h3'> Sale Billing Report</span></td>
+						<td width="35%">
+							 <span class='h3'>Time Period </span>
+		                    <select name="customTimePeriodId" class='h4'>
+		                    <#if saleTimePeriodList?has_content>	
+		                        <#list saleTimePeriodList as saleTimePeriod>    
+		                			  <#if ((saleTimePeriod.fromDate)?has_content) && ((saleTimePeriod.thruDate)?has_content)>
+		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(saleTimePeriod.fromDate, "MMMdd")/>
+		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(saleTimePeriod.thruDate, "MMMdd yyyy")/>
+				                  	    <option value='${saleTimePeriod.customTimePeriodId}' >
+				                    		${fromDate}-${thruDate}
+				                  		 </option>
+				                  	 </#if>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+						<td width="35%">
+							 <span class='h3'>Union/ Chilling Center </span>
+		                    <select name="partyId" id="partyId">
+		                    <#if unionsList?has_content>	
+		                        <#list unionsList as unionIds>    
+				                  	    <option value='${unionIds.partyId}' >
+				                    		${unionIds.partyId}
+				                  		 </option>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+				    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+					</tr>
+				</table>
+			</form>
+		</tr>
 		<tr class="alternate-row"> 
 				<form id="PTCUnionsReport" name="PTCUnionsReport" mothed="post" action="<@ofbizUrl>ptcUnionsReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
