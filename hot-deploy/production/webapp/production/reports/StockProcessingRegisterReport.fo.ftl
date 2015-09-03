@@ -263,10 +263,10 @@
   					  <#list IssuedSiloDetail as IssuedSiloData>
 					   <fo:table-row>
 				           <fo:table-cell >
-							  <fo:block text-align="right" font-size="10pt"> <#if IssuedSiloData.getValue().get("qty")?has_content>${IssuedSiloData.getValue().get("qty")?if_exists?string("##0.00")}<#else>0</#if></fo:block>
+							  <fo:block text-align="right" font-size="10pt"> <#if IssuedSiloData.getValue().get("issuedQuantity")?has_content>${IssuedSiloData.getValue().get("issuedQuantity")?if_exists?string("##0.00")}<#else>0</#if></fo:block>
 						   </fo:table-cell >
 						   <fo:table-cell >
-							  <fo:block text-align="center" font-size="10pt">${IssuedSiloData.getKey()?if_exists}</fo:block>
+							  <fo:block text-align="center" font-size="10pt"><#if IssuedSiloData.getValue().get("partyId")?has_content>${IssuedSiloData.getValue().get("partyId")?if_exists}</#if></fo:block>
 						   </fo:table-cell >				   
                         </fo:table-row> 
                         </#list>
