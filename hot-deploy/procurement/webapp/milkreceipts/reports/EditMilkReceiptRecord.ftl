@@ -165,6 +165,7 @@ $(document).ready(function() {
 			  	if(e.target.name == "partyName"){
 		  			$('[name=partyName]').val(($('[name=partyName]').val()).toUpperCase());
 		  			populatePartyName();
+		  			populatePartySpan();
 					var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
 		  			if(tempPartyJson){
 		  				$('span#partyToolTip').addClass("tooltip");
@@ -204,6 +205,7 @@ $(document).ready(function() {
 		  		if(e.target.name == "vehicleName"){
 		  			$('[name=vehicleName]').val(($('[name=vehicleName]').val()).toUpperCase());
 		  			populateVehicleName();
+					populateVehicleSpan();
 					var tempVehicleJson = vehicleCodeJson[$('[name=vehicleName]').val()];
 		  			if(tempVehicleJson){
 		  				$('span#vehicleToolTip').addClass("tooltip");
@@ -229,14 +231,24 @@ $(document).ready(function() {
 function populatePartyName(){
 	var availableTags = ${StringUtil.wrapString(partyItemsJSON)!'[]'};
 				$("#partyId").autocomplete({					
-						source:  availableTags
+						source:  availableTags,
+						select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('[name=partyName]').val(selectedValue);
+					        populatePartySpan();
+					    }
 				});
 				
 }
 function populateVehicleName(){
 	var availableTags = ${StringUtil.wrapString(vehItemsJSON)!'[]'};
 				$("#vehicleId").autocomplete({					
-						source:  availableTags
+						source:  availableTags,
+						select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('[name=vehicleName]').val(selectedValue);
+					        populateVehicleSpan();
+					    }
 				});
 				
 }
@@ -248,7 +260,46 @@ function populateProductName(){
 				
 }
 
-
+function populateVehicleSpan(){
+	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
+	var tempVehJson = vehicleCodeJson[$('[name=vehicleName]').val()];
+	if(tempVehJson){
+		$('span#vehicleToolTip').addClass("tooltip");
+		$('span#vehicleToolTip').removeClass("tooltipWarning");
+		var vehicleName = tempVehJson["vehicleName"];
+		var vehicleId = tempVehJson["vehicleId"];
+		if(!vehicleName){
+			vehicleName = vehicleId;
+		}
+		$('span#vehicleToolTip').html(vehicleName);
+		$('[name=tankerNo]').val(vehicleId);
+	}else{
+		$('[name=tankerNo]').val('');
+		$('span#vehicleToolTip').removeClass("tooltip");
+		$('span#vehicleToolTip').addClass("tooltipWarning");
+		$('span#vehicleToolTip').html('Code not found');
+	}
+}
+function populatePartySpan(){
+	var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)}
+	var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
+	if(tempPartyJson){
+		$('span#partyToolTip').addClass("tooltip");
+		$('span#partyToolTip').removeClass("tooltipWarning");
+		var partyName = tempPartyJson["partyName"];
+		var partyId = tempPartyJson["partyId"];
+		if(!partyName){
+			partyName = partyId;
+		}
+		$('span#partyToolTip').html(partyName);
+		$('[name=partyId]').val(partyId);
+	}else{
+		$('[name=partyId]').val('');
+		$('span#partyToolTip').removeClass("tooltip");
+		$('span#partyToolTip').addClass("tooltipWarning");
+		$('span#partyToolTip').html('Code not found');
+	}
+}
 function deleteTransferEntry(thisValue,milkTransferId){	
 	var confirmationFlag=false;
 	if(confirm('Dou u want to delete this Record?')){	

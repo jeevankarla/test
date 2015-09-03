@@ -54,6 +54,7 @@
 				<set field="displayScreen" value="EDITMILKRECEIPTS"/>
 				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/EditMilkReceiptsEntries.groovy"/>
 <!-- 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/> -->
 			</actions>
@@ -415,7 +416,11 @@
                 <entity-condition list="purchaseTimePeriodList" entity-name="CustomTimePeriod">
                 	<condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
                 	<order-by field-name="-fromDate"/>
-                </entity-condition> 
+                </entity-condition>
+                <entity-condition list="saleTimePeriodList" entity-name="CustomTimePeriod">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="SALE_BILL_MONTH"/>
+                	<order-by field-name="-fromDate"/>
+                </entity-condition>  
             	 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
         	</actions>
             <widgets>
