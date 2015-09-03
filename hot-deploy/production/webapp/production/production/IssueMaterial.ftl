@@ -134,6 +134,14 @@ function getInvAvailBalance(element){
 	var partyIdFromObj=$(varform).find("[name='"+"partyIdFrom"+"']");
 	var partyIdFrom =$(partyIdFromObj).val();
 	var qohObj = $(varform).find("[name='"+"QOH"+"']");
+	var issuedQtyObj = $(varform).find("[name='"+"issuedQty"+"']");
+ 	var quantityObj = $(varform).find("[name='"+"quantity"+"']");
+ 	var tempQtyObj=$(varform).find("[name='"+"tempQty"+"']");
+ 	var issuedQty = $(issuedQtyObj).val();
+ 	var quantity = $(quantityObj).val();
+ 	var quantity = quantity.replace(/,/g, '');
+ 	var issuedQty = issuedQty.replace(/,/g, '');
+ 	var toIssueQty = parseInt(quantity)-parseInt(issuedQty);
 	$.ajax({
          type: "POST",
          url: 'getProductInventoryOpeningBalance',
@@ -149,6 +157,13 @@ function getInvAvailBalance(element){
         	    invQty = result["inventoryCount"];
         	    $(qohObj).val(invQty);
         	    $(qohObj).attr("readOnly","readOnly");
+        	    if(invQty>toIssueQty){
+        	    	$(tempQtyObj).val(toIssueQty);
+        	    }
+        	    if(invQty<toIssueQty){
+        	    	$(tempQtyObj).val(invQty);
+        	    }
+        	    
         	    if(invQty == 0){
         	    		$.ajax({
 					         type: "POST",
@@ -164,6 +179,12 @@ function getInvAvailBalance(element){
 					        	    invQty = result["inventoryCount"];
 					        	    $(qohObj).val(invQty);
 					        	    $(qohObj).attr("readOnly","readOnly");
+					        	    if(invQty>toIssueQty){
+						    	    	$(tempQtyObj).val(toIssueQty);
+						    	    }
+						    	    if(invQty<toIssueQty){
+						    	    	$(tempQtyObj).val(invQty);
+						    	    }
 					           }
 					         } 
 					    });

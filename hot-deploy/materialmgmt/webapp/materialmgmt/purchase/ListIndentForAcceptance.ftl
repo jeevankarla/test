@@ -103,9 +103,9 @@ under the License.
           <td>Indent Date</td>
           <td>From Department</td>
           <td>Material Name - [Code][UOM]</td>
-          <#if custRequestTypeId == "INTERNAL_INDENT">
+          
           <td>Facility</td>
-          </#if>
+          
           <td>quantity</td>
           
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllIndents" name="checkAllIndents" onchange="javascript:toggleRequestId(this);"/></td>
@@ -135,15 +135,17 @@ under the License.
               	<#assign product = (delegator.findOne("Product", {"productId" : eachItem.productId}, false))!>
               	<#assign uom = (delegator.findOne("Uom", {"uomId" : product.quantityUomId}, false))!>
               	<td>${product.productName?if_exists} - [${eachItem.productId?if_exists}][${uom.description?if_exists}]</td>
-				<#if custRequestTypeId == "INTERNAL_INDENT">
 				<#assign facilitiesList = eachItem.get("facility")>
-          		<td><select id="facilityId" name="facilityId">
+                <#if facilitiesList.size() gt 0>
+          		<td><select id="facilityId" name="facilityId" required>
           				<#list facilitiesList as facility>
 							<option value="${facility.facilityId}">${facility.facilityName?if_exists}</option>
                         </#list>
           		    </select>	
           		</td>
-          		</#if>
+                <#else>
+                <td></td>
+                </#if>
               	<td>${eachItem.quantity?if_exists}</td>
            		<td><input type="checkbox" id="indentCheckBoxId_${eachItem_index}" name="indentCheckBoxId"/></td>
             </tr>

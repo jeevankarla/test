@@ -488,7 +488,8 @@
 				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
 			</drop-down>
 		</field>
-		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>  
+		<field name="responseRequiredDate" title="Required Date"><date-time type="date"/></field> 
    		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -530,6 +531,7 @@
         </field>
         <field name="custRequestItemSeqId" ><hidden/></field>
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="responseRequiredDate" title="Required Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(responseRequiredDate, &quot;dd/MM/yyyy&quot;)}"/></field>
         <field name="fromPartyId" title="Requested Department">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
@@ -539,9 +541,9 @@
         <field id-name="productId" name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
+         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
         <field name="facilityId" title="facility" event="onchange" action="javascript:getInvAvailBalance(this);"><drop-down allow-empty="true"><list-options key-name="facilityId" list-name="finalFacilityList" description="${facilityName}"/></drop-down></field>
-        <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
-         <field name="quantity" title="Req. Qty"><display/></field>
+         <field name="quantity" title="Req. Qty" ><display/></field>
           <field name="issuedQty" title="IssuedQty" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>  
          <field name="QOH" title="Inv. Available" ><text default-value="0" size="6" read-only="true"></text> </field>
         <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="0"> </text></field>
