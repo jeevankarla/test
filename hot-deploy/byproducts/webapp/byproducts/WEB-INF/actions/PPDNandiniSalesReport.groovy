@@ -140,7 +140,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 							totalMap["bedRevenue"]=bedRevenue;
 							totalMap["vatRevenue"]=vatRevenue+vatAdj;
 							totalMap["cstRevenue"]=cstRevenue;
-							totalMap["totalRevenue"]=basicRevenue+totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["bedRevenue"]+vatAdj+ppd;
+							totalMap["totalRevenue"]=basicRevenue+totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["bedRevenue"]+ppd;
 							totalMap["ppd"]=ppd;
 							totalMap["idValue"]=idValue;
 							totalMap["invoiceSequenceId"]=invoiceSequenceId;
@@ -267,7 +267,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 								totalMap["vatRevenue"]=vatRevenue+vatAdj;
 								totalMap["cstRevenue"]=cstRevenue;
 								totalMap["ppd"]=ppd;
-								totalMap["totalRevenue"]=basicRevenue+totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["bedRevenue"]+ppd+vatAdj;
+								totalMap["totalRevenue"]=basicRevenue+totalMap["vatRevenue"]+totalMap["cstRevenue"]+totalMap["bedRevenue"]+ppd;
 								totalMap["idValue"]=idValue;
 								totalMap["invoiceSequenceId"]=invoiceSequenceId;
 								totalMap["totalMrpValue"]=totalMrpValue;

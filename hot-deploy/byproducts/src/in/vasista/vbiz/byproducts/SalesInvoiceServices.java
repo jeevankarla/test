@@ -1453,23 +1453,43 @@ public class SalesInvoiceServices {
 						 }
 					 }
 				     invoiceTaxMap.put(invoiceItem.getString("invoiceId"),tempTaxMap);
-				     partyTaxMap.put(invoiceItem.getString("partyId"), tempTaxMap);
 				 }else{
 					 Map invoiceMap =  (Map) invoiceTaxMap.get(invoiceItem.getString("invoiceId"));
-					 Map partyMap =  (Map) partyTaxMap.get(invoiceItem.getString("partyId"));
 					 if(amount.intValue()>=0){
 						 invoiceMap.put(itemType, amount);
-						 partyMap.put(itemType, amount);
 					 }else{
 						 if(itemType.equals("VAT_SALE")){
 							 invoiceMap.put(itemType+"_ADJ", amount);
-							 partyMap.put(itemType+"_ADJ", amount);
 						 }else{
 							 invoiceMap.put(itemType, amount);
-							 partyMap.put(itemType, amount);
 						 }
 					}
 					 invoiceTaxMap.put(invoiceItem.getString("invoiceId"), invoiceMap);
+				 }
+				 
+				 if (partyTaxMap.get(invoiceItem.getString("partyId")) == null) {
+					 Map<String, BigDecimal> tempTaxMap = FastMap.newInstance();
+					 if(amount.intValue()>=0){
+						 tempTaxMap.put(itemType, amount);
+					 }else{
+						 if(itemType.equals("VAT_SALE")){
+						   tempTaxMap.put(itemType+"_ADJ", amount);
+						 }else{
+							 tempTaxMap.put(itemType, amount);
+						 }
+					 }
+				     partyTaxMap.put(invoiceItem.getString("partyId"), tempTaxMap);
+				 }else{
+					 Map partyMap =  (Map) partyTaxMap.get(invoiceItem.getString("partyId"));
+					 if(amount.intValue()>=0){
+						 partyMap.put(itemType, amount);
+					 }else{
+						 if(itemType.equals("VAT_SALE")){
+							 partyMap.put(itemType+"_ADJ", amount);
+						 }else{
+							 partyMap.put(itemType, amount);
+						 }
+					}
 					 partyTaxMap.put(invoiceItem.getString("partyId"), partyMap);
 				 }
 			}
