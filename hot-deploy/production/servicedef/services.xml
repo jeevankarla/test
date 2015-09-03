@@ -67,6 +67,11 @@
     	<attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
     	<attribute name="productId" mode="IN" type="String" optional="false"/>
     </service>
+    <service name="updateInternalDeptTransferStatus" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="updateInternalDeptTransferStatus">
+    	<attribute name="transferGroupId" mode="IN" type="String" optional="false"/>
+    	<attribute name="statusId" mode="IN" type="String" optional="false"/>
+    </service>
+    
     <service name="createProductBatchSequence" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createProductBatchSequence">
     	 <attribute name="productBatchId" mode="IN" type="String" optional="false"/> 
     </service>
