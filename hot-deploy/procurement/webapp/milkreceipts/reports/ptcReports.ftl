@@ -274,6 +274,7 @@
 				</table>
 			</form>
 		</tr>
+		
 		<tr class="alternate-row"> 
 			<form id="SaleBillingReportMR" name="SaleBillingReportMR" mothed="post" action="<@ofbizUrl>SaleBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">

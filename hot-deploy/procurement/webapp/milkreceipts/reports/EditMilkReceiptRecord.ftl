@@ -165,7 +165,7 @@ $(document).ready(function() {
 			  	if(e.target.name == "partyName"){
 		  			$('[name=partyName]').val(($('[name=partyName]').val()).toUpperCase());
 		  			populatePartyName();
-		  			populatePartySpan();
+		  			populatePartySpan(); 
 					var tempPartyJson = partyCodeJson[$('[name=partyName]').val()];
 		  			if(tempPartyJson){
 		  				$('span#partyToolTip').addClass("tooltip");

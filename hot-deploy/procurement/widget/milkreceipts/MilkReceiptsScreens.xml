@@ -54,7 +54,7 @@
 				<set field="displayScreen" value="EDITMILKRECEIPTS"/>
 				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
-				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptTankerIssues.groovy"/> 
 				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/EditMilkReceiptsEntries.groovy"/>
 <!-- 				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/> -->
 			</actions>

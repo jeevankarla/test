@@ -61,7 +61,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> SALE BILLING REPORT </fo:block>
   			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > &#160;&#160;  </fo:block>
-		         
+	   	         
       <#--    <#assign PremAndDeductionMap=allProdProcPriceDetail.getValue().get("PremAndDeductionMap")> -->
          
   				<fo:block>

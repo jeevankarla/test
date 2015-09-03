@@ -82,8 +82,8 @@ if(UtilValidate.isNotEmpty(partyIdTo)){
 	if(UtilValidate.isNotEmpty(partyName)){
 		context.partyName = partyName;
 	}
-/*
-	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+
+/*	partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 	address1="";address2="";city="";postalCode="";
 	 if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
 		if(partyPostalAddress.address1){

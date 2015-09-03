@@ -708,7 +708,6 @@
         <response name="error" type="view" value="mrTransporterBilling"/>
     </request-map>
     
-    
     <request-map uri="cancelPtcTranporterMargin">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelPtcTranporterMargin"/>
