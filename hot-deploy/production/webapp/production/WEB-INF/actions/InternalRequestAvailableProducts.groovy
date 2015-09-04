@@ -34,7 +34,8 @@ import org.ofbiz.party.party.PartyHelper;
 dctx = dispatcher.getDispatchContext();
 delegator  = dctx.getDelegator();
 	fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-	def sdf = new SimpleDateFormat("yyyy-mm-dd");
+	requiredDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	def sdf = new SimpleDateFormat("yyyy-MM-dd");
 	try {
 		if (parameters.custRequestDate) {
 			fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.custRequestDate).getTime()));
@@ -44,7 +45,15 @@ delegator  = dctx.getDelegator();
 		context.errorMessage = "Cannot parse date string: " + e;
 		return;
 	}
-
+	try {
+		if (parameters.responseRequiredDate) {
+			requiredDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.responseRequiredDate).getTime()));
+		}
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + e, "");
+		context.errorMessage = "Cannot parse date string: " + e;
+		return;
+	}
 List issueThruTransferProductsList = FastList.newInstance();
 issueThruTransferProductsList = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productCategoryId",EntityOperator.EQUALS,"ISSUE_THRU_TRANSFER"),null,null,null,false );
 List issueThruTransferProductIdsList = FastList.newInstance();
@@ -64,6 +73,9 @@ if(UtilValidate.isNotEmpty(parameters.fromPartyId)){
 }
 if(UtilValidate.isNotEmpty(parameters.custRequestDate)){
 	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, fromDate));
+}
+if(UtilValidate.isNotEmpty(parameters.responseRequiredDate)){
+	conditionList.add(EntityCondition.makeCondition("responseRequiredDate", EntityOperator.EQUALS, requiredDate));
 }
 conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.EQUALS,"CRQ_SUBMITTED"));
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "INTERNAL_INDENT"));
@@ -123,6 +135,7 @@ custRequestItems.each{ eachItem ->
 	tempMap.putAt("custRequestId", eachItem.custRequestId);
 	tempMap.putAt("custRequestItemSeqId", eachItem.custRequestItemSeqId);
 	tempMap.putAt("custRequestDate", eachItem.custRequestDate);
+	tempMap.putAt("responseRequiredDate", eachItem.responseRequiredDate);
 	tempMap.putAt("fromPartyId", eachItem.fromPartyId);
 	tempMap.putAt("productId", eachItem.productId);
 	tempMap.putAt("quantity", eachItem.quantity);
@@ -187,6 +200,7 @@ custRequestItems.each{ eachItem ->
    custRequestItemsList.add(tempMap);
    }
 }
+custRequestItemsList=UtilMisc.sortMaps(custRequestItemsList, UtilMisc.toList("responseRequiredDate"));
 context.custRequestItemsList = custRequestItemsList;
 
 
