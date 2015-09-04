@@ -136,6 +136,8 @@ categoryType=context.get("categoryType");
 		  Regularsaleslist.add(temptotal);
 	 	}
 	 }
+ grandTotal=grandTotal+totalPpd+totalVatAdj;
+ totalVatRev=totalVatRev+totalVatAdj;
  grandtotal.put("Description","Total");
  grandtotal.put("quantity",totalQty);
  grandtotal.put("basicRevenue",totalBasicRev);
