@@ -116,6 +116,8 @@
 						    if(statusIdVal=="GENERATED"){
 							 // alert("=====statusIdVal=INNER="+statusIdVal+"===billigIdval=="+billigIdval);
 							message +="<option value ="+"'APPROVED'" + " >" +"Approve Billing"+ "</option>";
+							  }else{
+							  	message +="<option value ="+"'SELECT'" + " >" +"SELECT"+ "</option>";
 							  }
 		message +="</select></td></tr>"+            
 						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='cancelGenerateTruckSheet' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
