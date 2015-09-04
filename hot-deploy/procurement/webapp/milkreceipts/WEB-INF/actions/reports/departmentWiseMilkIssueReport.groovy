@@ -238,5 +238,4 @@ if(UtilValidate.isNotEmpty(issuedToDepts)){
 context.allDeptsIssuesMap=allDeptsIssuesMap;	
 
 	
-Debug.log("allDeptsIssuesMap==============================+"+allDeptsIssuesMap);
 
