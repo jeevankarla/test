@@ -462,6 +462,30 @@ public class MilkReceiptBillingServices {
 					inVoiceInMap.put("invoiceTypeId", "MILK_OUT");
 					inVoiceInMap.put("productWiseAmtMap", productWiseAmtMap);
 					inVoiceInMap.put("partyId",partyId);
+					// here we hvae to raise invoice for union
+					inVoiceInMap.put("unionId",partyId);
+					//here we are trying to get unionId
+					List unionsList = FastList.newInstance();
+					try {  	   
+				        	List partyRelationShipConditionList = FastList.newInstance();
+				        	partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyId));
+				        	partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"UNION"));
+				 	 	   	EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)	;
+				        	unionsList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+				        	unionsList = EntityUtil.filterByDate(unionsList,monthBegin);
+				        }catch(Exception e){
+				        	Debug.logError("Error while getting ancestor nodes ::"+e,module);
+				        	return ServiceUtil.returnError("Error while getting ancestor nodes ::"+e.getMessage());
+				        }
+					String unionId="";
+					if(UtilValidate.isNotEmpty(unionsList)){
+						GenericValue unionDetails = EntityUtil.getFirst(unionsList);
+						unionId = unionDetails.getString("partyIdFrom");
+					}
+					if(UtilValidate.isNotEmpty(unionId)){
+						inVoiceInMap.put("unionId",unionId);
+					}
+					
 		    		inVoiceInMap.put("periodBillingId", periodBillingId);
 		    		inVoiceInMap.put("fromDateTime", monthBegin);
 		    		inVoiceInMap.put("thruDateTime", monthEnd);
@@ -469,7 +493,7 @@ public class MilkReceiptBillingServices {
 					Map invoiceResultMap = createInvoiceForParty(dctx,inVoiceInMap);
 		    		if(ServiceUtil.isError(invoiceResultMap)){
 		    			Debug.logError("Error while creating invoice for party :"+partyId+" errorMessage :"+invoiceResultMap, module);
-		    			ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
+		    			return ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
 		    		}
 		    	}
 	    	}catch(Exception e){
@@ -508,8 +532,9 @@ public class MilkReceiptBillingServices {
     	String periodBillingId = (String)context.get("periodBillingId");
     	Timestamp thruDateTime = (Timestamp)context.get("thruDateTime");
     	Timestamp fromDateTime = (Timestamp)context.get("fromDateTime");
-    	
-    	Map productWiseAmtMap = (Map)context.get("productWiseAmtMap"); 
+    	String unionId = (String)context.get("unionId");
+    	Map productWiseAmtMap = (Map)context.get("productWiseAmtMap");
+    	String description = (String)context.get("description");
     	if(UtilValidate.isEmpty(productWiseAmtMap)){
     		Debug.logError("product Wise Map is not found",module);
     		return ServiceUtil.returnError("product Wise Map is not found");
@@ -518,13 +543,25 @@ public class MilkReceiptBillingServices {
     	Map<String, Object> createInvoiceContext = FastMap.newInstance();
         createInvoiceContext.put("partyId", "Company");
         createInvoiceContext.put("partyIdFrom", partyIdTo);
+        if(UtilValidate.isNotEmpty(unionId) && !unionId.equalsIgnoreCase(partyIdTo)){
+        	createInvoiceContext.put("partyIdFrom", unionId);
+        	String partyName = (String)PartyHelper.getPartyName(delegator, partyIdTo, true);
+			
+			if(UtilValidate.isEmpty(partyName)){
+				partyName = "";
+			}
+        	if(UtilValidate.isNotEmpty(description)){
+        		description = description.concat(",");
+        	}
+        	description = description.concat("On behalf of "+partyIdTo+"["+partyName+"]");
+        }
         createInvoiceContext.put("dueDate", thruDateTime);
         createInvoiceContext.put("invoiceDate",thruDateTime);
         createInvoiceContext.put("invoiceTypeId", "MILK_OUT");
         createInvoiceContext.put("referenceNumber", "MILK_PUR_"+periodBillingId);
         createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
         createInvoiceContext.put("currencyUomId", "INR");
-        createInvoiceContext.put("description", (String)context.get("description"));
+        createInvoiceContext.put("description", description);
         createInvoiceContext.put("userLogin", userLogin);
 
         // store the invoice first
@@ -538,7 +575,7 @@ public class MilkReceiptBillingServices {
             }
         }catch(Exception e){
         	Debug.logError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e,module);
-    		ServiceUtil.returnError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e.getMessage());
+    		return ServiceUtil.returnError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e.getMessage());
         }
         // call service for creation invoice);
         String invoiceId = (String) createInvoiceResult.get("invoiceId");
@@ -1670,7 +1707,7 @@ public class MilkReceiptBillingServices {
             }
         }catch(Exception e){
         	Debug.logError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e,module);
-    		ServiceUtil.returnError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e.getMessage());
+    		return ServiceUtil.returnError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e.getMessage());
         }
         // call service for creation invoice);
         String invoiceId = (String) createInvoiceResult.get("invoiceId");
