@@ -295,35 +295,10 @@ if(UtilValidate.isNotEmpty(milkTransferParties)){
 	mtPartyIds = new HashSet(EntityUtil.getFieldListFromEntityList(milkTransferParties, "partyId", false));
 	context.mtPartyIds=mtPartyIds;
 }
-deptIds=[];
 List<GenericValue> facilityDepartments = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"), null,null,null,false);
 if(UtilValidate.isNotEmpty(facilityDepartments)){
-	 deptIds = EntityUtil.getFieldListFromEntityList(facilityDepartments, "facilityId", false);
-}
-productIdsCats=[];
-List<GenericValue> PproductAndCategoryMemberList = delegator.findList("ProductAndCategoryMember",EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "MILK_RECEIPTS"), null,null,null,false);
-if(UtilValidate.isNotEmpty(PproductAndCategoryMemberList)){
-	 productIdsCats = EntityUtil.getFieldListFromEntityList(PproductAndCategoryMemberList, "productId", false);
-	context.productIdsCats=productIdsCats;
-}
-
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsCats));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, deptIds));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-productFacilityList = delegator.findList("ProductFacility", condition, null, null, null, false);
-if(UtilValidate.isNotEmpty(productFacilityList)){
-	milkProdDeptIds = new HashSet(EntityUtil.getFieldListFromEntityList(productFacilityList, "facilityId", false));
-	context.milkProdDeptIds=milkProdDeptIds;
-}
-
-
-	
-
-	
-
-	
-	
+	 context.facilityDepartments=facilityDepartments;
+ }
 	
 	
 	
