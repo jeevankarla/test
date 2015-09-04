@@ -170,7 +170,7 @@ function appendParams(formName, action) {
 				 </td>
 			  </form>
 		  </tr> 
-     	<#--	<tr class="alternate-row"> 
+          <tr class="alternate-row"> 
 				<form id="deptWiseMilkIssueReport" name="deptWiseMilkIssueReport" mothed="post" action="<@ofbizUrl>deptWiseMilkIssueReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
@@ -181,25 +181,25 @@ function appendParams(formName, action) {
 									To   <input  type="text" size="18pt" id="deptMilkIssueThruDate"   name="thruDate"/>
 								 </span>
 							</td> 
-							<td align='left' width="35%"><span class="h3">Department</span>
-					           <select name="deptId" id="deptId">
-                             <#list milkProdDeptIds as deptId>
-						     <option value='${deptId?if_exists}' >${deptId?if_exists}</option>
+							<td align='left' width="35%"><span class="h3">From Dept</span>
+					           <select name="fromDeptId" id="fromDeptId">
+                             <#list facilityDepartments as facilityDepartment>
+						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
 						     </#list>
 						     </select>	
-						     <span class="h3">Product</span>
-					           <select name="productId" id="productId">
-                             <#list productIdsCats as productId>
-						     <option value='${productId?if_exists}' >${productId?if_exists}</option>
-						     </#list>
-						     </select>	
+						 <#-->    <span class="h3">To</span>
+					           <select name="thruDeptId" id="thruDeptId">
+  						     <option value='All' >All</option>
+                             <#list facilityDepartments as facilityDepartment>
+						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+						     </#list>						    
+						      </select>	-->
 						     	</td>
 						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
 				</form>
 			</tr>
-			 	   -->
 		</table>
     </div>
     </div>

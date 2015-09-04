@@ -659,7 +659,10 @@
        <response name="success" type="view" value="GeneratePurchaseBilling"/>   
        <response name="failed" type="view" value="GeneratePurchaseBilling"/>    
     </request-map>
-    
+    <request-map uri="deptWiseMilkIssueReport.pdf">
+	   <security auth="true" https="true"/>
+	   <response name="success" type="view" value="deptWiseMilkIssueReportPDF"/>
+    </request-map>
     <request-map uri="MilkIncommingReport.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkIncommingReportPDF"/> 
@@ -1162,9 +1165,11 @@
     <view-map name="GeneratePurchaseBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GeneratePurchaseBilling"/>
     <view-map name="GenerateSaleBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsTransporterScreens.xml#GenerateSaleBilling"/>
     
-   <!-- PTC Reports -->
+   <!--Milk Recipt and PTC Reports -->
     <view-map name="MilkIncommingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkIncommingReportPDF" content-type="application/pdf"/> 
     <view-map name="WeighbridgeReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#WeighbridgeReportPDF" content-type="application/pdf"/> 
+    <view-map name="deptWiseMilkIssueReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#deptWiseMilkIssueReportPDF" content-type="application/pdf"/> 
+   
     <view-map name="ptcVehicleContractorWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleContractorWiseReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcVehicleWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleWiseReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcUnionsReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcUnionsReportPDF" content-type="application/pdf"/> 
