@@ -1649,7 +1649,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	                	}
 		        	}catch(GenericEntityException e){
 		        		Debug.logError("Error While getting vehicleFineRecoveries "+e, module);
-		        		ServiceUtil.returnError("Error While getting vehicleFineRecoveries "+e.getMessage());
+		        		return ServiceUtil.returnError("Error While getting vehicleFineRecoveries "+e.getMessage());
 		        	}
 				}			
 				result.put("vehicleFineRecoveryInfoMap",vehicleFineRecoveryInfoMap);
