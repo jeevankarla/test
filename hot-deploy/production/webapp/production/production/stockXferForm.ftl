@@ -17,6 +17,11 @@
 </style>
 
 <script type="application/javascript">
+
+	var chromeBrowserFlag = 'Y'
+	if ( $.browser.mozilla ) {
+    	chromeBrowserFlag = 'N'
+  	}
 			 
 	var toFacility;
 	var fromFacility;
@@ -131,7 +136,13 @@
 			message += "</select></h3></td></tr>";
 			message += "<tr><td align='left'><h2>Xfer Qty</h2><sub>(in Kg/Ltr)</sub></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='text' name='xferQty' id='xferQty'></h3></td></tr>";
 			message += "<tr><td align='left'><h2>Comment</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='textarea' name='comments' id='comments'></h3></td></tr><tr></tr>";
-			message += "<tr class='h3'><td>&nbsp;</td><td align='right'><button onclick='javascript: submitTransferForm();' class='submit'>Submit</button></td><td class='h3' align='left'><button onclick='return cancelForm();'>Close</button></td></tr>";
+			if(chromeBrowserFlag && chromeBrowserFlag == 'Y'){
+				message += "<tr class='h3'><td>&nbsp;</td><td align='right'><button type='submit' onclick='javascript: submitTransferForm();' class='submit'>Submit</button></td><td class='h3' align='left'><button onclick='return cancelForm();'>Close</button></td></tr>";
+			}
+			else{
+				message += "<tr class='h3'><td>&nbsp;</td><td align='right'><input type='submit' onclick='javascript: submitTransferForm();' class='submit' value='Submit' /></td><td class='h3' align='left'><button onclick='return cancelForm();'>Close</button></td></tr>";
+			}
+			
 			title = "<center><h2>Stock Transfer</h2></center>";
 			message += "</table></form>";
 			Alert(message, title);
