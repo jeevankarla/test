@@ -194,4 +194,16 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_ISSUE_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_ISSUE_DELETE"/>
     
+    <SecurityPermission description="Approve Milk Receipts View.!" permissionId="MR_APPROVE_RECEIPT"/>
+    <SecurityGroup description="Approve Milk Receipts View.!" groupId="MR_APPROVE_RECEIPT"/>
+    <SecurityGroupPermission groupId="MR_APPROVE_RECEIPT" permissionId="MR_APPROVE_RECEIPT"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_APPROVE_RECEIPT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_APPROVE_RECEIPT"/>
+    
+    <SecurityPermission description="Approve Milk Receipts View.!" permissionId="MR_FINALIZE_RECEIPT"/>
+    <SecurityGroup description="Approve Milk Receipts View.!" groupId="MR_FINALIZE_RECEIPT"/>
+    <SecurityGroupPermission groupId="MR_FINALIZE_RECEIPT" permissionId="MR_FINALIZE_RECEIPT"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FINALIZE_RECEIPT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FINALIZE_RECEIPT"/>
+    
 </entity-engine-xml>
