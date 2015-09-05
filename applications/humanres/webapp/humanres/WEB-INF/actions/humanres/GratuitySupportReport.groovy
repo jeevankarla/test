@@ -81,7 +81,6 @@ if(UtilValidate.isNotEmpty(customTimePeriodIdsList)){
 
 
 
-sNo = 1;
 employeeList = [];
 
 employmentList = [];
@@ -141,6 +140,8 @@ if(UtilValidate.isNotEmpty(employementList)){
 		if(UtilValidate.isNotEmpty(partyIdencationList)){
 			partyIdencation = EntityUtil.getFirst(partyIdencationList);
 			employee.put("gratuityIdNo",partyIdencation.idValue);
+			String gratuityIdSorting = String.format("%15s", partyIdencation.idValue).replace(' ', '0');
+			employee.put("gratuityIdSorting",gratuityIdSorting);
 		}
 		if(reportFlag.equals("csv")){
 			employee.put("joinDate", employment.appointmentDate);
@@ -171,8 +172,6 @@ if(UtilValidate.isNotEmpty(employementList)){
 		}
 		employee.put("balance", balance);
 		employee.put("total", total);
-		employee.put("sNo", sNo);
-		sNo = sNo + 1;
 		i = 0;
 		if(UtilValidate.isNotEmpty(employeeList)){
 			employeeList.each { employee ->
@@ -193,19 +192,5 @@ if(UtilValidate.isNotEmpty(employementList)){
 		context.errorMessage = "No Records Found.......!";
 		return;
 	}
-	
-	sortGratuidIdMap = [:]as TreeMap;
-	for (eachOne in employeeList) {
-		String gratuityIdNo = eachOne.gratuityIdNo;
-		if(UtilValidate.isNotEmpty(gratuityIdNo)){
-			int gratuityIdNumber = Integer.parseInt(gratuityIdNo);
-			sortGratuidIdMap.put(gratuityIdNumber, eachOne);
-		}else{
-			employeeId = eachOne.employeeId;
-			int employeeIdVal = Integer.parseInt(employeeId);
-			sortGratuidIdMap.put(employeeIdVal, eachOne);
-		}
-	}
-	finalList = [];
-	employeeList = sortGratuidIdMap.values();
-context.employeeList=employeeList;
+	employeeList =UtilMisc.sortMaps(employeeList, UtilMisc.toList("gratuityIdSorting"));
+	context.employeeList=employeeList;
