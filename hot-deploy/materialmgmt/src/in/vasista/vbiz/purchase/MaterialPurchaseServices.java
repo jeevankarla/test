@@ -451,7 +451,14 @@ public class MaterialPurchaseServices {
 				}
 				
 				List<GenericValue> filterProdFacility = EntityUtil.filterByCondition(productsFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-				GenericValue facilityProd = EntityUtil.getFirst(filterProdFacility);
+				List prodFacilityIds = EntityUtil.getFieldListFromEntityList(filterProdFacility, "facilityId", true);
+				List facilityConditionList = FastList.newInstance();
+				facilityConditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
+				facilityConditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+				facilityConditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodFacilityIds));
+				EntityCondition facilityCondition = EntityCondition.makeCondition(facilityConditionList, EntityOperator.AND);
+				List<GenericValue> facilities = delegator.findList("Facility", facilityCondition, null, null, null, false);
+				GenericValue facilityProd = EntityUtil.getFirst(facilities);
 				//Product should mapped to any one of facility
 				 if (UtilValidate.isEmpty(facilityProd)) {
 			        	Debug.logError("Problem creating shipment Item for ProductId :"+productId+" Not Mapped To Store Facility !", module);
@@ -459,7 +466,7 @@ public class MaterialPurchaseServices {
 						TransactionUtil.rollback();
 				  		return "error";
 			        }
-				
+				 
 				Map inventoryReceiptCtx = FastMap.newInstance();
 				
 				inventoryReceiptCtx.put("userLogin", userLogin);

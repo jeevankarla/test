@@ -7616,8 +7616,12 @@ public class ByProductNetworkServices {
 					rateAmount = new BigDecimal(formulaValue);
 
 				} else {
-					rateAmount = validFacilityRate.getBigDecimal("rateAmount");
-					uomId = validFacilityRate.getString("uomId");
+					if(UtilValidate.isNotEmpty(validFacilityRate.getBigDecimal("rateAmount"))){
+						rateAmount = validFacilityRate.getBigDecimal("rateAmount");
+					}
+					if(UtilValidate.isNotEmpty(validFacilityRate.getString("uomId"))){
+						uomId = validFacilityRate.getString("uomId");
+					}
 				}
 
 			}
