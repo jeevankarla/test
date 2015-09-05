@@ -117,18 +117,25 @@ context.put("vehItemsJSON",vehItemsJSON);
 context.put("vehicleCodeJson",vehicleCodeJson);
 
 List partyRoleTypes = FastList.newInstance();
-if(UtilValidate.isEmpty(displayScreen) || (UtilValidate.isNotEmpty(displayScreen) && (!displayScreen.equalsIgnoreCase("ISSUE_INIT")))){
-	partyRoleTypes.add("INTERNAL_ORGANIZATIO");
-}
+List<String> internalPartyIds = FastList.newInstance();
 
+partyRoleTypes.add("INTERNAL_ORGANIZATIO");
 partyRoleTypes.add("UNION");
 partyRoleTypes.add("UNITS");
 List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes), null, null, null, true);
+List<GenericValue> intOrgParties = EntityUtil.filterByCondition(unionsList,EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"INTERNAL_ORGANIZATIO") );
+internalPartyIds = EntityUtil.getFieldListFromEntityList(intOrgParties, "partyId", false);
 
 JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();
 JSONObject  intPartyJSON = new JSONObject(); 
 for(union in unionsList){
+		if(UtilValidate.isEmpty(displayScreen) || (UtilValidate.isNotEmpty(displayScreen) && (displayScreen.equalsIgnoreCase("ISSUE_INIT")))){
+			String partyIdStr = union.get("partyId");
+			if(UtilValidate.isNotEmpty(internalPartyIds) && internalPartyIds.contains(partyIdStr)){
+				continue;
+			}
+		}
 		String roleTypeId = union.get("roleTypeId");
 		JSONObject unionObjectJson = new JSONObject();
 		unionObjectJson.put("value",union.get("partyId"));
