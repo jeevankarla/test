@@ -296,6 +296,29 @@ $(document).ready(function() {
 	}); 
 });
 
+function checkPurpose(){
+	var intPartyJSON = ${StringUtil.wrapString(intPartyJSON)};
+	var partyIdTo = $('#partyIdTo').val()
+	var purpose = $('[name=purposeTypeId]').val();
+	if(typeof(purpose)!='undefined' && purpose != null && purpose!='' && purpose != "INTERNALUSE"){ 
+		var intPartyDet = intPartyJSON[partyIdTo] ; 
+		if(typeof(intPartyDet)!= 'undefined' && intPartyDet!='' && intPartyDet!=null  ){
+			alert('you are not allowed to select other than internal use');
+			$('[name=purposeTypeId]').val('INTERNALUSE');
+			$('[name=purposeTypeId]').selected('selected');
+		}
+	}else{
+		var intPartyDet = intPartyJSON[partyIdTo] ; 
+		if(typeof(intPartyDet)!= 'undefined' && intPartyDet!='' && intPartyDet!=null  ){
+		
+		}else{
+			alert('you are not allowed to select internal use');
+			$('[name=purposeTypeId]').val('');
+			$('[name=purposeTypeId]').selected('selected');
+		}
+	}
+	
+}
 function populateNetWeight(){
 	var grossWeight = $('[name=grossWeight]').val();
 	if(typeof(grossWeight)!= "undefined"){	
@@ -481,6 +504,8 @@ function fetchTankerRecordNumber(){
 	   			
 	   			if(displayScreen == "ISSUE_LOAD"){
   					var milkTransfer = result['milkTransfer'];
+  					var partyIdTo = result['partyIdTo'];
+  					$('#partyIdTo').val(partyIdTo);
   					if(typeof(milkTransfer)!='undefined'){
   						var productId = milkTransfer['productId'];
   						if(typeof(productId)!= "undefined" && productId !='' && productId != null){
@@ -959,6 +984,7 @@ function reloadingPage(){
 							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"/></td>
 							    </tr> -->
 	        					<tr>
+	        						<input  name="partyIdTo" size="10pt" type="hidden" id="partyIdTo"/>
 	        						<input  name="vehicleStatusId" size="10pt" type="hidden" id="statusId" value="MR_ISSUE_LOAD" />
 	        						<td align='left' ><span class='h2'>Loading Date</span></td><td><input  type="text" size="15pt" id="loadDate" name="loadDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
@@ -981,7 +1007,7 @@ function reloadingPage(){
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class='h2'>Issue Purpose</span></td><td> 
-		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" >
+		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" onchange="javascript: checkPurpose();">
 						        					<option value="">SELECT</option>
 						        					<#list purposeList as purpose>
 						        						<option value='${purpose.enumId}'>${purpose.description}</option>
@@ -1153,7 +1179,7 @@ function reloadingPage(){
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class='h3'>Milk Used For</span></td><td> 
-		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false">
+		        						<select name="purposeTypeId" required="required" id="purposeTypeId" allow-empty="false" onchange="javascript: checkPurpose();">
 						        					<#if milkPurchasePurposeTypeList?has_content>
 							        					<#list milkPurchasePurposeTypeList as purposeType>
 							        						<option value="${purposeType.enumId}">${purposeType.enumCode}</option>
