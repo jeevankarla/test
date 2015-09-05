@@ -316,9 +316,15 @@
 			<link target="updateMilkRecord"></link>
 		</menu-item> -->
 		<menu-item name="MilkReceiptsToApprove" title="Approve Milk Receipt">
+			<condition>
+      			 <if-has-permission permission="MR" action="_APPROVE_RECEIPT"/>
+      	   </condition>
 		 <link target="MilkReceiptsToApprove"></link>
 		</menu-item>	
 		<menu-item name="MilkFinalization" title="Milk Finalization">
+		<condition>
+      			 <if-has-permission permission="MR" action="_FINALIZE_RECEIPT"/>
+      	   </condition>
 		<link target="MilkFinalization"></link>
 		</menu-item>			
 	</menu>
