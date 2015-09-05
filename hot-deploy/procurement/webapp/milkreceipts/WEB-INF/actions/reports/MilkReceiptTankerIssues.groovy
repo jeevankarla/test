@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
-
+String displayScreen = parameters.get("displayScreen");
 List<GenericValue> productCatMembers = ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(), context);
 List productIds = EntityUtil.getFieldListFromEntityList(productCatMembers, "productId", false);
 
@@ -117,14 +117,19 @@ context.put("vehItemsJSON",vehItemsJSON);
 context.put("vehicleCodeJson",vehicleCodeJson);
 
 List partyRoleTypes = FastList.newInstance();
-partyRoleTypes.add("INTERNAL_ORGANIZATIO");
+if(UtilValidate.isEmpty(displayScreen) || (UtilValidate.isNotEmpty(displayScreen) && (!displayScreen.equalsIgnoreCase("ISSUE_INIT")))){
+	partyRoleTypes.add("INTERNAL_ORGANIZATIO");
+}
+
 partyRoleTypes.add("UNION");
 partyRoleTypes.add("UNITS");
 List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes), null, null, null, true);
 
 JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();
+JSONObject  intPartyJSON = new JSONObject(); 
 for(union in unionsList){
+		String roleTypeId = union.get("roleTypeId");
 		JSONObject unionObjectJson = new JSONObject();
 		unionObjectJson.put("value",union.get("partyId"));
 		String label = union.get("partyId");
@@ -140,10 +145,16 @@ for(union in unionsList){
 		unionDetJson.put("partyName",union.get("groupName"));
 		
 		unionCodeJson.put(union.get("partyId"),unionDetJson);
+		if(UtilValidate.isNotEmpty(roleTypeId) && roleTypeId.equalsIgnoreCase("INTERNAL_ORGANIZATIO")){
+			if(UtilValidate.isEmpty(displayScreen) || (UtilValidate.isNotEmpty(displayScreen) && (!displayScreen.equalsIgnoreCase("ISSUE_INIT")))){
+				intPartyJSON.put(union.get("partyId"),union.get("partyId"));
+			}
+		}
 		
 }
 context.put("partyCodeJson",unionCodeJson);
 context.put("partyItemsJSON",unionItemsJSON);
+context.put("intPartyJSON",intPartyJSON);
 
 List rawMilkSilosList = FastList.newInstance();
 List rawMilkSiloConditionList = FastList.newInstance();
