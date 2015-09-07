@@ -1582,6 +1582,12 @@ public class HumanresService {
 					newEntity.set("busRouteNo", busRouteNo);
 					newEntity.set("flexibleShift", flexibleShift);
 					newEntity.set("presentEpf", pfNumber);
+					if (UtilValidate.isNotEmpty(dateOfJoiningStart)){
+						newEntity.set("joinDate", dateOfJoiningStart);
+					}else{
+						dateOfJoiningStart =  UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+						newEntity.set("joinDate", dateOfJoiningStart);
+					}
 					newEntity.set("punchType", punchType);
 					newEntity.set("shiftType", shiftType);
 					newEntity.set("backgroundVerification", backgroundVerification);
@@ -1920,7 +1926,7 @@ public class HumanresService {
     	LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> inMap = FastMap.newInstance();
-        
+        GenericValue updateEmployeeDetail = null;
         String partyId = (String)context.get("partyId");
         String oldJoiningDate = (String)context.get("oldJoiningDate");
         String newJoiningDate = (String) context.get("newJoiningDate");
@@ -1941,76 +1947,21 @@ public class HumanresService {
 			oldJoiningDateTs = (Timestamp)UtilDateTime.toTimestamp(sdformat.parse(oldJoiningDate));
 		} catch (ParseException e) {
 		}
-		
-		List conditionList = FastList.newInstance();
-        conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
-        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, oldJoiningDateTs));
-        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-        GenericValue employment = null;
-        try {
-        	 List<GenericValue> availableEmployment = delegator.findList("Employment", condition, null, null, null, false);
-        	 employment = EntityUtil.getFirst(availableEmployment);
-		} catch (GenericEntityException e) {
-			Debug.logError("Unable to Fetch Employment"+e, module);
-    		return ServiceUtil.returnError("Unable to Fetch Employment"); 
-		}
-        
-        String roleTypeIdFrom = (String) employment.get("roleTypeIdFrom");
-        String roleTypeIdTo = (String) employment.get("roleTypeIdTo");
-        String partyIdFrom = (String) employment.get("partyIdFrom");
-        Timestamp appointmentDate = (Timestamp) employment.get("appointmentDate");
-        String locationGeoId = (String) employment.get("locationGeoId");
-        String stateGeoId = (String) employment.get("stateGeoId");
-        Timestamp reportingDate = (Timestamp) employment.get("reportingDate");
-        Timestamp resignationDate = (Timestamp) employment.get("resignationDate");
-        String terminationReasonId = (String) employment.get("terminationReasonId");
-        String terminationTypeId = (String) employment.get("terminationTypeId");
-        
-        Map deleteEmploymentMap = FastMap.newInstance();
-        deleteEmploymentMap.put("userLogin",userLogin);
-        deleteEmploymentMap.put("roleTypeIdFrom",roleTypeIdFrom);
-        deleteEmploymentMap.put("partyIdTo",partyId);
-        deleteEmploymentMap.put("partyIdFrom",partyIdFrom);
-        deleteEmploymentMap.put("roleTypeIdTo",roleTypeIdTo);
-        deleteEmploymentMap.put("appointmentDate",appointmentDate);
-        deleteEmploymentMap.put("fromDate",oldJoiningDate);
 		try {
-			Map resultValue = dispatcher.runSync("deleteEmployment", deleteEmploymentMap);
-			if(ServiceUtil.isError(result)){
-				Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
-				return result;
+			updateEmployeeDetail = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId", partyId), false);
+			if(UtilValidate.isNotEmpty(updateEmployeeDetail)){
+				if(UtilValidate.isNotEmpty(newJoiningDate)){
+					updateEmployeeDetail.set("joinDate", fromDateStart);
+				}
+				updateEmployeeDetail.set("partyId", partyId);
+				updateEmployeeDetail.set("joinDate", fromDateStart);
+				updateEmployeeDetail.store();
+				delegator.createOrStore(updateEmployeeDetail);
 			}
-		} catch (GenericServiceException s) {
-			Debug.logError("Error while deleting Employment"+s.getMessage(), module);
-		} 
-        
-        Map createEmploymentMap = FastMap.newInstance();
-        createEmploymentMap.put("userLogin",userLogin);
-        createEmploymentMap.put("roleTypeIdFrom",roleTypeIdFrom);
-        createEmploymentMap.put("partyIdTo",partyId);
-        createEmploymentMap.put("partyIdFrom",partyIdFrom);
-        createEmploymentMap.put("roleTypeIdTo",roleTypeIdTo);
-        createEmploymentMap.put("appointmentDate",appointmentDate);
-        createEmploymentMap.put("fromDate",fromDateStart);
-        
-        createEmploymentMap.put("locationGeoId",locationGeoId);
-        createEmploymentMap.put("stateGeoId",stateGeoId);
-        createEmploymentMap.put("reportingDate",reportingDate);
-        createEmploymentMap.put("resignationDate",resignationDate);
-        createEmploymentMap.put("terminationReasonId",terminationReasonId);
-        createEmploymentMap.put("terminationTypeId",terminationTypeId);
-        
-        try {
-			Map resultValue = dispatcher.runSync("createEmployment", createEmploymentMap);
-			if(ServiceUtil.isError(result)){
-				Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
-				return result;
-			}
-		} catch (GenericServiceException s) {
-			Debug.logError("Error while creating Employment"+s.getMessage(), module);
-		} 
-        
-		return result;
+		}catch(GenericEntityException e){
+			Debug.logError("Error while updating joining date"+e.getMessage(), module);
+		}	
+	     return result;
     }
     public static Map<String, Object> updateEmployeeAppointmentDate(DispatchContext ctx, Map<String, ? extends Object> context) {
     	Map result = ServiceUtil.returnSuccess();
