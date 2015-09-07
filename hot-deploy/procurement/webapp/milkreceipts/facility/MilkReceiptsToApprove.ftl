@@ -101,6 +101,7 @@ under the License.
           <td>Vehicle Number</td>
           <td>Contractor</td>
           <td>Entry Date</td>
+          <td>Dc No</td>
           <td>TareWeight  Date</td>
           <td>From Union</td>
           <td>Milk Type</td>
@@ -127,6 +128,7 @@ under the License.
               	<td>${eachItem.containerId?if_exists}</td>
               	<td>${eachItem.contractorId?if_exists}</td>
 				<td>${eachItem.vehicleEntryDate}</td>
+				<td>${eachItem.dcNo?if_exists}</td>
               	 <#if eachItem.receiveDate?has_content>
 				<td>${eachItem.receiveDate}</td>
 				<#else>
@@ -156,7 +158,7 @@ under the License.
                 </#if>
               	
                 <#assign product = (delegator.findOne("Product", {"productId" : eachItem.productId}, false))!>
-              	<#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
+             <#--  <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
                 <td>  
                 <select name="productId" class='h4' >
                    <#assign existedPurpose = eachItem.productId >
@@ -171,9 +173,9 @@ under the License.
 			       </#list>            
 				</select>
 				</td>
-                <#else>  
+                <#else> -->
                 <td>${product.description?if_exists}</td>
-                </#if>
+               <#-- </#if> -->
                 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
                 <#assign enumeration = delegator.findOne("Enumeration",{"enumId":eachItem.purposeTypeId},false)>
                 <td>

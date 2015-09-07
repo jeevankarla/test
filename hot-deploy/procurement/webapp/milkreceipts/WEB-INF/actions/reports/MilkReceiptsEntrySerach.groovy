@@ -176,6 +176,7 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  shiftsMap.put("statusId",eachShift.statusId);
 		  shiftsMap.put("purposeTypeId",eachShift.purposeTypeId);
 		  shiftsMap.put("sequenceNum",eachShift.sequenceNum);
+		  shiftsMap.put("dcNo", eachShift.dcNo);
 		  
 		  List eachCondList = FastList.newInstance();
 		  eachCondList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , eachShift.vehicleId ));
@@ -260,3 +261,4 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	}
 }
 context.milkDetailslist=milkDetailslist;
+
