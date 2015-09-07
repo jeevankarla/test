@@ -103,15 +103,22 @@
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct"></lookup></field>
         <field name="toFacilityId" title="To Plant/Silo"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
         <field name="statusId" title="To Plant/Silo"><hidden value="IXF_COMPLETE" /></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     
      <form name="ListInventoryTransfers" type="list"  target="findStockXfer" title="" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="findStockXfer">
         <actions>
+        <script location="component://production/webapp/production/WEB-INF/actions/MaterialTransferPerformFind.groovy"/>
             <service service-name="performFind"  result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
                 <field-map field-name="entityName" value="InventoryTransferGroupAndMemberSum"/>
+                <field-map field-name="inputFields.fromFacilityId"  from-field="requestParameters.fromFacilityId"/>
                 <field-map field-name="orderBy" value="transferGroupId DESC"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
@@ -127,13 +134,29 @@
         	<set field="createdByUserLogin" from-field="invTranGrpMember[0].createdByUserLogin" />
         	<set field="createdDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invTranGrpMember[0].createdDate,&quot;dd-MM-yyyy&quot;);}"/>
         	<set field="comments" from-field="invTranGroup[0].comments"/>
+        	<entity-one value-field="toFacility" entity-name="Facility">
+        		<field-map field-name="facilityId" from-field="toFacilityId"/>
+        	</entity-one>
+        	<set field="toDept" from-field="toFacility.ownerPartyId"/>
+        	<entity-one value-field="fromFacility" entity-name="Facility">
+        		<field-map field-name="facilityId" from-field="fromFacilityId"/>
+        	</entity-one>
+        	<set field="fromDept" from-field="fromFacility.ownerPartyId"/>
         </row-actions>
         <field name="transferGroupId" title="Transfer Id">
         	<display />
         </field>
+        <field name="fromDept" title="From Department">
+			<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${fromDept}]">
+            </display-entity>
+          </field>
         <field name="fromFacilityId" title="From Plant/Silo">
         	<display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
         </field>
+        <field name="toDept" title="To Department">
+			<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${toDept}]">
+            </display-entity>
+          </field>
         <field name="toFacilityId" title="To Plant/Silo">
         	<display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
         </field>
