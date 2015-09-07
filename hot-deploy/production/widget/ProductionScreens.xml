@@ -98,6 +98,7 @@
 		     	<set field="facilityId" from-field="parameters.facilityId"/>
 		     	<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
         		<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/> 
+        		<property-map resource="materialmgmtUiLabels" map-name="uiLabelMap" global="true"/>
         		<script location="component://production/webapp/production/WEB-INF/actions/InitiateTransferFind.groovy"/>
 		     	<script location="component://production/webapp/production/WEB-INF/actions/StoreInventoryForXfer.groovy"/>
 		     </actions>
@@ -126,6 +127,9 @@
 		     	<set field="tabButtonItem1" value="productionStockXfers"/>
 		     	<set field="tabButtonItem2" value="findStockXfer"/>
 		     	<set field="titleProperty" value="Find Stock Transfers"/>
+		     	<property-map resource="materialmgmtUiLabels" map-name="uiLabelMap" global="true"/>
+		     	<set field="parameters.custRequestTypeId" value="INTERNAL_INDENT"/>
+		     	<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
 		     </actions>
 		     <widgets>
 	     		 <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
