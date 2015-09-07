@@ -70,6 +70,7 @@ if (workEffortId) {
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd.productId));
+		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS, null));
 		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN, BigDecimal.ZERO));
 		cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		
