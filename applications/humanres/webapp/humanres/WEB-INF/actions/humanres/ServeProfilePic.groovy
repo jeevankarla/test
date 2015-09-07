@@ -52,6 +52,8 @@ salary = null;
 grade = null;
 appointmentDate=null;
 resignationDate=null;
+empJoinDate = null;
+joiningDate = null;
 partyId=parameters.partyId;
 
 basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
@@ -79,7 +81,15 @@ if(UtilValidate.isNotEmpty(locations)){
 	}
 	appointmentDate=locations.get(0).appointmentDate;
 	resignationDate=locations.get(0).resignationDate;
+	empJoinDate=locations.get(0).fromDate;
 }
+employeeDetails = delegator.findOne("EmployeeDetail", [partyId : partyId], false);
+if(UtilValidate.isNotEmpty(employeeDetails) && (employeeDetails.get("joinDate"))){
+	joiningDate = employeeDetails.get("joinDate");
+}else{
+	joiningDate = empJoinDate;
+}
+context.put("joiningDate",joiningDate);
 context.appointmentDate=appointmentDate;
 context.resignationDate=resignationDate;
 context.salary=salary;

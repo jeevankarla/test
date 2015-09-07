@@ -1126,11 +1126,10 @@
             </hyperlink>
         </field>
         
-        <field name="joiningDate" title="Date of joining this Unit" entry-name="employment.fromDate">
-            <hyperlink target="editJoiningDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.fromDate, &quot;dd/MM/yyyy&quot;);}">
-                <parameter param-name="partyId" from-field="employmentData.employment.partyIdTo"/>
-                <parameter param-name="joiningDate" from-field="employmentData.employment.fromDate"/>
-                <parameter param-name="appointmentDate" from-field="employmentData.employment.appointmentDate"/>
+        <field name="joiningDate" title="Date of joining this Unit">
+            <hyperlink target="editJoiningDate" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(joiningDate, &quot;dd/MM/yyyy&quot;);}">
+                <parameter param-name="partyId" from-field="${parameters.partyId}"/>
+                <parameter param-name="joiningDate" from-field="joiningDate"/>
             </hyperlink>
         </field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>

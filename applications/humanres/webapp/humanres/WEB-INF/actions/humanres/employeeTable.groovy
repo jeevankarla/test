@@ -45,7 +45,13 @@ def populateChildren(org, employeeList) {
 		}
 		employee.put("name", employment.firstName + " " + lastName);
 		employee.put("employeeId", employment.partyId);
-		joinDate = UtilDateTime.toDateString(employment.fromDate, "dd/MM/yyyy");
+		joinDate = "";
+		employeeDetails = delegator.findOne("EmployeeDetail", [partyId : employment.partyId], false);
+		if(UtilValidate.isNotEmpty(employeeDetails) && (employeeDetails.get("joinDate"))){
+			joinDate = UtilDateTime.toDateString(employeeDetails.get("joinDate"), "dd/MM/yyyy");
+		}else{
+			joinDate = UtilDateTime.toDateString(employment.appointmentDate, "dd/MM/yyyy");
+		}
 		employee.put("joinDate", joinDate);
 		resignDate=UtilDateTime.toDateString(employment.resignationDate,"dd/MM/yyyy");
 		employee.put("resignDate",resignDate);
