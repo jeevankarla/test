@@ -162,6 +162,15 @@ condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 leaveList = delegator.findList("EmplLeave", condition , null, null, null, false );
 //Debug.logError("leaveList="+leaveList,"");
 
+weekMap=[:];
+weekMap["1"]="Sunday";
+weekMap["2"]="Monday";
+weekMap["3"]="Tuesday";
+weekMap["4"]="Wednesday";
+weekMap["5"]="Thursday";
+weekMap["6"]="Friday";
+weekMap["7"]="Saturday";
+
 leaveList.each { leave->
 	float leaveCount = 1;
 	JSONArray leaveJSON = new JSONArray();
@@ -182,7 +191,7 @@ leaveList.each { leave->
 	leaveCountDays = UtilDateTime.getIntervalInDays(leaveStartDate,leaveEndDate)+1;
 	if((leave.get("leaveTypeId")).equals("CL")){
 		for(int i=1 ;i < leaveCountDays; i++){
-			nextDay = UtilDateTime.addDaysToTimestamp(leaveFromDate, 1);
+			nextDay = UtilDateTime.addDaysToTimestamp(leaveStartDate, 1);
 			String dayOfWeek = (UtilDateTime.getDayOfWeek(nextDay, timeZone, locale)).toString();
 			String weekDay = weekMap[dayOfWeek];
 			leaveFromDate = nextDay;
