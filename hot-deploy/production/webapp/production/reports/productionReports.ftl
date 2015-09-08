@@ -170,7 +170,12 @@
 									To   <input  type="text" size="18pt" id="mateBalanceThruDate"   name="mateBalanceThruDate"/>
 								 </span>
 							</td>
-						    <td width="35%"><span class='h3'></span></td>
+						    <td width="35%"><span class="h3"> Department</span>
+					           <select name="deptId" id="deptId">
+                             <#list facilityDepartments as facilityDepartment>
+						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+						     </#list>
+						     </select></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
@@ -186,18 +191,13 @@
 						 Date <input type="text" size="18pt" id="temperatureDate" name="temperatureDate"/>
 						 </span>
 						 </td>
-						 <td width="35%">
-								 <span class='h3'>Floor </span>
-			                    <select name="facilityId" id="facilityId">
-			                    <#if floorList?has_content>	
-			                        <#list floorList as facilityId>    
-					                  	    <option value='${facilityId}' >
-					                    		${facilityId}
-					                  		 </option>
-			                		</#list>    
-			                	</#if>	    
-			                    </select>
-							</td>
+					     <td width="35%"><span class="h3"> Department</span>
+					           <select name="facilityId" id="facilityId">
+                             <#list facilityDepartments as facilityDepartment>
+						     <option value='${facilityDepartment.facilityId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+						     </#list>
+						     </select>
+						  </td>
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						 </tr>
 					 </table>

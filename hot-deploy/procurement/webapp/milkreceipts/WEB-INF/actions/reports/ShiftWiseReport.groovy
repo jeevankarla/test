@@ -59,6 +59,8 @@ shiftDateEnd = new java.sql.Timestamp(sdf1.parse(shiftDayTimeEnd).getTime());
 /*shiftDateStart = UtilDateTime.getDayStart(shiftDate);
 shiftDateEnd = UtilDateTime.getDayEnd(shiftDate);
 */
+Map partyReference =FastMap.newInstance();
+allPartyIds = [];
 ShiftWiseMap = [:];
 ShiftWiseTimeMap = [:];
 shiftTime = null;
@@ -115,6 +117,10 @@ def getShiftWiseRecords(int shiftType,Timestamp shiftDateTimeStart,Timestamp shi
 	if(UtilValidate.isNotEmpty(shiftList)){
 		ShiftWiseMap.put(shiftType, shiftList);
 		ShiftWiseTimeMap.put(shiftType,shiftTime);
+		partyIds=EntityUtil.getFieldListFromEntityList(shiftList, "partyId", true);
+		partyIds.each{eachPartyId->
+		  allPartyIds.add(eachPartyId)
+		}
 	}
 }
 
@@ -132,3 +138,17 @@ if(shiftType.equalsIgnoreCase("all")){
 context.putAt("ShiftWiseMap", ShiftWiseMap);
 context.putAt("ShiftWiseTimeMap", ShiftWiseTimeMap);
 context.putAt("shiftDate", shiftDate);
+
+if(UtilValidate.isNotEmpty(allPartyIds)){
+Set partyIdSet = new HashSet(allPartyIds);
+	List partyRelationShipConditionList = FastList.newInstance();
+    partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN,partyIdSet));
+    partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"UNION"));
+    EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)  ;
+    unionsList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+    unionsList = EntityUtil.filterByDate(unionsList,shiftDateTimeStart);
+	unionsList.each{eachPartyRef->
+		partyReference.put(eachPartyRef.partyIdTo, eachPartyRef.partyIdFrom);
+	}
+}
+context.putAt("partyReference", partyReference);

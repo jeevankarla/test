@@ -82,15 +82,18 @@ context.thruDate = dayEnd;
 Map allDeptsIssuesMap = FastMap.newInstance();
 
 List facilityList = delegator.findList("Facility", null, null,null, null, false);
-
-conditionList =[];
-conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, fromDeptId));
-conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
-EntityCondition facilityIssueDeptCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-issuedToDeptsList=EntityUtil.filterByCondition(facilityList,facilityIssueDeptCond );
-issuedToDepts=EntityUtil.getFieldListFromEntityList(issuedToDeptsList, "ownerPartyId", true);
+List conditionList=FastList.newInstance();
+List<String> issuedToDepts = FastList.newInstance();
+if("All".equals(thruDeptId)){
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, fromDeptId));
+	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
+	EntityCondition facilityIssueDeptCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	issuedToDeptsList=EntityUtil.filterByCondition(facilityList,facilityIssueDeptCond );
+	issuedToDepts=EntityUtil.getFieldListFromEntityList(issuedToDeptsList, "ownerPartyId", true);
+}else{
+	issuedToDepts.add(thruDeptId);
+}
 fromDeptStorageIds=null;
-
 fromDeptSiloList=EntityUtil.filterByCondition(facilityList, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,fromDeptId));
 if(UtilValidate.isNotEmpty(fromDeptSiloList)){
 	fromDeptStorageIds=EntityUtil.getFieldListFromEntityList(fromDeptSiloList, "facilityId", true);
@@ -99,7 +102,6 @@ if(UtilValidate.isNotEmpty(fromDeptSiloList)){
 		fromDeptNames = EntityUtil.getFirst(fromDeptNameList);
 		context.fromDeptId = fromDeptNames.facilityName;
 	}
-		
 }
 List allInvTransGroupMemSumList=FastList.newInstance();
 List custRequestAndIssuanceList=FastList.newInstance();
@@ -129,7 +131,6 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds)){
 	custRequestAndIssuanceList = delegator.findList("CustRequestAndIssuance", EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN,itemIssuanceIds), null,null, null, false);
 	//milkIsssuedDepts = new HashSet(EntityUtil.getFieldListFromEntityList(custRequestAndIssuanceList, "fromPartyId", false));
 }
-//issuedToDepts=["INT10"];
 if(UtilValidate.isNotEmpty(issuedToDepts)){
 	issuedToDepts.each{eachMilkIssuedDept->
 		Map eachDeptIssuesMap = FastMap.newInstance();
@@ -223,7 +224,7 @@ if(UtilValidate.isNotEmpty(issuedToDepts)){
 		}
 		
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, eachMilkIssuedDept));
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachMilkIssuedDept));
 		conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
 		EntityCondition IssueDeptNameCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		issuedDeptNameList=EntityUtil.filterByCondition(facilityList,IssueDeptNameCond );

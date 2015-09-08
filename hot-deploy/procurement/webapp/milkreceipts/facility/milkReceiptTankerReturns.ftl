@@ -290,7 +290,7 @@ function populateProductSpan(){
 	prod=$('[name=product]').val();
 	var facilityIds = productFacilityIdMap[prod];
     
-    setSiloDropdown(facilityIds);
+   // setSiloDropdown(facilityIds);
 	if(tempProductJson){
 		$('span#productToolTip').addClass("tooltip");
 		$('span#productToolTip').removeClass("tooltipWarning");
