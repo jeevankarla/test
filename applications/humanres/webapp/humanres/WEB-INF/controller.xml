@@ -2489,9 +2489,30 @@ under the License.
     <request-map uri="updateExcludeSalaryDisbursement">
         <security https="true" auth="true"/>
         <event type="java"  path="in.vasista.vbiz.humanres.PayrollService"  invoke="updateExcludeSalaryDisbursement" global-transaction="true"/>
-        <event type="service" invoke=""/>	
-        <response name="success" type="request" value="json">
-        </response> 
+        <response name="success" type="request-redirect" value="ExcludeSalaryDisbursement">
+        	<redirect-parameter name="customTimePeriodId"/>
+        </response>
+        <response name="error" type="request-redirect" value="ExcludeSalaryDisbursement"></response>
+    </request-map>
+    <request-map uri="salaryDisbursementReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="SalaryDisbursementReportPdf"/>        
+    </request-map>
+    <request-map uri="MakePaymentForPaymentStopEmpl">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="MakePaymentForPaymentStopEmpl"></response>
+    </request-map>
+    <request-map uri="SalaryDisbursedEmpl">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="MakePaymentForPaymentStopEmpl"></response>
+    </request-map>
+    <request-map uri="makepaymentForSalaryDisbursedEmpl">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.humanres.PayrollService"  invoke="makepaymentForSalaryDisbursedEmpl" global-transaction="true"/>
+        <response name="success" type="request-redirect" value="MakePaymentForPaymentStopEmpl">
+        	<redirect-parameter name="customTimePeriodId"/>
+        </response>
+        <response name="error" type="request-redirect" value="MakePaymentForPaymentStopEmpl"><redirect-parameter name="customTimePeriodId"/></response>
     </request-map>
     <request-map uri="editEmployment">
         <security https="true" auth="true"/>
@@ -2898,7 +2919,9 @@ under the License.
 	 <view-map name="DepartmentTotalsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DepartmentTotalsReport" content-type="text/plain" encoding="none"/>
 	<!-- SalaryDisbursement --> 
 	<view-map name="ExcludeSalaryDisbursement" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursement"></view-map>
-	<view-map name="ExcludeSalaryDisbursementInit" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursementInit"></view-map>
+   	<view-map name="ExcludeSalaryDisbursementInit" type="screen" page="component://humanres/widget/HumanresScreens.xml#ExcludeSalaryDisbursementInit"></view-map>
+   	<view-map name="MakePaymentForPaymentStopEmpl" type="screen" page="component://humanres/widget/HumanresScreens.xml#MakePaymentForPaymentStopEmpl"></view-map>
+	<view-map name="SalaryDisbursementReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#SalaryDisbursementReportPdf" content-type="application/pdf" encoding="none"/>
 	<view-map name="editJoiningDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditJoiningDate"/>
 	<view-map name="editAppointmentDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditAppointmentDate"/> 
 	 
