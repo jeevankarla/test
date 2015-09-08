@@ -502,13 +502,13 @@ public class InventoryServices {
             	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
                     	}
                     	
-                    	List<GenericValue> inventoryFilteredList = EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN, effectiveDate));
+                    	List<GenericValue> inventoryFilteredList = EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUALS, effectiveDate));
                     	BigDecimal invTotalTillDate = BigDecimal.ZERO;
                     	for(GenericValue eachInventoryDetails : inventoryFilteredList){
                     		invTotalTillDate = invTotalTillDate.add(eachInventoryDetails.getBigDecimal("availableToPromiseDiff"));
                     	}
-                    	BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
-                    	if(effectiveDateInvCheck.compareTo(BigDecimal.ZERO)<0){
+                    	//BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
+                    	if(invTotalTillDate.compareTo(BigDecimal.ZERO)<0){
                     		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
             	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
                     	}
