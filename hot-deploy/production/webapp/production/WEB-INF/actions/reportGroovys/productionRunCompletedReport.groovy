@@ -65,14 +65,13 @@ if (productionRunId) {
 
 productionDetails = ProductionServices.getProductionRunDetails(dctx, [ workEffortId: productionRunId, userLogin: userLogin,]);
 
-issuedProductsList=productionDetails.get("issuedProductsList");
+issuedProductsMap=productionDetails.get("issuedProductsMap");
 declareProductsList=productionDetails.get("declareProductsList");
 returnProductsList=productionDetails.get("returnProductsList");
 qcComponentsList=productionDetails.get("qcComponentsList");
-context.issuedProductsList=issuedProductsList; 
+context.issuedProductsMap=issuedProductsMap; 
 context.declareProductsList=declareProductsList;
 context.returnProductsList=returnProductsList;
 context.qcComponentsList=qcComponentsList;
-
 
 

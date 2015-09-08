@@ -118,7 +118,7 @@ function appendParams(formName, action) {
     <div class="screenlet-body">
         <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
         <tr class="alternate-row">
-      		<form id="ShiftWiseReportTxt" name="ShiftWiseReportTxt" method="post" action="<@ofbizUrl>ShiftWiseReport.txt</@ofbizUrl>">
+      		<form id="ShiftWiseReportTxt" name="ShiftWiseReportTxt" method="post" action="<@ofbizUrl>ShiftWiseReport.pdf</@ofbizUrl>" target="_blank">
       			<td>Shift Wise Report</td>
       			<td >
 					Select Shift <select name="shiftType">
@@ -129,7 +129,7 @@ function appendParams(formName, action) {
 		                   		</select>
 					Shift Date <input  type="text" size="15pt" id="MkrsThruDate" name="shiftDate" required />
 					
-      				<input type="submit" value="Download" class="buttontext"/> (12x12 Size)
+      				<input type="submit" value="Download" class="buttontext"/> 
           		</td>
           	</form>  	   
          </tr>   
@@ -187,13 +187,13 @@ function appendParams(formName, action) {
 						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
 						     </#list>
 						     </select>	
-						 <#-->    <span class="h3">To</span>
+						   <span class="h3">To</span>
 					           <select name="thruDeptId" id="thruDeptId">
   						     <option value='All' >All</option>
                              <#list facilityDepartments as facilityDepartment>
 						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
 						     </#list>						    
-						      </select>	-->
+						      </select>
 						     	</td>
 						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>

@@ -13,12 +13,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 
-conditionList =[];
-conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "PLANT"));
-EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-milkVehicleTransferList = delegator.findList("Facility", condition, null, null, null, false);
-List floorList = EntityUtil.getFieldListFromEntityList(milkVehicleTransferList, "facilityId", false);
-context.floorList=floorList;
+List<GenericValue> facilityDepartments = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"), null,null,null,false);
+if(UtilValidate.isNotEmpty(facilityDepartments)){
+	 context.facilityDepartments=facilityDepartments;
+ }
 
 allShiftsList = delegator.findList("WorkShiftTypePeriodAndMap",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"MILK_SHIFT"),null,UtilMisc.toList("shiftTypeId"),null,false);
 if(UtilValidate.isNotEmpty(allShiftsList)){

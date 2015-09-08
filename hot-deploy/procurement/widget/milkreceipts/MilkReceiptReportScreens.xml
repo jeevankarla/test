@@ -458,7 +458,7 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
-	<screen name="ShiftWiseReportTxt">
+	<screen name="ShiftWiseReportPdf">
 		<section>
 			<actions>
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
@@ -470,7 +470,7 @@ under the License.
 				<platform-specific>
 					<html>
 						<html-template
-							location="component://procurement/webapp/milkreceipts/reports/ShiftWiseReportTxt.fo.ftl"></html-template>
+							location="component://procurement/webapp/milkreceipts/reports/ShiftWiseReportPdf.fo.ftl"></html-template>
 					</html>
 				</platform-specific>
 			</widgets>
