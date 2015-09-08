@@ -70,7 +70,11 @@
 	
 </script>
 
-   <form id="ExcludeSalary" name="ExcludeSalary" method="post" action="<@ofbizUrl>ExcludeSalaryDisbursementInit</@ofbizUrl>">
+	<#if flag == "MakePayment">
+		<form id="ExcludeSalary" name="ExcludeSalary" method="post" action="<@ofbizUrl>SalaryDisbursedEmpl</@ofbizUrl>">
+	<#else>
+		<form id="ExcludeSalary" name="ExcludeSalary" method="post" action="<@ofbizUrl>ExcludeSalaryDisbursementInit</@ofbizUrl>">
+	</#if>
            <fieldset>
 			  <table cellpadding="5" cellspacing="15">
 			  	
@@ -80,7 +84,11 @@
 		      			<select name="customTimePeriodId" id="customTimePeriodId">
 		      				<option value=''>Select</option>
 					        <#list customTimeList as eachCustomTime>
-					            <option value='${eachCustomTime.customTimePeriodId}'>${eachCustomTime.get("periodName")?if_exists}</option>
+					        	<#if customTimePeriodId?exists && (customTimePeriodId == eachCustomTime.customTimePeriodId)>
+					      			<option value='${eachCustomTime.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachCustomTime.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachCustomTime.thruDate, "dd MMMMM, yyyy")}</option>
+					        	<#else>
+					        		<option value='${eachCustomTime.customTimePeriodId}'>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachCustomTime.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachCustomTime.thruDate, "dd MMMMM, yyyy")}</option>
+					        	</#if>
 					        </#list>
 	      				</select>
 		    		</td>			  	

@@ -9616,7 +9616,8 @@ public class PayrollService {
 	  	String payrollHeaderId = null;
 	  	String employeeId = null;
 	  	String comment = null;
-	  	  
+	  	String customTimePeriodId = "";  
+	  	
         Timestamp effectiveDate = UtilDateTime.nowTimestamp();
 	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	  	HttpSession session = request.getSession();
@@ -9651,7 +9652,29 @@ public class PayrollService {
 	  		String eachPayrollHeaderId = (String)disbursementMap.get("payrollHeaderId");
 	  		String eachEmployeeId = (String)disbursementMap.get("employeeId");
 	  		String eachComment = (String)disbursementMap.get("comment");
+	  		String periodBillingId = "";
+	  		GenericValue periodBilling = null;
+	  		GenericValue PayrollHeader = null;
+	  		try{
+	  			PayrollHeader = delegator.findOne("PayrollHeader", UtilMisc.toMap("payrollHeaderId", eachPayrollHeaderId), false);
+	  			if(UtilValidate.isNotEmpty(PayrollHeader)){
+	  				periodBillingId = PayrollHeader.getString("periodBillingId");
+	  			}
+  			}catch (GenericEntityException e) {
+  				Debug.logError(e, e.toString(), module);
+  				return "error";
+  			}
 	  		
+	  		try{
+		  		periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+		  		if(UtilValidate.isNotEmpty(periodBilling)){
+		  			customTimePeriodId = periodBilling.getString("customTimePeriodId");
+		  		}
+	  		}catch (GenericEntityException e) {
+				Debug.logError(e, e.toString(), module);
+				return "error";
+			}
+	  	
 	  		if(UtilValidate.isNotEmpty(eachPayrollHeaderId)){
 	  			List conditionList = FastList.newInstance();
 	  	  	    conditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, eachPayrollHeaderId));
@@ -9706,9 +9729,145 @@ public class PayrollService {
 	  			}
 	  		}
 	  	}
-	  	  
+	  	request.setAttribute("customTimePeriodId", customTimePeriodId);  
 	  	request.setAttribute("_EVENT_MESSAGE_", "Succesfully added ");
 	 	return "success";
 	
+	}
+  	
+  	public static Map<String, Object> getExcludedEployeeFromSalarayDisbursement(DispatchContext dctx, Map<String, ? extends Object> context){
+  		Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    Locale locale = (Locale) context.get("locale");
+  	    FastMap result = FastMap.newInstance();
+  	    
+  	    String periodBillingId = (String)context.get("periodBillingId");
+  	    
+        List conList = FastList.newInstance();
+        conList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+        EntityCondition payrollDeductionCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
+        
+        List<GenericValue> payrollHeaderDeductionList = FastList.newInstance();
+        try{
+        	payrollHeaderDeductionList = delegator.findList("PayrollHeaderAndPayrollRetention", payrollDeductionCond, null, null, null, false);
+        }catch(GenericEntityException e) {
+			Debug.logError(e, module);
+	        return ServiceUtil.returnError("Unable to get PayrollHeaderAndPayrollRetention");			
+		}
+        List deductPayrollHeaderIdList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(payrollHeaderDeductionList)){
+        	deductPayrollHeaderIdList = EntityUtil.getFieldListFromEntityList(payrollHeaderDeductionList, "payrollHeaderId", true);
+        }
+        result.put("deductPayrollHeaderIds",deductPayrollHeaderIdList);
+  	    return result;
+  	}
+  	
+  	public static String makepaymentForSalaryDisbursedEmpl(HttpServletRequest request, HttpServletResponse response) {
+  		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	Locale locale = UtilHttp.getLocale(request);
+	  	String payrollHeaderId = null;
+	  	String employeeId = null;
+	  	String comment = null;
+	  	String customTimePeriodId = "";
+	  
+        Timestamp effectiveDate = UtilDateTime.nowTimestamp();
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	HttpSession session = request.getSession();
+	  	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	      
+	  	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	List<Map>salaryDisbursementDetailList =FastList.newInstance();
+	  	  
+	  	for (int i = 0; i < rowCount; i++) {
+	  		Map<String  ,Object> disbursementMap = FastMap.newInstance();
+	  		String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  		if (paramMap.containsKey("payrollHeaderId" + thisSuffix)) {
+	  			payrollHeaderId = (String) paramMap.get("payrollHeaderId" + thisSuffix);
+	  		}
+	  		if (paramMap.containsKey("employeeId" + thisSuffix)) {
+	  			employeeId = (String) paramMap.get("employeeId" + thisSuffix);
+	  		}
+	  		if (paramMap.containsKey("comment" + thisSuffix)) {
+	  			comment = (String) paramMap.get("comment" + thisSuffix);
+	  		}
+	  		  
+	  		disbursementMap.put("payrollHeaderId", payrollHeaderId);
+	  		disbursementMap.put("employeeId", employeeId);
+	  		disbursementMap.put("comment", comment);
+	  		salaryDisbursementDetailList.add(disbursementMap);
+        }
+	  	 
+	  	for(int j=0; j< salaryDisbursementDetailList.size() ; j++){
+	  		Map disbursementMap = salaryDisbursementDetailList.get(j);
+	  		
+	  		String eachPayrollHeaderId = (String)disbursementMap.get("payrollHeaderId");
+	  		String eachEmployeeId = (String)disbursementMap.get("employeeId");
+	  		String eachComment = (String)disbursementMap.get("comment");
+	  		if(UtilValidate.isNotEmpty(eachPayrollHeaderId)){
+	  			String periodBillingId = "";
+	  			GenericValue periodBilling = null;
+	  			GenericValue PayrollHeaderAndPayrollRetention = null;
+	  			GenericValue PayrollRetention = null;
+	  			
+	  			try{
+		  			PayrollHeaderAndPayrollRetention = delegator.findOne("PayrollHeaderAndPayrollRetention", UtilMisc.toMap("payrollHeaderId", eachPayrollHeaderId,"employeeId",eachEmployeeId), false);
+		  			if(UtilValidate.isNotEmpty(PayrollHeaderAndPayrollRetention)){
+		  				periodBillingId = PayrollHeaderAndPayrollRetention.getString("periodBillingId");
+		  			}
+		  			PayrollRetention = delegator.findOne("PayrollRetention", UtilMisc.toMap("payrollHeaderId", eachPayrollHeaderId,"employeeId",eachEmployeeId), false);
+	  			}catch (GenericEntityException e) {
+	  				Debug.logError(e, e.toString(), module);
+	  				return "error";
+	  			}
+	  			
+	  			try{
+		  			periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+		  			if(UtilValidate.isNotEmpty(periodBilling)){
+	  		  			customTimePeriodId = periodBilling.getString("customTimePeriodId");
+	  		  			request.setAttribute("customTimePeriodId", customTimePeriodId);
+	  		  		}
+		  			List condList = FastList.newInstance();
+			 		condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF")));
+			 		condList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.EQUALS, periodBillingId));
+			 		condList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, eachEmployeeId));
+			 		condList.add(EntityCondition.makeCondition("referenceNumber",EntityOperator.EQUALS, periodBilling.getString("billingTypeId")+"_"+periodBillingId));
+					EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			 		List<GenericValue> invoices = delegator.findList("Invoice", cond, null, null, null, false);
+			 		if(UtilValidate.isNotEmpty(invoices)){
+			 			String invoiceId = " ";
+			 			GenericValue invoiceDetails = EntityUtil.getFirst(invoices);
+			 			invoiceId = (String) invoiceDetails.get("invoiceId");
+			 			try{
+				 			if(UtilValidate.isNotEmpty(invoiceId)){
+					 			Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+			                	paymentCtx.put("userLogin", userLogin);
+			                	paymentCtx.put("payrollHeaderId", eachPayrollHeaderId);
+			                	Map<String, Object> paymentResult = dispatcher.runSync("createPayrolPaymentAndAppclications",paymentCtx);
+			                	if (ServiceUtil.isError(paymentResult)) {
+			                		Debug.logError(paymentResult.toString(), module);
+			                		request.setAttribute("_ERROR_MESSAGE_", paymentResult+"***invoiceDetails==="+paymentCtx);
+			                        return "Error";
+			                    }
+			                	PayrollRetention.remove();
+			                    request.setAttribute("_EVENT_MESSAGE_", "Succesfully Payment created");
+				 			}
+			 			}catch (GenericServiceException s) {
+	    					s.printStackTrace();
+	    				}  
+		  			
+			 		}else{
+			 			request.setAttribute("_ERROR_MESSAGE_", "Invoice not created for "+eachEmployeeId);
+			 			return "error";
+			 		}
+	  			}catch (GenericEntityException e) {
+	  				Debug.logError(e, e.toString(), module);
+	  				return "error";
+	  			}
+	  		}
+	  	}
+	 	return "success";
 	}
 }//end of class

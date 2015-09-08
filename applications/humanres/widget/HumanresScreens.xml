@@ -1377,8 +1377,60 @@
             <actions>
                 <set field="titleProperty" value="Exclude salary disbursement"/>
                 <set field="headerItem" value="PayrollDeduction"/>
-				<set field="tabButtonItem" value="PayrollDeduction" />
-				<set field="tabButtonItem2" value="PayrollDeduction"/>
+				<set field="tabButtonItem" value="FindPayrollBilling" />
+				<set field="tabButtonItem2" value="PayrollRetention"/>
+				<set field="flag" value="StopPayment"/>
+				<set field="customTimePeriodId" from-field="${parameters.customTimePeriodId}"/>
+				<!-- <field-map field-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/> -->
+				<entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
+					<condition-list combine="and">
+			  			<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+			  		</condition-list>
+			  		<order-by field-name="-fromDate"/>
+		  		    <order-by field-name="periodNum"/> 
+				</entity-condition>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/SalaryDisbursementEmployees.groovy" />
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>
+                        <section>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="MakePaymentForPaymentStopEmpl" text="Make Payment" style="buttontext create"/>
+                                </container>
+                            </widgets>
+                        </section>
+                    	<screenlet title="Select Employee Details">
+                    		<platform-specific>
+                                <html><html-template location="component:///humanres/webapp/humanres/humanres/PayrollDudction.ftl"/></html>
+                            </platform-specific>
+                        </screenlet> 
+                        <screenlet title="Search Results For The Month ----> ${customTimePeriodId}" >
+                               <section>
+                               		 <widgets>
+			                            <platform-specific>
+			                                <html><html-template location="component:///humanres/webapp/humanres/humanres/deduction.ftl"/></html>
+			                            </platform-specific>
+		                             </widgets>
+                               </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="MakePaymentForPaymentStopEmpl">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Exclude salary disbursement"/>
+                <set field="headerItem" value="PayrollDeduction"/>
+				<set field="tabButtonItem" value="FindPayrollBilling" />
+				<set field="tabButtonItem2" value="PayrollRetention"/>
+				<set field="flag" value="MakePayment"/>
+				<set field="customTimePeriodId" from-field="${parameters.customTimePeriodId}"/>
 				<entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
 					<condition-list combine="and">
 			  			<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
@@ -1400,8 +1452,8 @@
                         <screenlet title="Search Results For The Month ----> ${customTimePeriodId}" >
                                <section>
                                		 <widgets>
-		                                <platform-specific>
-			                                <html><html-template location="component:///humanres/webapp/humanres/humanres/PayrollDudctionInit.ftl"/></html>
+			                            <platform-specific>
+			                                <html><html-template location="component:///humanres/webapp/humanres/humanres/deduction.ftl"/></html>
 			                            </platform-specific>
 		                             </widgets>
                                </section>
