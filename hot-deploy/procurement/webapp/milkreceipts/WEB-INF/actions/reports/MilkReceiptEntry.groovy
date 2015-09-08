@@ -179,9 +179,13 @@ context.put("vehicleCodeJson",vehicleCodeJson);
 
 List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,UtilMisc.toList("UNION","CHILL_CENTER")), null, null, null, true);
 context.unionsList = unionsList;
+List<Map> unionPrepList = FastList.newInstance();
 JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();
 for(union in unionsList){
+		Map unionPrepMap = FastMap.newInstance();
+		unionPrepMap.putAll(union);
+		
 		JSONObject unionObjectJson = new JSONObject();
 		unionObjectJson.put("value",union.get("partyId"));
 		String label = union.get("partyId");
@@ -194,10 +198,27 @@ for(union in unionsList){
 		
 		JSONObject unionDetJson = new JSONObject();
 		unionDetJson.put("partyId",union.get("partyId"));
+		String partyName = union.get("groupName");
 		unionDetJson.put("partyName",union.get("groupName"));
 		
+		List partyRelationShipConditionList = FastList.newInstance();
+		partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,union.get("partyId")));
+		partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"UNION"));
+			 EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList);
+		List unionDetList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+		GenericValue unionDetails = EntityUtil.getFirst(unionDetList);
+		if(UtilValidate.isNotEmpty(unionDetails)){
+			partyName = partyName.concat("-"+unionDetails.get("partyIdFrom"));
+			unionPrepMap.put("groupName",partyName);
+		}
+		if(UtilValidate.isNotEmpty(unionPrepMap)){
+			unionPrepList.add(unionPrepMap);
+		}
 		unionCodeJson.put(union.get("partyId"),unionDetJson);
 		
+}
+if(UtilValidate.isNotEmpty(unionPrepList)){
+	context.put("unionsList",unionPrepList);
 }
 context.put("partyCodeJson",unionCodeJson);
 context.put("partyItemsJSON",unionItemsJSON);
