@@ -1158,7 +1158,32 @@ function setOrgPartyId() {
 								</table>
 							</form>
 					 	</tr>
-					</#if>		
+					</#if>
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("IncrementDueReport.pdf")?exists) && (reportDetailsMap.get("IncrementDueReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("IncrementDueReport.pdf"))?exists))> 
+						<tr class="alternate-row">
+							<form id="IncrementDueReport" name="IncrementDueReport" mothed="post" action="<@ofbizUrl>IncrementDueReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="22%"><span class='h3'>Increment Due Report</span></td>
+										<td><input type="hidden" name="partyId" class="commonPartyId"/> 
+										<td width="45%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+												<#list customTimePeriodList as customTimePeriod>
+													 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+								      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								      					<#else>
+								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								                  		</option>
+								      				</#if>
+												</#list>
+											</select>
+										</td>	
+										<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									</tr>
+								</table>
+							</form>
+					 	</tr>
+					</#if>
 			   	</table>
 			</div>
 		</div>
