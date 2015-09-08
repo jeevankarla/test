@@ -151,12 +151,29 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	//grnDetailsList = delegator.findOne("ShipmentReceipt",["shipmentId":shipmentId],false);
 	
 	productIds = EntityUtil.getFieldListFromEntityList(grnDetailsList, "productId", true);
-	productStore = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
-	productStore=EntityUtil.getFirst(productStore);
-	if((productStore) && (productStore.facilityId)){
-	      Store=productStore.facilityId;
-	      shipmentMap.put("store",Store);
-    }	  	
+
+	List facilityIds = FastList.newInstance();
+	conlist.clear();
+	conlist.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "STORE"));
+	conlist.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
+	facility = delegator.findList("Facility", cond , null, null, null, false );
+	if(UtilValidate.isNotEmpty(facility)){
+	facilityIds = EntityUtil.getFieldListFromEntityList(facility, "facilityId", true);
+	}
+	if(UtilValidate.isNotEmpty(facilityIds)){
+		conlist.clear();
+		conlist.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+		conlist.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+		cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
+		productStore = delegator.findList("ProductFacility", cond , null, null, null, false );
+		if(UtilValidate.isNotEmpty(productStore)){
+			productStore=EntityUtil.getFirst(productStore);
+			Store=productStore.facilityId;
+			shipmentMap.put("store",Store);
+		}	 
+	}
+	 	
 }
 
  grnList=[];

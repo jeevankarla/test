@@ -95,7 +95,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
     	</fo:table-body>
     		</fo:table>
      </fo:block>
-     <#if issuedProductsList?has_content> 
+     <#if issuedProductsMap?has_content> 
      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160; </fo:block>
      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PRODUCTION ISSUE DETAILS: </fo:block>
      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -111,16 +111,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ss.pdf")}
             <fo:table-column column-width="80pt"/>
            	<fo:table-body>
            	<#assign sno=1>
+           	<#assign issuedProductsList = issuedProductsMap.entrySet()>
            <#list issuedProductsList as issuedProducts>
-           <#assign productId= issuedProducts.issuedProdId?if_exists >
-		          <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
+           <#assign productId= issuedProducts.getKey()?if_exists >
+		    <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
              <fo:table-row >
               <fo:table-cell ><fo:block text-align="center"   keep-together="always" font-size="12pt">${sno?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">${issuedProducts.issuedProdId?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt">${issuedProducts.getValue().get("issuedProdId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="left"  keep-together="always" font-size="12pt"><#if productNameDetails?has_content>${productNameDetails.get("productName")?if_exists}</#if></fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="12pt">${-issuedProducts.issuedQty?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="12pt">${issuedProducts.fatPercent?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="12pt">${issuedProducts.snfPercent?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="12pt">${-issuedProducts.getValue().get("issuedQty")?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="12pt">${issuedProducts.getValue().get("fatPercent")?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  keep-together="always" font-size="12pt">${issuedProducts.getValue().get("snfPercent")?if_exists}</fo:block></fo:table-cell>       		
              </fo:table-row>
               	<#assign sno=sno+1>
                </#list>    

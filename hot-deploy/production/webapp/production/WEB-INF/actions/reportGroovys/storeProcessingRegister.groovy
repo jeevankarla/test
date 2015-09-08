@@ -107,6 +107,11 @@ intAndExtenalIssuesList=EntityUtil.filterByCondition(milkTransferAndItemList, In
 milkTransferList=EntityUtil.filterByCondition(milkTransferAndItemList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"MXF_APPROVED"));
 
 
+List<String> internalShipIds = FastList.newInstance();
+List<GenericValue> internalShipment = delegator.findList("Shipment", EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "MILK_RETURN_SHIPMENT"), null, null, null, false);
+if(UtilValidate.isNotEmpty(internalShipment)){
+   internalShipIds = EntityUtil.getFieldListFromEntityList(internalShipment, "shipmentId", true);
+}
 
 // MILK PROCESSING REGISTER -- UNPROCESSING MILK
 
@@ -235,7 +240,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 				rmRecdQty=eachRmSiloReceipt.quantityOnHandDiff;
 				rmRecdFat=eachRmSiloReceipt.fatPercent;
 				rmRecdSnf=eachRmSiloReceipt.snfPercent;
-				//rmReceiptsMap.put("pmRecedProdId",pmRecedProdId);
+				//rmReceiptsMap.put("rmRecedProdId",rmRecedProdId);
 				rmReceiptsMap.put("receivedQuantity",rmRecdQty);
 				rmReceiptsMap.put("receivedFat",rmRecdFat);
 				rmReceiptsMap.put("receivedSnf",rmRecdSnf);
@@ -246,7 +251,42 @@ if(UtilValidate.isNotEmpty(siloIds)){
 				receiptNo++;
 			}
 		}
-	
+		 if(UtilValidate.isNotEmpty(internalShipIds)){
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,internalShipIds ));
+			 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,eachSiloId ));
+			 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+			 EntityCondition internalReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 internalReturnsList = EntityUtil.filterByCondition(InventoryItemAndDetailList, internalReturnCond);
+			 if(UtilValidate.isNotEmpty(internalReturnsList)){
+				 internalReturnsList.each{eachInternalReturns->
+					 Map rmReturnReceiptsMap =FastMap.newInstance();
+					 
+					 BigDecimal rmRecdQty = BigDecimal.ZERO;
+					 BigDecimal rmRecdFat = BigDecimal.ZERO;
+					 BigDecimal rmRecdSnf = BigDecimal.ZERO;
+					 String rmRecedProdId = "";
+					 
+					 rmRecedProdId=eachInternalReturns.productId;
+					 rmRecdQty=eachInternalReturns.quantityOnHandDiff;
+					 rmRecdFat=eachInternalReturns.fatPercent;
+					 rmRecdSnf=eachInternalReturns.snfPercent;
+					 //rmReturnReceiptsMap.put("rmRecedProdId",rmRecedProdId);
+					 rmReturnReceiptsMap.put("receivedQuantity",rmRecdQty);
+					 rmReturnReceiptsMap.put("receivedFat",rmRecdFat);
+					 rmReturnReceiptsMap.put("receivedSnf",rmRecdSnf);
+					 if(UtilValidate.isNotEmpty(rmRecdQty)){
+						 ReceiptTotQty=ReceiptTotQty+rmRecdQty;
+					 }
+					 receiptSiloMap.put(receiptNo,rmReturnReceiptsMap);
+					 receiptNo++;
+				 }
+			 }
+	 
+		  }
+
+		 
+		 
 		if(UtilValidate.isNotEmpty(allInvTransGroupMemSumList)){
 			inventoryRecdTransfer=EntityUtil.filterByCondition(allSiloInvTransferList, EntityCondition.makeCondition("facilityIdTo", EntityOperator.EQUALS,eachSiloId));
 			if(UtilValidate.isNotEmpty(inventoryRecdTransfer)){
@@ -287,28 +327,34 @@ if(UtilValidate.isNotEmpty(siloIds)){
 	 rmIssuesNo=1;
 	 BigDecimal issuedTotQty = BigDecimal.ZERO;
 	 inventoryItemDetails=EntityUtil.filterByCondition(InventoryItemAndDetailList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,eachSiloId));
-	 if(UtilValidate.isNotEmpty(inventoryItemDetails)){
-		inventoryItemDetails.each{eachinventoryItemDetail->
-			BigDecimal issuedQty=BigDecimal.ZERO;
-			Map rmProductinIssuesMap = FastMap.newInstance();
-		    issuedQty = (BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff");
-			workEffortId=eachinventoryItemDetail.workEffortId;
-			siloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,workEffortId));
-		 	if(UtilValidate.isNotEmpty(siloWorkList)){
-		        String receivedFacilityId = siloWorkList[0].get("facilityId");
-				if(UtilValidate.isNotEmpty(receivedFacilityId) && issuedQty<0){
-					issuedQty=-issuedQty;
-					if(UtilValidate.isNotEmpty(issuedQty)){
-						issuedTotQty=issuedTotQty+issuedQty;
-					}
-					rmProductinIssuesMap.put("partyId",receivedFacilityId);
-					rmProductinIssuesMap.put("issuedQuantity",issuedQty);
-					IssuedSiloMap.put(rmIssuesNo,rmProductinIssuesMap);
-					rmIssuesNo++;
-				}
-	         }
-		  }
-	  }
+	 workEffortIssueIds = new HashSet(EntityUtil.getFieldListFromEntityList(inventoryItemDetails, "workEffortId", false));
+	 if(UtilValidate.isNotEmpty(workEffortIssueIds)){
+		 workEffortIssueIds.each{eachIssueWorkeffId->
+			 Map rmProductinIssuesMap =FastMap.newInstance();
+			 BigDecimal issuedQty=BigDecimal.ZERO;
+			 siloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachIssueWorkeffId));
+			 String receivedFacilityId="";
+			 if(UtilValidate.isNotEmpty(siloWorkList)){
+				 receivedFacilityId = siloWorkList[0].get("facilityId");
+			 }
+			 workEffortInventoryItemDetails=EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachIssueWorkeffId));
+			 workEffortInventoryItemDetails.each{eachWorkEffInvIssue->
+				 tempIssuedQty = (BigDecimal)eachWorkEffInvIssue.get("quantityOnHandDiff");
+				 if(UtilValidate.isNotEmpty(receivedFacilityId) && tempIssuedQty<0){
+					 tempIssuedQty=-tempIssuedQty;
+					 issuedQty=issuedQty+tempIssuedQty;
+				 }
+			 }
+			 if(UtilValidate.isNotEmpty(issuedQty) && issuedQty>0){
+				 rmProductinIssuesMap.put("partyId",receivedFacilityId);
+				 rmProductinIssuesMap.put("issuedQuantity",issuedQty);
+				 IssuedSiloMap.put(rmIssuesNo,rmProductinIssuesMap);
+				 issuedTotQty=issuedTotQty+issuedQty;
+				 rmIssuesNo++;
+				 
+			 }
+		 }
+	 }
 	// RM Internal And External Milk Issues
 	 if(UtilValidate.isNotEmpty(intAndExtenalIssuesList)){
 		 intAndExtRmIssuesList=EntityUtil.filterByCondition(intAndExtenalIssuesList, EntityCondition.makeCondition("siloId", EntityOperator.EQUALS,eachSiloId));
@@ -497,7 +543,39 @@ pmSiloIds.each{eachPmSiloId->
 			receiptNo++;
 		}
 	}
-	
+	if(UtilValidate.isNotEmpty(internalShipIds)){
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,internalShipIds ));
+		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,eachPmSiloId ));
+		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+		EntityCondition internalPmReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		internalPmReturnsList = EntityUtil.filterByCondition(allSiloInveAndDetailList, internalPmReturnCond);
+		if(UtilValidate.isNotEmpty(internalPmReturnsList)){
+			internalPmReturnsList.each{eachInternalPmReturns->
+				Map pmReturnReceiptsMap =FastMap.newInstance();
+				
+				BigDecimal pmRecdQty = BigDecimal.ZERO;
+				BigDecimal pmRecdFat = BigDecimal.ZERO;
+				BigDecimal pmRecdSnf = BigDecimal.ZERO;
+				String pmRecedProdId = "";
+				
+				pmRecedProdId=eachInternalPmReturns.productId;
+				pmRecdQty=eachInternalPmReturns.quantityOnHandDiff;
+				pmRecdFat=eachInternalPmReturns.fatPercent;
+				pmRecdSnf=eachInternalPmReturns.snfPercent;
+				pmReturnReceiptsMap.put("pmRecedProdId",pmRecedProdId);
+				pmReturnReceiptsMap.put("pmRecdQty",pmRecdQty);
+				pmReturnReceiptsMap.put("pmRecdFat",pmRecdFat);
+				pmReturnReceiptsMap.put("pmRecdSnf",pmRecdSnf);
+				if(UtilValidate.isNotEmpty(pmRecdQty)){
+					pmRecdSiloQty=pmRecdSiloQty+pmRecdQty;
+				}
+				pmSiloRecdMap.put(receiptNo,pmReturnReceiptsMap);
+				receiptNo++;
+			}
+		}
+
+	 }
 	if(UtilValidate.isNotEmpty(allInvTransGroupMemSumList)){
 		PMInvRecdTransfer=EntityUtil.filterByCondition(allSiloInvTransferList, EntityCondition.makeCondition("facilityIdTo", EntityOperator.EQUALS,eachPmSiloId));
 		if(UtilValidate.isNotEmpty(PMInvRecdTransfer)){
@@ -535,26 +613,41 @@ pmSiloIds.each{eachPmSiloId->
 	BigDecimal pmIssuedSiloQty = BigDecimal.ZERO;
 	issueNo=1;
 	issuedInvDetails=EntityUtil.filterByCondition(allSiloInveAndDetailList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,eachPmSiloId));
+	
+	pmWorkEffortIssueIds = new HashSet(EntityUtil.getFieldListFromEntityList(issuedInvDetails, "workEffortId", false));
+	if(UtilValidate.isNotEmpty(pmWorkEffortIssueIds)){
+		pmWorkEffortIssueIds.each{eachPmIssueWorkeffId->
+			Map rmProductinIssuesMap =FastMap.newInstance();
+			BigDecimal pmProductionIssuQty=BigDecimal.ZERO;
+			pmSiloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachPmIssueWorkeffId));
+			String pmRecFacilityId="";
+			if(UtilValidate.isNotEmpty(pmSiloWorkList)){
+				pmRecFacilityId = pmSiloWorkList[0].get("facilityId");
+			}
+			pmWorkEffortInvItemDetails=EntityUtil.filterByCondition(issuedInvDetails, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachPmIssueWorkeffId));
+			pmWorkEffortInvItemDetails.each{eachPmWorkEffInvIssue->
+				tempPmIssuedQty = (BigDecimal)eachPmWorkEffInvIssue.get("quantityOnHandDiff");
+				if(UtilValidate.isNotEmpty(pmRecFacilityId) && tempPmIssuedQty<0){
+					tempPmIssuedQty=-tempPmIssuedQty;
+					pmProductionIssuQty=pmProductionIssuQty+tempPmIssuedQty;
+				}
+			}
+			if(UtilValidate.isNotEmpty(pmProductionIssuQty) && pmProductionIssuQty>0){
+				rmProductinIssuesMap.put("partyId",receivedFacilityId);
+				rmProductinIssuesMap.put("issuedQuantity",pmProductionIssuQty);
+				pmSiloIssueMap.put(issueNo,rmProductinIssuesMap);
+				pmIssuedSiloQty=pmIssuedSiloQty+pmProductionIssuQty;
+				issueNo++;
+				
+			}
+		}
+	}
+	
 	if(UtilValidate.isNotEmpty(issuedInvDetails)){
 		issuedInvDetails.each{eachinventoryItemDetail->
 		   // PM issued Qty through production
 		   BigDecimal pmissueProdnQty = ((BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff"));
-		   workEffortId=eachinventoryItemDetail.workEffortId;
-		   pmItemIssuanceId=eachinventoryItemDetail.itemIssuanceId;
-		   
-		   siloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,workEffortId));
-		   if(UtilValidate.isNotEmpty(siloWorkList)){
-			   String receivedFacilityId = siloWorkList[0].get("facilityId");
-			   if(UtilValidate.isNotEmpty(receivedFacilityId) && pmissueProdnQty<0){
-				   pmissueProdnQty=-pmissueProdnQty;
-				   Map pmIssProductioMap = FastMap.newInstance();
-				   pmIssProductioMap.put("qty",pmissueProdnQty);
-				   pmIssProductioMap.put("recFacility",receivedFacilityId);
-				   pmSiloIssueMap.put(issueNo, pmIssProductioMap);
-				   pmIssuedSiloQty=pmIssuedSiloQty+pmissueProdnQty;
-				   issueNo++;
-			   }
-		   }
+		   pmItemIssuanceId=eachinventoryItemDetail.itemIssuanceId; 
 		   if(UtilValidate.isNotEmpty(pmItemIssuanceId) && pmissueProdnQty<0){
 			   pmissueProdnQty=-pmissueProdnQty;
 			   custFromPartyId='';
