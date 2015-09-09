@@ -122,7 +122,11 @@ List<String> internalPartyIds = FastList.newInstance();
 partyRoleTypes.add("INTERNAL_ORGANIZATIO");
 partyRoleTypes.add("UNION");
 partyRoleTypes.add("UNITS");
-List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes), null, null, null, true);
+List unionConditionList = UtilMisc.toList(EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes));
+unionConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"PARTY_DISABLED"));
+EntityCondition unionCondition = EntityCondition.makeCondition(unionConditionList);
+
+List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",unionCondition, null, null, null, true);
 List<GenericValue> intOrgParties = EntityUtil.filterByCondition(unionsList,EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"INTERNAL_ORGANIZATIO") );
 internalPartyIds = EntityUtil.getFieldListFromEntityList(intOrgParties, "partyId", false);
 
@@ -130,7 +134,7 @@ JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();
 JSONObject  intPartyJSON = new JSONObject(); 
 for(union in unionsList){
-		if(UtilValidate.isEmpty(displayScreen) || (UtilValidate.isNotEmpty(displayScreen) && (displayScreen.equalsIgnoreCase("ISSUE_INIT")))){
+		if((UtilValidate.isNotEmpty(displayScreen) && (displayScreen.equalsIgnoreCase("ISSUE_INIT")))){
 			String partyIdStr = union.get("partyId");
 			if(UtilValidate.isNotEmpty(internalPartyIds) && internalPartyIds.contains(partyIdStr)){
 				continue;
@@ -159,6 +163,7 @@ for(union in unionsList){
 		}
 		
 }
+
 context.put("partyCodeJson",unionCodeJson);
 context.put("partyItemsJSON",unionItemsJSON);
 context.put("intPartyJSON",intPartyJSON);
