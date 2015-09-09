@@ -208,6 +208,11 @@ public class MilkReceiptBillingServices {
 		inMap.put("thruDateTime",thruDateTime);
 		inMap.put("monthBegin",monthBegin);
 		inMap.put("monthEnd",monthEnd);
+		inMap.put("statusId", "generate");
+		String statusId = (String)context.get("statusId");
+		if(UtilValidate.isNotEmpty(statusId)){
+			inMap.put("statusId", statusId);
+		}
 		
     	Map periodBillingResult = populatePeriodBillingForParty(dctx, inMap);
 		if(ServiceUtil.isError(periodBillingResult)){
@@ -234,6 +239,7 @@ public class MilkReceiptBillingServices {
     	Timestamp thruDateTime = (Timestamp) context.get("thruDateTime");
     	Timestamp monthBegin = (Timestamp) context.get("monthBegin");
     	Timestamp monthEnd = (Timestamp) context.get("monthEnd");
+    	String statusId = (String)context.get("statusId");
     	List<String> partyIdsList = FastList.newInstance();
     	String customTimePeriodId = (String) context.get("customTimePeriodId");
     	String periodBillingId = null;
@@ -251,24 +257,32 @@ public class MilkReceiptBillingServices {
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PB_PROC_MRGN"));
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	GenericValue billingId =null;
+	    	GenericValue newEntity = null;
 	    	try {
 	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
-	    		if(UtilValidate.isNotEmpty(periodBillingList)){
+	    		if(UtilValidate.isNotEmpty(statusId) && !statusId.equalsIgnoreCase("generate")){
+	    			newEntity = EntityUtil.getFirst(periodBillingList);
+	    			periodBillingId = (String) newEntity.get("periodBillingId");
+	    		}
+	    		
+	    		if(UtilValidate.isNotEmpty(periodBillingList) && UtilValidate.isEmpty(periodBillingId)){
 	    			// need to handle.
 	    			Debug.logError("This billing is already  Generated or IN-Process",module);
 	    			return ServiceUtil.returnError("This billing is already  Generated or IN-Process");
 	    			
 	    		}
-	    		GenericValue newEntity = delegator.makeValue("PeriodBilling");
-	            newEntity.set("billingTypeId", "PB_PROC_MRGN");
-	            newEntity.set("customTimePeriodId", customTimePeriodId);
-	            newEntity.set("statusId", "IN_PROCESS");
-	            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-	            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	            newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-	            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());  
-				delegator.createSetNextSeqId(newEntity);
-				periodBillingId = (String) newEntity.get("periodBillingId");
+	    		if(UtilValidate.isEmpty(periodBillingId)){
+		    		newEntity = delegator.makeValue("PeriodBilling");
+		            newEntity.set("billingTypeId", "PB_PROC_MRGN");
+		            newEntity.set("customTimePeriodId", customTimePeriodId);
+		            newEntity.set("statusId", "IN_PROCESS");
+		            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+		            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		            newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+		            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());  
+					delegator.createSetNextSeqId(newEntity);
+					periodBillingId = (String) newEntity.get("periodBillingId");
+	    		}
 	    	}catch (GenericEntityException e) {
 	    		 Debug.logError(e, module);             
 	             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
@@ -490,10 +504,12 @@ public class MilkReceiptBillingServices {
 		    		inVoiceInMap.put("fromDateTime", monthBegin);
 		    		inVoiceInMap.put("thruDateTime", monthEnd);
 		    		inVoiceInMap.put("description", "MILK PURCHASE FROM "+UtilDateTime.toDateString(monthBegin,"dd-MMM-yyyy")+" to "+UtilDateTime.toDateString(monthEnd,"dd-MMM-yyyy"));
-					Map invoiceResultMap = createInvoiceForParty(dctx,inVoiceInMap);
-		    		if(ServiceUtil.isError(invoiceResultMap)){
-		    			Debug.logError("Error while creating invoice for party :"+partyId+" errorMessage :"+invoiceResultMap, module);
-		    			return ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
+		    		if(UtilValidate.isNotEmpty(statusId) && !statusId.equalsIgnoreCase("generate")){
+		    			Map invoiceResultMap = createInvoiceForParty(dctx,inVoiceInMap);
+			    		if(ServiceUtil.isError(invoiceResultMap)){
+			    			Debug.logError("Error while creating invoice for party :"+partyId+" errorMessage :"+invoiceResultMap, module);
+			    			return ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
+			    		}
 		    		}
 		    	}
 	    	}catch(Exception e){
@@ -774,7 +790,9 @@ public class MilkReceiptBillingServices {
         String periodBillingId = (String) context.get("periodBillingId");
         String statusId = (String) context.get("statusId");
         if(UtilValidate.isEmpty(statusId)){
-        	statusId="GENERATED";
+        	//statusId="GENERATED";
+        	Debug.logError("status can not be empty",module);
+        	return ServiceUtil.returnError("status can not be empty");
         }
         GenericValue periodBilling = null;
         String customTimePeriodId="";
@@ -795,13 +813,31 @@ public class MilkReceiptBillingServices {
 			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
 		}
 		if("APPROVED".equalsIgnoreCase(statusId)){
+			Map populatePeriodBillingInMap = FastMap.newInstance();
+			
+			populatePeriodBillingInMap.put("statusId", "approved");
+			populatePeriodBillingInMap.put("userLogin", userLogin);
+			populatePeriodBillingInMap.put("customTimePeriodId", customTimePeriodId);
+			
+			Map  populateMilkReceiptPeriodBillingResult = populateMilkReceiptPeriodBilling(dctx,populatePeriodBillingInMap);
+			if(ServiceUtil.isError(populateMilkReceiptPeriodBillingResult)){
+				Debug.logError("Error while creating invoices :"+populateMilkReceiptPeriodBillingResult,module);
+				return ServiceUtil.returnError("Error while creating invoices :"+ServiceUtil.getErrorMessage(populateMilkReceiptPeriodBillingResult));
+			}
+			
 			Map updatePurchaseInvoiceBilling = updatePurchaseBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_READY"));
 			if(ServiceUtil.isError(updatePurchaseInvoiceBilling)){
 				Debug.logError("Error while processing invoices :"+updatePurchaseInvoiceBilling,module);
 				return ServiceUtil.returnError("Error while processing invoices :"+ServiceUtil.getErrorMessage(updatePurchaseInvoiceBilling));
 			}
+			try{
+				periodBilling.set("statusId","APPROVED");
+				delegator.store(periodBilling);
+			}catch(GenericEntityException e){
+				Debug.logError("Error while approving the billing ::"+e,module);
+				return ServiceUtil.returnError("Error while approving the billing ::"+e.getMessage());
+			}
 			result = ServiceUtil.returnSuccess("Billing successfully Approved for "+periodBillingId);
-			
 		}
 		if("APPROVED_PAYMENT".equalsIgnoreCase(statusId)){
 			Map purchasePaymentResult=createPurchaseBillingPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
@@ -1369,6 +1405,11 @@ public class MilkReceiptBillingServices {
 		inMap.put("thruDateTime",thruDateTime);
 		inMap.put("monthBegin",monthBegin);
 		inMap.put("monthEnd",monthEnd);
+		inMap.put("statusId","generate");
+		String statusId= (String)context.get("statusId");
+		if(UtilValidate.isNotEmpty(statusId)){
+			inMap.put("statusId",statusId);
+		}
 		
     	Map saleBillingResult = populateSaleBillingForParty(dctx, inMap);
 		if(ServiceUtil.isError(saleBillingResult)){
@@ -1401,6 +1442,7 @@ public class MilkReceiptBillingServices {
     	List<String> partyIdsList = FastList.newInstance();
     	String customTimePeriodId = (String) context.get("customTimePeriodId");
     	String periodBillingId = null;
+    	String statusId = (String)context.get("statusId");
     	if(UtilValidate.isEmpty(milkTransferList)){
     		Debug.logError("MilkTransfers not Found ::",module);
     		return ServiceUtil.returnError("MilkTransfers not Found ::");
@@ -1415,24 +1457,32 @@ public class MilkReceiptBillingServices {
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PB_SALE_MRGN"));
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	GenericValue billingId =null;
+	    	GenericValue newEntity = null;
 	    	try {
 	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
-	    		if(UtilValidate.isNotEmpty(periodBillingList)){
+	    		if(UtilValidate.isNotEmpty(statusId) && !statusId.equalsIgnoreCase("generate")){
+	    			newEntity = EntityUtil.getFirst(periodBillingList);
+	    			periodBillingId = (String) newEntity.get("periodBillingId");
+	    		}
+	    		
+	    		if(UtilValidate.isNotEmpty(periodBillingList) && UtilValidate.isEmpty(periodBillingId)){
 	    			// need to handle.
 	    			Debug.logError("This billing is already  Generated or IN-Process",module);
 	    			return ServiceUtil.returnError("This billing is already  Generated or IN-Process");
 	    			
 	    		}
-	    		GenericValue newEntity = delegator.makeValue("PeriodBilling");
-	            newEntity.set("billingTypeId", "PB_SALE_MRGN");
-	            newEntity.set("customTimePeriodId", customTimePeriodId);
-	            newEntity.set("statusId", "IN_PROCESS");
-	            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-	            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	            newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-	            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());  
-				delegator.createSetNextSeqId(newEntity);
-				periodBillingId = (String) newEntity.get("periodBillingId");
+	    		if(UtilValidate.isEmpty(periodBillingId)){
+		    		newEntity = delegator.makeValue("PeriodBilling");
+		            newEntity.set("billingTypeId", "PB_SALE_MRGN");
+		            newEntity.set("customTimePeriodId", customTimePeriodId);
+		            newEntity.set("statusId", "IN_PROCESS");
+		            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+		            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		            newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+		            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());  
+					delegator.createSetNextSeqId(newEntity);
+					periodBillingId = (String) newEntity.get("periodBillingId");
+	    		}
 	    	}catch (GenericEntityException e) {
 	    		 Debug.logError(e, module);             
 	             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
@@ -1632,12 +1682,12 @@ public class MilkReceiptBillingServices {
 		    		inVoiceInMap.put("fromDateTime", monthBegin);
 		    		inVoiceInMap.put("thruDateTime", monthEnd);
 		    		inVoiceInMap.put("description", "MILK SALE FROM "+UtilDateTime.toDateString(monthBegin,"dd-MMM-yyyy")+" to "+UtilDateTime.toDateString(monthEnd,"dd-MMM-yyyy"));
-					Map invoiceResultMap = createSaleInvoiceForParty(dctx,inVoiceInMap);
-					Debug.log("inVoiceInMap==========="+inVoiceInMap);
-					Debug.log("invoiceResultMap==========="+invoiceResultMap);
-		    		if(ServiceUtil.isError(invoiceResultMap)){
-		    			Debug.logError("Error while creating invoice for party :"+partyId+" errorMessage :"+invoiceResultMap, module);
-		    			return ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
+		    		if(UtilValidate.isNotEmpty(statusId) && !statusId.equalsIgnoreCase("generate")){
+						Map invoiceResultMap = createSaleInvoiceForParty(dctx,inVoiceInMap);
+			    		if(ServiceUtil.isError(invoiceResultMap)){
+			    			Debug.logError("Error while creating invoice for party :"+partyId+" errorMessage :"+invoiceResultMap, module);
+			    			return ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
+			    		}
 		    		}
 		    	}
 	    	}catch(Exception e){
@@ -1779,11 +1829,30 @@ public class MilkReceiptBillingServices {
 			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
 		}
 		if("APPROVED".equalsIgnoreCase(statusId)){
+			//populateMilkSaleBilling
+			Map populateSaleBillingInMap = FastMap.newInstance();
+			populateSaleBillingInMap.put("statusId", "approved");
+			populateSaleBillingInMap.put("userLogin", userLogin);
+			populateSaleBillingInMap.put("customTimePeriodId", customTimePeriodId);
+			
+			Map  populateSalePeriodBillingResult = populateMilkSaleBilling(dctx,populateSaleBillingInMap);
+			if(ServiceUtil.isError(populateSalePeriodBillingResult)){
+				Debug.logError("Error while creating invoices :"+populateSalePeriodBillingResult,module);
+				return ServiceUtil.returnError("Error while creating invoices :"+ServiceUtil.getErrorMessage(populateSalePeriodBillingResult));
+			}
 			Map updateSaleInvoiceBilling = updateSaleBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_READY"));
 			if(ServiceUtil.isError(updateSaleInvoiceBilling)){
 				Debug.logError("Error while processing invoices :"+updateSaleInvoiceBilling,module);
 				return ServiceUtil.returnError("Error while processing invoices :"+ServiceUtil.getErrorMessage(updateSaleInvoiceBilling));
 			}
+			try{
+				periodBilling.set("statusId","APPROVED");
+				delegator.store(periodBilling);
+			}catch(GenericEntityException e){
+				Debug.logError("Error while approving the billing ::"+e,module);
+				return ServiceUtil.returnError("Error while approving the billing ::"+e.getMessage());
+			}
+			
 			result = ServiceUtil.returnSuccess("Billing successfully Approved for "+periodBillingId);
 			
 		}
