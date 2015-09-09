@@ -5153,6 +5153,18 @@ public class MilkReceiptServices {
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		String paramMilkTransferId = (String) request.getParameter("paramMilkTransferId");
+		String paramPartyId = (String) request.getParameter("paramPartyId");
+		String paramVehicleId = (String) request.getParameter("paramVehicleId");
+		String paramSiloId = (String) request.getParameter("paramSiloId");
+		String paramProductId = (String) request.getParameter("paramProductId");
+		String paramFromDate = (String) request.getParameter("paramFromDate");
+		request.setAttribute("paramMilkTransferId", paramMilkTransferId);
+		request.setAttribute("paramPartyId", paramPartyId);
+		request.setAttribute("paramVehicleId", paramVehicleId);
+		request.setAttribute("paramSiloId", paramSiloId);
+		request.setAttribute("paramProductId", paramProductId);
+		request.setAttribute("paramFromDate", paramFromDate);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
@@ -5162,6 +5174,7 @@ public class MilkReceiptServices {
 		    String productId = "";
 		    String partyId = "";
 		    String purposeTypeId = "";
+		    String productIdTo = "";
 		  boolean beginTransaction = false;
 		try{
   		  	beginTransaction = TransactionUtil.begin();
@@ -5170,27 +5183,33 @@ public class MilkReceiptServices {
 				
 				if (paramMap.containsKey("milkTransferId" + thisSuffix)) {
 					milkTransferId = (String) paramMap.get("milkTransferId" + thisSuffix);
-				}
-				else {
+				}else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing milkTransferId");
+					return "error";
 				}
 				if (paramMap.containsKey("productId" + thisSuffix)) {
 					productId = (String) paramMap.get("productId" + thisSuffix);
 				}
-				else {
-					request.setAttribute("_ERROR_MESSAGE_", "Missing productId");
-				}
+				
 				if (paramMap.containsKey("purposeTypeId" + thisSuffix)) {
 					purposeTypeId = (String) paramMap.get("purposeTypeId" + thisSuffix);
-				}
-				else {
+				}else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing purposeTypeId");
+					return "error";
 				}
 				if (paramMap.containsKey("partyId" + thisSuffix)) {
 					partyId = (String) paramMap.get("partyId" + thisSuffix);
-				}
-				else {
+				}else {
 					request.setAttribute("_ERROR_MESSAGE_", "Missing partyId");
+					return "error";
+				}
+				if (paramMap.containsKey("productIdTo" + thisSuffix)) {
+					productIdTo = (String) paramMap.get("productIdTo" + thisSuffix);
+				}
+				if(UtilValidate.isEmpty(productIdTo) && purposeTypeId=="CONVERSION"){
+					Debug.logError("Convertion Product Not Selected For :"+milkTransferId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Convertion Product Not Selected For :"+milkTransferId);	
+			  		return "error";
 				}
 				GenericValue milkTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId", milkTransferId),false);
 				
@@ -5220,11 +5239,21 @@ public class MilkReceiptServices {
 					milkTransferItem.set("receivedProductId", productId);
 					delegator.store(milkTransferItem);
 				}
+				String conversionProductId="";
+				if(UtilValidate.isNotEmpty(milkTransfer.getString("conversionProductId"))){
+					conversionProductId = milkTransfer.getString("conversionProductId");
+				}
+				if(UtilValidate.isNotEmpty(productIdTo) && (UtilValidate.isEmpty(conversionProductId) || !productIdTo.equals(conversionProductId))){
+					milkTransfer.set("conversionProductId", productIdTo);
+				}
 				if(!partyId.equals(milkTransfer.getString("partyId"))){
 					milkTransfer.set("partyId", partyId);
 				}
 				if(!purposeTypeId.equals(milkTransfer.getString("purposeTypeId"))){
 					milkTransfer.set("purposeTypeId", purposeTypeId);
+					if(purposeTypeId.equals("INTERNAL")){
+						milkTransfer.set("conversionProductId", "");
+					}
 				}
 				milkTransfer.store();
 		  	}

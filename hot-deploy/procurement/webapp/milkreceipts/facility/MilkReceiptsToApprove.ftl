@@ -18,8 +18,76 @@ under the License.
 -->
 <script type="text/javascript">
 //<![CDATA[
-	
-	
+	var convProductJSON = ${StringUtil.wrapString(convProductJSON)!'[]'};
+	var milkTransProdJson = ${StringUtil.wrapString(milkTransProdJson)!'[]'};
+	$(document).ready(function() {	
+		getConvertionProducts();
+		setConvertionProduct();
+	});
+	function getConvertionProducts(){
+		var tableObj = $('#_col table tr');
+		$(tableObj).each(function(index, element){
+		var purposeTypeObj = $(this).find("[name='purposeTypeId']");
+		var purposeTypeId = $(purposeTypeObj).val();
+		var productIdObj = $(this).find("[name='productId']");
+		var productId = $(productIdObj).val();
+		if(productId!= "undefined"){
+		 	var optionList = '';
+		 	if(purposeTypeId=="CONVERSION"){
+		 		optionList += "<option value = " + "" + " >" +" "+ "</option>";
+				var list= convProductJSON[productId];
+				if (list) {		       				        	
+		        	for(var i=0 ; i<list.length ; i++){
+						var innerList=list[i];	 
+		                optionList += "<option value = " + innerList['productId'] + " >" +innerList['productName']+" </option>";          			
+		      		}//end of main list for loop
+		      	}
+		      	jQuery("[name='"+"productIdTo"+"']").html(optionList);
+		 	}
+		 	}
+		});
+	}
+	function setConvertionProduct(){
+		var tableObj = $('#_col table tr');
+		$(tableObj).each(function(index, element){
+			var purposeTypeObj = $(this).find("[name='purposeTypeId']");
+			var purposeTypeId = $(purposeTypeObj).val();
+			var milkTransferObj = $(this).find("[name='milkTransferId']");
+			var productIdToObj = $(this).find("[name='productIdTo']");
+            var milkTransferId = $(milkTransferObj).val();
+            if(purposeTypeId=="CONVERSION"){
+            	var productIdTo = milkTransProdJson[milkTransferId];
+            	if(typeof(productIdTo)!='undefined' && productIdTo!='' && productIdTo != null ){
+            	    $(productIdToObj).val(''+productIdTo);   
+            		$(productIdToObj).attr("selected", "selected");
+            	}
+            }else{
+            	var optionList = '';
+            	$(productIdToObj).html(optionList);
+            }
+		});
+	}
+	function getConvProduct(purposeTypeId,productIdStr,index){
+		var purposeTypeId = purposeTypeId.value;
+        var productId = productIdStr;
+        var index=index;
+        if(productId!= "undefined"){
+		 	var optionList = '';
+		 	if(purposeTypeId=="CONVERSION"){
+		 		optionList += "<option value = " + "" + " >" +" "+ "</option>";
+				var list= convProductJSON[productId];
+				if (list) {		       				        	
+		        	for(var i=0 ; i<list.length ; i++){
+						var innerList=list[i];	 
+		                optionList += "<option value = " + innerList['productId'] + " >" +innerList['productName']+" </option>";          			
+		      		}//end of main list for loop
+		      	}
+		     } 	
+		     var productIdToIndex = "productIdTo_"+index;		      	
+		     $("#"+productIdToIndex).html(optionList);
+		      	setConvertionProduct();
+		}
+	}
 	function toggleRequestId(master) {
         var receipts = jQuery("#listMilkReceipts :checkbox[name='receiptCheckBoxId']");
         jQuery.each(receipts, function() {
@@ -32,6 +100,7 @@ under the License.
     	var actionFlag = $(current).val();
     	var receipts = jQuery("#listMilkReceipts :checkbox[name='receiptCheckBoxId']");
         var index = 0;
+        var submitCount=0;
         jQuery.each(receipts, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -44,7 +113,16 @@ under the License.
 	            	var partyId = partyIdObj.val();
 	            	var purposeObj = $(domObj).find("[name='purposeTypeId']");
 	            	var purposeTypeId = purposeObj.val();
-	            	
+	            	var productIdToObj = $(domObj).find("[name='productIdTo']");
+	            	var productIdTo = productIdToObj.val();
+	            	if(purposeTypeId == "CONVERSION" && ((productIdTo == null) ||(productIdTo == ""))){
+	            		alert("Please select convertion Product..!");
+	            		submitCount=submitCount+1;
+	            	}
+	            	if(purposeTypeId == "CONVERSION"){
+	            		var appendProductIdToStr = "<input type=hidden name=productIdTo_o_"+index+" value="+productIdTo+" />";
+	            		$("#updateMilkTransferForm").append(appendProductIdToStr);
+	            	}
 	            	var appendProductIdStr = "<input type=hidden name=productId_o_"+index+" value="+productId+" />";
 	            	$("#updateMilkTransferForm").append(appendProductIdStr);
 	            	var appendPartyIsStr = "<input type=hidden name=partyId_o_"+index+" value="+partyId+" />";
@@ -63,7 +141,9 @@ under the License.
 	       	 jQuery(current).attr( "disabled", false);
 	       	 return false;
 	     }
-        jQuery('#updateMilkTransferForm').submit();
+	     if(submitCount==0){
+       	 jQuery('#updateMilkTransferForm').submit();
+         }
     }
        
 //]]>
@@ -74,7 +154,16 @@ under the License.
 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
 <#assign action="FinalizeTankerReceipts">
 </#if>
-<form name="updateMilkTransferForm" id="updateMilkTransferForm" method="post" action=${action}></form>
+<form name="updateMilkTransferForm" id="updateMilkTransferForm" method="post" action=${action}>
+	<#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
+		<input  type="hidden" id="paramMilkTransferId" name="paramMilkTransferId" value='${parameters.milkTransferId?if_exists}'>
+		<input  type="hidden" id="paramPartyId" name="paramPartyId" value='${parameters.partyId?if_exists}'>
+		<input  type="hidden" id="paramVehicleId" name="paramVehicleId" value='${parameters.vehicleId?if_exists}'>
+		<input  type="hidden" id="paramSiloId" name="paramSiloId" value='${parameters.siloId?if_exists}'>
+		<input  type="hidden" id="paramProductId" name="paramProductId" value='${parameters.productId?if_exists}'>
+		<input  type="hidden" id="paramFromDate" name="paramFromDate" value='${parameters.fromDate?if_exists}'>
+    </#if>
+</form>
 <#if milkDetailslist?has_content>
   
   <form name="listMilkReceipts" id="listMilkReceipts"  method="post" >
@@ -107,6 +196,7 @@ under the License.
           <td>Milk Type</td>
           <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
           <td>Milk Used For</td>
+          <td>Conv.Product</td>
           </#if>
           <td>Silo</td>
           <td>&#160;      Quantity(Kgs)</td>
@@ -121,7 +211,8 @@ under the License.
       <tbody>
       <#assign alt_row = false>
       <#assign index = 0>
-      <#list milkDetailslist as eachItem>
+      <#list milkDetailslist as eachItem>	
+			<#assign productIdStr = eachItem.productId>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
 				<input type=hidden name="milkTransferId" value='${eachItem.milkTransferId?if_exists}'>
 				<input type=hidden name="productId" value='${eachItem.productId?if_exists}'>
@@ -140,7 +231,7 @@ under the License.
               	<#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : eachItem.partyId}, false))!>
                 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
                 <td> 
-                <select name="partyId" class='h4' >
+                <select name="partyId"  class='h4' >
                      <#assign existedParty = eachItem.partyId >
                     <#--><option value='${eachItem.partyId}'>${partyName.groupName?if_exists}</option>-->
 			       <#list unionsList as union>  
@@ -179,9 +270,9 @@ under the License.
                <#-- </#if> -->
                 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
                 <#assign enumeration = delegator.findOne("Enumeration",{"enumId":eachItem.purposeTypeId},false)>
+                <#assign existedPurpose = eachItem.purposeTypeId>
                 <td>
-                	<select name="purposeTypeId" class='h4' >
-                    <#assign existedPurpose = eachItem.purposeTypeId >
+                	<select name="purposeTypeId" class='h4' onchange="javascript:getConvProduct(this,${productIdStr},${index});">
 			       <#list milkPurchasePurposeTypeList as purpose>    
 			         <#if existedPurpose?has_content  && existedPurpose == purpose.enumId >
 			        	<option value='${eachItem.purposeTypeId}' selected='selected'>${enumeration.enumCode?if_exists}</option> 	
@@ -192,6 +283,19 @@ under the License.
 				      </#if>
 			       </#list>            
 				</select>
+                </td>
+                <td><#assign conversionProductId=eachItem.productIdTo>
+                     <select id="productIdTo_${index}" name="productIdTo"  class='h4'>
+                      <#if convProductList?has_content>  
+                     	<#list convProductList as convProduct>
+                            <#if conversionProductId?has_content && conversionProductId == convProduct.productId>
+ 	                            <option value='eachItem.productIdTo' selected='selected'>${convProduct.productName?if_exists}</option>
+                            <#else>
+                          		<option value='${convProduct.productId}'>${convProduct.productName?if_exists}</option>
+                            </#if>
+                        </#list> 
+                      </#if>
+                     </select>
                 </td>
                 </#if>
                 <td>${eachItem.siloId?if_exists}</td>

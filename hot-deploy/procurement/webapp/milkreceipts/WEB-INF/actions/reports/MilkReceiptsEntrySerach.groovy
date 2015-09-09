@@ -73,9 +73,29 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.util.EntityUtil;
-
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
+
+if(UtilValidate.isNotEmpty(parameters.paramMilkTransferId)){
+	parameters.milkTransferId = parameters.paramMilkTransferId;
+}
+if(UtilValidate.isNotEmpty(parameters.paramFromDate)){
+	parameters.fromDate = parameters.paramFromDate;
+}
+if(UtilValidate.isNotEmpty(parameters.paramPartyId)){
+	parameters.partyId = parameters.paramPartyId;
+}
+if(UtilValidate.isNotEmpty(parameters.paramVehicleId)){
+	parameters.vehicleId = parameters.paramVehicleId;
+}
+if(UtilValidate.isNotEmpty(parameters.paramSiloId)){
+	parameters.siloId = parameters.paramSiloId;
+}
+if(UtilValidate.isNotEmpty(parameters.paramProductId)){
+	parameters.productId = parameters.paramProductId;
+}
 // shifts for Milk Receipts
 allShiftsList = delegator.findList("WorkShiftTypePeriodAndMap",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"MILK_SHIFT"),null,UtilMisc.toList("shiftTypeId"),null,false);
 if(UtilValidate.isNotEmpty(allShiftsList)){
@@ -177,6 +197,11 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  shiftsMap.put("purposeTypeId",eachShift.purposeTypeId);
 		  shiftsMap.put("sequenceNum",eachShift.sequenceNum);
 		  shiftsMap.put("dcNo", eachShift.dcNo);
+		  String conversionProductId="";
+		  if(UtilValidate.isNotEmpty(eachShift.conversionProductId)){
+			  conversionProductId = eachShift.conversionProductId;
+		  }
+		  shiftsMap.put("productIdTo",conversionProductId);
 		  
 		  List eachCondList = FastList.newInstance();
 		  eachCondList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , eachShift.vehicleId ));
@@ -261,4 +286,52 @@ if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	}
 }
 context.milkDetailslist=milkDetailslist;
+
+//For converion product selection.
+if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="FINALIZATION"){
+	JSONObject convProductJSON = new JSONObject();
+	List condList = FastList.newInstance();
+	condList.add(EntityCondition.makeCondition("productAssocTypeId",EntityOperator.EQUALS,"CONVERT_TO_PRODUCT"));
+	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+			  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()))));
+    EntityCondition prodAssCondition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	List productAssocList = delegator.findList("ProductAssoc",prodAssCondition,null,null,null,false); 
+	List productIds = EntityUtil.getFieldListFromEntityList(productAssocList, "productId", true);
+	Map prodAssocMap = FastMap.newInstance();
+	productIds.each{productId->
+		List assocProductList = EntityUtil.filterByCondition(productAssocList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+		newProductIds = EntityUtil.getFieldListFromEntityList(assocProductList, "productIdTo", true);
+		prodAssocMap.put(productId, newProductIds);
+	}
+	List productIdTos = FastList.newInstance();
+	List productList = FastList.newInstance();
+	productIdTos = EntityUtil.getFieldListFromEntityList(productAssocList, "productIdTo", true);
+	if(UtilValidate.isNotEmpty(productIdTos)){
+		productList = delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.IN,productIdTos),UtilMisc.toSet("productId","productName"),null,null,false);
+		if(UtilValidate.isNotEmpty(productAssocList)){
+			productIds.each{productId->
+				JSONArray arrayJSON = new JSONArray();
+				List assocProductList = EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productId",EntityOperator.IN,prodAssocMap.get(productId)));
+				assocProductList.each{assocProd->
+					JSONObject newObj=new JSONObject();
+					newObj.put("productId",assocProd.productId);
+					newObj.put("productName", assocProd.productName);
+					arrayJSON.add(newObj);
+				}
+				convProductJSON.putAt(productId,arrayJSON);
+			}
+		}
+	}
+	context.convProductJSON=convProductJSON;
+	JSONObject milkTransProdJson = new JSONObject();
+	milkDetailslist.each{milkDetail->
+		productIdTo = "";
+		if(UtilValidate.isNotEmpty(milkDetail.productIdTo)){
+			productIdTo = milkDetail.productIdTo;
+		}
+		milkTransProdJson.put(milkDetail.milkTransferId, productIdTo);
+	}
+	context.milkTransProdJson=milkTransProdJson;
+}
+
 
