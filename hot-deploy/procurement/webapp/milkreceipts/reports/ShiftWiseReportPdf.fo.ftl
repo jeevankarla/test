@@ -142,6 +142,7 @@ under the License.
 			                    			<#assign totKgSnf = totKgSnf + shiftDetail.get("receivedKgSnf") >
 			                    		</fo:table-cell>
 			                    	</fo:table-row>
+			                   	<#assign unionName = ''>
        					           </#list>
        					           	<fo:table-row>   
 		                    			<fo:table-cell>
