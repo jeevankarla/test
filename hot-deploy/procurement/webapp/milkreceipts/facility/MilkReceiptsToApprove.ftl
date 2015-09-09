@@ -103,7 +103,7 @@ under the License.
           <td>Entry Date</td>
           <td>Dc No</td>
           <td>TareWeight  Date</td>
-          <td>From Union</td>
+          <td>From Chilling Center - Union</td>
           <td>Milk Type</td>
           <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
           <td>Milk Used For</td>
@@ -123,8 +123,8 @@ under the License.
       <#assign index = 0>
       <#list milkDetailslist as eachItem>
       		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-				<input type=hidden name=milkTransferId value='${eachItem.milkTransferId?if_exists}'>
-				<input type=hidden name=productId  value='${eachItem.productId?if_exists}'>
+				<input type=hidden name="milkTransferId" value='${eachItem.milkTransferId?if_exists}'>
+				<input type=hidden name="productId" value='${eachItem.productId?if_exists}'>
               	<td>${eachItem.milkTransferId?if_exists}</td>
               	<td>${eachItem.containerId?if_exists}</td>
               	<td>${eachItem.contractorId?if_exists}</td>
@@ -145,7 +145,7 @@ under the License.
                     <#--><option value='${eachItem.partyId}'>${partyName.groupName?if_exists}</option>-->
 			       <#list unionsList as union>  
 			        <#if existedParty?has_content  && existedParty == union.partyId >
-			       <option value='${eachItem.partyId}' selected='selected'>${partyName.groupName?if_exists}</option>
+			       <option value='${eachItem.partyId}' selected='selected'>${union.groupName?if_exists}</option>
 			           <#else>
 			          	  <option value='${union.partyId}' >
 				         ${union.groupName?if_exists}

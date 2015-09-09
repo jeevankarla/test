@@ -617,7 +617,7 @@ pmSiloIds.each{eachPmSiloId->
 	pmWorkEffortIssueIds = new HashSet(EntityUtil.getFieldListFromEntityList(issuedInvDetails, "workEffortId", false));
 	if(UtilValidate.isNotEmpty(pmWorkEffortIssueIds)){
 		pmWorkEffortIssueIds.each{eachPmIssueWorkeffId->
-			Map rmProductinIssuesMap =FastMap.newInstance();
+			Map pmProductinIssuesMap =FastMap.newInstance();
 			BigDecimal pmProductionIssuQty=BigDecimal.ZERO;
 			pmSiloWorkList=EntityUtil.filterByCondition(workEffortList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachPmIssueWorkeffId));
 			String pmRecFacilityId="";
@@ -633,9 +633,9 @@ pmSiloIds.each{eachPmSiloId->
 				}
 			}
 			if(UtilValidate.isNotEmpty(pmProductionIssuQty) && pmProductionIssuQty>0){
-				rmProductinIssuesMap.put("partyId",receivedFacilityId);
-				rmProductinIssuesMap.put("issuedQuantity",pmProductionIssuQty);
-				pmSiloIssueMap.put(issueNo,rmProductinIssuesMap);
+				pmProductinIssuesMap.put("partyId",pmRecFacilityId);
+				pmProductinIssuesMap.put("issuedQuantity",pmProductionIssuQty);
+				pmSiloIssueMap.put(issueNo,pmProductinIssuesMap);
 				pmIssuedSiloQty=pmIssuedSiloQty+pmProductionIssuQty;
 				issueNo++;
 				
