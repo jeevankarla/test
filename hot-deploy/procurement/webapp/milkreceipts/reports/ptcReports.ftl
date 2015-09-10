@@ -324,13 +324,19 @@
 									To   <input  type="text" size="18pt" id="unionsThruDate"   name="thruDate"/>
 								 </span>
 							</td> 
-							<td align='left' width="35%"><span class="h3">PurposeType Id</span>
-					            <select name="purposeTypeId" id="purposeTypeId">
-						     <option value='All'>All</option>  
-						     <option value='INTERNAL' >IDR</option>
- 						     <option value='CONVERSION' >CONVERSION</option>
-						     </select>
-						    </td>
+						    <td width="35%">
+							 <span class='h3'>PurposeType Id </span>
+		                   	 <select name="purposeTypeId" id="purposeTypeId">
+ 						     <option value='All'>All</option>  
+		                   	 <#if milkPurposeList?has_content>	
+		                        <#list milkPurposeList as milkPurposes>    
+				                  	    <option value='${milkPurposes.enumId}' >
+				                    		${milkPurposes.enumCode}
+				                  		 </option>
+		                		</#list>    
+		                		</#if>	    
+		                   	 </select>
+							</td>
 						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
