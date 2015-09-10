@@ -30,6 +30,7 @@ under the License.
     ${setRequestAttribute("OUTPUT_FILENAME", "ShiftWiseReport.txt")}
   <#if ShiftWiseMap?has_content>
   <#assign ShiftWiseList=ShiftWiseMap.entrySet()>
+  <#list ShiftWiseList as shift>
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
                
@@ -40,7 +41,6 @@ under the License.
      			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >${uiLabelMap.KMFDairyHeader}</fo:block>
      			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >${uiLabelMap.KMFDairySubHeader}</fo:block>
      			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >----------------------------------------------------------------</fo:block>
-             <#list ShiftWiseList as shift>
               	<#assign ShiftWiseRecordsList = shift.getValue()>
                 <#assign shiftType = shift.getKey()>
                 <#assign shiftTime = ShiftWiseTimeMap.get(shiftType)>
@@ -48,7 +48,7 @@ under the License.
         	    <fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >&#160;&#160;MILK FROM CHILLING CENTERS AND OTHER DAIRIES</fo:block>
         	    <fo:block white-space-collapse="false"  text-align="center" keep-together="always" >&#160;</fo:block>
         		<fo:block>
-        		   <fo:table  border-style="solid">
+        		   <fo:table  >
        					 <fo:table-column column-width="65pt"/>
        					 <fo:table-column column-width="50pt"/>
        					 <fo:table-column column-width="60pt"/>
@@ -104,47 +104,47 @@ under the License.
 				        	<#assign unionName = partyReference.get(shiftDetail.get("partyId"))>
 				        	<#assign idrConv = shiftDetail.get("purposeTypeId")?if_exists>
        					    <#assign enumeration = delegator.findOne("Enumeration", {"enumId" :idrConv}, true)>
-       					    	<fo:table-row  border-style="dotted">   
-		                    			<fo:table-cell border-style="dotted">
+       					    	<fo:table-row >   
+		                    			<fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${shiftDetail.get("partyId")}<#if unionName?has_content>[${unionName}]</#if></fo:block>
 			                    		</fo:table-cell>                  
-			                    	    <fo:table-cell border-style="dotted">
+			                    	    <fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt"><#if enumeration?has_content> ${enumeration.get("enumCode")?substring(0,3)}</#if> </fo:block>
 			                    		</fo:table-cell>
-			                    			<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${shiftDetail.get("dcNo")}</fo:block>
 			                    		</fo:table-cell>                  
-			                    	    <fo:table-cell border-style="dotted">
+			                    	    <fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shiftDetail.get("receiveDate"), "dd-MM-yyyy")}</fo:block>
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shiftDetail.get("receiveDate"), "HH:mm")}</fo:block>
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${shiftDetail.get("vehicleId")}</fo:block>
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="right" font-size = "11pt">${shiftDetail.get("receivedQuantity")?if_exists?string("##0.00")}</fo:block>
 			                    			<#assign totWeight = totWeight + shiftDetail.get("receivedQuantity") >
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="right" font-size = "11pt">${shiftDetail.get("receivedFat")?if_exists?string("##0.00")}</fo:block>
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="right" font-size = "11pt">${shiftDetail.get("receivedSnf")?if_exists?string("##0.00")}</fo:block>
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="right" font-size = "11pt">${shiftDetail.get("receivedKgFat")?if_exists?string("##0.00")}</fo:block>
 			                    			<#assign totKgFat = totKgFat + shiftDetail.get("receivedKgFat") >
 			                    		</fo:table-cell>
-			                    		<fo:table-cell border-style="dotted">
+			                    		<fo:table-cell >
 			                    			<fo:block text-align="right" font-size = "11pt">${shiftDetail.get("receivedKgSnf")?if_exists?string("##0.00")}</fo:block>
 			                    			<#assign totKgSnf = totKgSnf + shiftDetail.get("receivedKgSnf") >
 			                    		</fo:table-cell>
 			                    	</fo:table-row>
 			                   	<#assign unionName = ''>
        					           </#list>
-       					           	<fo:table-row>   
+       					           	<fo:table-row  border-style="solid">   
 		                    			<fo:table-cell>
 			                    			<fo:block text-align="right" font-weight="bold" font-size = "11pt">TOTAL :</fo:block>
 			                    		</fo:table-cell>                  
@@ -182,10 +182,9 @@ under the License.
        				 </fo:table-body>
        				</fo:table>
        			</fo:block>
-       	 </#list>
            	</fo:flow>
-           	         
         </fo:page-sequence>
+        </#list>
         <#else>    	
 		<fo:page-sequence master-reference="main">
 			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
