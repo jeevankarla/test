@@ -172,6 +172,9 @@ orderIds.each{ eachOrderId ->
 		tempMap.put("sequenceNum",prodDetail.sequenceNum);
 		tempMap.put("description",prodDetail.description);
 //		tempMap.put("itemDescription",eachItem.itemDescription);
+		if(screenFlag=="scrapSales"){
+			tempMap.put("recurringFreqUomId",eachItem.recurringFreqUomId);
+		}
 		tempMap.put("batchNo", batchNo);
 		tempMap.put("qty", eachItem.quantity);
 		tempMap.put("qtyInCrate", crateQty);
@@ -195,4 +198,3 @@ orderIds.each{ eachOrderId ->
 	orderDetailMap.put(eachOrderId, ordersMap);
 }
 context.orderDetailMap = orderDetailMap;
-

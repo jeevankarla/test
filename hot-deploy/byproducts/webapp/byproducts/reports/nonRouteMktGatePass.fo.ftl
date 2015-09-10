@@ -195,10 +195,16 @@ under the License.
 					            	<fo:block text-align="center" font-size="12pt" white-space-collapse="false">
 					            		<fo:table border-style="solid">
 								            <fo:table-column column-width="40pt"/>
-								            <fo:table-column column-width="200pt"/>
+								            <#if screenFlag?exists && (screenFlag != 'scrapSales')>
+                                            <fo:table-column column-width="200pt"/>
 								            <fo:table-column column-width="90pt"/>
-								            
-								            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+								            </#if>
+                                            <#if screenFlag?exists && (screenFlag == 'scrapSales')>
+                                             <fo:table-column column-width="220pt"/>
+                                             <fo:table-column column-width="200pt"/>
+								             <fo:table-column column-width="140pt"/>
+                                            </#if>
+								            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag !='scrapSales')>
 								            	<fo:table-column column-width="60pt"/>
 								            	<fo:table-column column-width="60pt"/>
 								            	<fo:table-column column-width="70pt"/>
@@ -220,10 +226,12 @@ under the License.
 													<fo:table-cell border-style="solid">
 										            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">PRODUCT</fo:block>
 										            </fo:table-cell>
+										            <#if screenFlag?exists && (screenFlag != 'scrapSales')>
 										            <fo:table-cell border-style="solid">
 										            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">BATCH NO</fo:block>  
 										            </fo:table-cell>
-										            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+										            </#if>
+										            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag !='scrapSales')>
 								            			<fo:table-cell border-style="solid" >
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">NO. OF</fo:block>
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">CRATES</fo:block>  
@@ -234,6 +242,13 @@ under the License.
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">TOTAL QTY</fo:block>
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">(LTR/KG)</fo:block>  
+										            	</fo:table-cell>
+										            	<fo:table-cell border-style="solid">
+										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">REMARKS</fo:block>  
+										            	</fo:table-cell>
+										           <#elseif  screenFlag?exists && (screenFlag == 'scrapSales')> 	
+										            	<fo:table-cell border-style="solid">
+										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">TOTAL QTY</fo:block>
 										            	</fo:table-cell>
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">REMARKS</fo:block>  
@@ -264,7 +279,7 @@ under the License.
 												<#if orderItems?has_content>
 													<#list orderItems as eachItem>
 														<fo:table-row>
-														<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+														<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag !='scrapSales')>
 										                    <fo:table-cell border-style="solid">
 												            	<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
 												            </fo:table-cell>
@@ -274,6 +289,13 @@ under the License.
 												            <fo:table-cell border-style="solid" >
 												            	<fo:block  keep-together="always" text-align="left" font-size="14pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
 												            </fo:table-cell>
+                                                            <#elseif  screenFlag?exists && (screenFlag == 'scrapSales')> 
+                                                            <fo:table-cell border-style="solid">
+												            	<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell border-style="solid" >	
+												            	<fo:block  keep-together="always" text-align="left" font-size="14pt" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('description')?if_exists)),28)}</fo:block>
+												            </fo:table-cell>  
 												            <#else>
                                                              <fo:table-cell >
 												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
@@ -285,7 +307,7 @@ under the License.
 												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
 												            </fo:table-cell>  
                                                             </#if>
-												            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+												            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag !='scrapSales')>
 												            	<fo:table-cell border-style="solid" hight="10pt">
 												            		<fo:block  keep-together="always" text-align="right" font-size="14pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
 												           		</fo:table-cell>
@@ -294,6 +316,18 @@ under the License.
 												            	</fo:table-cell>
 												           		<fo:table-cell border-style="solid">	
 												            		<fo:block  keep-together="always" text-align="right" font-size="14pt" white-space-collapse="false">${eachItem.get('qtyLtr')?if_exists?string("#0.00")}</fo:block>
+												            	</fo:table-cell>
+												            	<fo:table-cell border-style="solid">
+												            		<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false"></fo:block>  
+												            	</fo:table-cell>
+                                                            <#elseif  screenFlag?exists && (screenFlag == 'scrapSales')> 
+                                                                 <#if eachItem.get('recurringFreqUomId')?has_content>
+                                                                 <#assign recurringFreqUomId=eachItem.get('recurringFreqUomId')>
+                                                                 <#assign uom=delegator.findOne("Uom",{"uomId":recurringFreqUomId},true)>
+                                                                 <#assign uomDesc = uom.get('description')>
+                                                                 </#if>
+                                                                 <fo:table-cell border-style="solid">	
+												            		<fo:block   text-align="right" font-size="14pt" white-space-collapse="true">${eachItem.get('qtyLtr')?if_exists?string("#0.00")} <#if uomDesc?has_content>(${uomDesc?if_exists})</#if> </fo:block>
 												            	</fo:table-cell>
 												            	<fo:table-cell border-style="solid">
 												            		<fo:block  keep-together="always" text-align="center" font-size="14pt" white-space-collapse="false"></fo:block>  
@@ -319,7 +353,7 @@ under the License.
 														<#assign slNo = slNo+1>
 													</#list>
 													</#if>
-													<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+													<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag !='scrapSales')>
 														<fo:table-row border-style="solid">
 										                    <fo:table-cell>
 												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block>
@@ -343,7 +377,7 @@ under the License.
 												            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
 												            </fo:table-cell>
 														</fo:table-row>
-													<#else>
+													<#elseif  screenFlag?exists && (screenFlag != 'scrapSales')> 
 													 	<fo:table-row border-style="solid">
 										                    <fo:table-cell>
 												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block>
