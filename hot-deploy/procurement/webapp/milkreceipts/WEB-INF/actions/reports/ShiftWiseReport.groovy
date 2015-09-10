@@ -152,3 +152,32 @@ Set partyIdSet = new HashSet(allPartyIds);
 	}
 }
 context.putAt("partyReference", partyReference);
+
+if(UtilValidate.isNotEmpty(ShiftWiseMap) && UtilValidate.isNotEmpty(partyReference)){
+	shiftKeys = ShiftWiseMap.keySet();
+	if(UtilValidate.isNotEmpty(shiftKeys)){
+		for(String shiftKey in shiftKeys){
+			List tempList = FastList.newInstance();
+			List tempFinalList = FastList.newInstance();
+			tempList = ShiftWiseMap.get(shiftKey);
+			if(UtilValidate.isNotEmpty(tempList)){
+				for(tempMap in tempList){
+					Map tempFinalMap = FastMap.newInstance();
+					tempFinalMap.putAll(tempMap);
+					String partyId = tempMap.get("partyId");
+					String unionId = partyId;
+					if(UtilValidate.isNotEmpty(partyReference.get(partyId))){
+						unionId = partyReference.get(partyId);
+					}
+					tempFinalMap.put("unionId",unionId);
+					tempFinalList.add(tempFinalMap);
+				}
+			}
+			if(UtilValidate.isNotEmpty(tempFinalList) ){
+				tempFinalList = UtilMisc.sortMaps(tempFinalList, UtilMisc.toList("unionId"));
+				ShiftWiseMap.put(shiftKey,tempFinalList);
+			}
+		}
+	} 
+}
+context.putAt("ShiftWiseMap", ShiftWiseMap);
