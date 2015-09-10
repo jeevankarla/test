@@ -163,6 +163,7 @@
 		}
 		var dataJson = {};
 		var index = 0;		
+		$("#declareDiv").hide();
 		for (var rowCount=0; rowCount < data2.length; ++rowCount)
 		{ 
 			var productId = data2[rowCount]["cDeclareProductId"];
@@ -212,6 +213,7 @@
 		}
 		var dataJson = {};
 		var index = 0;		
+		$("#returnSubmitDiv").hide();
 		for (var rowCount=0; rowCount < data3.length; ++rowCount)
 		{ 
 			var productId = data3[rowCount]["cReturnProductId"];
@@ -266,6 +268,7 @@
 		}
 		var dataJson = {};
 		var index = 0;		
+		$("#issueSubmitDiv").hide();
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cIssueProductId"];

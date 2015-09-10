@@ -90,6 +90,13 @@
 				declareTaskOut(effortId);
 			</#if>
 		}
+		$('#confirmSubmit').click (function (){
+			$("#confirmRunDiv").hide();
+         });
+         
+         $('#startTaskBtn').click (function (){
+			$("#startBtnDiv").hide();
+         });
 	});
 		
 </script>
@@ -216,7 +223,7 @@
 					    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 	    			</table>
 	    			<#if !productionRunId?exists>
-		    			<div align="center">
+		    			<div id="createRunDiv" align="center">
 				    		<input type="submit" style="padding:.5em" id="submit" value="Create Run" onclick="javascript:processProductionHeader('productionRunEntryInit');"/>
 				    	</div>
 			    	</#if>
@@ -225,7 +232,9 @@
 	    			<div align="center">
 	    				<form id = "tempProcessForm' name = "tempProcessForm" method="post" action = "<@ofbizUrl>confirmProductionRunStatus</@ofbizUrl>">
 							<input type="hidden" name="productionRunId" value='${productionRunId?if_exists}'>
+							<div id="confirmRunDiv" align="center">
 							<input type="submit" style="padding:.5em" id="confirmSubmit" value="Confirm Run"/>
+							</div>
 						</form>
 			    	</div>
 		    	</#if>
@@ -290,7 +299,9 @@
 						      				<input type="hidden" name="workEffortId" value="${eachTask.workEffortId?if_exists}">
 						      				<input type="hidden" name="productionRunId" value="${productionRunId?if_exists}"> 
 						      				<input type="hidden" name="statusId" value="PRUN_RUNNING">
+						      				<div id="startBtnDiv">
 						      				<input class="myButton" type="submit" name="startTaskBtn" id="startTaskBtn" value="Start"/></td>
+						      				</div>
 						      			</form>
 						      		<td style='width:10%;'>&nbsp;</td>
 						      		<td style='width:10%;'>&nbsp;</td>
@@ -336,7 +347,7 @@
 	    		<div class="screenlet-body">
 					<div id="myGrid1" style="width:100%;height:120px;"></div>
 					<div id='grid1Msg' style="font-color:green;"></div>
-					<div align="center">
+					<div id="issueSubmitDiv" align="center">
 		    			<input type="submit" style="padding:.3em" id="issueMaterialSave" value="Submit" onclick="javascript:processIssueComponentEntry();"/>
 		    		</div>
 	    		</div>
@@ -375,7 +386,7 @@
 			     </div>
 	    		<div class="screenlet-body">
 					<div id="myGrid2" style="width:100%;height:120px;"></div>
-					<div align="center">
+					<div id="declareDiv" align="center">
 		    			<input type="submit" style="padding:.3em" id="declareSave" value="Submit" onclick="javascript:processDeclareComponentEntry();"/>
 		    		</div>
 	    		</div>
@@ -388,7 +399,7 @@
 			 			<label>Return Unused Materials To Warehouse</label>
 					</div>
 					<div id="myGrid3" style="width:100%;height:120px;"></div>
-					<div align="center">
+					<div id="returnSubmitDiv" align="center">
 		    			<input type="submit" style="padding:.3em" id="returnMaterialSave" value="Submit" onclick="javascript:processReturnComponentEntry();"/>
 		    		</div>
 				</div>
@@ -400,6 +411,7 @@
 <script type="application/javascript">
    
 	  function processProductionHeader(form){
+			$("#createRunDiv").hide();
 			var dateFormat = $('[name="startDate"]').val();
 			var dateArr = dateFormat.split(' ');
 			var dateStr = dateArr[0];
