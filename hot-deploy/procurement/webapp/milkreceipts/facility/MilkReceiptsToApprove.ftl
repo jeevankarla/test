@@ -55,8 +55,22 @@ under the License.
 			var milkTransferObj = $(this).find("[name='milkTransferId']");
 			var productIdToObj = $(this).find("[name='productIdTo']");
             var milkTransferId = $(milkTransferObj).val();
+            var productIdObj = $(this).find("[name='productId']");
+			var productId = $(productIdObj).val();
+			var optionList = '';
+          //  alert("milkTransferId==============="+milkTransferId);
             if(purposeTypeId=="CONVERSION"){
+            	optionList += "<option value = " + "" + " >" +" "+ "</option>";
             	var productIdTo = milkTransProdJson[milkTransferId];
+            //	alert("productIdTo==============="+productIdTo);
+            	var list= convProductJSON[productId];
+				if (list) {		       				        	
+		        	for(var i=0 ; i<list.length ; i++){
+						var innerList=list[i];	 
+		                optionList += "<option value = " + innerList['productId'] + " >" +innerList['productName']+" </option>";          			
+		      		}//end of main list for loop
+		      	}
+		      	$(productIdToObj).html(optionList);
             	if(typeof(productIdTo)!='undefined' && productIdTo!='' && productIdTo != null ){
             	    $(productIdToObj).val(''+productIdTo);   
             		$(productIdToObj).attr("selected", "selected");
@@ -116,8 +130,10 @@ under the License.
 	            	var productIdToObj = $(domObj).find("[name='productIdTo']");
 	            	var productIdTo = productIdToObj.val();
 	            	if(purposeTypeId == "CONVERSION" && ((productIdTo == null) ||(productIdTo == ""))){
-	            		alert("Please select convertion Product..!");
 	            		submitCount=submitCount+1;
+	            		alert("Please select conversion Product..!");
+	            		jQuery(current).attr( "disabled", false);
+	            		return false;
 	            	}
 	            	if(purposeTypeId == "CONVERSION"){
 	            		var appendProductIdToStr = "<input type=hidden name=productIdTo_o_"+index+" value="+productIdTo+" />";
@@ -136,7 +152,7 @@ under the License.
             }
             
         });
-        if(index == 0){
+        if(index == 0 && submitCount==0){
 	       	 alert("Please Select Record(s) To Process!.");
 	       	 jQuery(current).attr( "disabled", false);
 	       	 return false;

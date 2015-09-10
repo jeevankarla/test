@@ -329,7 +329,9 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="FINALIZATION"){
 		if(UtilValidate.isNotEmpty(milkDetail.productIdTo)){
 			productIdTo = milkDetail.productIdTo;
 		}
-		milkTransProdJson.put(milkDetail.milkTransferId, productIdTo);
+		if(milkDetail.purposeTypeId=="CONVERSION"){
+			milkTransProdJson.put(milkDetail.milkTransferId, productIdTo);
+		}
 	}
 	context.milkTransProdJson=milkTransProdJson;
 }
