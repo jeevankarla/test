@@ -942,6 +942,7 @@
     	<field name="shiftType" title="Shift Type" tooltip="${uiLabelMap.CommonRequired}">
     		<drop-down>
     			<entity-options entity-name="WorkShiftType" key-field-name="shiftTypeId" description="${description}" filter-by-date="false">
+    				<entity-constraint name="parentTypeId" operator="equals" value="HR_SHIFT"/>
     			</entity-options>
     		</drop-down>
     	</field>
