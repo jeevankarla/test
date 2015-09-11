@@ -73,14 +73,20 @@ thruDate=workShifts.thruDate;
 
 context.fromDate = fromDate;
 context.thruDate = dayEnd;
-	
+purposeTypeIds=[];
+List<GenericValue> milkPurposeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS,"MILK_PRCH_PURP"), null, ['sequenceId'], null, true);
+if(UtilValidate.isNotEmpty(milkPurposeList)){
+	purposeTypeIds=EntityUtil.getFieldListFromEntityList(milkPurposeList, "enumId", true);
+}
 conditionList =[];
 if((!"All".equalsIgnoreCase(purposeTypeId)) && UtilValidate.isNotEmpty(purposeTypeId)){
 	context.purposeTypeId=purposeTypeId;
    	conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS , purposeTypeId));
+}else{
+	conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN , purposeTypeIds));
 }
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , ["MXF_APPROVED","MXF_RECD"]));
-//conditionList.add(EntityCondition.makeCondition("milkTransferId", EntityOperator.IN , milkTransferIds));
+conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -132,7 +138,7 @@ if(UtilValidate.isNotEmpty(unions)){
 			
 				idrMap=[:];
 				convMap=[:];
-				if(("INTERNAL".equalsIgnoreCase(purposeTypeId)) && UtilValidate.isNotEmpty(purposeTypeId)){
+				if(purposeTypeId.equals("INTERNAL") && UtilValidate.isNotEmpty(purposeTypeId)){
 					if(UtilValidate.isEmpty(idrProductsMap) || (UtilValidate.isNotEmpty(idrProductsMap) && UtilValidate.isEmpty(idrProductsMap.get(productId)))){
 						idrMap.put("quantity", receivedQuantity);
 						idrMap.put("kgFat", receivedKgFat);
@@ -146,7 +152,7 @@ if(UtilValidate.isNotEmpty(unions)){
 						 idrTempMap.putAt("kgSnf", idrTempMap.get("kgSnf") + receivedKgSnf);
 						 idrProductsMap.put(productId, idrTempMap);
 						}
-				}else if(("CONVERSION".equalsIgnoreCase(purposeTypeId)) && UtilValidate.isNotEmpty(purposeTypeId)){
+				}else if(purposeTypeId.equals("CONVERSION") && UtilValidate.isNotEmpty(purposeTypeId)){
 					if(UtilValidate.isEmpty(convProductsMap) || (UtilValidate.isNotEmpty(convProductsMap) && UtilValidate.isEmpty(convProductsMap.get(productId)))){
 					    convMap.put("quantity", receivedQuantity);
 						convMap.put("kgFat", receivedKgFat);
@@ -154,7 +160,7 @@ if(UtilValidate.isNotEmpty(unions)){
 						convProductsMap.put(productId, convMap);
 					}else{
 						 Map convTempMap = FastMap.newInstance();
-						 convTempMap.putAll(idrProductsMap.get(productId));
+						 convTempMap.putAll(convProductsMap.get(productId));
 						 convTempMap.putAt("quantity", convTempMap.get("quantity") + receivedQuantity);
 						 convTempMap.putAt("kgFat", convTempMap.get("kgFat") + receivedKgFat);
 						 convTempMap.putAt("kgSnf", convTempMap.get("kgSnf") + receivedKgSnf);
@@ -183,13 +189,5 @@ totUnionsMilkMap.put("totKgSnf", totKgSnf);
 
 context.unionsMilkMap=unionsMilkMap;			
 context.totUnionsMilkMap=totUnionsMilkMap;
-
-
-
-
-
-
-
-
 
 

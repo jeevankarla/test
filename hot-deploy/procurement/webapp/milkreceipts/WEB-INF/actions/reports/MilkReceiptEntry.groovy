@@ -322,7 +322,12 @@ List<GenericValue> facilityDepartments = delegator.findList("Facility",EntityCon
 if(UtilValidate.isNotEmpty(facilityDepartments)){
 	 context.facilityDepartments=facilityDepartments;
  }
-	
+
+//	Purpose Types
+List<GenericValue> milkPurposeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS,"MILK_PRCH_PURP"), null, ['sequenceId'], null, true);
+if(UtilValidate.isNotEmpty(milkPurposeList)){
+	context.milkPurposeList=milkPurposeList;
+}
 	
 	
 	
