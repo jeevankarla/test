@@ -238,11 +238,25 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 			}*/
 			 quantitySummaryByFacility.put(facility.facilityId, quantitySummary);
 		 }
-		 
-		 productInventoryItems = delegator.findByAnd("InventoryItem",
-				 [productId : productId],
-				 ['facilityId', '-datetimeReceived', '-inventoryItemId']);
-	 
+		 List prodInvCondList = FastList.newInstance();
+		 List productInventoryItems = FastList.newInstance();
+		 prodInvCondList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,"Company"));
+		 prodInvCondList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS,"STORE"));
+		 EntityCondition prodInvcon = EntityCondition.makeCondition(prodInvCondList,EntityOperator.AND);
+	     prodInvFacilities = delegator.findList("Facility",prodInvcon,null,null,null,false);
+		 if(UtilValidate.isNotEmpty(prodInvFacilities)){
+			 prodInvFacilityIds = EntityUtil.getFieldListFromEntityList(prodInvFacilities, "facilityId", true);
+			 prodInvCondList.clear();
+			 prodInvCondList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+			 prodInvCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodInvFacilityIds));
+			 EntityCondition prodInvcondition = EntityCondition.makeCondition(prodInvCondList,EntityOperator.AND);
+             List prodFacil = delegator.findList("ProductFacility",prodInvcondition,null,null,null,false);	
+			 if(UtilValidate.isNotEmpty(prodFacil)){
+				 prodInvFacilityIds = EntityUtil.getFirst(prodFacil);	
+				 prodInvFacilityId = prodInvFacilityIds.getString("facilityId");										 
+				 productInventoryItems = delegator.findByAnd("InventoryItem", [productId : productId,facilityId:prodInvFacilityId],['facilityId', '-datetimeReceived', '-inventoryItemId']);
+			 }
+		 }
 		 // TODO: get all incoming shipments not yet arrived coming into each facility that this product is in, use a view entity with ShipmentAndItem
 		 findIncomingShipmentsConds = [];
 	 
