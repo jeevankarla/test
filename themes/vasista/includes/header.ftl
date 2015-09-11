@@ -234,6 +234,12 @@ under the License.
             </li>
           </ul>
         </li>
+        <#if layoutSettings.VT_HDR_COMP_IMG_URL?exists>
+        	<#assign headerCompImageUrl = layoutSettings.VT_HDR_COMP_IMG_URL.get(0)>                       
+        	<#if headerCompImageUrl?exists>
+        		<li class="control-area"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${StringUtil.wrapString(headerCompImageUrl)}</@ofbizContentUrl>"/></li>
+        	</#if>
+        </#if>	        
       </ul>
       <br class="clear" />
      <div id="maintenance-msg" align="center" style="display:none" class="h1">
