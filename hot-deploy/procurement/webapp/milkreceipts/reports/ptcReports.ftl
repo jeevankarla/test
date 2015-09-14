@@ -260,10 +260,10 @@
 						<td width="35%">
 							 <span class='h3'>Union/ Chilling Center </span>
 		                    <select name="partyId" id="partyId">
-		                    <#if unionsList?has_content>	
-		                        <#list unionsList as unionIds>    
-				                  	    <option value='${unionIds.partyId}' >
-				                    		${unionIds.partyId}
+		                    <#if unionPartyList?has_content>	
+		                        <#list unionPartyList as unionParty>    
+				                  	    <option value='${unionParty.partyId}' >
+				                    		${unionParty.partyId}
 				                  		 </option>
 		                		</#list>    
 		                	</#if>	    

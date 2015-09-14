@@ -176,11 +176,16 @@ for(vehicle in vehiclesList){
 }
 context.put("vehItemsJSON",vehItemsJSON);
 context.put("vehicleCodeJson",vehicleCodeJson);
+List<GenericValue> partyRoleAndPartyDetail = delegator.findList("PartyRoleAndPartyDetail",null, null, null, null, true);
 List unionConditionList = UtilMisc.toList(EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,UtilMisc.toList("UNION","CHILL_CENTER")));
 //unionConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"PARTY_DISABLED"));
 EntityCondition unionCondition = EntityCondition.makeCondition(unionConditionList);
-List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",unionCondition, null, null, null, true);
+List<GenericValue> unionsList = EntityUtil.filterByCondition(partyRoleAndPartyDetail,unionCondition);
 context.unionsList = unionsList;
+
+List<GenericValue> unionPartyList = EntityUtil.filterByCondition(partyRoleAndPartyDetail,EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"));
+context.unionPartyList = unionPartyList;
+
 List<Map> unionPrepList = FastList.newInstance();
 JSONObject unionCodeJson = new JSONObject();
 JSONArray unionItemsJSON = new JSONArray();

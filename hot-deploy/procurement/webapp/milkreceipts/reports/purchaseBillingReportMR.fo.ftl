@@ -29,7 +29,7 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
- <#if allProdProcPriceMap?has_content> 
+ <#if allUnionPartyBillMap?has_content> 
 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
 			<fo:static-content flow-name="xsl-region-before">
@@ -38,7 +38,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
             	
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
   		<#assign pageNumber = 0>	
-         <#assign allProdProcPriceDetails = allProdProcPriceMap.entrySet()?if_exists>											
+  		<#assign allUnionPartyBillList = allUnionPartyBillMap.entrySet()?if_exists>											
+  	   <#list allUnionPartyBillList as allProdProcPriceMap>
+  		  <#assign partyId=allProdProcPriceMap.getKey()>
+  		  <#assign partyIdDetails=allUnionPartyNamesMap.get(partyId)>
+  		  
+         <#assign allProdProcPriceDetails = allProdProcPriceMap.getValue().entrySet()?if_exists>
          <#list allProdProcPriceDetails as allProdProcPriceDetail>
          <#assign productId=allProdProcPriceDetail.getKey()>
          <#assign PremAndDeductionMap=allProdProcPriceDetail.getValue().get("PremAndDeductionMap")>
@@ -59,7 +64,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="14pt" font-weight="bold" >${uiLabelMap.KMFDairySubHeader}</fo:block>
 			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
-			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> DEBIT NOTE\INVOICE IDR 66 D                     TIN NO: ${tinNumber?if_exists} </fo:block>
+			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> DEBIT NOTE\INVOICE IDR 66 D                     TIN NO: ${partyIdDetails.tinNumber?if_exists} </fo:block>
   			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > &#160;&#160;  </fo:block>
 		         
       <#--    <#assign PremAndDeductionMap=allProdProcPriceDetail.getValue().get("PremAndDeductionMap")> -->
@@ -77,7 +82,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">BILL TO       : </fo:block>  
                        			</fo:table-cell>
                                 <fo:table-cell>
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >GENERAL MANAGER(TECHNICAL) ${partyToName?if_exists}</fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >GENERAL MANAGER(TECHNICAL) ${partyIdDetails.partyToName?if_exists}</fo:block>  
                        			</fo:table-cell>
                                 <fo:table-cell>
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;</fo:block>  
@@ -88,7 +93,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >SUPPLIED FROM :</fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${partyName?if_exists} (${partyId?if_exists})</fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${partyIdDetails.partyName?if_exists} (${partyId?if_exists})</fo:block>  
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;</fo:block>  
@@ -224,7 +229,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseBillingReportMR.pdf")}
         <#assign pageNumber = pageNumber+1>	
         </#list>
      
-     
+     </#list>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
