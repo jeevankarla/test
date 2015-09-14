@@ -392,7 +392,7 @@ public class ProductionServices {
 	  		  if (UtilValidate.isNotEmpty(tenantConfigEnableCancelAfterShipDate) && (tenantConfigEnableCancelAfterShipDate.getString("propertyValue")).equals("Y")) {
 				 enableInputPrunIssueDate = Boolean.TRUE;
 	  		  }
-
+	  		  
 	  		  String productionFloorId = productionRun.getString("facilityId"); 
 	  		
 	  		  for (int i = 0; i < rowCount; i++){
@@ -513,18 +513,6 @@ public class ProductionServices {
 	  		  String facilityId = productionRun.getString("facilityId"); 
 	  		  
 	  		  String transferDateStr = UtilDateTime.toDateString(productionRun.getTimestamp("estimatedStartDate"), "dd-MM-yyyy HH:mm:ss");
-	  		  /*GenericValue returnHeader = delegator.makeValue("ReturnHeader");
-	  		  returnHeader.set("returnHeaderTypeId", "PRODUCTION_RETURN");
-	  		  returnHeader.set("statusId", "RTN_INITIATED");
-	  		  returnHeader.set("originFacilityId", facilityId);
-	  		  returnHeader.set("entryDate", nowTimestamp);
-	  		  returnHeader.set("createdBy", userLogin.getString("userLoginId"));
-	  		  returnHeader.set("returnDate", nowTimestamp);
-	  		  returnHeader.set("workEffortId", workEffortId);
-	  		  delegator.createSetNextSeqId(returnHeader);
-    		
-	  		  String returnId = (String)returnHeader.get("returnId");
-	  		  */
 	  		  for (int i = 0; i < rowCount; i++){
 		  		  
 		  		  String productId = "";
@@ -567,7 +555,6 @@ public class ProductionServices {
 	                }
 	                
 	                String inventoryItemId = (String)resultService.get("inventoryItemId");
-	                
 	                serviceContext.clear();
 	                serviceContext.put("inventoryItemId", inventoryItemId);
 	                serviceContext.put("availableToPromiseDiff", quantity);
@@ -584,21 +571,7 @@ public class ProductionServices {
 	                	TransactionUtil.rollback();
 	            		return "error";
 	                }
-		  			/*GenericValue returnItem = delegator.makeValue("ReturnItem");
-		    		returnItem.set("returnReasonId", "RTN_DEFECTIVE_ITEM");
-		    		if(UtilValidate.isNotEmpty(returnReasonId)){
-		    			returnItem.set("returnReasonId", returnReasonId);
-		    		}
-		    		returnItem.set("statusId", "RTN_INITIATED");
-		    		returnItem.set("returnId", returnId);
-		    		returnItem.set("productId", productId);
-		    		returnItem.set("returnQuantity", quantity);
-		    		returnItem.set("description", description);
-		    		returnItem.set("returnTypeId", "RTN_REFUND");
-		    		returnItem.set("returnItemTypeId", "RET_FPROD_ITEM");
-	    		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
-		    		delegator.create(returnItem);
-		    		*/
+		  			
 		  		  Map inputCtx = FastMap.newInstance();
 		  		  inputCtx.put("xferQty", quantity);
 		  		  inputCtx.put("fromFacilityId", facilityId);
@@ -620,17 +593,6 @@ public class ProductionServices {
 		  			  TransactionUtil.rollback();
 		  			  return "error";
 		  		  }
-		  		  /*Map inputCtx = FastMap.newInstance();
-		  		  inputCtx.put("productId", productId);
-		  		  inputCtx.put("quantity", quantity);
-		  		  inputCtx.put("workEffortId", workEffortId);
-		  		  inputCtx.put("userLogin", userLogin);
-		  		  Map resultCtx = dispatcher.runSync("productionRunTaskReturnMaterial", inputCtx);
-		  		  if(ServiceUtil.isError(resultCtx)){
-		  			  Debug.logError("Error issuing material for routing task : "+workEffortId, module);
-		  			  TransactionUtil.rollback();
-		  			  return "error";
-		  		  }*/
 		  	  }
 	  	  }
 	  	catch (GenericEntityException e) {
@@ -704,6 +666,13 @@ public class ProductionServices {
 				 enableInputPrunIssueDate = Boolean.TRUE;
 	  		  }
 	  		  
+	  		 boolean enableTrackRawMaterial = Boolean.FALSE;
+	  		  GenericValue tenantConfigEnableTrackRM = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PRUN_CHECK", "propertyName","enableTrackRawMaterial"), false);
+	  		  if (UtilValidate.isNotEmpty(tenantConfigEnableTrackRM) && (tenantConfigEnableTrackRM.getString("propertyValue")).equals("Y")) {
+	  			  enableTrackRawMaterial = Boolean.TRUE;
+	  		  }
+	  		  List conditionList = FastList.newInstance();
+	  		  
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  
 		  		  String productId = "";
@@ -763,6 +732,60 @@ public class ProductionServices {
 		  			 inventoryItem.store();
 		  		  }
 		  		  
+                if(enableTrackRawMaterial){
+                	
+                	GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", toFacilityId), false);
+                	String ownerPartyId = facility.getString("ownerPartyId");
+                	
+                	conditionList.clear();
+                	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId));
+                	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
+                	EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	List<GenericValue> facilities = delegator.findList("Facility", cond, null, null, null, false);
+                	
+                	List<String> facilityIds = EntityUtil.getFieldListFromEntityList(facilities, "facilityId", true);
+                	
+                	conditionList.clear();
+                	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+                	conditionList.add(EntityCondition.makeCondition("productAssocTypeId", EntityOperator.EQUALS, "PROD_PACK_MATERIAL"));
+                	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp()));
+                	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
+                	EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+                	List<GenericValue> productAssocs = delegator.findList("ProductAssoc", condExpr, null, null, null ,false);
+                	
+                	String rawMaterialIssuedFacilityId = "";
+                	if(UtilValidate.isEmpty(facilityIds)){
+                		Debug.logError("Raw Material is not available in production floor", module);
+	                	request.setAttribute("_ERROR_MESSAGE_", "Raw Material is not available in production floor");
+	                	TransactionUtil.rollback();
+	            		return "error";
+                	}
+                	rawMaterialIssuedFacilityId = facilityIds.get(0);
+                	for(GenericValue eachMaterial : productAssocs){
+                		
+                		String issueProductId = eachMaterial.getString("productIdTo");
+                		BigDecimal issueQty = eachMaterial.getBigDecimal("quantity");
+                		BigDecimal totalIssueQty = quantity.multiply(issueQty);
+                		if(totalIssueQty.compareTo(BigDecimal.ZERO)>0){
+                			inputCtx.clear();
+        	                inputCtx.put("productId", issueProductId);
+        	                inputCtx.put("facilityId", rawMaterialIssuedFacilityId);
+        	                inputCtx.put("quantity", totalIssueQty);
+        	                if(enableInputPrunIssueDate){
+        	                	inputCtx.put("issuedInputDate", productionRun.getTimestamp("estimatedStartDate"));
+        	                }
+        	                inputCtx.put("workEffortId", workEffortId);
+        	                inputCtx.put("userLogin", userLogin);
+        	                resultCtx = dispatcher.runSync("issueProductionRunTaskComponent", inputCtx);
+        	                if(ServiceUtil.isError(resultCtx)){
+        	                	Debug.logError("Error issuing material for routing task : "+workEffortId, module);
+        	                	request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resultCtx));
+        	                	TransactionUtil.rollback();
+        	            		return "error";
+        	                }
+                		}
+                	}
+                }
 		  	  }
 	  	  }
 	  	catch (GenericEntityException e) {
@@ -1480,7 +1503,6 @@ public class ProductionServices {
      	  		 requestedQty = requestedQty.subtract(xferQuantity);
      	  		 
      	  		String inventoryTransferId = (String)resultMap.get("inventoryTransferId");
-     	  		
      	  		Timestamp dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
      	  		Timestamp dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
      	  		
