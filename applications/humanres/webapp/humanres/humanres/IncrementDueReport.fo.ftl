@@ -54,7 +54,7 @@ under the License.
 	     				<fo:table>
 	     					<fo:table-column column-width="50pt"/>
 	     					<fo:table-column column-width="45pt"/>
-	     					<fo:table-column column-width="165pt"/>
+	     					<fo:table-column column-width="190pt"/>
 	     					<fo:table-column column-width="180pt"/>
 	       					<fo:table-column column-width="150pt"/>
 	       					<fo:table-body>
@@ -70,7 +70,7 @@ under the License.
            				<fo:table text-align="center">
            					<fo:table-column column-width="50pt"/>
 	     					<fo:table-column column-width="45pt"/>
-	     					<fo:table-column column-width="165pt"/>
+	     					<fo:table-column column-width="190pt"/>
 	     					<fo:table-column column-width="180pt"/>
 	       					<fo:table-column column-width="150pt"/>
 	       					<fo:table-body>
@@ -79,11 +79,13 @@ under the License.
 	       					<#list employeeDetails as employeeDetail>
 	       					<#assign sNo = sNo+1>
    								<fo:table-row>
-		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${sNo}</fo:block></fo:table-cell>
-		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${employeeDetail.getKey()}</fo:block></fo:table-cell>
-	       							<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${employeeDetail.getValue().get("partyName")}</fo:block></fo:table-cell>
-	       							<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${employeeDetail.getValue().get("designation")}</fo:block></fo:table-cell>
-	       							<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">${employeeDetail.getValue().get("incrementDate")}</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="center" border-style="solid">${sNo}</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="center" border-style="solid">${employeeDetail.getKey()}</fo:block></fo:table-cell>
+	       							<#assign partyName = employeeDetail.getValue().get("partyName")>
+									<#assign shedName = partyName.substring(0,partyName.indexOf(" ")+1)>
+	       							<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">&#160;<#if shedName == " ">${employeeDetail.getValue().get("partyName")}<#else>&#160;${employeeDetail.getValue().get("partyName")}</#if></fo:block></fo:table-cell>
+	       							<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">&#160;${employeeDetail.getValue().get("designation")}</fo:block></fo:table-cell>
+	       							<fo:table-cell><fo:block keep-together="always" font-size="11pt" text-align="left" border-style="solid">&#160;${employeeDetail.getValue().get("incrementDate")}</fo:block></fo:table-cell>
 	       						</fo:table-row>
 			       			</#list>
 	       					</fo:table-body>
