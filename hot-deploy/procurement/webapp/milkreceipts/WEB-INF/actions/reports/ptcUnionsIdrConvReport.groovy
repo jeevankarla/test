@@ -143,6 +143,7 @@ if(UtilValidate.isNotEmpty(unions)){
 						idrMap.put("quantity", receivedQuantity);
 						idrMap.put("kgFat", receivedKgFat);
 						idrMap.put("kgSnf", receivedKgSnf);
+						idrMap.put("purposeTypeId", purposeTypeId);
 						idrProductsMap.put(productId, idrMap);
 					}else{
 						 Map idrTempMap = FastMap.newInstance();
@@ -150,6 +151,7 @@ if(UtilValidate.isNotEmpty(unions)){
 						 idrTempMap.putAt("quantity", idrTempMap.get("quantity") + receivedQuantity);
 						 idrTempMap.putAt("kgFat", idrTempMap.get("kgFat") + receivedKgFat);
 						 idrTempMap.putAt("kgSnf", idrTempMap.get("kgSnf") + receivedKgSnf);
+						 idrTempMap.putAt("purposeTypeId", purposeTypeId);
 						 idrProductsMap.put(productId, idrTempMap);
 						}
 				}else if(purposeTypeId.equals("CONVERSION") && UtilValidate.isNotEmpty(purposeTypeId)){
@@ -157,6 +159,7 @@ if(UtilValidate.isNotEmpty(unions)){
 					    convMap.put("quantity", receivedQuantity);
 						convMap.put("kgFat", receivedKgFat);
 						convMap.put("kgSnf", receivedKgSnf);
+						convMap.put("purposeTypeId", purposeTypeId);
 						convProductsMap.put(productId, convMap);
 					}else{
 						 Map convTempMap = FastMap.newInstance();
@@ -164,6 +167,7 @@ if(UtilValidate.isNotEmpty(unions)){
 						 convTempMap.putAt("quantity", convTempMap.get("quantity") + receivedQuantity);
 						 convTempMap.putAt("kgFat", convTempMap.get("kgFat") + receivedKgFat);
 						 convTempMap.putAt("kgSnf", convTempMap.get("kgSnf") + receivedKgSnf);
+						 convTempMap.putAt("purposeTypeId", purposeTypeId);
 						 convProductsMap.put(productId, convTempMap);
 						}
 				}

@@ -58,8 +58,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
        	<fo:table-body>
 	         <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left" font-weight="bold"  font-size="12pt">PROCUREMENT CENTER</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">IDR - CONV</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="left"  font-weight="bold"  font-size="12pt">PRODUCT NAME</fo:block></fo:table-cell>       		
+   		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-weight="bold"  font-size="12pt">IDR - CONV</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">NET WEIGHT</fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG FAT </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG SNF</fo:block></fo:table-cell>       		
@@ -73,10 +73,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
               <#list idrProductsDetailsList as idrProductsDetails>
               	<#assign products = delegator.findOne("Product", {"productId" : idrProductsDetails.getKey()}, true)>
 				<#assign productName= products.brandName>
+				<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : idrProductsDetails.getValue().get("purposeTypeId")}, true)>
+				
+				
         	 <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"   font-size="12pt">${unionsMilkMapList.getKey()}</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-size="12pt">PUR </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="left"    font-size="12pt">${productName?if_exists} </fo:block></fo:table-cell>       		
+   		          <fo:table-cell border-style="dotted"><fo:block text-align="left"    font-size="12pt">${productName?if_exists} </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="center"  font-size="12pt">${enumeration.enumCode} </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"> <#if idrProductsDetails.getValue().get("quantity")?has_content> ${idrProductsDetails.getValue().get("quantity")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if idrProductsDetails.getValue().get("kgFat")?has_content> ${idrProductsDetails.getValue().get("kgFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if idrProductsDetails.getValue().get("kgSnf")?has_content>${idrProductsDetails.getValue().get("kgSnf")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
@@ -85,11 +88,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcUnionsReport.pdf")}
 	      <#assign convProductsDetailsList = convProductsMapDetails.entrySet()?if_exists>											
           <#list convProductsDetailsList as convProductsDetails>
           <#assign products = delegator.findOne("Product", {"productId" : convProductsDetails.getKey()}, true)>
-				<#assign productName= products.brandName>
+			<#assign productName= products.brandName>
+		   <#assign enumeration = delegator.findOne("Enumeration", {"enumId" : convProductsDetails.getValue().get("purposeTypeId")}, true)>
+				
 	         <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"  font-size="12pt">${unionsMilkMapList.getKey()}</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="center" font-size="12pt">CONV </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="left"   font-size="12pt">${productName} </fo:block></fo:table-cell>       		
+   		          <fo:table-cell border-style="dotted"><fo:block text-align="left"   font-size="12pt">${productName} </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="center" font-size="12pt">${enumeration.enumCode} </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-size="12pt"><#if convProductsDetails.getValue().get("quantity")?has_content>${convProductsDetails.getValue().get("quantity")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-size="12pt"><#if convProductsDetails.getValue().get("kgFat")?has_content>${convProductsDetails.getValue().get("kgFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-size="12pt"><#if convProductsDetails.getValue().get("kgSnf")?has_content>${convProductsDetails.getValue().get("kgSnf")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
