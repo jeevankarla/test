@@ -68,5 +68,5 @@
     
     <Enumeration enumId="PRUN_CHECK" enumTypeId="TENANTCONF_TYPE" description="Production Run Check"/>
 	<TenantConfiguration propertyName="enableInputPrunIssueDate" propertyTypeEnumId="PRUN_CHECK" propertyValue="Y" description="Enable Production Run Issue Date"/>
-	
+	<TenantConfiguration propertyName="enableTrackRawMaterial" propertyTypeEnumId="PRUN_CHECK" propertyValue="Y" description="Enable Track Raw Material"/>
 </entity-engine-xml>
