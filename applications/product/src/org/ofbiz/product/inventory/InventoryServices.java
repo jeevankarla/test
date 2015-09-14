@@ -487,8 +487,7 @@ public class InventoryServices {
                     String facilityId = inventoryItem.getString("facilityId");
                     Map inventoryDetails = (Map)getProductInventoryOpeningBalance(dctx, UtilMisc.toMap("effectiveDate", effectiveDate, "userLogin", userLogin, "productId", productId, "facilityId", facilityId));
                     BigDecimal totalInventory = (BigDecimal)inventoryDetails.get("inventoryCount");
-                    BigDecimal checkInv = totalInventory.add(availableToPromiseDiff);
-                    if(checkInv.compareTo(BigDecimal.ZERO)<0){
+                    if(totalInventory.compareTo(BigDecimal.ZERO)<0){
                     	Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
         	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
                     }
@@ -1332,7 +1331,7 @@ public class InventoryServices {
             		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
             	}
             }
-            
+        
         } catch (GenericEntityException e) {
         	Debug.logError(e, module);
             return ServiceUtil.returnError("Error fetching data " + e);
@@ -1361,7 +1360,6 @@ public class InventoryServices {
        
         conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
         EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-        
 
         BigDecimal inventoryCost = BigDecimal.ZERO;
         BigDecimal inventoryCount = BigDecimal.ZERO;
