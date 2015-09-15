@@ -699,6 +699,10 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="PurchaseBillingReportMRpdf"/> 
     </request-map>
+    <request-map uri="UnionPurchaseBillingReportMR.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="UnionPurchaseBillingReportMRpdf"/> 
+    </request-map>
     <request-map uri="SaleBillingReportMR.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="SaleBillingReportMRpdf"/> 
@@ -1177,6 +1181,7 @@
     <view-map name="ptcBankReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcBankReportCSV" type="screencsv" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportCSV" content-type="text/csv"/> 
     <view-map name="PurchaseBillingReportMRpdf" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#PurchaseBillingReportMRpdf" content-type="application/pdf"/>
+    <view-map name="UnionPurchaseBillingReportMRpdf" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#UnionPurchaseBillingReportMRpdf" content-type="application/pdf"/>
     <view-map name="SaleBillingReportMRpdf" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#SaleBillingReportMRpdf" content-type="application/pdf"/>
     <view-map name="MilkTankerReturnReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkTankerReturnReportPDF" content-type="application/pdf"/>
     <view-map name="MilkOutGoingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkOutGoingReportPDF" content-type="application/pdf"/>
