@@ -235,12 +235,60 @@
 					</table>
 				</form>
 			</tr>
+			<tr class="alternate-row"> 
+			<form id="UnionPurchaseBillingReportMR" name="UnionPurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>UnionPurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
+				<table class="basic-table" cellspacing="5">
+					<tr class="alternate-row">
+						<td width="23%"><span class='h3'>Union Purchase Billing Report</span></td>
+						<td width="35%">
+							 <span class='h3'>Time Period </span>
+		                    <select name="customTimePeriodId" class='h4'>
+		                    <#if purchaseTimePeriodList?has_content>	
+		                        <#list purchaseTimePeriodList as purTimePeriod>    
+		                			  <#if ((purTimePeriod.fromDate)?has_content) && ((purTimePeriod.thruDate)?has_content)>
+		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(purTimePeriod.fromDate, "MMMdd")/>
+		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(purTimePeriod.thruDate, "MMMdd yyyy")/>
+				                  	    <option value='${purTimePeriod.customTimePeriodId}' >
+				                    		${fromDate}-${thruDate}
+				                  		 </option>
+				                  	 </#if>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+						<td width="35%">
+							 <span class='h3'>Union </span>
+		                    <select name="partyId" id="partyId">
+		                    <#if unionPartyList?has_content>	
+		                        <#list unionPartyList as unionParty>    
+				                  	    <option value='${unionParty.partyId}' >
+				                    		${unionParty.partyId}
+				                  		 </option>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+		                  <span class='h3'>Product </span>
+		                    <select name="productId" id="productId">
+		                    <#if productIdList?has_content>	
+		                        <#list productIdList as productIds>    
+				                  	    <option value='${productIds.productId}' >
+				                    		${productIds.productName}
+				                  		 </option>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+				    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+					</tr>
+				</table>
+			</form>
+		</tr>
 		
 		 <tr class="alternate-row"> 
 			<form id="PurchaseBillingReportMR" name="PurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>PurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">
 					<tr class="alternate-row">
-						<td width="23%"><span class='h3'> Purchase Billing Report</span></td>
+						<td width="23%"><span class='h3'> Chilling Center Wise Purchase BillingReport </span></td>
 						<td width="35%">
 							 <span class='h3'>Time Period </span>
 		                    <select name="customTimePeriodId" class='h4'>

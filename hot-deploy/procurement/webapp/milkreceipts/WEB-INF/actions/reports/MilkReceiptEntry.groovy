@@ -321,6 +321,7 @@ if("PTCReports".equals(reportFrequencyFlag) && UtilValidate.isNotEmpty(reportFre
 List<GenericValue> milkTransferParties = delegator.findList("MilkTransfer",null, null,null,null,false);
 if(UtilValidate.isNotEmpty(milkTransferParties)){
 	mtPartyIds = new HashSet(EntityUtil.getFieldListFromEntityList(milkTransferParties, "partyId", false));
+	mtPartyIds=mtPartyIds.sort();
 	context.mtPartyIds=mtPartyIds;
 }
 List<GenericValue> facilityDepartments = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"), null,null,null,false);
@@ -334,7 +335,13 @@ if(UtilValidate.isNotEmpty(milkPurposeList)){
 	context.milkPurposeList=milkPurposeList;
 }
 	
-	
+//	Milk Receipt Products
+List<GenericValue> productCategoryMember = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,"MILK_RECEIPTS"), null, ['productId'], null, true);
+if(UtilValidate.isNotEmpty(productCategoryMember)){
+	productIds = EntityUtil.getFieldListFromEntityList(productCategoryMember, "productId", false);
+	List<GenericValue> productIdList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN,productIds), null, ['productId'], null, true);
+	context.productIdList=productIdList;
+}
 	
 	
 	

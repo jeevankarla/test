@@ -348,7 +348,7 @@
 		<menu-item name="ShiftWiseReport" title="Shift Wise">
 			<link target="ShiftWiseReport"></link>
 		</menu-item>
-		<menu-item name="PTCReports" title="PTC Reports">
+		<menu-item name="PTCReports" title="Billing Reports">
 			<link target="PTCReports"></link>
 		</menu-item>
      </menu>
