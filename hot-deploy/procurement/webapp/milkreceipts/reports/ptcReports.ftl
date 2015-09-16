@@ -99,6 +99,7 @@
 		makeDatePicker("vehicleFromDate","vehicleThruDate");
 		makeDatePicker("unionsFromDate","unionsThruDate");
 		makeDatePicker("milkProcessRegDate","");
+		makeDatePicker("purchaseBillingFromDate","purchaseBillingThruDate");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -240,7 +241,7 @@
 				<table class="basic-table" cellspacing="5">
 					<tr class="alternate-row">
 						<td width="23%"><span class='h3'>Union Purchase Billing Report</span></td>
-						<td width="35%">
+						<#-- <td width="35%">
 							 <span class='h3'>Time Period </span>
 		                    <select name="customTimePeriodId" class='h4'>
 		                    <#if purchaseTimePeriodList?has_content>	
@@ -255,7 +256,13 @@
 		                		</#list>    
 		                	</#if>	    
 		                    </select>
-						</td>
+						</td> -->
+							<td width="35%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="purchaseBillingFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="purchaseBillingThruDate"   name="thruDate"/>
+								 </span>
+							</td>
 						<td width="35%">
 							 <span class='h3'>Union </span>
 		                    <select name="partyId" id="partyId">
