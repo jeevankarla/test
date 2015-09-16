@@ -967,9 +967,9 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 						conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,intPartyIds));
 					}
 					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"INTERNAL"));
-					List<String> stausList = UtilMisc.toList("MXF_APPROVED");
-					//stausList.add("MXF_RECD");
-					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,stausList));
+					List<String> statusList = UtilMisc.toList("MXF_APPROVED");
+					//statusList.add("MXF_RECD");
+					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,statusList));
 					conditionList.add(EntityCondition.makeCondition("receivedQuantity",EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
 					milkTransferList = delegator.findList("MilkTransfer", condition, null, null, null, false);
@@ -985,7 +985,9 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				try{
 					List tempContractorCondList = FastList.newInstance();
 					tempContractorCondList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"PTC_VEHICLE"));
-					tempContractorCondList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,"TEMP_CONTRACTOR"));
+					List<String> tempPartyIds = UtilMisc.toList("MD", "Company","TEMP_CONTRACTOR");
+					
+					tempContractorCondList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,tempPartyIds));
 					tempContractorCondList.add(
 			        				EntityCondition.makeCondition(
 			        				EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate),EntityOperator.OR,
@@ -1003,17 +1005,25 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				}catch(GenericEntityException e){
 					Debug.logError("Error while getting tempContractor vehicle List :"+e,module);
 				}
-				if(UtilValidate.isNotEmpty(tempContractorVehicleIdsList)){
+				/*if(UtilValidate.isNotEmpty(tempContractorVehicleIdsList)){
 					List tempContractorTransfer = EntityUtil.filterByCondition(milkTransferList,EntityCondition.makeCondition("containerId",EntityOperator.IN,tempContractorVehicleIdsList) );
 					HashSet tempContrTrnVehicleList  = (new HashSet(EntityUtil.getFieldListFromEntityList(tempContractorTransfer, "containerId", false))); 
 					if(UtilValidate.isNotEmpty(tempContrTrnVehicleList)){
 						Debug.logError("Billing could not generated for Temp contractor vehicles . Please check Milk Finalization.This  Period tempContractor vehicleList is :"+tempContrTrnVehicleList, customTimePeriodId);
 						return ServiceUtil.returnError("Billing could not generated for Temp contractor vehicles . Please check Milk Finalization.This  Period tempContractor vehicleList is :"+tempContrTrnVehicleList);
 					}
+				}*/
+				List<GenericValue> tempContractVehicleTransferList = FastList.newInstance();
+				tempContractVehicleTransferList = EntityUtil.filterByCondition(milkTransferList,EntityCondition.makeCondition("containerId",EntityOperator.IN,tempContractorVehicleIdsList));
+				Debug.logInfo("milkTransferList size =========="+milkTransferList.size(),module);
+				Debug.logInfo("tempContractVehicleTransferList size =========="+tempContractVehicleTransferList.size(),module);
+				if(UtilValidate.isNotEmpty(tempContractVehicleTransferList)){
+					for(GenericValue milkTransObj : tempContractVehicleTransferList){
+						milkTransferList.remove(milkTransObj);
+					}
 				}
-				
-				
 				if(UtilValidate.isNotEmpty(milkTransferList)){
+					Debug.logInfo("milkTransferList============="+milkTransferList.size(),module);
 					List<String> partyKeys = EntityUtil.getFieldListFromEntityList(milkTransferList,"partyId", false);
 					Set<String> partyIds = new HashSet(partyKeys);
 					for(String partyId : partyIds){

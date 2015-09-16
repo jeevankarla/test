@@ -1191,7 +1191,7 @@ public class MilkReceiptBillingServices {
     		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
     		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
 		}
-    	//first Cancel PTC payments
+    	//first Cancel Purchase billing  payments
 		Map purchasePaymentCancelResult=cancelPurchaseBillingPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
 		if (ServiceUtil.isError(purchasePaymentCancelResult)) {
 			cancelationFailed = true;
