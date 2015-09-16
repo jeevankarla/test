@@ -18,7 +18,7 @@ fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.put("fromDate",fromDateStart);
 context.put("thruDate",thruDateEnd);
-prevMonthFromDateStart = UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
+prevMonthFromDateStart = UtilDateTime.getMonthStart(fromDateStart);
 prevMonthThruDate=UtilDateTime.getMonthEnd(prevMonthFromDateStart, timeZone, locale);
 curreentYearStart = UtilDateTime.getYearStart(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
 previousYearEnd = UtilDateTime.addDaysToTimestamp(curreentYearStart, -1);
@@ -39,8 +39,8 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 	emplInputMap.put("orgPartyId", "Company");
 }
 emplInputMap.put("userLogin", userLogin);
-emplInputMap.put("fromDate", timePeriodStart);
-emplInputMap.put("thruDate", timePeriodEnd);
+emplInputMap.put("fromDate", fromDateStart);
+emplInputMap.put("thruDate", thruDateEnd);
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
