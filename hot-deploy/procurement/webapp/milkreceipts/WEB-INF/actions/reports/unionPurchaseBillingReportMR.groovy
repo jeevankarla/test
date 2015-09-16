@@ -38,32 +38,40 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 import org.ofbiz.party.party.PartyHelper;
+import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 
 
 dctx = dispatcher.getDispatchContext();
+fromDateStart=parameters.fromDate;
+thruDateEnd=parameters.thruDate;
 
-customTimePeriodId=parameters.customTimePeriodId;
-if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
-	Debug.logError("customTimePeriod Cannot Be Empty","");
-	context.errorMessage = "customTimePeriod Cannot Be Empty.......!";
-	return;
+dctx = dispatcher.getDispatchContext();
+fromDateTime = null;
+thruDateTime = null;
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+try {
+	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDateStart).getTime());
+	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDateEnd).getTime());
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
-fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-nextDateTime = UtilDateTime.getNextDayStart(thruDateTime);
-thruDate = UtilDateTime.toDateString(nextDateTime,"yyyy-MM-dd");
-fromDate = UtilDateTime.toDateString(fromDateTime,"yyyy-MM-dd");
-sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-shiftDayTimeStart = fromDate + " 05:00:00.000";
-shiftDayTimeEnd = thruDate + " 04:59:59.000";
+shiftDayTimeStart = UtilDateTime.getDayStart(fromDateTime);
+shiftDayTimeEnd = UtilDateTime.getDayEnd(thruDateTime);
 
-dayBegin = new java.sql.Timestamp(sdf.parse(shiftDayTimeStart).getTime());
-dayEnd = new java.sql.Timestamp(sdf.parse(shiftDayTimeEnd).getTime());
-context.fromDate = dayBegin;
-context.thruDate = thruDateTime;
+Map inMap = FastMap.newInstance();
+inMap.put("userLogin", userLogin);
+inMap.put("shiftType", "MILK_SHIFT");
+inMap.put("fromDate", shiftDayTimeStart);
+inMap.put("thruDate", shiftDayTimeEnd);
+Map workShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMap );
 
+dayBegin=workShifts.fromDate;
+dayEnd=workShifts.thruDate;
 
+context.fromDate = shiftDayTimeStart;
+context.thruDate = shiftDayTimeEnd;
+
+ 
 Map vehicleWiseDetailsMap =FastMap.newInstance();
 Map unionTotalsMap =FastMap.newInstance();
 sno=1;

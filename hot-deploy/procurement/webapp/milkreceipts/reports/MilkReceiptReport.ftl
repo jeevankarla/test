@@ -102,13 +102,58 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("UnionsPrivateFromDate","thruDate");
 		makeDatePicker("UnionsPrivateThruDate","thruDate");
 		makeDatePicker("finalizeMilkReceiptsFromDate","thruDate");
-		$('#ui-datepicker-div').css('clip', 'auto');		
-	});			
-function appendParams(formName, action) {
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+		$("input").keyup(function(e){
+			if(e.target.name == "vehicleId"){
+				$('[name=vehicleId]').val(($('[name=vehicleId]').val()).toUpperCase());
+				populateVehicleName();
+				populateVehicleSpan();
+			}	
+		});
+});	
+	
+			
+ function appendParams(formName, action) {
 		var formId = "#" + formName;
 			jQuery(formId).attr("action", action);
 			jQuery(formId).submit();
+ }
+	
+	
+function populateVehicleName(){
+	var availableTags = ${StringUtil.wrapString(vehItemsJSON)!'[]'};
+				$("#vehicleId").autocomplete({					
+						source:  availableTags,
+						select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('[name=vehicleId]').val(selectedValue);
+					        populateVehicleSpan();
+					    }
+				});
+}
+	
+function populateVehicleSpan(){
+	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
+	var tempVehJson = vehicleCodeJson[$('[name=vehicleId]').val()];
+	if(tempVehJson){
+		$('span#tankerToolTip').addClass("tooltip");
+		$('span#tankerToolTip').removeClass("tooltipWarning");
+		var vehicleName = tempVehJson["vehicleName"];
+		var vehicleId = tempVehJson["vehicleId"];
+		if(!vehicleName){
+			vehicleName = vehicleId;
+		}
+		$('span#tankerToolTip').html(vehicleName);
+		$('[name=vehicleId]').val(vehicleName);
+		
+	}else{
+		//$('[name=vehicleId]').val('');
+		$('span#tankerToolTip').removeClass("tooltip");
+		$('span#tankerToolTip').addClass("tooltipWarning");
+		$('span#tankerToolTip').html('None');
 	}
+}
 </script>
 <#if reportFrequencyFlag =="ShiftWiseReport">
 <div class="screenlet">
@@ -145,11 +190,13 @@ function appendParams(formName, action) {
 						     </select>
                           dc No<input type="text" id="dcNo"name="dcNo">
 				                Vehicle No 
-				             <select name="vehicleId" id="vehicleId">
+				          <#-->   <select name="vehicleId" id="vehicleId">
                              <#list vehicleRoleList as vehicles>
 						     <option value='${vehicles.vehicleId?if_exists}' >${vehicles.vehicleId?if_exists}</option>
 						     </#list>
-						     </select>
+						     </select> -->
+                             <input  name="vehicleId" size="12pt" type="text" id="vehicleId"   required="required" /><span class="tooltip h5" id ="tankerToolTip">none</span> 
+						     
 						     Received Date<input  type="text" size="20pt" id="weighBridgeReportDate" name="receiveDate"/>
 	               <input type="submit" value="Download" class="buttontext"></td>
 				               
