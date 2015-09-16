@@ -68,8 +68,11 @@ under the License.
                             			<fo:table-body>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
-											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-077&#160;    KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-			                                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			                              		    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			                              		    
+											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-077&#160;    ${reportHeader.description?if_exists}.</fo:block>
+			                                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;       ${reportSubHeader.description?if_exists}.</fo:block>
 											        <fo:block font-family="Courier,monospace" >------------------------------------------------------------------------------</fo:block>
 											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; &#160;     TAX INVOICE</fo:block>
 			                              		</fo:table-cell>

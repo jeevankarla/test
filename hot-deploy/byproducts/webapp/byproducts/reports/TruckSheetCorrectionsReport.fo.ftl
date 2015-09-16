@@ -32,8 +32,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
  <#if truckSheetCorrectionList?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" font-weight = "bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" font-weight = "bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+			        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			        
+					<fo:block  keep-together="always" font-weight = "bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${reportHeader.description?if_exists}.</fo:block>
+					<fo:block  keep-together="always" font-weight = "bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${reportSubHeader.description?if_exists}.</fo:block>
                     <fo:block text-align="center" font-weight = "bold" font-size="12pt" keep-together="always"  white-space-collapse="false">TruckSheet Corrections Report :: ${effectiveDateStr?if_exists}</fo:block>
               		<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>

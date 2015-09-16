@@ -35,8 +35,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 				 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                ${uiLabelMap.KMFDairyHeader}             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                            ${uiLabelMap.KMFDairySubHeader}                  ${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block> 
+				 <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                 <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+				 
+				<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                ${reportHeader.description?if_exists}.             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                            ${reportSubHeader.description?if_exists}.                 ${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block> 
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace"  font-weight="bold"  white-space-collapse="false">PRODUCT PRICE LIST AS ON ${fromDateTime?if_exists}</fo:block>
 				<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 				<fo:block>

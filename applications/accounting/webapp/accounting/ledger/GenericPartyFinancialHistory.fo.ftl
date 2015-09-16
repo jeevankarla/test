@@ -44,8 +44,10 @@ under the License.
       
 		        <fo:page-sequence master-reference="main" font-size="12pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-		        		<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false">&#160;${uiLabelMap.KMFDairyHeader}</fo:block>
-                    	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;${uiLabelMap.KMFDairySubHeader}</fo:block>
+		        	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+		        		<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false">&#160;${reportHeader.description?if_exists}.</fo:block>
+                    	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;${reportSubHeader.description?if_exists}.</fo:block>
                     	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;PARTY AR LEDGER ABSTRACT FOR: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
               			<fo:block font-size="11pt" text-align="left">=======================================================================================================</fo:block> 
 	                    <#assign  partyName="">

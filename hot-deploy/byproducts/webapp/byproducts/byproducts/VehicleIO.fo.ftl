@@ -32,8 +32,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 
 <fo:page-sequence master-reference="main" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">      ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+			        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			        
+					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">      ${reportHeader.description?if_exists}.</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">      ${reportSubHeader.description?if_exists}.</fo:block>
                     <fo:block text-align="center"  font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">        Vehicle InTime OutTime From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
                      <fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${shipType}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
                      <fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>

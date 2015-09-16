@@ -41,8 +41,11 @@ under the License.
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 						<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 						<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">&#160;      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-		        		<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="14pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-						<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="14pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+						<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+						
+		        		<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="13pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${reportHeader.description?if_exists}.</fo:block>
+						<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="13pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${reportSubHeader.description?if_exists}.</fo:block>
                     	<fo:block text-align="center" font-size="14pt" font-weight="bold"  keep-together="always"  white-space-collapse="false">&#160;     MONTHLY VAT SUPPORT STATEMENT FOR THE PERIOD: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")} TO: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
               			<fo:block font-size="10pt">================================================================================================================</fo:block>
             			<fo:block text-align="left" font-size="11pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;S NO      DESCRIPTION              QUANTITY(KGS/LTRS) 		SALE VALUE     		VAT COLLECTED   		 NET SALE</fo:block>	 	 	  

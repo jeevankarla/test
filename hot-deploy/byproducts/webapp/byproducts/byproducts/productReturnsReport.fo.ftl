@@ -32,8 +32,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
  <#if returnProductList?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" font-size="12pt" text-align="left" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160; &#160;&#160; &#160; &#160;        ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" font-size="12pt" text-align="left" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160; &#160; &#160;&#160; &#160;        ${uiLabelMap.KMFDairySubHeader}</fo:block>
+			        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			        
+					<fo:block  keep-together="always" font-size="12pt" text-align="left" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160; &#160;&#160; &#160; &#160;        ${reportHeader.description?if_exists}.</fo:block>
+					<fo:block  keep-together="always" font-size="12pt" text-align="left" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160; &#160; &#160;&#160; &#160;        ${reportSubHeader.description?if_exists}.</fo:block>
                     <fo:block text-align="left" font-size="12pt" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;&#160; &#160; &#160;        Product Returns  Report From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
                     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
               		<fo:block font-size="12pt">----------------------------------------------------------------------------------------------------------------------------------------</fo:block>

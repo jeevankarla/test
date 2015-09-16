@@ -38,15 +38,12 @@ under the License.
 		    	<fo:static-content flow-name="xsl-region-before">
 		    	   <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
 			       <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
-			       <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportHeaderLable"}, true)>
- 			       <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "DEPOT_SALES","propertyName" : "reportSubHeaderLable"}, true)>
-			       <#if reportHeader?has_content && reportSubHeader?has_content>
+			       <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                   <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+
+			       
  			         <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
  			         <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${reportSubHeader.description?if_exists}</fo:block>
-			       <#else>>
-			        <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  &#160;&#160;   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
-				   </#if>	
                     <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
               		<fo:block font-weight = "bold">Received with thanks the ${reportType} by way of <#if paymentDescription == "CHQ">CHEQUE<#else>${paymentDescription?if_exists}</#if>												</fo:block>

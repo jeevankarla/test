@@ -30,8 +30,11 @@ under the License.
        ${setRequestAttribute("OUTPUT_FILENAME", "PCMRetailerWorkingNotes.pdf")} 
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
         <fo:static-content flow-name="xsl-region-before">
-        		<fo:block text-align="center" white-space-collapse="false" font-size="12pt" font-weight="bold" keep-together="always">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD. </fo:block>
-        		<fo:block text-align="center" white-space-collapse="false" font-size="12pt" font-weight="bold" keep-together="always">UNIT : MOTHER DAIRY  : G.K.V.K POST : YELAHANKA : BANGALORE - 560065</fo:block>
+                <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+                
+        		<fo:block text-align="center" white-space-collapse="false" font-size="12pt" font-weight="bold" keep-together="always">${reportHeader.description?if_exists}. </fo:block>
+        		<fo:block text-align="center" white-space-collapse="false" font-size="12pt" font-weight="bold" keep-together="always">${reportSubHeader.description?if_exists}.</fo:block>
         		<fo:block text-align="center" white-space-collapse="false" font-size="12pt" font-weight="bold" keep-together="always"> STATEMENT SHOWING DETAILS OF NO. OF  SACHET AGENTS IN SACHET ROUTES BETWEEN </fo:block>
         		<fo:block text-align="center" white-space-collapse="false" font-size="12pt" font-weight="bold" keep-together="always"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(cMonthStart, "dd-MMM-yyyy")}   TO  :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(cMonthEnd, "dd-MMM-yyyy")}</fo:block>
         		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>

@@ -40,8 +40,11 @@ under the License.
        <#if facilityCurntSaleMap?has_content>  
 		        <fo:page-sequence master-reference="main" font-size="12pt">	 
 		    <fo:static-content flow-name="xsl-region-before">
-        		<fo:block text-align="center" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD. </fo:block>
-        		<fo:block text-align="center" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always">UNIT : MOTHER DAIRY  : G.K.V.K POST : YELAHANKA : BANGALORE - 560065</fo:block>
+		        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+		        
+        		<fo:block text-align="center" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always">${reportHeader.description?if_exists}. </fo:block>
+        		<fo:block text-align="center" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always">${reportSubHeader.description?if_exists}.</fo:block>
         		<fo:block text-align="center" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always"> STATEMENT SHOWING AVERAGE MILK SALES / DAY OF  SACHET  AGENTS IN SACHET ROUTES WITH </fo:block>
         		<fo:block text-align="center" white-space-collapse="false" font-size="9pt" font-weight="bold" keep-together="always">COMPARISON BETWEEN  :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(pMonthStart, "MMM yyyy")}   TO  :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(cMonthStart, "MMM yyyy")}</fo:block>
         	</fo:static-content>	        	

@@ -40,8 +40,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 	        	<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" :invoiceList.getString("partyId")}, true)>
 	        	<#assign tinNumber = (partyGroup.tinNumber)?if_exists>
 	    		<#assign cstNumber = (partyGroup.cstNumber)?if_exists>
-	         </#if>	
-	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> MOTHER DAIRY, GKVK POST, YELAHANKA, BANGALORE 560 065</fo:block>
+	         </#if>
+	         <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+             <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+	         	
+	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> ${reportHeader.description?if_exists}.</fo:block>
+	<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold"   keep-together="always"> ${reportSubHeader.description?if_exists}.</fo:block>
  	<fo:block text-align="center" border-style="solid">
  	<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 	     <fo:table-column column-width="70%"/>

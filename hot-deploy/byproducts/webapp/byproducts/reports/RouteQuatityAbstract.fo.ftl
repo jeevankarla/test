@@ -43,8 +43,11 @@ under the License.
 <#if !(parameters.summeryOnly?exists)>		
 	<fo:page-sequence master-reference="main" force-page-count="no-force" font-size="6pt">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" >
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+		    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+		    
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   ${reportHeader.description?if_exists}.</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          ${reportSubHeader.description?if_exists}.</fo:block>
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">&lt;ROUTE-WISE&gt; From: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")}-To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">======================================================================================================================================================================================================================</fo:block>
 			<fo:block>
@@ -637,8 +640,11 @@ under the License.
 	<#if (parameters.summeryOnly?exists)>
 	<fo:page-sequence master-reference="main" force-page-count="no-force" font-size="6pt">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" >
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+		    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+		    
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   ${reportHeader.description?if_exists}.</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          ${reportSubHeader.description?if_exists}.</fo:block>
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">&lt;ROUTE-WISE&gt; From: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")}-To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">======================================================================================================================================================================================================================</fo:block>
 			<fo:block>

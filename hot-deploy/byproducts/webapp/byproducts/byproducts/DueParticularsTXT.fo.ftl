@@ -60,8 +60,11 @@ under the License.
    <#if (reportTypeFlag=="DuesParticulers")><#-- For Dues Report This code will invoke -->
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content font-size="7pt" flow-name="xsl-region-before">
-					<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              ${uiLabelMap.KMFDairySubHeader}</fo:block>				
+			        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			        
+					<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              ${reportHeader.description?if_exists}.</fo:block>
+					<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              ${reportSubHeader.description?if_exists}.</fo:block>				
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              DAIRY PARTICULARS FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}                                    ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
             		<fo:block >-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>
