@@ -113,7 +113,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});
 });	
 	
-	
 			
  function appendParams(formName, action) {
 		var formId = "#" + formName;

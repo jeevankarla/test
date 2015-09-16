@@ -104,7 +104,6 @@
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 
-
 	
 	
 </script>	

@@ -71,7 +71,7 @@ dayEnd=workShifts.thruDate;
 context.fromDate = shiftDayTimeStart;
 context.thruDate = shiftDayTimeEnd;
 
-
+ 
 Map vehicleWiseDetailsMap =FastMap.newInstance();
 Map unionTotalsMap =FastMap.newInstance();
 sno=1;

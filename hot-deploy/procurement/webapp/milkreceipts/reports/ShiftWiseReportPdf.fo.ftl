@@ -185,7 +185,6 @@ under the License.
         	    <fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >&#160;&#160;</fo:block>
         	    <fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >&#160;&#160;</fo:block>
         	    <fo:block white-space-collapse="false" font-weight="bold" text-align="right" keep-together="always" >SHIFT INCHARGE              &#160;&#160;</fo:block>
-       			
            	</fo:flow>
         </fo:page-sequence>
         </#list>
