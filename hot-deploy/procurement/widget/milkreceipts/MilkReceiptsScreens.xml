@@ -404,7 +404,7 @@
      <screen name="PTCReports">
         <section>
         	<actions>
-        		 <set field="titleProperty" value="PTC Reports"/>	
+        		 <set field="titleProperty" value="Billing Reports"/>	
         		 <set field="tabButtonItem" value="MilkReceiptReports"/> 
         		 <set field="tabButtonItem3" value="PTCReports"/>
         		 <set field="reportFrequencyFlag" value="PTCReports"/>

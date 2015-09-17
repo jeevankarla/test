@@ -633,8 +633,8 @@ pmSiloIds.each{eachPmSiloId->
 				}
 			}
 			if(UtilValidate.isNotEmpty(pmProductionIssuQty) && pmProductionIssuQty>0){
-				pmProductinIssuesMap.put("partyId",pmRecFacilityId);
-				pmProductinIssuesMap.put("issuedQuantity",pmProductionIssuQty);
+				pmProductinIssuesMap.put("recFacility",pmRecFacilityId);
+				pmProductinIssuesMap.put("qty",pmProductionIssuQty);
 				pmSiloIssueMap.put(issueNo,pmProductinIssuesMap);
 				pmIssuedSiloQty=pmIssuedSiloQty+pmProductionIssuQty;
 				issueNo++;

@@ -222,6 +222,597 @@ public class ProductionServices {
         return result;
     }// End of the Service
     
+    public static Map<String, Object> getPurchaseAndConversionMilkReceipts(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp fromDate = (Timestamp)context.get("fromDate");
+        Timestamp thruDate = (Timestamp)context.get("thruDate");
+        String partyId = (String)context.get("partyId");
+        String purposeTypeId = (String)context.get("purposeTypeId");
+        Map<String, Object> result = FastMap.newInstance();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
+        	fromDate = UtilDateTime.nowTimestamp();
+        	thruDate = UtilDateTime.nowTimestamp();
+        }
+        Map milkReceiptsMap = FastMap.newInstance();
+        Map milkReceiptsTotalsMap = FastMap.newInstance();
+        Map productWiseMap = FastMap.newInstance();
+		BigDecimal totRecdQty = BigDecimal.ZERO;
+		BigDecimal totRecdKgFat = BigDecimal.ZERO;
+		BigDecimal totRecdKgSnf = BigDecimal.ZERO;
+        try {
+        	 List conditionList = FastList.newInstance();
+             conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+             conditionList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN ,UtilMisc.toList("MXF_APPROVED","MXF_RECD")));
+             if(UtilValidate.isNotEmpty(purposeTypeId)){
+                conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS , purposeTypeId));
+             }
+             if(UtilValidate.isNotEmpty(partyId)){
+             	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId));
+             }
+             EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+             List<GenericValue> MilkTransferList = delegator.findList("MilkTransferAndMilkTransferItem", condition, null,null, null, false);
+          
+             if(UtilValidate.isNotEmpty(MilkTransferList)){
+        	 	 HashSet<String> partyIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(MilkTransferList, "partyId", true));
+				 if(UtilValidate.isNotEmpty(partyIdsSet)){
+    	    		for(String eachPartyId:partyIdsSet){
+    	    			List<GenericValue> partyMilkReceipts = EntityUtil.filterByCondition(MilkTransferList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,eachPartyId));
+    	    			if(UtilValidate.isNotEmpty(partyMilkReceipts)){
+        	    	        Map partyMilkRecptMap = FastMap.newInstance();
+    	    				BigDecimal receivedQuantity = BigDecimal.ZERO;
+    						BigDecimal receivedKgFat = BigDecimal.ZERO;
+    						BigDecimal receivedKgSnf = BigDecimal.ZERO;
+    						BigDecimal receivedFat = BigDecimal.ZERO;
+    						BigDecimal receivedSnf = BigDecimal.ZERO;
+    						for(GenericValue partyMilkReceipt : partyMilkReceipts){
+    							String receivedProductId = (String)partyMilkReceipt.get("productId");
+    	    					BigDecimal tempRecdQty = (BigDecimal)partyMilkReceipt.get("receivedQuantity");
+    	    					BigDecimal tempRecdKgFat = (BigDecimal)partyMilkReceipt.get("receivedKgFat");
+    	    					BigDecimal tempRecdKgSnf = (BigDecimal)partyMilkReceipt.get("receivedKgSnf");
+    	    	    			if(UtilValidate.isNotEmpty(tempRecdQty)){
+        	    					receivedQuantity=receivedQuantity.add(tempRecdQty);
+    	    	    			}else{
+    	    	    				tempRecdQty=BigDecimal.ZERO;
+    	    	    			}
+    	    	    			if(UtilValidate.isNotEmpty(tempRecdKgFat)){
+        	    					receivedKgFat=receivedKgFat.add(tempRecdKgFat);
+    	    	    			}else{
+    	    	    				tempRecdKgFat=BigDecimal.ZERO;
+    	    	    			}
+    	    	    			if(UtilValidate.isNotEmpty(tempRecdKgSnf)){
+        	    					receivedKgSnf=receivedKgSnf.add(tempRecdKgSnf);
+    	    	    			}else{
+    	    	    				tempRecdKgSnf=BigDecimal.ZERO;
+    	    	    			}
+    	    					if(UtilValidate.isEmpty(productWiseMap) || (UtilValidate.isNotEmpty(productWiseMap) && UtilValidate.isEmpty(productWiseMap.get(receivedProductId)))){
+    								Map tempMilkMap = FastMap.newInstance();
+    								tempMilkMap.put("quantity", tempRecdQty);
+    								tempMilkMap.put("kgFat",receivedKgFat);
+    								tempMilkMap.put("kgSnf",receivedKgSnf);
+    								productWiseMap.put(receivedProductId,tempMilkMap);
+    							 }else{
+    								Map tempMap = FastMap.newInstance();
+    								tempMap=(Map) productWiseMap.get(receivedProductId);
+    								tempMap.put("quantity", (((BigDecimal) tempMap.get("quantity")).add(tempRecdQty)));
+    								tempMap.put("kgFat", (((BigDecimal) tempMap.get("kgFat")).add(tempRecdKgFat)));
+    								tempMap.put("kgSnf", (((BigDecimal) tempMap.get("kgSnf")).add(tempRecdKgSnf)));
+    								productWiseMap.put(receivedProductId,tempMap);
+    							}
+    	    					
+    	    				}
+    	    				receivedFat = ProcurementNetworkServices.calculateFatOrSnf(receivedKgFat, receivedQuantity);
+    	    				receivedSnf = ProcurementNetworkServices.calculateFatOrSnf(receivedKgSnf, receivedQuantity);
+    	    				//String partyName =  PartyHelper.getPartyName(delegator, eachPartyId, false);
+    	    				partyMilkRecptMap.put("receivedQuantity", receivedQuantity);
+    	    				partyMilkRecptMap.put("receivedKgFat", receivedKgFat);
+    	    				partyMilkRecptMap.put("receivedKgSnf", receivedKgSnf);
+    	    				partyMilkRecptMap.put("receivedFat", receivedFat);
+    	    				partyMilkRecptMap.put("receivedSnf", receivedSnf);
+    	    				totRecdQty=totRecdQty.add(receivedQuantity);
+    	    				totRecdKgFat=totRecdKgFat.add(receivedKgFat);
+    	    				totRecdKgSnf=totRecdKgSnf.add(receivedKgSnf);
+        	    	        milkReceiptsMap.put(eachPartyId, partyMilkRecptMap);
+    	    		    }
+    	    		}
+    	    		milkReceiptsTotalsMap.put("totRecdQty",totRecdQty);
+    	    		milkReceiptsTotalsMap.put("totRecdKgFat",totRecdKgFat);
+    	    		milkReceiptsTotalsMap.put("totRecdKgSnf",totRecdKgSnf);
+				  }
+              }
+        }catch (GenericEntityException e) {
+        	Debug.logError(e, module);
+            return ServiceUtil.returnError("Error fetching MilkTransferAndMilkTransferItem data " + e);
+        }
+        
+        result.put("milkReceiptsMap",milkReceiptsMap);
+        result.put("milkReceiptsTotalsMap",milkReceiptsTotalsMap);
+        result.put("productWiseMap",productWiseMap);
+        return result;
+    }// End of the Service
+
+    public static Map<String, Object> getMilkReturnsAndIntenalReceipts(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp fromDate = (Timestamp)context.get("fromDate");
+        Timestamp thruDate = (Timestamp)context.get("thruDate");
+        String ownerPartyId = (String)context.get("ownerPartyId");
+        String facilityId = (String)context.get("facilityId");
+        Map<String, Object> result = FastMap.newInstance();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
+        	fromDate = UtilDateTime.nowTimestamp();
+        	thruDate = UtilDateTime.nowTimestamp();
+        }
+        Map milkReturnsAndReceiptsMap = FastMap.newInstance();
+        Map milkRetnsAndRcptsTotalsMap = FastMap.newInstance();
+
+		BigDecimal totRecdQty = BigDecimal.ZERO;
+		BigDecimal totRecdKgFat = BigDecimal.ZERO;
+		BigDecimal totRecdKgSnf = BigDecimal.ZERO;
+		
+		List<String> facilityIds = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(ownerPartyId)){
+	        try {
+            	List<GenericValue> facility = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId), null, null, null, false);
+	            if(UtilValidate.isNotEmpty(facility)){
+	            	facilityIds = EntityUtil.getFieldListFromEntityList(facility, "facilityId", true);
+	            	}
+	        } catch (GenericEntityException e) {
+	        	Debug.logError(e, module);
+	            return ServiceUtil.returnError("Error fetching data " + e);
+	        }
+        }
+        if(UtilValidate.isEmpty(ownerPartyId) && UtilValidate.isNotEmpty(facilityId)){
+        	facilityIds.add(facilityId);
+        }
+    	List conditionList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(facilityIds)){
+        	try {
+        		 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+        	 	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
+        		 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        		 List<GenericValue> inventoryItemAndDetail = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);
+            	 if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
+ 		        	List<String> invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItemAndDetail, "productId", true);
+ 		        	conditionList.clear();
+	        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
+	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	        		EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		List<GenericValue> workEffortInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortCond);
+	        		conditionList.clear();
+	        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+	        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.NOT_EQUAL,null ));
+	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		List<GenericValue> inventoryTransDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, invenTransCond);
+	        		List<GenericValue> internalReturnsList= null;
+	        		List<GenericValue> custrequestList= null;
+	        		List<String> shipmentIds = FastList.newInstance();
+	        		List<String> custRequestIds = FastList.newInstance();
+	        		List<GenericValue> internalShipment = delegator.findList("Shipment", EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "MILK_RETURN_SHIPMENT"), null, null, null, false);
+	        		List<GenericValue> internalCustRequest = delegator.findList("CustRequest", EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "INTERNAL_INDENT"), null, null, null, false);
+	        		if(UtilValidate.isNotEmpty(internalShipment)){
+	            		shipmentIds = EntityUtil.getFieldListFromEntityList(internalShipment, "shipmentId", true);
+	            		conditionList.clear();
+	 	        		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIds ));
+	 	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	 	        		EntityCondition internalReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	 	        		internalReturnsList = EntityUtil.filterByCondition(inventoryItemAndDetail, internalReturnCond);
+                    }
+	        		if(UtilValidate.isNotEmpty(internalCustRequest)){
+	        			custRequestIds = EntityUtil.getFieldListFromEntityList(internalCustRequest, "custRequestId", true);
+	            		conditionList.clear();
+	 	        		conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN,custRequestIds ));
+	 	        		conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.NOT_EQUAL,null));
+	 	        		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.NOT_EQUAL,null));
+	 	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	 	        		EntityCondition internalCustRequestCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	 	        		custrequestList = EntityUtil.filterByCondition(inventoryItemAndDetail, internalCustRequestCond);
+                    }
+
+	     	    	for(String invProductId:invProductIds){
+	     	    		Map productReceiptReturnMap = FastMap.newInstance();
+	     	    		BigDecimal receivedQuantity = BigDecimal.ZERO;
+						BigDecimal receivedKgFat = BigDecimal.ZERO;
+						BigDecimal receivedKgSnf = BigDecimal.ZERO;
+						BigDecimal receivedFat = BigDecimal.ZERO;
+						BigDecimal receivedSnf = BigDecimal.ZERO;
+	     	    		
+						if(UtilValidate.isNotEmpty(workEffortInvDetailList)){
+		     	    		List<GenericValue> eachProdWorkEffortInventory = EntityUtil.filterByCondition(workEffortInvDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdWorkEffortInventory)){
+	    						for(GenericValue productInventory : eachProdWorkEffortInventory){
+	    	    					BigDecimal tempRecdQty = (BigDecimal)productInventory.get("quantityOnHandDiff");
+	    	    					BigDecimal tempFatPercent = (BigDecimal)productInventory.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInventory.get("snfPercent");
+	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
+		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempSnfPercent);
+	    								receivedKgSnf=receivedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty)){
+	    								receivedQuantity=receivedQuantity.add(tempRecdQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(inventoryTransDetailList)){
+		     	    		List<GenericValue> eachProdInventoryTransfer = EntityUtil.filterByCondition(inventoryTransDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdInventoryTransfer)){
+	    						for(GenericValue productInvTransfer : eachProdInventoryTransfer){
+	    	    					BigDecimal tempRecdQty = (BigDecimal)productInvTransfer.get("quantityOnHandDiff");
+	    	    					BigDecimal tempFatPercent = (BigDecimal)productInvTransfer.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInvTransfer.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
+		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempSnfPercent);
+	    								receivedKgSnf=receivedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty)){
+	    								receivedQuantity=receivedQuantity.add(tempRecdQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(custrequestList)){
+		     	    		List<GenericValue> eachProdCustReqtList = EntityUtil.filterByCondition(custrequestList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdCustReqtList)){
+	    						for(GenericValue eachProdCustReqt : eachProdCustReqtList){
+	    	    					BigDecimal tempRecdQty = (BigDecimal)eachProdCustReqt.get("quantityOnHandDiff");
+	    	    					BigDecimal tempFatPercent = (BigDecimal)eachProdCustReqt.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)eachProdCustReqt.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
+		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempSnfPercent);
+	    								receivedKgSnf=receivedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty)){
+	    								receivedQuantity=receivedQuantity.add(tempRecdQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(internalReturnsList)){
+		     	    		List<GenericValue> eachProdInternalReturns = EntityUtil.filterByCondition(internalReturnsList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdInternalReturns)){
+	    						for(GenericValue productInvReturn : eachProdInternalReturns){
+	    	    					BigDecimal tempRecdQty = (BigDecimal)productInvReturn.get("quantityOnHandDiff");
+	    	    					BigDecimal tempFatPercent = (BigDecimal)productInvReturn.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInvReturn.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
+		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempSnfPercent);
+	    								receivedKgSnf=receivedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty)){
+	    								receivedQuantity=receivedQuantity.add(tempRecdQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						receivedFat = ProcurementNetworkServices.calculateFatOrSnf(receivedKgFat, receivedQuantity);
+						receivedSnf = ProcurementNetworkServices.calculateFatOrSnf(receivedKgSnf, receivedQuantity);
+						totRecdQty=totRecdQty.add(receivedQuantity);
+	    				totRecdKgFat=totRecdKgFat.add(receivedKgFat);
+	    				totRecdKgSnf=totRecdKgSnf.add(receivedKgSnf);
+						productReceiptReturnMap.put("receivedQuantity",receivedQuantity);
+						productReceiptReturnMap.put("receivedKgFat",receivedKgFat);
+						productReceiptReturnMap.put("receivedKgSnf",receivedKgSnf);
+						productReceiptReturnMap.put("receivedFat",receivedFat);
+						productReceiptReturnMap.put("receivedSnf",receivedSnf);
+
+						milkReturnsAndReceiptsMap.put(invProductId,productReceiptReturnMap);
+	     	    	}
+	     	    	milkRetnsAndRcptsTotalsMap.put("totRecdQty",totRecdQty);
+	     	    	milkRetnsAndRcptsTotalsMap.put("totRecdKgFat",totRecdKgFat);
+	     	    	milkRetnsAndRcptsTotalsMap.put("totRecdKgSnf",totRecdKgSnf);
+            	 }
+        	 } catch (GenericEntityException e) {
+	        	Debug.logError(e, module);
+	            return ServiceUtil.returnError("Error fetching Returns and Receipts data " + e);
+	        }
+
+        }
+        result.put("milkReturnsAndReceiptsMap",milkReturnsAndReceiptsMap);
+        result.put("milkRetnsAndRcptsTotalsMap",milkRetnsAndRcptsTotalsMap);
+        return result;
+    }// End of the Service
+    public static Map<String, Object> getDepartmentMilkIssues(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp fromDate = (Timestamp)context.get("fromDate");
+        Timestamp thruDate = (Timestamp)context.get("thruDate");
+        String ownerPartyId = (String)context.get("ownerPartyId");
+        String facilityId = (String)context.get("facilityId");
+        String productId = (String)context.get("productId");
+        String thruDeptId = (String)context.get("thruDeptId");
+        Map<String, Object> result = FastMap.newInstance();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
+        	fromDate = UtilDateTime.nowTimestamp();
+        	thruDate = UtilDateTime.nowTimestamp();
+        }
+        Map milkIssuesMap = FastMap.newInstance();
+        Map milkIssuesTotalsMap = FastMap.newInstance();
+
+		BigDecimal totIssuedQty = BigDecimal.ZERO;
+		BigDecimal totIssuedKgFat = BigDecimal.ZERO;
+		BigDecimal totIssuedKgSnf = BigDecimal.ZERO;
+		BigDecimal totIssuedFat = BigDecimal.ZERO;
+		BigDecimal totIssuedSnf = BigDecimal.ZERO;
+
+		List<String> facilityIds = FastList.newInstance();
+		List<String> thruFacilityIds = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(ownerPartyId)){
+	        try {
+            	List<GenericValue> facility = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId), null, null, null, false);
+	            if(UtilValidate.isNotEmpty(facility)){
+	            	facilityIds = EntityUtil.getFieldListFromEntityList(facility, "facilityId", true);
+	            	}
+	            List<GenericValue> facilityThruDepts = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, thruDeptId), null, null, null, false);
+	            if(UtilValidate.isNotEmpty(facilityThruDepts)){
+	            	thruFacilityIds = EntityUtil.getFieldListFromEntityList(facilityThruDepts, "facilityId", true);
+	            	}
+	        } catch (GenericEntityException e) {
+	        	Debug.logError(e, module);
+	            return ServiceUtil.returnError("Error fetching data " + e);
+	        }
+        }
+        if(UtilValidate.isEmpty(ownerPartyId) && UtilValidate.isNotEmpty(facilityId)){
+        	facilityIds.add(facilityId);
+        }
+    	List conditionList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(facilityIds)){
+        	try {
+        		 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+        	 	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+        	     if(UtilValidate.isNotEmpty(productId)){
+        	    	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,productId ));
+        	     }
+        		 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        		 List<GenericValue> inventoryItemAndDetailList = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);
+        		 List<GenericValue> inventoryItemAndDetail = EntityUtil.filterByCondition(inventoryItemAndDetailList, EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
+        		 if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
+ 		        	List<String> invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItemAndDetail, "productId", true);
+ 	        	 	//HashSet<String> partyIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(MilkTransferList, "partyId", true));
+ 		        	conditionList.clear();
+ 		        	 if(UtilValidate.isNotEmpty(thruFacilityIds)){
+ 	        	    	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,thruFacilityIds ));
+ 	        	     }
+	        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
+	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+	        		EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		List<GenericValue> workEffortInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortCond);
+	        		// internal indent & external issues
+	        		List<GenericValue> indentIssuesDetailList =null;
+	        		if(UtilValidate.isNotEmpty(thruDeptId)){
+		        		conditionList.clear();
+		        		conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS,thruDeptId ));
+		        		conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS,"INTERNAL_INDENT" ));
+		        		EntityCondition custReqCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        		List<GenericValue> custRequestList = delegator.findList("CustRequestAndIssuance",custReqCond , null,null, null, false);
+	 	        	 	HashSet<String> itemIssuanceIds= new HashSet( EntityUtil.getFieldListFromEntityList(custRequestList, "itemIssuanceId", true));
+
+	 	        	 	if(UtilValidate.isNotEmpty(itemIssuanceIds)){
+		 	        	 	conditionList.clear();
+			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN,itemIssuanceIds ));
+			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+			        		EntityCondition indentIssuesCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			        		indentIssuesDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, indentIssuesCond);
+		        		}
+ 
+	        		}
+	        		if(UtilValidate.isEmpty(thruDeptId)){
+		        		conditionList.clear();
+		        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+		        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS,null ));
+		        		conditionList.add(EntityCondition.makeCondition("itemIssuanceId", EntityOperator.NOT_EQUAL,null ));
+		        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+		        		EntityCondition indentIssuesCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        		indentIssuesDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, indentIssuesCond);
+	        		}
+	        		List<GenericValue> inventoryTransDetailList=null;
+	        		if(UtilValidate.isNotEmpty(thruFacilityIds)){
+		        		conditionList.clear();
+		        		conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.IN, thruFacilityIds ));
+		        		//conditionList.add(EntityCondition.makeCondition("statusId	", EntityOperator.EQUALS,"IXF_COMPLETE" ));
+		        		EntityCondition invTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        		List<GenericValue> inventoryTransferList = delegator.findList("InventoryTransfer",invTransCond , null,null, null, false);
+		        		HashSet<String> inventoryTransferIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransferList, "inventoryTransferId", true));
+		        		if(UtilValidate.isNotEmpty(inventoryTransferIds)){
+		 	        	 	conditionList.clear();
+			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,inventoryTransferIds ));
+			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+			        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			        		inventoryTransDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, invenTransCond);
+		        		}
+ 
+	        		}else{
+			        	conditionList.clear();
+		        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+		        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.NOT_EQUAL,null ));
+		        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+		        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        		inventoryTransDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, invenTransCond);
+	        		}
+	        		// Return Issues
+	        		List<GenericValue> internalReturnsList= null;
+	        		List<String> shipmentIds = FastList.newInstance();
+	        		conditionList.clear();
+	        		conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS,"MILK_RETURN_SHIPMENT" ));
+	        		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN,facilityIds ));
+	        		EntityCondition invenShipCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		List<GenericValue> internalShipment = delegator.findList("Shipment", invenShipCond, null, null, null, false);
+	            	if(UtilValidate.isNotEmpty(internalShipment)){
+	            		shipmentIds = EntityUtil.getFieldListFromEntityList(internalShipment, "shipmentId", true);
+	            		conditionList.clear();
+	            		if(UtilValidate.isNotEmpty(thruFacilityIds)){
+			        		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, thruFacilityIds));
+		        		}
+	 	        		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIds ));
+	 	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	 	        		EntityCondition internalReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	 	        		internalReturnsList = EntityUtil.filterByCondition(inventoryItemAndDetailList, internalReturnCond);
+                    }
+	     	    	for(String invProductId:invProductIds){
+	     	    		Map productIssuesMap = FastMap.newInstance();
+	     	    		BigDecimal issuedQuantity = BigDecimal.ZERO;
+						BigDecimal issuedKgFat = BigDecimal.ZERO;
+						BigDecimal issuedKgSnf = BigDecimal.ZERO;
+						BigDecimal issuedFat = BigDecimal.ZERO;
+						BigDecimal issuedSnf = BigDecimal.ZERO;
+						if(UtilValidate.isNotEmpty(workEffortInvDetailList)){
+		     	    		List<GenericValue> eachProdWorkEffortInventory = EntityUtil.filterByCondition(workEffortInvDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdWorkEffortInventory)){
+	    						for(GenericValue productInventory : eachProdWorkEffortInventory){
+	    	    					BigDecimal tempIssuedQty = (BigDecimal)productInventory.get("quantityOnHandDiff");
+	    							   		   tempIssuedQty = tempIssuedQty.negate();
+	    	    					BigDecimal tempFatPercent = (BigDecimal)productInventory.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInventory.get("snfPercent");
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempFatPercent);
+		    	    					issuedKgFat=issuedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempSnfPercent);
+	    								issuedKgSnf=issuedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
+	    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(indentIssuesDetailList)){
+		     	    		List<GenericValue> indentIssuesDetails = EntityUtil.filterByCondition(indentIssuesDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(indentIssuesDetails)){
+	    						for(GenericValue indentIssuesDetail : indentIssuesDetails){
+	    	    					BigDecimal tempIssuedQty = (BigDecimal)indentIssuesDetail.get("quantityOnHandDiff");
+	    	    							   tempIssuedQty = tempIssuedQty.negate();
+	    	    					BigDecimal tempFatPercent = (BigDecimal)indentIssuesDetail.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)indentIssuesDetail.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempFatPercent);
+		    	    					issuedKgFat=issuedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempSnfPercent);
+	    								issuedKgSnf=issuedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
+	    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(inventoryTransDetailList)){
+		     	    		List<GenericValue> eachProdInventoryTransfer = EntityUtil.filterByCondition(inventoryTransDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdInventoryTransfer)){
+	    						for(GenericValue productInvTransfer : eachProdInventoryTransfer){
+	    	    					BigDecimal tempIssuedQty = (BigDecimal)productInvTransfer.get("quantityOnHandDiff");
+	    	    							   tempIssuedQty = tempIssuedQty.negate();
+	    	    					BigDecimal tempFatPercent = (BigDecimal)productInvTransfer.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInvTransfer.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempFatPercent);
+		    	    					issuedKgFat=issuedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempSnfPercent);
+	    								issuedKgSnf=issuedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
+	    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(internalReturnsList)){
+		     	    		List<GenericValue> eachProdInternalReturns = EntityUtil.filterByCondition(internalReturnsList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(eachProdInternalReturns)){
+	    						for(GenericValue productInvReturn : eachProdInternalReturns){
+	    	    					BigDecimal tempIssuedQty = (BigDecimal)productInvReturn.get("quantityOnHandDiff");
+	    	    					BigDecimal tempFatPercent = (BigDecimal)productInvReturn.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInvReturn.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempFatPercent);
+		    	    					issuedKgFat=issuedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempSnfPercent);
+	    								issuedKgSnf=issuedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
+	    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						issuedFat = ProcurementNetworkServices.calculateFatOrSnf(issuedKgFat, issuedQuantity);
+						issuedSnf = ProcurementNetworkServices.calculateFatOrSnf(issuedKgSnf, issuedQuantity);
+
+						totIssuedQty=totIssuedQty.add(issuedQuantity);
+
+						totIssuedKgFat=totIssuedKgFat.add(issuedKgFat);
+						totIssuedKgSnf=totIssuedKgSnf.add(issuedKgSnf);
+						productIssuesMap.put("issuedQuantity",issuedQuantity);
+						productIssuesMap.put("issuedKgFat",issuedKgFat);
+						productIssuesMap.put("issuedKgSnf",issuedKgSnf);
+						productIssuesMap.put("issuedFat",issuedFat);
+						productIssuesMap.put("issuedSnf",issuedSnf);
+
+						milkIssuesMap.put(invProductId,productIssuesMap);
+	     	    	}
+	     	    	
+	     	    	totIssuedFat = ProcurementNetworkServices.calculateFatOrSnf(totIssuedKgFat, totIssuedQty);
+	     	    	totIssuedSnf = ProcurementNetworkServices.calculateFatOrSnf(totIssuedKgSnf, totIssuedQty);
+
+	     	    	milkIssuesTotalsMap.put("totIssuedQty",totIssuedQty);
+	     	    	milkIssuesTotalsMap.put("totIssuedKgFat",totIssuedKgFat);
+	     	    	milkIssuesTotalsMap.put("totIssuedKgSnf",totIssuedKgSnf);
+	     	    	milkIssuesTotalsMap.put("totIssuedFat",totIssuedFat);
+	     	    	milkIssuesTotalsMap.put("totIssuedSnf",totIssuedSnf);
+
+            	 }
+        	 } catch (GenericEntityException e) {
+	        	Debug.logError(e, module);
+	            return ServiceUtil.returnError("Error fetching Returns and Receipts data " + e);
+	        }
+
+        }
+        result.put("milkIssuesMap",milkIssuesMap);
+        result.put("milkIssuesTotalsMap",milkIssuesTotalsMap);
+        return result;
+    }// End of the Service
+    
     public static Map<String, Object> getProductionRunDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -232,7 +823,7 @@ public class ProductionServices {
             EntityListIterator eli = null;
             EntityListIterator eliForQc = null;
 
-            List issuedProductsList = FastList.newInstance();
+            Map issuedProductsMap = FastMap.newInstance();
             List declareProductsList = FastList.newInstance();
             List returnProductsList = FastList.newInstance();
             List qcComponentsList = FastList.newInstance();
@@ -248,7 +839,6 @@ public class ProductionServices {
 		            eli = delegator.find("InventoryItemAndDetail", EntityCondition.makeCondition("workEffortId", EntityOperator.IN, workEffortIds), null, null, null, null);
 		            GenericValue productionTrans;
 		            while ((productionTrans = eli.next()) != null) {
-		                Map issuedProductsMap = FastMap.newInstance();
 		                Map declareProductsMap = FastMap.newInstance();
 		                BigDecimal fatPercent = BigDecimal.ZERO;
 		                BigDecimal snfPercent = BigDecimal.ZERO;
@@ -264,11 +854,22 @@ public class ProductionServices {
 	                    String productBatchId = productionTrans.getString("productBatchId");
 
 		             	if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) <= 0) && (UtilValidate.isEmpty(inventoryTransferId))){
-		             		issuedProductsMap.put("issuedProdId",productId);
-		             		issuedProductsMap.put("issuedQty",quantityOnHandDiff);
-		             		issuedProductsMap.put("fatPercent",fatPercent);
-		             		issuedProductsMap.put("snfPercent",snfPercent);
-		             		issuedProductsList.add(issuedProductsMap);
+		             		if(UtilValidate.isEmpty(issuedProductsMap) || (UtilValidate.isNotEmpty(issuedProductsMap) && UtilValidate.isEmpty(issuedProductsMap.get(productId)))){
+		             			Map tempIssuMap = FastMap.newInstance();
+		             			tempIssuMap.put("issuedProdId", productId);
+		             			tempIssuMap.put("issuedQty", quantityOnHandDiff);
+		             			tempIssuMap.put("fatPercent",fatPercent);
+		             			tempIssuMap.put("snfPercent",snfPercent);
+		             			issuedProductsMap.put(productId,tempIssuMap);
+							}else{
+				                Map tempMap = FastMap.newInstance();
+				                tempMap=(Map) issuedProductsMap.get(productId);
+				            	BigDecimal tempQty =(BigDecimal) tempMap.get("issuedQty");
+				                tempQty=tempQty.add(quantityOnHandDiff);
+				                tempMap.put("issuedQty", tempQty);
+		             			issuedProductsMap.put(productId,tempMap);
+							}
+		             		//issuedProductsList.add(issuedProductsMap);
 		                } else if((quantityOnHandDiff.compareTo(BigDecimal.ZERO) >= 0) && (UtilValidate.isNotEmpty(productBatchId))){
 		                    	List<GenericValue> productBatchSequence = delegator.findList("ProductBatchAndSequence", EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS, productBatchId), null, UtilMisc.toList("sequenceId"), null, false);
 		                     	if(UtilValidate.isNotEmpty(productBatchSequence)){
@@ -349,7 +950,7 @@ public class ProductionServices {
             	Debug.logError(e, module);
             	return ServiceUtil.returnError(e.toString());
             }
-            result.put("issuedProductsList",issuedProductsList);
+            result.put("issuedProductsMap",issuedProductsMap);
             result.put("declareProductsList",declareProductsList);
             result.put("returnProductsList",returnProductsList);
             result.put("qcComponentsList",qcComponentsList);
