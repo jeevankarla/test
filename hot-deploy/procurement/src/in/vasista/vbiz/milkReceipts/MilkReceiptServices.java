@@ -5763,9 +5763,9 @@ public class MilkReceiptServices {
      GenericValue userLogin = (GenericValue) context.get("userLogin");
      String milkTransferId = (String)context.get("milkTransferId");
      String sequenceNum = (String)context.get("sequenceNum");
-     String tankerNo = (String) context.get("vehicleId");
-     String fromPartyId = (String) context.get("partyId");
-	 String productId = (String) context.get("productId");
+     String tankerNo = (String) context.get("vehicleName");
+     String fromPartyId = (String) context.get("partyName");
+	 String productId = (String) context.get("productName");
 	 String siloId = (String) context.get("siloId");
  
 	 BigDecimal dispatchWeight = (BigDecimal) context.get("dispatchWeight");
