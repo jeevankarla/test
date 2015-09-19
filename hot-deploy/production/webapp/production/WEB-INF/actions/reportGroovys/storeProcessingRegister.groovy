@@ -51,6 +51,8 @@ EntityCondition facilityCond = EntityCondition.makeCondition(facilityCondList,En
 allSilosList = delegator.findList("Facility", facilityCond , null, UtilMisc.toList("sequenceNum"), null, false );
 allSiloIds=EntityUtil.getFieldListFromEntityList(allSilosList, "facilityId", true);
 
+partyGroup = delegator.findList("PartyGroup", null , null, null, null, false );
+
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
@@ -307,6 +309,12 @@ if(UtilValidate.isNotEmpty(siloIds)){
 							if(UtilValidate.isNotEmpty(receivedQuantity)){
 								ReceiptTotQty=ReceiptTotQty+receivedQuantity;
 							}
+							rmInvTransRecdParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,fromFacilityId));
+							if(UtilValidate.isNotEmpty(rmInvTransRecdParty)){
+								if(UtilValidate.isNotEmpty(rmInvTransRecdParty.comments)){
+									fromFacilityId=rmInvTransRecdParty.comments;
+								}
+							}
 							transferDetailsMap.put("partyId",fromFacilityId);
 							transferDetailsMap.put("receivedQuantity",receivedQuantity);
 							receiptSiloMap.put(receiptNo,transferDetailsMap);
@@ -349,12 +357,10 @@ if(UtilValidate.isNotEmpty(siloIds)){
 				 if(UtilValidate.isNotEmpty(recdSilo) && UtilValidate.isNotEmpty(productBatchId) && tempIssuedQty>0){
 					 if(UtilValidate.isNotEmpty(receivedFacilityId)){
 						 receivedFacilityId=receivedFacilityId+","+recdSilo;
-						 
 					 }else{
 					 	receivedFacilityId=recdSilo;
 					 }
 				 }
-					 
 			 }
 			 if(UtilValidate.isNotEmpty(issuedQty) && issuedQty>0){
 				 rmProductinIssuesMap.put("partyId",receivedFacilityId);
@@ -401,6 +407,12 @@ if(UtilValidate.isNotEmpty(siloIds)){
 						 BigDecimal issueTransferQty=BigDecimal.ZERO;
 						 issueTransferQty=eachInventoryIssuedTransfer.xferQtySum;
 						 toFacilityId=eachInventoryIssuedTransfer.toFacilityId;
+						 rmInvTransIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,toFacilityId));
+						 if(UtilValidate.isNotEmpty(rmInvTransIssuedParty)){
+							 if(UtilValidate.isNotEmpty(rmInvTransIssuedParty.comments)){
+								 toFacilityId=rmInvTransIssuedParty.comments;
+							 }
+						 }
 						 if(UtilValidate.isNotEmpty(issueTransferQty)){
 							 issuedTotQty=issuedTotQty+issueTransferQty;
 						 }
@@ -619,6 +631,12 @@ mpuSiloTypes.each{eachSiloType->
 							if(UtilValidate.isNotEmpty(pmTransferQty)){
 								pmRecdSiloQty=pmRecdSiloQty+pmTransferQty;
 							}
+							pmInvTransRecdParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,pmFromFacId));
+							if(UtilValidate.isNotEmpty(pmInvTransRecdParty)){
+								if(UtilValidate.isNotEmpty(pmInvTransRecdParty.comments)){
+									pmFromFacId=pmInvTransRecdParty.comments;
+								}
+							}
 							pmRecdTransfersMap.put("partyId",pmFromFacId);
 							pmRecdTransfersMap.put("pmRecdQty",pmTransferQty);
 							pmSiloRecdMap.put(receiptNo,pmRecdTransfersMap);
@@ -691,6 +709,12 @@ mpuSiloTypes.each{eachSiloType->
 						   custFromPartyId=pmItemIssuancePartyIdToList.get("fromPartyId");
 					   }
 				   }
+				   pmCustIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,custFromPartyId));
+				   if(UtilValidate.isNotEmpty(pmCustIssuedParty)){
+					   if(UtilValidate.isNotEmpty(pmCustIssuedParty.comments)){
+						   custFromPartyId=pmCustIssuedParty.comments;
+					   }
+				   }
 				   Map pmIssIntExtMap = FastMap.newInstance();
 				   pmIssIntExtMap.put("qty",pmissueProdnQty);
 				   pmIssIntExtMap.put("recFacility",custFromPartyId);
@@ -739,6 +763,12 @@ mpuSiloTypes.each{eachSiloType->
 							   pmRecdFacilityId=eachInventoryIssuedTransfer.toFacilityId;
 							   if(UtilValidate.isNotEmpty(pmIssueTransQty)){
 								   pmIssuedSiloQty=pmIssuedSiloQty+pmIssueTransQty;
+							   }
+							   pmInvTransIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,pmRecdFacilityId));
+							   if(UtilValidate.isNotEmpty(pmInvTransIssuedParty)){
+								   if(UtilValidate.isNotEmpty(pmInvTransIssuedParty.comments)){
+									   pmRecdFacilityId=pmInvTransIssuedParty.comments;
+								   }
 							   }
 							   pmTransferIssueDetailsMap.put("recFacility",pmRecdFacilityId);
 							   pmTransferIssueDetailsMap.put("qty",pmIssueTransQty);
