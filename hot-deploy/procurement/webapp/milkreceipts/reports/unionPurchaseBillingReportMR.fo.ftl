@@ -74,7 +74,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "UnionPurchaseBillingReportMR.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">THE MANAGING DIRECTOR  </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">&#160; BILL DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")} </fo:block>  
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">&#160; BILL DATE:  </fo:block>  
                        			</fo:table-cell>
                             </fo:table-row >
                             
