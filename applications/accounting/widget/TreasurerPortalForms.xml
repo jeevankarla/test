@@ -406,7 +406,7 @@ under the License.
                 <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
-                   <entity-constraint name="finAccountTypeId"  value="BANK_ACCOUNT"/>
+                   <entity-constraint name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
                    <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
@@ -437,7 +437,7 @@ under the License.
                 <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
-                   <entity-constraint name="finAccountTypeId"  value="BANK_ACCOUNT"/>
+                   <entity-constraint name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
                    <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
@@ -663,7 +663,7 @@ under the License.
                  <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
-                   <entity-constraint name="finAccountTypeId"  value="BANK_ACCOUNT"/>
+                   <entity-constraint name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
                    <entity-order-by field-name="finAccountName"/>
                 </entity-options> 
             </drop-down>
@@ -702,7 +702,7 @@ under the License.
                  <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
-                   <entity-constraint name="finAccountTypeId"  value="BANK_ACCOUNT"/>
+                   <entity-constraint name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
                    <entity-order-by field-name="finAccountName"/>
                 </entity-options> 
             </drop-down>
@@ -729,7 +729,7 @@ under the License.
                  <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
-                   <entity-constraint name="finAccountTypeId"  value="BANK_ACCOUNT"/>
+                   <entity-constraint name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
                    <entity-order-by field-name="finAccountName"/>
                 </entity-options> 
             </drop-down>
@@ -769,7 +769,7 @@ under the License.
                  <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
-                   <entity-constraint name="finAccountTypeId"  value="BANK_ACCOUNT"/>
+                   <entity-constraint name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
                    <entity-order-by field-name="finAccountName"/>
                 </entity-options> 
             </drop-down>
