@@ -92,7 +92,11 @@ under the License.
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
-			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
+							<#if amountinWords?has_content>
+							 <#assign amountWords =amountinWords>
+							<#else>
+			                 <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%rupees-and-paise", locale).toUpperCase()>
+							</#if>
 			                  <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>

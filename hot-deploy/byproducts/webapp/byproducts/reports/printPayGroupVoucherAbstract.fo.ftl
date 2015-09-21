@@ -103,6 +103,7 @@ under the License.
 		        				</#if>
         						<#assign sno=0>
         						<#assign totalAmount = abstractDetails.get('amount')>
+								<#assign amountinWords = abstractDetails.get('amountInWords')>
 							 	<#assign cheqFav = "">
 								 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 									 <fo:table-row>
@@ -132,7 +133,11 @@ under the License.
     						</fo:table-row>
 							<fo:table-row>
         						<fo:table-cell number-columns-spanned="2">
+        						<#if amountinWords?has_content>
+							 <#assign amountWords =amountinWords>
+							<#else>
         						    <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalAmount, "%indRupees-and-paiseRupees", locale)>
+							</#if>
         								<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" wrap-option="wrap"> In Words: ${amountWords} only</fo:block>
         						</fo:table-cell>
     						</fo:table-row>
