@@ -1108,6 +1108,97 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="MilkTankerReturnReportPDF"/> 
     </request-map>
+    <!-- Non Milk Receipts Requests -->
+    <request-map uri="NonMilkReceiptsEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptsEntry"/>
+    	<response name="error" type="view" value="NonMilkReceiptsEntry"/>
+    </request-map>
+    <request-map uri="FindNonMilkReceiptsEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindNonMilkReceiptsEntry"/>
+    	<response name="error" type="view" value="FindNonMilkReceiptsEntry"/>
+    </request-map>
+    <request-map uri="findNoNMilkReceipts">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindNonMilkReceiptsEntry"/>
+    	<response name="error" type="view" value="FindNonMilkReceiptsEntry"/>
+    </request-map>
+    <request-map uri="NonMilkReceiptsGrossWeight">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptsGrossWeight"/>
+    	<response name="error" type="view" value="NonMilkReceiptsGrossWeight"/>
+    </request-map>
+    <request-map uri="NonMilkReceiptsTareWeight">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptsTareWeight"/>
+    	<response name="error" type="view" value="NonMilkReceiptsTareWeight"/>
+    </request-map>
+    <request-map uri="NonMilkReceiptsOut">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptsOut"/>
+    	<response name="error" type="view" value="NonMilkReceiptsOut"/>
+    </request-map>
+    <request-map uri="createNonMilkReceiptEntry">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createNonMilkReceiptEntry"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+     <request-map uri="updateNonMilkReceiptEntryGrsWeight">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateNonMilkReceiptEntryGrsWeight"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+     <request-map uri="updateNonMilkReceiptEntryTareWeight">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateNonMilkReceiptEntryTareWeight"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+    <request-map uri="updateNonMilkReceiptEntryOut">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateNonMilkReceiptEntryOut"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+    <request-map uri="fetchWeighmentDetails">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="fetchWeighmentDetails"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    <request-map uri="NonMilkIncomingReport.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="NonMilkIncomingReportPDF"/> 
+    </request-map>
+    
+    <request-map uri="NonMilkReceiptIssuesEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptIssuesEntry"/>
+    	<response name="error" type="view" value="NonMilkReceiptIssuesEntry"/>
+    </request-map>
+    <request-map uri="NonMilkReceiptIssuesTareWight">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptIssuesTareWight"/>
+    	<response name="error" type="view" value="NonMilkReceiptIssuesTareWight"/>
+    </request-map>
+    <request-map uri="NonMilkReceiptIssuesGrsWeight">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptIssuesGrsWeight"/>
+    	<response name="error" type="view" value="NonMilkReceiptIssuesGrsWeight"/>
+    </request-map>
+    <request-map uri="NonMilkReceiptIssuesOut">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NonMilkReceiptIssuesOut"/>
+    	<response name="error" type="view" value="NonMilkReceiptIssuesOut"/>
+    </request-map>
     <!-- View Mappings -->
 	<view-map name="main" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
     <view-map name="MilkReceiptDashboard" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptDashboard"/>
@@ -1128,6 +1219,18 @@
 	<view-map name="PtcAdjustmentAdditions" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#PtcAdjustmentAdditions"/>
 	<view-map name="FindPtcAdjustment" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindPtcAdjustment"/>
 	<view-map name="MilkFinalization" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkFinalization"/>
+	<!-- Material Receipts mapping -->
+	<view-map name="NonMilkReceiptsEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptsEntry"/>
+	<view-map name="FindNonMilkReceiptsEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindNonMilkReceiptsEntry"/>
+	<view-map name="NonMilkReceiptsGrossWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptsGrossWeight"/>
+	<view-map name="NonMilkReceiptsTareWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptsTareWeight"/>
+	<view-map name="NonMilkReceiptsOut" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptsOut"/>
+	<view-map name="NonMilkIncomingReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#NonMilkIncomingReportPDF" content-type="application/pdf"/>
+	
+	<view-map name="NonMilkReceiptIssuesEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptIssuesEntry"/>
+	<view-map name="NonMilkReceiptIssuesTareWight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptIssuesTareWight"/>
+	<view-map name="NonMilkReceiptIssuesGrsWeight" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptIssuesGrsWeight"/>
+	<view-map name="NonMilkReceiptIssuesOut" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#NonMilkReceiptIssuesOut"/>
 	<!-- Report View Mappings -->
     <view-map name="FindMilkReceiptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#FindMilkReceiptsBilling"/>
 	<view-map name="GenerateMlkRecptsBilling" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#GenerateMlkRecptsBilling"/>

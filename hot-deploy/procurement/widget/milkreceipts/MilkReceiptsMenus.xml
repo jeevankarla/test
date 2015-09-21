@@ -154,6 +154,21 @@
         	</condition>
 	    	<link target="findProductVariance"></link>
 	    </menu-item>
+	    <menu-item name="NonMilkReceiptsEntry" title="Non Milk Receipts">
+	    	<condition>
+        		<if-has-permission permission="MR" action="_NONMILK_ENTRY"/>
+        	</condition>
+	    	<link target="NonMilkReceiptsEntry"></link>
+	    </menu-item>
+	    <menu-item name="FindNonMilkReceiptsEntry" title="Find Non Milk Receipts">
+	    	<condition>
+        		<if-has-permission permission="MR" action="_NONMILK_VIEW"/>
+        	</condition>
+	    	<link target="FindNonMilkReceiptsEntry"></link>
+	    </menu-item>
+	   <!--  <menu-item name="NonMilkReceiptIssuesEntry" title="Non Milk Issues">
+	    	<link target="NonMilkReceiptIssuesEntry"></link>
+	    </menu-item> -->
 	</menu>
 	<menu name="MilkReceiptsVarianceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 	    <menu-item name="findProductVariance" title="Find Variance">
@@ -452,6 +467,52 @@
  	<menu-item name="PtcAdjustmentAdditions" title="Additions" > <link target="PtcAdjustmentAdditions"></link></menu-item>
  	<menu-item name="FindPtcAdjustment" title="Find Adjustments" > <link target="FindPtcAdjustment"></link></menu-item>
  	</menu>	
- 
-     
+ 	<menu name="NonMilkReceiptsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="NonMilkReceiptsEntry" title="Vehicle In">
+			<condition>
+			 	<if-has-permission permission="MR" action="_TANKER_INOUT"/>
+			 </condition>
+			<link target="NonMilkReceiptsEntry">
+			</link>
+		</menu-item>
+		<menu-item name="NonMilkReceiptsGrossWeight" title="Gross Weight Entry">
+			<condition>
+			 	<if-has-permission permission="MR" action="_WEIGHT_ENTRY"/>
+			 </condition>
+			<link target="NonMilkReceiptsGrossWeight">
+			</link>
+		</menu-item>
+		<menu-item name="NonMilkReceiptsTareWeight" title="Tare Weight Entry">
+			<condition>
+			 	<if-has-permission permission="MR" action="_WEIGHT_ENTRY"/>
+			 </condition>
+			<link target="NonMilkReceiptsTareWeight">
+			</link>
+		</menu-item>
+		<menu-item name="NonMilkReceiptsOut" title="Vehicle Out">
+			<condition>
+			 	<if-has-permission permission="MR" action="_TANKER_INOUT"/>
+			 </condition>
+			<link target="NonMilkReceiptsOut">
+			</link>
+		</menu-item>
+     </menu>
+     <!-- <menu name="NonMilkReceiptIssuesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="NonMilkReceiptIssuesEntry" title="Issue Initiation">
+			<link target="NonMilkReceiptIssuesEntry">
+			</link>
+		</menu-item>
+		<menu-item name="NonMilkReceiptIssuesTareWight" title="Tare Weight">
+			<link target="NonMilkReceiptIssuesTareWight">
+			</link>
+		</menu-item>
+		<menu-item name="NonMilkReceiptIssuesGrsWeight" title="Gross Weight">
+			<link target="NonMilkReceiptIssuesGrsWeight">
+			</link>
+		</menu-item>
+		<menu-item name="NonMilkReceiptIssuesOut" title="Vehicle Out">
+			<link target="NonMilkReceiptIssuesOut">
+			</link>
+		</menu-item>
+     </menu> -->
 </menus>
