@@ -36,6 +36,7 @@ conditionUOMlist.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.E
 conditionUOMlist.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.EQUALS, "VOLUME_LIQ_MEASURE"));
 conditionUOMlist.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.EQUALS, "NUMERIC_MEASURE"));
 conditionUOMlist.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.EQUALS, "LENGTH_MEASURE"));
+conditionUOMlist.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.EQUALS, "AREA_MEASURE"));
 condition = EntityCondition.makeCondition(conditionUOMlist,EntityOperator.OR);
 productUOMList = delegator.findList("Uom", condition, null, null, null, false);
 context.productUOMList=productUOMList;
