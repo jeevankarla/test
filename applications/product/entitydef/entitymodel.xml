@@ -3013,6 +3013,18 @@ under the License.
       <field name="thruDate" type="date-time"></field>
       <prim-key field="productPriceRuleId"/>
     </entity>
+    
+    <view-entity entity-name="ProductPriceConditionRule" package-name="org.ofbiz.product.price">
+    	<member-entity entity-alias="PPC" entity-name="ProductPriceCond"/>
+    	<member-entity entity-alias="PPR" entity-name="ProductPriceRule"/>
+    	<alias name="productPriceRuleId" entity-alias="PPC"></alias>
+    	<alias-all entity-alias="PPC"/>
+    	<alias-all entity-alias="PPR"/>
+    	<view-link rel-entity-alias="PPC" entity-alias="PPR">
+    		<key-map field-name="productPriceRuleId"/>
+    	</view-link>
+    	
+    </view-entity>
     <entity entity-name="ProductPriceType"
             package-name="org.ofbiz.product.price"
             default-resource-name="ProductEntityLabels"

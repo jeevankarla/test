@@ -434,6 +434,15 @@
       <field name="containerId" type="id-ne"></field>
       <field name="sequenceNum" type="id-ne"></field>
       
+      <field name="conSugarAddn" type="fixed-point"></field>
+      <field name="butterYield" type="fixed-point"></field>
+      <field name="conProductYield" type="fixed-point"></field>
+      <field name="butterAmount" type="fixed-point"></field>
+      <field name="conProductAmount" type="fixed-point"></field>
+      <field name="conFatLoss" type="fixed-point"></field>
+      <field name="conTotalSolidsLoss" type="fixed-point"></field>
+      
+      
       <field name="sendDate" type="date-time"></field>
       <field name="receiveDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
