@@ -50,7 +50,7 @@ JSONArray uomSelectionJSON = new JSONArray();
 JSONObject uomLabelIdJSON = new JSONObject();
 if(changeFlag=="scrapSales"){
 	productCatageoryId="SCRAP_MATERIAL";
-	List uomTypeIdList = UtilMisc.toList("LENGTH_MEASURE","NUMERIC_MEASURE","OTHER_MEASURE","WEIGHT_MEASURE","VOLUME_LIQ_MEASURE");
+	List uomTypeIdList = UtilMisc.toList("LENGTH_MEASURE","NUMERIC_MEASURE","OTHER_MEASURE","WEIGHT_MEASURE","VOLUME_LIQ_MEASURE","AREA_MEASURE");
 	List uomList = delegator.findList("Uom",EntityCondition.makeCondition("uomTypeId",EntityOperator.IN,uomTypeIdList),null,null,null,false);
 	if(UtilValidate.isNotEmpty(uomList)){
 		uomList.each{uom->
