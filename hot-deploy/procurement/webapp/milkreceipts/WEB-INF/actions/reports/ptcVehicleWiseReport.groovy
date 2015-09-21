@@ -39,6 +39,7 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 import org.ofbiz.party.party.PartyHelper;
+import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 
 dctx = dispatcher.getDispatchContext();
 
@@ -55,12 +56,18 @@ thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 nextDateTime = UtilDateTime.getNextDayStart(thruDateTime);
 thruDate = UtilDateTime.toDateString(nextDateTime,"yyyy-MM-dd");
 fromDate = UtilDateTime.toDateString(fromDateTime,"yyyy-MM-dd");
-sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-shiftDayTimeStart = fromDate + " 05:00:00.000";
-shiftDayTimeEnd = thruDate + " 04:59:59.000";
 
-dayBegin = new java.sql.Timestamp(sdf.parse(shiftDayTimeStart).getTime());
-dayEnd = new java.sql.Timestamp(sdf.parse(shiftDayTimeEnd).getTime());
+
+Map inMap = FastMap.newInstance();
+inMap.put("userLogin", userLogin);
+inMap.put("shiftType", "MILK_SHIFT");
+inMap.put("fromDate", fromDateTime);
+inMap.put("thruDate", thruDateTime);
+Map workShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMap );
+
+dayBegin=workShifts.fromDate;
+dayEnd=workShifts.thruDate;
+
 context.fromDate = dayBegin;
 context.thruDate = thruDateTime;
 vehicleId=parameters.vehicleId;

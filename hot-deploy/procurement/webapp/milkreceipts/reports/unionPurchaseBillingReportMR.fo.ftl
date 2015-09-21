@@ -47,7 +47,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "UnionPurchaseBillingReportMR.pdf")}
 		         
    			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
-          	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
+          	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" > (This Report Only For Reference Purpose ,Not for Accounting)  </fo:block>
+            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" > &#160;&#160;  </fo:block>
        
          	<fo:block>
 	              <fo:table >

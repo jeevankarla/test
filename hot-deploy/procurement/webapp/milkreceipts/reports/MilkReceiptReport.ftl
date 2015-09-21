@@ -230,15 +230,15 @@ function populateVehicleSpan(){
 							</td> 
 							<td align='left' width="35%"><span class="h3">From Dept</span>
 					           <select name="fromDeptId" id="fromDeptId">
-                             <#list facilityDepartments as facilityDepartment>
-						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
 						     </#list>
 						     </select>	
 						   <span class="h3">To</span>
 					           <select name="thruDeptId" id="thruDeptId">
   						     <option value='All' >All</option>
-                             <#list facilityDepartments as facilityDepartment>
-						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
 						     </#list>						    
 						      </select>
 						     	</td>
