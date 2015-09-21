@@ -223,14 +223,12 @@ if(UtilValidate.isNotEmpty(issuedToDepts)){
 			}
 		}
 		
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachMilkIssuedDept));
-		conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
-		EntityCondition IssueDeptNameCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		issuedDeptNameList=EntityUtil.filterByCondition(facilityList,IssueDeptNameCond );
-		if(UtilValidate.isNotEmpty(issuedDeptNameList) && (UtilValidate.isNotEmpty(eachDeptIssuesMap))){
-			Map issuedDeptNameMap = EntityUtil.getFirst(issuedDeptNameList);
-			allDeptsIssuesMap.put(issuedDeptNameMap.get("facilityName"), eachDeptIssuesMap);
+		if(UtilValidate.isNotEmpty(eachDeptIssuesMap)){
+			partyName =  PartyHelper.getPartyName(delegator, eachMilkIssuedDept, false);
+			if(UtilValidate.isNotEmpty(partyName)){
+				eachMilkIssuedDept = partyName;
+			}
+			allDeptsIssuesMap.put(eachMilkIssuedDept, eachDeptIssuesMap);
 		}
 		
 		

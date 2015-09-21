@@ -38,8 +38,8 @@ import in.vasista.vbiz.milkReceipts.MilkReceiptReports;
 import in.vasista.vbiz.procurement.ProcurementReports;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
-
 import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
+
 import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
@@ -77,31 +77,61 @@ thruDate=workShifts.thruDate;
 context.fromDate = fromDate;
 context.thruDate = dayEnd;
 context.fromDeptId = fromDeptId;
-context.thruDeptId = thruDeptId;
 context.productId = productId;
 
+partyName =  PartyHelper.getPartyName(delegator, thruDeptId, false);
+if(UtilValidate.isNotEmpty(partyName)){
+	context.thruDeptId = partyName;
+}
 
 int totalDays =UtilDateTime.getIntervalInDays(dayBegin, dayEnd);
 totalDays=totalDays+1;
-Map dayWiseMap =FastMap.newInstance();
 
-for(int i=0; i <totalDays; i++){
-	dayBeginStart = UtilDateTime.getDayStart(fromDate, i);
-	
-	Map inMapStr = FastMap.newInstance();
-	inMapStr.put("userLogin", userLogin);
-	inMapStr.put("shiftType", "MILK_SHIFT");
-	inMapStr.put("fromDate", dayBeginStart);
-	Map dayWorkShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMapStr );
-	
-	fromDateStart=dayWorkShifts.fromDate;
-	thruDateEnd=dayWorkShifts.thruDate;
-	
-// ISSUE DETAILS==============================>
-departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDateStart,thruDate: thruDateEnd, ownerPartyId:fromDeptId, productId:productId, thruDeptId:thruDeptId, userLogin: userLogin,]);
-milkIssuesMap=departmentMilkIssues.get("milkIssuesMap");
-milkIssuesTotalsMap=departmentMilkIssues.get("milkIssuesTotalsMap");
-dayWiseMap.put(fromDateStart,milkIssuesTotalsMap);
-
+List<String> productIds=[];
+if(UtilValidate.isEmpty(productId)){
+	List<GenericValue> facility = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, fromDeptId), null, null, null, false);
+	List facilityIds=[];
+	if(UtilValidate.isNotEmpty(facility)){
+		facilityIds = EntityUtil.getFieldListFromEntityList(facility, "facilityId", true);
+	}
+	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds), null, null, null, false);
+	if(UtilValidate.isNotEmpty(productFacility)){
+		productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", false);
+		
+	}
+}else{
+	productIds.add(productId);
 }
-context.dayWiseMap=dayWiseMap;
+Set<String> hsProdIds = new HashSet();
+hsProdIds.addAll(productIds);
+Map allProductsMap =FastMap.newInstance();
+
+if(UtilValidate.isNotEmpty(hsProdIds)){
+	hsProdIds.each {eachProdId->
+		Map dayWiseMap =FastMap.newInstance();
+		for(int i=0; i <totalDays; i++){
+			dayBeginStart = UtilDateTime.getDayStart(fromDate, i);
+			
+			Map inMapStr = FastMap.newInstance();
+			inMapStr.put("userLogin", userLogin);
+			inMapStr.put("shiftType", "MILK_SHIFT");
+			inMapStr.put("fromDate", dayBeginStart);
+			Map dayWorkShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMapStr );
+			
+			fromDateStart=dayWorkShifts.fromDate;
+			thruDateEnd=dayWorkShifts.thruDate;
+			
+			// ISSUE DETAILS==============================>
+			departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDateStart,thruDate: thruDateEnd, ownerPartyId:fromDeptId, productId:eachProdId, thruDeptId:thruDeptId, userLogin: userLogin,]);
+			milkIssuesMap=departmentMilkIssues.get("milkIssuesMap");
+			milkIssuesTotalsMap=departmentMilkIssues.get("milkIssuesTotalsMap");
+			if(milkIssuesTotalsMap.get("totIssuedQty") >0 && UtilValidate.isNotEmpty(milkIssuesTotalsMap.get("totIssuedQty"))){
+				dayWiseMap.put(fromDateStart,milkIssuesTotalsMap);
+			}
+		}
+		if(UtilValidate.isNotEmpty(dayWiseMap)){
+			allProductsMap.put(eachProdId, dayWiseMap);
+		}
+	}
+}
+context.allProductsMap=allProductsMap;

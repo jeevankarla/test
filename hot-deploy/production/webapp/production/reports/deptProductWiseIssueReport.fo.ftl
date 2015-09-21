@@ -30,7 +30,7 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "deptProductWiseIssueReport.pdf")}
- <#if dayWiseMap?has_content> 
+ <#if allProductsMap?has_content> 
 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
 		<#assign pageNumber = 0>				
@@ -44,11 +44,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "deptProductWiseIssueReport.pdf")}
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="14pt" font-weight="bold" >${uiLabelMap.KMFDairySubHeader}</fo:block>
 			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+		
+		
+	 <#assign allProductsList = allProductsMap.entrySet()?if_exists>											
+       <#list allProductsList as allProductsIssues>
 			    
-             <#assign products = delegator.findOne("Product", {"productId" : productId}, true)>
+             <#assign products = delegator.findOne("Product", {"productId" : allProductsIssues.getKey()}, true)>
 				<#assign productName= products.productName>
 			    
-             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">${productName} ISSUED TO ${thruDeptId} DEPARTMENT'S BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}  </fo:block>
+             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">${productName} ISSUED TO <#if thruDeptId?has_content> ${thruDeptId}<#else>All</#if> DEPARTMENT'S BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}  </fo:block>
              <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
  
      <fo:block >
@@ -73,7 +77,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "deptProductWiseIssueReport.pdf")}
 	         <#assign totIssuedQty = (Static["java.math.BigDecimal"].ZERO)>
 	         <#assign totIssuedKgFat = (Static["java.math.BigDecimal"].ZERO)>
 	         <#assign totIssuedKgSnf = (Static["java.math.BigDecimal"].ZERO)>
-            <#assign dayWiseDeptIssueList = dayWiseMap.entrySet()?if_exists>											
+            <#assign dayWiseDeptIssueList = allProductsIssues.getValue().entrySet()?if_exists>											
             <#list dayWiseDeptIssueList as dayWiseDeptIssues>
             <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"   font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayWiseDeptIssues.getKey(), "dd-MM-yyyy")}</fo:block></fo:table-cell>       		
@@ -99,7 +103,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "deptProductWiseIssueReport.pdf")}
     	</fo:table-body>
     </fo:table>
  </fo:block>	
-     
+	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+ 
+     </#list>
 			 </fo:flow>
 			 </fo:page-sequence>
 			 <#else>

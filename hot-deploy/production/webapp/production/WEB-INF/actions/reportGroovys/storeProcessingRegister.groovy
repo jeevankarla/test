@@ -385,6 +385,13 @@ if(UtilValidate.isNotEmpty(siloIds)){
 				 if(UtilValidate.isNotEmpty(rmIntExtIssueQty)){
 					 issuedTotQty=issuedTotQty+rmIntExtIssueQty;
 				 }
+				 rmInternalIssuesPatry=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,rmIntExtIssueParty));
+				 if(UtilValidate.isNotEmpty(rmInternalIssuesPatry)){
+					 rmInternalIssuesPatry = EntityUtil.getFirst(rmInternalIssuesPatry);
+					 if(UtilValidate.isNotEmpty(rmInternalIssuesPatry.comments)){
+						 rmIntExtIssueParty=rmInternalIssuesPatry.comments;
+					 }
+				 }
 				 rmIntExtIssuesMap.put("partyId",rmIntExtIssueParty);
 				 rmIntExtIssuesMap.put("issuedQuantity",rmIntExtIssueQty);
 				 IssuedSiloMap.put(rmIssuesNo,rmIntExtIssuesMap);
@@ -409,6 +416,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 						 toFacilityId=eachInventoryIssuedTransfer.toFacilityId;
 						 rmInvTransIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,toFacilityId));
 						 if(UtilValidate.isNotEmpty(rmInvTransIssuedParty)){
+							 rmInvTransIssuedParty = EntityUtil.getFirst(rmInvTransIssuedParty);
 							 if(UtilValidate.isNotEmpty(rmInvTransIssuedParty.comments)){
 								 toFacilityId=rmInvTransIssuedParty.comments;
 							 }
@@ -711,6 +719,7 @@ mpuSiloTypes.each{eachSiloType->
 				   }
 				   pmCustIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,custFromPartyId));
 				   if(UtilValidate.isNotEmpty(pmCustIssuedParty)){
+					   pmCustIssuedParty = EntityUtil.getFirst(pmCustIssuedParty);
 					   if(UtilValidate.isNotEmpty(pmCustIssuedParty.comments)){
 						   custFromPartyId=pmCustIssuedParty.comments;
 					   }
@@ -766,6 +775,7 @@ mpuSiloTypes.each{eachSiloType->
 							   }
 							   pmInvTransIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,pmRecdFacilityId));
 							   if(UtilValidate.isNotEmpty(pmInvTransIssuedParty)){
+								   pmInvTransIssuedParty = EntityUtil.getFirst(pmInvTransIssuedParty);
 								   if(UtilValidate.isNotEmpty(pmInvTransIssuedParty.comments)){
 									   pmRecdFacilityId=pmInvTransIssuedParty.comments;
 								   }

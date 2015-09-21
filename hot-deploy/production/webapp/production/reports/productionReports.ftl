@@ -108,7 +108,7 @@
 	function getDeptProducts(facility){
        	var facilityId=facility.value;
        	var optionList = '';
-			optionList += "<option value = " + "" + " >" +" "+ "</option>";
+			optionList += "<option value = " + " " + " >" +"All "+ "</option>";
 			var list= facilityProductObj[facilityId];
 			if (list) {		       				        	
 	        	for(var i=0 ; i<list.length ; i++){
@@ -189,8 +189,8 @@
 							</td>
 						    <td width="35%"><span class="h3"> Department</span>
 					           <select name="deptId" id="deptId">
-                             <#list facilityDepartments as facilityDepartment>
-						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
 						     </#list>
 						     </select></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -210,8 +210,8 @@
 						 </td>
 					     <td width="35%"><span class="h3"> Department</span>
 					           <select name="facilityId" id="facilityId">
-                             <#list facilityDepartments as facilityDepartment>
-						     <option value='${facilityDepartment.facilityId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
 						     </#list>
 						     </select>
 						  </td>
@@ -238,21 +238,21 @@
 						     </#list>
 						     </select>	-->
 						     <select name='fromDeptId' onchange="javascript:getDeptProducts(this);" required>
-				      			 	    <option value=''></option>
-				      			 	 <#list facilityDepartments as facilityDepartment>
-				      			 			<option value='${facilityDepartment.get("ownerPartyId")}'>${facilityDepartment.get("facilityName")}</option>
+	       						     <option value='' ></option>
+				      			 	 <#list partyGroup as facilityDepartment>
+				      			 			<option value='${facilityDepartment.get("partyId")}'>${facilityDepartment.get("groupName")}</option>
 				      			 		</#list> 
 				      			 	</select>
 						     
 					     <span class="h3">Product</span>
-					          <select name='productId'  required>
+					          <select name='productId'  >
 				      			 	</select>
 						     
 						  <span class="h3">To</span>
 					           <select name="thruDeptId" id="thruDeptId">
   						     <option value='' >All</option>
-                             <#list facilityDepartments as facilityDepartment>
-						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
 						     </#list>						    
 						      </select>
 						     	</td>

@@ -25,6 +25,8 @@ facilityDepartments=EntityUtil.filterByCondition(facility,EntityCondition.makeCo
 if(UtilValidate.isNotEmpty(facilityDepartments)){
 	 context.facilityDepartments=facilityDepartments;
 	 ownerPartyIds = EntityUtil.getFieldListFromEntityList(facilityDepartments, "ownerPartyId", true);
+	 List<GenericValue> partyGroup = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.IN, ownerPartyIds), null,UtilMisc.toList("groupName"),null,false);
+	 context.partyGroup=partyGroup;
 	 if(UtilValidate.isNotEmpty(ownerPartyIds)){
 		 ownerPartyIds.each{eachDeptOwner->
 			 facilityDepts=EntityUtil.filterByCondition(facilityDepartments,EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachDeptOwner));

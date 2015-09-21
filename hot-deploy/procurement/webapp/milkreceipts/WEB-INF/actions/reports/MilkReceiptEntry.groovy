@@ -333,6 +333,9 @@ if(UtilValidate.isNotEmpty(milkTransferParties)){
 List<GenericValue> facilityDepartments = delegator.findList("Facility",EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"), null,null,null,false);
 if(UtilValidate.isNotEmpty(facilityDepartments)){
 	 context.facilityDepartments=facilityDepartments;
+	 ownerPartyIds = EntityUtil.getFieldListFromEntityList(facilityDepartments, "ownerPartyId", true);
+	 List<GenericValue> partyGroup = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.IN, ownerPartyIds), null,UtilMisc.toList("groupName"),null,false);
+	 context.partyGroup=partyGroup;
  }
 
 //	Purpose Types
