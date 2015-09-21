@@ -95,7 +95,11 @@
 								<container style="button-bar">
 									<section>
 									<condition>	
-									<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+										<or>
+											<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+											<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					                		<if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+										</or>
 									</condition>
 									<widgets>
 									<link target="GenerateMRTransporterMarginReport" text="Generate PTC  Billing" style="buttontext create">				
@@ -127,10 +131,11 @@
                     	<include-menu name="MilkReceiptTransporterTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
                     	<section>
                     	<condition > 
-                    	 <or>
-                    	<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
-                    	<if-has-permission permission="FACILITY" action="_ADMIN"></if-has-permission>	
-                    	</or>
+                    	  <or>
+                    	 	<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+							<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					        <if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+                          </or>
                     	</condition>
 							<widgets>
 								 <screenlet title="New TransporterMargin Billing">
@@ -208,8 +213,9 @@
                     	<section>
                     	<condition > 
                     	 <or>
-                    	<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
-                    	<if-has-permission permission="FACILITY" action="_ADMIN"></if-has-permission>	
+                    	 	<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+							<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					        <if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
                     	</or>
                     	</condition>
 							<widgets>
@@ -289,10 +295,11 @@
                     	<include-menu name="purchaseBillingTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
                     	<section>
                     	<condition > 
-                    	 <or>
-                    	<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
-                    	<if-has-permission permission="FACILITY" action="_ADMIN"></if-has-permission>	
-                    	</or>
+                    	 	<or>
+                    	 		<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					            <if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+                    		</or>
                     	</condition>
 							<widgets>
 								 <screenlet title="Sale  Billing">
@@ -306,5 +313,85 @@
         </section>
     </screen>
     
-    
+    <screen name="MRConversionBilling">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="tabButtonItem" value="Billing"/>
+        		 <set field="tabButtonItem2" value="conversionBilling"/>
+        		 <entity-condition list="listConversionBilling" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_CONV_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                	<order-by field-name="-createdDate"/>
+                	<order-by field-name="-customTimePeriodId"/>
+                </entity-condition>
+        		 
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="purchaseBillingTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<section>
+							<condition>
+								<or>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+									<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					                <if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+								</or>
+							</condition>
+							<widgets>
+								<container style="button-bar">
+									<section>
+									<condition>	
+									<if-has-permission permission="BILLING" action="_ADMIN"></if-has-permission>
+									</condition>
+									<widgets>
+									<link target="GenerateConversionBilling" text="Generate Conversion  Billing" style="buttontext create">				
+										<parameter param-name="billingTypeId" value="PB_CONV_MRGN"/>
+									</link></widgets>
+									</section>
+								<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/transporter/convBillingStatus.ftl"></html-template></html></platform-specific>
+								</container>
+								<screenlet title="Conversion Billing ">				
+									<include-form name="listConversionBilling" location="component://procurement/widget/milkreceipts/MilkReceiptsTransporterForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="GenerateConversionBilling">
+        <section>
+            <actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="tabButtonItem" value="Billing"/>
+        		 <set field="tabButtonItem2" value="conversionBilling"/>
+        	</actions>           
+            <widgets>
+            <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="purchaseBillingTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<section>
+                    	<condition > 
+                    	 	<or>
+                    	 		<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					            <if-has-permission permission="MILKRECEIPT" action="_ADMIN"/>
+                    		</or>
+                    	</condition>
+							<widgets>
+								 <screenlet title="Conversion  Billing">
+                    				<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsTransporterForms.xml" name="GenerateConversionBilling"/>
+                    			</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
   </screens>

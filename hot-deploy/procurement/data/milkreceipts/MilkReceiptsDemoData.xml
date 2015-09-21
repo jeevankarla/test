@@ -119,4 +119,91 @@
 	
 	
 	
+	<!--  Configurations for Conversion billing  -->
+	<ProductCategory  productCategoryId="PRODUCT_STANDARD" />
+	<ProductCategory  productCategoryId="PRODUCT_CON_STD" />
+	<!-- Configuration for SMP -->
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="1" testComponent="fatLoss" testDescription="Fat Loss %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="2" testComponent="snfLoss" testDescription="Snf Loss %" standardValue="5" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="3" testComponent="addSugar" testDescription="Add Sugar %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="4" testComponent="totSolids" testDescription="TS LOSS%" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="5" testComponent="butterYield" testDescription="Butter %" standardValue="83" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="6" testComponent="productYield" testDescription="Product %" standardValue="96.7" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="81" sequenceId="7" testComponent="fatPercentStd" testDescription="Fat%" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<!-- Configuration for WMP -->
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="1" testComponent="fatLoss" testDescription="Fat Loss %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="2" testComponent="snfLoss" testDescription="Snf Loss %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="3" testComponent="addSugar" testDescription="Add Sugar %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="4" testComponent="totSolids" testDescription="TS LOSS%" standardValue="5" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="5" testComponent="butterYield" testDescription="Butter %" standardValue="85.128" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="6" testComponent="productYield" testDescription="Product %" standardValue="97.8" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="90" sequenceId="7" testComponent="fatPercentStd" testDescription="Fat%" standardValue="3.1" fromDate="2015-01-01 00:00:00"/>
+	
+	<!-- Configuration for DW   -->
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="1" testComponent="fatLoss" testDescription="Fat Loss %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="2" testComponent="snfLoss" testDescription="Snf Loss %" standardValue="0" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="3" testComponent="addSugar" testDescription="Add Sugar %" standardValue="20" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="4" testComponent="totSolids" testDescription="TS LOSS%" standardValue="5" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="5" testComponent="butterYield" testDescription="Butter %" standardValue="85.128" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="6" testComponent="productYield" testDescription="Product %" standardValue="98" fromDate="2015-01-01 00:00:00"/>
+	<ProductTestComponent  productCategoryId="PRODUCT_CON_STD" productId="369" sequenceId="7" testComponent="fatPercentStd" testDescription="Fat%" standardValue="3.1" fromDate="2015-01-01 00:00:00"/>
+	
+	
+	<ProductAssocType description="ConvertToProduct" hasTable="N" productAssocTypeId="CONVERT_TO_PRODUCT" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc  productId="23" productIdTo="81" productAssocTypeId="CONVERT_TO_PRODUCT" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc  productId="23" productIdTo="90" productAssocTypeId="CONVERT_TO_PRODUCT" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc  productId="23" productIdTo="369" productAssocTypeId="CONVERT_TO_PRODUCT" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc  productId="70" productIdTo="81" productAssocTypeId="CONVERT_TO_PRODUCT" fromDate="2015-01-01 00:00:00"/>
+	
+	<ProductAssocType description="Service Product" hasTable="N" productAssocTypeId="SERVICE_PRODUCT"/>	
+	<ProductAssoc productId="23" productIdTo="81" productAssocTypeId="SERVICE_PRODUCT" instruction="RAW_SMP_CON" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc productId="23" productIdTo="90" productAssocTypeId="SERVICE_PRODUCT" instruction="WMP_CON_FEE" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc productId="23" productIdTo="369" productAssocTypeId="SERVICE_PRODUCT" instruction="DW_CON_FEE" fromDate="2015-01-01 00:00:00"/>
+	<ProductAssoc productId="23" productIdTo="84" productAssocTypeId="SERVICE_PRODUCT" instruction="BUTER_CON_FEE" fromDate="2015-01-01 00:00:00"/>
+	
+	<ProductAssoc productId="70" productIdTo="81" productAssocTypeId="SERVICE_PRODUCT" instruction="SKM_SMP_CON" fromDate="2015-01-01 00:00:00"/>
+	<!-- Product conversion Price  -->
+	 <ProductPriceRule fromDate="2015-10-07 00:00:00.0" isSale="N" productPriceRuleId="RMRule1" ruleName="RM SMP Rule 1"/>
+	 <ProductPriceRule fromDate="2015-10-07 00:00:00.0" isSale="N" productPriceRuleId="RMRule2" ruleName="RM DW Rule 1"/>
+	 <ProductPriceRule fromDate="2015-10-07 00:00:00.0" isSale="N" productPriceRuleId="RMRule3" ruleName="RM WMP Rule 1"/>
+	 <ProductPriceRule fromDate="2015-10-07 00:00:00.0" isSale="N" productPriceRuleId="RMRule4" ruleName="RM Butter Rule 1"/>
+	 <ProductPriceRule fromDate="2015-10-07 00:00:00.0" isSale="N" productPriceRuleId="SMPRule1" ruleName="SM SMP Rule 1"/>
+	 
+	 <ProductPriceCond condValue="23"  inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="RMRule1"/>
+	 <ProductPriceCond condValue="81"  inputParamEnumId="PRIP_PRODUCT_ID_TO" operatorEnumId="PRC_EQ" productPriceCondSeqId="02" productPriceRuleId="RMRule1"/>
+	 
+	 <ProductPriceCond condValue="23"  inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="RMRule2"/>
+	 <ProductPriceCond condValue="369" inputParamEnumId="PRIP_PRODUCT_ID_TO" operatorEnumId="PRC_EQ" productPriceCondSeqId="02" productPriceRuleId="RMRule2"/>
+	 
+	 <ProductPriceCond condValue="23"  inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="RMRule3"/> 	
+	 <ProductPriceCond condValue="90"  inputParamEnumId="PRIP_PRODUCT_ID_TO" operatorEnumId="PRC_EQ" productPriceCondSeqId="02" productPriceRuleId="RMRule3"/>
+	
+	 <ProductPriceCond condValue="23"  inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="RMRule4"/>
+	 <ProductPriceCond condValue="84"  inputParamEnumId="PRIP_PRODUCT_ID_TO" operatorEnumId="PRC_EQ" productPriceCondSeqId="02" productPriceRuleId="RMRule4"/>
+	 
+	 <ProductPriceCond condValue="70"  inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="SMPRule1"/>
+	 <ProductPriceCond condValue="81"  inputParamEnumId="PRIP_PRODUCT_ID_TO" operatorEnumId="PRC_EQ" productPriceCondSeqId="02" productPriceRuleId="SMPRule1"/>
+	 
+	 <ProductPriceAction amount="31.000000" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" productPriceRuleId="RMRule1"/> 
+	 <ProductPriceAction amount="38.000000" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" productPriceRuleId="RMRule2"/>
+	 <ProductPriceAction amount="35.000000" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" productPriceRuleId="RMRule3"/>
+	 <ProductPriceAction amount="16.000000" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" productPriceRuleId="RMRule4"/>
+	 <ProductPriceAction amount="27.000000" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" productPriceRuleId="SMPRule1"/>
+	 
+	 
+	 
+	 
+	 
+	  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </entity-engine-xml>

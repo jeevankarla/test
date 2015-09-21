@@ -62,8 +62,31 @@
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
     </service>
     <!-- End of the sale billing def -->
-    
-    
+    <!-- Conversion billing def -->
+    <service name="populateConversionBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="populateConversionBilling">
+        <description>populate Conversion Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+     <service name="updateConversionBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="updateConversionBillingStatus">
+        <description>Update Conversion Billing StatusId.</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
+    </service>
+     <service name="cancelConversionBillingInvoice" engine="java" auth="true" 
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="cancelConversionBillingInvoice">
+        <description>Cancel SaleBilling Invoice.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <service name="cancelConversionBilling" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices" invoke="cancelConversionBilling">
+        <description>Cancel Sale Billing.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <!-- End of the conversion Billing def -->
     
     
     <service name="generatePtcTranporterMargin" engine="java" auth="true" transaction-timeout="3000"

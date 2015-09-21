@@ -1210,14 +1210,22 @@ public class MilkReceiptBillingServices {
     		Map<String,  Object> inputContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
 			Map cancelPtcTranInvoiceResult = dispatcher.runSync("cancelPurchaseBillingInvoice", inputContext);
 			if(ServiceUtil.isError(cancelPtcTranInvoiceResult)){
-				Debug.logError("Error whiel cancelling PTC Transporter Invoice",module);
-				return ServiceUtil.returnError("Error whiel cancelling PTC Transporter Invoice");
+				Debug.logError("Error while cancelling Purchase billing Invoice",module);
+				return ServiceUtil.returnError("Error whiel cancelling Purchase Billing Invoice");
 			}
 			
     	} catch (GenericServiceException e) {
             Debug.logError(e, "Error in canceling 'transporterMargin' service", module);
             return ServiceUtil.returnError(e.getMessage());
         } 
+    	periodBilling.set("statusId", "COM_CANCELLED");
+    	try{
+    		periodBilling.store();    		
+    	}catch (Exception e) {
+    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
+    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
+		}
+    	
     	result = ServiceUtil.returnSuccess("Successfully cancelled");
         return result;
     }//end of the service
@@ -2003,9 +2011,8 @@ public class MilkReceiptBillingServices {
 		if(customTimePeriod == null){
 			cancelationFailed = true;
 		}
-		
 	try{
-		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
 		  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS,  "MILK_SALE_"+periodBillingId));
 		  
 	     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "MILK_SALES_INVOICE"));
@@ -2064,4 +2071,1052 @@ public class MilkReceiptBillingServices {
     /**
      * End of sale Billing services
      */
+    
+ // Conversion Billing services
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> populateConversionBilling(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Map resultMap = FastMap.newInstance();
+    	Delegator delegator = dctx.getDelegator();
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	String customTimePeriodId = (String)context.get("customTimePeriodId");
+    	GenericValue userLogin = (GenericValue)context.get("userLogin");
+    	String partyId = (String)context.get("partyId");
+    	GenericValue customTimePeriod = null;
+    	try{
+    		customTimePeriod =delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+        	if(UtilValidate.isEmpty(customTimePeriod)){
+        		Debug.logError( "There no active billing time periods. ", module);				 
+        		return ServiceUtil.returnError("There no active billing  periods ,Please contact administrator.");
+        	}
+    	}catch(GenericEntityException e){
+    		Debug.logError("Error while getting customTimePeriod Details ::"+e,module);
+    		return ServiceUtil.returnError("Error while getting customTimePeriod Details ::"+e.getMessage());
+    	}
+		
+		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+        Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		
+        Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime);
+        Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime);
+		List MilkTransfersList = FastList.newInstance();
+		//Here we are getting shifts for MILK_SHIFT
+		try{
+			Map inMap = FastMap.newInstance();
+			inMap.put("userLogin", userLogin);
+			inMap.put("shiftType", "MILK_SHIFT");
+			inMap.put("fromDate", monthBegin);
+			inMap.put("thruDate", monthEnd);
+			Map workShifts = getShiftDaysByType(dctx,inMap );
+			if(ServiceUtil.isError(workShifts)){
+				Debug.logError("Error while getting shift times :"+workShifts, module);
+				return ServiceUtil.returnError("Error while getting shift times :"+ServiceUtil.getErrorMessage(workShifts));
+			}
+			fromDateTime =(Timestamp)workShifts.get("fromDate");
+			thruDateTime =(Timestamp)workShifts.get("thruDate");
+		}catch(Exception e){
+			Debug.logError("Error while getting fromdate and thruDate ::"+e,module);
+			return ServiceUtil.returnError("Error while getting fromdate and thruDate ::"+e.getMessage());
+		}
+		// here we are getting MilkReceipts 
+		List milkTrnasferCondList = FastList.newInstance();
+		milkTrnasferCondList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"CONVERSION"));
+		milkTrnasferCondList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
+		milkTrnasferCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDateTime));
+		milkTrnasferCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDateTime));
+		//
+		milkTrnasferCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"MXF_APPROVED"));
+		if(UtilValidate.isNotEmpty(partyId)){
+			milkTrnasferCondList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+		}
+		EntityCondition milkTranCondition = EntityCondition.makeCondition(milkTrnasferCondList);
+		List<GenericValue> milkTransferList = FastList.newInstance();
+		try{
+			milkTransferList = delegator.findList("MilkTransfer", milkTranCondition, null, null, null, false);
+		}catch(Exception e){
+			Debug.logError("Error while getting MilkTransfers for the period ::"+customTimePeriodId+"  error:"+e,module);
+			return ServiceUtil.returnError("Error while getting MilkTransfers for the period ::"+customTimePeriodId+"  error:"+e.getMessage());
+		}
+		if(UtilValidate.isEmpty(milkTransferList)){
+			Debug.logError("No Records found for Billing ::",module);
+			return ServiceUtil.returnError("No Records found for Billing ::");
+		}
+    	// Here we are tryingTo raise Invoice 
+		Map inMap = FastMap.newInstance();
+		inMap.put("userLogin", userLogin);
+		if(UtilValidate.isNotEmpty(partyId)){
+			inMap.put("partyId", partyId);
+		}
+		inMap.put("customTimePeriodId", customTimePeriodId);
+		inMap.put("milkTransferList",milkTransferList);
+		inMap.put("fromDateTime",fromDateTime);
+		inMap.put("thruDateTime",thruDateTime);
+		inMap.put("monthBegin",monthBegin);
+		inMap.put("monthEnd",monthEnd);
+		inMap.put("statusId", "generate");
+		String statusId = (String)context.get("statusId");
+		if(UtilValidate.isNotEmpty(statusId)){
+			inMap.put("statusId", statusId);
+		}
+    	Map conversionBillingResult = populateConversionBillingForParty(dctx, inMap);
+		if(ServiceUtil.isError(conversionBillingResult)){
+			Debug.logError("Error while populating Period Billing :"+conversionBillingResult,module);
+			return ServiceUtil.returnError("Error while populating Period Billing :"+ServiceUtil.getErrorMessage(conversionBillingResult));
+		}
+		resultMap.putAll(conversionBillingResult);
+    	return resultMap;
+    }//End of the service
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> populateConversionBillingForParty(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Map resultMap = FastMap.newInstance();
+    	Delegator delegator = dctx.getDelegator();
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	List<GenericValue> milkTransferList = (List) context.get("milkTransferList");
+    	Timestamp fromDateTime = (Timestamp) context.get("fromDateTime");
+    	Timestamp thruDateTime = (Timestamp) context.get("thruDateTime");
+    	Timestamp monthBegin = (Timestamp) context.get("monthBegin");
+    	Timestamp monthEnd = (Timestamp) context.get("monthEnd");
+    	List<String> partyIdsList = FastList.newInstance();
+    	String customTimePeriodId = (String) context.get("customTimePeriodId");
+    	String statusId = (String)context.get("statusId");
+    	// Here we are setting butter Product Id
+    	String butterProductId = "84";
+    	String periodBillingId = null;
+    	if(UtilValidate.isEmpty(milkTransferList)){
+    		Debug.logError("MilkTransfers not Found ::",module);
+    		return ServiceUtil.returnError("MilkTransfers not Found ::");
+    	}
+    	HashSet<String> partyIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(milkTransferList, "partyId", true));
+    	if(UtilValidate.isNotEmpty(partyIdsSet)){
+    		//Here we are checking for PeriodBilling If it is not existed
+			List conditionList = FastList.newInstance();
+	        List periodBillingList = FastList.newInstance();
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED","APPROVED_PAYMENT")));
+	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PB_CONV_MRGN"));
+	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	GenericValue billingId =null;
+	    	GenericValue newEntity = null;
+	    	try {
+	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+	    		if(UtilValidate.isNotEmpty(statusId) && !statusId.equalsIgnoreCase("generate")){
+	    			newEntity = EntityUtil.getFirst(periodBillingList);
+	    			periodBillingId = (String) newEntity.get("periodBillingId");
+	    		}
+	    		
+	    		if(UtilValidate.isNotEmpty(periodBillingList) && UtilValidate.isEmpty(periodBillingId)){
+	    			// need to handle.
+	    			Debug.logError("This billing is already  Generated or IN-Process",module);
+	    			return ServiceUtil.returnError("This billing is already  Generated or IN-Process");
+	    			
+	    		}
+	    		if(UtilValidate.isEmpty(periodBillingId)){
+		    		newEntity = delegator.makeValue("PeriodBilling");
+		            newEntity.set("billingTypeId", "PB_CONV_MRGN");
+		            newEntity.set("customTimePeriodId", customTimePeriodId);
+		            newEntity.set("statusId", "IN_PROCESS");
+		            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+		            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		            newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+		            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());  
+					delegator.createSetNextSeqId(newEntity);
+					periodBillingId = (String) newEntity.get("periodBillingId");
+	    		}
+	    	}catch (GenericEntityException e) {
+	    		 Debug.logError(e, module);             
+	             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
+			}
+    		try{
+		    	Map partyProductWiseMap = FastMap.newInstance();
+	    		for(String partyId : partyIdsSet){
+		    		Map productWiseAmtMap = FastMap.newInstance();
+		    		List<GenericValue> partyTransfersList = EntityUtil.filterByCondition(milkTransferList, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+		    		if(UtilValidate.isNotEmpty(partyTransfersList)){
+		    			HashSet<String> productIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(partyTransfersList, "productId", true));
+		    			for(String productId : productIdsSet){
+		    				List<GenericValue> productTransfersList = EntityUtil.filterByCondition(partyTransfersList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+		    				HashSet<String> conProductIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(productTransfersList, "conversionProductId", true));
+		    				if(UtilValidate.isEmpty(conProductIdsSet)){
+		    					Debug.logError("Conveted Products Not found for the product :"+productId+",Finalization not done .",module);
+		    					return ServiceUtil.returnError("Conveted Products Not found for the product :"+productId+",Finalization not done .");
+		    				}
+		    				for(String conProductId : conProductIdsSet){
+		    					List<GenericValue> conProductTransfersList = EntityUtil.filterByCondition(partyTransfersList, EntityCondition.makeCondition("conversionProductId",EntityOperator.EQUALS,conProductId));
+		    					Map serviceProductMap = FastMap.newInstance();
+		    					serviceProductMap.put("userLogin",userLogin);
+		    					serviceProductMap.put("productId",productId);
+		    					serviceProductMap.put("productIdTo",conProductId);
+		    					serviceProductMap.put("fromDate",monthBegin);
+		    					Map serviceProductResultMap = getServiceProductDetails (dctx,serviceProductMap);
+		    					if(ServiceUtil.isError(serviceProductResultMap)){
+		    						Debug.logError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap), module);
+		    						return ServiceUtil.returnError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap));
+		    					}
+		    					//here we need to handle
+		    					String productWiseAmtKey = (String) serviceProductResultMap.get("serviceProductId");
+		    					
+		    					// Here we are getting butter product Amt key
+		    					serviceProductMap.put("productIdTo",butterProductId);
+		    					serviceProductResultMap = getServiceProductDetails (dctx,serviceProductMap);
+		    					if(ServiceUtil.isError(serviceProductResultMap)){
+		    						Debug.logError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap), module);
+		    						return ServiceUtil.returnError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap));
+		    					}
+		    					String butterAmtkey = (String) serviceProductResultMap.get("serviceProductId");
+		    					
+		    					if(UtilValidate.isEmpty(productWiseAmtKey)){
+		    						Debug.logError("Service Product Id not configured for Invoice :", module);
+		    						return ServiceUtil.returnError("Service Product Id not configured for Invoice :");
+		    					}
+		    					
+		    					// Here we are trying to get conversion product configurations
+		    					List<GenericValue> productConfigList = FastList.newInstance(); 
+		    					List productConditionList = FastList.newInstance();
+		    					productConditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,conProductId));
+		    					productConditionList.add(EntityCondition.makeCondition("productCategoryId",EntityOperator.EQUALS,"PRODUCT_CON_STD"));
+		    					EntityCondition productCondition = EntityCondition.makeCondition(productConditionList);
+		    					
+		    					try{
+		    						productConfigList = delegator.findList("ProductTestComponent", productCondition, null, null, null, false);
+		    						productConfigList = EntityUtil.filterByDate(productConfigList,monthBegin);
+		    					}catch(GenericEntityException e){
+		    						Debug.logError("Error while getting conversion product settings : "+e,module);
+		    						return ServiceUtil.returnError("Error while getting conversion product settings : "+e.getMessage());
+		    					}
+		    					if(UtilValidate.isEmpty(productConfigList)){
+		    						Debug.logError("Product Configurations not found for "+conProductId,module);
+		    						return ServiceUtil.returnError("Product Configurations not found for "+conProductId);
+		    					}
+		    					BigDecimal fatLoss        = BigDecimal.ZERO;
+		    					BigDecimal snfLoss        = BigDecimal.ZERO;
+		    					BigDecimal addSugar       = BigDecimal.ZERO;
+		    					BigDecimal totSolidsLoss      = BigDecimal.ZERO;
+		    					BigDecimal butterYield    = BigDecimal.ZERO;
+		    					BigDecimal productYield   = BigDecimal.ZERO;
+		    					BigDecimal fatPercentStd	  = BigDecimal.ZERO;
+		    					GenericValue fatLossDetails      = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"fatLoss")));
+		    					GenericValue snfLossDetails      = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"snfLoss")));
+		    					GenericValue addSugarDetails     = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"addSugar")));
+		    					GenericValue totSolidsDetails    = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"totSolidsLoss")));
+		    					GenericValue butterYieldDetails  = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"butterYield")));
+		    					GenericValue productYieldDetails = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"productYield")));
+		    					GenericValue fatPercentDetails   = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"fatPercentStd")));
+		    					
+		    					if(UtilValidate.isNotEmpty(fatLossDetails)){
+		    						fatLoss = (BigDecimal)fatLossDetails.get("standardValue");
+		    					}
+		    					if(UtilValidate.isNotEmpty(snfLossDetails)){
+		    						snfLoss = (BigDecimal)snfLossDetails.get("standardValue");
+		    					}
+		    					if(UtilValidate.isNotEmpty(addSugarDetails)){
+		    						addSugar = (BigDecimal)addSugarDetails.get("standardValue");
+		    					}
+		    					if(UtilValidate.isNotEmpty(totSolidsDetails)){
+		    						totSolidsLoss = (BigDecimal)totSolidsDetails.get("standardValue");
+		    					}
+		    					if(UtilValidate.isNotEmpty(butterYieldDetails)){
+		    						butterYield = (BigDecimal)butterYieldDetails.get("standardValue");;
+		    					}
+		    					if(UtilValidate.isNotEmpty(productYieldDetails)){
+		    						productYield = (BigDecimal)productYieldDetails.get("standardValue");
+		    					}
+		    					if(UtilValidate.isNotEmpty(fatPercentDetails)){
+		    						fatPercentStd = (BigDecimal)fatPercentDetails.get("standardValue");
+		    					}
+		    					// here we need to get rates of productConversion price and Butter Conversion Price .
+		    					Map productConversionRateInMap = FastMap.newInstance();
+		    					productConversionRateInMap.put("userLogin", userLogin);
+		    					productConversionRateInMap.put("productId", productId);
+		    					productConversionRateInMap.put("fromDate",monthBegin);
+		    					Map productConversionRatesResult = getProductConversionRates(dctx,productConversionRateInMap);
+		    					if(ServiceUtil.isError(productConversionRatesResult)){
+		    						Debug.logError("Error while getting product conversion Rates :"+productConversionRatesResult, module);
+		    						return ServiceUtil.returnError("Error while getting product conversion Rates :"+ServiceUtil.getErrorMessage(productConversionRatesResult));
+		    					}
+		    					Map conversionProductPriceMap = (Map)productConversionRatesResult.get("conversionProductPriceMap");
+		    					for(GenericValue conProductTransfer : conProductTransfersList){
+		    						// here we need to populate product conversion Amounts in transfer 
+		    						BigDecimal quantity = (BigDecimal)conProductTransfer.get("receivedQuantity");
+		    						BigDecimal kgFat = (BigDecimal)conProductTransfer.get("receivedKgFat");
+		    						BigDecimal kgSnf = (BigDecimal)conProductTransfer.get("receivedKgSnf");
+		    						BigDecimal totalSolids = kgFat.add(kgSnf);
+		    						BigDecimal difKgFat = kgFat;
+		    						BigDecimal difKgSnf = BigDecimal.ZERO;
+		    						BigDecimal butterAmount = BigDecimal.ZERO;
+		    						BigDecimal butterYieldQty = BigDecimal.ZERO;
+		    						BigDecimal productYieldQty = BigDecimal.ZERO;
+		    						BigDecimal conProductAmount = BigDecimal.ZERO;
+		    						
+		    						
+		    						if(fatPercentStd.compareTo(BigDecimal.ZERO)==1){
+		    							BigDecimal prodKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatPercentStd);
+		    							difKgFat = kgFat.subtract(prodKgFat);
+		    						}
+		    						if(fatLoss.compareTo(BigDecimal.ZERO)==1){
+		    							BigDecimal prodKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatLoss);
+		    							difKgFat = kgFat.subtract(prodKgFat);
+		    							conProductTransfer.set("conFatLoss", prodKgFat);
+		    						}
+		    						if(snfLoss.compareTo(BigDecimal.ZERO)==1){
+		    							BigDecimal prodKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, snfLoss);
+		    							difKgSnf = kgSnf.subtract(prodKgSnf);
+		    						}
+		    						// Here we are adding sugar Qty
+		    						if(addSugar.compareTo(BigDecimal.ZERO)==1){
+		    							BigDecimal  addedSugarQty = totalSolids.multiply(addSugar).divide(new BigDecimal(100) ,2,BigDecimal.ROUND_HALF_UP);
+		    							totalSolids = totalSolids.add(addedSugarQty);
+		    							conProductTransfer.set("conSugarAddn", addedSugarQty);
+		    						}
+		    						if(totSolidsLoss.compareTo(BigDecimal.ZERO)==1){
+		    							BigDecimal tsLoss = totalSolids.multiply(totSolidsLoss).divide(new BigDecimal(100) ,2,BigDecimal.ROUND_HALF_UP);
+		    							difKgSnf =  totalSolids.subtract(tsLoss);
+		    							conProductTransfer.set("conTotalSolidsLoss",tsLoss );
+		    						}
+		    						if(butterYield.compareTo(BigDecimal.ZERO)==1){
+		    							butterYieldQty = difKgFat.multiply(new BigDecimal(100)).divide(butterYield,2,BigDecimal.ROUND_HALF_UP);
+		    							BigDecimal butterRate = (BigDecimal)conversionProductPriceMap.get(butterProductId);
+		    							if(UtilValidate.isEmpty(butterRate)){
+		    								butterRate = BigDecimal.ZERO;
+		    							}
+		    							butterAmount = butterYieldQty.multiply(butterRate).setScale(2,BigDecimal.ROUND_HALF_UP);
+		    						}
+		    						if(productYield.compareTo(BigDecimal.ZERO)==1){
+		    							productYieldQty = difKgSnf.multiply(new BigDecimal(100)).divide(productYield,2,BigDecimal.ROUND_HALF_UP);
+		    							BigDecimal productRate = (BigDecimal)conversionProductPriceMap.get(conProductId);
+		    							if(UtilValidate.isEmpty(productRate)){
+		    								productRate = BigDecimal.ZERO;
+		    							}
+		    							conProductAmount = productYieldQty.multiply(productRate).setScale(2, BigDecimal.ROUND_HALF_UP);
+		    						}
+		    						conProductTransfer.set("butterYield", butterYieldQty);
+		    						conProductTransfer.set("conProductYield", productYieldQty);
+		    						conProductTransfer.set("butterAmount", butterAmount);
+		    						conProductTransfer.set("conProductAmount", conProductAmount);
+		    						try{
+		    							delegator.store(conProductTransfer);
+		    						}catch(GenericEntityException e){
+		    							Debug.logError("Error while storing conversion charage in Transfer:"+e,module);
+		    							return ServiceUtil.returnError("Error while storing conversion charage in Transfer:"+e.getMessage());
+		    						}
+		    						if(UtilValidate.isEmpty(productWiseAmtMap)|| (UtilValidate.isNotEmpty(productWiseAmtMap)&& UtilValidate.isEmpty(productWiseAmtMap.get(butterAmtkey)))){
+		    							productWiseAmtMap.put(butterAmtkey,butterAmount);
+		    							productWiseAmtMap.put(butterAmtkey.concat("_QUANTITY"),butterYieldQty);
+		    						}else{
+		    							BigDecimal existedAmt = (BigDecimal)productWiseAmtMap.get(butterAmtkey);
+		    							BigDecimal existedQty = (BigDecimal)productWiseAmtMap.get(butterAmtkey.concat("_QUANTITY"));
+		    							productWiseAmtMap.put(butterAmtkey,butterAmount.add(existedAmt));
+		    							productWiseAmtMap.put(butterAmtkey.concat("_QUANTITY"),butterYieldQty.add(existedQty));
+		    						}
+		    						if(UtilValidate.isEmpty(productWiseAmtMap)|| (UtilValidate.isNotEmpty(productWiseAmtMap)&& UtilValidate.isEmpty(productWiseAmtMap.get(productWiseAmtKey)))){
+		    							productWiseAmtMap.put(productWiseAmtKey,conProductAmount);
+		    							productWiseAmtMap.put(productWiseAmtKey.concat("_QUANTITY"),productYieldQty);
+		    						}else{
+		    							BigDecimal existedAmt = (BigDecimal)productWiseAmtMap.get(productWiseAmtKey);
+		    							BigDecimal existedQty = (BigDecimal)productWiseAmtMap.get(productWiseAmtKey.concat("_QUANTITY"));
+		    							productWiseAmtMap.put(productWiseAmtKey,conProductAmount.add(existedAmt));
+		    							productWiseAmtMap.put(productWiseAmtKey.concat("_QUANTITY"),productYieldQty.add(existedQty));
+		    						}
+		    					}
+		    				}
+		    			}
+		    		}
+		    		if(UtilValidate.isNotEmpty(productWiseAmtMap)){
+		    			partyProductWiseMap.put(partyId, productWiseAmtMap);
+		    		}
+		    		// Here we are trying to create invoice for each party with product wise items
+		    		Map inVoiceInMap = FastMap.newInstance();
+					inVoiceInMap.put("userLogin", userLogin);
+					inVoiceInMap.put("invoiceTypeId", "MILK_SALES_INVOICE");
+					inVoiceInMap.put("productWiseAmtMap", productWiseAmtMap);
+					inVoiceInMap.put("partyId",partyId);
+					
+					inVoiceInMap.put("unionId",partyId);
+					//here we are trying to get unionId
+					List unionsList = FastList.newInstance();
+					try {  	   
+				        	List partyRelationShipConditionList = FastList.newInstance();
+				        	partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyId));
+				        	partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"UNION"));
+				 	 	   	EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)	;
+				        	unionsList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+				        	unionsList = EntityUtil.filterByDate(unionsList,monthBegin);
+				        }catch(Exception e){
+				        	Debug.logError("Error while getting ancestor nodes ::"+e,module);
+				        	return ServiceUtil.returnError("Error while getting ancestor nodes ::"+e.getMessage());
+				        }
+					String unionId="";
+					if(UtilValidate.isNotEmpty(unionsList)){
+						GenericValue unionDetails = EntityUtil.getFirst(unionsList);
+						unionId = unionDetails.getString("partyIdFrom");
+					}
+					if(UtilValidate.isNotEmpty(unionId)){
+						inVoiceInMap.put("unionId",unionId);
+					}
+		    		inVoiceInMap.put("periodBillingId", periodBillingId);
+		    		inVoiceInMap.put("fromDateTime", monthBegin);
+		    		inVoiceInMap.put("thruDateTime", monthEnd);
+		    		inVoiceInMap.put("description", "MILK CONVERSION FROM "+UtilDateTime.toDateString(monthBegin,"dd-MMM-yyyy")+" to "+UtilDateTime.toDateString(monthEnd,"dd-MMM-yyyy"));
+		    		if(UtilValidate.isNotEmpty(statusId) && !statusId.equalsIgnoreCase("generate")){
+		    			Map invoiceResultMap = createConversionInvoiceForParty(dctx,inVoiceInMap);
+			    		if(ServiceUtil.isError(invoiceResultMap)){
+			    			Debug.logError("Error while creating invoice for party :"+partyId+" errorMessage :"+invoiceResultMap, module);
+			    			return ServiceUtil.returnError("Error while creating invoice for party :"+partyId+" errorMessage :"+ServiceUtil.getErrorMessage(invoiceResultMap));
+			    		}
+		    		}
+		    	}
+	    	}catch(Exception e){
+	    		Debug.logError("Error while populating conversion  billing "+e, module);
+	    		return ServiceUtil.returnError("Error while populating conversion billing "+e.getMessage());
+	    	}
+    		// here we are updating PeriodBilling status to generated
+    		try{
+    			GenericValue periodDetails = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId",periodBillingId), false);
+    			if(UtilValidate.isNotEmpty(periodDetails)){
+    				periodDetails.set("statusId","GENERATED");
+    				periodDetails.store();
+    			}
+    		}catch(Exception e){
+    			Debug.logError("Error while updating status of Period Billing"+e,module);
+    			return ServiceUtil.returnError("Error while updating status of Period Billing"+e.getMessage());
+    		}
+    	}
+    	resultMap = ServiceUtil.returnSuccess("Billing Successfully Generated :"+periodBillingId);
+    	resultMap.put("periodBillingId",periodBillingId);
+    	return resultMap;
+    }// end of the service
+    
+    /**
+     * 
+     * @param dctx
+     * @param contextMap
+     * @return
+     */
+    public static Map<String, Object> getServiceProductDetails(DispatchContext dctx,Map<String, ? extends Object> context){
+    	Map resultMap 			   = ServiceUtil.returnSuccess();
+    	String productId           = (String)context.get("productId");
+    	String productIdTo         = (String)context.get("productIdTo");
+    	Timestamp fromDate         = (Timestamp)context.get("fromDate");
+    	GenericValue userLogin 	   = (GenericValue)context.get("userLogin");
+    	Delegator delegator 	   = dctx.getDelegator();
+    	LocalDispatcher dispatcher = dctx.getDispatcher();   
+    	String serviceProductId    ="";
+    	List<GenericValue> serviceProductDetailsList = FastList.newInstance();
+    	GenericValue serviceProductDetails = null;
+    	if(UtilValidate.isEmpty(fromDate)){
+    		fromDate = UtilDateTime.nowTimestamp();
+    	}
+    	if(UtilValidate.isEmpty(productId) ){
+    		Debug.logError("product Id is missing ", module);
+    		return ServiceUtil.returnError("product Id is missing ");
+    	}
+    	
+    	try{
+    		List conditionList = FastList.newInstance();
+    		conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+    		conditionList.add(EntityCondition.makeCondition("productIdTo",EntityOperator.EQUALS,productIdTo));
+    		conditionList.add(EntityCondition.makeCondition("productAssocTypeId",EntityOperator.EQUALS,"SERVICE_PRODUCT"));
+    		EntityCondition condition = EntityCondition.makeCondition(conditionList);
+    		serviceProductDetailsList = delegator.findList("ProductAssoc",condition,null,null,null,false);
+    		serviceProductDetailsList = EntityUtil.filterByDate(serviceProductDetailsList,fromDate);
+    	}catch(GenericEntityException e){
+    		Debug.logError("Error while getting service Product Details ::"+e,module);
+    		return ServiceUtil.returnError("Error while getting service Product Details ::"+e.getMessage());
+    	}
+    	if(UtilValidate.isEmpty(serviceProductDetailsList)){
+    		Debug.logError("Service Product not found:",module );
+    		return ServiceUtil.returnError("Service Product not found:");
+    	}
+    	serviceProductDetails = EntityUtil.getFirst(serviceProductDetailsList);
+    	serviceProductId      = (String)serviceProductDetails.get("instruction");
+    	resultMap.put("serviceProductId", serviceProductId);
+    	return resultMap;
+    }
+    
+    //getProductConversionRates
+    
+    /**
+     * 
+     * @param dctx
+     * @param contextMap
+     * @return
+     */
+    public static Map<String, Object> getProductConversionRates(DispatchContext dctx,Map<String, ? extends Object> context){
+    	Map resultMap = ServiceUtil.returnSuccess();
+    	String productId           = (String)context.get("productId");
+    	Timestamp fromDate         = (Timestamp)context.get("fromDate");
+    	GenericValue userLogin 	   = (GenericValue)context.get("userLogin");
+    	Delegator delegator 	   = dctx.getDelegator();
+    	LocalDispatcher dispatcher = dctx.getDispatcher();   
+    	String serviceProductId    ="";
+    	List<GenericValue> productPriceRulesList = FastList.newInstance();
+    	GenericValue serviceProductDetails = null;
+    	if(UtilValidate.isEmpty(fromDate)){
+    		fromDate = UtilDateTime.nowTimestamp();
+    	}
+    	if(UtilValidate.isEmpty(productId) ){
+    		Debug.logError("product Id is missing ", module);
+    		return ServiceUtil.returnError("product Id is missing ");
+    	}
+    	
+    	try{
+    		List conditionList = FastList.newInstance();
+    		//conditionList.add(EntityCondition.makeCondition("condValue",EntityOperator.EQUALS,productId));
+    		//conditionList.add(EntityCondition.makeCondition("inputParamEnumId",EntityOperator.EQUALS,"PRIP_PRODUCT_ID"));
+    		conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate));
+    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null),EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate)));
+    		EntityCondition condition = EntityCondition.makeCondition(conditionList);
+    		productPriceRulesList = delegator.findList("ProductPriceConditionRule",null,null,null,null,false);
+    	}catch(GenericEntityException e){
+    		Debug.logError("Error while getting service Product Details ::"+e,module);
+    		return ServiceUtil.returnError("Error while getting service Product Details ::"+e.getMessage());
+    	}
+    	List productPriceRuleConditionList = UtilMisc.toList(EntityCondition.makeCondition("condValue",EntityOperator.EQUALS,productId));
+    	productPriceRuleConditionList.add(EntityCondition.makeCondition("inputParamEnumId",EntityOperator.EQUALS,"PRIP_PRODUCT_ID"));
+    	EntityCondition producPriceRuleCondition =EntityCondition.makeCondition(productPriceRuleConditionList) ;
+    	List<GenericValue> productRelatedRulesList = EntityUtil.filterByCondition(productPriceRulesList,producPriceRuleCondition);
+    	// Here we are trying to get prices
+    	Map conversionProductPriceMap = FastMap.newInstance();
+    	if(UtilValidate.isNotEmpty(productRelatedRulesList)){
+    		for(GenericValue productPriceRule : productRelatedRulesList){
+    			String ruleId = (String)productPriceRule.get("productPriceRuleId");
+    			List productConPriceRuleConditionList = UtilMisc.toList(EntityCondition.makeCondition("productPriceRuleId",EntityOperator.EQUALS,ruleId));
+    			productConPriceRuleConditionList.add(EntityCondition.makeCondition("inputParamEnumId",EntityOperator.EQUALS,"PRIP_PRODUCT_ID_TO"));
+    	    	EntityCondition productConPriceRuleCondition =EntityCondition.makeCondition(productConPriceRuleConditionList);
+    			List<GenericValue> productConvRuleList = EntityUtil.filterByCondition(productPriceRulesList, productConPriceRuleCondition);
+    			for(GenericValue productConvRule : productConvRuleList){
+    				String convProductId = (String)productConvRule.get("condValue");
+    				// Here we are getting conversion price
+    				try{
+    					List productPriceActionCondList = FastList.newInstance();
+    					productPriceActionCondList.add(EntityCondition.makeCondition("productPriceRuleId",EntityOperator.EQUALS,ruleId));
+    					productPriceActionCondList.add(EntityCondition.makeCondition("productPriceActionTypeId",EntityOperator.EQUALS,"PRICE_FLAT"));		
+    					EntityCondition productPriceActionCondition = EntityCondition.makeCondition(productPriceActionCondList);		
+    					List<GenericValue>  productPriceActionList = FastList.newInstance();
+    					productPriceActionList = delegator.findList("ProductPriceAction", productPriceActionCondition,null,null,null,false);
+    					GenericValue productPriceAction = EntityUtil.getFirst(productPriceActionList);
+    					BigDecimal amount = BigDecimal.ZERO;
+    					if(UtilValidate.isNotEmpty(productPriceAction)){
+    						amount = (BigDecimal)productPriceAction.get("amount");
+    					}
+    					conversionProductPriceMap.put(convProductId,amount);
+    				}catch(GenericEntityException e){
+    					Debug.logError("Error while getting conversion Price fof product "+productId+" To product "+convProductId+ " ::"+e, module);
+    					return ServiceUtil.returnError("Error while getting conversion Price fof product "+productId+" To product "+convProductId+ " ::"+e.getMessage());
+    				}
+    			}
+    		}
+    	}
+    	resultMap.put("conversionProductPriceMap", conversionProductPriceMap);
+    	return resultMap;
+    }
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> updateConversionBillingStatus (DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	TimeZone timeZone = TimeZone.getDefault();
+        LocalDispatcher dispatcher = dctx.getDispatcher();       
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Locale locale = (Locale) context.get("locale");
+        Map<String, Object> result = new HashMap<String, Object>();
+        result = ServiceUtil.returnSuccess();
+        String periodBillingId = (String) context.get("periodBillingId");
+        String statusId = (String) context.get("statusId");
+        if(UtilValidate.isEmpty(statusId)){
+        	//statusId="GENERATED";
+        	Debug.logError("status can not be empty",module);
+        	return ServiceUtil.returnError("status can not be empty");
+        }
+        GenericValue periodBilling = null;
+        String customTimePeriodId="";
+        try{
+        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+        	  periodBilling.set("statusId", statusId);
+			  periodBilling.store();
+        }catch (GenericEntityException e) {
+    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+		}   
+        GenericValue customTimePeriod;
+		try {
+			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1,"Error While Finding Customtime Period");
+			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+		}
+		if("APPROVED".equalsIgnoreCase(statusId)){
+			Map populatePeriodBillingInMap = FastMap.newInstance();
+			
+			populatePeriodBillingInMap.put("statusId", "approved");
+			populatePeriodBillingInMap.put("userLogin", userLogin);
+			populatePeriodBillingInMap.put("customTimePeriodId", customTimePeriodId);
+			
+			Map  populateMilkReceiptPeriodBillingResult = populateConversionBilling(dctx,populatePeriodBillingInMap);
+			if(ServiceUtil.isError(populateMilkReceiptPeriodBillingResult)){
+				Debug.logError("Error while creating invoices :"+populateMilkReceiptPeriodBillingResult,module);
+				return ServiceUtil.returnError("Error while creating invoices :"+ServiceUtil.getErrorMessage(populateMilkReceiptPeriodBillingResult));
+			}
+			
+			Map updatePurchaseInvoiceBilling = updateConversionBillingInvoices(dctx,UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin,"statusId","INVOICE_READY"));
+			if(ServiceUtil.isError(updatePurchaseInvoiceBilling)){
+				Debug.logError("Error while processing invoices :"+updatePurchaseInvoiceBilling,module);
+				return ServiceUtil.returnError("Error while processing invoices :"+ServiceUtil.getErrorMessage(updatePurchaseInvoiceBilling));
+			}
+			try{
+				periodBilling.set("statusId","APPROVED");
+				delegator.store(periodBilling);
+			}catch(GenericEntityException e){
+				Debug.logError("Error while approving the billing ::"+e,module);
+				return ServiceUtil.returnError("Error while approving the billing ::"+e.getMessage());
+			}
+			result = ServiceUtil.returnSuccess("Billing successfully Approved for "+periodBillingId);
+		}
+		if("REJECT_PAYMENT".equalsIgnoreCase(statusId)){
+			Map purchasePaymentCancelResult=cancelPurchaseBillingPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+			try{
+	        	  periodBilling.set("statusId", "REJECT_PAYMENT");
+				  periodBilling.store();
+	        }catch (GenericEntityException e) {
+	    		Debug.logError("Unable To Cancel Purchase Bill Payment"+e, module);
+	    		return ServiceUtil.returnError("Unable To Cancel Purchase Bill Payment.. "); 
+			}   
+			result = ServiceUtil.returnSuccess("Payment Rejected successfully for "+periodBillingId);
+			result.putAll(purchasePaymentCancelResult);
+	       }
+		return result;
+    }  
+    
+    
+    public static Map<String, Object> updateConversionBillingInvoices(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	TimeZone timeZone = TimeZone.getDefault();
+        LocalDispatcher dispatcher = dctx.getDispatcher();       
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Locale locale = (Locale) context.get("locale");
+        Map<String, Object> result = new HashMap<String, Object>();
+        result = ServiceUtil.returnSuccess();
+        String periodBillingId = (String) context.get("periodBillingId");
+        List<GenericValue> invoicesList = FastList.newInstance();
+        String referenceNumber = "MILK_CONV_"+periodBillingId;
+        String statusId = (String) context.get("statusId");
+        try{
+        	List conditionList = FastList.newInstance();
+        	conditionList.add(EntityCondition.makeCondition("referenceNumber",EntityOperator.EQUALS,referenceNumber));
+        	if(statusId.equalsIgnoreCase("INVOICE_READY")){
+        		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_IN_PROCESS"));
+        	}
+        	if(statusId.equalsIgnoreCase("INVOICE_PAID")){
+        		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"INVOICE_READY"));
+        	}
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList);
+        	invoicesList = delegator.findList("Invoice", condition, null, null, null, false);
+        	if(UtilValidate.isEmpty(invoicesList)){
+        		Debug.logError("Invoices not found for the billing period :"+periodBillingId,module);
+        		return ServiceUtil.returnError("Invoices not found for the billing period :"+periodBillingId);
+        	}
+        }catch(Exception e){
+        	Debug.logError("Error while getting invoices "+e,module);
+        	return ServiceUtil.returnError("Error while getting invoices "+e.getMessage());
+        }
+        HashSet<String> invoiceIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(invoicesList, "invoiceId", true));
+        for(String invoiceId : invoiceIdsSet){
+	        Map invoiceCtx = FastMap.newInstance();
+	      //set to Ready for Posting
+	        invoiceCtx.put("userLogin", userLogin);
+	        invoiceCtx.put("invoiceId", invoiceId);
+	        invoiceCtx.put("statusId",statusId);
+	        try{
+	        	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+	        	if (ServiceUtil.isError(invoiceResult)) {
+	        		Debug.logError(invoiceResult.toString(), module);
+	                return ServiceUtil.returnError(null, null, null, invoiceResult);
+	            }	             	
+	        }catch(GenericServiceException e){
+	        	 Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+	        } 
+        }
+    	return result;
+    }//end of the method
+    
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> createConversionInvoiceForParty(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Map resultMap = FastMap.newInstance();
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue)context.get("userLogin");
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	String periodBillingId = (String)context.get("periodBillingId");
+    	Timestamp thruDateTime = (Timestamp)context.get("thruDateTime");
+    	Timestamp fromDateTime = (Timestamp)context.get("fromDateTime");
+    	String unionId = (String)context.get("unionId");
+    	Map productWiseAmtMap = (Map)context.get("productWiseAmtMap");
+    	String description = (String)context.get("description");
+    	if(UtilValidate.isEmpty(productWiseAmtMap)){
+    		Debug.logError("product Wise Map is not found",module);
+    		return ServiceUtil.returnError("product Wise Map is not found");
+    	}
+    	String partyIdTo = (String) context.get("partyId");
+    	Map<String, Object> createInvoiceContext = FastMap.newInstance();
+        createInvoiceContext.put("partyIdFrom", "Company");
+        createInvoiceContext.put("partyId", partyIdTo);
+        if(UtilValidate.isNotEmpty(unionId) && !unionId.equalsIgnoreCase(partyIdTo)){
+        	createInvoiceContext.put("partyIdFrom", unionId);
+        	String partyName = (String)PartyHelper.getPartyName(delegator, partyIdTo, true);
+			
+			if(UtilValidate.isEmpty(partyName)){
+				partyName = "";
+			}
+        	if(UtilValidate.isNotEmpty(description)){
+        		description = description.concat(",");
+        	}
+        	description = description.concat("On behalf of "+partyIdTo+"["+partyName+"]");
+        }
+        createInvoiceContext.put("dueDate", thruDateTime);
+        createInvoiceContext.put("invoiceDate",thruDateTime);
+        createInvoiceContext.put("invoiceTypeId", "SALES_INVOICE");
+        createInvoiceContext.put("referenceNumber", "MILK_CONV_"+periodBillingId);
+        createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+        createInvoiceContext.put("currencyUomId", "INR");
+        createInvoiceContext.put("description", description);
+        createInvoiceContext.put("userLogin", userLogin);
+
+        // store the invoice first
+        Map<String, Object> createInvoiceResult = FastMap.newInstance();
+        try{
+	        createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
+	        if (ServiceUtil.isError(createInvoiceResult)) {
+	    		//generationFailed = true;
+                Debug.logWarning("There was an error while creating  Invoice For TransporterCommission: " + ServiceUtil.getErrorMessage(createInvoiceResult), module);
+        		return ServiceUtil.returnError("There was an error while creating Invoice for  TransporterCommission: " + ServiceUtil.getErrorMessage(createInvoiceResult));          	            
+            }
+        }catch(Exception e){
+        	Debug.logError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e,module);
+    		return ServiceUtil.returnError("Error while creating invoice for partyId:"+partyIdTo+" Message:"+e.getMessage());
+        }
+        Map productKeyMap = FastMap.newInstance();
+        for(Object productKey : productWiseAmtMap.keySet()){
+        	String productKeyStr = productKey.toString(); 
+        	if(!productKeyStr.contains("_QUANTITY")){
+        		Map productDetails = FastMap.newInstance();
+        		BigDecimal prodQty = (BigDecimal) productWiseAmtMap.get(productKeyStr.concat("_QUANTITY"));
+        		BigDecimal amount  = (BigDecimal) productWiseAmtMap.get(productKeyStr);
+        		productDetails.put("quantity", prodQty);
+        		productDetails.put("amount", amount);
+        		productKeyMap.put(productKeyStr,productDetails);
+        	}
+        }
+        // call service for creation invoice);
+        String invoiceId = (String) createInvoiceResult.get("invoiceId");
+    	// here we are creating Invoice Items
+        Map invItemInMap = FastMap.newInstance();
+        invItemInMap.put("userLogin",userLogin);
+        invItemInMap.put("invoiceId",invoiceId);
+        invItemInMap.put("invoiceItemTypeId","INCOME_ITEM16");
+        for(Object productKey : productKeyMap.keySet()){
+        	String productKeyStr = productKey.toString();
+        	Map tempProdMap = FastMap.newInstance();
+        	tempProdMap.putAll((Map)productKeyMap.get(productKey));
+        	//BigDecimal quantity = (BigDecimal)tempProdMap.get("quantity");
+        	BigDecimal quantity = BigDecimal.ONE;
+        	BigDecimal amount = (BigDecimal)tempProdMap.get("amount");
+        	/*BigDecimal unitPrice = BigDecimal.ZERO;
+        	if(UtilValidate.isNotEmpty(quantity) && UtilValidate.isNotEmpty(amount) && quantity.compareTo(BigDecimal.ZERO)==1){
+        		unitPrice = amount.divide(quantity, 8,BigDecimal.ROUND_HALF_UP);
+        	}*/
+        	invItemInMap.put("amount",amount);
+        	invItemInMap.put("quantity",quantity);
+        	invItemInMap.put("productId",productKeyStr);
+        	invItemInMap.put("description","Bill Qty(Kgs) : "+(BigDecimal)tempProdMap.get("quantity"));
+        	try{
+        		resultMap =  dispatcher.runSync("createInvoiceItem",invItemInMap);
+        	}catch(Exception e){
+        		Debug.logError("Error while creating invoiceItem for Product :"+productKeyStr+",partyId:"+partyIdTo+" Message:"+e,module);
+        		resultMap = ServiceUtil.returnError("Error while creating invoiceItem for Product :"+productKeyStr+",partyId:"+partyIdTo+" Message:"+e.getMessage());
+        	}
+        }
+        return resultMap;
+    }// End of the service
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> cancelConversionBilling(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();       
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Locale locale = (Locale) context.get("locale");
+        //Map<String, Object> result = ServiceUtil.returnSuccess();
+        
+        Map<String, Object> result = new HashMap<String, Object>();
+        
+        String periodBillingId = (String) context.get("periodBillingId");
+        GenericValue periodBilling = null;
+        String customTimePeriodId="";
+        try{
+        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+        }catch (GenericEntityException e) {
+    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+		}        
+    	periodBilling.set("statusId", "CANCEL_INPROCESS");
+        boolean cancelationFailed = false;	
+    	try{
+    		periodBilling.store();    		
+    	}catch (Exception e) {
+    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
+    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
+		}
+    	//first Cancel Purchase billing  payments
+		Map purchasePaymentCancelResult=cancelConversionBillingPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+		if (ServiceUtil.isError(purchasePaymentCancelResult)) {
+			cancelationFailed = true;
+			periodBilling.set("statusId", "CANCEL_FAILED");
+			try{
+	    		periodBilling.store();    		
+	    	}catch (Exception e) {
+	    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
+	    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
+			}
+            Debug.logWarning("There was an error while Canceling Payment: " + ServiceUtil.getErrorMessage(purchasePaymentCancelResult), module);
+    		return ServiceUtil.returnError("There was an error while Canceling Payment: " + ServiceUtil.getErrorMessage(purchasePaymentCancelResult));          	            
+        } 
+           
+    	try{
+    		Map<String,  Object> inputContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
+			Map cancelPtcTranInvoiceResult = dispatcher.runSync("cancelConversionBillingInvoice", inputContext);
+			if(ServiceUtil.isError(cancelPtcTranInvoiceResult)){
+				Debug.logError("Error while cancelling Conversion Billing Invoice",module);
+				return ServiceUtil.returnError("Error while Conversion Billing Invoice");
+			}
+			
+    	} catch (GenericServiceException e) {
+            Debug.logError(e, "Error in canceling 'transporterMargin' service", module);
+            return ServiceUtil.returnError(e.getMessage());
+        } 
+    	
+    	periodBilling.set("statusId", "COM_CANCELLED");
+    	try{
+    		periodBilling.store();    		
+    	}catch (Exception e) {
+    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
+    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
+		}
+    	
+    	
+    	result = ServiceUtil.returnSuccess("Successfully cancelled");
+        return result;
+    }//end of the service
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> cancelConversionBillingPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String periodBillingId = (String) context.get("periodBillingId");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		List<String> billingPaymentIdsList=(List<String>)getConversionBillingPayments(dctx, UtilMisc.toMap("periodBillingId", periodBillingId,"userLogin", userLogin)).get("paymentIdsList");
+		Locale locale = (Locale) context.get("locale");
+		if(UtilValidate.isEmpty(billingPaymentIdsList)){
+			result = ServiceUtil.returnSuccess("No Payments Found To Cancel ..!");
+			return result;
+		}
+	 try { 
+		for(String paymentId:billingPaymentIdsList){
+		            	 Map<String, Object> removePaymentApplResult = dispatcher.runSync("voidPayment", UtilMisc.toMap("userLogin" ,userLogin ,"paymentId", paymentId));
+						 if (ServiceUtil.isError(removePaymentApplResult)) {
+				            	Debug.logError(removePaymentApplResult.toString(), module);    			
+				                return ServiceUtil.returnError(null, null, null, removePaymentApplResult);
+				         }
+		    }
+	    }catch (GenericServiceException e) {
+			Debug.logError("Error while Cancel Payment for Conversion Billing" + e,module);
+			return ServiceUtil.returnError("Error while Cancel Payment for Conversion Billing");
+		}
+		result = ServiceUtil.returnSuccess("Payment  Cancelled For Billing ..!");
+		return result;
+	}// end of service
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    
+    public static Map<String, Object> getConversionBillingPayments(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();       
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = new HashMap<String, Object>();
+        Locale locale = (Locale) context.get("locale");
+        boolean cancelationFailed = false;	
+        String periodBillingId = (String) context.get("periodBillingId");
+        List paymentIdsList=FastList.newInstance();
+    	List purchasePaymentsList = FastList.newInstance();
+        GenericValue periodBilling = null;
+        String customTimePeriodId="";
+        try{
+        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+        }catch (GenericEntityException e) {
+    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+		}        
+    	GenericValue customTimePeriod;
+		try {
+			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1, e1.getMessage());
+			return ServiceUtil.returnError("Error in customTimePeriod" + e1);
+		}
+		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		
+		Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, TimeZone.getDefault(), locale);
+		Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, TimeZone.getDefault(), locale);
+		
+		try{
+			List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
+			  conditionList.add(EntityCondition.makeCondition("paymentRefNum", EntityOperator.EQUALS,  "MILK_CONV_"+periodBillingId));
+		     conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, "EXPENSE_PAYOUT"));
+             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+            
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);      	
+        	List<GenericValue> paymentsList = delegator.findList("Payment", condition, null, null, null, false);
+	        paymentIdsList = EntityUtil.getFieldListFromEntityList(paymentsList, "paymentId", false);
+	        purchasePaymentsList.addAll(paymentsList);
+		  }catch(GenericEntityException e){
+	        	Debug.logError("Unable to get Puchase Billing Payments"+e, module);
+	    		return ServiceUtil.returnError("Unable to get purchase Billing Payments "); 
+	      }
+	     result.put("paymentIdsList", paymentIdsList);
+	     result.put("purchasePaymentsList", purchasePaymentsList);
+        return result;
+    }// end of the service
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    
+    public static Map<String, Object> cancelConversionBillingInvoice(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();       
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = new HashMap<String, Object>();
+        Locale locale = (Locale) context.get("locale");
+        boolean cancelationFailed = false;	
+        String periodBillingId = (String) context.get("periodBillingId");
+        GenericValue periodBilling = null;
+        String customTimePeriodId="";
+        try{
+        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+        }catch (GenericEntityException e) {
+    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+		}        
+    	GenericValue customTimePeriod;
+		try {
+			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1, e1.getMessage());
+			return ServiceUtil.returnError("Error in customTimePeriod" + e1);
+		}
+		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		
+		Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, TimeZone.getDefault(), locale);
+		Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, TimeZone.getDefault(), locale);
+		
+		if(customTimePeriod == null){
+			cancelationFailed = true;
+		}
+		
+	try{
+		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
+		  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS,  "MILK_CONV_"+periodBillingId));
+		  
+	     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+	     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
+	     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
+         conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED")); 
+        
+    	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);      	
+    	List<GenericValue> invoiceRows = delegator.findList("Invoice", condition, null, null, null, false);
+        List invoiceIdsList = EntityUtil.getFieldListFromEntityList(invoiceRows, "invoiceId", false);
+        	//cancel mass invoice
+        	Map<String, Object> cancelInvoiceInput = UtilMisc.<String, Object>toMap("invoiceIds",invoiceIdsList);
+     	    cancelInvoiceInput.put("userLogin", userLogin);
+            cancelInvoiceInput.put("statusId", "INVOICE_CANCELLED");
+         	Map<String, Object> invoiceResult = dispatcher.runSync("massChangeInvoiceStatus",cancelInvoiceInput);
+         	if (ServiceUtil.isError(invoiceResult)) {
+         		Debug.logError("There was an error while cancel Invoice: " + ServiceUtil.getErrorMessage(invoiceResult), module);
+         		  try{
+      	        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+      	        }catch (GenericEntityException e) {
+      	    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+      	    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+      			}     
+         		periodBilling.set("statusId", "CANCEL_FAILED");
+		    	try{
+		    		periodBilling.store();    		
+		    	}catch (Exception e) {
+		    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
+		    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
+				}
+		    	return ServiceUtil.returnError("There was an error while cancel Invoice:");
+             }	
+         	
+        	
+        	if (cancelationFailed) {
+				periodBilling.set("statusId", "CANCEL_FAILED");
+			} else {
+				periodBilling.set("statusId", "COM_CANCELLED");
+				periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			}
+			periodBilling.store();	
+        
+        }catch(GenericServiceException e){
+	        	Debug.logError("Unable to Cancel Purchase billint"+e, module);
+	    		return ServiceUtil.returnError("Unable to Cancel Purchase Billing"); 
+	    }catch(GenericEntityException e){
+        	Debug.logError("Unable to Cancel Purchase Billing"+e, module);
+    		return ServiceUtil.returnError("Unable to Cancel Purchase Billing "); 
+        }
+        return result;
+    }
+ // End of the Conversion Billing Services
 }

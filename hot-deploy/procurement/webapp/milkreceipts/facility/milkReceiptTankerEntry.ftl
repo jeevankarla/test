@@ -754,10 +754,10 @@ function reloadingPage(){
 					        <#if displayScreen == "VEHICLE_OUT">
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
-	        						<td align='left' ><span class='h2'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h2'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" readonly="readonly" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" readonly="readonly" required/></td>
 					        	</tr>
 					        </#if>
 					        <#if displayScreen !="VEHICLE_IN">
@@ -782,7 +782,7 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h2">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" value="${setDate}" name="entryDate" autocomplete="off" required="required" readonly="readonly"/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Entry Time(HHMM)[24 hour format]</span> </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" readonly="readonly" required/></td>
 					        	</tr>
 	                         	<tr>
 		        					<td align='left' ><span class="h2">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
@@ -818,10 +818,10 @@ function reloadingPage(){
 							    
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_GRSWEIGHT" />
-	        						<td align='left' ><span class="h2">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" value="${setDate}" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h2">Gross Weight Date</span></td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" value="${setDate}" readonly="readonly" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" readonly="readonly" required/></td>
 					        	</tr>
 							    <tr>
 	        						<td align='left' ><span class="h2"> Dispatch Weight(Kgs)</span></td><td><input  type="text" size="15pt" id="dispatchWeight" name="dispatchWeight" autocomplete="off" required="required"/></td>
@@ -855,10 +855,10 @@ function reloadingPage(){
 	        					</tr>
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_TARWEIGHT" />
-	        						<td align='left' ><span class="h2">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" value="${setDate}" autocomplete="off" readonly="readonly" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Tare Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" readonly="readonly" required/></td>
 					        	</tr>
 							    <tr>
 	        						<td align='left' ><span class="h2">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
@@ -905,10 +905,10 @@ function reloadingPage(){
 	        				<#if displayScreen == "VEHICLE_QC">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_QC" />
-	        						<td align='left' ><span class="h2">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" /></td>
+	        						<td align='left' ><span class="h2">QC Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" value="${setDate}" autocomplete="off" readonly="readonly" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
+	        						<td align='left' ><span class="h2">QC Time(HHMM)[24 hour format]</span> </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" readonly="readonly" required/>
 			        					</td>
 					        	</tr>
 					        	<tr>
@@ -984,10 +984,10 @@ function reloadingPage(){
 		        					</td>
 						        </tr>
 						        <tr>
-	        						<td align='left' ><span class='h2'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
+	        						<td align='left' ><span class='h2'>CIP Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" readonly="readonly" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">CIP Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" readonly="readonly" required/></td>
 					        	</tr>
                                 <tr>
                                  <td align='left' ><span class="h2"> Is CIP Checked</span></td><td><input type="checkbox" name="isCipChecked" id="isCipChecked" style="width:20px;height:20px;" value="Y" required/><em>*<em></td>
