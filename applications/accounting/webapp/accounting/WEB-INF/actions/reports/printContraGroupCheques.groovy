@@ -128,6 +128,8 @@ paymentGroup = delegator.findOne("FinAccountTransGroup", UtilMisc.toMap("finAccn
 		context.put("paymentDate",paymentDate);
 	}
 	if(UtilValidate.isNotEmpty(amount)){
+		amountinWords=UtilNumber.formatRuleBasedAmount(amount,"%indRupees-and-paiseRupees", locale);
+		context.put("amountinWords",amountinWords);
 		context.put("amount",amount);
 	}
 	if(UtilValidate.isNotEmpty(amountStr)){

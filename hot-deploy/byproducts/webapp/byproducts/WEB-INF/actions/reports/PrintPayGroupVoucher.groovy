@@ -83,7 +83,7 @@ tempAmount = 0;
 if(paymentGroup.amount){
 	tempAmount = paymentGroup.amount;
 }
-amountInWords=UtilNumber.formatRuleBasedAmount(tempAmount,"%rupees-and-paise", locale).toUpperCase();
+amountInWords=UtilNumber.formatRuleBasedAmount(tempAmount,"%indRupees-and-paiseRupees", locale);
 abstractDetails.put("amount", tempAmount);
 abstractDetails.put("amountInWords", amountInWords);
 context.abstractDetails = abstractDetails;

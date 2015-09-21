@@ -116,6 +116,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 				context.put("paymentDate",paymentDate);
 			}
 			if(UtilValidate.isNotEmpty(amount)){
+				amountinWords=UtilNumber.formatRuleBasedAmount(amount,"%indRupees-and-paiseRupees", locale);
+				context.put("amountinWords",amountinWords);
 				context.put("amount",amount);
 			}
 			if(UtilValidate.isNotEmpty(amountStr)){
@@ -237,6 +239,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 	}
 	context.put("finAccountId",finAccountId);
 	context.put("amount",amount);
+	if(amount){
+	amountinWords=UtilNumber.formatRuleBasedAmount(amount,"%indRupees-and-paiseRupees", locale).toUpperCase();
+	context.put("amountinWords",amountinWords);
+	}
 	context.put("amountStr",amountStr);
 	context.put("paymentId",paymentId);
 	context.put("paymentDate",paymentDate);

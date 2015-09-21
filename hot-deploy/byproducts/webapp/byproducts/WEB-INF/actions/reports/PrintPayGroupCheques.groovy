@@ -97,6 +97,8 @@ if(paymentMethodType && paymentMethodType == "CHEQUE_PAYIN"){
 		context.put("paymentDate",paymentDate);
 	}
 	if(UtilValidate.isNotEmpty(amount)){
+		amountinWords=UtilNumber.formatRuleBasedAmount(amount,"%indRupees-and-paiseRupees", locale);
+		context.put("amountinWords",amountinWords);
 		context.put("amount",amount);
 	}
 	if(UtilValidate.isNotEmpty(amountStr)){

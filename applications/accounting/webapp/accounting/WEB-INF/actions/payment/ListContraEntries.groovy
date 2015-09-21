@@ -85,7 +85,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	if(UtilValidate.isNotEmpty(interUnitFlag) && interUnitFlag == "interUnitFlag"){
 		condList=[];
 		condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "INTERUNIT_ACCOUNT"));
-		condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"),EntityOperator.AND,
+		condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, ["BANK_ACCOUNT","CASH"]),EntityOperator.AND,
 			EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company")));
 		
 	conditions=EntityCondition.makeCondition(condList,EntityOperator.OR);
@@ -118,7 +118,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	}else{
 		conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
 	}
-	conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL, "FIN_ACCNT1"));
+	//conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL, "FIN_ACCNT1"));
 	conditionList.add(EntityCondition.makeCondition("reasonEnumId", EntityOperator.EQUALS, "FATR_CONTRA"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FINACT_TRNS_CREATED"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
