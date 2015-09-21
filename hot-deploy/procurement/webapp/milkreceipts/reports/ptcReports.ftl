@@ -145,8 +145,13 @@
 						    <td align='left' width="35%"><span class="h3">Contractor </span>
 					            <select name="partyId" id="partyId">
 						     <option value="">All</option>  
-                             <#list vehicleRoleList as vehicles>
-						     <option value='${vehicles.partyId?if_exists}' >${vehicles.partyId?if_exists}</option>
+                             <#list ptcParties as ptcParty>
+                             <#assign partyName = ptcParty>
+                             <#assign party = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(ptcParty) />
+                             <#if party?has_content>
+                             	<#assign partyName= partyName+"["+party+"]" >
+                             </#if>
+						     <option value='${ptcParty?if_exists}' > ${partyName?if_exists}   </option>
 						     </#list>
 						     </select>
 						     </td>

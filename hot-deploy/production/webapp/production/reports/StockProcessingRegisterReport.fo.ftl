@@ -432,6 +432,10 @@
 
 
 <#-->	PASTURISED MILK (PM SILOs)    -->
+  <#assign mpuAllSilosList = mpuAllSilosMap.entrySet()>
+     <#list mpuAllSilosList as mpuAllSilos>
+               <#assign pmRegisterMap = mpuAllSilos.getValue().get("pmRegisterMap")?if_exists>
+               <#assign pmSilosTotalsMap = mpuAllSilos.getValue().get("pmSilosTotalsMap")?if_exists>                  
 
  <fo:block text-align="left">
                    <fo:table border-style="dotted" width="100%" align="right" table-layout="fixed"  font-size="12pt">
@@ -831,6 +835,12 @@
  </fo:table>	
 </fo:block>
 
+<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="25pt" > &#160;&#160;  </fo:block>
+<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="25pt" > &#160;&#160;  </fo:block>
+<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="25pt" > &#160;&#160;  </fo:block>
+
+
+</#list>>
 </fo:flow>
        </fo:page-sequence>	
 	<#else>

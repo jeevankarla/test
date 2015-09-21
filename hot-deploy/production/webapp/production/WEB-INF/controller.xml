@@ -404,6 +404,12 @@
     	<response name="success" type="view" value="ProductionIssuanceRequest"/>
     	<response name="error" type="view" value="ProductionIssuanceRequest"/>
     </request-map>
+      <request-map uri="CreateIssueanceReqQcDetails">
+	    <security https="true" auth="true"/>
+	    <event type="service" path=""  invoke="createProductQcDetails" global-transaction="true"/>
+	    <response name="success" type="request-redirect-noparam" value="ProductionIssuanceRequest">
+        </response>
+    </request-map>
     <request-map uri="IssueRequestThroughTransfer">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.production.ProductionServices" invoke="IssueRequestThroughTransfer"/>

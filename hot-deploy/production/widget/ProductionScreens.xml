@@ -558,6 +558,7 @@
             <decorator-screen name="ProductionCommonDecorator" location="${parameters.mainDecoratorLocation}">
             	<decorator-section name="body">   
                 	<include-menu name="ProductionIssuanceTabBar" location="component://production/widget/ProductionMenus.xml"/>
+                  	<platform-specific><html><html-template location="component://production/webapp/production/production/ProductQualityAnalysis.ftl"/></html></platform-specific>
                 	<screenlet title="Search Options">
                 	<include-form location="component://production/widget/ProductionForms.xml" name="FindProductionIssueRequests"/>
                 	</screenlet>
