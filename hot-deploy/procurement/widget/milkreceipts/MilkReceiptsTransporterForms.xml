@@ -18,7 +18,7 @@
 		<field name="submitButton" title="${uiLabelMap.Generate}" widget-style="smallSubmit">
             <submit/>
         </field>
-    </form>
+    </form> 
 	<form name="ListTransporterReports" list-name="listTransporterReports" title="" type="list" paginate-target="Commissions"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="periodBillingId"><hidden/></field>       

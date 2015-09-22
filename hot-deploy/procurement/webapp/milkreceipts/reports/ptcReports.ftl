@@ -11,7 +11,7 @@
 		dateFormat:'MM d, yy',
 		changeMonth: true,
 		changeYear: true,
-		onSelect: function(selectedDate) {
+		onSelect: function(selectedDate) { 
 		date = $(this).datepicker('getDate');
 		y = date.getFullYear(),
 		m = date.getMonth();

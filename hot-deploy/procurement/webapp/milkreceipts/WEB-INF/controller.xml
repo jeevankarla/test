@@ -18,7 +18,7 @@
     <postprocessor>
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
-    -->
+    --> 
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="MilkReceiptsTankerEntry"/></request-map>

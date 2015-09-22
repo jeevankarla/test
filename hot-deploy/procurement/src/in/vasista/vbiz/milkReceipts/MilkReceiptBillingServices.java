@@ -2248,7 +2248,7 @@ public class MilkReceiptBillingServices {
 		    				List<GenericValue> productTransfersList = EntityUtil.filterByCondition(partyTransfersList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 		    				HashSet<String> conProductIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(productTransfersList, "conversionProductId", true));
 		    				if(UtilValidate.isEmpty(conProductIdsSet)){
-		    					Debug.logError("Converted Products Not found for the product :"+productId+",Finalization not done .",module);
+		    					Debug.logError(" Converted Products Not found for the product :"+productId+",Finalization not done .",module);
 		    					return ServiceUtil.returnError("Converted Products Not found for the product :"+productId+",Finalization not done .");
 		    				}
 		    				for(String conProductId : conProductIdsSet){

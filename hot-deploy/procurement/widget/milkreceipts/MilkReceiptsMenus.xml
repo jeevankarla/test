@@ -19,7 +19,7 @@
 	        	<or>
 	        		<if-has-permission permission="MILKRECEIPT"  action="_TMPERIOD"/>
 	        	</or>        		
-	        </condition> 
+	        </condition>  
         	<link target="mrTransporterTimePeriod"/>
         </menu-item>    -->  
         <menu-item name="TransporterAdjustments" title="Transporter Adjustments">
