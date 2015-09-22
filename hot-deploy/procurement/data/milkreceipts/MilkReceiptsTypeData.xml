@@ -139,6 +139,7 @@
    <PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="Purchase Billing Period" periodTypeId="PROC_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="Sale Billing Period" periodTypeId="SALE_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
+   <PeriodType description="Conversion Billing Period" periodTypeId="CONV_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <EnumerationType enumTypeId="MILK_PRCH_PURP" description="Milk Purchase Purpose" hasTable="N"></EnumerationType>
    <EnumerationType enumTypeId="MILK_OUT_PURP" description="Milk Outgoing Purpose" hasTable="N"></EnumerationType>
    

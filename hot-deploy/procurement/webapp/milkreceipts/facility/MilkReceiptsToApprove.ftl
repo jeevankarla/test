@@ -194,12 +194,12 @@ under the License.
     			</#if>
                 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
     			<td align="right"><h2><input id="submitButton" type="button"  onclick="javascript:processReceipt(this);" value="Finalize"</h2></td>
+    			</#if>
     		</tr>
     	</table>
     </div>
  
     <table class="basic-table hover-bar" cellspacing="0">
-    			</#if>
       <thead>
         <tr class="header-row-2">
           <td>Record No</td>
@@ -215,7 +215,7 @@ under the License.
           <td>Conv.Product</td>
           </#if>
           <td>Silo</td>
-          <td>&#160;      Qty(Kgs)</td>
+          <td>&#160;      Quantity(Kgs)</td>
           <td>&#160;      Fat %</td>
           <td>&#160;      SNF %</td>
           <td>&#160;      KgFat</td>
@@ -291,10 +291,10 @@ under the License.
                 	<select name="purposeTypeId" class='h4' onchange="javascript:getConvProduct(this,${productIdStr},${index});">
 			       <#list milkPurchasePurposeTypeList as purpose>    
 			         <#if existedPurpose?has_content  && existedPurpose == purpose.enumId >
-			        	<option value='${eachItem.purposeTypeId}' selected='selected'>${((enumeration.enumCode).substring(0,3))?if_exists}</option> 	
+			        	<option value='${eachItem.purposeTypeId}' selected='selected'>${enumeration.enumCode?if_exists}</option> 	
 			         <#else>
 			          <option value='${purpose.enumId}' >
-				         ${((purpose.enumCode).substring(0,3))?if_exists}
+				         ${purpose.enumCode?if_exists}
 				      </option>
 				      </#if>
 			       </#list>            
