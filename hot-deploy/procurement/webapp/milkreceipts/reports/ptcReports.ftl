@@ -11,7 +11,7 @@
 		dateFormat:'MM d, yy',
 		changeMonth: true,
 		changeYear: true,
-		onSelect: function(selectedDate) {
+		onSelect: function(selectedDate) { 
 		date = $(this).datepicker('getDate');
 		y = date.getFullYear(),
 		m = date.getMonth();
@@ -401,6 +401,44 @@
 					</table>
 				</form>
 			</tr>
+			<tr class="alternate-row"> 
+			<form id="ConversionBillingReportMR" name="ConversionBillingReportMR" mothed="post" action="<@ofbizUrl>ConversionBillingReportMR.pdf</@ofbizUrl>" target="_blank">
+				<table class="basic-table" cellspacing="5">
+					<tr class="alternate-row">
+						<td width="23%"><span class='h3'> Conversion Billing Report</span></td>
+						<td width="35%">
+							 <span class='h3'>Time Period </span>
+		                    <select name="customTimePeriodId" class='h4'>
+		                    <#if timePeriodList?has_content>	
+		                        <#list timePeriodList as convTimePeriod>    
+		                			  <#if ((convTimePeriod.fromDate)?has_content) && ((convTimePeriod.thruDate)?has_content)>
+		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(convTimePeriod.fromDate, "MMMdd")/>
+		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(convTimePeriod.thruDate, "MMMdd yyyy")/>
+				                  	    <option value='${convTimePeriod.customTimePeriodId}' >
+				                    		${fromDate}-${thruDate}
+				                  		 </option>
+				                  	 </#if>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+						<td width="35%">
+							 <span class='h3'>Union/ Chilling Center </span>
+		                    <select name="partyId" id="partyId">
+		                    <#if unionsList?has_content>	
+		                        <#list unionsList as unionIds>    
+				                  	    <option value='${unionIds.partyId}' >
+				                    		${unionIds.partyId}
+				                  		 </option>
+		                		</#list>    
+		                	</#if>	    
+		                    </select>
+						</td>
+				    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+					</tr>
+				</table>
+			</form>
+		</tr>
        </table>
     </div>
   </div>

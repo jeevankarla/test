@@ -2248,8 +2248,8 @@ public class MilkReceiptBillingServices {
 		    				List<GenericValue> productTransfersList = EntityUtil.filterByCondition(partyTransfersList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 		    				HashSet<String> conProductIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(productTransfersList, "conversionProductId", true));
 		    				if(UtilValidate.isEmpty(conProductIdsSet)){
-		    					Debug.logError("Conveted Products Not found for the product :"+productId+",Finalization not done .",module);
-		    					return ServiceUtil.returnError("Conveted Products Not found for the product :"+productId+",Finalization not done .");
+		    					Debug.logError(" Converted Products Not found for the product :"+productId+",Finalization not done .",module);
+		    					return ServiceUtil.returnError("Converted Products Not found for the product :"+productId+",Finalization not done .");
 		    				}
 		    				for(String conProductId : conProductIdsSet){
 		    					List<GenericValue> conProductTransfersList = EntityUtil.filterByCondition(partyTransfersList, EntityCondition.makeCondition("conversionProductId",EntityOperator.EQUALS,conProductId));
@@ -2308,7 +2308,7 @@ public class MilkReceiptBillingServices {
 		    					GenericValue fatLossDetails      = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"fatLoss")));
 		    					GenericValue snfLossDetails      = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"snfLoss")));
 		    					GenericValue addSugarDetails     = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"addSugar")));
-		    					GenericValue totSolidsDetails    = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"totSolidsLoss")));
+		    					GenericValue totSolidsDetails    = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"totSolids")));
 		    					GenericValue butterYieldDetails  = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"butterYield")));
 		    					GenericValue productYieldDetails = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"productYield")));
 		    					GenericValue fatPercentDetails   = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"fatPercentStd")));
@@ -2334,6 +2334,7 @@ public class MilkReceiptBillingServices {
 		    					if(UtilValidate.isNotEmpty(fatPercentDetails)){
 		    						fatPercentStd = (BigDecimal)fatPercentDetails.get("standardValue");
 		    					}
+		    					
 		    					// here we need to get rates of productConversion price and Butter Conversion Price .
 		    					Map productConversionRateInMap = FastMap.newInstance();
 		    					productConversionRateInMap.put("userLogin", userLogin);
@@ -2352,16 +2353,17 @@ public class MilkReceiptBillingServices {
 		    						BigDecimal kgSnf = (BigDecimal)conProductTransfer.get("receivedKgSnf");
 		    						BigDecimal totalSolids = kgFat.add(kgSnf);
 		    						BigDecimal difKgFat = kgFat;
-		    						BigDecimal difKgSnf = BigDecimal.ZERO;
+		    						BigDecimal difKgSnf = kgSnf;
 		    						BigDecimal butterAmount = BigDecimal.ZERO;
 		    						BigDecimal butterYieldQty = BigDecimal.ZERO;
 		    						BigDecimal productYieldQty = BigDecimal.ZERO;
 		    						BigDecimal conProductAmount = BigDecimal.ZERO;
 		    						
-		    						
+		    						conProductTransfer.set("conFatLoss",difKgFat);
 		    						if(fatPercentStd.compareTo(BigDecimal.ZERO)==1){
 		    							BigDecimal prodKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatPercentStd);
 		    							difKgFat = kgFat.subtract(prodKgFat);
+		    							conProductTransfer.set("conFatLoss", prodKgFat);
 		    						}
 		    						if(fatLoss.compareTo(BigDecimal.ZERO)==1){
 		    							BigDecimal prodKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatLoss);
@@ -2371,6 +2373,7 @@ public class MilkReceiptBillingServices {
 		    						if(snfLoss.compareTo(BigDecimal.ZERO)==1){
 		    							BigDecimal prodKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, snfLoss);
 		    							difKgSnf = kgSnf.subtract(prodKgSnf);
+		    							conProductTransfer.set("conTotalSolidsLoss",prodKgSnf );
 		    						}
 		    						// Here we are adding sugar Qty
 		    						if(addSugar.compareTo(BigDecimal.ZERO)==1){

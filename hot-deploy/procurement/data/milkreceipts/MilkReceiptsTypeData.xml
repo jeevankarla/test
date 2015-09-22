@@ -22,7 +22,7 @@
     <EnumerationType enumTypeId="FAC_INC_EXP_TYPE"  description="Milk Receipt INCOME,EXPENDITURE Types"/>
     <EnumerationType enumTypeId="FAC_INC" parentTypeId="FAC_INC_EXP_TYPE" description="Milk Receipt Income Types"/>
     <EnumerationType enumTypeId="FAC_EXP" parentTypeId="FAC_INC_EXP_TYPE" description="Milk Receipt Expenditure Types"/>
-    <Enumeration description="sales" enumCode="SALES" enumId="SALES" sequenceId="1" enumTypeId="FAC_INC"/>
+    <Enumeration description="sales" enumCode="SALES" enumId="SALES" sequenceId="1" enumTypeId="FAC_INC"/> 
     <Enumeration description="salaries" enumCode="SALARY" enumId="SALARY" sequenceId="3" enumTypeId="FAC_EXP"/>
     <Enumeration description="store material Value" enumCode="STORE_MATERIAL" enumId="STORE_MATERIAL" sequenceId="4" enumTypeId="FAC_EXP"/>
     <Enumeration description="milk Products Value" enumCode="MLK_PROD_VAL" enumId="MLK_PROD_VAL" sequenceId="5" enumTypeId="FAC_EXP"/>
@@ -139,6 +139,7 @@
    <PeriodType description="PTC Fortnight Bill" periodTypeId="PTC_FORTNIGHT_BILL" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="Purchase Billing Period" periodTypeId="PROC_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <PeriodType description="Sale Billing Period" periodTypeId="SALE_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
+   <PeriodType description="Conversion Billing Period" periodTypeId="CONV_BILL_MONTH" parentPeriodTypeId="MILK_RCPT_BILL_TYPE" periodLength="1" uomId="TF_mon"/>
    <EnumerationType enumTypeId="MILK_PRCH_PURP" description="Milk Purchase Purpose" hasTable="N"></EnumerationType>
    <EnumerationType enumTypeId="MILK_OUT_PURP" description="Milk Outgoing Purpose" hasTable="N"></EnumerationType>
    
