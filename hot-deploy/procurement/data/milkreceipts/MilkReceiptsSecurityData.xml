@@ -206,4 +206,16 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_FINALIZE_RECEIPT"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_FINALIZE_RECEIPT"/>
     
+    <SecurityPermission description="Non Milk Tanker Entry View.!" permissionId="MR_NONMILK_ENTRY"/>
+    <SecurityGroup description="Non Milk Tanker Entry View.!" groupId="MR_NONMILK_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_NONMILK_ENTRY" permissionId="MR_NONMILK_ENTRY"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMILK_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMILK_ENTRY"/>
+    
+    <SecurityPermission description="Non Milk Tanker Find View.!" permissionId="MR_NONMILK_VIEW"/>
+    <SecurityGroup description="Non Milk Tanker Find View.!" groupId="MR_NONMILK_VIEW"/>
+    <SecurityGroupPermission groupId="MR_NONMILK_VIEW" permissionId="MR_NONMILK_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMILK_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMILK_VIEW"/>
+    
 </entity-engine-xml>

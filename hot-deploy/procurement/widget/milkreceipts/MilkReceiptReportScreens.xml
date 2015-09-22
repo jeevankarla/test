@@ -747,5 +747,22 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
-	
+	<screen name="NonMilkIncomingReportPDF">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/nonMilkIncomingReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://procurement/webapp/milkreceipts/reports/NonMilkIncomingReport.fo.ftl"></html-template>
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
 </screens>

@@ -190,4 +190,20 @@
     
     
     <Enumeration description="Product Id To" enumCode="PRODUCT_ID_TO" enumId="PRIP_PRODUCT_ID_TO" sequenceId="02" enumTypeId="PROD_PRICE_IN_PARAM"/>
+    
+    <StatusType  description="Weighment Details Status"  statusTypeId="WEIGHMNT_STTS"/>
+	<StatusItem  description="Cancelled"  statusCode="CANCELLED" statusId="WMNT_CANCELLED" statusTypeId="WEIGHMNT_STTS"/>
+	<StatusItem description="Created"  statusCode="CREATED" statusId="WMNT_CREATED" statusTypeId="WEIGHMNT_STTS"/>
+	<StatusItem description="InProcess"  statusCode="INPROCESS" statusId="WMNT_INPROCESS" statusTypeId="WEIGHMNT_STTS"/>
+	<StatusItem description="Received."  statusCode="RECEIVED" statusId="WMNT_RECEIVED" statusTypeId="WEIGHMNT_STTS"/>
+	
+	<StatusType description="Non Milk Receipts Vehicle Status"  statusTypeId="WMNT_VEHICLE_STTS"/>
+	<StatusItem description="Vehicle Entered"  sequenceId="1" statusCode="VEHICLE ENTERED" statusId="WMNT_VCL_IN" statusTypeId="WMNT_VEHICLE_STTS"/>
+	<StatusItem description="Vehicle Out"  sequenceId="4" statusCode="VEHICLE OUT" statusId="WMNT_VCL_OUT" statusTypeId="WMNT_VEHICLE_STTS"/>
+	<StatusItem  description="Vehicle At Tare Weight"  sequenceId="3" statusCode="VEHICLE AT TARE WEIGHT" statusId="WMNT_VCL_TAREWEIGHT" statusTypeId="WMNT_VEHICLE_STTS"/>
+	<StatusItem description="Vehicle At Gross Weight"  sequenceId="2" statusCode="VEHICLE AT GROSS WEIGHT" statusId="WMNT_VCL_GRSWEIGHT" statusTypeId="WMNT_VEHICLE_STTS"/>
+	
+	<StatusValidChange  statusId="WMNT_VCL_GRSWEIGHT" statusIdTo="WMNT_VCL_TAREWEIGHT" transitionName="GROSSWEIGHT TO TAREWEIGHT"/>
+	<StatusValidChange  statusId="WMNT_VCL_IN" statusIdTo="WMNT_VCL_GRSWEIGHT" transitionName="IN TO GROSSWEIGHT"/>
+	<StatusValidChange  statusId="WMNT_VCL_TAREWEIGHT" statusIdTo="WMNT_VCL_OUT" transitionName="TAREWEIGHT TO OUT"/>
 </entity-engine-xml>

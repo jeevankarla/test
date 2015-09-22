@@ -1121,6 +1121,114 @@
             <key-map field-name="procPriceChartId"/>
         </view-link>
   	</view-entity>
-  	
-	
+  	<entity entity-name="WeighmentDetails"
+            package-name="org.ofbiz.product.inventory"
+            title="Weighment Details">
+      <field name="weighmentId" type="id-ne"></field>
+      <field name="vehicleId" type="id"></field>
+      <field name="sequenceNum" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="shipmentId" type="id"/>
+      <field name="partyId" type="id"></field>
+      <field name="partyIdTo" type="id"></field>             
+      <field name="dcNo" type="id"></field>    
+      <field name="noOfProducts" type="id"></field>
+      <field name="isSealChecked" type="indicator"/>
+      <field name="sendDate" type="date-time"></field>
+      <field name="receiveDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>  
+      <field name="createdByUserLogin" type="id-vlong"></field> 
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>                   
+      <prim-key field="weighmentId"/>
+      <relation type="one" fk-name="WEIGHMNT_VEHICLE" rel-entity-name="VehicleTrip">
+        <key-map field-name="vehicleId" rel-field-name="vehicleId"/>
+        <key-map field-name="sequenceNum"/>
+      </relation>
+      <relation rel-entity-name="Shipment" type="one" fk-name="WEIGHMNT_SHIPMENT">
+      	<key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="WEIGHMNT_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+	  <relation type="one" fk-name="WEIGHTMNT_PAR" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="WEIGHMNT_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="WEIGHMNT_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="WEIGHMNT_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WeighmentItemDetails"
+            package-name="org.ofbiz.product.inventory"
+            title="Weighment Details">
+      <field name="weighmentId" type="id-ne"></field>
+      <field name="sequenceNum" type="id-ne"></field>
+      <field name="productId" type="id"/>    
+      <field name="dispatchWeight" type="fixed-point"></field>
+      <field name="grossWeight" type="fixed-point"></field>
+      <field name="tareWeight" type="fixed-point"></field>
+      <field name="quantity" type="fixed-point"></field>
+      <field name="comments" type="comment"></field>  
+      <field name="createdByUserLogin" type="id-vlong"></field> 
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>                   
+      <prim-key field="weighmentId"/>
+      <prim-key field="sequenceNum"/>
+      <relation type="one" fk-name="WMNTIT_WMNT" rel-entity-name="WeighmentDetails">
+        <key-map field-name="weighmentId" rel-field-name="weighmentId"/>
+      </relation>
+      <relation type="one" fk-name="WMNTIT_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="WMNTIT_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="WMNTIT_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
+    
+	<view-entity entity-name="WeighmentDetailsAndItemAndVehicleTripStatus"
+            package-name="org.ofbiz.product.inventory"
+            title="WeighmentDetails And WeighmentItemDetails And VehicleTripStatus View Entity">
+      <member-entity entity-alias="WMNT" entity-name="WeighmentDetails"/>
+      <member-entity entity-alias="WMNTIT" entity-name="WeighmentItemDetails"/>
+      <member-entity entity-alias="VHTPST" entity-name="VehicleTripStatus"/>
+      <alias name="vehicleTripStatusId" entity-alias="VHTPST" field="statusId"/>
+       <alias-all entity-alias="WMNT" >
+       		<exclude field="vehicleId"/>
+       		<exclude field="sequenceNum"/>
+       </alias-all>
+       <alias-all entity-alias="WMNTIT">
+       	<exclude field="weighmentId"/>
+       	<exclude field="sequenceNum"/>
+       </alias-all>
+       <alias entity-alias="WMNTIT" name="itemSequenceNo" field="sequenceNum"/>
+       <alias-all entity-alias="VHTPST" />
+       <view-link entity-alias="WMNT" rel-entity-alias="VHTPST">
+        <key-map field-name="vehicleId" rel-field-name="vehicleId"/>
+       	<key-map field-name="sequenceNum"/>
+       </view-link>
+       <view-link entity-alias="WMNT" rel-entity-alias="WMNTIT">
+        <key-map field-name="weighmentId" rel-field-name="weighmentId"/>
+       </view-link>
+    </view-entity>
+    <view-entity entity-name="WeighmentAndItemDetails"
+          package-name="org.ofbiz.product.inventory" 
+          title="Weighment And WeighmentItem View Entity">
+	    <member-entity entity-alias="WMNT" entity-name="WeighmentDetails"/>
+	    <member-entity entity-alias="WMNTI" entity-name="WeighmentItemDetails"/>	
+	    <alias-all entity-alias="WMNT"/>   
+		<alias-all entity-alias="WMNTI"/>    
+		<alias entity-alias="WMNTI" name="itemSequenceNo" field="sequenceNum"/>
+      	<view-link entity-alias="WMNTI" rel-entity-alias="WMNT">
+        	<key-map field-name="weighmentId"/>
+      	</view-link>
+  	</view-entity> 
 </entitymodel>
