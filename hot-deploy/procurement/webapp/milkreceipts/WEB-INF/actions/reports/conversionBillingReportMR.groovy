@@ -153,13 +153,13 @@ Map conversionProductMap = FastMap.newInstance();
 				fatLoss = (BigDecimal)fatLossDetails.get("standardValue");
 			}
 			if(UtilValidate.isNotEmpty(snfLossDetails)){
-				totSolidsLoss = (BigDecimal)snfLossDetails.get("standardValue");
-			}
-			if(UtilValidate.isNotEmpty(addSugarDetails)){
-				addSugar = (BigDecimal)addSugarDetails.get("standardValue");
+				snfLoss = (BigDecimal)snfLossDetails.get("standardValue");
 			}
 			if(UtilValidate.isNotEmpty(totSolidsDetails)){
 				totSolidsLoss = (BigDecimal)totSolidsDetails.get("standardValue");
+			}
+			if(UtilValidate.isNotEmpty(addSugarDetails)){
+				addSugar = (BigDecimal)addSugarDetails.get("standardValue");
 			}
 			if(UtilValidate.isNotEmpty(butterYieldDetails)){
 				butterYield = (BigDecimal)butterYieldDetails.get("standardValue");;
@@ -170,7 +170,9 @@ Map conversionProductMap = FastMap.newInstance();
 			if(UtilValidate.isNotEmpty(fatPercentDetails)){
 				fatPercentStd = (BigDecimal)fatPercentDetails.get("standardValue");
 			}
-			
+			if(snfLoss.compareTo(totSolidsLoss)==1){
+				totSolidsLoss = snfLoss;
+			}
 			Map productConfigMap = FastMap.newInstance();
 			
 			productConfigMap.put("productName", productDetails.get("productName"));
@@ -216,6 +218,10 @@ Map conversionProductMap = FastMap.newInstance();
 				
 				BigDecimal prodQty  = recdQty;
 				BigDecimal prodFat  = fatPercentStd;
+				int recdFatIntValue = recdFat.intValue();
+				if(fatPercentStd.compareTo(BigDecimal.ZERO)==0 && recdFatIntValue<1){
+					prodFat = recdFat;
+				}
 				BigDecimal prodSnf  = recdSnf;
 				BigDecimal prodKgFat  = ProcurementNetworkServices.calculateKgFatOrKgSnf(recdQty, prodFat);
 				BigDecimal prodKgSnf  = recdKgSnf;
@@ -283,12 +289,12 @@ Map conversionProductMap = FastMap.newInstance();
 						BigDecimal newQty = (BigDecimal)tranProductDetPriceMap.get(trnKey);
 						totTransferMap.put(trnKey,existedQty.add(newQty));
 					}
-					BigDecimal existedRecdQty = (BigDecimal)totTransferMap.get(trnKey);
-					BigDecimal existedRecdKgFat = (BigDecimal)totTransferMap.get(trnKey);
-					BigDecimal existedRecdKgSnf = (BigDecimal)totTransferMap.get(trnKey);
-					BigDecimal existedProdQty = (BigDecimal)totTransferMap.get(trnKey);
-					BigDecimal existedProdKgFat = (BigDecimal)totTransferMap.get(trnKey);
-					BigDecimal existedProdKgSnf = (BigDecimal)totTransferMap.get(trnKey);
+					BigDecimal existedRecdQty = (BigDecimal)totTransferMap.get("recdQty");
+					BigDecimal existedRecdKgFat = (BigDecimal)totTransferMap.get("recdKgFat");
+					BigDecimal existedRecdKgSnf = (BigDecimal)totTransferMap.get("recdKgSnf");
+					BigDecimal existedProdQty = (BigDecimal)totTransferMap.get("prodQty");
+					BigDecimal existedProdKgFat = (BigDecimal)totTransferMap.get("prodKgFat");
+					BigDecimal existedProdKgSnf = (BigDecimal)totTransferMap.get("prodKgSnf");
 					totTransferMap.put("recdFat",ProcurementNetworkServices.calculateFatOrSnf(existedRecdKgFat, existedRecdQty));
 					totTransferMap.put("recdSnf",ProcurementNetworkServices.calculateFatOrSnf(existedRecdKgSnf, existedRecdQty));
 					totTransferMap.put("prodFat",ProcurementNetworkServices.calculateFatOrSnf(existedProdKgFat, existedProdQty));

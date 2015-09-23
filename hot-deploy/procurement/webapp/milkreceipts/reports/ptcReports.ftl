@@ -409,8 +409,8 @@
 						<td width="35%">
 							 <span class='h3'>Time Period </span>
 		                    <select name="customTimePeriodId" class='h4'>
-		                    <#if timePeriodList?has_content>	
-		                        <#list timePeriodList as convTimePeriod>    
+		                    <#if conversionTimePeriodList?has_content>	
+		                        <#list conversionTimePeriodList as convTimePeriod>    
 		                			  <#if ((convTimePeriod.fromDate)?has_content) && ((convTimePeriod.thruDate)?has_content)>
 		                			   <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(convTimePeriod.fromDate, "MMMdd")/>
 		                       			<#assign thruDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(convTimePeriod.thruDate, "MMMdd yyyy")/>

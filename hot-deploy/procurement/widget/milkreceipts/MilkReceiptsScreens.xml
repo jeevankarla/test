@@ -420,6 +420,10 @@
                 <entity-condition list="saleTimePeriodList" entity-name="CustomTimePeriod">
                 	<condition-expr field-name="periodTypeId" operator="equals" value="SALE_BILL_MONTH"/>
                 	<order-by field-name="-fromDate"/>
+                </entity-condition>
+                <entity-condition list="conversionTimePeriodList" entity-name="CustomTimePeriod">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="CONV_BILL_MONTH"/>
+                	<order-by field-name="-fromDate"/>
                 </entity-condition>  
             	 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
         	</actions>
