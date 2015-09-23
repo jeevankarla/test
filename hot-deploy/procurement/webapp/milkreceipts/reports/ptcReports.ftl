@@ -395,6 +395,10 @@
 		                		</#list>    
 		                		</#if>	    
 		                   	 </select>
+		                   	 <select name="reportType" id="reportType">
+ 						     <option value='Abstract'>Abstract</option>  
+ 						  	 <option value='Details'>Details</option>  
+		                   	 </select>
 							</td>
 						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
