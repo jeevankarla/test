@@ -352,7 +352,7 @@ if(UtilValidate.isNotEmpty(siloIds)){
 			 workEffortInventoryItemDetails=EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachIssueWorkeffId));
 			 workEffortInventoryItemDetails.each{eachWorkEffInvIssue->
 				 tempIssuedQty = (BigDecimal)eachWorkEffInvIssue.get("quantityOnHandDiff");
-				 if(UtilValidate.isNotEmpty(receivedFacilityId) && tempIssuedQty<0){
+				 if(tempIssuedQty<0){
 					 tempIssuedQty=-tempIssuedQty;
 					 issuedQty=issuedQty+tempIssuedQty;
 				 }
