@@ -47,6 +47,7 @@ purposeTypeId=parameters.purposeTypeId;
 
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
+reportType=parameters.reportType;
 
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
@@ -101,90 +102,189 @@ totUnionsMilkMap=[:];
 BigDecimal totQuantity=BigDecimal.ZERO;
 BigDecimal totKgFat=BigDecimal.ZERO;
 BigDecimal totKgSnf=BigDecimal.ZERO;
-
-if(UtilValidate.isNotEmpty(unions)){
-	unions.sort();
-	unions.each {union->
-		idrConvDetailsMap=[:];
+if(reportType.equals("Abstract")){
+	if(UtilValidate.isNotEmpty(unions)){
+		Set partyIdSet = new HashSet(unions);
+		List partyRelationShipConditionList = FastList.newInstance();
+		partyRelationShipConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN,partyIdSet),EntityOperator.OR,EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,partyIdSet)));
+		EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)  ;
+		unionsList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+		unionsList = EntityUtil.filterByDate(unionsList,fromDate);
+		unionParties=new HashSet(EntityUtil.getFieldListFromEntityList(unionsList, "partyIdFrom", true));
 		
-		idrProductsMap=[:];
-		convProductsMap=[:];
-		unionList=EntityUtil.filterByCondition(MilkTransferList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, union));
-		
-		if(UtilValidate.isNotEmpty(unionList)){
-			unionList.each {unionDataEachTime->
-				
-				BigDecimal receivedQuantity=BigDecimal.ZERO;
-				String productId='';
-				String purposeTypeId='';
-				
-				productId=unionDataEachTime.productId;
-				purposeTypeId=unionDataEachTime.purposeTypeId;
-				receivedQuantity=unionDataEachTime.receivedQuantity;
-				receivedKgFat=unionDataEachTime.receivedKgFat;
-				receivedKgSnf=unionDataEachTime.receivedKgSnf;
-				if(UtilValidate.isNotEmpty(receivedQuantity)){
-					totQuantity=totQuantity+receivedQuantity;
-				}else
-			    receivedQuantity=0;
-				if(UtilValidate.isNotEmpty(receivedKgFat)){
-					totKgFat=totKgFat+receivedKgFat;
-				}else
-     			receivedKgFat=0;
-				if(UtilValidate.isNotEmpty(receivedKgSnf)){
-					totKgSnf=totKgSnf+receivedKgSnf;
-				}else
-			    receivedKgSnf=0;
+		unionParties.each{eachUnionParty->
+			List ccIds=[];
+			unionCcIdList=EntityUtil.filterByCondition(unionsList, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, eachUnionParty));
+			ccIdsList=EntityUtil.getFieldListFromEntityList(unionCcIdList, "partyIdTo", true);
+			ccIdsList.each{eachCcId->
+				ccIds.add(eachCcId);
+			}
+			ccIds.add(eachUnionParty);
+			ccIds.sort();
+			idrConvDetailsMap=[:];
+			idrProductsMap=[:];
+			convProductsMap=[:];
+			unionList=EntityUtil.filterByCondition(MilkTransferList, EntityCondition.makeCondition("partyId", EntityOperator.IN, ccIds));
 			
-				idrMap=[:];
-				convMap=[:];
-				if(purposeTypeId.equals("INTERNAL") && UtilValidate.isNotEmpty(purposeTypeId)){
-					if(UtilValidate.isEmpty(idrProductsMap) || (UtilValidate.isNotEmpty(idrProductsMap) && UtilValidate.isEmpty(idrProductsMap.get(productId)))){
-						idrMap.put("quantity", receivedQuantity);
-						idrMap.put("kgFat", receivedKgFat);
-						idrMap.put("kgSnf", receivedKgSnf);
-						idrMap.put("purposeTypeId", purposeTypeId);
-						idrProductsMap.put(productId, idrMap);
-					}else{
-						 Map idrTempMap = FastMap.newInstance();
-						 idrTempMap.putAll(idrProductsMap.get(productId));
-						 idrTempMap.putAt("quantity", idrTempMap.get("quantity") + receivedQuantity);
-						 idrTempMap.putAt("kgFat", idrTempMap.get("kgFat") + receivedKgFat);
-						 idrTempMap.putAt("kgSnf", idrTempMap.get("kgSnf") + receivedKgSnf);
-						 idrTempMap.putAt("purposeTypeId", purposeTypeId);
-						 idrProductsMap.put(productId, idrTempMap);
-						}
-				}else if(purposeTypeId.equals("CONVERSION") && UtilValidate.isNotEmpty(purposeTypeId)){
-					if(UtilValidate.isEmpty(convProductsMap) || (UtilValidate.isNotEmpty(convProductsMap) && UtilValidate.isEmpty(convProductsMap.get(productId)))){
-					    convMap.put("quantity", receivedQuantity);
-						convMap.put("kgFat", receivedKgFat);
-						convMap.put("kgSnf", receivedKgSnf);
-						convMap.put("purposeTypeId", purposeTypeId);
-						convProductsMap.put(productId, convMap);
-					}else{
-						 Map convTempMap = FastMap.newInstance();
-						 convTempMap.putAll(convProductsMap.get(productId));
-						 convTempMap.putAt("quantity", convTempMap.get("quantity") + receivedQuantity);
-						 convTempMap.putAt("kgFat", convTempMap.get("kgFat") + receivedKgFat);
-						 convTempMap.putAt("kgSnf", convTempMap.get("kgSnf") + receivedKgSnf);
-						 convTempMap.putAt("purposeTypeId", purposeTypeId);
-						 convProductsMap.put(productId, convTempMap);
-						}
+			if(UtilValidate.isNotEmpty(unionList)){
+				unionList.each {unionDataEachTime->
+					
+					BigDecimal receivedQuantity=BigDecimal.ZERO;
+					String productId='';
+					String purposeTypeId='';
+					
+					productId=unionDataEachTime.productId;
+					purposeTypeId=unionDataEachTime.purposeTypeId;
+					receivedQuantity=unionDataEachTime.receivedQuantity;
+					receivedKgFat=unionDataEachTime.receivedKgFat;
+					receivedKgSnf=unionDataEachTime.receivedKgSnf;
+					if(UtilValidate.isNotEmpty(receivedQuantity)){
+						totQuantity=totQuantity+receivedQuantity;
+					}else
+					receivedQuantity=0;
+					if(UtilValidate.isNotEmpty(receivedKgFat)){
+						totKgFat=totKgFat+receivedKgFat;
+					}else
+					 receivedKgFat=0;
+					if(UtilValidate.isNotEmpty(receivedKgSnf)){
+						totKgSnf=totKgSnf+receivedKgSnf;
+					}else
+					receivedKgSnf=0;
+				
+					idrMap=[:];
+					convMap=[:];
+					if(purposeTypeId.equals("INTERNAL") && UtilValidate.isNotEmpty(purposeTypeId)){
+						if(UtilValidate.isEmpty(idrProductsMap) || (UtilValidate.isNotEmpty(idrProductsMap) && UtilValidate.isEmpty(idrProductsMap.get(productId)))){
+							idrMap.put("quantity", receivedQuantity);
+							idrMap.put("kgFat", receivedKgFat);
+							idrMap.put("kgSnf", receivedKgSnf);
+							idrMap.put("purposeTypeId", purposeTypeId);
+							idrProductsMap.put(productId, idrMap);
+						}else{
+							 Map idrTempMap = FastMap.newInstance();
+							 idrTempMap.putAll(idrProductsMap.get(productId));
+							 idrTempMap.putAt("quantity", idrTempMap.get("quantity") + receivedQuantity);
+							 idrTempMap.putAt("kgFat", idrTempMap.get("kgFat") + receivedKgFat);
+							 idrTempMap.putAt("kgSnf", idrTempMap.get("kgSnf") + receivedKgSnf);
+							 idrTempMap.putAt("purposeTypeId", purposeTypeId);
+							 idrProductsMap.put(productId, idrTempMap);
+							}
+					}else if(purposeTypeId.equals("CONVERSION") && UtilValidate.isNotEmpty(purposeTypeId)){
+						if(UtilValidate.isEmpty(convProductsMap) || (UtilValidate.isNotEmpty(convProductsMap) && UtilValidate.isEmpty(convProductsMap.get(productId)))){
+							convMap.put("quantity", receivedQuantity);
+							convMap.put("kgFat", receivedKgFat);
+							convMap.put("kgSnf", receivedKgSnf);
+							convMap.put("purposeTypeId", purposeTypeId);
+							convProductsMap.put(productId, convMap);
+						}else{
+							 Map convTempMap = FastMap.newInstance();
+							 convTempMap.putAll(convProductsMap.get(productId));
+							 convTempMap.putAt("quantity", convTempMap.get("quantity") + receivedQuantity);
+							 convTempMap.putAt("kgFat", convTempMap.get("kgFat") + receivedKgFat);
+							 convTempMap.putAt("kgSnf", convTempMap.get("kgSnf") + receivedKgSnf);
+							 convTempMap.putAt("purposeTypeId", purposeTypeId);
+							 convProductsMap.put(productId, convTempMap);
+							}
+					}
 				}
 			}
+			idrConvDetailsMap.put("idrProductsMap", idrProductsMap);
+			idrConvDetailsMap.put("convProductsMap", convProductsMap);
+			
+			partyName =  PartyHelper.getPartyName(delegator, eachUnionParty, false);
+			if(UtilValidate.isEmpty(partyName)){
+				unionsMilkMap.put(eachUnionParty, idrConvDetailsMap);
+			}else{
+			   unionsMilkMap.put(partyName, idrConvDetailsMap);
+			}
 		}
-		idrConvDetailsMap.put("idrProductsMap", idrProductsMap);
-		idrConvDetailsMap.put("convProductsMap", convProductsMap);
+	}
 		
-		partyName =  PartyHelper.getPartyName(delegator, union, false);
-		if(UtilValidate.isEmpty(partyName)){
-		    unionsMilkMap.put(union, idrConvDetailsMap);
-		}else{
-	       unionsMilkMap.put(partyName, idrConvDetailsMap);
+}else{
+	if(UtilValidate.isNotEmpty(unions)){
+		unions.sort();
+		unions.each {union->
+			idrConvDetailsMap=[:];
+			
+			idrProductsMap=[:];
+			convProductsMap=[:];
+			unionList=EntityUtil.filterByCondition(MilkTransferList, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, union));
+			
+			if(UtilValidate.isNotEmpty(unionList)){
+				unionList.each {unionDataEachTime->
+					
+					BigDecimal receivedQuantity=BigDecimal.ZERO;
+					String productId='';
+					String purposeTypeId='';
+					
+					productId=unionDataEachTime.productId;
+					purposeTypeId=unionDataEachTime.purposeTypeId;
+					receivedQuantity=unionDataEachTime.receivedQuantity;
+					receivedKgFat=unionDataEachTime.receivedKgFat;
+					receivedKgSnf=unionDataEachTime.receivedKgSnf;
+					if(UtilValidate.isNotEmpty(receivedQuantity)){
+						totQuantity=totQuantity+receivedQuantity;
+					}else
+				    receivedQuantity=0;
+					if(UtilValidate.isNotEmpty(receivedKgFat)){
+						totKgFat=totKgFat+receivedKgFat;
+					}else
+	     			receivedKgFat=0;
+					if(UtilValidate.isNotEmpty(receivedKgSnf)){
+						totKgSnf=totKgSnf+receivedKgSnf;
+					}else
+				    receivedKgSnf=0;
+				
+					idrMap=[:];
+					convMap=[:];
+					if(purposeTypeId.equals("INTERNAL") && UtilValidate.isNotEmpty(purposeTypeId)){
+						if(UtilValidate.isEmpty(idrProductsMap) || (UtilValidate.isNotEmpty(idrProductsMap) && UtilValidate.isEmpty(idrProductsMap.get(productId)))){
+							idrMap.put("quantity", receivedQuantity);
+							idrMap.put("kgFat", receivedKgFat);
+							idrMap.put("kgSnf", receivedKgSnf);
+							idrMap.put("purposeTypeId", purposeTypeId);
+							idrProductsMap.put(productId, idrMap);
+						}else{
+							 Map idrTempMap = FastMap.newInstance();
+							 idrTempMap.putAll(idrProductsMap.get(productId));
+							 idrTempMap.putAt("quantity", idrTempMap.get("quantity") + receivedQuantity);
+							 idrTempMap.putAt("kgFat", idrTempMap.get("kgFat") + receivedKgFat);
+							 idrTempMap.putAt("kgSnf", idrTempMap.get("kgSnf") + receivedKgSnf);
+							 idrTempMap.putAt("purposeTypeId", purposeTypeId);
+							 idrProductsMap.put(productId, idrTempMap);
+							}
+					}else if(purposeTypeId.equals("CONVERSION") && UtilValidate.isNotEmpty(purposeTypeId)){
+						if(UtilValidate.isEmpty(convProductsMap) || (UtilValidate.isNotEmpty(convProductsMap) && UtilValidate.isEmpty(convProductsMap.get(productId)))){
+						    convMap.put("quantity", receivedQuantity);
+							convMap.put("kgFat", receivedKgFat);
+							convMap.put("kgSnf", receivedKgSnf);
+							convMap.put("purposeTypeId", purposeTypeId);
+							convProductsMap.put(productId, convMap);
+						}else{
+							 Map convTempMap = FastMap.newInstance();
+							 convTempMap.putAll(convProductsMap.get(productId));
+							 convTempMap.putAt("quantity", convTempMap.get("quantity") + receivedQuantity);
+							 convTempMap.putAt("kgFat", convTempMap.get("kgFat") + receivedKgFat);
+							 convTempMap.putAt("kgSnf", convTempMap.get("kgSnf") + receivedKgSnf);
+							 convTempMap.putAt("purposeTypeId", purposeTypeId);
+							 convProductsMap.put(productId, convTempMap);
+							}
+					}
+				}
+			}
+			idrConvDetailsMap.put("idrProductsMap", idrProductsMap);
+			idrConvDetailsMap.put("convProductsMap", convProductsMap);
+			
+			partyName =  PartyHelper.getPartyName(delegator, union, false);
+			if(UtilValidate.isEmpty(partyName)){
+			    unionsMilkMap.put(union, idrConvDetailsMap);
+			}else{
+		       unionsMilkMap.put(partyName, idrConvDetailsMap);
+			}
+			
+			
+			
 		}
-		
-		
-		
 	}
 }
 totUnionsMilkMap.put("totQuantity", totQuantity);
