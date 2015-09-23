@@ -59,10 +59,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 			        	<fo:table>
 			        		<fo:table-column column-width="20pt"/>
 	                    	<fo:table-column column-width="30pt"/>
-	            			<fo:table-column column-width="50pt"/>
-	            			<fo:table-column column-width="250pt"/>
-	                    	<fo:table-column column-width="590pt"/>
-	            			<fo:table-column column-width="120pt"/>
+	            			<fo:table-column column-width="40pt"/>
+	            			<fo:table-column column-width="245pt"/>
+	                    	<fo:table-column column-width="585pt"/>
+	            			<fo:table-column column-width="150pt"/>
 	            			<fo:table-body>
 	            				<fo:table-row >
 	                                <fo:table-cell border-style="solid">
@@ -79,7 +79,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 	                            		<fo:block>
 	                            			<fo:table>
 	                            				<fo:table-column column-width="30pt"/>
-						                    	<fo:table-column column-width="60pt"/>
+						                    	<fo:table-column column-width="55pt"/>
 						            			<fo:table-column column-width="30pt"/>
 						            			<fo:table-column column-width="30pt"/>
 						                    	<fo:table-column column-width="50pt"/>
@@ -113,14 +113,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 	                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">${productBrandName} To ${conProductBrandName} Conversion Details </fo:block>
 	                            		<fo:block>
 	                            			<fo:table>
-						                    	<fo:table-column column-width="60pt"/>
+						                    	<fo:table-column column-width="55pt"/>
 						            			<fo:table-column column-width="30pt"/>
 						            			<fo:table-column column-width="30pt"/>
-						                    	<fo:table-column column-width="40pt"/>
-						            			<fo:table-column column-width="40pt"/>
-						            			<fo:table-column column-width="60pt"/>
+						                    	<fo:table-column column-width="45pt"/>
+						            			<fo:table-column column-width="50pt"/>
+						            			<fo:table-column column-width="55pt"/>
 						                    	<fo:table-column column-width="50pt"/>
-						            			<fo:table-column column-width="60pt"/>
+						            			<fo:table-column column-width="50pt"/>
 						            			<fo:table-column column-width="50pt"/>
 						                    	<fo:table-column column-width="60pt"/>
 						            			<fo:table-column column-width="50pt"/>
@@ -159,7 +159,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 						                       			<fo:table-cell border-style="solid" >
 						                       				<#assign totSolidsLoss = 0>
 						                            		<#assign totSolidsLoss = conProdDetailsMap.get("totSolidsLoss")>
-						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">HL${totSolidsLoss?if_exists?string('##0')}</fo:block>  
+						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">HL${totSolidsLoss?if_exists?string('##0')}%</fo:block>  
 						                       			</fo:table-cell>
 						                       			<fo:table-cell border-style="solid" >
 						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">NET TS</fo:block>  
@@ -186,9 +186,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 	                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Diff. in FAT</fo:block>
 	                            		<fo:block>
 	                            			<fo:table>
-	                            				<fo:table-column column-width="30pt"/>
-						                    	<fo:table-column column-width="45pt"/>
-						            			<fo:table-column column-width="45pt"/>
+	                            				<fo:table-column column-width="50pt"/>
+						                    	<fo:table-column column-width="50pt"/>
+						            			<fo:table-column column-width="50pt"/>
 						            			<fo:table-body>
 	            									<fo:table-row >
 	            										<fo:table-cell border-style="solid" >
@@ -196,13 +196,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 						                       			</fo:table-cell>
 						                       			<fo:table-cell border-style="solid" >
 						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">But </fo:block>
-						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Yield </fo:block>  
+						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Yield </fo:block>
 						                       			</fo:table-cell>
 						                       			<fo:table-cell border-style="solid" >
 						                       				<#assign butConCost = 0>
 						                       				<#assign butConCost = conProdDetailsMap.get("butterConversionPrice")>
 						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">But</fo:block>
-						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Conv. Cost</fo:block>
+						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Conv.Cost</fo:block>
 						                            		<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Rs ${butConCost?if_exists?string('##0.00')}</fo:block>  
 						                       			</fo:table-cell>
 	            									</fo:table-row >
@@ -255,16 +255,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 			                            		<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${slNo} </fo:block>  
 			                       			</fo:table-cell>
 			                       			<fo:table-cell  >
-			                            		<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${date} </fo:block>  
+			                            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${date} </fo:block>  
 			                       			</fo:table-cell>
 			                       			<fo:table-cell >
-			                            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${tankerNo} </fo:block>  
+			                            		<fo:block   text-align="right" font-size="8pt" white-space-collapse="false">${tankerNo} </fo:block>  
 			                       			</fo:table-cell>
 			                       			<fo:table-cell >
 			                            		<fo:block>
 			                            			<fo:table>
 			                            				<fo:table-column column-width="30pt"/>
-						                    	<fo:table-column column-width="60pt"/>
+						                    	<fo:table-column column-width="55pt"/>
 						            			<fo:table-column column-width="30pt"/>
 						            			<fo:table-column column-width="30pt"/>
 						                    	<fo:table-column column-width="50pt"/>
@@ -297,18 +297,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 			                       			<fo:table-cell >
 			                            		<fo:block>
 			                            			<fo:table>
+								                    	<fo:table-column column-width="55pt"/>
+								            			<fo:table-column column-width="30pt"/>
+								            			<fo:table-column column-width="30pt"/>
+								                    	<fo:table-column column-width="45pt"/>
+								            			<fo:table-column column-width="50pt"/>
+								            			<fo:table-column column-width="55pt"/>
+								                    	<fo:table-column column-width="50pt"/>
+								            			<fo:table-column column-width="50pt"/>
+								            			<fo:table-column column-width="50pt"/>
 								                    	<fo:table-column column-width="60pt"/>
-						            			<fo:table-column column-width="30pt"/>
-						            			<fo:table-column column-width="30pt"/>
-						                    	<fo:table-column column-width="40pt"/>
-						            			<fo:table-column column-width="40pt"/>
-						            			<fo:table-column column-width="60pt"/>
-						                    	<fo:table-column column-width="50pt"/>
-						            			<fo:table-column column-width="60pt"/>
-						            			<fo:table-column column-width="50pt"/>
-						                    	<fo:table-column column-width="60pt"/>
-						            			<fo:table-column column-width="50pt"/>
-						            			<fo:table-column column-width="60pt"/>
+								            			<fo:table-column column-width="50pt"/>
+								            			<fo:table-column column-width="60pt"/>
 								            			<fo:table-body>
 			            									<fo:table-row >
 								                       			<fo:table-cell >
@@ -355,19 +355,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 			                       			<fo:table-cell >
 			                            		<fo:block>
 			                            			<fo:table>
-			                            				<fo:table-column column-width="30pt"/>
-								                    	<fo:table-column column-width="45pt"/>
-								            			<fo:table-column column-width="45pt"/>
+			                            				<fo:table-column column-width="50pt"/>
+								                    	<fo:table-column column-width="50pt"/>
+								            			<fo:table-column column-width="50pt"/>
 								            			<fo:table-body>
 			            									<fo:table-row >
 			            										<fo:table-cell >
-								                            		<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${diffFat} </fo:block>  
+								                            		<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${diffFat?if_exists?string('#0.00')} </fo:block>  
 								                       			</fo:table-cell>
 								                       			<fo:table-cell >
-								                            		<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${butterYield} </fo:block>  
+								                            		<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${butterYield?if_exists?string('#0.00')} </fo:block>  
 								                       			</fo:table-cell>
 								                       			<fo:table-cell >
-								                            		<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${butterAmount}</fo:block>  
+								                            		<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${butterAmount?if_exists?string('#0.00')}</fo:block>  
 								                       			</fo:table-cell>
 			            									</fo:table-row >
 			            								</fo:table-body>	

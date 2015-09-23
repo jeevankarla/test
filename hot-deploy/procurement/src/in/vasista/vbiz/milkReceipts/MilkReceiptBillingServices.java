@@ -2252,7 +2252,7 @@ public class MilkReceiptBillingServices {
 		    					return ServiceUtil.returnError("Converted Products Not found for the product :"+productId+",Finalization not done .");
 		    				}
 		    				for(String conProductId : conProductIdsSet){
-		    					List<GenericValue> conProductTransfersList = EntityUtil.filterByCondition(partyTransfersList, EntityCondition.makeCondition("conversionProductId",EntityOperator.EQUALS,conProductId));
+		    					List<GenericValue> conProductTransfersList = EntityUtil.filterByCondition(productTransfersList, EntityCondition.makeCondition("conversionProductId",EntityOperator.EQUALS,conProductId));
 		    					Map serviceProductMap = FastMap.newInstance();
 		    					serviceProductMap.put("userLogin",userLogin);
 		    					serviceProductMap.put("productId",productId);
@@ -2260,21 +2260,21 @@ public class MilkReceiptBillingServices {
 		    					serviceProductMap.put("fromDate",monthBegin);
 		    					Map serviceProductResultMap = getServiceProductDetails (dctx,serviceProductMap);
 		    					if(ServiceUtil.isError(serviceProductResultMap)){
-		    						Debug.logError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap), module);
+		    						Debug.logError("Error While getting service Product Details:"+serviceProductResultMap, module);
 		    						return ServiceUtil.returnError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap));
 		    					}
 		    					//here we need to handle
 		    					String productWiseAmtKey = (String) serviceProductResultMap.get("serviceProductId");
-		    					
+		    					String butterAmtkey = "";
 		    					// Here we are getting butter product Amt key
 		    					serviceProductMap.put("productIdTo",butterProductId);
 		    					serviceProductResultMap = getServiceProductDetails (dctx,serviceProductMap);
 		    					if(ServiceUtil.isError(serviceProductResultMap)){
 		    						Debug.logError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap), module);
-		    						return ServiceUtil.returnError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap));
+		    						//return ServiceUtil.returnError("Error While getting service Product Details:"+ServiceUtil.getErrorMessage(serviceProductResultMap));
+		    					}else{
+		    						 butterAmtkey = (String) serviceProductResultMap.get("serviceProductId");
 		    					}
-		    					String butterAmtkey = (String) serviceProductResultMap.get("serviceProductId");
-		    					
 		    					if(UtilValidate.isEmpty(productWiseAmtKey)){
 		    						Debug.logError("Service Product Id not configured for Invoice :", module);
 		    						return ServiceUtil.returnError("Service Product Id not configured for Invoice :");
@@ -2314,7 +2314,7 @@ public class MilkReceiptBillingServices {
 		    					GenericValue fatPercentDetails   = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"fatPercentStd")));
 		    					
 		    					if(UtilValidate.isNotEmpty(fatLossDetails)){
-		    						fatLoss = (BigDecimal)fatLossDetails.get("standardValue");
+		    						fatLoss = ((BigDecimal)fatLossDetails.get("standardValue"));
 		    					}
 		    					if(UtilValidate.isNotEmpty(snfLossDetails)){
 		    						snfLoss = (BigDecimal)snfLossDetails.get("standardValue");
@@ -2349,6 +2349,7 @@ public class MilkReceiptBillingServices {
 		    					for(GenericValue conProductTransfer : conProductTransfersList){
 		    						// here we need to populate product conversion Amounts in transfer 
 		    						BigDecimal quantity = (BigDecimal)conProductTransfer.get("receivedQuantity");
+		    						BigDecimal recdFat = (BigDecimal)conProductTransfer.get("receivedFat");
 		    						BigDecimal kgFat = (BigDecimal)conProductTransfer.get("receivedKgFat");
 		    						BigDecimal kgSnf = (BigDecimal)conProductTransfer.get("receivedKgSnf");
 		    						BigDecimal totalSolids = kgFat.add(kgSnf);
@@ -2358,21 +2359,31 @@ public class MilkReceiptBillingServices {
 		    						BigDecimal butterYieldQty = BigDecimal.ZERO;
 		    						BigDecimal productYieldQty = BigDecimal.ZERO;
 		    						BigDecimal conProductAmount = BigDecimal.ZERO;
-		    						
 		    						conProductTransfer.set("conFatLoss",difKgFat);
+		    						int recdFatIntValue = recdFat.intValue();
 		    						if(fatPercentStd.compareTo(BigDecimal.ZERO)==1){
-		    							BigDecimal prodKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatPercentStd);
+		    							BigDecimal prodKgFat = (ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatPercentStd)).setScale(2,BigDecimal.ROUND_HALF_UP);
 		    							difKgFat = kgFat.subtract(prodKgFat);
-		    							conProductTransfer.set("conFatLoss", prodKgFat);
+		    							totalSolids = prodKgFat.add(kgSnf);
+		    							conProductTransfer.set("conFatLoss", difKgFat);
 		    						}
 		    						if(fatLoss.compareTo(BigDecimal.ZERO)==1){
-		    							BigDecimal prodKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, fatLoss);
+		    							BigDecimal prodKgFat = kgFat.multiply(fatLoss).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
 		    							difKgFat = kgFat.subtract(prodKgFat);
-		    							conProductTransfer.set("conFatLoss", prodKgFat);
+		    							if(recdFatIntValue!=0){
+		    								conProductTransfer.set("conFatLoss", difKgFat);
+		    							}else{
+		    								conProductTransfer.set("conFatLoss", BigDecimal.ZERO);
+		    							}
 		    						}
 		    						if(snfLoss.compareTo(BigDecimal.ZERO)==1){
-		    							BigDecimal prodKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(quantity, snfLoss);
-		    							difKgSnf = kgSnf.subtract(prodKgSnf);
+		    							BigDecimal kgSnfValue = kgSnf;
+		    							if(recdFatIntValue ==0){
+		    								kgSnfValue = kgSnf.add(kgFat);
+		    							}
+		    							BigDecimal prodKgSnf = kgSnfValue.multiply(snfLoss).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+		    							
+		    							difKgSnf = kgSnfValue.subtract(prodKgSnf);
 		    							conProductTransfer.set("conTotalSolidsLoss",prodKgSnf );
 		    						}
 		    						// Here we are adding sugar Qty
@@ -2384,9 +2395,10 @@ public class MilkReceiptBillingServices {
 		    						if(totSolidsLoss.compareTo(BigDecimal.ZERO)==1){
 		    							BigDecimal tsLoss = totalSolids.multiply(totSolidsLoss).divide(new BigDecimal(100) ,2,BigDecimal.ROUND_HALF_UP);
 		    							difKgSnf =  totalSolids.subtract(tsLoss);
-		    							conProductTransfer.set("conTotalSolidsLoss",tsLoss );
+		    							conProductTransfer.set("conTotalSolidsLoss",tsLoss);
 		    						}
-		    						if(butterYield.compareTo(BigDecimal.ZERO)==1){
+		    						
+		    						if(butterYield.compareTo(BigDecimal.ZERO)==1 && recdFatIntValue !=0 ){
 		    							butterYieldQty = difKgFat.multiply(new BigDecimal(100)).divide(butterYield,2,BigDecimal.ROUND_HALF_UP);
 		    							BigDecimal butterRate = (BigDecimal)conversionProductPriceMap.get(butterProductId);
 		    							if(UtilValidate.isEmpty(butterRate)){
@@ -2396,7 +2408,8 @@ public class MilkReceiptBillingServices {
 		    						}
 		    						if(productYield.compareTo(BigDecimal.ZERO)==1){
 		    							productYieldQty = difKgSnf.multiply(new BigDecimal(100)).divide(productYield,2,BigDecimal.ROUND_HALF_UP);
-		    							BigDecimal productRate = (BigDecimal)conversionProductPriceMap.get(conProductId);
+		    							BigDecimal productRate = BigDecimal.ZERO;
+		    							productRate =(BigDecimal)conversionProductPriceMap.get(conProductId);
 		    							if(UtilValidate.isEmpty(productRate)){
 		    								productRate = BigDecimal.ZERO;
 		    							}
@@ -2537,8 +2550,8 @@ public class MilkReceiptBillingServices {
     		return ServiceUtil.returnError("Error while getting service Product Details ::"+e.getMessage());
     	}
     	if(UtilValidate.isEmpty(serviceProductDetailsList)){
-    		Debug.logError("Service Product not found:",module );
-    		return ServiceUtil.returnError("Service Product not found:");
+    		Debug.logError("Service Product not found for :"+productId+" To :"+productIdTo,module );
+    		return ServiceUtil.returnError("Service Product not found:"+productId+" To :"+productIdTo);
     	}
     	serviceProductDetails = EntityUtil.getFirst(serviceProductDetailsList);
     	serviceProductId      = (String)serviceProductDetails.get("instruction");
