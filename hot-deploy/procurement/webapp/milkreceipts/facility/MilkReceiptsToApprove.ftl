@@ -110,55 +110,57 @@ under the License.
     }
     
     function processReceipt(current){
-    	jQuery(current).attr( "disabled", "disabled");
-    	var actionFlag = $(current).val();
-    	var receipts = jQuery("#listMilkReceipts :checkbox[name='receiptCheckBoxId']");
+        jQuery(current).attr( "disabled", "disabled");
+        var actionFlag = $(current).val();
+        $("#submitButton").hide();
+        var receipts = jQuery("#listMilkReceipts :checkbox[name='receiptCheckBoxId']");
         var index = 0;
         var submitCount=0;
         jQuery.each(receipts, function() {
             if (jQuery(this).is(':checked')) {
-            	var domObj = $(this).parent().parent();
-            	var milkTransferObj = $(domObj).find("[name='milkTransferId']");
-            	var milkTransferId = $(milkTransferObj).val();
-            	if(actionFlag == "Finalize"){
-	            	var productIdObj = $(domObj).find("[name='productId']");
-	            	var productId = productIdObj.val();
-	            	var partyIdObj = $(domObj).find("[name='partyId']");
-	            	var partyId = partyIdObj.val();
-	            	var purposeObj = $(domObj).find("[name='purposeTypeId']");
-	            	var purposeTypeId = purposeObj.val();
-	            	var productIdToObj = $(domObj).find("[name='productIdTo']");
-	            	var productIdTo = productIdToObj.val();
-	            	if(purposeTypeId == "CONVERSION" && ((productIdTo == null) ||(productIdTo == ""))){
-	            		submitCount=submitCount+1;
-	            		alert("Please select conversion Product..!");
-	            		jQuery(current).attr( "disabled", false);
-	            		return false;
-	            	}
-	            	if(purposeTypeId == "CONVERSION"){
-	            		var appendProductIdToStr = "<input type=hidden name=productIdTo_o_"+index+" value="+productIdTo+" />";
-	            		$("#updateMilkTransferForm").append(appendProductIdToStr);
-	            	}
-	            	var appendProductIdStr = "<input type=hidden name=productId_o_"+index+" value="+productId+" />";
-	            	$("#updateMilkTransferForm").append(appendProductIdStr);
-	            	var appendPartyIsStr = "<input type=hidden name=partyId_o_"+index+" value="+partyId+" />";
-	            	$("#updateMilkTransferForm").append(appendPartyIsStr);
-	            	var purposeTypeIdStr = "<input type=hidden name=purposeTypeId_o_"+index+" value="+purposeTypeId+" />";
-	            	$("#updateMilkTransferForm").append(purposeTypeIdStr);
-            	}
-            	var appendStr = "<input type=hidden name=milkTransferId_o_"+index+" value="+milkTransferId+" />";
-            	$("#updateMilkTransferForm").append(appendStr);
-            	index = index+1;
+                var domObj = $(this).parent().parent();
+                var milkTransferObj = $(domObj).find("[name='milkTransferId']");
+                var milkTransferId = $(milkTransferObj).val();
+                if(actionFlag == "Finalize"){
+                    var productIdObj = $(domObj).find("[name='productId']");
+                    var productId = productIdObj.val();
+                    var partyIdObj = $(domObj).find("[name='partyId']");
+                    var partyId = partyIdObj.val();
+                    var purposeObj = $(domObj).find("[name='purposeTypeId']");
+                    var purposeTypeId = purposeObj.val();
+                    var productIdToObj = $(domObj).find("[name='productIdTo']");
+                    var productIdTo = productIdToObj.val();
+                    if(purposeTypeId == "CONVERSION" && ((productIdTo == null) ||(productIdTo == ""))){
+                        submitCount=submitCount+1;
+                        alert("Please select conversion Product..!");
+                        jQuery(current).attr( "disabled", false);
+                        return false;
+                    }
+                    if(purposeTypeId == "CONVERSION"){
+                        var appendProductIdToStr = "<input type=hidden name=productIdTo_o_"+index+" value="+productIdTo+" />";
+                        $("#updateMilkTransferForm").append(appendProductIdToStr);
+                    }
+                    var appendProductIdStr = "<input type=hidden name=productId_o_"+index+" value="+productId+" />";
+                    $("#updateMilkTransferForm").append(appendProductIdStr);
+                    var appendPartyIsStr = "<input type=hidden name=partyId_o_"+index+" value="+partyId+" />";
+                    $("#updateMilkTransferForm").append(appendPartyIsStr);
+                    var purposeTypeIdStr = "<input type=hidden name=purposeTypeId_o_"+index+" value="+purposeTypeId+" />";
+                    $("#updateMilkTransferForm").append(purposeTypeIdStr);
+                }
+                var appendStr = "<input type=hidden name=milkTransferId_o_"+index+" value="+milkTransferId+" />";
+                $("#updateMilkTransferForm").append(appendStr);
+                index = index+1;
             }
             
         });
         if(index == 0 && submitCount==0){
-	       	 alert("Please Select Record(s) To Process!.");
-	       	 jQuery(current).attr( "disabled", false);
-	       	 return false;
-	     }
-	     if(submitCount==0){
-       	 jQuery('#updateMilkTransferForm').submit();
+                alert("Please Select Record(s) To Process!.");
+                jQuery(current).attr( "disabled", false);
+                $("#submitButton").show();
+                return false;
+         }
+         if(submitCount==0){
+            jQuery('#updateMilkTransferForm').submit();
          }
     }
        
