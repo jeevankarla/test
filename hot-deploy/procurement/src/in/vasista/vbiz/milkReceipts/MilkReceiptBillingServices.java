@@ -2798,7 +2798,7 @@ public class MilkReceiptBillingServices {
         createInvoiceContext.put("partyIdFrom", "Company");
         createInvoiceContext.put("partyId", partyIdTo);
         if(UtilValidate.isNotEmpty(unionId) && !unionId.equalsIgnoreCase(partyIdTo)){
-        	createInvoiceContext.put("partyIdFrom", unionId);
+        	createInvoiceContext.put("partyId", unionId);
         	String partyName = (String)PartyHelper.getPartyName(delegator, partyIdTo, true);
 			
 			if(UtilValidate.isEmpty(partyName)){
