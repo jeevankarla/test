@@ -34,9 +34,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
 			<fo:static-content flow-name="xsl-region-before">
 				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
 			 </fo:static-content>	
-			 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
-					<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+			 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+			        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			        		
+					<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${reportHeader.description?if_exists}.</fo:block>
+					<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${reportSubHeader.description?if_exists}.</fo:block>
                     <fo:block text-align="center" font-size="11pt" keep-together="always"  font-weight = "bold" white-space-collapse="false">TruckSheet Corrections Variant Report :: ${effectiveDateStr?if_exists}</fo:block>
               		<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
               		<fo:block>

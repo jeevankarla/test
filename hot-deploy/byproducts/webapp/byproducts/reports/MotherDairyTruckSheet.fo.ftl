@@ -40,8 +40,11 @@ under the License.
 	<fo:page-sequence master-reference="main" force-page-count="no-force">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="6pt">
 			<fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015      &#160;                                                             KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015      &#160;                                                             ${reportHeader.description?if_exists}.</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                       ${reportSubHeader.description?if_exists}.</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">&#160;                                                                GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">==================================================================================================================================================================================================================</fo:block>

@@ -34,9 +34,12 @@ under the License.
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
             </fo:static-content>	
               	
-		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
-		        	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
+		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">
+		        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+		        		
+		        	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;     ${reportHeader.description?if_exists}.</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;    ${reportSubHeader.description?if_exists}.</fo:block>
                     	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;STATEMENT SHOWING THE SUBSIDISED GHEE SUPPLIED TO THE EMPLOYEES DURING  </fo:block>
                     	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "MMM-yyyy")}   </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;         THE AMOUNTS MAY BE DEDUCTED FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nMonthStart, "MMM-yyyy")} SALARY   </fo:block>

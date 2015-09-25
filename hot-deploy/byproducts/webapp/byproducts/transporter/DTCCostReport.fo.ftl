@@ -37,8 +37,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DtcCostReport.pdf")}
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">&#160;      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${reportHeader.description?if_exists}.</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${reportSubHeader.description?if_exists}.</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="11pt">DISTRIBUTION TRANSPORTATION COST PER LTR OF MILK AND CURD SOLD </fo:block>
               		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="11pt">BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthBegin, "dd/MMMM/yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(monthEnd, "dd/MMMM/yyyy")}</fo:block>
               		<fo:block font-size="8pt">----------------------------------------------------------------------------------------------------------------------------------------------</fo:block>

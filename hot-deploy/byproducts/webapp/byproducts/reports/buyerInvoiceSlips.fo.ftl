@@ -58,7 +58,10 @@ under the License.
 			                <fo:table-row>
 			                    <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">MOTHER DAIRY-ICE CREAM DIVISION</fo:block>
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">(A UNIT OF KMF LTD.) GKVK POST : BANGALORE - 65</fo:block>
+					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${reportHeader.description?if_exists}.</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${reportSubHeader.description?if_exists}.</fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">(ISSUED UNDER RULE 52A &amp; 173G)</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">ECC NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
@@ -70,8 +73,10 @@ under the License.
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<#assign nowTime = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">AUTHENTICATED BY: </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipment.get('estimatedShipDate'), "dd-MMM-yyyy")}</fo:block>
+					            	<fo:block>&#160; </fo:block>
+					            	<fo:block>&#160; </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">AUTHENTICATED BY:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; </fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipment.get('estimatedShipDate'), "dd-MMM-yyyy")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 					            	<#--<fo:block  keep-together="always" text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">TAX INVOICE</fo:block>-->
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>

@@ -42,8 +42,11 @@ under the License.
 			<#assign workOrderNo=facilityWorkOrdrNumMap(facilityId)?if_exists>
 				<fo:page-sequence master-reference="main" >
 					<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
-						<fo:block text-align="center" font-weight="bold" font-size="13pt" white-space-collapse="false" keep-together="always">UNIT : MOTHER DAIRY : G.K.V.K POST : YELAHANKA : BANGALORE - 560065</fo:block>
+					    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					    
+						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> ${reportHeader.description?if_exists}.</fo:block>
+						<fo:block text-align="center" font-weight="bold" font-size="13pt" white-space-collapse="false" keep-together="always">${reportSubHeader.description?if_exists}.</fo:block>
 						 <fo:block >-----------------------------------------------------------------------------------</fo:block>
 						<fo:block text-align="center" font-size="13pt" keep-together="always">DISTRIBUTION TRANSPORTATION COST</fo:block>
 						<fo:block text-align="center" font-size="13pt" keep-together="always">PAYMENT SHEET</fo:block>

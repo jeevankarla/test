@@ -35,8 +35,11 @@ under the License.
 				<#assign partyFacilityMapList = (partyFacilityMap).entrySet()>		   
 				<fo:page-sequence master-reference="main" >
 					<fo:static-content flow-name="xsl-region-before"  font-weight="7pt" font-family="Courier,monospace">
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> MOTHER DAIRY, KMF UNIT	</fo:block>
-						<fo:block text-align="center" font-weight="bold" font-size="10pt" white-space-collapse="false" keep-together="always">BANGALORE - 560065.</fo:block>
+					    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					    
+						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> ${reportHeader.description?if_exists}.	</fo:block>
+						<fo:block text-align="center" font-weight="bold" font-size="10pt" white-space-collapse="false" keep-together="always">${reportSubHeader.description?if_exists}.</fo:block>
 						<fo:block text-align="center" keep-together="always">CONTRCTOR WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
 						<fo:block text-align="center" keep-together="always" white-space-collapse="false">FROMDATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO  DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}       ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>				    		
 		            <fo:block >------------------------------------------------------------------------------------</fo:block>

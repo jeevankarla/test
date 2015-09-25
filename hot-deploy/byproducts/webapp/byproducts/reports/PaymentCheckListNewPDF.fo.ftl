@@ -23,7 +23,7 @@ under the License.
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
                      margin-left="0.2in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
-                <fo:region-body margin-top="1.5in"/>
+                <fo:region-body margin-top="1.7in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -35,7 +35,11 @@ under the License.
         <fo:page-sequence master-reference="main">
         	<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before">
         	<#-->	<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block> -->
-        		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                              MOTHER DAIRY</fo:block>
+        	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+        	    
+        		<fo:block text-align="left" font-size="12pt" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                   ${reportHeader.description?if_exists}.</fo:block>
+        		<fo:block text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;         ${reportSubHeader.description?if_exists}.</fo:block>
         		<fo:block text-align="center" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")}  UserLogin:${userLogin.get("userLoginId")}</fo:block>	 	 	  
         		<#if unDepositedCheques?exists>
         		 <#if unDepositedCheques=="TRUE" >

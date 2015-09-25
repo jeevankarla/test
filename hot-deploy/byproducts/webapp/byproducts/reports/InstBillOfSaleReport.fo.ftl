@@ -65,8 +65,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			                         <fo:block  font-size = "12pt">&#160;</fo:block>
 			                    </fo:table-cell>
 			                    <fo:table-cell>
-			                        <fo:block text-align="left" font-size = "12pt" keep-together="always" white-space-collapse="false" font-weight="bold">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED</fo:block>
-									<fo:block text-align="left" font-size = "12pt" keep-together="always" white-space-collapse="false" font-weight="bold">UNIT:MOTHER DAIRY :G.K.V.K. POST, YELAHANKA, BANGALORE - 560 065</fo:block>
+			                        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			                        
+			                        <fo:block text-align="left" font-size = "12pt" keep-together="always" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}.</fo:block>
+									<fo:block text-align="left" font-size = "12pt" keep-together="always" white-space-collapse="false" font-weight="bold">${reportSubHeader.description?if_exists}.</fo:block>
 									<#if (reportTypeFlag=="instBillOfSale")>
 									<fo:block text-align="left" font-size = "12pt" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;                 ENCLOSURE FOR TAX INVOICE : 2</fo:block>
 									<#else>

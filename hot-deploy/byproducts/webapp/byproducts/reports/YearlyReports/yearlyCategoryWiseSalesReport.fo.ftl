@@ -39,9 +39,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
             </fo:static-content>		
-            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${uiLabelMap.KMFDairySubHeader}</fo:block>
+            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+            <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+            	
+            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${reportHeader.description?if_exists}.</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${reportSubHeader.description?if_exists}.</fo:block>
 					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">Route Marketing Channel</fo:block>
                     <fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">CATEGORY WISE SALES STATEMENT From :: ${fromDate?if_exists}  To:: ${thruDate?if_exists}</fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>

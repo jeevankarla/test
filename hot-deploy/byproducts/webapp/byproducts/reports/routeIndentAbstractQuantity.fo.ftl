@@ -25,7 +25,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.5in" margin-bottom=".5in" margin-left=".3in" margin-right=".5in">
-        <fo:region-body margin-top="1.2in"/>
+        <fo:region-body margin-top="1.4in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -36,8 +36,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 <#assign facilityNumberInPage = 0>
 <#if routeWiseIndentMap?has_content>	
 <fo:page-sequence master-reference="main" force-page-count="no-force">					
-			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> <#assign lineNumber = 5> 
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;     UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> <#assign lineNumber = 5>
+			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+            <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;     ${reportHeader.description?if_exists}.</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;     ${reportSubHeader.description?if_exists}.</fo:block>
 				<#assign facilityNumberInPage = 0>
 				<#if parameters.subscriptionTypeId=="AM" >          		
               		<fo:block text-align="left" white-space-collapse="false">&#160;  ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- MORNING SHIFT ; Date&amp;Time :${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MMMM-yyyy HH:mm:ss")}  </fo:block>  

@@ -33,8 +33,11 @@ under the License.
 			<#if masterList?has_content>		   
 				<fo:page-sequence master-reference="main" >
 					<fo:static-content flow-name="xsl-region-before"  font-weight="7pt" font-family="Courier,monospace">
-						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+					    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					    
+						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${reportHeader.description?if_exists}.</fo:block>
+						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${reportSubHeader.description?if_exists}.</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always" white-space-collapse="false">FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
 		            <fo:block >-------------------------------------------------------------------------------------------------------</fo:block>

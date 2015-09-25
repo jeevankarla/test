@@ -23,7 +23,7 @@ under the License.
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
                      margin-left="1in" margin-right="1in">
-                <fo:region-body margin-top="1.35in"/>
+                <fo:region-body margin-top="1.55in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -35,7 +35,10 @@ under the License.
         	<#-- 
         		<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block> -->
         		<fo:block text-align="left" font-size="10pt" keep-together="always">${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
-        		<fo:block text-align="center"   white-space-collapse="false"> MOTHER DAIRY, KMF UNIT</fo:block>
+        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+        		<fo:block text-align="center"   white-space-collapse="false"> ${reportHeader.description?if_exists}.</fo:block>
+        		<fo:block text-align="center"   white-space-collapse="false"> ${reportSubHeader.description?if_exists}.</fo:block>
         		<fo:block text-align="center" keep-together="always" font-size="11pt" white-space-collapse="false"> UserLogin:${userLogin.get("userLoginId")} ,Time: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")} </fo:block>	 	 	  
         		<fo:block text-align="center" keep-together="always" font-size="11pt" > Cash Payment CheckList Report For Cash On Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "dd-MM-yyyy")}</fo:block>
         		 <fo:block font-family="Courier,monospace"  >                

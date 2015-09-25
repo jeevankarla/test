@@ -35,8 +35,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "productPriceRevisionReport.pdf")}
         </fo:static-content>
            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 			   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160; UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                  ${uiLabelMap.KMFDairyHeader}       Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;               ${uiLabelMap.KMFDairySubHeader}             </fo:block> 
+			   <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+               <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+			   
+			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                  ${reportHeader.description?if_exists}.    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+			   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;               ${reportSubHeader.description?if_exists}.          </fo:block> 
 	           <fo:block text-align="center" keep-together="always"  >---------------------------------------------------------------</fo:block>
 	           <fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >PRICE HISTORY  BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>                
 	           <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------</fo:block>

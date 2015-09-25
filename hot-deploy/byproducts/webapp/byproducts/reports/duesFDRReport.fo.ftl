@@ -32,9 +32,12 @@ under the License.
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
         <fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"></fo:block>
-              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-              		<fo:block font-weight="bold" font-size="14pt" text-align="center">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-                    <fo:block text-align="center" font-size="14pt" font-weight="bold">UNIT : MOTHER DAIRY , G.K.V.K POST, YELAHANKA, BANGALORE -560065.</fo:block>
+              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
+              		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+              		 
+              		<fo:block font-weight="bold" font-size="14pt" text-align="center">${reportHeader.description?if_exists}.</fo:block>
+                    <fo:block text-align="center" font-size="14pt" font-weight="bold">${reportSubHeader.description?if_exists}.</fo:block>
                     <fo:block text-align="center" linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block text-align="center" font-size="14pt" font-weight="bold">Dues In Excess Of Fixed Deposit As On ${displayDate?if_exists}</fo:block>
                     <fo:block keep-together="always" text-align="left" white-space-collapse="false" font-size="12pt">UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>                                         Print Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
