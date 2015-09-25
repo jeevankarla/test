@@ -87,7 +87,7 @@ List periodBillingList = delegator.findList("PeriodBilling",periodBillingConditi
 if(UtilValidate.isEmpty(periodBillingList)){
 	Debug.logError("Conversion Billing not generated","");
 	context.errorMessage = "Conversion Billing not generated.......!";
-	//return;
+	return;
 }
 String butterProductId = "84";
 List milkConversionConditionList = UtilMisc.toList(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"CONVERSION"));
