@@ -123,7 +123,7 @@ partyRoleTypes.add("INTERNAL_ORGANIZATIO");
 partyRoleTypes.add("UNION");
 partyRoleTypes.add("UNITS");
 List unionConditionList = UtilMisc.toList(EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,partyRoleTypes));
-unionConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"PARTY_DISABLED"));
+unionConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"PARTY_DISABLED"),EntityOperator.OR,EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,null)));
 EntityCondition unionCondition = EntityCondition.makeCondition(unionConditionList);
 
 List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",unionCondition, null, null, null, true);
