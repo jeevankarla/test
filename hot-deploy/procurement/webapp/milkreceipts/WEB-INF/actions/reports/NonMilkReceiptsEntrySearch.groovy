@@ -76,8 +76,7 @@
  import net.sf.json.JSONObject;
  import net.sf.json.JSONArray;
  import in.vasista.vbiz.procurement.ProcurementNetworkServices;
- 
- 
+ String flag = flag;
  
  // shifts for Milk Receipts
  allShiftsList = delegator.findList("WorkShiftTypePeriodAndMap",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"MILK_SHIFT"),null,UtilMisc.toList("shiftTypeId"),null,false);
@@ -102,8 +101,12 @@
  hideSearch = "N";
  if(UtilValidate.isNotEmpty(hideSearch) && (hideSearch.equalsIgnoreCase("N"))){
 	 List conditionList=FastList.newInstance();
-	 if(UtilValidate.isNotEmpty(parameters.partyId)){
+	 if(UtilValidate.isNotEmpty(parameters.partyId) && UtilValidate.isNotEmpty(flag) && flag == "Incoming"){
 		 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyId));
+		 context.partyId=parameters.partyId;
+	 }
+	 if(UtilValidate.isNotEmpty(parameters.partyId) && UtilValidate.isNotEmpty(flag) && flag == "OutGoing"){
+		 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , parameters.partyId));
 		 context.partyId=parameters.partyId;
 	 }
 	 if(UtilValidate.isNotEmpty(parameters.tankerName)){
@@ -118,12 +121,21 @@
 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
 		 context.productId=parameters.productId;
 	 }
-	 //conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS , "Y"),EntityOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS ,"N")));
+	 if(UtilValidate.isNotEmpty(flag) && flag=="Incoming"){
 	 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , "MD"));
+	 }
+	 if(UtilValidate.isNotEmpty(flag) && flag=="OutGoing"){
+		 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "MD"));
+	 }
 	 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	 vehicleTripStatusViewList = delegator.findList("WeighmentDetailsAndItemAndVehicleTripStatus",condition,null,UtilMisc.toList("-estimatedStartDate"),null,false);
 	 
-	 weighmentDetailsList = EntityUtil.filterByCondition(vehicleTripStatusViewList, EntityCondition.makeCondition(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS , null ),EntityOperator.OR,EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "WMNT_VCL_OUT" )));
+	 if(UtilValidate.isNotEmpty(flag) && flag=="Incoming"){
+		 weighmentDetailsList = EntityUtil.filterByCondition(vehicleTripStatusViewList, EntityCondition.makeCondition(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS , null ),EntityOperator.OR,EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "WMNT_VCL_OUT" )));
+	 }
+	 if(UtilValidate.isNotEmpty(flag) && flag=="OutGoing"){
+		 weighmentDetailsList = EntityUtil.filterByCondition(vehicleTripStatusViewList, EntityCondition.makeCondition(EntityCondition.makeCondition("estimatedEndDate", EntityOperator.EQUALS , null ),EntityOperator.OR,EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "WMNT_ISSUE_VCL_OUT" )));
+	 }
  }
  sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
  String toDate=null;
@@ -144,8 +156,14 @@
  
  def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd){
 	   List condList=FastList.newInstance();
-	   condList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
-	   condList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
+	   if(UtilValidate.isNotEmpty(flag) && flag=="Incoming"){
+		   condList.add(EntityCondition.makeCondition("receiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
+		   condList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
+	   }
+	   if(UtilValidate.isNotEmpty(flag) && flag=="OutGoing"){
+		   condList.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.GREATER_THAN_EQUAL_TO, shiftDateTimeStart));
+		   condList.add(EntityCondition.makeCondition("estimatedStartDate",EntityOperator.LESS_THAN_EQUAL_TO, shiftDateTimeEnd));
+	   }
 	   cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	   shiftList = EntityUtil.filterByCondition(weighmentDetailsList, cond);
 	   shiftList.each{eachShift->
@@ -167,7 +185,13 @@
 		   List eachCondList = FastList.newInstance();
 		   eachCondList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS , eachShift.vehicleId ));
 		   eachCondList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS , eachShift.sequenceNum ));
-		   eachCondList.add(EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "WMNT_VCL_IN" ));
+		   if(UtilValidate.isNotEmpty(flag) && flag=="Incoming"){
+			   eachCondList.add(EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "WMNT_VCL_IN" ));
+		   }
+		   if(UtilValidate.isNotEmpty(flag) && flag=="OutGoing"){
+			  eachCondList.add(EntityCondition.makeCondition("vehicleTripStatusId", EntityOperator.EQUALS , "WMNT_ISSUE_VCL_INIT" ));
+		   }
+		   
 		   EntityCondition eachCond = EntityCondition.makeCondition(eachCondList,EntityOperator.AND);
 		   vehicleEntryProductList = EntityUtil.filterByCondition(vehicleTripStatusViewList, eachCond);
 		   if(vehicleEntryProductList){
@@ -220,8 +244,8 @@
 				 shiftTimeStart = shiftDateTime +" "+startTime;
 				 shiftTimeEnd = nextDateTime +" "+endTime
 			 }else{
-			 shiftTimeStart = shiftDateTime +" "+startTime;
-			 shiftTimeEnd = shiftDateTime +" "+endTime;
+				 shiftTimeStart = shiftDateTime +" "+startTime;
+				 shiftTimeEnd = shiftDateTime +" "+endTime;
 			 }
 			 shiftDateTimeStart= new java.sql.Timestamp(sdf1.parse(shiftTimeStart).getTime());
 			 shiftDateTimeEnd = new java.sql.Timestamp(sdf1.parse(shiftTimeEnd).getTime());

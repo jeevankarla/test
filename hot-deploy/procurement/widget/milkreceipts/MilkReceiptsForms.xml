@@ -955,4 +955,25 @@
            </hyperlink>
        </field>
     </form>
+    <form name="ListNonMilkIssues" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"  list-name="nonMilkDetailslist"  default-table-style="basic-table " separate-columns="true"   paginate-target="findNoNMilkReceipts">
+    	<field name="weighmentId" title="Record No"><display></display></field>
+    	<field name="partyIdTo"  title="To Party"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]">
+            </display-entity></field>
+        <field name="productId" title="Product"><display-entity entity-name="Product" description="${description}"/></field>
+        <field name="itemSequenceNo" title="Item No"><display/></field>
+        <field name="grossWeight" title="Grs.Weight"><display></display></field>
+        <field name="tareWeight" title="Tr.Weight"><display></display></field>
+        <field name="quantity" title="Qty"><display></display></field>
+        <field name="vehicleEntryDate" title="Entry Date"><display/></field>  
+        <field name="receiveDate" title="TareWeight Date"><display/></field>
+    	<field name="dcNo"><display></display></field>
+    	<field name="vehicleId"><display></display></field>
+    	<field name="sequenceNum" title="Veh.Seq"><display></display></field>
+    	 <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+    	 <field name="report" use-when="!statusId.equals(&quot;WMNT_INPROCESS&quot;)" widget-style="buttontext">
+       		<hyperlink  description="Report" target="NonMilkIncomingReport.pdf" target-window="_blank">
+       		<parameter param-name="weighmentId" from-field="weighmentId"/>
+           </hyperlink>
+       </field>
+    </form>
 </forms>

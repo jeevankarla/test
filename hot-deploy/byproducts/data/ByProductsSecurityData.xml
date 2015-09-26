@@ -366,4 +366,11 @@
     <SecurityGroup description="Viewing the  Purchase Analysis Summary Report!" groupId="BYPRODUCTS_YEARREPOR"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_YEARREPOR"  permissionId="BYPRODUCTS_YEARREPOR"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="BYPRODUCTS_YEARREPOR"/>
+    
+    <SecurityPermission description="Route Marketing cash payment cancel permission" permissionId="BOOTH_PMT_CANCEL"/>
+    <SecurityGroup description="Route Marketing cash payment cancel permission" groupId="BOOTH_PMT_CANCEL"/>
+    <SecurityGroupPermission groupId="BOOTH_PMT_CANCEL"  permissionId="BOOTH_PMT_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BOOTH_PMT_CANCEL"/>
+    
+    
 </entity-engine-xml>

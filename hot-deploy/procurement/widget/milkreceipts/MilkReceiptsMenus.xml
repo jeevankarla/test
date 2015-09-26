@@ -19,7 +19,7 @@
 	        	<or>
 	        		<if-has-permission permission="MILKRECEIPT"  action="_TMPERIOD"/>
 	        	</or>        		
-	        </condition>  
+	        </condition> 
         	<link target="mrTransporterTimePeriod"/>
         </menu-item>    -->  
         <menu-item name="TransporterAdjustments" title="Transporter Adjustments">
@@ -166,9 +166,18 @@
         	</condition>
 	    	<link target="FindNonMilkReceiptsEntry"></link>
 	    </menu-item>
-	   <!--  <menu-item name="NonMilkReceiptIssuesEntry" title="Non Milk Issues">
+	    <menu-item name="NonMilkReceiptIssuesEntry" title="Non Milk Issues">
+	    	<condition>
+				<if-has-permission permission="MR" action="_NONMLK_ISUE_ENTRY"/>
+			</condition>
 	    	<link target="NonMilkReceiptIssuesEntry"></link>
-	    </menu-item> -->
+	    </menu-item>
+	    <menu-item name="FindNonMilkReceiptIssues" title="Find Non Milk Issues">
+	    	<condition>
+				<if-has-permission permission="MR" action="_NONMLK_ISUE_VIEW"/>
+			</condition>
+	    	<link target="FindNonMilkReceiptIssues"></link>
+	    </menu-item>
 	</menu>
 	<menu name="MilkReceiptsVarianceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 	    <menu-item name="findProductVariance" title="Find Variance">
@@ -497,22 +506,34 @@
 			</link>
 		</menu-item>
      </menu>
-     <!-- <menu name="NonMilkReceiptIssuesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+     <menu name="NonMilkReceiptIssuesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="NonMilkReceiptIssuesEntry" title="Issue Initiation">
+			<condition>
+				<if-has-permission permission="MR" action="_NONMILK_ISUE_INIT"/>
+			</condition>
 			<link target="NonMilkReceiptIssuesEntry">
 			</link>
 		</menu-item>
 		<menu-item name="NonMilkReceiptIssuesTareWight" title="Tare Weight">
+			<condition>
+			 	<if-has-permission permission="MR" action="_WEIGHT_ENTRY"/>
+			 </condition>
 			<link target="NonMilkReceiptIssuesTareWight">
 			</link>
 		</menu-item>
 		<menu-item name="NonMilkReceiptIssuesGrsWeight" title="Gross Weight">
+			<condition>
+			 	<if-has-permission permission="MR" action="_WEIGHT_ENTRY"/>
+			 </condition>
 			<link target="NonMilkReceiptIssuesGrsWeight">
 			</link>
 		</menu-item>
 		<menu-item name="NonMilkReceiptIssuesOut" title="Vehicle Out">
+			<condition>
+			 	<if-has-permission permission="MR" action="_TANKER_INOUT"/>
+			 </condition>
 			<link target="NonMilkReceiptIssuesOut">
 			</link>
 		</menu-item>
-     </menu> -->
+     </menu>
 </menus>

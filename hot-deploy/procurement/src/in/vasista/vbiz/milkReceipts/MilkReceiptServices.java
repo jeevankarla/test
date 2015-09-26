@@ -6327,6 +6327,10 @@ public static Map<String, Object> getWeighmentDetails(DispatchContext dctx, Map<
 			resultMap.put("partyName", partyName);
 		}
 		resultMap.put("partyIdTo", transferRecord.get("partyIdTo"));
+		if(UtilValidate.isNotEmpty(transferRecord.get("partyIdTo"))){
+			String partyToName = PartyHelper.getPartyName(delegator, transferRecord.getString("partyIdTo"), false);
+			resultMap.put("partyToName", partyToName);
+		}
 		resultMap.put("weighmentDetails",transferRecord);
 		List<GenericValue> weighmentItemDetailsList = FastList.newInstance();
 		try{
@@ -6515,7 +6519,6 @@ public static Map<String, Object> getWeighmentDetails(DispatchContext dctx, Map<
 	 	        updateVehStatusInMap.put("estimatedStartDate",grossDate);
 	 	        Debug.log("noOfprodcts"+Integer.parseInt(noOfProducts));
 	 	        int prodCount = Integer.parseInt(noOfProducts);
-	 	       Debug.log("final"+(prodCount-1));
 	 	        if(weighmentItemDetailsList.size()== (prodCount-1)){
 		 	        try{
 		 	        	updateVehStatResultMap = dispatcher.runSync("updateWeighmentVehicleTripStatus", updateVehStatusInMap);
@@ -6743,13 +6746,35 @@ public static Map<String, Object> getWeighmentDetails(DispatchContext dctx, Map<
 		 	String comments = (String) context.get("comments");
  			BigDecimal grossWeight = (BigDecimal)context.get("grossWeight");
  			BigDecimal dispatchWeight = (BigDecimal)context.get("dispatchWeight");
+ 			BigDecimal tareWeight = (BigDecimal)context.get("tareWeight");
+ 			BigDecimal quantity = BigDecimal.ZERO;
+ 			if(UtilValidate.isNotEmpty(context.get("quantity"))){
+ 				quantity = (BigDecimal) context.get("quantity");
+ 			}else if(UtilValidate.isNotEmpty(grossWeight) && UtilValidate.isNotEmpty(tareWeight)){
+ 				quantity = grossWeight.subtract(tareWeight);
+ 			}
+ 			
  			try{
  				GenericValue newItem = delegator.makeValue("WeighmentItemDetails");
  				newItem.set("weighmentId", weighmentId);
- 				newItem.set("productId", productId);
- 				newItem.set("grossWeight",grossWeight);
- 				newItem.set("dispatchWeight",dispatchWeight);
- 				newItem.set("comments",comments);
+ 				if(UtilValidate.isNotEmpty(productId)){
+ 					newItem.set("productId", productId);
+ 				}
+ 				if(UtilValidate.isNotEmpty(grossWeight)){
+ 					newItem.set("grossWeight",grossWeight);
+ 				}
+ 				if(UtilValidate.isNotEmpty(dispatchWeight)){
+ 					newItem.set("dispatchWeight",dispatchWeight);
+ 				}
+ 				if(UtilValidate.isNotEmpty(tareWeight)){
+ 					newItem.set("tareWeight",tareWeight);
+ 				}
+ 				if(UtilValidate.isNotEmpty(quantity)){
+ 					newItem.set("quantity",quantity);
+ 				}
+ 				if(UtilValidate.isNotEmpty(comments)){
+ 					newItem.set("comments",comments);
+ 				}
  				newItem.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
  				newItem.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
  				newItem.set("lastModifiedDate", UtilDateTime.nowTimestamp());
@@ -6762,5 +6787,383 @@ public static Map<String, Object> getWeighmentDetails(DispatchContext dctx, Map<
  			}
  			return resultMap;
 	}
+	public static Map<String, Object> createNonMilkReceiptIssueEntry(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	LocalDispatcher dispatcher = dctx.getDispatcher();
+    	Map<String, Object> resultMap = ServiceUtil.returnSuccess("Tanker Recipt Created Successfully");
+   	 	Delegator delegator = dctx.getDelegator();
+   	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	 	//String receivedProductId = (String) context.get("receivedProductId");
+   	 	String tankerName = (String) context.get("tankerName");
+   	 	String partyId = (String) context.get("partyIdFrom");
+	 	String partyIdTo = (String) context.get("partyId");
+	 	String tareDateStr = (String) context.get("tareDate");
+   	 	String tareTime = (String) context.get("tareTime");
+   	 	String noOfProducts = (String) context.get("noOfProducts");
+
+	 	String vehicleStatusId = (String) context.get("vehicleStatusId");
+	 	String weighmentId = (String)context.get("weighmentId");
+		BigDecimal tareWeight = (BigDecimal)context.get("tareWeight");
+	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
+	 	try{
+	 		//we need to check the transfer status of the give tanker
+	 		Map tankerInMap = FastMap.newInstance();
+	 		tankerInMap.put("tankerName", tankerName);
+	 		tankerInMap.put("userLogin", userLogin);
+	 		tankerInMap.put("reqStatusId","WMNT_CREATED");
+	 		
+	 		Map getTankerDetailsMap = getWeighmentDetails(dctx,tankerInMap);
+	 		if(ServiceUtil.isSuccess(getTankerDetailsMap) && UtilValidate.isEmpty(weighmentId)){
+	 			Debug.logError("Exisiting receipt is not completed of the tanker :"+tankerName,module);
+	 			resultMap = ServiceUtil.returnError("Exisiting receipt is not completed of the tanker :"+tankerName);
+	 			return resultMap;
+	 		}
+	 		// we need to create vehicle trip and vehicle trip status
+	 		GenericValue  vehicle = delegator.findOne("Vehicle",UtilMisc.toMap("vehicleId", tankerName),false);
+	 		if(UtilValidate.isEmpty(vehicle)){
+	 			Map vehicleMap = FastMap.newInstance();
+	 			vehicleMap.put("vehicleId", tankerName);
+	 			vehicleMap.put("vehicleNumber", tankerName);
+	 			vehicleMap.put("userLogin",userLogin);
+	 			Map vehicleResultMap = dispatcher.runSync("createVehicle", vehicleMap);
+	 			if(ServiceUtil.isError(vehicleResultMap)){
+	 	 			Debug.logError("Error While Creating vehicle :: "+ServiceUtil.getErrorMessage(vehicleResultMap),module);
+	 	 			resultMap = ServiceUtil.returnError("Error while creating vehicle.");
+	 	 			return resultMap;
+	 	 		}
+	 		}
+	 		//creating vehicle trip
+	 		Map vehicleTripMap = FastMap.newInstance();
+	 		vehicleTripMap.put("vehicleId", tankerName);
+	 		vehicleTripMap.put("partyId", partyId);
+	 		vehicleTripMap.put("userLogin",userLogin);
+	 		Map vehicleTripResultMap = dispatcher.runSync("createVehicleTrip", vehicleTripMap);
+	 		
+	 		if(ServiceUtil.isError(vehicleTripResultMap)){
+	 			Debug.logError("Error While Creating vehicleTrip :: "+ServiceUtil.getErrorMessage(vehicleTripResultMap),module);
+	 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip ");
+	 			return resultMap;
+	 		}
+	 		String sequenceNum = (String)vehicleTripResultMap.get("sequenceNum");
+	 		Timestamp tareDate = UtilDateTime.nowTimestamp();
+ 	        try{
+ 		 		if(UtilValidate.isNotEmpty(tareDateStr)){
+ 		 			if(UtilValidate.isNotEmpty(tareTime)){
+ 		 				tareDateStr = tareDateStr.concat(tareTime);
+ 		 			}
+ 		 			tareDate = new java.sql.Timestamp(sdf.parse(tareDateStr).getTime());
+ 		 		}
+ 	        	
+ 	        }catch(ParseException e){
+ 	        	Debug.logError(e, "Cannot parse date string: " + tareDateStr, module);
+ 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+	 			return resultMap;
+ 	        }
+	 		
+	 		// here based on status id we have to create new trip status 
+	 		
+	 		Map vehicleTripStatusMap = FastMap.newInstance();
+	 		vehicleTripStatusMap.put("vehicleId", tankerName);
+	 		vehicleTripStatusMap.put("sequenceNum", sequenceNum);
+	 		vehicleTripStatusMap.put("statusId","WMNT_ISSUE_VCL_INIT");
+	 		if(UtilValidate.isNotEmpty(vehicleStatusId)){
+	 			vehicleTripStatusMap.put("statusId",vehicleStatusId);
+	 		}
+	 		vehicleTripStatusMap.put("userLogin",userLogin);
+	 		vehicleTripStatusMap.put("estimatedStartDate",tareDate);
+	 		Map vehicleStatusResultMap = FastMap.newInstance(); 
+	 		Debug.log("vehicleStatusId========"+vehicleStatusId);
+	 		
+	 		if(UtilValidate.isNotEmpty(vehicleStatusId) && vehicleStatusId.equalsIgnoreCase("WMNT_ISSUE_VCL_INIT")){
+	 			Debug.log("Hello==========="+vehicleTripStatusMap);
+	 			try{
+		 			vehicleStatusResultMap = dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+			 		if(ServiceUtil.isError(vehicleStatusResultMap)){
+			 			Debug.logError("Error While Creating vehicleTripStatus :: "+ServiceUtil.getErrorMessage(vehicleStatusResultMap),module);
+			 			resultMap = ServiceUtil.returnError("Error while creating vehicle Trip Status");
+			 			return resultMap;
+			 		}	
+	 			}catch(GenericServiceException e){
+	 				Debug.logError("Error while creating vehicleTripStatus ::"+e,module);
+	 				return ServiceUtil.returnError("Error while creating vehicleTripStatus ::"+e.getMessage());
+	 			}
+	 					
+	 			
+	 		}
+	 		GenericValue newWeighmentDetails = null; 
+	 		if(UtilValidate.isNotEmpty(weighmentId)){
+		 		try{
+		 			newWeighmentDetails = delegator.findOne("WeighmentDetails",UtilMisc.toMap("weighmentId",weighmentId),false);
+		 			
+		 		}catch(GenericEntityException e){
+		 			Debug.logError("Error while getting Transfer Details for :: "+weighmentId,module);
+		 			return ServiceUtil.returnError("Error while getting Transfer Details for :: "+weighmentId);
+		 		}
+		 	}
+	 		if(UtilValidate.isEmpty(newWeighmentDetails)){
+	 			newWeighmentDetails = delegator.makeValue("WeighmentDetails");
+	 		}
+	 		newWeighmentDetails.set("vehicleId", tankerName);
+	 		newWeighmentDetails.set("sequenceNum", sequenceNum);
+	 		newWeighmentDetails.set("sendDate", tareDate);
+	 		newWeighmentDetails.set("noOfProducts",noOfProducts);
+	 		newWeighmentDetails.set("partyId", partyId);
+	 		newWeighmentDetails.set("statusId", "WMNT_CREATED");
+	 		newWeighmentDetails.set("partyIdTo", partyIdTo);
+	 		newWeighmentDetails.set("createdByUserLogin", (String)userLogin.get("userLoginId"));
+	 		newWeighmentDetails.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+	 		if(UtilValidate.isEmpty(weighmentId)){
+	 			delegator.createSetNextSeqId(newWeighmentDetails);
+	 		}else{
+	 			delegator.createOrStore(newWeighmentDetails);
+	 		}
+	 		resultMap = ServiceUtil.returnSuccess("Successfully Created with Record Number :"+newWeighmentDetails.get("weighmentId"));
+	 	}catch (Exception e) {
+			// TODO: handle exception
+	 		Debug.logError("Error while creating record==========="+e,module);
+	 		resultMap = ServiceUtil.returnError("Error while creating record==========="+e.getMessage());
+		}
+    	return resultMap;
+   }
+	public static Map<String, Object> updateNonMilkReceiptIssuesEntry(DispatchContext dctx, Map<String, ? extends Object> context) {
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> resultMap = ServiceUtil.returnSuccess("Tanker Recipt Updated Successfully");
+	 	Delegator delegator = dctx.getDelegator();
+	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	 	String tankerName = (String) context.get("tankerName");
+	 	String statusId = (String) context.get("vehicleStatusId");
+	 	String weighmentId = (String) context.get("weighmentId");
+	 	SimpleDateFormat   sdf = new SimpleDateFormat("dd-MM-yyyyHHmm");
+ 	try{
+ 		GenericValue weighmentDetails = delegator.findOne("WeighmentDetails",UtilMisc.toMap("weighmentId", weighmentId),false);
+ 		if(UtilValidate.isEmpty(weighmentDetails)){
+ 			Debug.logError("Error while getting existing Record", module);
+ 			resultMap = ServiceUtil.returnError("Error while getting existing Record");
+ 			return resultMap;
+ 		}
+ 		String sequenceNum = (String) weighmentDetails.get("sequenceNum");
+ 		Map updateVehStatusInMap = FastMap.newInstance();
+    	updateVehStatusInMap.put("userLogin", userLogin);
+    	updateVehStatusInMap.put("statusId", statusId);
+    	updateVehStatusInMap.put("vehicleId", tankerName);
+    	updateVehStatusInMap.put("sequenceNum", sequenceNum);
+    	
+    	Map updateVehStatResultMap = FastMap.newInstance();
+ 		// Need to handle based on the statusId
+ 		if(statusId.equalsIgnoreCase("WMNT_ISSUE_VCL_GRS")){
+ 			String newNoOfProducts = (String) context.get("noOfProduct");
+ 			String noOfProducts = (String) weighmentDetails.get("noOfProducts");
+ 			if(UtilValidate.isNotEmpty(newNoOfProducts) && !newNoOfProducts.equals(noOfProducts)){
+ 				weighmentDetails.set("noOfProducts",newNoOfProducts);
+ 				weighmentDetails.store();
+ 			}
+ 			String productId = (String) context.get("productId");
+ 			noOfProducts = (String) weighmentDetails.get("noOfProducts");
+ 			String comments = (String) context.get("comments");
+ 			BigDecimal grossWeight = (BigDecimal)context.get("grossWeight");
+ 			String grossDateStr = (String) context.get("grossDate"); 
+ 	        String grossTime = (String) context.get("grossTime");
+ 	        String dcNo = (String) context.get("dcNo");
+ 	        Timestamp grossDate = UtilDateTime.nowTimestamp();
+ 	        List weighmentItemDetailsList = FastList.newInstance();
+ 	        try{
+ 		 		if(UtilValidate.isNotEmpty(grossDateStr)){
+ 		 			if(UtilValidate.isNotEmpty(grossTime)){
+ 		 				grossDateStr = grossDateStr.concat(grossTime);
+ 		 			}
+ 		 			grossDate = new java.sql.Timestamp(sdf.parse(grossDateStr).getTime());
+ 		 		}
+ 	        	
+ 	        }catch(ParseException e){
+ 	        	Debug.logError(e, "Cannot parse date string: " + grossDateStr, module);
+ 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+	 			return resultMap;
+ 	        }
+ 	       try{
+	        	Map weighmentItemMap = FastMap.newInstance();
+	        	weighmentItemMap.put("userLogin", userLogin);
+	        	weighmentItemMap.put("weighmentId", weighmentId);
+	        	weighmentItemMap.put("tareWeight", grossWeight);
+	        	weighmentItemDetailsList = delegator.findList("WeighmentItemDetails",EntityCondition.makeCondition("weighmentId",EntityOperator.EQUALS,weighmentId) , null, null, null, false);
+	        	if(UtilValidate.isNotEmpty(weighmentItemDetailsList)){
+	       			weighmentItemDetailsList = EntityUtil.orderBy(weighmentItemDetailsList, UtilMisc.toList("-sequenceNum"));
+	       			GenericValue weighmentItem = EntityUtil.getFirst(weighmentItemDetailsList);
+	       			Debug.log("weighmentItem######"+weighmentItem);
+	       			BigDecimal quantity = BigDecimal.ZERO;
+	       			BigDecimal prevTareWeight = weighmentItem.getBigDecimal("tareWeight");
+	       			quantity = grossWeight.subtract(prevTareWeight);
+	       			weighmentItem.set("productId", productId);
+	       			weighmentItem.set("comments", comments);
+	       			weighmentItem.set("grossWeight",grossWeight);
+	       			weighmentItem.set("quantity",quantity);
+	       			weighmentItem.store();
+	       			updateVehStatusInMap.put("estimatedStartDate",grossDate);
+		 	        int prodCount = Integer.parseInt(noOfProducts);
+		 	       // Debug.log("listsize#####"+weighmentItemDetailsList.size());
+		 	      // Debug.log("listsize#####"+prodCount);
+		 	        if(weighmentItemDetailsList.size()<(prodCount)){
+		       			try{
+			        			Map weighmentItemResultMap = dispatcher.runSync("createWeighmentItemDetails",weighmentItemMap);
+			 	        		if(ServiceUtil.isError(weighmentItemResultMap)){
+			 	        			Debug.logError("Error While Creating weighmentItemDetails :: "+ServiceUtil.getErrorMessage(weighmentItemResultMap),module);
+			 	        			resultMap = ServiceUtil.returnError("Error while creating weighmentItemDetails.");
+			 	        			return resultMap;
+			 	        		}
+		       			}catch (GenericServiceException e) {
+		   					// TODO: handle exception
+		   	 	        	Debug.logError("Service Exception while Creating weighmentItemDetails"+e,module);
+		   		        		resultMap = ServiceUtil.returnError("Exception while Creating weighmentItemDetails::"+e.getMessage());
+		   		 			return resultMap;
+		   	 	        	
+		   				}catch(Exception e){
+		   					Debug.logError("Exception while Creating weighmentItemDetails"+e,module);
+		   		        		resultMap = ServiceUtil.returnError("Exception while Creating weighmentItemDetails ::"+e.getMessage());
+		   		 			return resultMap;
+		   				}	
+		 	        }
+		 	       if(weighmentItemDetailsList.size()==(prodCount)){
+		 	    	  try{
+			 	        	updateVehStatResultMap = dispatcher.runSync("updateWeighmentVehicleTripStatus", updateVehStatusInMap);
+			 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+			 	        		Debug.logError("Error while updating the vehicleTrip Status ::"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+			 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status ::"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+					 			return resultMap;
+			 	        	}
+			 	        }catch(Exception e){
+							Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+				        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
+				 			return resultMap;
+						}
+		 	    	 weighmentDetails.set("statusId", "WMNT_RECEIVED");
+		 	    	 weighmentDetails.set("receiveDate", grossDate);
+		 	        }
+	        	}
+	        	weighmentDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        }catch(Exception e){
+				Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status ::"+e.getMessage());
+	 			return resultMap;
+			}
+	        weighmentDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        weighmentDetails.set("dcNo", dcNo);
+ 		}else if(statusId.equalsIgnoreCase("WMNT_ISSUE_VCL_TARE")){
+ 			BigDecimal tareWeight = (BigDecimal)context.get("tareWeight");
+ 			String tareDateStr = (String) context.get("tareDate"); 
+ 	        String tareTime = (String) context.get("tareTime");
+ 	        Timestamp tareDate = UtilDateTime.nowTimestamp();
+ 	        try{
+ 		 		if(UtilValidate.isNotEmpty(tareDateStr)){
+ 		 			if(UtilValidate.isNotEmpty(tareTime)){
+ 		 				tareDateStr = tareDateStr.concat(tareTime);
+ 		 			}
+ 		 			tareDate = new java.sql.Timestamp(sdf.parse(tareDateStr).getTime());
+ 		 		}
+ 	        	
+ 	        }catch(ParseException e){
+ 	        	Debug.logError(e, "Cannot parse date string: " + tareDateStr, module);
+ 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+	 			return resultMap;
+ 	        }
+ 	        updateVehStatusInMap.put("estimatedStartDate",tareDate);
+ 	        try{
+ 	        	List weighmentItemDetailsList = delegator.findList("WeighmentItemDetails",EntityCondition.makeCondition("weighmentId",EntityOperator.EQUALS,weighmentId) , null, null, null, false);
+ 	        	if(UtilValidate.isEmpty(weighmentItemDetailsList)){
+ 	        		Map weighmentItemMap = FastMap.newInstance();
+ 	 	        	weighmentItemMap.put("userLogin", userLogin);
+ 	 	        	weighmentItemMap.put("weighmentId", weighmentId);
+ 	 	        	weighmentItemMap.put("tareWeight", tareWeight);
+ 	 	        	try{
+ 	 	        		Map weighmentItemResultMap = dispatcher.runSync("createWeighmentItemDetails",weighmentItemMap);
+	 	        		if(ServiceUtil.isError(weighmentItemResultMap)){
+	 	        			Debug.logError("Error While Creating weighmentItemDetails :: "+ServiceUtil.getErrorMessage(weighmentItemResultMap),module);
+	 	        			resultMap = ServiceUtil.returnError("Error while creating weighmentItemDetails.");
+	 	        			return resultMap;
+	 	        		}
+        			}catch (GenericServiceException e) {
+    					// TODO: handle exception
+    	 	        	Debug.logError("Service Exception while Creating weighmentItemDetails"+e,module);
+    		        		resultMap = ServiceUtil.returnError("Exception while Creating weighmentItemDetails::"+e.getMessage());
+    		 			return resultMap;
+    	 	        	
+    				}catch(Exception e){
+    					Debug.logError("Exception while Creating weighmentItemDetails"+e,module);
+    		        		resultMap = ServiceUtil.returnError("Exception while Creating weighmentItemDetails ::"+e.getMessage());
+    		 			return resultMap;
+    				}
+ 	        	}
+ 	        	
+ 	        	updateVehStatResultMap = dispatcher.runSync("updateWeighmentVehicleTripStatus", updateVehStatusInMap);
+ 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+ 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+ 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+		 			return resultMap;
+ 	        	}
+ 	        }catch (GenericServiceException e) {
+				// TODO: handle exception
+ 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+	 			return resultMap;
+ 	        	
+			}catch(Exception e){
+				Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+	 			return resultMap;
+			}
+ 	        
+			weighmentDetails.set("statusId", "WMNT_INPROCESS");
+			weighmentDetails.set("receiveDate", tareDate);
+			weighmentDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 		}else if(statusId.equalsIgnoreCase("WMNT_ISSUE_VCL_OUT")){
+ 			String exitDateStr = (String) context.get("exitDate"); 
+ 	        String exitTime = (String) context.get("exitTime");
+ 	        Timestamp exitDate = UtilDateTime.nowTimestamp();
+ 	        try{
+ 		 		if(UtilValidate.isNotEmpty(exitDateStr)){
+ 		 			if(UtilValidate.isNotEmpty(exitTime)){
+ 		 				exitDateStr = exitDateStr.concat(exitTime);
+ 		 			}
+ 		 			exitDate = new java.sql.Timestamp(sdf.parse(exitDateStr).getTime());
+ 		 		}
+ 	        	
+ 	        }catch(ParseException e){
+ 	        	Debug.logError(e, "Cannot parse date string: " + exitDateStr, module);
+ 	        	resultMap = ServiceUtil.returnError("Cannot parse date string: ");
+	 			return resultMap;
+ 	        }
+ 	        updateVehStatusInMap.put("estimatedStartDate",exitDate);
+ 	        updateVehStatusInMap.put("estimatedEndDate",exitDate);
+ 	        try{
+ 	        	updateVehStatResultMap = dispatcher.runSync("updateWeighmentVehicleTripStatus", updateVehStatusInMap);
+ 	        	if(ServiceUtil.isError(updateVehStatResultMap)){
+ 	        		Debug.logError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap),module);
+ 	        		resultMap = ServiceUtil.returnError("Error while updating the vehicleTrip Status"+ServiceUtil.getErrorMessage(updateVehStatResultMap));
+		 			return resultMap;
+ 	        	}
+ 	        }catch (GenericServiceException e) {
+				// TODO: handle exception
+ 	        	Debug.logError("Service Exception while updating the vehicleTrip Status"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+	 			return resultMap;
+ 	        	
+			}catch(Exception e){
+				Debug.logError("Exception while updating the vehicleTrip Status"+e,module);
+	        		resultMap = ServiceUtil.returnError("Exception while updating the vehicleTrip Status"+e.getMessage());
+	 			return resultMap;
+			}
+			weighmentDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 		}
+ 		weighmentDetails.store();
+ 	}catch(GenericEntityException e){
+ 		Debug.logError("Error While updating the status "+e,module);
+ 		resultMap = ServiceUtil.returnError("Error While updating the status "+e.getMessage());
+ 		return resultMap;
+ 	}
+ 	catch (Exception e) {
+		// TODO: handle exception
+ 		Debug.logError("Error While updating the status:"+e,module);
+ 		resultMap = ServiceUtil.returnError("Error While updating the status:"+e.getMessage());
+ 		return resultMap;
+ 	}
+	return resultMap;
+}	
 
 }

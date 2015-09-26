@@ -32,8 +32,12 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import org.ofbiz.party.party.PartyHelper;
 
 // vehicles auto complete from vehicle master
-
-List<GenericValue> vehiclesList = delegator.findList("Vehicle",null, null, null, null, true);
+List vehicleRoleList = delegator.findList("VehicleRole",null,UtilMisc.toSet("vehicleId"),null,null,false);
+JSONObject otherVehicleCodeJson = new JSONObject();
+for(vehicle in vehicleRoleList){
+	otherVehicleCodeJson.put(vehicle.get("vehicleId"),"Other Vehicle");
+}
+List<GenericValue> vehiclesList = delegator.findList("Vehicle",EntityCondition.makeCondition("vehicleId",EntityOperator.NOT_IN,EntityUtil.getFieldListFromEntityList(vehicleRoleList, "vehicleId", true)), null, null, null, true);
 
 JSONObject vehicleCodeJson = new JSONObject();
 JSONArray vehItemsJSON = new JSONArray();
@@ -57,6 +61,32 @@ for(vehicle in vehiclesList){
 }
 context.put("vehItemsJSON",vehItemsJSON);
 context.put("vehicleCodeJson",vehicleCodeJson);
+context.put("otherVehicleCodeJson", otherVehicleCodeJson);
+List facilityIds = FastList.newInstance();
+List productIds = FastList.newInstance();
+List facilityGroupAndMemberAndFacility = delegator.findList("FacilityGroupAndMemberAndFacility",EntityCondition.makeCondition("primaryParentGroupId",EntityOperator.EQUALS,"MILK_SILO_GROUP"),UtilMisc.toSet("facilityId"),null,null,false);
+if(UtilValidate.isNotEmpty(facilityGroupAndMemberAndFacility)){
+	facilityIds = EntityUtil.getFieldListFromEntityList(facilityGroupAndMemberAndFacility, "facilityId", true);
+	List productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),UtilMisc.toSet("productId"),null,null,false);
+	if(UtilValidate.isNotEmpty(productFacility)){
+		productIds = EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
+	}
+}
+List productList = delegator.findList("Product",EntityCondition.makeCondition("productId",EntityOperator.NOT_IN,productIds),null,null,null,false);
+JSONObject productJson = new JSONObject();
+JSONArray productItemsJSON = new JSONArray();
+for(product in productList){
+	JSONObject productNamesJson = new JSONObject();
+	JSONObject productDetailsJson = new JSONObject();
+	productDetailsJson.put("name",product.get("productName"));
+	productDetailsJson.put("brandName",product.get("brandName"));
+	productNamesJson.put("value",product.get("productId"));
+	productNamesJson.put("label",product.get("productName")+"("+product.get("productId")+")"+ " [" + product.get("brandName") + "]");
+	productItemsJSON.add(productNamesJson);
+	productJson.put(product.get("productId"), productDetailsJson);
+	}
+context.putAt("productItemsJSON", productItemsJSON);
+context.put("productJson",productJson);
 
 String displayScreen = parameters.displayScreen;
 if(UtilValidate.isEmpty(displayScreen)){
@@ -98,7 +128,41 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="VEHICLE_OUT") || (
 	}
 	context.vehicleList = vehicleList;
 }
-
+if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="ISSUE_TARWEIGHT") || (displayScreen=="ISSUE_GRSWEIGHT") || (displayScreen=="ISSUE_OUT")){
+	List conList = FastList.newInstance();
+	if(displayScreen=="ISSUE_TARWEIGHT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"WMNT_ISSUE_VCL_INIT"));
+	}
+	if(displayScreen=="ISSUE_GRSWEIGHT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"WMNT_ISSUE_VCL_TARE"));
+	}
+	if(displayScreen=="ISSUE_OUT"){
+		conList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"WMNT_ISSUE_VCL_GRS"));
+	}
+	
+	conList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
+	EntityCondition ecl = EntityCondition.makeCondition(conList,EntityOperator.AND);
+	List vehicleTripStatus = delegator.findList("VehicleTripStatus",ecl,UtilMisc.toSet("vehicleId","sequenceNum","statusId"),null,null,false);
+	List vehicleList = FastList.newInstance();
+	vehicleTripStatus.each{trip->
+		tempMap=[:];
+		vehicleInTime = delegator.findOne("VehicleTripStatus",[vehicleId:trip.vehicleId,sequenceNum:trip.sequenceNum,statusId:"WMNT_ISSUE_VCL_INIT"],false);
+		List weighmentDetailsList = delegator.findList("WeighmentDetails",EntityCondition.makeCondition([EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,trip.vehicleId),
+																							 EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,trip.sequenceNum)],EntityOperator.AND),UtilMisc.toSet("partyIdTo"),null,null,false);
+		String partyId="";
+		String partyName="";
+		if(weighmentDetailsList){
+			GenericValue weighmentDetails = EntityUtil.getFirst(weighmentDetailsList);
+			partyId = weighmentDetails.partyIdTo;
+			partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		}
+		tempMap.partyId = partyName +"["+partyId+"]";
+		tempMap.inTime = vehicleInTime.estimatedStartDate;
+		tempMap.vehicleId = trip.vehicleId;
+		vehicleList.add(tempMap);
+	}
+	context.vehicleList = vehicleList;
+}
 
 
 
