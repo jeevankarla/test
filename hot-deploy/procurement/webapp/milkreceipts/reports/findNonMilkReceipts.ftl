@@ -129,7 +129,12 @@ function populateVehicleName(){
       <h3>Find Non Milk Receipts</h3>
     </div>
     <div class="screenlet-body">
- 		<form method="post" name="findNoNMilkReceipts" id="findNoNMilkReceipts" action="<@ofbizUrl>findNoNMilkReceipts</@ofbizUrl>">  
+        <#if flag?has_content && flag == "Incoming">
+ 		<form method="post" name="findNoNMilkReceipts" id="findNoNMilkReceipts" action="<@ofbizUrl>findNoNMilkReceipts</@ofbizUrl>"> 
+        </#if> 
+		<#if flag?has_content && flag == "OutGoing">
+ 		<form method="post" name="findNoNMilkReceipts" id="findNoNMilkReceipts" action="<@ofbizUrl>findNoNMilkIssues</@ofbizUrl>"> 
+        </#if>
       		<table width="60%" border="0" cellspacing="0" cellpadding="0">     
         	<tr>
 			  <td>&nbsp;</td>

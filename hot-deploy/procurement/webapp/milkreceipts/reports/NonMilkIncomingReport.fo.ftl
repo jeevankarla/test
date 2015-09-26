@@ -43,15 +43,19 @@ under the License.
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold" >${uiLabelMap.KMFDairyHeader}</fo:block>
 				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold" >${uiLabelMap.KMFDairySubHeader}</fo:block>
 			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > ----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-			    
+			    <#if partyIdTo?has_content && partyIdTo=="MD">
              	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold">ACKNOWLEDGEMENT </fo:block>
-             	
+             	<#else>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold">DISPATCH REPORT </fo:block>
+                </#if>
 			    
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160; </fo:block> 
 			   
-	            
+	             <#if partyIdTo?has_content && partyIdTo=="MD">
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold" >DISPATCH FROM:      </fo:block>
-                
+                <#else>
+				 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold" >DISPATCH TO:    </fo:block>
+                </#if>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  <#if partyDetailsMap.get("partyName")?has_content>${partyDetailsMap.get("partyName")} <#else> </#if><#if partyDetailsMap.get("partyId")?has_content>[${partyDetailsMap.get("partyId")}] <#else> </#if>        </fo:block>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("address1")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("address1")}   <#else> </#if>     </fo:block>
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" ><#if partyDetailsMap.get("address2")?has_content>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  ${partyDetailsMap.get("address2")?if_exists} <#else> </#if>     </fo:block>
@@ -64,9 +68,12 @@ under the License.
              
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">DC NO :         ${dcNo?if_exists}</fo:block>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">TANKER NO :     ${vehicleId?if_exists} </fo:block>
+              <#if partyIdTo?has_content && partyIdTo=="MD">
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">DISPATCH DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(sendDate, "dd MMM yyyy")}                                   DISPATCH TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(sendDate, "HH:mm")}</fo:block>
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">RECEIVED DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiveDate, "dd MMM yyyy")}                                   RECEIVED TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiveDate, "HH:mm")}     </fo:block>
-     	  
+              <#else>
+     	  		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt">DISPATCH DATE : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiveDate, "dd MMM yyyy")}                                   DISPATCH TIME : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiveDate, "HH:mm")}     </fo:block>
+              </#if>  
       	    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------</fo:block>
             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">S.NO       PRODUCT     					DISPATCH WEIGHT   GROSS WEIGHT		TARE WEIGHT	   QUANTITY	</fo:block>
             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------</fo:block>
@@ -104,8 +111,14 @@ under the License.
             		</fo:table-cell>
             		<#if weighmentDetails.get("grossWeight")?has_content>
                     	<#assign grossWeight = weighmentDetails.get("grossWeight")>
-                         <#if sno == 1>
-                         	<#assign totGrsWeight = grossWeight>
+                         <#if partyIdTo?has_content && partyIdTo=="MD">
+                         	<#if sno == 1>
+                          		<#assign totGrsWeight = grossWeight>
+                         	</#if>
+                         <#else>
+                            <#if sno == listSize>
+                         		<#assign totGrsWeight = grossWeight>
+                        	</#if>
                          </#if>
                         <fo:table-cell>
             				<fo:block   text-align="left" font-family="Courier,monospace"  font-size="10pt" >${grossWeight?if_exists}</fo:block>
@@ -118,9 +131,15 @@ under the License.
             		
                     <#if weighmentDetails.get("tareWeight")?has_content>
                     	<#assign tareWeight = weighmentDetails.get("tareWeight")>
-						<#if sno == listSize>
-                         	<#assign totTareWeight = tareWeight>
+ 						<#if partyIdTo?has_content && partyIdTo=="MD">
+							<#if sno == listSize>
+                         		<#assign totTareWeight = tareWeight>
+                        	</#if>
+                        <#else>
+                            <#if sno == 1>
+                          		<#assign totTareWeight = tareWeight>
                          </#if>
+                        </#if>
 						<fo:table-cell>
 	            			<fo:block   text-align="left" font-family="Courier,monospace"  font-size="10pt" >${tareWeight?if_exists}</fo:block>
             			</fo:table-cell>

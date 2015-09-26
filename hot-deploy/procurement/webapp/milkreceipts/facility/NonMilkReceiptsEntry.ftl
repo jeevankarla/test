@@ -79,6 +79,19 @@ $(document).ready(function() {
  		makeDatePicker1("sendDate","fromDate");
  		//makeDatePicker("entryDate","fromDate");
  		$('#dcNo').removeAttr("readonly");
+ 		$('#tankerName').focusout(function (){
+ 			var vehicleId = $('#tankerName').val();
+ 			if(typeof(vehicleId)!= "undefined" && vehicleId!='' && vehicleId != null ){
+ 			var otherVehicleCodeJson = ${StringUtil.wrapString(otherVehicleCodeJson)};
+ 				var newVehicleId = otherVehicleCodeJson[vehicleId];
+ 				if(newVehicleId){
+ 					alert("Please check vehicle. This is Ptc or Route Vechile.!");
+ 					$('#tankerName').val('');
+ 					$('span#tankerToolTip').html('');
+ 					return false;
+ 				}
+ 			}
+ 		});
  	}
  	if($('#displayScreen').val()=="VEHICLE_OUT"){
  		$('#dcNo').attr("readonly","readonly");
@@ -90,6 +103,18 @@ $(document).ready(function() {
  		$('#sendWeightToolTip').attr("readonly","readonly");
  		$('#netWeightToolTip').attr("readonly","readonly");
  		makeDatePicker("tareDate","fromDate");
+ 		$('#tareWeight').focusout(function (){
+    		if(grsWeight>0){
+    			var checkVal = parseInt($('#tareWeight').val());
+    			if(typeof(checkVal)!= "undefined" && checkVal!='' && checkVal != null ){
+    				if(checkVal>=grsWeight){
+    					alert("Please check tare Weight.!");
+    					$('#tareWeight').val('');
+    					return false;
+    				}
+    			}
+    		}
+		});
  	}
  	if($('#displayScreen').val()=="VEHICLE_GROSSWEIGHT"){
  		$('#dcNo').attr("readonly","readonly");
@@ -97,7 +122,7 @@ $(document).ready(function() {
  		$('#grossWeight').focusout(function (){
     		if(grsWeight>0){
     			var checkVal = parseInt($('#grossWeight').val());
-    			if(typeof(checkVal)!= "undefined" && checkVal!=='' && checkVal != null ){
+    			if(typeof(checkVal)!= "undefined" && checkVal!='' && checkVal != null ){
     				if(checkVal>=grsWeight){
     					alert("Please check Gross Weight.!");
     					$('#grossWeight').val('');
@@ -108,7 +133,7 @@ $(document).ready(function() {
 		});
 		$('#productId').focusout(function(){
 			var productIdVal = $('[name=productId]').val();
-			if(typeof(itemsList)!= "undefined" && itemsList!=='' && itemsList != null ){
+			if(typeof(itemsList)!= "undefined" && itemsList!='' && itemsList != null ){
 				for(var i=0 ; i<itemsList.length ; i++){
 					var innerItems=itemsList[i];
 					var prodId = innerItems['productId'];
@@ -148,6 +173,8 @@ $(document).ready(function() {
 	  		}
 	  		if(e.target.name == "productId"){
 	  			$('[name=productId]').val(($('[name=productId]').val()).toUpperCase());
+	  			populateProductNames();
+				populateProductSpan();	
 	  		}
 	  		if(e.target.name == "partyId"){
 	  			$('[name=partyId]').val(($('[name=partyId]').val()).toUpperCase());
@@ -174,8 +201,8 @@ $(document).ready(function() {
 	  		}
 	  		if(e.target.name == "noOfProduct"){
 	  			var prodCount = $('#noOfProduct').val(); 		
-	  			   if(typeof(prodCount)!= "undefined" && prodCount!=='' && prodCount != null ){
-	  			   		if(typeof(productsCount)!= "undefined" && productsCount!=='' && productsCount != null ){
+	  			   if(typeof(prodCount)!= "undefined" && prodCount!='' && prodCount != null ){
+	  			   		if(typeof(productsCount)!= "undefined" && productsCount!='' && productsCount != null ){
 	  			   			if(prodCount<=productsCount){
 	  			   				alert("Please check no Of Products..!");
 	  			   				$('#noOfProduct').val('');
@@ -186,7 +213,7 @@ $(document).ready(function() {
 	  		}
 	  		if(e.target.name == "noOfProducts"){
 	  			var prodCount = $('#noOfProducts').val(); 		
-	  			   if(typeof(prodCount)!= "undefined" && prodCount!=='' && prodCount != null && prodCount<1){
+	  			   if(typeof(prodCount)!= "undefined" && prodCount!='' && prodCount != null && prodCount<1){
 		   				alert("Please check no Of Products..!");
 		   				$('#noOfProducts').val('1');
 		   				return false;
@@ -205,6 +232,29 @@ $(document).ready(function() {
 			
 	}); 
 });
+function populateProductNames(){
+	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
+		$("#productId").autocomplete({					
+			source:  availableTags,
+			select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $('#productId').val(selectedValue);
+					        populateProductSpan();
+					    }
+		});
+}
+function populateProductSpan(){
+	var productJson = ${StringUtil.wrapString(productJson)}
+	var tempProductJson = productJson[$('[name=productId]').val()];
+	if(tempProductJson){
+		$('span#productToolTip').addClass("tooltip");
+		$('span#productToolTip').removeClass("tooltipWarning");
+		productName = tempProductJson["name"];
+		$('[name=productId]').val($('[name=productId]').val());
+		$('span#productToolTip').html(productName);
+		
+	}
+}
 function populateVehicleName(){
 	var availableTags = ${StringUtil.wrapString(vehItemsJSON)!'[]'};
 				$("#tankerName").autocomplete({					
@@ -333,7 +383,7 @@ function fetchWeighmentDetails(){
            		var  weighmentItems = [];
            		weighmentItems=result['weighmentItemDetails'];
            		itemsList = result['weighmentItemDetails'];
-           		if(typeof(weighmentItems)!= "undefined" && weighmentItems!=='' && weighmentItems != null ){
+           		if(typeof(weighmentItems)!= "undefined" && weighmentItems!='' && weighmentItems != null ){
            			productsCount = weighmentItems.length;
 	           		$("#productsTable").append('<tr><td></td><td align="right"><u><span class="h2">UN LOADED PRODUCTS LIST</span></u></td></tr>');
 	           		$("#productsTable").append('<tr><td></td><td><u><span class="h4"><b>NAME</b></span></u></td><td><u><span class="h4"><b>DISP WEIGHT</b></span></u></td>&nbsp;<td><u><span class="h4"><b>GRS WEIGHT</b></span></u></td>&nbsp;<td><u><span class="h4"><b>TR WEIGHT</b></span></u></td><td><u><span class="h4"><b>QUANTITY</b></span></u></td></tr>');
@@ -344,15 +394,15 @@ function fetchWeighmentDetails(){
 							var itemGrsWeight = "";
 							var itemTareWeight = "";
 							var qty = 0;
-							if(typeof(innerList['dispatchWeight'])!= "undefined" && innerList['dispatchWeight']!=='' && innerList['dispatchWeight'] != null ){
+							if(typeof(innerList['dispatchWeight'])!= "undefined" && innerList['dispatchWeight']!='' && innerList['dispatchWeight'] != null ){
 								itemDispatchWeight=innerList['dispatchWeight'];
 							}
-							if(typeof(innerList['grossWeight'])!= "undefined" && innerList['grossWeight']!=='' && innerList['grossWeight'] != null ){
+							if(typeof(innerList['grossWeight'])!= "undefined" && innerList['grossWeight']!='' && innerList['grossWeight'] != null ){
 								itemGrsWeight=innerList['grossWeight'];
 								grsWeight = parseInt(itemGrsWeight);
 								qty = parseInt(itemGrsWeight);
 							}
-							if(typeof(innerList['tareWeight'])!= "undefined" && innerList['tareWeight']!=='' && innerList['tareWeight'] != null ){
+							if(typeof(innerList['tareWeight'])!= "undefined" && innerList['tareWeight']!='' && innerList['tareWeight'] != null ){
 								itemTareWeight=innerList['tareWeight'];
                                 if(parseInt(itemTareWeight)>0){
 									qty = qty - parseInt(itemTareWeight);
@@ -378,7 +428,7 @@ function fetchWeighmentDetails(){
 	   			if(displayScreen == "VEHICLE_TAREWEIGHT"){
 	   				grossWeight = result['grossWeight'];
 	   				var tareweightVal = weighmentDetails['tareWeight']
-           				if(typeof(tareweightVal)!= "undefined" && tareweightVal!=='' && tareweightVal != null ){
+           				if(typeof(tareweightVal)!= "undefined" && tareweightVal!='' && tareweightVal != null ){
            					$('[name=tareWeight]').val(tareweightVal);
            					$('#tareWeight').attr("readonly","readonly");
            					populateNetWeight();
@@ -410,7 +460,7 @@ function fetchWeighmentDetails(){
            				if(typeof(noOfProduct)!= "undefined" && noOfProduct!='' && noOfProduct!= null ){
            					$('#noOfProduct').val(noOfProduct);
            				}
-           				if(typeof(grossweightVal)!= "undefined" && grossweightVal!=='' && grossweightVal != null ){
+           				if(typeof(grossweightVal)!= "undefined" && grossweightVal!='' && grossweightVal != null ){
            					$('[name=grossWeight]').val(grossweightVal);
            					$('#grossWeight').attr("readonly","readonly");
            				}else{
@@ -717,8 +767,8 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h2"> Gross Weight(Kgs)</span> </td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
                                 <tr>
-        							<td align='left' valign='middle' nowrap="nowrap"><span class="h2">Proudct </span></td><td>
-						        		<@htmlTemplate.lookupField name="productId" id="productId" formName="nonMilkReceiptEntry" size="10pt" fieldFormName="LookupProduct"/>
+        							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Proudct </span></td><td>
+						        		<input type="text" size="15" id="productId"  name="productId" autocomplete="off" /><span class="tooltip" id ="productToolTip">none</span></td>
 									</td>
 				        		</tr>
                                 <tr>

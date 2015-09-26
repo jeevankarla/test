@@ -66,12 +66,24 @@ if(UtilValidate.isNotEmpty(weighmentId) && !("undefined".equals(weighmentId))){
 	weighmentAndItemDetailsList = delegator.findList("WeighmentAndItemDetails", condition, null,null, null, false);
 	if(UtilValidate.isNotEmpty(weighmentAndItemDetailsList)){
 		weighmentAndItemDetail = EntityUtil.getFirst(weighmentAndItemDetailsList);
-		partyId = weighmentAndItemDetail.getString("partyId");
+		partyId = "";partyIdTo="";
+		if(UtilValidate.isNotEmpty(weighmentAndItemDetail.getString("partyId"))){
+			partyId = weighmentAndItemDetail.getString("partyId");
+			if(UtilValidate.isNotEmpty(weighmentAndItemDetail.getString("partyIdTo")) && partyId =="MD"){
+				partyId = weighmentAndItemDetail.getString("partyIdTo");
+			}
+		}
+		partyIdTo =  weighmentAndItemDetail.getString("partyIdTo");
+
 		vehicleId  = weighmentAndItemDetail.getString("vehicleId");
-		dcNo = weighmentAndItemDetail.getString("dcNo");
+		dcNo = "";
+		if(UtilValidate.isNotEmpty(weighmentAndItemDetail.getString("dcNo"))){
+			dcNo = weighmentAndItemDetail.getString("dcNo");
+		}
 		sendDate = weighmentAndItemDetail.getTimestamp("sendDate");
 		receiveDate = weighmentAndItemDetail.getTimestamp("receiveDate");
 		listSize = weighmentAndItemDetailsList.size();
+		context.partyIdTo = partyIdTo;
 		context.vehicleId = vehicleId; 
 		context.dcNo = dcNo;
 		context.sendDate = sendDate;

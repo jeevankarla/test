@@ -218,4 +218,23 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMILK_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMILK_VIEW"/>
     
+     <SecurityPermission description="Non Milk Issue Entry View.!" permissionId="MR_NONMLK_ISUE_ENTRY"/>
+    <SecurityGroup description="Non Milk Issue Entry View.!" groupId="MR_NONMLK_ISUE_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_NONMLK_ISUE_ENTRY" permissionId="MR_NONMLK_ISUE_ENTRY"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMLK_ISUE_ENTRY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMLK_ISUE_ENTRY"/>
+    
+    <SecurityPermission description="Non Milk Issue Find View.!" permissionId="MR_NONMLK_ISUE_VIEW"/>
+    <SecurityGroup description="Non Milk Issue Find View.!" groupId="MR_NONMLK_ISUE_VIEW"/>
+    <SecurityGroupPermission groupId="MR_NONMLK_ISUE_VIEW" permissionId="MR_NONMLK_ISUE_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMLK_ISUE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMLK_ISUE_VIEW"/>
+    
+    <SecurityPermission description="Non Milk Issue Initiation View.!" permissionId="MR_NONMILK_ISUE_INIT"/>
+    <SecurityGroup description="Non Milk Issue Initiation View.!" groupId="MR_NONMILK_ISUE_INIT"/>
+    <SecurityGroupPermission groupId="MR_NONMILK_ISUE_INIT" permissionId="MR_NONMILK_ISUE_INIT"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMILK_ISUE_INIT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMILK_ISUE_INIT"/>
+    
+    
 </entity-engine-xml>
