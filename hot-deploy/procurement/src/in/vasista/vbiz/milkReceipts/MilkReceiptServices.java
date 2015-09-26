@@ -3264,7 +3264,16 @@ public class MilkReceiptServices {
 					String shipmentId ="";
 					List <GenericValue> milkTransferAndItemList = delegator.findList("MilkTransferAndMilkTransferItem", EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId), null, null, null, false);
 					GenericValue milkTransfer = EntityUtil.getFirst(milkTransferAndItemList) ;
-					
+					GenericValue milkTrans = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId",milkTransferId), false);
+					if(UtilValidate.isNotEmpty(milkTrans)){
+						String statusCheck = milkTrans.getString("statusId");
+						if(statusCheck.equals("MXF_APPROVED")){
+							Debug.logError(milkTransferId+" Record Already Approved.", module);
+							request.setAttribute("_ERROR_MESSAGE_",milkTransferId+" this Record Already Approved.");	
+							TransactionUtil.rollback();
+					  		return "error";
+						}
+					}
 					if(UtilValidate.isNotEmpty(milkTransfer)){
 						String partyIdFrom = milkTransfer.getString("partyId");
 						String containerId = milkTransfer.getString("containerId");
@@ -3333,7 +3342,6 @@ public class MilkReceiptServices {
 					  		return "error";
 			            }
 			            
-						GenericValue milkTrans = delegator.findOne("MilkTransfer", UtilMisc.toMap("milkTransferId",milkTransferId), false);
 						milkTrans.set("statusId", "MXF_APPROVED");
 						milkTrans.set("shipmentId",shipmentId);
 						milkTrans.store();
