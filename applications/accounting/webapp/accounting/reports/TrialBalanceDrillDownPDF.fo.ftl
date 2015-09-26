@@ -15,6 +15,8 @@
 		<fo:block text-align="left" white-space-collapse="false"
 									font-size="10pt" keep-together="always" >&#160;${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
 			<fo:block>
+			  <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+			  <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 				<fo:table table-layout="fixed" width="100%" space-before="0.2in"
 					table-border-style="solid" margin-left=".1in" margin-right=".1in">
 					<fo:table-column column-width="27%" />
@@ -65,8 +67,9 @@
 		                      </fo:block-container>
 		                    </fo:table-cell>
 		                    <fo:table-cell>
-								 <fo:block text-align="center" white-space-collapse="false" font-size="14pt" font-weight="bold" keep-together="always">&#160;MOTHER DAIRY,YALAHANKA KMF UNIT: GKVK POST.BANGALORE-560 065</fo:block>
-		                    </fo:table-cell>
+                                <fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}</fo:block>
+			                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportSubHeader.description?if_exists}</fo:block>
+			                </fo:table-cell>
 				       </fo:table-row>
 				       <fo:table-row>
 		                    <fo:table-cell>
