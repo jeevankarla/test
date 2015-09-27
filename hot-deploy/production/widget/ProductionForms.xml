@@ -576,10 +576,10 @@
           <field name="issuedQty" title="IssuedQty" widget-style="tabletextright"  widget-area-style="align-text"><display/></field>  
          <field name="QOH" title="Inv. Available" ><text default-value="0" size="6" read-only="true"></text> </field>
         <field name="tempQty" title="QtyToIssue" ><text size="5"  default-value="0"> </text></field>
-        <field use-when="&quot;${qcCheck}&quot;.equals(&quot;INCOMPLETE&quot;) &amp;&amp; showTransferButton == &quot;N&quot;" name="QC Details" widget-style="buttontext">
+   <!-- <field use-when="&quot;${qcCheck}&quot;.equals(&quot;INCOMPLETE&quot;) &amp;&amp; showTransferButton == &quot;N&quot;" name="QC Details" widget-style="buttontext">
            <hyperlink  target-type="plain" description="QC Details"  target="javascript: showQcForm('${productId}','', 'CreateIssueanceReqQcDetails', 'custRequestId', '${custRequestId}');" ></hyperlink>
-        </field>
-        <field id-name="checkIssuance" name="checkIssuance"  title="Select" use-when="showTransferButton == &quot;N&quot; &amp;&amp;&quot;${qcCheck}&quot;.equals(&quot;COMPLETE&quot;)" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
+        </field> -->
+        <field id-name="checkIssuance" name="checkIssuance"  title="Select" use-when="showTransferButton == &quot;N&quot;" > <check all-checked="false" > <option key="${custRequestId}_${custRequestItemSeqId}_${tempQty}_${shipmentTypeId}" description=" " ></option></check> </field>
         <field name="issueThruTransfer" widget-style="buttontext" title="Issue thru Transfers" use-when= "showTransferButton == &quot;Y&quot;" event="onclick" action="javascript:setFormValues(this);">
             <!-- <display  description="Transfer"/> -->
             <hyperlink target-type="plain" target="javascript:showProductFacilityAvailableForm('${custRequestId}','${custRequestItemSeqId}','${fromPartyId}','${productId}','${quantity}','${issuedQty}','${tempQty}');" description="Issue thru Transfer">
