@@ -92,21 +92,21 @@ under the License.
               <fo:table-cell ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="10pt" >DISPATCH</fo:block></fo:table-cell>       		
               <fo:table-cell  ><fo:block text-align="left"  font-weight="bold"  font-size="10pt">${milkTransferMap.get("sendProductId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendQtyKgs")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendTemparature")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendAcidity")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendLR")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("fat")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("snf")?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendTemparature")?if_exists?string("##0.0")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendAcidity")?if_exists?string("##0.000")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("sendLR")?if_exists?string("##0.0")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("fat")?if_exists?string("##0.0")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block  text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("snf")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
              </fo:table-row>
             <fo:table-row>
               <fo:table-cell ><fo:block text-align="left"  font-weight="bold" keep-together="always" font-size="10pt" >ACKNOWLEDGED</fo:block></fo:table-cell>       		
              <fo:table-cell  ><fo:block text-align="left"  font-weight="bold"  font-size="10pt">${milkTransferMap.get("receivedProductId")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedTemparature")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedAcidity")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedLR")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedFat")?if_exists}</fo:block></fo:table-cell>       		
-              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedSnf")?if_exists}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedTemparature")?if_exists?string("##0.0")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedAcidity")?if_exists?string("##0.000")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedLR")?if_exists?string("##0.0")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedFat")?if_exists?string("##0.0")}</fo:block></fo:table-cell>       		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="10pt">${milkTransferMap.get("receivedSnf")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
              </fo:table-row>
     	</fo:table-body>
     		</fo:table>
