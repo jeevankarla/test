@@ -96,7 +96,7 @@ under the License.
                                 <#assign vat=0>
                                 <#assign cst=0>
                                 <#assign total=0>
-                                <#assign sequenceId = null>
+                                <#assign sequenceId = "">
           						 <#list invoiceMap as invoiceDetails>
           						 <#assign invoice = invoiceDetails.getValue()>
           						 <#list invoice as invoiceDtls>
@@ -461,6 +461,22 @@ under the License.
 	                	      <#list productDetailsList as prodTotals>
 	                	      
 	                	      	<#if !(productType == prodTotals.get("productType"))>
+	                	      		<#if categoryTotal[productType]?has_content>
+	                	      			<fo:table-row>
+		                    				<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>	  
+			                       			</fo:table-cell>
+			                       			<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">Section Total:</fo:block>  
+			                       			</fo:table-cell>
+			                       			<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+			                       			</fo:table-cell>
+			                       			<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" font-weight="bold" white-space-collapse="false">${categoryTotal[productType]?if_exists?string("#0.00")}</fo:block>  
+			                       			</fo:table-cell>
+	                       				</fo:table-row>
+	                	      		</#if>
 	                	      		<#assign productType = prodTotals.get("productType")>
 	                	     		<#assign productTypeName = delegator.findOne("ProductType", {"productTypeId" : productType}, true)>
 	                	     		<fo:table-row>
@@ -513,6 +529,22 @@ under the License.
 	                       			</fo:table-cell>
 	                       		</fo:table-row>
 		                    </#list>
+		                      <#if categoryTotal[productType]?has_content>
+		                    	<fo:table-row>
+                    				<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>	  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">Section Total:</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" font-weight="bold" white-space-collapse="false">${categoryTotal[productType]?if_exists?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+	                       		</fo:table-row>
+	                       		</#if>
 		                    </#if>
 							<fo:table-row> 
 							       <fo:table-cell number-columns-spanned="2">   						
