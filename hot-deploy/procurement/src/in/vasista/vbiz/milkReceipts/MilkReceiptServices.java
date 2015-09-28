@@ -3150,7 +3150,7 @@ public class MilkReceiptServices {
         BigDecimal recdSnf = (BigDecimal)context.get("recdSnf");
 		
         BigDecimal sendCLR = (BigDecimal)context.get("sendCLR");
-        BigDecimal recdCLR = (BigDecimal)context.get("recdCLR");
+        BigDecimal recdCLR =  (BigDecimal)context.get("recdCLR");
         
         BigDecimal recdPH = (BigDecimal)context.get("recdPH");
         BigDecimal recdMBRT = (BigDecimal)context.get("recdMBRT");
