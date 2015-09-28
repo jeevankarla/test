@@ -168,7 +168,11 @@ vatMap=[:];
 												product = delegator.findOne("Product", [productId : currentProduct], false);
 												productId = productValue.getKey();
 													exprList=[];
-													exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
+													if(product.productTypeId == "FINISHED_GOOD"){
+														exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "SALES_ACANLY"));
+													}else{
+														exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
+													}
 													exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 													condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 													productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
@@ -197,7 +201,6 @@ vatMap=[:];
 																virtualProductId = product.brandName;
 															}
 															productDetailsList = UtilMisc.sortMaps(prodTempMap.values().asList(), UtilMisc.toList("productCategory"));
-															context.productDetailsList=productDetailsList;
 														}
 														if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 															quantity =productValue.getValue().get("total");
@@ -296,7 +299,21 @@ vatMap=[:];
 			//dayWisePpdMap.put(dayBegin, ppdMap);
 		}
 	}
-	//Debug.log("ppd------------------------------------------------"+dayWiseInvoice);
+	productDetailsList = UtilMisc.sortMaps(productDetailsList, UtilMisc.toList("productType"));
+	categoryCheck = "";
+	categoryTotal = [:]; 
+	productDetailsList.each{ productDetail ->
+		if(categoryCheck == productDetail.productType){
+			categoryTotal[productDetail.productType] += productDetail.amount;
+		}
+		else{
+			categoryCheck = productDetail.productType;
+			categoryTotal[categoryCheck] = productDetail.amount;
+		}
+	}
+	
+context.categoryTotal = categoryTotal;	
+context.productDetailsList=productDetailsList;
 context.shippingDetails=shippingDetails;	
 context.categoryType=categoryType;
 context.ppdMap=ppdMap;
