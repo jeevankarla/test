@@ -33,7 +33,11 @@ if(UtilValidate.isNotEmpty(facilityDepartments)){
 			 facilityIds = EntityUtil.getFieldListFromEntityList(facilityDepts, "facilityId", true);
 			 List<GenericValue> facilityProducts = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds), null,UtilMisc.toList("productId"),null,false);
 			 productIds = EntityUtil.getFieldListFromEntityList(facilityProducts, "productId", true);
-			 List<GenericValue> productList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null,UtilMisc.toList("internalName"),null,false);
+			 List prodCondList =FastList.newInstance();
+			 prodCondList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,productIds ));
+			 prodCondList.add(EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS,"FINISHED_GOOD" ));
+			 EntityCondition prodCond = EntityCondition.makeCondition(prodCondList,EntityOperator.AND);
+			 List<GenericValue> productList = delegator.findList("Product",prodCond, null,UtilMisc.toList("internalName"),null,false);
 			 JSONArray arrayJSON = new JSONArray();
 			 productList.each{product->
 				 JSONObject newObj=new JSONObject();
@@ -54,3 +58,17 @@ allShiftsList = delegator.findList("WorkShiftTypePeriodAndMap",EntityCondition.m
 if(UtilValidate.isNotEmpty(allShiftsList)){
 	context.allShiftsList=allShiftsList;
 }
+
+
+List deptCondList =FastList.newInstance();
+deptCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL,null ));
+deptCondList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS,"SILO" ));
+EntityCondition deptCond = EntityCondition.makeCondition(deptCondList,EntityOperator.AND);
+siloDepartments=EntityUtil.filterByCondition(facility,deptCond);
+if(UtilValidate.isNotEmpty(siloDepartments)){
+	siloDeptIds = EntityUtil.getFieldListFromEntityList(siloDepartments, "ownerPartyId", true);
+	List<GenericValue> partyGroupSilo = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.IN, siloDeptIds), null,UtilMisc.toList("groupName"),null,false);
+	context.partyGroupSilo=partyGroupSilo;
+}
+
+

@@ -193,7 +193,12 @@ if(UtilValidate.isNotEmpty(productFacilityDetails)){
 		facilityProdIds.each{eachProdId->
 			productFacilities = EntityUtil.filterByCondition(productFacilityDetails, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
 			eachProdFacilityIds=EntityUtil.getFieldListFromEntityList(productFacilities, "facilityId", true);
-			inventoryItemForProducts = delegator.findList("InventoryItem",EntityCondition.makeCondition("facilityId", EntityOperator.IN , eachProdFacilityIds)  , null, null, null, false );
+			List invCondList =FastList.newInstance();
+			invCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , eachProdFacilityIds));
+			invCondList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , eachProdId));
+			invCondList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN , BigDecimal.ZERO));
+			EntityCondition invCond = EntityCondition.makeCondition(invCondList,EntityOperator.AND);
+			inventoryItemForProducts = delegator.findList("InventoryItem",invCond , null, null, null, false );
 			eachProdInvFacilityIds=EntityUtil.getFieldListFromEntityList(inventoryItemForProducts, "facilityId", true);
 			java.util.Collections.sort(eachProdInvFacilityIds);
 			productFacilityIdMap.putAt(eachProdId, eachProdInvFacilityIds);

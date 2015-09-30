@@ -8,7 +8,7 @@
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
 		</fo:layout-master-set>
-				        <#if allDetailsRegisterMap?has_content>
+				        <#if mpuAllSilosMap?has_content>
 		
        <fo:page-sequence master-reference="main">
 		    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" >	 				       		
@@ -23,6 +23,7 @@
 				<fo:block text-align="center" white-space-collapse="false" font-size="12pt"  font-weight="bold" >&#160;   MILK PROCESSING REGISTER REPORT                                      </fo:block>                
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+          <#if allDetailsRegisterMap?has_content>
                 <fo:block text-align="left">
                    <fo:table border-style="dotted" width="100%" align="right" table-layout="fixed"  font-size="12pt">
                        <fo:table-column column-width="30pt"/>                      
@@ -427,7 +428,7 @@
 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="25pt" > &#160;&#160;  </fo:block>
 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="25pt" > &#160;&#160;  </fo:block>
 
-
+</#if>
 
 
 

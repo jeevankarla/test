@@ -29,7 +29,7 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
- <#if openingBalProductMap?has_content> 
+ <#if closingBalanceFinalMap?has_content> 
 ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 <#-- <#if milkTransferMap?has_content> -->
 
@@ -113,12 +113,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
   	             <#assign qtyTotal = (Static["java.math.BigDecimal"].ZERO)>
   	             <#assign fatKgTotal = (Static["java.math.BigDecimal"].ZERO)>
   	             <#assign snfKgTotal = (Static["java.math.BigDecimal"].ZERO)>
-             <#if convMilkReceipts?has_content> 
+             <#if convUnionProductsMap?has_content> 
 	             <fo:table-row border-style="solid">
                 	 <fo:table-cell  border-style="solid"><fo:block text-align="center" font-weight="bold" font-size="12pt"  >A</fo:block></fo:table-cell>       		
                 	 <fo:table-cell  border-style="solid"><fo:block text-align="left" font-weight="bold" font-size="12pt"   >Conversion</fo:block></fo:table-cell>       		
 	            </fo:table-row>
-  	          <#assign convMilkReceiptsList = convMilkReceipts.entrySet()>
+  	          <#assign convMilkReceiptsList = convUnionProductsMap.entrySet()>
               <#list convMilkReceiptsList as convMilkReceiptsData>
 	           <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
@@ -144,13 +144,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 	          <#assign  fatKgTotal=fatKgTotal.add(convMilkReceiptsTotal.get("totRecdKgFat"))>
 	          <#assign  snfKgTotal=snfKgTotal.add(convMilkReceiptsTotal.get("totRecdKgSnf"))>
             </#if>
-             <#if purchaseMilkReceipts?has_content> 
+             <#if idrUnionProductsMap?has_content> 
              
 	             <fo:table-row border-style="solid">
                 	 <fo:table-cell  border-style="solid"><fo:block text-align="center" font-weight="bold" font-size="12pt"  >B</fo:block></fo:table-cell>       		
                 	 <fo:table-cell  border-style="solid"><fo:block text-align="left" font-weight="bold" font-size="12pt"   >Purchase</fo:block></fo:table-cell>       		
 	            </fo:table-row>
-  	          <#assign purchaseMilkReceiptsList = purchaseMilkReceipts.entrySet()>
+  	          <#assign purchaseMilkReceiptsList = idrUnionProductsMap.entrySet()>
               <#list purchaseMilkReceiptsList as purchaseMilkReceiptsData>
 	           <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		

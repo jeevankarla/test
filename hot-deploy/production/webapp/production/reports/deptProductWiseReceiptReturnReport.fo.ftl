@@ -47,12 +47,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "deptProductWiseIssueReport.pdf")}
 		
 		
 	 <#assign allProductsList = allProductsMap.entrySet()?if_exists>											
-       <#list allProductsList as allProductsIssues>
+       <#list allProductsList as allProductsReturns>
 			    
-             <#assign products = delegator.findOne("Product", {"productId" : allProductsIssues.getKey()}, true)>
+             <#assign products = delegator.findOne("Product", {"productId" : allProductsReturns.getKey()}, true)>
 				<#assign productName= products.productName>
 			    
-             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">${productName} ISSUED TO <#if thruDeptId?has_content> ${thruDeptId}<#else>All DEPARTMENT'S</#if>  BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}  </fo:block>
+             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">${productName} RECEIVED FROM <#if thruDeptId?has_content> ${thruDeptId}<#else>ALL DEPARTMENT'S</#if>  BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}  </fo:block>
              <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
  
      <fo:block >
@@ -66,39 +66,39 @@ ${setRequestAttribute("OUTPUT_FILENAME", "deptProductWiseIssueReport.pdf")}
 		    
        	<fo:table-body>
 	         <fo:table-row border-style="dotted">
-		          <fo:table-cell  border-style="dotted"><fo:block text-align="left" font-weight="bold"  font-size="12pt"> ISSUED DATE</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">ISSUED QTY</fo:block></fo:table-cell>       		
+		          <fo:table-cell  border-style="dotted"><fo:block text-align="left" font-weight="bold"  font-size="12pt"> RECD DATE</fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">RECD QTY</fo:block></fo:table-cell>       		
   		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">FAT %</fo:block></fo:table-cell>       		
   		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">SNF % </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG FAT </fo:block></fo:table-cell>       		
 		          <fo:table-cell border-style="dotted"><fo:block text-align="right"  font-weight="bold"  font-size="12pt">KG SNF</fo:block></fo:table-cell>       		
 	         </fo:table-row>
 	        <#assign siNo=1>
-	         <#assign totIssuedQty = (Static["java.math.BigDecimal"].ZERO)>
-	         <#assign totIssuedKgFat = (Static["java.math.BigDecimal"].ZERO)>
-	         <#assign totIssuedKgSnf = (Static["java.math.BigDecimal"].ZERO)>
-            <#assign dayWiseDeptIssueList = allProductsIssues.getValue().entrySet()?if_exists>											
-            <#list dayWiseDeptIssueList as dayWiseDeptIssues>
+	         <#assign totRecdQty = (Static["java.math.BigDecimal"].ZERO)>
+	         <#assign totRecdKgFat = (Static["java.math.BigDecimal"].ZERO)>
+	         <#assign totRecdKgSnf = (Static["java.math.BigDecimal"].ZERO)>
+            <#assign dayWiseDeptReturnsList = allProductsReturns.getValue().entrySet()?if_exists>											
+            <#list dayWiseDeptReturnsList as dayWiseDeptReturns>
             <fo:table-row border-style="dotted">
-		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"   font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayWiseDeptIssues.getKey(), "dd-MM-yyyy")}</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"> <#if dayWiseDeptIssues.getValue().get("totIssuedQty")?has_content> ${dayWiseDeptIssues.getValue().get("totIssuedQty")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
-   		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptIssues.getValue().get("totIssuedFat")?has_content> ${dayWiseDeptIssues.getValue().get("totIssuedFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
-   		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptIssues.getValue().get("totIssuedSnf")?has_content> ${dayWiseDeptIssues.getValue().get("totIssuedSnf")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptIssues.getValue().get("totIssuedKgFat")?has_content> ${dayWiseDeptIssues.getValue().get("totIssuedKgFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptIssues.getValue().get("totIssuedKgSnf")?has_content>${dayWiseDeptIssues.getValue().get("totIssuedKgSnf")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+		          <fo:table-cell  border-style="dotted"><fo:block text-align="left"   font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayWiseDeptReturns.getKey(), "dd-MM-yyyy")}</fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"> <#if dayWiseDeptReturns.getValue().get("totRecdQty")?has_content> ${dayWiseDeptReturns.getValue().get("totRecdQty")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+   		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptReturns.getValue().get("totIssuedFat")?has_content> ${dayWiseDeptReturns.getValue().get("totIssuedFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+   		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptReturns.getValue().get("totIssuedSnf")?has_content> ${dayWiseDeptReturns.getValue().get("totIssuedSnf")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptReturns.getValue().get("totRecdKgFat")?has_content> ${dayWiseDeptReturns.getValue().get("totRecdKgFat")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right"   font-size="12pt"><#if dayWiseDeptReturns.getValue().get("totRecdKgSnf")?has_content>${dayWiseDeptReturns.getValue().get("totRecdKgSnf")?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 	       </fo:table-row>
-   	          <#assign  totIssuedQty=totIssuedQty.add(dayWiseDeptIssues.getValue().get("totIssuedQty"))>
-   	          <#assign  totIssuedKgFat=totIssuedKgFat.add(dayWiseDeptIssues.getValue().get("totIssuedKgFat"))>
-   	          <#assign  totIssuedKgSnf=totIssuedKgSnf.add(dayWiseDeptIssues.getValue().get("totIssuedKgSnf"))>
+   	          <#assign  totRecdQty=totRecdQty.add(dayWiseDeptReturns.getValue().get("totRecdQty"))>
+   	          <#assign  totRecdKgFat=totRecdKgFat.add(dayWiseDeptReturns.getValue().get("totRecdKgFat"))>
+   	          <#assign  totRecdKgSnf=totRecdKgSnf.add(dayWiseDeptReturns.getValue().get("totRecdKgSnf"))>
 	       
 	       </#list>
 	       <fo:table-row border-style="dotted">
 		          <fo:table-cell  border-style="dotted"><fo:block text-align="left" font-weight="bold" font-size="12pt">TOTAL</fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold"  font-size="12pt"><#if totIssuedQty?has_content>${totIssuedQty?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold"  font-size="12pt"><#if totRecdQty?has_content>${totRecdQty?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
   		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold"  font-size="12pt"> </fo:block></fo:table-cell>       		
    		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold"  font-size="12pt"> </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold" font-size="12pt"><#if totIssuedKgFat?has_content>${totIssuedKgFat?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
-		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold" font-size="12pt"><#if totIssuedKgSnf?has_content>${totIssuedKgSnf?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold" font-size="12pt"><#if totRecdKgFat?has_content>${totRecdKgFat?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
+		          <fo:table-cell border-style="dotted"><fo:block text-align="right" font-weight="bold" font-size="12pt"><#if totRecdKgSnf?has_content>${totRecdKgSnf?if_exists?string("##0.00")}<#else>0.00</#if> </fo:block></fo:table-cell>       		
 	         </fo:table-row>
     	</fo:table-body>
     </fo:table>

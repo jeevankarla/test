@@ -103,6 +103,9 @@
 		makeDatePicker("temperatureDate","");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		makeDatePicker("deptProductIssueFromDate","deptProductIssueThruDate");
+		makeDatePicker("deptMilkIssueFromDate","deptMilkIssueThruDate");
+		makeDatePicker("deptProductReturnFromDate","deptProductReturnThruDate");
+		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 	function getDeptProducts(facility){
@@ -169,6 +172,12 @@
 			                		</#list>    
 			                	 </#if>	    
 			                    </select>
+			                   <select name="dept" id="dept">
+   	        				 <option value=""></option>
+                             <#list partyGroupSilo as partyGroupSiloDept>
+						     <option value='${partyGroupSiloDept.partyId?if_exists}' >${partyGroupSiloDept.groupName?if_exists}</option>
+						     </#list>
+						     </select>
 						    </td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
@@ -249,6 +258,77 @@
 				      			 	</select>
 						     
 						  <span class="h3">To</span>
+					           <select name="thruDeptId" id="thruDeptId">
+  						     <option value='' >All</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
+						     </#list>						    
+						      </select>
+						     	</td>
+						    <td width="5%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+		<#-- <tr class="alternate-row"> 
+				<form id="deptWiseMilkIssueReport" name="deptWiseMilkIssueReport" mothed="post" action="<@ofbizUrl>deptWiseMilkIssueReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="23%"><span class='h3'>Department Wise Milk Issue Register</span></td>
+							<td width="35%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="deptMilkIssueFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="deptMilkIssueThruDate"   name="thruDate"/>
+								 </span>
+							</td> 
+							<td align='left' width="35%"><span class="h3">From Dept</span>
+					           <select name="fromDeptId" id="fromDeptId">
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
+						     </#list>
+						     </select>	
+						   <span class="h3">To</span>
+					           <select name="thruDeptId" id="thruDeptId">
+  						     <option value='All' >All</option>
+                             <#list partyGroup as facilityDepartment>
+						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
+						     </#list>						    
+						      </select>
+						     	</td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr> -->
+			<tr class="alternate-row"> 
+				<form id="deptProductWiseReturnReceiptReport" name="deptProductWiseReturnReceiptReport" mothed="post" action="<@ofbizUrl>deptProductWiseReturnReceiptReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="18%"><span class='h3'>Dept Product Wise Receipts/Returns Register</span></td>
+							<td width="30%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="deptProductReturnFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="deptProductReturnThruDate"   name="thruDate"/>
+								 </span>
+							</td> 
+							<td align='left' width="37%"><span class="h3">Recd Dept</span>
+					     <#--      <select name="fromDeptId" id="fromDeptId">
+                             <#list facilityDepartments as facilityDepartment>
+						     <option value='${facilityDepartment.ownerPartyId?if_exists}' >${facilityDepartment.facilityName?if_exists}</option>
+						     </#list>
+						     </select>	-->
+						     <select name='fromDeptId' onchange="javascript:getDeptProducts(this);" required>
+	       						     <option value='' ></option>
+				      			 	 <#list partyGroup as facilityDepartment>
+				      			 			<option value='${facilityDepartment.get("partyId")}'>${facilityDepartment.get("groupName")}</option>
+				      			 		</#list> 
+				      			 	</select>
+						     
+					     <span class="h3">Product</span>
+					          <select name='productId'  >
+				      			 	</select>
+						     
+						  <span class="h3">From Dept</span>
 					           <select name="thruDeptId" id="thruDeptId">
   						     <option value='' >All</option>
                              <#list partyGroup as facilityDepartment>
