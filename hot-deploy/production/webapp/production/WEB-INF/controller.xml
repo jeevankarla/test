@@ -97,7 +97,13 @@
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>       
     </request-map>
-    
+    <request-map uri="getProductAvailableToPromise">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/" invoke="StoreInventoryForXfer.groovy"/>
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
     <request-map uri="createProductionRunSingle">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProductionRun"/>
@@ -231,9 +237,8 @@
      <request-map uri="CreateIncomingInvTransQcDetails">
 	    <security https="true" auth="true"/>
 	    <event type="service" path=""  invoke="createProductQcDetails" global-transaction="true"/>
-	    <response name="success" type="view" value="InOutStockXfers">
+	    <response name="success" type="view" value="InOutStockXfers"/>
         <response name="error" type="view" value="InOutStockXfers"/>
-      </response>
     </request-map>
     <request-map uri="findStockXfer">
         <security https="true" auth="true"/>                        

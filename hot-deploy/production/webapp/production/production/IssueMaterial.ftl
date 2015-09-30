@@ -142,9 +142,10 @@ function getInvAvailBalance(element){
  	var quantity = quantity.replace(/,/g, '');
  	var issuedQty = issuedQty.replace(/,/g, '');
  	var toIssueQty = parseInt(quantity)-parseInt(issuedQty);
+ 	if(typeof(facilityId)!= "undefined" && facilityId!='' && facilityId != null ){
 	$.ajax({
          type: "POST",
-         url: 'getProductInventoryOpeningBalance',
+         url: 'getProductAvailableToPromise',
          data: {productId : productId,
                 ownerPartyId : partyIdFrom,
                 facilityId : facilityId},
@@ -153,8 +154,8 @@ function getInvAvailBalance(element){
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 
         	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
-           }else{               			
-        	    invQty = result["inventoryCount"];
+           }else{              
+        	    invQty = parseInt(result["avlToPromise"]);
         	    $(qohObj).val(invQty);
         	    $(qohObj).attr("readOnly","readOnly");
         	    if(invQty>toIssueQty){
@@ -167,7 +168,7 @@ function getInvAvailBalance(element){
         	    if(invQty == 0){
         	    		$.ajax({
 					         type: "POST",
-					         url: 'getProductInventoryOpeningBalance',
+					         url: 'getProductAvailableToPromise',
 					         data: {productId : productId,
 					                ownerPartyId : "Company",
 					                facilityId : facilityId},
@@ -176,7 +177,7 @@ function getInvAvailBalance(element){
 					           if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 					        	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
 					           }else{               			
-					        	    invQty = result["inventoryCount"];
+					        	    invQty = parseInt(result["avlToPromise"]);
 					        	    $(qohObj).val(invQty);
 					        	    $(qohObj).attr("readOnly","readOnly");
 					        	    if(invQty>toIssueQty){
@@ -193,7 +194,10 @@ function getInvAvailBalance(element){
            }
          } 
     });
-	
+    }else{
+    		$(tempQtyObj).val(0);
+    		$(qohObj).val(0);
+    }
 }
 
 </script>
