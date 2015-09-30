@@ -10,10 +10,10 @@ import org.ofbiz.entity.condition.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import net.sf.json.JSONObject;
 facilityId = parameters.facilityId;
 productId = parameters.productId;
-
+String avlToPromise="";
 storeProductInventory = [];
 if(facilityId){
 
@@ -59,6 +59,12 @@ if(facilityId){
 		tempMap.put("atp", qtyMap.get("atpQty"));
 		tempMap.put("facilityId", facilityId);
 		storeProductInventory.add(tempMap)
-	}
+		avlToPromise=qtyMap.get("atpQty");
+		}
 }
 context.storeProductInventory = storeProductInventory;
+if(UtilValidate.isNotEmpty(avlToPromise)){
+	request.setAttribute("avlToPromise",avlToPromise);
+}else{
+	request.setAttribute("avlToPromise","0");
+}
