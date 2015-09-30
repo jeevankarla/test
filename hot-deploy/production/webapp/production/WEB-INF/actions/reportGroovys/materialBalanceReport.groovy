@@ -82,7 +82,12 @@ fromDeptPlantCond = EntityCondition.makeCondition(conditionList,EntityOperator.A
 fromDeptPlantList=EntityUtil.filterByCondition(facilityList,fromDeptPlantCond );
 if(UtilValidate.isNotEmpty(fromDeptPlantList)){
 	String deptName = (EntityUtil.getFirst(fromDeptPlantList)).getString("facilityName");
+	partyGroup = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,deptId) , null, null, null, false );
+	if(UtilValidate.isNotEmpty(partyGroup)){
+		deptName = (EntityUtil.getFirst(partyGroup)).getString("groupName");
+	}
 	context.deptName=deptName;
+	
 	fromDeptPlantList=EntityUtil.getFieldListFromEntityList(fromDeptPlantList, "facilityId", true);
 	context.fromDeptPlantList = fromDeptPlantList;
 }
@@ -121,8 +126,8 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 				openingFatPers = ProcurementNetworkServices.calculateFatOrSnf(openingFatKg, openingQty);
 				openingSnfPers = ProcurementNetworkServices.calculateFatOrSnf(openingSnfKg, openingQty);
 				if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
-			        facilityNames = delegator.findOne("Facility",["facilityId":eachDeptStorageId],false);
-			        storageName=facilityNames.get("facilityName");
+					facilityNames = delegator.findOne("Facility",["facilityId":eachDeptStorageId],false);
+					storageName=facilityNames.get("facilityName");
 					openingBalSiloMap.put("productId", invProductId);
 					openingBalSiloMap.put("description", storageName);
 					openingBalSiloMap.put("quantity", openingQty);
@@ -153,7 +158,7 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 				BigDecimal openingSnfPers = BigDecimal.ZERO;
 				invCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:fromDate, facilityId: fromDeptPlantId,productId: eachProductId, userLogin: userLogin,]);
 				invCountMapData=invCountMap.openingBalance;
-				if(invCountMapData.get("quantityKgs") && UtilValidate.isNotEmpty(invCountMapData)){
+				if(UtilValidate.isNotEmpty(invCountMapData) && invCountMapData.get("quantityKgs") && invCountMapData.get("quantityKgs")>0){
 					openingQty = invCountMapData.get("quantityKgs");
 					invProductId = invCountMapData.get("invProductId");
 					openingFatKg=invCountMapData.get("kgFat");
@@ -185,16 +190,18 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 	openingBalProductTotalMap.put("quantity", totInventoryQty);
 	openingBalProductTotalMap.put("fatKg", totOpenFatQtyKg);
 	openingBalProductTotalMap.put("snfKg", totOpenSnfQtyKg);
-} 
+}
 context.openingBalProductMap=openingBalProductMap;
 context.openingBalProductTotalMap=openingBalProductTotalMap;
 
 	
-
+List convParties =[];
 List convPurchaseList=FastList.newInstance();
 if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
+	
+	convUnionProductsMap=[:];
 	// CONVERSION RECEIPTS======================>
-	conversionReceipts = ProductionServices.getPurchaseAndConversionMilkReceipts(dctx, [fromDate: fromDate,thruDate: thruDate, purposeTypeId: "CONVERSION", userLogin: userLogin,]);
+	conversionReceipts = ProductionServices.getPurchaseAndConversionMilkReceipts(dctx, [fromDate: fromDate, thruDate: thruDate, purposeTypeId: "CONVERSION", userLogin: userLogin,]);
 	convMilkReceipts=conversionReceipts.get("milkReceiptsMap");
 	convMilkReceiptsTotal=conversionReceipts.get("milkReceiptsTotalsMap");
 	context.convMilkReceipts=convMilkReceipts;
@@ -206,7 +213,90 @@ if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
 		totReceiptFat=totReceiptFat+convMilkReceiptsTotal.get("totRecdKgFat");
 		totReceiptSnf=totReceiptSnf+convMilkReceiptsTotal.get("totRecdKgSnf");
 	}
+	if(UtilValidate.isNotEmpty(convMilkReceipts)){
+		SortedSet partyIdSet = new TreeSet(convMilkReceipts.keySet());
+		List unionTempParties=[];
+		if(UtilValidate.isNotEmpty(partyIdSet)){
+			partyIdSet.each{eachCc->
+				List partyRelationShipConditionList = FastList.newInstance();
+				//partyRelationShipConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN,partyIdSet),EntityOperator.OR,EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,partyIdSet)));
+				partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "UNION"));
+				partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, eachCc));
+				EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)  ;
+				unionsList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+				if(UtilValidate.isNotEmpty(unionsList)){
+					unionsList = EntityUtil.filterByDate(unionsList,fromDate);
+					String partyIdFrom = (EntityUtil.getFirst(unionsList)).getString("partyIdFrom");
+					unionTempParties.add(partyIdFrom);
+				}else{
+					unionTempParties.add(eachCc);
+				}
+				
+			}
+		}
+		Set unionParties = new HashSet(unionTempParties);
+		unionParties.each{eachUnionParty->
+			Map tempUnionMap=FastMap.newInstance();
+			List ccIds=[];
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, eachUnionParty));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "CHILL_CENTER"));
+			partyCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			//unionCcIdList=EntityUtil.filterByCondition(unionsList,partyCond );
+			unionCcIdList = delegator.findList("PartyRelationship",partyCond,null,null,null,false);
+			
+			ccIdsList=EntityUtil.getFieldListFromEntityList(unionCcIdList, "partyIdTo", true);
+			ccIdsList.each{eachCcId->
+				ccIds.add(eachCcId);
+			}
+			ccIds.add(eachUnionParty);
+			ccIds.sort();
+			BigDecimal idrUnionQty = BigDecimal.ZERO;
+			BigDecimal idrUnionKgFat = BigDecimal.ZERO;
+			BigDecimal idrUnionKgSnf = BigDecimal.ZERO;
+			BigDecimal idrUnionFatPer = BigDecimal.ZERO;
+			BigDecimal idrUnionSnfPer = BigDecimal.ZERO;
+			
+			if(UtilValidate.isNotEmpty(ccIds)){
+				ccIds.each{eachCcId->
+					BigDecimal receivedQuantity = BigDecimal.ZERO;
+					BigDecimal receivedKgFat = BigDecimal.ZERO;
+					BigDecimal receivedKgSnf = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(convMilkReceipts.get(eachCcId))){
+						ccQuantityList =convMilkReceipts.get(eachCcId);
+						receivedQuantity=ccQuantityList.receivedQuantity;
+						receivedKgFat=ccQuantityList.receivedKgFat;
+						receivedKgSnf=ccQuantityList.receivedKgSnf;
+						if(UtilValidate.isNotEmpty(receivedQuantity)){
+							idrUnionQty=idrUnionQty+receivedQuantity;
+						}
+						if(UtilValidate.isNotEmpty(receivedKgFat)){
+							idrUnionKgFat=idrUnionKgFat+receivedKgFat;
+						}
+						if(UtilValidate.isNotEmpty(receivedKgSnf)){
+							idrUnionKgSnf=idrUnionKgSnf+receivedKgSnf;
+						}
+					}
+					
+				}
+			}
+			idrUnionFatPer = ProcurementNetworkServices.calculateFatOrSnf(idrUnionKgFat, idrUnionQty);
+			idrUnionSnfPer = ProcurementNetworkServices.calculateFatOrSnf(idrUnionKgSnf, idrUnionQty);
+			tempUnionMap.put("receivedQuantity",idrUnionQty);
+			tempUnionMap.put("receivedKgFat",idrUnionKgFat);
+			tempUnionMap.put("receivedKgSnf",idrUnionKgSnf);
+			tempUnionMap.put("receivedFat",idrUnionFatPer);
+			tempUnionMap.put("receivedSnf",idrUnionSnfPer);
+			
+			convUnionProductsMap.put(eachUnionParty,tempUnionMap);
+		}
+	}
+	context.convUnionProductsMap=convUnionProductsMap;
 	
+	
+	
+	
+	idrUnionProductsMap=[:];
 	// PURCHASE RECEIPTS======================>
 	purchaseReceipts = ProductionServices.getPurchaseAndConversionMilkReceipts(dctx, [fromDate: fromDate,thruDate: thruDate, purposeTypeId: "INTERNAL", userLogin: userLogin,]);
 	purchaseMilkReceipts=purchaseReceipts.get("milkReceiptsMap");
@@ -220,10 +310,89 @@ if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
 		totReceiptFat=totReceiptFat+purchaseMilkReceiptsTotal.get("totRecdKgFat");
 		totReceiptSnf=totReceiptSnf+purchaseMilkReceiptsTotal.get("totRecdKgSnf");
 	}
+	if(UtilValidate.isNotEmpty(purchaseMilkReceipts)){
+		SortedSet partyIdSet = new TreeSet(purchaseMilkReceipts.keySet());
+		List unionTempParties=[];
+		if(UtilValidate.isNotEmpty(partyIdSet)){
+			partyIdSet.each{eachCc->
+				List partyRelationShipConditionList = FastList.newInstance();
+				//partyRelationShipConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN,partyIdSet),EntityOperator.OR,EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,partyIdSet)));
+				partyRelationShipConditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "UNION"));
+				partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, eachCc));
+				EntityCondition partyRelationShipCondition  = EntityCondition.makeCondition(partyRelationShipConditionList)  ;
+				unionsList = delegator.findList("PartyRelationship",partyRelationShipCondition,null,null,null,false);
+				if(UtilValidate.isNotEmpty(unionsList)){
+					unionsList = EntityUtil.filterByDate(unionsList,fromDate);
+					String partyIdFrom = (EntityUtil.getFirst(unionsList)).getString("partyIdFrom");
+					unionTempParties.add(partyIdFrom);
+				}else{
+					unionTempParties.add(eachCc);
+				}
+				
+			}
+		}
+		Set unionParties = new HashSet(unionTempParties);
+		unionParties.each{eachUnionParty->
+			Map tempUnionMap=FastMap.newInstance();
+			List ccIds=[];
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, eachUnionParty));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "CHILL_CENTER"));
+			partyCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			//unionCcIdList=EntityUtil.filterByCondition(unionsList,partyCond );
+			unionCcIdList = delegator.findList("PartyRelationship",partyCond,null,null,null,false);
+			
+			ccIdsList=EntityUtil.getFieldListFromEntityList(unionCcIdList, "partyIdTo", true);
+			ccIdsList.each{eachCcId->
+				ccIds.add(eachCcId);
+			}
+			ccIds.add(eachUnionParty);
+			ccIds.sort();
+			BigDecimal idrUnionQty = BigDecimal.ZERO;
+			BigDecimal idrUnionKgFat = BigDecimal.ZERO;
+			BigDecimal idrUnionKgSnf = BigDecimal.ZERO;
+			BigDecimal idrUnionFatPer = BigDecimal.ZERO;
+			BigDecimal idrUnionSnfPer = BigDecimal.ZERO;
+			
+			if(UtilValidate.isNotEmpty(ccIds)){
+				ccIds.each{eachCcId->
+					BigDecimal receivedQuantity = BigDecimal.ZERO;
+					BigDecimal receivedKgFat = BigDecimal.ZERO;
+					BigDecimal receivedKgSnf = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(purchaseMilkReceipts.get(eachCcId))){
+						ccQuantityList =purchaseMilkReceipts.get(eachCcId);
+						receivedQuantity=ccQuantityList.receivedQuantity;
+						receivedKgFat=ccQuantityList.receivedKgFat;
+						receivedKgSnf=ccQuantityList.receivedKgSnf;
+						if(UtilValidate.isNotEmpty(receivedQuantity)){
+							idrUnionQty=idrUnionQty+receivedQuantity;
+						}
+						if(UtilValidate.isNotEmpty(receivedKgFat)){
+							idrUnionKgFat=idrUnionKgFat+receivedKgFat;
+						}
+						if(UtilValidate.isNotEmpty(receivedKgSnf)){
+							idrUnionKgSnf=idrUnionKgSnf+receivedKgSnf;
+						}
+					}
+					
+				}
+			}
+			idrUnionFatPer = ProcurementNetworkServices.calculateFatOrSnf(idrUnionKgFat, idrUnionQty);
+			idrUnionSnfPer = ProcurementNetworkServices.calculateFatOrSnf(idrUnionKgSnf, idrUnionQty);
+			tempUnionMap.put("receivedQuantity",idrUnionQty);
+			tempUnionMap.put("receivedKgFat",idrUnionKgFat);
+			tempUnionMap.put("receivedKgSnf",idrUnionKgSnf);
+			tempUnionMap.put("receivedFat",idrUnionFatPer);
+			tempUnionMap.put("receivedSnf",idrUnionSnfPer);
+			
+			idrUnionProductsMap.put(eachUnionParty,tempUnionMap);
+		}
+	}
+	context.idrUnionProductsMap=idrUnionProductsMap;
 }
 
 // INTERNAL, RECEIPTS AND RETURNS =============>
-internalReturnsAndReceipts = ProductionServices.getMilkReturnsAndIntenalReceipts(dctx, [fromDate: fromDate,thruDate: thruDate, ownerPartyId:deptId, userLogin: userLogin,]);
+internalReturnsAndReceipts = ProductionServices.getMilkReturnsAndIntenalReceipts(dctx, [fromDate: fromDate,thruDate: thruDate, recdDeptId:deptId, flag:"allDepts", userLogin: userLogin,]);
 intReturnsAndReceipts=internalReturnsAndReceipts.get("milkReturnsAndReceiptsMap");
 intReturnsAndReceiptsTotal=internalReturnsAndReceipts.get("milkRetnsAndRcptsTotalsMap");
 context.intReturnsAndReceipts=intReturnsAndReceipts;
@@ -235,7 +404,7 @@ if(UtilValidate.isNotEmpty(intReturnsAndReceiptsTotal)){
 }
 
 // ISSUE DETAILS==============================>
-departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDate,thruDate: thruDate, ownerPartyId:deptId, userLogin: userLogin,]);
+departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDate,thruDate: thruDate, ownerPartyId:deptId, flag:"allDepts", userLogin: userLogin,]);
 milkIssuesMap=departmentMilkIssues.get("milkIssuesMap");
 milkIssuesTotalsMap=departmentMilkIssues.get("milkIssuesTotalsMap");
 context.milkIssuesMap=milkIssuesMap;
@@ -287,7 +456,7 @@ if(UtilValidate.isNotEmpty(openingBalProductMap)){
 				tempOpenMap.put("kgSnf",kgSnf);
 				closingBalanceMap.put(productId,tempOpenMap);
 			 }else{
-			 	Map tempMap = FastMap.newInstance();
+				 Map tempMap = FastMap.newInstance();
 				tempMap=(Map) closingBalanceMap.get(productId);
 				tempMap.put("quantity", ((BigDecimal) tempMap.get("quantity"))+quantity);
 				tempMap.put("kgFat", ((BigDecimal) tempMap.get("kgFat"))+kgFat);
@@ -296,7 +465,7 @@ if(UtilValidate.isNotEmpty(openingBalProductMap)){
 			}
 		}
 	}
-} 
+}
 
 if(UtilValidate.isNotEmpty(intReturnsAndReceipts)){
 	for(Map.Entry intReturnsAndReceiptsMap : intReturnsAndReceipts.entrySet()){

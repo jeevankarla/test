@@ -54,9 +54,25 @@ if (workEffortId) {
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	inventoryItemAndDetail = delegator.findList("InventoryItemAndDetail", condition, null, null, null, false);
 	
+	String facilityDeptId="";
+	facilityDeptIds = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, productionFloorId), null, null, null, false);
+	if(UtilValidate.isNotEmpty(facilityDeptIds)){
+		facilityDeptId = (EntityUtil.getFirst(facilityDeptIds)).ownerPartyId;
+	}
+	facilityRelationIds = [];
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("facilityRelationshipTypeId", EntityOperator.EQUALS, "CROSS_TRANSFER"));
+	conditionList.add(EntityCondition.makeCondition("facilityIdFrom", EntityOperator.EQUALS, facilityDeptId));
+	facilityRelCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	facilityRelationship = delegator.findList("FacilityRelationship",facilityRelCond , null, null, null, false);
+	if(UtilValidate.isNotEmpty(facilityRelationship)){
+		facilityRelationIds = EntityUtil.getFieldListFromEntityList(facilityRelationship, "facilityIdTo", true);
+	}
+		
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
-	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, productionFloorFacilityIds));
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("facilityId", EntityOperator.IN, productionFloorFacilityIds), EntityOperator.OR,
+		EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityRelationIds)));
 	condExpr1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	productFacility = delegator.findList("ProductFacility", condExpr1, null, null, null, false);
 	

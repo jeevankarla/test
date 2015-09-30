@@ -89,7 +89,7 @@ totalDays=totalDays+1;
 
 List<String> productIds=[];
 if(UtilValidate.isEmpty(productId)){
-List facilityCondList =FastList.newInstance();
+	List facilityCondList =FastList.newInstance();
 	facilityCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,fromDeptId ));
 	facilityCondList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS,"PLANT" ));
 	EntityCondition facilityCond = EntityCondition.makeCondition(facilityCondList,EntityOperator.AND);
@@ -132,13 +132,13 @@ if(UtilValidate.isNotEmpty(hsProdIds)){
 			fromDateStart=dayWorkShifts.fromDate;
 			thruDateEnd=dayWorkShifts.thruDate;
 			
-			// ISSUE DETAILS==============================>
-			departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDateStart,thruDate: thruDateEnd, ownerPartyId:fromDeptId, productId:eachProdId, thruDeptId:thruDeptId, userLogin: userLogin,]);
-			milkIssuesMap=departmentMilkIssues.get("milkIssuesMap");
-			milkIssuesTotalsMap=departmentMilkIssues.get("milkIssuesTotalsMap");
-			if(UtilValidate.isNotEmpty(milkIssuesTotalsMap)){
-				if(milkIssuesTotalsMap.get("totIssuedQty") >0 && UtilValidate.isNotEmpty(milkIssuesTotalsMap.get("totIssuedQty"))){
-					dayWiseMap.put(fromDateStart,milkIssuesTotalsMap);
+			// RECEIVE DETAILS==============================>
+			departmentMilkReturns = ProductionServices.getMilkReturnsAndIntenalReceipts(dctx, [fromDate: fromDateStart,thruDate: thruDateEnd, recdDeptId:fromDeptId, productId:eachProdId, sendDeptId:thruDeptId, userLogin: userLogin,]);
+			milkReturnsAndReceiptsMap=departmentMilkReturns.get("milkReturnsAndReceiptsMap");
+			milkRetnsAndRcptsTotalsMap=departmentMilkReturns.get("milkRetnsAndRcptsTotalsMap");
+			if(UtilValidate.isNotEmpty(milkRetnsAndRcptsTotalsMap)){
+				if(milkRetnsAndRcptsTotalsMap.get("totRecdQty") >0 && UtilValidate.isNotEmpty(milkRetnsAndRcptsTotalsMap.get("totRecdQty"))){
+					dayWiseMap.put(fromDateStart,milkRetnsAndRcptsTotalsMap);
 				}
 			}
 		}

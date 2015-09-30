@@ -20,8 +20,10 @@ if(UtilValidate.isNotEmpty(parameters.fromPartyId)){
 	requestParameters.fromFacilityId= facilityIds;
 	requestParameters.fromFacilityId_op="in";
 }else{
-	List facilityList = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,context.get("partyId")),null,null,null,false);
-	facilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
-	requestParameters.fromFacilityId= facilityIds;
-	requestParameters.fromFacilityId_op="in";
+	if(UtilValidate.isNotEmpty(context.get("partyId"))){
+		List facilityList = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,context.get("partyId")),null,null,null,false);
+		facilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
+		requestParameters.fromFacilityId= facilityIds;
+		requestParameters.fromFacilityId_op="in";
+	}
 }
