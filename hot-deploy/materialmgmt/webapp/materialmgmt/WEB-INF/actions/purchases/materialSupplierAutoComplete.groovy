@@ -28,7 +28,6 @@ if(supplierList){
 		Cond = EntityCondition.makeCondition([EntityCondition.makeCondition("custRequestId", custReqId),EntityCondition.makeCondition("partyId",supplier.partyId),
 			                                  EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"QUO_CANCELED")],EntityOperator.AND);
 		existedSuppliers=delegator.findList("QuoteAndItemAndCustRequest",Cond,null,null,null,false);
-		if(UtilValidate.isEmpty(existedSuppliers)){
 			JSONObject newObj = new JSONObject();
 			newObj.put("value",supplier.partyId);
 			partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
@@ -37,7 +36,6 @@ if(supplierList){
 			if(UtilValidate.isEmpty(nameMap[supplier.partyId])){
 				nameMap[supplier.partyId]=partyName;
 			}
-		}
 	}
 }
 context.supplierJSON=supplierJSON;
