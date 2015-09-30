@@ -304,8 +304,16 @@
     </request-map>
     <request-map uri="deptProductWiseIssueReport.pdf">
        <security https="true" auth="true"/>                        
-       <response name="success" type="view" value="deptProductWiseIssueReportPDF"/>        
+       <response name="success" type="view" value="deptProductWiseIssueReportPDF"/>
     </request-map>
+    <request-map uri="deptWiseMilkIssueReport.pdf">
+	   <security auth="true" https="true"/>
+	   <response name="success" type="view" value="deptWiseMilkIssueReportPDF"/>
+    </request-map>
+    <request-map uri="deptProductWiseReturnReceiptReport.pdf">
+       <security https="true" auth="true"/>                        
+       <response name="success" type="view" value="deptProductWiseReturnReceiptReportPDF"/>
+    </request-map> 
     <!-- RequestMaps -->
     <request-map uri="productionIndent">
         <security https="true" auth="true"/>                        
@@ -494,6 +502,8 @@
     <view-map name="productionRunCompletedReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#productionRunCompletedReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="TemperatureRecordReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#TemperatureRecordReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="deptProductWiseIssueReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#deptProductWiseIssueReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="deptWiseMilkIssueReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#deptWiseMilkIssueReportPDF" content-type="application/pdf"/> 
+    <view-map name="deptProductWiseReturnReceiptReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#deptProductWiseReturnReceiptReportPDF" content-type="application/pdf" encoding="none"/>
    
     <!-- INDENT VIEW MAPPINGS -->
   	<view-map name="ProductionIndent" type="screen" page="component://production/widget/ProductionScreens.xml#ProductionIndent"/> 
