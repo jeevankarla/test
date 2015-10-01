@@ -91,6 +91,7 @@ invAdjMap=[:];
 vatMap=[:];
 // Invoice Sales Abstract
 	dayWisePpdMap = [:];
+	productDetailsList=[];
 	for( i=0 ; i <= (totalDays); i++){
 		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
 		dayBegin=UtilDateTime.getDayStart(currentDay);
@@ -299,9 +300,11 @@ vatMap=[:];
 			//dayWisePpdMap.put(dayBegin, ppdMap);
 		}
 	}
-	productDetailsList = UtilMisc.sortMaps(productDetailsList, UtilMisc.toList("productType"));
 	categoryCheck = "";
-	categoryTotal = [:]; 
+	categoryTotal = [:];
+	if(productDetailsList){
+	productDetailsList = UtilMisc.sortMaps(productDetailsList, UtilMisc.toList("productType"));
+	if(productDetailsList){
 	productDetailsList.each{ productDetail ->
 		if(categoryCheck == productDetail.productType){
 			categoryTotal[productDetail.productType] += productDetail.amount;
@@ -311,7 +314,8 @@ vatMap=[:];
 			categoryTotal[categoryCheck] = productDetail.amount;
 		}
 	}
-	
+	}
+}
 context.categoryTotal = categoryTotal;	
 context.productDetailsList=productDetailsList;
 context.shippingDetails=shippingDetails;	
