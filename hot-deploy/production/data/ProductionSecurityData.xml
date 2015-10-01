@@ -103,4 +103,16 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_CLOSE_INDENT"/>
     <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_CLOSE_INDENT"/>
     
+    <SecurityPermission description="Edit Transfer Quantity..!" permissionId="PRO_EDIT_XFER_QTY"/>
+    <SecurityGroup description="Edit Transfer Quantity..!" groupId="PRO_EDIT_XFER_QTY"/>
+    <SecurityGroupPermission groupId="PRO_EDIT_XFER_QTY" permissionId="PRO_EDIT_XFER_QTY" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_EDIT_XFER_QTY"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_EDIT_XFER_QTY"/>
+    
+    <SecurityPermission description="Edit Transfer Facility..!" permissionId="PRO_EDIT_XFER_FAC"/>
+    <SecurityGroup description="Edit Transfer Facility..!" groupId="PRO_EDIT_XFER_FAC"/>
+    <SecurityGroupPermission groupId="PRO_EDIT_XFER_FAC" permissionId="PRO_EDIT_XFER_FAC" />
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PRO_EDIT_XFER_FAC"/>
+    <SecurityGroupPermission groupId="PRODUCTION_ADMIN" permissionId="PRO_EDIT_XFER_FAC"/>
+    
 </entity-engine-xml>

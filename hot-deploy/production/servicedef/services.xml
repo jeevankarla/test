@@ -36,6 +36,7 @@
     </service>
     <service name="createStockXferRequest" engine="java" location="in.vasista.vbiz.production.ProductionServices" invoke="createStockXferRequest">
     	<attribute name="transferDate" mode="IN" type="String" optional="true"/>
+    	<attribute name="transferGroupId" mode="IN" type="String" optional="true"/>
     	<attribute name="xferQty" mode="IN" type="BigDecimal" optional="false"/>
     	<attribute name="fromFacilityId" mode="IN" type="String" optional="false"/>
     	<attribute name="toFacilityId" mode="IN" type="String" optional="false"/>
@@ -134,4 +135,9 @@
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="checkFacilityAvalableOrNot" engine="groovy" location="component://production/webapp/production/WEB-INF/actions/CheckFacilityAvalableOrNot.groovy" invoke="" transaction-timeout="12000">
+        <description>Facility Available or Not</description>
+        <attribute name="transId" mode="IN" type="String" optional="false"/>
+        <attribute name="toFacilityId" mode="IN" type="String" optional="false"/>
+    </service> 
 </services>

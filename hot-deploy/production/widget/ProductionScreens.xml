@@ -220,9 +220,9 @@
 		     		 	   	<platform-specific><html><html-template location="component://production/webapp/production/production/ProductQualityAnalysis.ftl"/></html></platform-specific>
 		     		 		<platform-specific><html><html-template location="component://production/webapp/production/production/ListSearchIncomingXfer.ftl"/></html></platform-specific>
 		     		 	</screenlet>
-		     		 	<screenlet title="Outgoing Transfers">
+		     		 	<!-- <screenlet title="Outgoing Transfers">
 		     		 		<platform-specific><html><html-template location="component://production/webapp/production/production/ListSearchOutgoingXfer.ftl"/></html></platform-specific>
-		     		 	</screenlet>	  
+		     		 	</screenlet>	 -->  
 	     		 	</decorator-section>
 	     		 </decorator-screen>
 	     	</widgets>
