@@ -50,14 +50,14 @@ under the License.
         		<fo:block>
         		   <fo:table  >
        					 <fo:table-column column-width="65pt"/>
-       					 <fo:table-column column-width="50pt"/>
+       					 <fo:table-column column-width="90pt"/>
        					 <fo:table-column column-width="60pt"/>
        					 <fo:table-column column-width="70pt"/>
        					 <fo:table-column column-width="40pt"/>
        					 <fo:table-column column-width="70pt"/>
        					 <fo:table-column column-width="80pt"/>
-       					 <fo:table-column column-width="65pt"/>
-       					 <fo:table-column column-width="65pt"/>
+       					 <fo:table-column column-width="45pt"/>
+       					 <fo:table-column column-width="45pt"/>
        					 <fo:table-column column-width="65pt"/>
        					 <fo:table-column column-width="65pt"/>
        					 
@@ -104,12 +104,18 @@ under the License.
 				        	<#assign unionName = partyReference.get(shiftDetail.get("partyId"))>
 				        	<#assign idrConv = shiftDetail.get("purposeTypeId")?if_exists>
        					    <#assign enumeration = delegator.findOne("Enumeration", {"enumId" :idrConv}, true)>
+       					    	
+       					    	<#assign convProductId= shiftDetail.get("conversionProductId")?if_exists >
+		        		       <#assign productNameDetails=''>
+		        		        <#if convProductId?has_content> 
+		        					<#assign productNameDetails = delegator.findOne("Product", {"productId" : convProductId}, true)>
+		        				 </#if>
        					    	<fo:table-row >   
 		                    			<fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${shiftDetail.get("partyId")}<#if unionName?has_content>[${unionName}]</#if></fo:block>
 			                    		</fo:table-cell>                  
 			                    	    <fo:table-cell >
-			                    			<fo:block text-align="left" font-size = "11pt"><#if enumeration?has_content> ${enumeration.get("enumCode")?substring(0,3)}</#if> </fo:block>
+			                    			<fo:block text-align="left" font-size = "11pt"><#if enumeration?has_content> ${enumeration.get("enumCode")?substring(0,3)}</#if><#if productNameDetails?has_content>&#160;[${productNameDetails.get("internalName")?if_exists}]</#if> </fo:block>
 			                    		</fo:table-cell>
 			                    		<fo:table-cell >
 			                    			<fo:block text-align="left" font-size = "11pt">${shiftDetail.get("dcNo")}</fo:block>
