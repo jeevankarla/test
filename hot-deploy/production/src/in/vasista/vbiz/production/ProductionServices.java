@@ -776,6 +776,7 @@ public class ProductionServices {
 			        		indentIssuesDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, indentIssuesCond);
 		        		}
 	 	        	// Inventory Transfer
+	 	        	 	HashSet<String> invTransIdsPurposes=null;
 	 	        	 	List<GenericValue> inventoryTransDetailList=null;
 		        		conditionList.clear();
 		        		conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.IN, thruFacilityIds ));
@@ -791,6 +792,9 @@ public class ProductionServices {
 			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
 			        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			        		inventoryTransDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, invenTransCond);
+			        		if(UtilValidate.isNotEmpty(inventoryTransDetailList)){
+			        			invTransIdsPurposes= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransDetailList, "inventoryTransferId", true));
+			        		}
 		        		}
 	        		// Return Issues
 	        		List<GenericValue> internalReturnsList= null;
@@ -816,6 +820,7 @@ public class ProductionServices {
 						BigDecimal issuedKgSnf = BigDecimal.ZERO;
 						BigDecimal issuedFat = BigDecimal.ZERO;
 						BigDecimal issuedSnf = BigDecimal.ZERO;
+						List<String> issuedPurposeIds =FastList.newInstance();
 						if(UtilValidate.isNotEmpty(workEffortInvDetailList)){
 		     	    		List<GenericValue> eachProdWorkEffortInventory = EntityUtil.filterByCondition(workEffortInvDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
 		     	    		if(UtilValidate.isNotEmpty(eachProdWorkEffortInventory)){
@@ -881,6 +886,20 @@ public class ProductionServices {
 	    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
 	    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
 	    							}
+    								List purposeCondList=FastList.newInstance();
+    								purposeCondList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,invProductId ));
+    								purposeCondList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,invTransIdsPurposes ));
+    				        		EntityCondition purposeCond = EntityCondition.makeCondition(purposeCondList,EntityOperator.AND);
+    				        		List<GenericValue> inventoryTransferGroupMember = delegator.findList("InventoryTransferGroupMember", purposeCond, null, null, null, false);
+    				        		HashSet<String> invTransPurposeIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransferGroupMember, "inventoryTransferId", true));
+
+    			  	        		List<GenericValue> productInvTransList = EntityUtil.filterByCondition(inventoryTransferList, EntityCondition.makeCondition("inventoryTransferId",EntityOperator.IN,invTransPurposeIds));
+		    						if(UtilValidate.isNotEmpty(productInvTransList)){
+			    						for(GenericValue eachTransfer : productInvTransList){
+			    							String prodId = (String)eachTransfer.get("comments");
+			    							issuedPurposeIds.add(prodId);
+		    							}
+	    							}
 	    	    				}
 		
 		     	    		}
@@ -907,6 +926,10 @@ public class ProductionServices {
 		
 		     	    		}
 						}
+						Set<String> purPoseProdIds=null;
+						if(UtilValidate.isNotEmpty(issuedPurposeIds)){
+							purPoseProdIds = new HashSet(issuedPurposeIds);
+						}
 						issuedFat = ProcurementNetworkServices.calculateFatOrSnf(issuedKgFat, issuedQuantity);
 						issuedSnf = ProcurementNetworkServices.calculateFatOrSnf(issuedKgSnf, issuedQuantity);
 
@@ -919,6 +942,7 @@ public class ProductionServices {
 						productIssuesMap.put("issuedKgSnf",issuedKgSnf);
 						productIssuesMap.put("issuedFat",issuedFat);
 						productIssuesMap.put("issuedSnf",issuedSnf);
+						productIssuesMap.put("purposeIds",purPoseProdIds);
 
 						milkIssuesMap.put(invProductId,productIssuesMap);
 	     	    	}
