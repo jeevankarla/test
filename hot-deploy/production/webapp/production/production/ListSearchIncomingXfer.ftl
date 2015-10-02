@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 <style type="text/css">
 
 .myButton {
@@ -36,7 +37,33 @@ under the License.
 </style>
 <script type="text/javascript">
 //<![CDATA[
-	
+	function checkFacilityAvalableOrNot(current){
+		var domObj = $(current).parent().parent();
+		var transferObj = $(domObj).find("#transferGroupId");
+        var toFacilityObj = $(domObj).find("#toFacilityId");
+    	var transId = $(transferObj).val();
+		var toFacilityId = $(toFacilityObj).val();
+		if(typeof(toFacilityId)!= "undefined" && toFacilityId!='' && toFacilityId != null ){
+		$.ajax({
+		     type: "POST",
+		     url: 'checkFacilityAvalableOrNot',
+		     data: {
+		            toFacilityId : toFacilityId,
+		            transId : transId,
+		            },
+		     dataType: 'json',
+		     success: function(result) {
+		       if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+				  alert(''+result['_ERROR_MESSAGE_']);
+		    	   //populateError(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
+		    	   location.reload(true);
+		       }else{              
+		    	    
+		       }
+		     } 
+		});
+    }
+	}
 	
 	function toggleTransferGroupId(master) {
         var transfers = jQuery("#listInXfer :checkbox[name='transferGroupIds']");
@@ -46,17 +73,32 @@ under the License.
     }
         
     function massTransferAcknowledgementSubmit(current, statusId){
-    	jQuery(current).attr( "disabled", "disabled");
-    	var transferGroup = jQuery("#listInXfer :checkbox[name='transferGroupIds']");
+    	//jQuery(current).attr( "disabled", "disabled");
+    //	var transferGroup = jQuery("#listInXfer :checkbox[name='transferGroupIds']");
+    	var transferGroup = $('input[name=transferGroupIds]:checked');
+	 	if(transferGroup.size() <=0) {
+	 		alert("Please Select at least One Request..!")
+		 	return false;
+	 	}
         var index = 0;
         jQuery.each(transferGroup, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
             	var transferObj = $(domObj).find("#transferGroupId");
+                var toFacilityObj = $(domObj).find("#toFacilityId");
+				var transferQtyObj = $(domObj).find("#transferQty");
             	var transId = $(transferObj).val();
+				var toFacilityId = $(toFacilityObj).val();
+				var transferQty = $(transferQtyObj).val();
             	var appendStr = "";
             	appendStr += "<input type=hidden name=transferGroupId_o_"+index+" value="+transId+" />";
             	appendStr += "<input type=hidden name=statusId_o_"+index+" value="+statusId+" />";
+            	if(typeof(toFacilityId)!= "undefined" && toFacilityId!='' && toFacilityId != null ){
+            		appendStr += "<input type=hidden name=toFacilityId_o_"+index+" value="+toFacilityId+" />";
+            	}
+            	if(typeof(transferQty)!= "undefined" && transferQty!='' && transferQty != null ){
+            		appendStr += "<input type=hidden name=transferQty_o_"+index+" value="+transferQty+" />";
+            	}
    				$("#updateTransferGroupForm").append(appendStr);
             }
             index = index+1;
@@ -95,8 +137,8 @@ under the License.
           <td>To Plant/Silo</td>
           <td>Product</td>
           <td>Status</td>
-          <td>Quantity</td>
-          <td>QC Details</td>
+         <td>Quantity</td> 
+         <#-- <td>QC Details</td> -->
           <td align='center'>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllTransfers" name="checkAllTransfers" onchange="javascript:toggleTransferGroupId(this);"/></td>
         </tr>
       </thead>
@@ -107,20 +149,39 @@ under the License.
         	<#assign toFacility = delegator.findOne("Facility", {"facilityId" : eachXfer.toFacilityId}, false)>
         	<#assign product = delegator.findOne("Product", {"productId" : eachXfer.productId}, false)>
         	<#assign status = delegator.findOne("StatusItem", {"statusId" : eachXfer.statusId}, false)>   
+        	<#assign facilityList = eachXfer.facilityList>
+            <#assign toFacilityId = eachXfer.toFacilityId>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             	<input type="hidden" name="transferGroupId" id="transferGroupId" value="${eachXfer.transferGroupId?if_exists}">
 	            <td>${(eachXfer.transferGroupId)?if_exists}</td>
               	<td>${fromFacility.facilityName?if_exists} [${eachXfer.fromFacilityId?if_exists}]</td>
+              	<#if security.hasEntityPermission("PRO", "_EDIT_XFER_FAC", session) && facilityList?has_content>
+				<td><select id="toFacilityId" name="toFacilityId" onchange="javascript:checkFacilityAvalableOrNot(this);">
+					<#list facilityList as facility>
+                      <#if toFacilityId?has_content  && toFacilityId == facility.facilityId >
+			        	<option value='${facility.facilityId}' selected='selected'>${facility.facilityName?if_exists}</option> 	
+			         <#else>
+			           <option value='${facility.facilityId?if_exists}'>${facility.facilityName?if_exists}</option>
+				      </#if>
+                    </#list>
+				</td>
+                <#else>
               	<td>${toFacility.facilityName?if_exists} [${eachXfer.toFacilityId?if_exists}]</td>
+                </#if>
               	<td>${(product.productName)?if_exists} [${eachXfer.productId}]</td>
               	<td>${status.description?if_exists}</td>
+              	<#if security.hasEntityPermission("PRO", "_EDIT_XFER_QTY", session)>
+				<td><input type="text" size="6" name="transferQty" id="transferQty" value="${eachXfer.xferQtySum?if_exists}"></td>
+                <#else>
               	<td>${eachXfer.xferQtySum?if_exists}</td>
-              	<#if eachXfer.qcStatusId=="QC_NOT_ACCEPT"> 
+                </#if>
+               <#--	<#if eachXfer.qcStatusId=="QC_NOT_ACCEPT"> 
               	<td><input type="button" name="QCDetails" onclick="javascript:showQcForm('${eachXfer.productId}','${eachXfer.toFacilityId}','CreateIncomingInvTransQcDetails', 'transferGroupId', '${eachXfer.transferGroupId}');" style="buttontext" value="QCDetails" /></td>
               	<#else> 
-              	<td>&#160;</td>
+              	</#if> 
+              	<td>&#160;</td> -->
               	<td align='center'><input type="checkbox" id="transferGroupIds" name="transferGroupIds" value="${eachXfer.transferGroupId}"/></td>
-              	</#if>
+              	
             </tr>
             <#assign alt_row = !alt_row>
         </#list>

@@ -28,7 +28,7 @@ if(facilityId){
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "IXF_EN_ROUTE"));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	incommingTransferDetails = delegator.findList("InventoryTransferGroupAndMemberSum", condition, null, null, null, false);
-	
+	List facilityList = delegator.findList("Facility",null,null,null,null,false);
 	if(incommingTransferDetails){
 		incommingTransferDetails.each {eachIncommingTransfer->
 			inventoryTransMap=[:];
@@ -36,6 +36,17 @@ if(facilityId){
 			inventoryTransMap.put("xferQtySum", eachIncommingTransfer.xferQtySum);
 			inventoryTransMap.put("fromFacilityId", eachIncommingTransfer.fromFacilityId);
 			inventoryTransMap.put("toFacilityId", eachIncommingTransfer.toFacilityId);
+			GenericValue facilityOwner = EntityUtil.getFirst(EntityUtil.filterByCondition(facilityList, EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,eachIncommingTransfer.toFacilityId)));
+			String ownerPartyId = "";
+			if(UtilValidate.isNotEmpty(facilityOwner)){
+				ownerPartyId = facilityOwner.getString("ownerPartyId");
+			}
+			List toFacilityList = EntityUtil.filterByCondition(facilityList, EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,ownerPartyId));
+			List facilityIds = EntityUtil.getFieldListFromEntityList(toFacilityList, "facilityId", true);
+			List productFacilities = delegator.findList("ProductFacility",EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId",EntityOperator.IN,facilityIds),EntityCondition.makeCondition("productId",EntityOperator.EQUALS,eachIncommingTransfer.productId)],EntityOperator.AND),null,null,null,false);
+			List prodFacilityIds = EntityUtil.getFieldListFromEntityList(productFacilities, "facilityId", true);
+			List finalToFacilities = EntityUtil.filterByCondition(facilityList, EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodFacilityIds));
+			inventoryTransMap.put("facilityList", finalToFacilities);
 			inventoryTransMap.put("statusId", eachIncommingTransfer.statusId);
 			inventoryTransMap.put("productId", eachIncommingTransfer.productId);
 
