@@ -406,8 +406,8 @@
         	<actions>
         		 <set field="titleProperty" value="Billing Reports"/>	
         		 <set field="tabButtonItem" value="MilkReceiptReports"/> 
-        		 <set field="tabButtonItem3" value="PTCReports"/>
-        		 <set field="reportFrequencyFlag" value="PTCReports"/>
+        		 <set field="tabButtonItem3" from-field="parameters.reportFrequencyFlag"/>
+        		 <set field="reportFrequencyFlag" from-field="parameters.reportFrequencyFlag"/>
         		 <set field="displayScreen" value=" "/>
         		 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">
                 	<condition-expr field-name="periodTypeId" operator="equals" value="PTC_FORTNIGHT_BILL"/>

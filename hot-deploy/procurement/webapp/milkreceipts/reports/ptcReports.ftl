@@ -110,10 +110,22 @@
 <div>
   <div class="screenlet">
 	<div class="screenlet-title-bar">
-		<h3>PTC Reports</h3>
+	<#if reportFrequencyFlag?has_content && reportFrequencyFlag=="PTCReports">
+		<h3>Day To Day Billing Reports</h3>
+	</#if>	
+    <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="MilkPurchaseReports">
+		<h3>Milk Purchase Reports</h3>
+    </#if>
+	<#if reportFrequencyFlag?has_content && reportFrequencyFlag=="AccountingReports">
+		<h3>Accounting Reports</h3>
+    </#if>
 	</div>
 	<div class="screenlet-body">
 		<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+		    <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="PTCReports">
+
+            </#if>
+            <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="AccountingReports">
 			<tr class="alternate-row"> 
 				<form id="PTCTankerReport" name="PTCTankerReport" mothed="post" action="<@ofbizUrl>ptcVehicleContractorWiseReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
@@ -240,6 +252,8 @@
 					</table>
 				</form>
 			</tr>
+			</#if>
+            <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="PTCReports">
 			<tr class="alternate-row"> 
 			<form id="UnionPurchaseBillingReportMR" name="UnionPurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>UnionPurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">
@@ -294,7 +308,8 @@
 				</table>
 			</form>
 		</tr>
-		
+		</#if>
+        <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="AccountingReports">
 		 <tr class="alternate-row"> 
 			<form id="PurchaseBillingReportMR" name="PurchaseBillingReportMR" mothed="post" action="<@ofbizUrl>PurchaseBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">
@@ -372,6 +387,8 @@
 				</table>
 			</form>
 		</tr>
+		</#if>
+		<#if reportFrequencyFlag?has_content && reportFrequencyFlag=="PTCReports">
 		<tr class="alternate-row"> 
 				<form id="PTCUnionsReport" name="PTCUnionsReport" mothed="post" action="<@ofbizUrl>ptcUnionsReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
@@ -405,6 +422,8 @@
 					</table>
 				</form>
 			</tr>
+			</#if>
+           <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="AccountingReports">
 			<tr class="alternate-row"> 
 			<form id="ConversionBillingReportMR" name="ConversionBillingReportMR" mothed="post" action="<@ofbizUrl>ConversionBillingReportMR.pdf</@ofbizUrl>" target="_blank">
 				<table class="basic-table" cellspacing="5">
@@ -443,6 +462,7 @@
 				</table>
 			</form>
 		</tr>
+        </#if>
        </table>
     </div>
   </div>

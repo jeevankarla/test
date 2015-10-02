@@ -375,8 +375,15 @@
 		<menu-item name="ShiftWiseReport" title="Shift Wise">
 			<link target="ShiftWiseReport"></link>
 		</menu-item>
-		<menu-item name="PTCReports" title="BILLING REPORTS">
-			<link target="PTCReports"></link>
+		<menu-item name="PTCReports" title="Day To Day Billing Reports">
+			<link target="PTCReports">
+				<parameter param-name="reportFrequencyFlag" value="PTCReports"/>
+			</link>
+		</menu-item>
+		<menu-item name="AccountingReports" title="Accounting Reports">
+			<link target="PTCReports">
+			<parameter param-name="reportFrequencyFlag" value="AccountingReports"/>
+			</link>
 		</menu-item>
      </menu>
 	<menu name="MilkreceiptReportTabBar" extends="CommonTabBarMenu"
