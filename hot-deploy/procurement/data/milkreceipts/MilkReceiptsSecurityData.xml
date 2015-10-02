@@ -123,6 +123,8 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="BILLING_ADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="BILLING_ADMIN"/>
     <SecurityGroupPermission groupId="BILLING_ADMIN" permissionId="BILLING_ADMIN"/>
+    <!-- Permission for time period creation -->
+    <SecurityGroupPermission groupId="BILLING_ADMIN" permissionId="PERIOD_MAINT"/>
     
     <!-- MilkTransfer Issue Tab permissions -->
     <SecurityPermission description="Milk Transfer Issue Tare and Gross Weight Details Permission" permissionId="MR_ISSUE_WGHT_ENTRY"/>

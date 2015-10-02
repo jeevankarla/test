@@ -937,4 +937,8 @@
 		<attribute name="exitDate" mode="IN" type="String" optional="false"/>
 		<attribute name="exitTime" mode="IN" type="String" optional="false"/>
     </service>
+    <service name="createMilkTransferDcSequence" engine="java" location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTransferDcSequence">
+    	 <attribute name="milkTransferId" mode="IN" type="String" optional="false"/> 
+    	 <attribute name="dcNo" mode="OUT" type="String" optional="true"></attribute>
+    </service>
 </services>

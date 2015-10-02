@@ -59,6 +59,7 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
+					changePurposeType();
 					$('button', api.elements.content).click(api.hide);
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
@@ -120,7 +121,7 @@
 				message += "<option value='"+facId+"'>"+facName+"</option>";
 			}
 			message += "</select></h3></td></tr>";
-			message += "<tr><td align='left'><h2>To Plant/Silo</h2></td><td>&nbsp;</td><td align='left'><h3><select style='width:150px;' id='toFacilityId' name='toFacilityId'>";
+			message += "<tr><td align='left'><h2>To Plant/Silo</h2></td><td>&nbsp;</td><td align='left'><h3><select style='width:150px;' id='toFacilityId' name='toFacilityId' onchange='javascript: changePurposeType();'>";
 			for(var i=0;i<toFacility.length;i++){
 				var facId = toFacility[i]['facilityId'];
 				var facName = toFacility[i]['facilityName'];
@@ -137,7 +138,7 @@
 			}
 			message += "</select></h3></td></tr>";
 			message += "<tr><td align='left'><h2>Xfer Qty</h2><sub>(in Kg/Ltr)</sub></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='text' name='xferQty' id='xferQty'></h3></td></tr>";
-			message += "<tr><td align='left'><h2>Comment</h2></td><td>&nbsp;</td><td align='left'><h3><input style='width:150px;' type='textarea' name='comments' id='comments'></h3></td></tr><tr></tr>";
+			message += "<tr><td align='left'><h2>Purpose</h2></td><td>&nbsp;</td><td align='left'><h3><select style='width:150px;' id='comments' name='comments'></select></h3></tr>";
 			if(chromeBrowserFlag && chromeBrowserFlag == 'Y'){
 				message += "<tr class='h3'><td>&nbsp;</td><td align='right'><button type='submit' onclick='javascript: submitTransferForm();' class='submit'>Submit</button></td><td class='h3' align='left'><button onclick='return cancelForm();'>Close</button></td></tr>";
 			}
@@ -178,7 +179,34 @@
 			$("#xferQty").css("background-color", '#FFFFFF');
 		}
 	}
-	
+	function changePurposeType(){
+		var toFacilityId = $('[name=toFacilityId]').val();
+		var productIdStr = product["productId"];
+		if(typeof(toFacilityId) != 'undefined' && toFacilityId!=null && toFacilityId!=''){
+			var dataJson = {"facilityId": toFacilityId};
+			jQuery.ajax({
+                url: 'getFacilityPurposeProducts',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               	success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in getting purpose");
+					}else{
+						var optionList = '';
+						var purposeProducts = result['purposeProducts'];
+						if(typeof(purposeProducts) != 'undefined' && purposeProducts!=null && purposeProducts!=''){
+							for(i=0;i<purposeProducts.length ; i++){
+								var puposeProduct = purposeProducts[i];
+								optionList += "<option value = " + puposeProduct['productId'] + " >" +puposeProduct['productName']+"</option>";
+							}
+						}
+						jQuery("[name=comments]").html(optionList);		
+               		}
+               	}							
+			});
+		}
+	}
 	function showXferForm(facilityId, productId) {
 		var dataJson = {"facilityId": facilityId, "productId": productId};
 		jQuery.ajax({

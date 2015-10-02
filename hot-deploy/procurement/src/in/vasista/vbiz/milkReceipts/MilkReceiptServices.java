@@ -7173,5 +7173,89 @@ public static Map<String, Object> getWeighmentDetails(DispatchContext dctx, Map<
  	}
 	return resultMap;
 }	
+	/**
+	 * 
+	 * @param dctx
+	 * @param context
+	 * @return
+	 */
+	public static Map<String, Object> createMilkTransferDcSequence(DispatchContext dctx, Map<String, ? extends Object> context){
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> resultMap = ServiceUtil.returnSuccess();
+        String milkTransferId = (String)context.get("milkTransferId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue milkTransfer = null;
+        if(UtilValidate.isEmpty(milkTransferId)){
+        	Debug.logError("milkTransferId should not be empty",module);
+        	return ServiceUtil.returnError("milkTransferId should not be empty");
+        }
+        try{
+        	milkTransfer = delegator.findOne("MilkTransfer",UtilMisc.toMap("milkTransferId",milkTransferId),false);
+        }catch(GenericEntityException e){
+        	Debug.logError("Error while getting Milk Transfer Details :"+e,module);
+        	return ServiceUtil.returnError("Error while getting Milk Transfer Details :"+e.getMessage());
+        }
+        if(UtilValidate.isEmpty(milkTransfer)){
+        	Debug.logError("MilkTransfer not found with the transferId :"+milkTransferId,module);
+        	return ServiceUtil.returnError("MilkTransfer not found with the transferId :"+milkTransferId);
+        }
+        //her we are gettin finyear Id
+        Map finYearContext = FastMap.newInstance();
+		finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+		finYearContext.put("organizationPartyId", "Company");
+		finYearContext.put("userLogin", userLogin);
+		finYearContext.put("findDate", UtilDateTime.nowTimestamp());
+		finYearContext.put("excludeNoOrganizationPeriods", "Y");
+		List customTimePeriodList = FastList.newInstance();
+		Map resultCtx = FastMap.newInstance();
+		try{
+			resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+			if(ServiceUtil.isError(resultCtx)){
+				Debug.logError("Problem in fetching financial year ", module);
+				return ServiceUtil.returnError("Problem in fetching financial year ");
+			}
+		}catch(GenericServiceException e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+		String finYearId = "";
+		if(UtilValidate.isNotEmpty(customTimePeriodList)){
+			GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+			finYearId = (String)customTimePeriod.get("customTimePeriodId");
+		}
+        //here we are trying to generate sequence Id ..
+        GenericValue MilkTransferDCNumberSequence = null;
+        // CHECKING FOR EXISTED SEQUENCE for this transfer
+        try{
+        	List conditionList = FastList.newInstance();
+        	conditionList.add(EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
+        	List<GenericValue> milkTransferDCNumberSequenceList = delegator.findList("MilkTransferDCNumberSequence",condition, null, null, null, false);
+        	MilkTransferDCNumberSequence = EntityUtil.getFirst(milkTransferDCNumberSequenceList);
+        }catch(GenericEntityException e){
+        	Debug.logError("Error while getting existed sequence for :"+milkTransferId+" ::"+e,module);
+        	return ServiceUtil.returnError("");
+        }
+        
+        if(UtilValidate.isEmpty(MilkTransferDCNumberSequence)){
+        
+	        try{
+	        	MilkTransferDCNumberSequence = delegator.makeValue("MilkTransferDCNumberSequence");
+	        	MilkTransferDCNumberSequence.set("milkTransferId", milkTransferId);
+	        	MilkTransferDCNumberSequence.set("finYearId", finYearId);
+	        	delegator.setNextSubSeqId(MilkTransferDCNumberSequence,"sequenceId",5,1);
+	        	delegator.create(MilkTransferDCNumberSequence);
+	        }catch(GenericEntityException e){
+	        	Debug.logError("Error while generating dcNumber :"+e,module);
+	        	return ServiceUtil.returnError("Error while generating dcNumber :"+e.getMessage());
+	        }
+        }
+        String dcNo = (String) MilkTransferDCNumberSequence.get("sequenceId");
+        resultMap.put("dcNo", dcNo);
+        return resultMap;
+        
+	}//end of the service 
 
 }
