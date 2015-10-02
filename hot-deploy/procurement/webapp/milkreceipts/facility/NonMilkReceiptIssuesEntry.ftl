@@ -206,6 +206,14 @@ $(document).ready(function() {
 	    		}
 	    			$(this).val( $(this).val().replace(/[^0-9\.]/g,''));
 		  	}
+		  	if(e.target.name == "tankerName"){
+	  			if(e.which == 110 || e.which == 190 || e.which ==32 || e.which==188 ){
+    				$(this).val( $(this).val().replace('.',''));
+    				$(this).val( $(this).val().replace(' ',''));
+    				$(this).val( $(this).val().replace(',',''));
+	    		}
+	    			
+		  	}
 	}); 
 });
 function populateProductNames(){
