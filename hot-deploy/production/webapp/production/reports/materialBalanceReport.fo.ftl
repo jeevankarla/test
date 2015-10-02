@@ -50,12 +50,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
  
         <fo:table width="100%" align="left" table-layout="fixed"  font-size="12pt" border-style="solid">
                 <fo:table-column column-width="40pt"/>               
-                <fo:table-column column-width="200pt"/>               
+                <fo:table-column column-width="260pt"/>               
 	            <fo:table-column column-width="100pt"/>               
-                <fo:table-column column-width="70pt"/>               
-                <fo:table-column column-width="70pt"/>  
-                <fo:table-column column-width="90pt"/>               
-                <fo:table-column column-width="90pt"/>               
+                <fo:table-column column-width="55pt"/>               
+                <fo:table-column column-width="55pt"/>  
+                <fo:table-column column-width="75pt"/>               
+                <fo:table-column column-width="75pt"/>               
 	           <fo:table-body>
 	             <#assign openingBal = (Static["java.math.BigDecimal"].ZERO)>
 	             <#assign receipts = (Static["java.math.BigDecimal"].ZERO)>
@@ -241,7 +241,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                     <#assign productNameDetails = delegator.findOne("Product", {"productId" : milkIssuesData.getKey()}, true)>
 	           <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
-                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists}<#if milkIssuesData.getValue().get("purposeIds")?has_content>  ${milkIssuesData.getValue().get("purposeIds")?if_exists}</#if></fo:block></fo:table-cell>       		
               	 <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${milkIssuesData.getValue().get("issuedQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${milkIssuesData.getValue().get("issuedFat")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${milkIssuesData.getValue().get("issuedSnf")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
