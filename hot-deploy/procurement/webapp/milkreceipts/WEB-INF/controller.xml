@@ -936,6 +936,13 @@
        <response name="error" type="request" value="json"/>       
     </request-map>
     
+    <request-map uri="generateMilkTransferDcNo">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createMilkTransferDcSequence"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
     
    <request-map uri="updateInternalMilkTransferCip">
         <security https="true" auth="true"/>

@@ -73,6 +73,12 @@
        <event type="groovy" path="component://production/webapp/production/WEB-INF/actions/"  invoke="getQcProducts.groovy"/>
        <response name="success" type="request" value="json"/>    
     </request-map>
+    <request-map uri="getFacilityPurposeProducts">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="getFacilityPurposeProducts"/>
+       <response name="success" type="request" value="json"/>  
+       <response name="error" type="request" value="json"/>    
+    </request-map>
     <request-map uri="checkFacilityAvalableOrNot">
        <security https="true" auth="true"/>
        <event type="service" invoke="checkFacilityAvalableOrNot"/>

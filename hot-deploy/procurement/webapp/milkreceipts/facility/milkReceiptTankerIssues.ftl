@@ -168,7 +168,7 @@ $(document).ready(function() {
  		makeDatePicker("testDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_LOAD"){
- 		//$('#dcNo').attr("readonly","readonly");
+ 		$('#dcNo').attr("readonly","readonly");
  		makeDatePicker("loadDate","fromDate");
  	}
  	if($('#displayScreen').val()=="ISSUE_AQC"){
@@ -793,6 +793,27 @@ function populateMccNames(){
 			source:  availableTags
 		});
 }
+function generateDC(){
+		var milkTransId = $('[name=milkTransferId]').val();
+		var action = "generateMilkTransferDcNo";
+		var dataString = {"milkTransferId": milkTransId	 };
+		$.ajax({
+	         type: "POST",
+	         url: action,
+	         data: dataString,
+	         dataType: 'json',
+	         success: function(result) { 
+	       		var dcNo	 = result['dcNo'];
+	       		$('[name=dcNo]').val(dcNo);
+	       		$('#dcNo').attr("readonly","readonly");
+	       		$('#generateDcNo').parent().hide();
+	         },
+	         error:function(){
+	         	//$('#dcNo').removeAttr("readonly");
+	         	$('#generateDcNo').parent().show();
+	         }
+    	});
+	}
 
 function getProductJson(){
 	var tempProductJson = productJson[$('[name=product]').val()];
@@ -969,6 +990,7 @@ function reloadingPage(){
 					        	</tr>
 					         	<tr>
 								    <td align='left'><span class="h3">Dc No</span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required='required' /><em>*<em></td>
+								  <#if  displayScreen =="ISSUE_LOAD"><td><input type="button" id="generateDcNo" name="generateDcNo"  value="Generate DcNo" onclick="javascript: generateDC();"/></td></#if>
 								</tr>	
 								<#--<#if displayScreen == "ISSUE_QC">
 									<tr>

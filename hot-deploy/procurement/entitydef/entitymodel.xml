@@ -1231,4 +1231,16 @@
         	<key-map field-name="weighmentId"/>
       	</view-link>
   	</view-entity> 
+  	
+  	<entity entity-name="MilkTransferDCNumberSequence"
+            package-name="org.ofbiz.product.inventory"
+            title="MilkTransfer DC Sequence Entity">
+      <field name="finYearId" type="id"></field>
+      <field name="sequenceId" type="id-ne"></field>
+      <field name="milkTransferId" type="id"></field>
+      <prim-key field="sequenceId"/>
+      <relation rel-entity-name="MilkTransfer" type="one">
+      	<key-map field-name="milkTransferId"/>
+      </relation>
+    </entity>
 </entitymodel>
