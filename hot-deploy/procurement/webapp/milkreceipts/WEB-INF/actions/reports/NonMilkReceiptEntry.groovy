@@ -32,7 +32,7 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import org.ofbiz.party.party.PartyHelper;
 
 // vehicles auto complete from vehicle master
-List vehicleRoleList = delegator.findList("VehicleRole",null,UtilMisc.toSet("vehicleId"),null,null,false);
+List vehicleRoleList = delegator.findList("VehicleRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.NOT_EQUAL,"ROUTE_VEHICLE"),UtilMisc.toSet("vehicleId"),null,null,false);
 JSONObject otherVehicleCodeJson = new JSONObject();
 for(vehicle in vehicleRoleList){
 	otherVehicleCodeJson.put(vehicle.get("vehicleId"),"Other Vehicle");
