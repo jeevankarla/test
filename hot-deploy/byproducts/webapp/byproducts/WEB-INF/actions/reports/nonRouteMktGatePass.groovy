@@ -168,9 +168,16 @@ orderIds.each{ eachOrderId ->
 			unitPriceInc = (eachItem.unitPrice/prodDetail.quantityIncluded);
 		}
 		tempMap = [:];
+		uomDesc = "";
+		if(UtilValidate.isNotEmpty(prodDetail.quantityUomId)){
+			uomDetails = delegator.findOne("Uom",UtilMisc.toMap("uomId",prodDetail.quantityUomId),false);
+			if(UtilValidate.isNotEmpty(uomDetails)){
+				uomDesc =uomDetails.description;
+			} 
+		}
 		tempMap.put("productId",eachItem.productId);
 		tempMap.put("sequenceNum",prodDetail.sequenceNum);
-		tempMap.put("description",prodDetail.description);
+		tempMap.put("description",prodDetail.description+" "+"("+uomDesc+")");
 //		tempMap.put("itemDescription",eachItem.itemDescription);
 		if(screenFlag=="scrapSales"){
 			tempMap.put("recurringFreqUomId",eachItem.recurringFreqUomId);

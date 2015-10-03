@@ -213,6 +213,7 @@
     <SecurityGroupPermission groupId="MR_NONMILK_ENTRY" permissionId="MR_NONMILK_ENTRY"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMILK_ENTRY"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMILK_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_NONMILK_ENTRY" permissionId="PARTYMGR_VIEW"/>
     
     <SecurityPermission description="Non Milk Tanker Find View.!" permissionId="MR_NONMILK_VIEW"/>
     <SecurityGroup description="Non Milk Tanker Find View.!" groupId="MR_NONMILK_VIEW"/>
@@ -225,6 +226,7 @@
     <SecurityGroupPermission groupId="MR_NONMLK_ISUE_ENTRY" permissionId="MR_NONMLK_ISUE_ENTRY"/>
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMLK_ISUE_ENTRY"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMLK_ISUE_ENTRY"/>
+    <SecurityGroupPermission groupId="MR_NONMLK_ISUE_ENTRY" permissionId="PARTYMGR_VIEW"/>
     
     <SecurityPermission description="Non Milk Issue Find View.!" permissionId="MR_NONMLK_ISUE_VIEW"/>
     <SecurityGroup description="Non Milk Issue Find View.!" groupId="MR_NONMLK_ISUE_VIEW"/>

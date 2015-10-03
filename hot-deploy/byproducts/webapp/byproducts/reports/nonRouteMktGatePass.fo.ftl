@@ -67,7 +67,7 @@ under the License.
 			                    	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
 			                    	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">  ${reportSubHeader.description?if_exists}</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if reportFlag?has_content && reportFlag == "gatePass">GATE PASS<#else>DELIVERY CHALLAN</#if></fo:block>
+					            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if reportFlag?has_content && reportFlag == "gatePass">GATE PASS<#else>DELIVERY CHALLAN <#if screenFlag == 'InterUnitTransferSale'>CUM GATE PASS</#if></#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">TIN : ${companyDetail.get('TIN_NUMBER')?if_exists}</fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")?if_exists}                CST : ${companyDetail.get('CST_NUMBER')?if_exists}</fo:block>
 					            </fo:table-cell>
@@ -93,7 +93,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${partyCode?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">GP NO : </fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag !='scrapSales')>GP NO :<#else> </#if> </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>  
@@ -123,7 +123,7 @@ under the License.
 					            	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">${billingAddress.get('city')?if_exists},${billingAddress.get('countryGeoId')?if_exists}, ${billingAddress.get('postalCode')?if_exists}</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DC No : </fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> <#if screenFlag?exists &&  screenFlag == 'InterUnitTransferSale' >DC Cum Gate Pass No :<#else>DC No :</#if> </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>	
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if shipment?has_content>${shipment.shipmentId?if_exists}</#if></fo:block>  
@@ -241,7 +241,7 @@ under the License.
 										            	</fo:table-cell>
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">TOTAL QTY</fo:block>
-										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">(LTR/KG)</fo:block>  
+										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">(LTR/KG)</fo:block> 
 										            	</fo:table-cell>
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">REMARKS</fo:block>  
@@ -260,11 +260,11 @@ under the License.
 										            	</fo:table-cell>
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">QTY</fo:block>
-										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold"> IN PCKS</fo:block>  
+										            		<#--<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold"> IN PCKS</fo:block> -->  
 										            	</fo:table-cell>
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">QTY</fo:block>
-										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">(LTR/KG)</fo:block>  
+										            		<#-- <fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">(LTR/KG)</fo:block> -->  
 										            	</fo:table-cell>
 										            	<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">AMOUNT</fo:block>
