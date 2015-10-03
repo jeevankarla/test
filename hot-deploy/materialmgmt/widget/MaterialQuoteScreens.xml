@@ -230,6 +230,7 @@
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
                 <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
                 	<condition-list combine="and">
+                	    <condition-expr field-name="statusId" operator="not-equals" value="QUO_CANCELED"/>
                 		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 		<condition-expr field-name="qiStatusId" operator="not-equals" value="QTITM_REJECTED"/>
                 	</condition-list>
