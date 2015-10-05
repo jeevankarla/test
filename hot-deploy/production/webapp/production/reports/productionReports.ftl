@@ -100,6 +100,7 @@
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("convFromDate","convThruDate");
 		makeDatePicker("milkProcessRegDate","");
+		makeDatePicker("smpRegDate","");
 		makeDatePicker("temperatureDate","");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		makeDatePicker("deptProductIssueFromDate","deptProductIssueThruDate");
@@ -184,7 +185,35 @@
 					</table>
 				</form>
 			</tr>
-			
+				<tr class="alternate-row"> 
+				<form id="smpRegisterReport" name="smpRegisterReport" mothed="post" action="<@ofbizUrl>smpRegisterReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'>SMP Register Report</span></td>
+							
+							<td width="35%">
+							     <span class='h3'>
+									Date <input  type="text" size="18pt" id="smpRegDate"   name="fromDate"/>
+								 </span>
+							</td>
+						    <td width="35%">
+						    	 <span class='h3'>Shift </span>
+			                    <select name="shiftId" id="shiftId">
+	        				 <option value=""></option>
+			                    <#if allShiftsList?has_content>	
+			                        <#list allShiftsList as shiftDetails>    
+					                  	    <option value='${shiftDetails.shiftTypeId}' >
+					                    		${shiftDetails.description}
+					                  		 </option>
+			                		</#list>    
+			                	 </#if>	    
+			                    </select>
+						    </td>
+						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
 			<tr class="alternate-row"> 
 				<form id="MaterialBalanceReport" name="MaterialBalanceReport" mothed="post" action="<@ofbizUrl>MaterialBalanceReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
