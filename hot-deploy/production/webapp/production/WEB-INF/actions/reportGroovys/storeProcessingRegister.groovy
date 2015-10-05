@@ -103,7 +103,7 @@ conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUAL
 EntityCondition invTransMainCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 invTransferList = delegator.findList("InventoryTransfer", invTransMainCond, null,null, null, false);
 //conditionList.clear();
-//allSiloInvTransferList = EntityUtil.filterByCondition(invTransferList, EntityCondition.makeCondition("facilityId", EntityOperator.IN,allFacilityIds));
+allSiloInvTransferList = EntityUtil.filterByCondition(invTransferList, EntityCondition.makeCondition("facilityId", EntityOperator.IN,allFacilityIds));
 if(UtilValidate.isNotEmpty(invTransferList)){
 	allinvTransIds=EntityUtil.getFieldListFromEntityList(invTransferList, "inventoryTransferId", true);
 	allInvTransGroupMemList = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,allinvTransIds ), null,null, null, false);
@@ -783,31 +783,38 @@ mpuSiloTypes.each{eachSiloType->
 			   // PM issued Qty through production
 			   BigDecimal pmissueProdnQty = ((BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff"));
 			   pmItemIssuanceId=eachinventoryItemDetail.itemIssuanceId; 
-			   if(UtilValidate.isNotEmpty(pmItemIssuanceId) && pmissueProdnQty<0){
-				   pmissueProdnQty=-pmissueProdnQty;
-				   custFromPartyId='';
-				   pmItemIssuanceCustIdList = delegator.findOne("ItemIssuance",["itemIssuanceId":pmItemIssuanceId],false);
-				   if(pmItemIssuanceCustIdList){
-					   pmIsscustReqId=pmItemIssuanceCustIdList.get("custRequestId");
-					   pmItemIssuancePartyIdToList = delegator.findOne("CustRequest",["custRequestId":pmIsscustReqId],false);
-					   if(pmItemIssuancePartyIdToList){
-						   custFromPartyId=pmItemIssuancePartyIdToList.get("fromPartyId");
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("itemIssuanceId", EntityOperator.EQUALS,pmItemIssuanceId));
+				conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+				EntityCondition itemIssuanceCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				itemIssuanceCloseData = EntityUtil.filterByCondition(issuedInvDetails, itemIssuanceCond);
+				if(UtilValidate.isEmpty(itemIssuanceCloseData)){
+				   if(UtilValidate.isNotEmpty(pmItemIssuanceId) && pmissueProdnQty<0){
+					   pmissueProdnQty=-pmissueProdnQty;
+					   custFromPartyId='';
+					   pmItemIssuanceCustIdList = delegator.findOne("ItemIssuance",["itemIssuanceId":pmItemIssuanceId],false);
+					   if(pmItemIssuanceCustIdList){
+						   pmIsscustReqId=pmItemIssuanceCustIdList.get("custRequestId");
+						   pmItemIssuancePartyIdToList = delegator.findOne("CustRequest",["custRequestId":pmIsscustReqId],false);
+						   if(pmItemIssuancePartyIdToList){
+							   custFromPartyId=pmItemIssuancePartyIdToList.get("fromPartyId");
+						   }
 					   }
-				   }
-				   pmCustIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,custFromPartyId));
-				   if(UtilValidate.isNotEmpty(pmCustIssuedParty)){
-					   pmCustIssuedParty = EntityUtil.getFirst(pmCustIssuedParty);
-					   if(UtilValidate.isNotEmpty(pmCustIssuedParty.comments)){
-						   custFromPartyId=pmCustIssuedParty.comments;
+					   pmCustIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,custFromPartyId));
+					   if(UtilValidate.isNotEmpty(pmCustIssuedParty)){
+						   pmCustIssuedParty = EntityUtil.getFirst(pmCustIssuedParty);
+						   if(UtilValidate.isNotEmpty(pmCustIssuedParty.comments)){
+							   custFromPartyId=pmCustIssuedParty.comments;
+						   }
 					   }
+					   Map pmIssIntExtMap = FastMap.newInstance();
+					   pmIssIntExtMap.put("qty",pmissueProdnQty);
+					   pmIssIntExtMap.put("recFacility",custFromPartyId);
+					   pmSiloIssueMap.put(issueNo, pmIssIntExtMap);
+					   pmIssuedSiloQty=pmIssuedSiloQty+pmissueProdnQty;
+					   issueNo++;
 				   }
-				   Map pmIssIntExtMap = FastMap.newInstance();
-				   pmIssIntExtMap.put("qty",pmissueProdnQty);
-				   pmIssIntExtMap.put("recFacility",custFromPartyId);
-				   pmSiloIssueMap.put(issueNo, pmIssIntExtMap);
-				   pmIssuedSiloQty=pmIssuedSiloQty+pmissueProdnQty;
-				   issueNo++;
-			   }
+				}
 			}
 		}
 		// PM Internal And External Milk Issues

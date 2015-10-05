@@ -44,6 +44,28 @@
        </widgets>
    </section>
 </screen>
+<screen name="smpRegisterReportPDF">
+  <section>
+	<actions>
+	 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+	 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+	 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+     <script location="component://production/webapp/production/WEB-INF/actions/reportGroovys/SmpRegisterReport.groovy"/>
+	</actions>
+	   <widgets>
+	    <section>
+		 <widgets>
+		   <platform-specific> 
+			  <xsl-fo>					  
+			    <html-template location="component://production/webapp/production/reports/SmpRegisterReportPDF.fo.ftl" /> 
+              </xsl-fo> 
+           </platform-specific>
+          </widgets>
+		 </section>
+       </widgets>
+   </section>
+</screen>
+
 <screen name="MaterialBalanceReportPDF">
   <section>
 	<actions>

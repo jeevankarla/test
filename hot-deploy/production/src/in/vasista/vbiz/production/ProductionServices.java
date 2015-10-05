@@ -428,7 +428,7 @@ public class ProductionServices {
 		 		        conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN,sendWorkEffIds ));
 		        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 		        		EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		        		workEffortInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortCond);
+		        		workEffortInvDetailList = delegator.findList("InventoryItemAndDetail", workEffortCond, null,null, null, false);
 	        		}
 	        		
 	        		// Work Effort Return Details
@@ -738,15 +738,17 @@ public class ProductionServices {
         		 if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
  		        	List<String> invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItemAndDetail, "productId", true);
  	        	 	//HashSet<String> partyIdsSet= new HashSet( EntityUtil.getFieldListFromEntityList(MilkTransferList, "partyId", true));
- 		        
+
  		        	List<String> recdDeptWorkEffortIds =FastList.newInstance();
  		        	List<String> recdFromDeptWorkEffortIds =FastList.newInstance();
  		        	 conditionList.clear();
+ 		        	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+ 	        	 	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	        		 conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
 	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
         	    	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,thruFacilityIds ));
 	        		 EntityCondition workEffortRecdCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	        		 List<GenericValue> workEffortIdsInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortRecdCond);
+	        		 List<GenericValue> workEffortIdsInvDetailList = delegator.findList("InventoryItemAndDetail", workEffortRecdCond, null,null, null, false);
 	        		 recdDeptWorkEffortIds = EntityUtil.getFieldListFromEntityList(workEffortIdsInvDetailList, "workEffortId", true);
 	        		 conditionList.clear();
 	        		 conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN,recdDeptWorkEffortIds ));
@@ -756,7 +758,7 @@ public class ProductionServices {
 	        		 EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
   	        		 List<GenericValue> workEffortInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortCond);
 
-	        		// internal indent & external issues
+  	        		 // internal indent & external issues
 	        		List<GenericValue> indentIssuesDetailList =null;
 		        		conditionList.clear();
 		        		conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.IN,thruDeptIds ));
@@ -787,7 +789,7 @@ public class ProductionServices {
 		        		if(UtilValidate.isNotEmpty(inventoryTransferList)){
 			        		HashSet<String> inventoryTransferIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransferList, "inventoryTransferId", true));
 			        		conditionList.clear();
-			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+			        		//conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
 			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,inventoryTransferIds ));
 			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
 			        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -849,20 +851,28 @@ public class ProductionServices {
 		     	    		if(UtilValidate.isNotEmpty(indentIssuesDetails)){
 	    						for(GenericValue indentIssuesDetail : indentIssuesDetails){
 	    	    					BigDecimal tempIssuedQty = (BigDecimal)indentIssuesDetail.get("quantityOnHandDiff");
-	    	    							   tempIssuedQty = tempIssuedQty.negate();
-	    	    					BigDecimal tempFatPercent = (BigDecimal)indentIssuesDetail.get("fatPercent");
-	    	    					BigDecimal tempSnfPercent = (BigDecimal)indentIssuesDetail.get("snfPercent");
-	    	    					if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempFatPercent)){
-	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempFatPercent);
-		    	    					issuedKgFat=issuedKgFat.add(tempFatKg);
-	    							}
-	    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
-	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempSnfPercent);
-	    								issuedKgSnf=issuedKgSnf.add(tempSnfKg);
-	    							}
-	    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
-	    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
-	    							}
+	    	    					String returnItemIssuanceId = (String)indentIssuesDetail.get("itemIssuanceId");
+	    	    					conditionList.clear();
+	    	    					conditionList.add(EntityCondition.makeCondition("itemIssuanceId", EntityOperator.EQUALS,returnItemIssuanceId));
+	    	    					conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	    	    					EntityCondition itemIssuanceCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	    					List<GenericValue> itemIssuanceCloseData = EntityUtil.filterByCondition(inventoryItemAndDetail, itemIssuanceCond);
+	    	    					if(UtilValidate.isEmpty(itemIssuanceCloseData)){
+	    	    						tempIssuedQty = tempIssuedQty.negate();
+		    	    					BigDecimal tempFatPercent = (BigDecimal)indentIssuesDetail.get("fatPercent");
+		    	    					BigDecimal tempSnfPercent = (BigDecimal)indentIssuesDetail.get("snfPercent");
+		    	    					if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+		    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempFatPercent);
+			    	    					issuedKgFat=issuedKgFat.add(tempFatKg);
+		    							}
+		    							if(UtilValidate.isNotEmpty(tempIssuedQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+		    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempIssuedQty, tempSnfPercent);
+		    								issuedKgSnf=issuedKgSnf.add(tempSnfKg);
+		    							}
+		    							if(UtilValidate.isNotEmpty(tempIssuedQty)){
+		    								issuedQuantity=issuedQuantity.add(tempIssuedQty);
+		    							}
+	    	    					}
 	    	    				}
 		
 		     	    		}
@@ -1428,7 +1438,10 @@ public class ProductionServices {
 	  			  enableTrackRawMaterial = Boolean.TRUE;
 	  		  }
 	  		  List conditionList = FastList.newInstance();
-	  		  
+	  		 
+	  		  List<GenericValue> product = delegator.findList("Product", null, null, null, null, false);
+	  		  List<GenericValue> productAttribute = delegator.findList("ProductAttribute", null, null, null, null, false);
+
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  
 		  		  String productId = "";
@@ -1521,7 +1534,31 @@ public class ProductionServices {
                 		
                 		String issueProductId = eachMaterial.getString("productIdTo");
                 		BigDecimal issueQty = eachMaterial.getBigDecimal("quantity");
-                		BigDecimal totalIssueQty = quantity.multiply(issueQty);
+                		
+                		BigDecimal totalIssueQty = BigDecimal.ZERO;
+                		BigDecimal LtrKg = BigDecimal.ZERO;
+                		BigDecimal crateBoxes = BigDecimal.ZERO;
+                		List<GenericValue> productDetail = EntityUtil.filterByCondition(product, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+                		if(UtilValidate.isNotEmpty(productDetail)){
+             	  			GenericValue productQtyIncuds = EntityUtil.getFirst(productDetail);
+                			LtrKg = productQtyIncuds.getBigDecimal("quantityIncluded");
+                		}
+            			conditionList.clear();
+		        		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,productId ));
+		 		        conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS,"CRATE" ));
+		        		EntityCondition cratesCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        		List<GenericValue> productAttributePackConvList = EntityUtil.filterByCondition(productAttribute, cratesCond);
+                		if(UtilValidate.isNotEmpty(productAttributePackConvList)){
+                			GenericValue productAttrCrateValue = EntityUtil.getFirst(productAttributePackConvList);
+                			crateBoxes = new BigDecimal(productAttrCrateValue.getString("attrValue"));
+                		}
+                		if(UtilValidate.isNotEmpty(crateBoxes) && UtilValidate.isNotEmpty(LtrKg)){
+                    		BigDecimal oneCrateQtyLtr = crateBoxes.multiply(LtrKg);
+                    		BigDecimal crateQty = (quantity.divide(oneCrateQtyLtr ,3 , BigDecimal.ROUND_HALF_UP));
+
+                    		totalIssueQty = crateQty.multiply(issueQty);
+                		}
+                		
                 		if(totalIssueQty.compareTo(BigDecimal.ZERO)>0){
                 			inputCtx.clear();
         	                inputCtx.put("productId", issueProductId);
@@ -1859,6 +1896,22 @@ public class ProductionServices {
 	  	String productionRunId = (String) context.get("productionRunId");
 	  	String statusId = (String) context.get("statusId");
 	  	try{
+  			if(UtilValidate.isNotEmpty(statusId) && statusId.equals("PRUN_COMPLETED") && UtilValidate.isNotEmpty(workEffortId)){
+  				List workEffCondList = FastList.newInstance();
+  				workEffCondList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,workEffortId ));
+  				workEffCondList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+  				EntityCondition workEffCond = EntityCondition.makeCondition(workEffCondList,EntityOperator.AND);
+  				List<GenericValue> workEffDeclareProdList = delegator.findList("InventoryItemAndDetail", workEffCond, null,null, null, false);
+  				if(UtilValidate.isEmpty(workEffDeclareProdList)){
+  					Debug.logError("Canot Finish the routing task Without Declare products for : "+workEffortId, module);
+  					return ServiceUtil.returnError("Canot Finish the routing task Without Declare products for : "+workEffortId);
+  				}
+  			}
+  		} catch (GenericEntityException e) {
+  			Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+  		}
+  		try {
 	  		  Map inputStatusCtx = FastMap.newInstance();
 	  		  inputStatusCtx.put("productionRunId", productionRunId);
 	  		  inputStatusCtx.put("workEffortId", workEffortId);
