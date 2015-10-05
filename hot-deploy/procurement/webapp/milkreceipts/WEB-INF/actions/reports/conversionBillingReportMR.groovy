@@ -74,6 +74,7 @@ context.thruDate = dayEnd;
 String partyId=parameters.partyId;
 String partyName = PartyHelper.getPartyName(delegator,partyId,false);
 context.put("partyName",partyName);
+context.put("abstPartyName",partyName);
 
 
 
@@ -102,6 +103,8 @@ Set sendPartyIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(unionsLi
 sentPartyIds.addAll(sendPartyIdsSet);
 sentPartyIds.add(0,partyId);
 String butterProductId = "84";
+Map unionWiseProductAbstract = FastMap.newInstance();
+
 List milkConversionConditionList = UtilMisc.toList(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"CONVERSION"));
 milkConversionConditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "MXF_APPROVED"));
 milkConversionConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN , sentPartyIds));
@@ -121,7 +124,7 @@ for(String unionId in sentPartyIds){
 		Set productIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(unionConversionList, "productId", false));
 		for(productId in productIdsSet){
 			List productTransferDetList = FastList.newInstance();
-			List productRelatedTransfers = EntityUtil.filterByCondition(milkTransferConversionList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+			List productRelatedTransfers = EntityUtil.filterByCondition(unionConversionList, EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
 			// Here we are trying to get conversion product configurations
 			Set conProductIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(productRelatedTransfers, "conversionProductId", false));
 			Map productConversionRateInMap = FastMap.newInstance();
@@ -149,13 +152,13 @@ for(String unionId in sentPartyIds){
 				productConfigList = delegator.findList("ProductTestComponent", productCondition, null, null, null, false);
 				productConfigList = EntityUtil.filterByDate(productConfigList,dayBegin);
 				
-				BigDecimal fatLoss        = BigDecimal.ZERO;
-				BigDecimal snfLoss        = BigDecimal.ZERO;
-				BigDecimal addSugar       = BigDecimal.ZERO;
-				BigDecimal totSolidsLoss  = BigDecimal.ZERO;
-				BigDecimal butterYield    = BigDecimal.ZERO;
-				BigDecimal productYield   = BigDecimal.ZERO;
-				BigDecimal fatPercentStd	  = BigDecimal.ZERO;
+				BigDecimal   fatLoss             = BigDecimal.ZERO;
+				BigDecimal   snfLoss             = BigDecimal.ZERO;
+				BigDecimal   addSugar       	 = BigDecimal.ZERO;
+				BigDecimal   totSolidsLoss  	 = BigDecimal.ZERO;
+				BigDecimal   butterYield    	 = BigDecimal.ZERO;
+				BigDecimal   productYield   	 = BigDecimal.ZERO;
+				BigDecimal   fatPercentStd	     = BigDecimal.ZERO;
 				GenericValue fatLossDetails      = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"fatLoss")));
 				GenericValue snfLossDetails      = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"snfLoss")));
 				GenericValue addSugarDetails     = EntityUtil.getFirst(EntityUtil.filterByCondition(productConfigList,EntityCondition.makeCondition("testComponent",EntityOperator.EQUALS,"addSugar")));
@@ -188,6 +191,9 @@ for(String unionId in sentPartyIds){
 				if(snfLoss.compareTo(totSolidsLoss)==1){
 					totSolidsLoss = snfLoss;
 				}
+				String productName = (String) productDetails.get("internalName");
+				String conProductName = (String) conversionProduct.get("internalName");
+				
 				Map productConfigMap = FastMap.newInstance();
 				
 				productConfigMap.put("productName", productDetails.get("productName"));
@@ -322,6 +328,33 @@ for(String unionId in sentPartyIds){
 					tranConProductDetPriceMapList.add(tranProductDetPriceMap);
 					slNo = slNo+1;
 				}
+				String abstProductName = productName.concat(" TO ").concat(conProductName);
+				if(UtilValidate.isNotEmpty(unionWiseProductAbstract) && UtilValidate.isNotEmpty(unionWiseProductAbstract.get(abstProductName))){
+					Map tempMap = FastMap.newInstance();
+					tempMap.putAll(unionWiseProductAbstract.get(abstProductName));
+					for(String prodAbstKey in tempMap.keySet()){
+						BigDecimal tempQty = tempMap.get(prodAbstKey);
+						BigDecimal newQty  = totTransferMap.get(prodAbstKey);
+						tempMap.put(prodAbstKey,tempQty.add(newQty));
+					}
+					BigDecimal existedRecdQty = (BigDecimal)tempMap.get("recdQty");
+					BigDecimal existedRecdKgFat = (BigDecimal)tempMap.get("recdKgFat");
+					BigDecimal existedRecdKgSnf = (BigDecimal)tempMap.get("recdKgSnf");
+					BigDecimal existedProdQty = (BigDecimal)tempMap.get("prodQty");
+					BigDecimal existedProdKgFat = (BigDecimal)tempMap.get("prodKgFat");
+					BigDecimal existedProdKgSnf = (BigDecimal)tempMap.get("prodKgSnf");
+					
+					tempMap.put("recdFat",ProcurementNetworkServices.calculateFatOrSnf(existedRecdKgFat, existedRecdQty));
+					tempMap.put("recdSnf",ProcurementNetworkServices.calculateFatOrSnf(existedRecdKgSnf, existedRecdQty));
+					tempMap.put("prodFat",ProcurementNetworkServices.calculateFatOrSnf(existedProdKgFat, existedProdQty));
+					tempMap.put("prodSnf",ProcurementNetworkServices.calculateFatOrSnf(existedProdKgSnf, existedProdQty));
+					unionWiseProductAbstract.put(abstProductName, tempMap);
+				}else{
+					Map tempMap = FastMap.newInstance();
+					tempMap.putAll(totTransferMap);
+					unionWiseProductAbstract.put(abstProductName, tempMap);
+				}
+				
 				totTransferMap.put("slNo"," ");
 				totTransferMap.put("date"," ");
 				totTransferMap.put("tankerNo","TOTAL");
@@ -342,6 +375,48 @@ for(String unionId in sentPartyIds){
 	}
 }
 
+if(UtilValidate.isNotEmpty(unionWiseProductAbstract)){
+	Map grandTotMap = FastMap.newInstance();
+	List productTransferList = FastList.newInstance();
+	for(String prodConvKey in unionWiseProductAbstract.keySet()){
+		Map tempMap = FastMap.newInstance();
+		tempMap.putAll((Map)unionWiseProductAbstract.get(prodConvKey));
+		// Here we are preparing totals 
+		if(UtilValidate.isEmpty(grandTotMap)){
+			grandTotMap.putAll(tempMap);
+		}else{
+			for(String prodKey in grandTotMap.keySet()){
+				BigDecimal existedQty = (BigDecimal)grandTotMap.get(prodKey);
+				BigDecimal newQty = (BigDecimal)tempMap.get(prodKey);
+				grandTotMap.put(prodKey,existedQty.add(newQty));
+			}
+		}
+		
+		tempMap.put("prodConvKey",prodConvKey);
+		productTransferList.add(tempMap);
+	}
+	if(UtilValidate.isNotEmpty(grandTotMap)){
+		BigDecimal existedRecdQty = (BigDecimal)grandTotMap.get("recdQty");
+		BigDecimal existedRecdKgFat = (BigDecimal)grandTotMap.get("recdKgFat");
+		BigDecimal existedRecdKgSnf = (BigDecimal)grandTotMap.get("recdKgSnf");
+		BigDecimal existedProdQty = (BigDecimal)grandTotMap.get("prodQty");
+		BigDecimal existedProdKgFat = (BigDecimal)grandTotMap.get("prodKgFat");
+		BigDecimal existedProdKgSnf = (BigDecimal)grandTotMap.get("prodKgSnf");
+		
+		grandTotMap.put("recdFat",ProcurementNetworkServices.calculateFatOrSnf(existedRecdKgFat, existedRecdQty));
+		grandTotMap.put("recdSnf",ProcurementNetworkServices.calculateFatOrSnf(existedRecdKgSnf, existedRecdQty));
+		grandTotMap.put("prodFat",ProcurementNetworkServices.calculateFatOrSnf(existedProdKgFat, existedProdQty));
+		grandTotMap.put("prodSnf",ProcurementNetworkServices.calculateFatOrSnf(existedProdKgSnf, existedProdQty));
+		grandTotMap.put("prodConvKey","TOTAL");
+		productTransferList.add(grandTotMap);
+	}
+	
+	
+	unionWiseProductAbstract.clear();
+	unionWiseProductAbstract.put("tankerList",productTransferList);
+	
+}
+
+context.putAt("unionWiseProductAbstract", unionWiseProductAbstract);
 context.putAt("nowTimestamp", UtilDateTime.nowTimestamp());
 context.put("partyWiseProductWiseConversionMap",partyWiseProductWiseConversionMap);
-
