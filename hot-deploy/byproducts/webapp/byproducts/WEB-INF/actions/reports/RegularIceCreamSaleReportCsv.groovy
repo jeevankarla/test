@@ -110,12 +110,19 @@ categoryType=context.get("categoryType");
 							  tempMap.put("partyName", partyName);
 							  }
 							  prvinvoiceId=invoiceId;
-							  
-							  if(UtilValidate.isNotEmpty(parameters.categoryType)){
-							  tempMap.put("Description", productDtls.getKey());
-							  }else{
 							  productDes = delegator.findOne("Product", [productId : productDtls.getKey()], false);
-							  tempMap.put("Description", productDes.description);
+							  if(UtilValidate.isNotEmpty(parameters.categoryType)){
+								  if(UtilValidate.isNotEmpty(productDes)){
+									  tempMap.put("Description", productDes.description+"["+productDtls.getKey()+"]");
+								  }else{
+								  	tempMap.put("Description", productDtls.getKey());
+								  }
+							  }else{
+							  	  if(UtilValidate.isNotEmpty(productDes)){
+									  tempMap.put("Description", productDes.description+"["+productDtls.getKey()+"]");
+								  }else{
+								  	tempMap.put("Description", productDtls.getKey());
+								  }
 							  }
 							  tempMap.put("quantity", productDtls.getValue().get("quantity"));
 							  tempMap.put("basicRevenue", productDtls.getValue().get("basicRevenue"));
