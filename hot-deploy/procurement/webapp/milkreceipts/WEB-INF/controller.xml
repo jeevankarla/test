@@ -746,6 +746,11 @@
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="ConversionBillingReportMRpdf"/> 
     </request-map>
+    <request-map uri="ConversionBillingReportDay.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="ConversionBillingReportMRpdf"/> 
+    </request-map>
+    
     <request-map uri="createMRTransporterMarginReport">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="populateMRPeriodBilling"/>

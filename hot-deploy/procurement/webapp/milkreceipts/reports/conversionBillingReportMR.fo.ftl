@@ -29,6 +29,15 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
+<#if errorMessage?has_content>
+	<fo:page-sequence master-reference="main">
+				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+			 		<fo:block font-size="14pt">
+			 			${errorMessage}
+			 		</fo:block>
+				</fo:flow>
+	</fo:page-sequence>
+<#else>
 <#assign pageNumber = 0>
 
 			<fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
@@ -63,6 +72,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 			                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">----------------------------------------------------------------------------------------</fo:block>
 					        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">   Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 					        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">DETAILS OF MILK/PRODUCTS RECEIVED FROM :${partyName} BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}   </fo:block>
+					        <#if showReference?has_content && showReference == "Y">
+					        	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">ONLY FOR REFERENCE NOT FOR ACCOUNTING</fo:block>
+					        </#if>
 					        <#assign conProdDetailsMap = "">
 					        <#assign conProdDetailsMap = convProdMap.get(conProductKey)>
 					        <#assign conProductBrandName = conProdDetailsMap.get("conProductBrandName")>
@@ -407,6 +419,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 			                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">----------------------------------------------------------------------------------------</fo:block>
 					        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">   Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 					        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">DETAILS OF MILK/PRODUCTS RECEIVED FROM :${abstPartyName} BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} AND  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")}   </fo:block>
+					        <#if showReference?has_content && showReference == "Y">
+					        	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">ONLY FOR REFERENCE NOT FOR ACCOUNTING</fo:block>
+					        </#if>
 					        <fo:block>
 					        	<fo:table>
 			            			<fo:table-column column-width="60pt"/>
@@ -711,7 +726,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 				</fo:flow>
 			</fo:page-sequence>
 		</#if>  
-		
+	</#if>
 </fo:root>
 </#escape>
 

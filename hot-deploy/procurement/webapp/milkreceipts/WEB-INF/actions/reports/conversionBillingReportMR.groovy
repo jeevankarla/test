@@ -45,15 +45,56 @@ import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 dctx = dispatcher.getDispatchContext();
 
 String customTimePeriodId=parameters.customTimePeriodId;
-if(UtilValidate.isEmpty(customTimePeriodId)){
-	Debug.logError("customTimePeriod Cannot Be Empty","");
-	context.errorMessage = "customTimePeriod Cannot Be Empty.......!";
-	return;
-}
-customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodId], false);
-fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+GenericValue customTimePeriod = null;
+String reportTypeFlag  = parameters.reportTypeFlag;
+Timestamp fromDateTime = UtilDateTime.nowTimestamp();
+Timestamp thruDateTime = UtilDateTime.nowTimestamp();
 
+if(UtilValidate.isEmpty(reportTypeFlag)){
+	if(UtilValidate.isEmpty(customTimePeriodId)){
+		Debug.logError("customTimePeriod Cannot Be Empty","");
+		context.errorMessage = "customTimePeriod Cannot Be Empty.......!";
+		return;
+	}
+	customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodId], false);
+	
+	
+	List periodBillingConditionList = UtilMisc.toList(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PB_CONV_MRGN"));
+	periodBillingConditionList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodId));
+	periodBillingConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"COM_CANCELLED"));
+	EntityCondition periodBillingCondition = EntityCondition.makeCondition(periodBillingConditionList);
+	
+	List periodBillingList = delegator.findList("PeriodBilling",periodBillingCondition,null,null,null,false);
+	
+	if(UtilValidate.isEmpty(periodBillingList)){
+		Debug.logError("Conversion Billing not generated","");
+		context.errorMessage = "Conversion Billing not generated.......!";
+		return;
+	}
+}
+context.put("showReference","N");
+if(UtilValidate.isNotEmpty(customTimePeriod)){
+	fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+}else{
+	String fromDateStr = parameters.fromDate;
+	String thruDateStr = parameters.thruDate;
+	if(UtilValidate.isEmpty(fromDateStr) ||UtilValidate.isEmpty(thruDateStr) ){
+		Debug.logError("From Date or thru date is empty","");
+		context.errorMessage = "From Date or thru date is empty :";
+		return;
+	}
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		fromDateTime = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+		thruDateTime = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: "+fromDate, "");
+	}
+	
+	context.put("showReference","Y");
+	
+}
 
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
@@ -78,18 +119,7 @@ context.put("abstPartyName",partyName);
 
 
 
-List periodBillingConditionList = UtilMisc.toList(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PB_CONV_MRGN"));
-periodBillingConditionList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodId));
-periodBillingConditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"COM_CANCELLED"));
-EntityCondition periodBillingCondition = EntityCondition.makeCondition(periodBillingConditionList);
 
-List periodBillingList = delegator.findList("PeriodBilling",periodBillingCondition,null,null,null,false);
-
-if(UtilValidate.isEmpty(periodBillingList)){
-	Debug.logError("Conversion Billing not generated","");
-	context.errorMessage = "Conversion Billing not generated.......!";
-	return;
-}
 List sentPartyIds = FastList.newInstance();
 List partyRelationShipConditionList = FastList.newInstance();
 partyRelationShipConditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,partyId));

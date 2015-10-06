@@ -98,6 +98,7 @@
 		makeDatePicker("contractorFromDate","contractorThruDate");
 		makeDatePicker("vehicleFromDate","vehicleThruDate");
 		makeDatePicker("unionsFromDate","unionsThruDate");
+		makeDatePicker("conversionFromDate","conversionThruDate");
 		makeDatePicker("milkProcessRegDate","");
 		makeDatePicker("purchaseBillingFromDate","purchaseBillingThruDate");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
@@ -275,7 +276,7 @@
 		                	</#if>	    
 		                    </select>
 						</td> -->
-							<td width="35%">
+							<td width="38%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="purchaseBillingFromDate"   name="fromDate"/>
 									To   <input  type="text" size="18pt" id="purchaseBillingThruDate"   name="thruDate"/>
@@ -394,7 +395,7 @@
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
 							<td width="23%"><span class='h3'>Union/Chilling Center Wise Report</span></td>
-							<td width="35%">
+							<td width="38%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="unionsFromDate"   name="fromDate"/>
 									To   <input  type="text" size="18pt" id="unionsThruDate"   name="thruDate"/>
@@ -417,6 +418,35 @@
  						  	 <option value='Details'>Details</option>  
 		                   	 </select>
 							</td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+			<tr class="alternate-row"> 
+				<form id="ConversionBillingReport" name="ConversionReports" mothed="post" action="<@ofbizUrl>ConversionBillingReportDay.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="23%"><span class='h3'>Union/Chilling Center Wise Report</span></td>
+							<td width="39%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="conversionFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="conversionThruDate"   name="thruDate"/>
+								 </span>
+							</td> 
+							<td width="36%">
+								 <span class='h3'>Union/ Chilling Center </span>
+			                    <select name="partyId" id="partyId">
+			                    <#if unionsList?has_content>	
+			                        <#list unionsList as unionIds>    
+					                  	    <option value='${unionIds.partyId}' >
+					                    		${unionIds.partyId}
+					                  		 </option>
+			                		</#list>    
+			                	</#if>	    
+			                    </select>
+							</td>
+								<input type="hidden" name="reportTypeFlag" value="dayWise"/>
 						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
