@@ -85,11 +85,15 @@ if(UtilValidate.isNotEmpty(vehicleTripStatus)){
 			productObj.put("receivedSnf", receivedSnf);
 			productObj.put("siloId", eachVehicleStatus.siloId);
 		}
-		if(UtilValidate.isNotEmpty(eachVehicleStatus.grossWeight) && UtilValidate.isNotEmpty(eachVehicleStatus.tareWeight)){
+		if(UtilValidate.isNotEmpty(eachVehicleStatus.grossWeight)){
 			grossWeight=eachVehicleStatus.grossWeight;
+			dispatchWeight=eachVehicleStatus.dispatchWeight;
+			productObj.put("dispatchWeight", dispatchWeight);
+			productObj.put("grossWeight", grossWeight);
+		}
+		if(UtilValidate.isNotEmpty(eachVehicleStatus.tareWeight)){
 			tareWeight=eachVehicleStatus.tareWeight;
 			receivedQuantity=eachVehicleStatus.receivedQuantity;
-			productObj.put("grossWeight", grossWeight);
 			productObj.put("tareWeight", tareWeight);
 			productObj.put("netWeight", receivedQuantity);
 		}
