@@ -169,7 +169,7 @@ vatMap=[:];
 												product = delegator.findOne("Product", [productId : currentProduct], false);
 												productId = productValue.getKey();
 													exprList=[];
-													if(product.productTypeId == "FINISHED_GOOD" && categoryType.equals("UNITS")){
+													if(product.productTypeId == "FINISHED_GOOD" && categoryType.equalsIgnoreCase("UNITS")){
 														
 															exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "SALES_ACANLY"));
 														
