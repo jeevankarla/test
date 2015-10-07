@@ -112,8 +112,13 @@
 	    message +="<tr class='h3'><td align='left' class='h3' width='25%'>Union/Chilling Center :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.partyId+"</td><td align='left' width='30%'>DC No      :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.dcNo+"</td></tr>";
 		
 		if (netWeight) {
-		message +="<tr class='h3'><td align='left' width='20%'>Gross Weight(Kgs) :</td><td align='left' width='10%'>"+vehicleProdDetails.grossWeight+"</td><td align='left' width='20%'>Tare Weight (Kgs) :</td><td align='left' width='10%' keep-together='always'>"+vehicleProdDetails.tareWeight+"</td><td align='left' width='20%' keep-together='always'></tr>";
+		message +="<tr class='h3'><td align='left' width='20%'>Dispatch Weight(Kgs) :</td><td align='left' width='10%'>"+vehicleProdDetails.dispatchWeight+"</td><td align='left' width='20%'>Gross Weight(Kgs) :</td><td align='left' width='10%'>"+vehicleProdDetails.grossWeight+"</td><td align='left' width='20%'>Tare Weight (Kgs) :</td><td align='left' width='10%' keep-together='always'>"+vehicleProdDetails.tareWeight+"</td><td align='left' width='20%' keep-together='always'></tr>";
 		message +="<tr class='h3'><td align='left' class='h3' width='25%'>Silo Id :</td><td align='left' width='30%'>"+vehicleProdDetails.siloId+"</td><td align='left' width='25%' >Net Weight (Kgs) :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.netWeight+"</td></tr>";
+		}else if(vehicleProdDetails.grossWeight){
+			message +="<tr class='h3'><td align='left' width='20%'>Dispatch Weight(Kgs) :</td><td align='left' width='10%'>"+vehicleProdDetails.dispatchWeight+"</td><td align='left' width='20%'>Gross Weight(Kgs) :</td><td align='left' width='10%'>"+vehicleProdDetails.grossWeight+"</td></tr>";
+		}
+		if((vehicleProdDetails.siloId) && !(netWeight)){
+			message +="<tr class='h3'><td align='left' class='h3' width='25%'>Silo Id :</td><td align='left' width='30%'>"+vehicleProdDetails.siloId+"</td></tr>";
 		}
 		if (receivedFat) {
 		message +="<tr class='h3'><td align='left' class='h3' width='25%'>Fat % :</td><td align='left' width='30%'>"+vehicleProdDetails.receivedFat+"</td><td align='left' width='25%'>SNF % :</td><td align='left' width='25%' keep-together='always'>"+vehicleProdDetails.receivedSnf+"</td></tr>";
