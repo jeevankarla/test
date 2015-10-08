@@ -408,69 +408,39 @@ public class ProductionServices {
         		 List<GenericValue> inventoryItemAndDetail = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);
             	 if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
  		        	List<String> invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItemAndDetail, "productId", true);
- 		        	
- 		        	List<String> sendWorkEffIds =FastList.newInstance();
- 		        	conditionList.clear();
-	        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
-	 		        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
-	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
-	        		EntityCondition workEffortSendFacCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	        		List<GenericValue> workEffortSendInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortSendFacCond);
-	        		if(UtilValidate.isNotEmpty(workEffortSendInvDetailList)){
-	        			sendWorkEffIds = EntityUtil.getFieldListFromEntityList(workEffortSendInvDetailList, "workEffortId", true);
-	        		}
-	        		List<GenericValue> workEffortInvDetailList =FastList.newInstance();
-	        		if(UtilValidate.isNotEmpty(sendWorkEffIds)){
-	 		        	conditionList.clear();
-		        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
-		 		        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
-		        		conditionList.add(EntityCondition.makeCondition("productBatchId", EntityOperator.NOT_EQUAL,null ));
-		 		        conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN,sendWorkEffIds ));
-		        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
-		        		EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		        		workEffortInvDetailList = delegator.findList("InventoryItemAndDetail", workEffortCond, null,null, null, false);
-	        		}
-	        		
-	        		// Work Effort Return Details
-	        		List<GenericValue> workEffReturnTransFinalList=FastList.newInstance();
-	        		conditionList.clear();
-	 		        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
-	        		conditionList.add(EntityCondition.makeCondition("productBatchId", EntityOperator.EQUALS,null ));
-	 		        conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN,sendWorkEffIds ));
-	        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.NOT_EQUAL,null ));
-	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
-	        		EntityCondition workEffortReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	        		List<GenericValue> workEffReturnDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortReturnCond);
-	        		if(UtilValidate.isNotEmpty(workEffReturnDetailList)){
-	        			List<String> returnTransferIds = EntityUtil.getFieldListFromEntityList(workEffReturnDetailList, "inventoryTransferId", true);
-	        			conditionList.clear();
-		 		        conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,returnTransferIds));
-		 		        conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.IN,facilityIds ));
-		        		EntityCondition invTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		        		List<GenericValue> inventoryReturnTransferList = delegator.findList("InventoryTransfer",invTransCond , null,null, null, false);
-		        		if(UtilValidate.isNotEmpty(inventoryReturnTransferList)){
-		        			HashSet<String> inventoryReturnTransferIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryReturnTransferList, "inventoryTransferId", true));
-		        			conditionList.clear();
-			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
-			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,inventoryReturnTransferIds ));
-			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
-			        		EntityCondition invenTransReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			        		workEffReturnTransFinalList = EntityUtil.filterByCondition(inventoryItemAndDetail, invenTransReturnCond);
-		        		}
 
-	        		}
-		        		
-	        		List<GenericValue> inventoryTransDetailList=FastList.newInstance();
+ 		          List<String> recdDeptWorkEffortIds =FastList.newInstance();
+		        	List<String> recdFromDeptWorkEffortIds =FastList.newInstance();
+		        	 conditionList.clear();
+		        	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	        	 	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	        		 conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
+	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
+	        		 EntityCondition workEffortRecdCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		 List<GenericValue> workEffortIdsInvDetailList = delegator.findList("InventoryItemAndDetail", workEffortRecdCond, null,null, null, false);
+	        		 recdDeptWorkEffortIds = EntityUtil.getFieldListFromEntityList(workEffortIdsInvDetailList, "workEffortId", true);
+
+	        		 conditionList.clear();
+	        		 conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN,recdDeptWorkEffortIds ));
+		        	 conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS,null ));
+	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+	        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
+	        		 EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		 List<GenericValue> workEffortInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortCond);
+ 		           
+	 		        List<GenericValue> inventoryTransDetailList=FastList.newInstance();
 	        		conditionList.clear();
 	 		        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
 	 		        conditionList.add(EntityCondition.makeCondition("facilityIdTo", EntityOperator.IN,facilityIds ));
+	        		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"IXF_CANCELLED" ));
 	        		EntityCondition invTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	        		List<GenericValue> inventoryTransferList = delegator.findList("InventoryTransfer",invTransCond , null,null, null, false);
 	        		if(UtilValidate.isNotEmpty(inventoryTransferList)){
 	        			HashSet<String> inventoryTransferIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransferList, "inventoryTransferId", true));
 	        			conditionList.clear();
 
-		        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+		        		//conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
 		        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,inventoryTransferIds ));
 		        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
 		        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -524,6 +494,7 @@ public class ProductionServices {
 		     	    		if(UtilValidate.isNotEmpty(eachProdWorkEffortInventory)){
 	    						for(GenericValue productInventory : eachProdWorkEffortInventory){
 	    	    					BigDecimal tempRecdQty = (BigDecimal)productInventory.get("quantityOnHandDiff");
+	    	    					tempRecdQty=tempRecdQty.negate();
 	    	    					BigDecimal tempFatPercent = (BigDecimal)productInventory.get("fatPercent");
 	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInventory.get("snfPercent");
 	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
@@ -541,29 +512,6 @@ public class ProductionServices {
 		
 		     	    		}
 						}
-						if(UtilValidate.isNotEmpty(workEffReturnTransFinalList)){
-		     	    		List<GenericValue> eachProdWorkEffortReturnInventory = EntityUtil.filterByCondition(workEffReturnTransFinalList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
-		     	    		if(UtilValidate.isNotEmpty(eachProdWorkEffortReturnInventory)){
-	    						for(GenericValue productWorkEffReturn : eachProdWorkEffortReturnInventory){
-	    	    					BigDecimal tempRecdQty = (BigDecimal)productWorkEffReturn.get("quantityOnHandDiff");
-	    	    					BigDecimal tempFatPercent = (BigDecimal)productWorkEffReturn.get("fatPercent");
-	    	    					BigDecimal tempSnfPercent = (BigDecimal)productWorkEffReturn.get("snfPercent");
-	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
-	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
-		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);
-	    							}
-	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
-	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempSnfPercent);
-	    								receivedKgSnf=receivedKgSnf.add(tempSnfKg);
-	    							}
-	    							if(UtilValidate.isNotEmpty(tempRecdQty)){
-	    								receivedQuantity=receivedQuantity.add(tempRecdQty);
-	    							}
-	    	    				}
-		
-		     	    		}
-						}
-						
 						if(UtilValidate.isNotEmpty(inventoryTransDetailList)){
 		     	    		List<GenericValue> eachProdInventoryTransfer = EntityUtil.filterByCondition(inventoryTransDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
 		     	    		if(UtilValidate.isNotEmpty(eachProdInventoryTransfer)){
@@ -643,8 +591,9 @@ public class ProductionServices {
 						productReceiptReturnMap.put("receivedKgSnf",receivedKgSnf);
 						productReceiptReturnMap.put("receivedFat",receivedFat);
 						productReceiptReturnMap.put("receivedSnf",receivedSnf);
-
-						milkReturnsAndReceiptsMap.put(invProductId,productReceiptReturnMap);
+			            if((receivedQuantity.compareTo(BigDecimal.ZERO) > 0)){
+			            	milkReturnsAndReceiptsMap.put(invProductId,productReceiptReturnMap);
+			            }
 	     	    	}
 	     	    	milkRetnsAndRcptsTotalsMap.put("totRecdQty",totRecdQty);
 	     	    	milkRetnsAndRcptsTotalsMap.put("totRecdKgFat",totRecdKgFat);
@@ -953,8 +902,9 @@ public class ProductionServices {
 						productIssuesMap.put("issuedFat",issuedFat);
 						productIssuesMap.put("issuedSnf",issuedSnf);
 						productIssuesMap.put("purposeIds",purPoseProdIds);
-
-						milkIssuesMap.put(invProductId,productIssuesMap);
+			            if((issuedQuantity.compareTo(BigDecimal.ZERO) > 0)){
+							milkIssuesMap.put(invProductId,productIssuesMap);
+						}
 	     	    	}
 	     	    	
 	     	    	totIssuedFat = ProcurementNetworkServices.calculateFatOrSnf(totIssuedKgFat, totIssuedQty);
