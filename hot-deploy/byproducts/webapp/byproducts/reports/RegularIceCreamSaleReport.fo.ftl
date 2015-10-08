@@ -152,14 +152,20 @@ under the License.
 					       							<#assign totalCstRev=totalCstRev+productDtls.getValue().get("cstRevenue")>
 					       							<#assign grandTotal=grandTotal+productDtls.getValue().get("totalRevenue")>
 						                                <fo:table-row>
+						                                   <#if categoryType?has_content && categoryType!="UNITS">
+                                                            <#assign product=delegator.findOne("Product",{"productId":productDtls.getKey()},true)>
+                                                           </#if>
 						                                   <#if categoryType?has_content>
-						                                   <fo:table-cell>
-								                           		<fo:block   font-size="12pt" text-align="left" white-space-collapse="true">${productDtls.getKey()}</fo:block>  
+                                                           <fo:table-cell>
+								                           		<fo:block   font-size="12pt" text-align="left" white-space-collapse="true">${productDtls.getKey()?if_exists}</fo:block>  
 								                       		</fo:table-cell>
-								                       		<#else>
-                                                             <#assign product=delegator.findOne("Product",{"productId":productDtls.getKey()},true)>
+                                                          <#--<#elseif categoryType?has_content>
+						                                   <fo:table-cell>
+								                           		<fo:block   font-size="12pt" text-align="left" white-space-collapse="true">${product.internalName?if_exists}</fo:block>  
+								                       		</fo:table-cell> -->
+                                                            <#else>
                                                             <fo:table-cell>
-								                           		<fo:block  font-size="12pt" text-align="left" white-space-collapse="true">${product.description}</fo:block>  
+								                           		<fo:block  font-size="12pt" text-align="left" white-space-collapse="true">${product.description?if_exists}</fo:block>  
 								                       		</fo:table-cell>
 															</#if>
 															<fo:table-cell>

@@ -169,8 +169,10 @@ vatMap=[:];
 												product = delegator.findOne("Product", [productId : currentProduct], false);
 												productId = productValue.getKey();
 													exprList=[];
-													if(product.productTypeId == "FINISHED_GOOD"){
-														exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "SALES_ACANLY"));
+													if(product.productTypeId == "FINISHED_GOOD" && categoryType.equalsIgnoreCase("UNITS")){
+														
+															exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "SALES_ACANLY"));
+														
 													}else{
 														exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
 													}
@@ -325,3 +327,5 @@ context.vatAdjMap=vatAdjMap;
 context.invAdjMap=invAdjMap;
 context.vatMap=vatMap;
 context.dayWiseInvoice=dayWiseInvoice;
+
+
