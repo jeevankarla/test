@@ -221,4 +221,29 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="LookupProductFinishedGoods">
+        <section>
+            <condition>
+                <if-service-permission service-name="catalogPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupProduct}"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="entityName" value="Product"/>
+                <set field="searchFields" value="[productId, brandName, internalName]"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/lookup/conditionFinishedGoodsLookUp.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="LookupProductFinishedGoods" location="component://product/widget/catalog/FieldLookupForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listLookupProductFinishedGoods" location="component://product/widget/catalog/FieldLookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

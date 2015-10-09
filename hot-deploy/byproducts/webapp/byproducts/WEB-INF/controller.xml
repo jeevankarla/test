@@ -1668,8 +1668,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ChannelWiseProductWiseSalesPDF"/>
     </request-map>
-    
-    
+    <request-map uri="LookupProductFinishedGoods">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFinishedGoods"/>
+    </request-map>   
     <request-map uri="createOrUpdateDiselAmount">
         <security https="true" auth="true"/>
        <event type="service"  invoke="createOrUpdateDiselAmount"/>
@@ -1953,4 +1955,5 @@
  <view-map name="ChannelWiseProductWiseSalesPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ChannelWiseProductWiseSalesPDF" content-type="application/pdf"/>
  <view-map name="EditDieselAmount" type="screen" page="component://byproducts/widget/TransporterScreens.xml#EditDieselAmount"/>
  <view-map name="NewDieselAmount" type="screen" page="component://byproducts/widget/TransporterScreens.xml#NewDieselAmount"/>		 
+ <view-map name="LookupProductFinishedGoods" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFinishedGoods"/>
 </site-conf>
