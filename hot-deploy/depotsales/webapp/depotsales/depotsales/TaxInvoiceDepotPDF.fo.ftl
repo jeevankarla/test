@@ -86,10 +86,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 								 </fo:table-row> 
 								  <fo:table-row> 
 									 <fo:table-cell>
-									    <fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap">To: <#if billingAddress?has_content>${billingAddress.get("toName")?if_exists} </#if></fo:block>
-	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address1")?if_exists} </#if></fo:block>
-	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address2")?if_exists} </#if></fo:block>
-	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </#if></fo:block>  
+									 	<#assign shippingAddress = billingAddress.get('shippingAddress')>
+									    <fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap">To: <#if shippingAddress?has_content>${shippingAddress.get("toName")?if_exists} </#if></fo:block>
+	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if shippingAddress?has_content>${shippingAddress.get("address1")?if_exists} </#if></fo:block>
+	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if shippingAddress?has_content>${shippingAddress.get("address2")?if_exists} </#if></fo:block>
+	            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight = "bold" wrap-option="wrap"><#if shippingAddress?has_content>${shippingAddress.get("city")?if_exists} - ${shippingAddress.get("postalCode")?if_exists} </#if></fo:block>  
 					            	</fo:table-cell>   
 								 </fo:table-row>
 								  <fo:table-row> 
@@ -181,7 +182,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
  								<fo:table-row> 
 									 <fo:table-cell border-style="solid" > 
 									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" keep-together="always" >Destination</fo:block>
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" font-weight="bold" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("toName")?if_exists}</#if></fo:block> 
+									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" font-weight="bold" wrap-option="wrap"><#if shippingAddress?has_content>${shippingAddress.get("toName")?if_exists}</#if></fo:block> 
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								  <fo:table-row> 
