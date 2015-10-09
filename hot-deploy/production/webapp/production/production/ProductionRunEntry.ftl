@@ -65,7 +65,7 @@
 		 $("#startDate").datetimepicker({
 			dateFormat:'dd-mm-yy',
 			changeMonth: true,
-		    minDate: '-1d',
+		    minDate: '-15d',
 		    maxDate: '0d'
 		 });	
 				

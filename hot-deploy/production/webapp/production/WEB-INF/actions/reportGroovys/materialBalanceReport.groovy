@@ -107,7 +107,6 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 		
 	if(UtilValidate.isNotEmpty(fromDeptStorageIds)){
 		fromDeptStorageIds.each {eachDeptStorageId->
-			openingBalSiloMap=[:];
 			
 			BigDecimal openingQty = BigDecimal.ZERO;
 			BigDecimal openingFatKg = BigDecimal.ZERO;
@@ -127,6 +126,7 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 				openingSnfPers = ProcurementNetworkServices.calculateFatOrSnf(openingSnfKg, openingQty);
 				if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
 					facilityNames = delegator.findOne("Facility",["facilityId":eachDeptStorageId],false);
+					Map openingBalSiloMap= FastMap.newInstance();
 					storageName=facilityNames.get("facilityName");
 					openingBalSiloMap.put("productId", invProductId);
 					openingBalSiloMap.put("description", storageName);
@@ -166,6 +166,7 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 					openingFatPers = ProcurementNetworkServices.calculateFatOrSnf(openingFatKg, openingQty);
 					openingSnfPers = ProcurementNetworkServices.calculateFatOrSnf(openingSnfKg, openingQty);
 					if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
+						Map openingBalSiloMap= FastMap.newInstance();
 						facilityNames = delegator.findOne("Facility",["facilityId":fromDeptPlantId],false);
 						storageName=facilityNames.get("facilityName");
 						openingBalSiloMap.put("productId", invProductId);
@@ -178,7 +179,8 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 						totInventoryQty=totInventoryQty+openingQty;
 						totOpenFatQtyKg=totOpenFatQtyKg+openingFatKg;
 						totOpenSnfQtyKg=totOpenSnfQtyKg+openingSnfKg;
-						openingBalProductMap.put(eachSiloNo,openingBalSiloMap)
+						openingBalProductMap.put(eachSiloNo,openingBalSiloMap);
+						
 						eachSiloNo=eachSiloNo+1;
 						
 					}
@@ -194,7 +196,6 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 context.openingBalProductMap=openingBalProductMap;
 context.openingBalProductTotalMap=openingBalProductTotalMap;
 
-	
 List convParties =[];
 List convPurchaseList=FastList.newInstance();
 if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
