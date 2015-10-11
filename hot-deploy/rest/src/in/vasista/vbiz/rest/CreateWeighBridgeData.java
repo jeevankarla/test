@@ -55,7 +55,7 @@ import org.apache.commons.lang.StringUtils;
 
 @Path("/createWeighBridgeData")
 public class CreateWeighBridgeData {
- 
+	public static final String module = CreateWeighBridgeData.class.getName();
     @Context
     HttpHeaders headers;
 
@@ -72,13 +72,6 @@ public class CreateWeighBridgeData {
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     	
     	Timestamp entryDate = UtilDateTime.nowTimestamp();
-    	Debug.log("username========="+username);
-    	Debug.log("password========="+password);
-    	Debug.log("tenantId========="+tenantId);
-    	Debug.log("date========="+date);
-    	Debug.log("vehicleId========="+vehicleId);
-    	Debug.log("weight========="+weight);
-    	Debug.log("weighmentType========="+weighmentType);
     	
     	try {
     		entryDate = UtilDateTime.toTimestamp(sdf.parse(date)); 
@@ -124,27 +117,10 @@ public class CreateWeighBridgeData {
         		return Response.serverError().entity("weighment Type must be either G or T ").build();
         	 }
         }
-        GenericValue weighBridgeDetails = delegator.makeValue("WeighBridgeDetails");
-        try{
-        	weightKgs = new BigDecimal(weight);
-        	weighBridgeDetails.set("vehicleId",vehicleId);
-        	weighBridgeDetails.set("weightKgs",weightKgs);
-        	weighBridgeDetails.set("statusId","ITEM_CREATED");
-        	weighBridgeDetails.set("createdDate",entryDate);
-        	weighBridgeDetails.set("weighmentType",weighmentType);
-        	weighBridgeDetails.set("weighmentId",delegator.getNextSeqId("WeighBridgeDetails"));
-        	
-        	delegator.create(weighBridgeDetails);		
-        	
-        }catch (Exception e) {
-			// TODO: handle exception
-        	Debug.logError("Error While creating Weigh BridgeDetails"+e, CreateWeighBridgeData.class.getName());
-        	return Response.serverError().entity("Error While creating WeighBridge Details").build();
-		}
         
         List vehicleTripStatusCondList = FastList.newInstance();
     	vehicleTripStatusCondList.add(EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,vehicleId));
-    	vehicleTripStatusCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.LIKE,"MR_%"));
+    	//vehicleTripStatusCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.LIKE,"MR_%"));
     	vehicleTripStatusCondList.add(EntityCondition.makeCondition("estimatedStartDate",EntityOperator.LESS_THAN_EQUAL_TO,entryDate));
     	vehicleTripStatusCondList.add(EntityCondition.makeCondition("estimatedEndDate",EntityOperator.EQUALS,null));
     	
@@ -152,7 +128,6 @@ public class CreateWeighBridgeData {
     	List<GenericValue> vehicleTripStatusList = FastList.newInstance();
     	
         // Here  we are trying to get the vehicle status pending 
-    	Debug.log("vehicleTripStatusCond===================="+vehicleTripStatusCond);
     	try{
         	vehicleTripStatusList = delegator.findList("VehicleTripStatus", vehicleTripStatusCond, null, null, null, false);
         }catch(Exception e){
@@ -165,13 +140,77 @@ public class CreateWeighBridgeData {
         	Debug.logError("Previous status not found for vehicle :"+vehicleId, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Previous status not found for vehicle :"+vehicleId).build();
         }
-        
         GenericValue vehicleStatus = EntityUtil.getFirst(vehicleTripStatusList);
-        String sequenceNum = (String)vehicleStatus.get("sequenceNum");
-        Debug.log("vehicleStatus===================="+vehicleStatus);
-        List MilkTransferCondList = FastList.newInstance();
-        Debug.log("vehicleStatus========"+vehicleStatus);
         
+        String sequenceNum = (String)vehicleStatus.get("sequenceNum");
+        String vehicleStatusIdExist = (String)vehicleStatus.get("statusId");
+        GenericValue statusItemDetail = null;
+        try{
+        	statusItemDetail = delegator.findOne("StatusItem",UtilMisc.toMap("statusId", vehicleStatusIdExist),false);
+        }catch(GenericEntityException e){
+        	Debug.logError("Error while getting Status Item for Status Id:"+e, CreateWeighBridgeData.class.getName());
+        	return Response.serverError().entity("Error while getting Status Item for Status Id:"+e.getMessage()).build();
+        }
+        String statuItemType = "";
+        if(UtilValidate.isNotEmpty(statusItemDetail) ){
+        	statuItemType =(String)statusItemDetail.get("statusTypeId");
+        }
+        String statusIdToVal = "";
+        List statusVaidChangeCondList = UtilMisc.toList(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,vehicleStatusIdExist));
+        EntityCondition svcCondition = EntityCondition.makeCondition(statusVaidChangeCondList);
+        List<GenericValue> statusValidChangeList = FastList.newInstance();
+        try{
+        	statusValidChangeList = delegator.findList("StatusValidChange",svcCondition, null, null, null, false);
+        }catch(GenericEntityException e){
+        	Debug.logError("Error while getting Status Valid Change for Status Id:"+e, CreateWeighBridgeData.class.getName());
+        	return Response.serverError().entity("Error while getting Status Valid Change for Status Id:"+e.getMessage()).build();
+        }
+        if(UtilValidate.isEmpty(statusValidChangeList)){
+        	Debug.logError("can not update . please contact admin. next level not configured for : "+vehicleStatusIdExist,CreateWeighBridgeData.class.getName());
+        	return Response.serverError().entity("can not update . please contact admin. next level not configured for : "+vehicleStatusIdExist).build();
+        }
+        GenericValue statusValidChange =  EntityUtil.getFirst(statusValidChangeList);
+        statusIdToVal = (String) statusValidChange.get("statusIdTo");
+        
+        boolean proceedToCreateMT = false;
+        boolean proceedToCreateMaterialWeighment = false;
+        
+        if(weighmentType.equalsIgnoreCase("G")){
+        	if(statusIdToVal.equalsIgnoreCase("MR_ISSUE_GRWEIGHT")||statusIdToVal.equalsIgnoreCase("MR_RETURN_GRWEIGHT") || statusIdToVal.equalsIgnoreCase("MR_VEHICLE_GRSWEIGHT")){
+        		proceedToCreateMT = true;
+        	}else{
+        		proceedToCreateMT = false;
+        	}
+        }
+        if(weighmentType.equalsIgnoreCase("T")){
+        	if(statusIdToVal.equalsIgnoreCase("MR_ISSUE_TARWEIGHT")||statusIdToVal.equalsIgnoreCase("MR_RETURN_TARWEIGHT") || statusIdToVal.equalsIgnoreCase("MR_VEHICLE_TARWEIGHT")){
+        		proceedToCreateMT = true;
+        	}else{
+        		proceedToCreateMT = false;
+        	}
+        }
+        if(!proceedToCreateMT){
+        	Debug.logError("we can not update weight at this stage .vehicle current  status  :"+vehicleStatusIdExist+"("+statusItemDetail.get("statusCode")+")", module);
+        	return Response.serverError().entity("we can not update weight at this stage .vehicle current  status  :"+vehicleStatusIdExist+"("+statusItemDetail.get("statusCode")+")").build();
+        }
+        GenericValue weighBridgeDetails = delegator.makeValue("WeighBridgeDetails");
+        try{
+        	weightKgs = new BigDecimal(weight);
+        	weighBridgeDetails.set("vehicleId",vehicleId);
+        	weighBridgeDetails.set("weightKgs",weightKgs);
+        	weighBridgeDetails.set("statusId","ITEM_CREATED");
+        	weighBridgeDetails.set("createdDate",entryDate);
+        	weighBridgeDetails.set("weighmentType",weighmentType);
+        	weighBridgeDetails.set("weighmentId",delegator.getNextSeqId("WeighBridgeDetails"));
+        	delegator.create(weighBridgeDetails);		
+        }catch (Exception e) {
+			// TODO: handle exception
+        	Debug.logError("Error While creating Weigh BridgeDetails"+e, CreateWeighBridgeData.class.getName());
+        	return Response.serverError().entity("Error While creating WeighBridge Details").build();
+		}
+        
+        
+        List MilkTransferCondList = FastList.newInstance();
         MilkTransferCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId));
         MilkTransferCondList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
         EntityCondition milkTransferCondition =  EntityCondition.makeCondition(MilkTransferCondList,EntityJoinOperator.AND);
@@ -184,7 +223,6 @@ public class CreateWeighBridgeData {
         	Debug.logError("Error while getting Milk TrasnsfersList :"+e, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Error while getting Milk TrasnsfersList :").build();
         }
-        Debug.log("MilkTransfer========"+MilkTransfer);
         if(UtilValidate.isEmpty(MilkTransfer)){
         	Debug.logError("No valid Transfer Found to Store weight :", CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("No valid Transfer Found to Store weight :").build();

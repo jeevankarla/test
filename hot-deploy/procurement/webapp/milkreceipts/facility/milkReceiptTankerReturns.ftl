@@ -403,12 +403,10 @@ function fetchTankerRecordNumber(){
            		var displayScreen = $('[name=displayScreen]').val();
 	   			
 	   			if(displayScreen == "RETURN_TARWEIGHT"){
-	   				alert('wos');
 	   				grossWeight = result['grossWeight'];
 	   				$('#grossWeightToolTip').val(grossWeight);
 	   				var milkTransfer = result['milkTransfer'];
 	   				var tareweightVal = milkTransfer['tareWeight']
-       				alert('tareWeight==='+tareweightVal);
        				if(typeof(tareweightVal)!= "undefined" && tareweightVal!=='' && tareweightVal != null ){
        					$('[name=tareWeight]').val(tareweightVal);
        					$('#tareWeight').attr("readonly","readonly");
@@ -788,7 +786,7 @@ function reloadingPage(){
 					        	</tr>
 				        		<tr>
 	        						<td align='left' ><span class="h3">Gross Weight(Kgs)</span></td>
-	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0"/></td>
+	        						<td><input  type="text" class="onlyNumber" size="15pt" id="grossWeightToolTip" autocomplete="off" value="0" readonly/></td>
 	        					</tr>
 							    <tr>
 	        						<td align='left' ><span class="h3">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
