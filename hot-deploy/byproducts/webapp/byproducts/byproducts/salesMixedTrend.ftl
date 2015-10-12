@@ -118,7 +118,7 @@ $(document).ready(function(){
         		<td align="right" width="10%"><span class='h3'>Retailer/Route: </span></td>
             	<td align="left" width="10%"><@htmlTemplate.lookupField value="${facilityId?if_exists}" formName="byproductsAnalysis" name="facilityId" id="facilityId" fieldFormName="LookupFacility"/></td>
 				<td width="10%"><span class='h3'>Product: </span></td>
-				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="byproductsAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="byproductsAnalysis" name="productId" id="productId" fieldFormName="LookupProductFinishedGoods"/></td>
 				<td width="10%"><span class='h3'>Product Category: </span></td>
 				<td align="left" width="10%">
 					<select name="productCategoryId" class='h4'><option value='allProducts'>All Categories</option>
