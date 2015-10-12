@@ -1474,7 +1474,7 @@
     </field>
     </form>
     <form name="createEmployee" type="single" header-row-style="header-row" default-table-style="basic-table"  target="createEmployeeMaster">
-    	<field name="employeeId" parameter-name="partyId" required-field="true"><text></text></field>
+    	<!-- <field name="employeeId" parameter-name="partyId" required-field="true"><text></text></field> -->./s
     	<field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">

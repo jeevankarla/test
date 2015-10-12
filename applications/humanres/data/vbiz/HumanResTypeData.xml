@@ -64,4 +64,7 @@ under the License.
     <Enumeration description="LIC Policy" enumCode="LIC_POLICY" enumId="LIC_POLICY" sequenceId="01" enumTypeId="SECTION_80C"/>
     <Enumeration description="HBA Principal" enumCode="HBA_PRICIPAL" enumId="HBA_PRICIPAL" sequenceId="02" enumTypeId="SECTION_80C"/>
     <Enumeration description="Tuition Fee" enumCode="TUITION_FEE" enumId="TUITION_FEE" sequenceId="03" enumTypeId="SECTION_80C"/>
+    
+    <SequenceValueItemPref  lastSeqNumber="3002" seqName="EmployeeDetail" sequenceEnumId="SQIT_ENF_SEQ"/>
+    
 </entity-engine-xml>
