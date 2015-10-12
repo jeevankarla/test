@@ -1919,9 +1919,13 @@ under the License.emplpunch
         <attribute name="caste" mode="IN" type="String" optional="true"></attribute>
         <attribute name="backgroundVerification" mode="IN" type="String" optional="true"></attribute>
         <attribute name="partyIdFrom" mode="IN" type="String" optional="false"></attribute>
-        <attribute name="partyId" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="partyId" mode="OUT" type="String" optional="false"></attribute>
         <attribute name="emplPositionTypeId" mode="IN" type="String" optional="false"></attribute>
         <attribute name="locationGeoId" mode="IN" type="String" optional="true"></attribute>
+    </service>
+    <service name="getNextEmployeeSeqID" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="getNextEmployeeSeqID" auth="true">
+        <description>create a sequence for the new Product  </description>
+        <attribute name="employeeId" mode="OUT" type="String" optional="false"/>
     </service>
     <service name="calculateESIEmployerContribution"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="calculateESIEmployerContribution" auth="true" transaction-timeout="5000">

@@ -1372,7 +1372,49 @@
 <!--        <set field="amount" value="${groovy:org.ofbiz.base.util.UtilFormatOut.formatCurrency(cost, currencyUomId, parameters.locale)}"/>-->
 		<set field="amount" value="${groovy:org.ofbiz.base.util.UtilFormatOut.formatPrice(cost)}"/>
         <field-to-result field="amount"/>
-    </simple-method>       
-     
+    </simple-method>    
+    <!-- getting next employee Id by sequence here -->   
+    <simple-method method-name="getNextEmployeeSeqID" short-description="Get Next Employee Id">
+        <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special custRequest number sequencing -->
+        <entity-one entity-name="SequenceValueItemPref" value-field="sequenceValueItemPref" auto-field-map="false">
+            <field-map field-name="seqName" value="EmployeeDetail"/>
+        </entity-one>
+        <if>
+            <condition>
+                <if-compare field="sequenceValueItemPref.sequenceEnumId" operator="equals" value="SQIT_ENF_SEQ"/>
+            </condition>
+            <then>
+                <log level="info" message="In create New Employee sequence enum SQIT_ENF_SEQ"/>
+                <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
+                <if-not-empty field="sequenceValueItemPref.lastSeqNumber">
+                    <calculate field="sequenceValueItemPref.lastSeqNumber" type="Long">
+                        <calcop operator="add" field="sequenceValueItemPref.lastSeqNumber"/>
+                        <number value="1"/>
+                    </calculate>
+                    <else>
+                        <calculate field="sequenceValueItemPref.lastSeqNumber" type="Long"><number value="1"/></calculate>
+                    </else>
+                </if-not-empty>
+                <store-value value-field="sequenceValueItemPref"/>
+                <set from-field="sequenceValueItemPref.lastSeqNumber" field="newEmplIdTemp"/>
+            </then>
+            <else>
+                <log level="info" message="In create New Employee sequence enum SQIT_STANDARD"/>
+                <!-- default to the default sequencing: SQIT_STANDARD -->
+                <set from-field="parameters.employeeId" field="newEmplIdTemp"/>
+                <if-empty field="newEmplIdTemp">
+                    <sequenced-id sequence-name="EmployeeDetail" field="newEmplIdTemp"/>
+                    <else>
+                        <!-- check the provided ID -->
+                        <check-id field="newEmplIdTemp"/>
+                        <check-errors/>
+                    </else>
+                </if-empty>
+            </else>
+        </if>
+        <!-- use newEmplIdTemp along with the sequenceIdPrefix to create the real ID -->
+        <set field="employeeId" value="${sequenceValueItemPref.sequenceIdPrefix}${str:toString(newEmplIdTemp)}"/>
+        <field-to-result field="employeeId" result-name="employeeId"/>
+    </simple-method>
     <!-- ================Time sheet========================= -->
 </simple-methods>

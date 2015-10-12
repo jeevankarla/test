@@ -1367,8 +1367,8 @@ public class HumanresService {
 			String address1 = null;
 			String address2 = null;
 			String contactMechId = null;
-			String partyId = (String) context.get("partyId");
-			
+			//String partyId = (String) context.get("partyId");
+			String partyId = null;
 			String firstName = (String) context.get("firstName");
 			String lastName = (String) context.get("lastName");
 			String middleName = (String) context.get("middleName");
@@ -1424,7 +1424,17 @@ public class HumanresService {
 			GenericValue facility;
 			GenericValue person = null;
 			try{
-				// create Person / Party
+				// create Person / Party 
+				String employeeId = null;
+				Map<String, Object> seqResult = dispatcher.runSync("getNextEmployeeSeqID", UtilMisc.toMap("userLogin", userLogin));
+				if (ServiceUtil.isError(seqResult)) {
+					return ServiceUtil.returnError("Error while creating new party Sequence"); 
+				}
+				if(UtilValidate.isNotEmpty(seqResult)){
+					employeeId = (String)seqResult.get("employeeId");
+				}
+				partyId = employeeId;
+				
 				try {
 			        person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
 		        } catch (GenericEntityException e) {
@@ -1601,7 +1611,7 @@ public class HumanresService {
 					Debug.logError(e, module);
 					return ServiceUtil.returnError("Error while creating Employee" + e);	
 				}
-			  //result.put("partyId", ownerPartyId);
+			  result.put("partyId", ownerPartyId);
 		      return result;
 	    }
 	    
