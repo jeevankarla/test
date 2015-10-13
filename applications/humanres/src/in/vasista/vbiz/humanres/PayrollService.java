@@ -7378,6 +7378,7 @@ public class PayrollService {
 	    	    condBasicSalPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(UtilDateTime.getDayStart(basicSalDate))));
 				EntityCondition basicSalPeriodCond = EntityCondition.makeCondition(condBasicSalPeriodList,EntityOperator.AND); 	
 				List<GenericValue> basicSalPeriodList = delegator.findList("CustomTimePeriod", basicSalPeriodCond, null, null, null, false);
+				GenericValue basicSalPeriod = null;
 				List payHeaderList = FastList.newInstance();
 	    	    // getting HR Months for the given period
 				List condPeriodList = FastList.newInstance();
@@ -7428,7 +7429,7 @@ public class PayrollService {
 				  	  	        		BigDecimal currentDAamt=BigDecimal.ZERO;
 				  	  	        		BigDecimal oldRateDaAmount = BigDecimal.ZERO;
 				  	  	        		if(UtilValidate.isNotEmpty(basicSalPeriodList)){
-				  	  	        			GenericValue basicSalPeriod = EntityUtil.getFirst(basicSalPeriodList);
+				  	  	        			basicSalPeriod = EntityUtil.getFirst(basicSalPeriodList);
 						  	  	        	
 				  	  	        			//getting basic here
 						  					List payHeadCondList1 = FastList.newInstance();
@@ -7719,8 +7720,10 @@ public class PayrollService {
 																//if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
 													            	List oldRateAmountCondList1 = FastList.newInstance();
 													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
-													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
-													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("fromDate")))));
+													            	//oldRateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
+													            	//oldRateAmountCondList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(LEbasicSalPeriod.getDate("fromDate")))));
+													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin));
+													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod.getDate("fromDate")))));
 												  					EntityCondition oldRateAmountCond1 = EntityCondition.makeCondition(oldRateAmountCondList1,EntityOperator.AND);
 												  					List<GenericValue> oldRateAmountList1 = delegator.findList("RateAmount", oldRateAmountCond1,null, UtilMisc.toList("fromDate"), null, false);
 												  					BigDecimal oldRateAmount1 = BigDecimal.ZERO;
