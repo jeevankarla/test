@@ -7716,7 +7716,7 @@ public class PayrollService {
 																currentLEDAamt = new BigDecimal( evltr.evaluate());
 																currentLEDAamt = currentLEDAamt.setScale(0, BigDecimal.ROUND_HALF_DOWN);
 																
-																if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
+																//if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
 													            	List oldRateAmountCondList1 = FastList.newInstance();
 													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("rateTypeId" ,EntityOperator.EQUALS , rateTypeId));
 													            	oldRateAmountCondList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.toTimestamp(basicSalPeriod1.getDate("fromDate")))));
@@ -7762,7 +7762,7 @@ public class PayrollService {
 																		oldRateDaAmount1 = new BigDecimal( evltr1.evaluate());
 																		oldRateDaAmount1 = oldRateDaAmount1.setScale(0, BigDecimal.ROUND_HALF_DOWN);
 																	}
-													            }
+													            //}
 																/*if(oldDADate.compareTo(monthBegin) > 0 && oldDADate.compareTo(monthEnd) < 0){
 																		LEpayAmt = oldRateDaAmount1;
 																}else{
