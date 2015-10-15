@@ -5775,7 +5775,9 @@ public class MilkReceiptServices {
      String fromPartyId = (String) context.get("partyName");
 	 String productId = (String) context.get("productName");
 	 String siloId = (String) context.get("siloId");
- 
+	 String dcNo = (String) context.get("dcNo");
+	 String driverName = (String) context.get("driverName");
+     Timestamp  sendDate =  (Timestamp) context.get("sendDate");
 	 BigDecimal dispatchWeight = (BigDecimal) context.get("dispatchWeight");
 	 BigDecimal grossWeight = (BigDecimal) context.get("grossWeight");
 	 BigDecimal tareWeight = (BigDecimal) context.get("tareWeight");
@@ -5819,16 +5821,16 @@ public class MilkReceiptServices {
      if(UtilValidate.isNotEmpty(recdQty) && recdQty.compareTo(BigDecimal.ZERO)>0){
     	 recdQuantityLtrs= ProcurementNetworkServices.convertKGToLitreSetScale(recdQty,false);	
      }
-     if(sendQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(sendFat) && sendFat.compareTo(BigDecimal.ZERO)>0){
+     if(UtilValidate.isNotEmpty(sendQty) && UtilValidate.isNotEmpty(sendFat) && sendQty.compareTo(BigDecimal.ZERO)>0  && sendFat.compareTo(BigDecimal.ZERO)>0){
 		sendKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(sendQty,sendFat);
 	 }
-	 if(sendQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(sendSnf) && sendSnf.compareTo(BigDecimal.ZERO)>0){
+	 if(UtilValidate.isNotEmpty(sendQty) && UtilValidate.isNotEmpty(sendSnf) && sendQty.compareTo(BigDecimal.ZERO)>0  && sendSnf.compareTo(BigDecimal.ZERO)>0){
 		 sendKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(sendQty,sendSnf);
 	 }
-	 if(recdQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(recdFat) && recdFat.compareTo(BigDecimal.ZERO)>0){
+	 if(UtilValidate.isNotEmpty(recdQty) && UtilValidate.isNotEmpty(recdFat) && recdQty.compareTo(BigDecimal.ZERO)>0  && recdFat.compareTo(BigDecimal.ZERO)>0){
 		 receivedKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(recdQty,recdFat);
 	 }
-	 if(recdQty.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(recdSnf) && recdSnf.compareTo(BigDecimal.ZERO)>0){
+	 if(UtilValidate.isNotEmpty(recdQty) && UtilValidate.isNotEmpty(recdSnf) && recdQty.compareTo(BigDecimal.ZERO)>0  && recdSnf.compareTo(BigDecimal.ZERO)>0){
 		 receivedKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(recdQty,recdSnf);
 	 }
      Map vehicleTripStatusResult = FastMap.newInstance();
@@ -5843,10 +5845,13 @@ public class MilkReceiptServices {
 		// vehicleTripStatus creation
 			if(UtilValidate.isNotEmpty(milkTransfer)){
 				containerId=(String) milkTransfer.get("containerId");
-				seqNum=(String) milkTransfer.get("sequenceNum");
-				partyId=(String) milkTransfer.get("partyId");
-
-				if(!containerId.equals(tankerNo) && UtilValidate.isNotEmpty(tankerNo)){
+				if(UtilValidate.isNotEmpty((String) milkTransfer.get("sequenceNum"))){
+					seqNum=(String) milkTransfer.get("sequenceNum");
+				}
+				if(UtilValidate.isNotEmpty((String) milkTransfer.get("partyId"))){
+					partyId=(String) milkTransfer.get("partyId");
+				}
+				if(UtilValidate.isNotEmpty(tankerNo) && !containerId.equals(tankerNo)){
 					Map vehicleTripMap = FastMap.newInstance();
 					vehicleTripMap.put("oldTankerNo",containerId);
 					vehicleTripMap.put("newTankerNo",tankerNo);
@@ -5866,7 +5871,7 @@ public class MilkReceiptServices {
 							// TODO: handle exception
 					 	Debug.logError(e,module);
 					 }
-				}else if(!partyId.equals(fromPartyId) && UtilValidate.isNotEmpty(fromPartyId)){
+				}else if(UtilValidate.isNotEmpty(fromPartyId) && !partyId.equals(fromPartyId)){
 					 try{
 				        	GenericValue vehicleTripChangeParty = delegator.findOne("VehicleTrip", UtilMisc.toMap("vehicleId", tankerNo,"sequenceNum",seqNum), false);
 				        	vehicleTripChangeParty.set("partyId",fromPartyId);
@@ -5896,38 +5901,48 @@ public class MilkReceiptServices {
 	    		String receivedCob = (String) milkTransferItem.get("receivedCob");
 	    		String receivedOrganoLepticTest = (String) milkTransferItem.get("recdOrganoLepticTest");
 	    		String receivedSedimentTest = (String) milkTransferItem.get("receivedSedimentTest");
-	    		if(!silo.equals(siloId) && UtilValidate.isNotEmpty(siloId)){
-					milkTransferItem.set("siloId", siloId);
+	    		if(UtilValidate.isNotEmpty(siloId) && !silo.equals(siloId)){
+					try{
+		    			List<GenericValue> facilitySilos = delegator.findList("Facility", EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, "RAWMILK"), null, null, null, false);
+		    	 		List<String> siloIds = EntityUtil.getFieldListFromEntityList(facilitySilos, "facilityId", true);
+		    	 		if(!siloIds.contains(siloId)){
+		    	 			Debug.logError("Error While Updating silo  "+siloId, module);
+		    	 			return ServiceUtil.returnError("Error While Updating Unknown silo   : "+siloId);
+		    	 		}
+						milkTransferItem.set("siloId", siloId);
+					}catch(GenericEntityException e){
+						Debug.logError(e.getMessage(), module);
+					}
 				}
-	    		if(!sendLR.equals(sendCLR) && UtilValidate.isNotEmpty(sendCLR)){
+	    		if(UtilValidate.isNotEmpty(sendCLR) && !sendLR.equals(sendCLR)){
 					milkTransferItem.set("sendLR", sendCLR);
 				}
-	    		if(!receivedLR.equals(recdCLR) && UtilValidate.isNotEmpty(recdCLR)){
+	    		if(UtilValidate.isNotEmpty(recdCLR) && !receivedLR.equals(recdCLR)){
 					milkTransferItem.set("receivedLR", recdCLR);
 				}
-	    		if(!sendTemparature.equals(sendTemp) && UtilValidate.isNotEmpty(sendTemp)){
+	    		if(UtilValidate.isNotEmpty(sendTemp) && !sendTemparature.equals(sendTemp)){
 					milkTransferItem.set("sendTemparature", sendTemp);
 				}
-	    		if(!receivedTemparature.equals(recdTemp) && UtilValidate.isNotEmpty(recdTemp)){
+		    	if(UtilValidate.isNotEmpty(recdTemp) && !receivedTemparature.equals(recdTemp)){
 					milkTransferItem.set("receivedTemparature", recdTemp);
 				}
-	    		if(!sendAcidity.equals(sendAcid) && UtilValidate.isNotEmpty(sendAcid)){
-					milkTransferItem.set("sendAcidity", sendAcid);
+		    	if(UtilValidate.isNotEmpty(sendAcid) && !sendAcidity.equals(sendAcid)){
+	    			milkTransferItem.set("sendAcidity", sendAcid);
 				}
-	    		if(!receivedAcidity.equals(recdAcid) && UtilValidate.isNotEmpty(recdAcid)){
-					milkTransferItem.set("receivedAcidity", recdAcid);
+		    	if(UtilValidate.isNotEmpty(recdAcid) && !receivedAcidity.equals(recdAcid)){
+	    			milkTransferItem.set("receivedAcidity", recdAcid);
 				}
-	    		if(!sendedCob.equals(sendCob) && UtilValidate.isNotEmpty(sendCob)){
-					milkTransferItem.set("sendCob", sendCob);
+		    	if(UtilValidate.isNotEmpty(sendCob) && !sendedCob.equals(sendCob)){
+	    			milkTransferItem.set("sendCob", sendCob);
 				}
-	    		if(!receivedCob.equals(recdCob) && UtilValidate.isNotEmpty(recdCob)){
-					milkTransferItem.set("receivedCob", recdCob);
+		    	if(UtilValidate.isNotEmpty(recdCob) && !receivedCob.equals(recdCob)){
+	    			milkTransferItem.set("receivedCob", recdCob);
 				}
-	    		if(!receivedOrganoLepticTest.equals(recdOrganoLepticTest) && UtilValidate.isNotEmpty(recdOrganoLepticTest)){
-					milkTransferItem.set("recdOrganoLepticTest", recdOrganoLepticTest);
+		    	if(UtilValidate.isNotEmpty(recdOrganoLepticTest) && !receivedOrganoLepticTest.equals(recdOrganoLepticTest)){
+	    			milkTransferItem.set("recdOrganoLepticTest", recdOrganoLepticTest);
 				}
-	    		if(!receivedSedimentTest.equals(recdSedimentTest) && UtilValidate.isNotEmpty(recdSedimentTest)){
-					milkTransferItem.set("receivedSedimentTest", recdSedimentTest);
+		    	if(UtilValidate.isNotEmpty(recdSedimentTest) && !receivedSedimentTest.equals(recdSedimentTest)){
+	    			milkTransferItem.set("receivedSedimentTest", recdSedimentTest);
 				}
 			}
 			if(UtilValidate.isNotEmpty(milkTransfer)){
@@ -5945,7 +5960,7 @@ public class MilkReceiptServices {
 				BigDecimal receivedQuantityLtrs	 = (BigDecimal)milkTransfer.get("receivedQuantityLtrs	");
 				BigDecimal receivedFat = (BigDecimal)milkTransfer.get("receivedFat");
 				BigDecimal receivedSnf = (BigDecimal)milkTransfer.get("receivedSnf");
-				if(!prodId.equals(productId) && UtilValidate.isNotEmpty(productId)){
+				if(UtilValidate.isNotEmpty(productId) && !prodId.equals(productId)){
 					milkTransfer.set("productId", productId);
 					if(UtilValidate.isNotEmpty(milkTransferItem)){
 						milkTransferItem.set("receivedProductId", productId);
@@ -5955,22 +5970,31 @@ public class MilkReceiptServices {
 					milkTransfer.set("sequenceNum", newSeqNum);
 					//milkTransferItem.set("sequenceNum", newSeqNum);
 				}
-				if(!containerId.equals(tankerNo) && UtilValidate.isNotEmpty(tankerNo)){
+				if(UtilValidate.isNotEmpty(dcNo)){
+					milkTransfer.set("dcNo", dcNo);
+				}
+				if(UtilValidate.isNotEmpty(driverName)){
+					milkTransfer.set("driverName", driverName);
+				}
+				if(UtilValidate.isNotEmpty(sendDate)){
+					milkTransfer.set("sendDate", sendDate);
+				}
+				if(UtilValidate.isNotEmpty(tankerNo) && !containerId.equals(tankerNo)){
 					milkTransfer.set("containerId", tankerNo);
 				}
-				if(!partyId.equals(fromPartyId) && UtilValidate.isNotEmpty(fromPartyId)){
+				if(UtilValidate.isNotEmpty(fromPartyId) && !partyId.equals(fromPartyId)){
 					milkTransfer.set("partyId", fromPartyId);
 				}
-				if(!dWeight.equals(dispatchWeight) && UtilValidate.isNotEmpty(dispatchWeight)){
+				if(UtilValidate.isNotEmpty(dispatchWeight) && !dWeight.equals(dispatchWeight)){
 					milkTransfer.set("dispatchWeight", dispatchWeight);
 				}
-				if(!gWeight.equals(grossWeight) && UtilValidate.isNotEmpty(grossWeight)){
+				if(UtilValidate.isNotEmpty(grossWeight) && !gWeight.equals(grossWeight)){
 					milkTransfer.set("grossWeight", grossWeight);
 				}
-				if(!tWeight.equals(tareWeight) && UtilValidate.isNotEmpty(tareWeight)){
+				if(UtilValidate.isNotEmpty(tareWeight) && !tWeight.equals(tareWeight)){
 					milkTransfer.set("tareWeight", tareWeight);
 				}
-				if(!quantity.equals(sendQty) && UtilValidate.isNotEmpty(sendQty)){
+				if(UtilValidate.isNotEmpty(quantity) && !quantity.equals(sendQty)){
 					milkTransfer.set("quantity", sendQty);
 					milkTransfer.set("quantityLtrs", sendQuantityLtrs);
 					if(UtilValidate.isNotEmpty(milkTransferItem)){
@@ -5978,7 +6002,7 @@ public class MilkReceiptServices {
 						milkTransferItem.set("quantityLtrs", sendQuantityLtrs);
 					}
 				}
-				if(!receivedQuantity.equals(recdQty) && UtilValidate.isNotEmpty(recdQty)){
+				if(UtilValidate.isNotEmpty(recdQty) && UtilValidate.isNotEmpty(receivedQuantity) &&  !receivedQuantity.equals(recdQty)){
 					milkTransfer.set("receivedQuantity", recdQty);
 					milkTransfer.set("receivedQuantityLtrs", recdQuantityLtrs);
 					if(UtilValidate.isNotEmpty(milkTransferItem)){
@@ -5986,7 +6010,8 @@ public class MilkReceiptServices {
 						milkTransferItem.set("receivedQuantityLtrs", recdQuantityLtrs);
 					}
 				}
-				if((!fat.equals(sendFat) && UtilValidate.isNotEmpty(sendFat)) || (!snf.equals(sendSnf) && UtilValidate.isNotEmpty(sendSnf))){
+				
+				if((UtilValidate.isNotEmpty(sendFat) && !fat.equals(sendFat)) || (UtilValidate.isNotEmpty(sendSnf) && !snf.equals(sendSnf))){
 					milkTransfer.set("fat", sendFat);
 					milkTransfer.set("sendKgFat", sendKgFat);
 					milkTransfer.set("snf", sendSnf);
@@ -5998,7 +6023,7 @@ public class MilkReceiptServices {
 						milkTransferItem.set("sendKgSnf", sendKgFat);
 					}
 				}
-				if((!receivedFat.equals(recdFat) && UtilValidate.isNotEmpty(recdFat)) || (!receivedSnf.equals(recdSnf) && UtilValidate.isNotEmpty(recdSnf))){
+				if((UtilValidate.isNotEmpty(recdFat) && UtilValidate.isNotEmpty(receivedFat) && !receivedFat.equals(recdFat)) || (UtilValidate.isNotEmpty(recdSnf) && !receivedSnf.equals(recdSnf))){
 					milkTransfer.set("receivedFat", recdFat);
 					milkTransfer.set("receivedKgFat", receivedKgFat);
 					milkTransfer.set("receivedSnf", recdSnf);
@@ -6011,10 +6036,12 @@ public class MilkReceiptServices {
 					}
 				}
 				milkTransfer.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
-	        	milkTransferItem.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
 	    	}
 			 try{
-				 milkTransferItem.store();
+				 if(UtilValidate.isNotEmpty(milkTransferItem)){
+					  milkTransferItem.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+					  milkTransferItem.store();
+					}
 			 }catch(GenericEntityException e){
 				 Debug.logError("Error While Updating milkTransferItem Details11 "+e, module);
 				  return ServiceUtil.returnError("Error While Updating milkTransferItem Details11 : "+milkTransferId);

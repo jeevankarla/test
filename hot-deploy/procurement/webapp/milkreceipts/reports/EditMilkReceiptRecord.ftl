@@ -53,10 +53,10 @@
 
 
 <script type="application/javascript">
-function makeDatePicker(fromDateId ,thruDateId){
+/*function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
-			dateFormat:'dd-mm-yy hh:mm',
-			//timeFormat: 'hh:mm:ss',
+			dateFormat:'dd-mm-yy',
+			timeFormat: 'hh:mm',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
@@ -64,6 +64,38 @@ function makeDatePicker(fromDateId ,thruDateId){
 			}
 		});
 }
+*/
+function processProductionHeader(form){
+			$("#createRunDiv").hide();
+			var dateFormat = $('[name="sendDate"]').val();
+			var dateArr = dateFormat.split(' ');
+			var dateStr = dateArr[0];
+			var timeStr = dateArr[1];
+			var dateTokens = dateStr.split('-');
+			var dateTimestamp = dateTokens[2]+'-'+dateTokens[1]+'-'+dateTokens[0]+' '+timeStr+':00';
+			if($('#sendDate').val()){
+				$('#sendDate').val(dateTimestamp);
+			}
+      }
+
+function datetimepick(){
+		var currentTime = new Date();
+	 	// First Date Of the month 
+	 	var startDateFrom = new Date(currentTime.getFullYear(),currentTime.getMonth(),1);
+	 	// Last Date Of the Month 
+	 	var startDateTo = new Date(currentTime.getFullYear(),currentTime.getMonth() +1,0);
+	  
+		 $("#sendDate").datetimepicker({
+			dateFormat:'dd-mm-yy',
+			changeMonth: true,
+		    //minDate: '-1d',
+		    maxDate: '0d'
+		 });	
+				
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+		//$('#startDate').val('2015-04-21 10:50:20');	
+	}
 
 $(document).ready(function() {	
  
@@ -89,9 +121,12 @@ $(document).ready(function() {
   $('#sendSnf').attr("readonly","readonly");
  
  
-  
+        /*
 		makeDatePicker("findFromDate","thruDate");
 		makeDatePicker("findThruDate","thruDate");
+		makeDatePicker("sendDate","thruDate");
+		$('#ui-datepicker-div').css('clip', 'auto');		
+		*/
 	
 		var mccCodeJson = ${StringUtil.wrapString(mccCodeJson)};
 		var partyCodeJson = ${StringUtil.wrapString(partyCodeJson)};
@@ -366,11 +401,31 @@ function deleteTransferEntry(thisValue,milkTransferId){
 					<td><span class='h3'> <#if editMrRecord.receiveDate?has_content> ${editMrRecord.receiveDate}<span/> </#if></td>
 				</tr>
 				</#if>
+				 <#if editMrRecord.sendDate?has_content>
+               	 <tr>
+					<td><span class='h3'>Dispatch Date  </span></td>
+					<td><input type="text" size="15" maxlength="10" name="sendDate" id="sendDate"  onmouseover='datetimepick()' autocomplete="on" <#if editMrRecord.sendDate?has_content> value="${editMrRecord.sendDate}" </#if>/></td>
+				</tr>
+				</#if>
+			 <#if editMrRecord.dcNo?has_content>
+				<tr>
+             		<td><span class='h3'>DC No  </span></td>
+             		<td><input type="text" size="10" maxlength="10" name="dcNo" id="dcNo" autocomplete="on" <#if editMrRecord.dcNo?has_content> value="${editMrRecord.dcNo}" </#if>/></td>
+             		<input type="hidden" size="6" maxlength="6" name="vehicleId"/>
+               	 </tr>
+               	 </#if>
+                <#if editMrRecord.driverName?has_content>
+				<tr>
+             		<td><span class='h3'>Driver Name  </span></td>
+             		<td><input type="text" size="10" maxlength="10" name="driverName" id="driverName" autocomplete="on" <#if editMrRecord.driverName?has_content> value="${editMrRecord.driverName}" </#if>/></td>
+               	 </tr>
+               	 </#if>
 	            <tr>
              		<td><span class='h3'>Tanker No  </span></td>
              		<td><input type="text" size="10" maxlength="10" name="vehicleName" id="vehicleId" autocomplete="on" <#if editMrRecord.vehicleId?has_content> value="${editMrRecord.vehicleId}" </#if>/><span class="tooltip" id ="vehicleToolTip">none</span></td>
              		<input type="hidden" size="6" maxlength="6" name="vehicleId"/>
                	 </tr>
+ 				<#if security.hasPermission("MR_EDIT_SCREENS", session)> 
 	         	 <tr>
              		<td><span class='h3'>From Union </span></td>
              		<td><input type="text" size="6" maxlength="6" name="partyName" id="partyId" autocomplete="on" <#if editMrRecord.partyId?has_content> value="${editMrRecord.partyId}" </#if>/><span class="tooltip" id ="partyToolTip">none</span></td>
@@ -381,16 +436,19 @@ function deleteTransferEntry(thisValue,milkTransferId){
              		<td><input type="text" size="6" maxlength="6" name="productName" id="productId" autocomplete="on" <#if editMrRecord.productId?has_content> value="${editMrRecord.productId}" </#if>/><span class="tooltip" id ="productToolTip">none</span></td>
              			<input type="hidden" size="6" id="productId" maxlength="6" name="productId" autocomplete="off" value="" />
                	 </tr>
+                <#if editMrRecord.siloId?has_content>
                	 <tr>
              		<td><span class='h3'>Silo Id  </span></td>
              		<td><input type="text" size="6" maxlength="6" name="siloId" id="siloId" autocomplete="on" <#if editMrRecord.siloId?has_content> value="${editMrRecord.siloId}" </#if>/></td>
                	 </tr>
+               	 </#if>
                	<#if editMrRecord.receivedQuantity?has_content>
                	  <tr>
              		<td><span class='h3'>Net Qty  </span></td>
              	   <td><span class='h3'> <#if editMrRecord.receivedQuantity?has_content> ${editMrRecord.receivedQuantity}<span/> </#if></td>
                	 </tr>
-				</#if>               	 
+				</#if>  
+				<#if editMrRecord.dispatchWeight?has_content>
 				 <tr>
              		<td><span class='h3'>Dispatch Weight  </span></td>
              		<td><input type="text" size="6" maxlength="6" name="dispatchWeight" id="dispatchWeight" autocomplete="on" <#if editMrRecord.dispatchWeight?has_content> value="${editMrRecord.dispatchWeight}" </#if>/></td>
@@ -400,10 +458,14 @@ function deleteTransferEntry(thisValue,milkTransferId){
              		<td><span class='h3'>Gross Weight  </span></td>
              		<td><input type="text" size="6" maxlength="6" name="grossWeight" id="grossWeight" autocomplete="on" <#if editMrRecord.grossWeight?has_content> value="${editMrRecord.grossWeight}" </#if>/></td>
                	 </tr>
+               	 </#if>
+                <#if editMrRecord.tareWeight?has_content>
                	 <tr>
              		<td><span class='h3'>Tare Weight  </span></td>
              		<td><input type="text" size="6" maxlength="6" name="tareWeight" id="tareWeight" autocomplete="on" <#if editMrRecord.tareWeight?has_content> value="${editMrRecord.tareWeight}" </#if>/></td>
                	 </tr>
+               	 </#if>
+         <#if editMrRecord.fat?has_content>
                	 <tr>
              		<td><span class='h1'>QC Details </span></td>
                	 </tr>
@@ -476,8 +538,9 @@ function deleteTransferEntry(thisValue,milkTransferId){
 						</#if>
 							</select></td>
 		        	</tr>
-               	 
-			    <tr><td align='right'><span class='h2'><input type="submit"  size="10" value="Add" class="buttontext h1"/></span> </td></tr>      					 
+               	 </#if>
+          	 </#if>
+			    <tr><td align='right'><span class='h2'><input type="submit"  size="10" value="Update" class="buttontext h1" onclick="javascript:processProductionHeader();"/></span> </td></tr>      					 
           	</table>
   		</tr>
   		</#list>
