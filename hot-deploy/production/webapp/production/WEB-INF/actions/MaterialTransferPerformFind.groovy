@@ -27,3 +27,5 @@ if(UtilValidate.isNotEmpty(parameters.fromPartyId)){
 		requestParameters.fromFacilityId_op="in";
 	}
 }
+requestParameters.statusId= ["IXF_EN_ROUTE","IXF_COMPLETE","IXF_CANCELLED"];
+requestParameters.statusId_op="in";

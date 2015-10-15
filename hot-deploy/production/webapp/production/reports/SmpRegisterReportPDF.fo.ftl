@@ -46,7 +46,8 @@ under the License.
         		   <fo:table  >
        					 <fo:table-column column-width="50pt"/>
        					 <fo:table-column column-width="90pt"/>
-       					 <fo:table-column column-width="100pt"/>
+       					 <fo:table-column column-width="150pt"/>
+       					 <fo:table-column column-width="150pt"/>
        					 
        					 <fo:table-body>
        					    <fo:table-row  border-style="solid">
@@ -57,7 +58,10 @@ under the License.
        					      <fo:block keep-together="always" text-align="left" font-size = "12pt" font-weight="bold">SILO</fo:block>
        					     </fo:table-cell>
        					     <fo:table-cell border-style="dotted">
-       					      <fo:block keep-together="always" text-align="left" font-size = "12pt" font-weight="bold">RECD QUANTITY</fo:block>
+       					      <fo:block keep-together="always" text-align="right" font-size = "12pt" font-weight="bold">RECD QUANTITY (RM)</fo:block>
+       					     </fo:table-cell>
+       					     <fo:table-cell border-style="dotted">
+       					      <fo:block keep-together="always" text-align="right" font-size = "12pt" font-weight="bold">USED QTY IN PRUN</fo:block>
        					     </fo:table-cell>
        					    </fo:table-row>
        					    <#assign slNo=1>
@@ -73,6 +77,10 @@ under the License.
        					     <fo:table-cell border-style="dotted">
        					      <fo:block keep-together="always" text-align="right" font-size = "12pt" font-weight="bold">${smpRegster.getValue()?if_exists?string("##0.00")}</fo:block>
        					     </fo:table-cell>
+       					     <fo:table-cell border-style="dotted">
+       					      <fo:block keep-together="always" text-align="right" font-size = "12pt" font-weight="bold">${smpRegster.getValue()?if_exists?string("##0.00")}</fo:block>
+       					     </fo:table-cell>
+       					     
        					   </fo:table-row>
        					    <#assign slNo=slNo+1>
        					    </#list>
@@ -86,6 +94,10 @@ under the License.
        					     <fo:table-cell border-style="dotted">
        					      <fo:block keep-together="always" text-align="right" font-size = "12pt" font-weight="bold">${smpTotQty?if_exists?string("##0.00")}</fo:block>
        					     </fo:table-cell>
+       					      <fo:table-cell border-style="dotted">
+       					      <fo:block keep-together="always" text-align="right" font-size = "12pt" font-weight="bold">${smpTotQty?if_exists?string("##0.00")}</fo:block>
+       					     </fo:table-cell>
+       					     
        					   </fo:table-row>
        					    
 				       	</fo:table-body>

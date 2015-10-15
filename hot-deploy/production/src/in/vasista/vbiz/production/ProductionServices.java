@@ -1359,6 +1359,24 @@ public class ProductionServices {
 	  	  String workEffortId = (String) request.getParameter("workEffortId");
 	  	  String productionRunId = (String) request.getParameter("productionRunId");
 	  	  boolean beginTransaction = false;
+		  try{
+		  		if(UtilValidate.isNotEmpty(workEffortId)){
+		  			List workEffCondList = FastList.newInstance();
+		  			workEffCondList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,workEffortId ));
+		 			workEffCondList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+					EntityCondition workEffCond = EntityCondition.makeCondition(workEffCondList,EntityOperator.AND);
+		  			List<GenericValue> workEffDeclareProdList = delegator.findList("InventoryItemAndDetail", workEffCond, null,null, null, false);
+		  			if(UtilValidate.isEmpty(workEffDeclareProdList)){
+		  				Debug.logError("Canot Declare the routing task Without Issue products for : "+workEffortId, module);
+		  	  			request.setAttribute("Canot Declare the routing task Without Issue products for : ", workEffortId);
+		 	  			TransactionUtil.rollback();
+		 	  			return "error";
+		 			}
+		 		}
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, module);
+	  			request.setAttribute("_ERROR_MESSAGE_", e.toString());
+	  	  }
 	  	  try{
 	  		  beginTransaction = TransactionUtil.begin();
 	  		  
