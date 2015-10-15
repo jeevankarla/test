@@ -153,13 +153,20 @@ if(UtilValidate.isNotEmpty(parameters.fromDate)){
  context.milkDetailslist=milkDetailslist;
  if(UtilValidate.isNotEmpty(parameters.milkTransferId)){
 	 GenericValue milkTransferEditDetails = EntityUtil.getFirst(milkDetailslist);
-	 receiveDateTime=null;
 	 receiveDate = milkTransferEditDetails.getTimestamp("receiveDate");
 	 statusDate=null;
 	 if(receiveDate){
 		 statusDate = UtilDateTime.toDateString(receiveDate,"dd-MM-yyyy HH:mm");
 		  }
 	 milkTransferEditDetails.set("receiveDate", statusDate);
+	
+	 dispatchDate = milkTransferEditDetails.getTimestamp("sendDate");
+	 sendDate=null;
+	 if(dispatchDate){
+		 sendDate = UtilDateTime.toDateString(dispatchDate,"dd-MM-yyyy HH:mm");
+		  }
+	 milkTransferEditDetails.set("sendDate", sendDate);
+
 	 context.milkTransferEditDetails=milkTransferEditDetails;
 	 
  }

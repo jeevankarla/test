@@ -240,5 +240,11 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_NONMILK_ISUE_INIT"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_NONMILK_ISUE_INIT"/>
     
+    <SecurityPermission description="Edit Screens view" permissionId="MR_EDIT_SCREENS"/>
+    <SecurityGroup description="Edit Screens view" groupId="MR_EDIT_SCREENS"/>
+    <SecurityGroupPermission groupId="MR_EDIT_SCREENS" permissionId="MR_EDIT_SCREENS"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_EDIT_SCREENS"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_EDIT_SCREENS"/>
+    
     
 </entity-engine-xml>

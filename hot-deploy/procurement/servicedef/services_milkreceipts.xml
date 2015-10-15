@@ -35,6 +35,10 @@
 	    <attribute name="vehicleName" mode="IN" type="String" optional="true"/>
         <attribute name="partyName" mode="IN" type="String" optional="true"/>
 	    <attribute name="productName" mode="IN" type="String" optional="true"/>
+        <attribute name="dcNo" mode="IN" type="String" optional="true"/>
+        <attribute name="sendDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="driverName" mode="IN" type="String" optional="true"/>
+        
 	    <attribute name="siloId" mode="IN" type="String" optional="true"/>
 		<attribute name="dispatchWeight" mode="IN" type="BigDecimal" optional="true"/>
  		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="true"/>
