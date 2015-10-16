@@ -192,7 +192,7 @@ function leaveApprovalAjax() {
     		}
     	}
 	  	
-    	var data = "emplLeaveApplId="+emplLeaveApplId+"&leaveStatus="+leaveStatus+"&approverPartyId="+approverPartyId+"&thruDate="+thruDate+"&leaveTypeId="+leaveTypeId;
+    	var data = "emplLeaveApplId="+emplLeaveApplId+"&leaveStatus="+leaveStatus+"&approverPartyId="+approverPartyId+"&thruDate="+thruDate+"&leaveTypeId="+leaveTypeId+"&dateList="+dateList;
     	if(levelApproverPartyId){
     		data = data+"&levelApproverPartyId="+levelApproverPartyId;
     	}

@@ -933,6 +933,7 @@ under the License.emplpunch
         <description>Checks to see any leaves between given fromDate and thruDate </description>
         <attribute name="partyId" optional="false" type="String" mode="IN"/>
         <attribute name="leaveTypeId" optional="true" type="String" mode="IN"/>
+        <attribute name="dayFractionId" optional="true" type="String" mode="IN"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
     </service>
@@ -971,7 +972,30 @@ under the License.emplpunch
         <attribute name="serviceName" mode="IN" type="String" optional="true"/>
         <attribute name="dayFractionId" mode="IN" type="String" optional="true"/>
         <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="dateList"  mode="IN" type="List" optional="true"/>
         <override name="partyId" optional="false"/>
+    </service>
+    
+     <service name="updateChSSHalfBalanceDetails" engine="java" default-entity-name="EmplLeave"
+             location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="updateChSSHalfBalanceDetails" auth="true">
+        <description>Create Employee CH Half Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="emplLeaveApplId" mode="IN" type="String" optional="false"/>
+        <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="chDate" mode="IN" type="List" optional="true"/>
+    </service>
+    
+     <service name="deleteGhSsLeaveHistory" engine="java" default-entity-name="EmplLeave"
+             location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="deleteGhSsLeaveHistory" auth="true">
+        <description>Delete Employee CH Half Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="emplLeaveApplId" mode="IN" type="String" optional="false"/>
+        <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="chDate" mode="IN" type="List" optional="true"/>
     </service>
     
       <service name="updateEmplLeave" engine="java" default-entity-name="EmplLeave"
@@ -1262,6 +1286,7 @@ under the License.emplpunch
         <auto-attributes mode="INOUT" include="pk" optional="false"/>
         <auto-attributes mode="INOUT" include="nonpk" optional="true"/>
         <attribute name="levelApproverPartyId"  mode="IN" type="String" optional="true"/>
+        <attribute name="dateList"  mode="INOUT" type="List" optional="true"/>
         <attribute name="thruDate" mode="IN" type="String" optional="true"></attribute>
     </service>
     
@@ -1642,6 +1667,7 @@ under the License.emplpunch
         <description>Populate Period Billing for Attendance Finalization</description>
         <attribute name="partyId" mode="IN" type="String"/> 
         <attribute name="customTimePeriodId" mode="IN" optional="false" type="String"/>
+        <attribute name="periodBillingId" mode="OUT" type="String"></attribute>
    </service>
    <service name="setAttendanceFinalizationStatus" engine="java" auth="true" invoke="setAttendanceFinalizationStatus" 
         location="in.vasista.vbiz.humanres.PayrollService">

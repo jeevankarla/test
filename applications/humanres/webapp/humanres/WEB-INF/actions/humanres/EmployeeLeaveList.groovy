@@ -111,7 +111,7 @@ if(UtilValidate.isNotEmpty(leaveDetails)){
 		leaveThruDate = leave.thruDate;
 		leaveCountDays = UtilDateTime.getIntervalInDays(leaveFromDate,leaveThruDate)+1;
 		
-		if((leave.leaveTypeId).equals("CL")){
+		if((leave.leaveTypeId).equals("CL") || (leave.leaveTypeId).equals("CH") || (leave.leaveTypeId).equals("CHGH") || (leave.leaveTypeId).equals("CHSS")){
 			for(int i=1 ;i < leaveCountDays; i++){
 				nextDay = UtilDateTime.addDaysToTimestamp(leaveFromDate, 1);
 				String dayOfWeek = (UtilDateTime.getDayOfWeek(nextDay, timeZone, locale)).toString();
@@ -160,6 +160,14 @@ if(UtilValidate.isNotEmpty(leaveDetails)){
 			emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
 			if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
 				compDateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+			}else{
+				EmplCompOffLeaveHistoryList = delegator.findList("EmplCompOffLeaveHistory",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
+				if(UtilValidate.isNotEmpty(EmplCompOffLeaveHistoryList)){
+					EmplCompOffLeaveHistoryList.each{ EmplCompOffLeaveHistor->
+						compDatereq = UtilDateTime.toDateString(EmplCompOffLeaveHistor.get("chDate"),"yyyy-MM-dd");
+						compDateList.add(compDatereq);
+					}
+				}
 			}
 		}
 		if(UtilValidate.isNotEmpty(compDateList)){

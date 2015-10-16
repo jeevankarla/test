@@ -25,7 +25,16 @@
      <eca service="updateEmplLeaveStatus" event="commit">
         <action service="updateGhSsAvailedDetails" mode="sync"/>
      </eca>
-      <eca service="createEmplLeave" event="invoke">
+     <eca service="createEmplLeave" event="commit">
+        <condition operator="is-not-empty" field-name="chDate" />
+        <condition operator="is-not-empty" field-name="emplLeaveApplId" />
+        <action service="updateChSSHalfBalanceDetails" mode="sync"/>
+     </eca>
+      <eca service="deleteEmplLeave" event="commit">
+        <set field-name="serviceName" value="deleteEmplLeave"/>
+        <action service="deleteGhSsLeaveHistory" mode="sync"/>
+     </eca>
+     <eca service="createEmplLeave" event="invoke">
         <condition field-name="leaveTypeId" operator="is-not-empty"/>
         <condition field-name="fromDate" operator="is-not-empty"/>
         <condition field-name="thruDate" operator="is-not-empty"/>

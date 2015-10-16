@@ -621,6 +621,23 @@ under the License.
             <key-map field-name="customTimePeriodId"/>
         </relation>
     </entity>
+    <entity entity-name="EmplCompOffLeaveHistory"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Comp Off History Entity">
+        <field name="empLeaveHisId" type="id-ne"/>
+        <field name="emplLeaveApplId" type="id-ne"/>
+        <field name="chDate" type="date-time"/>
+        <prim-key field="empLeaveHisId"/>
+        <relation type="one" fk-name="EMPL_LEAVE_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_ST_ID" title="Parent" rel-entity-name="EmplLeave">
+            <key-map field-name="emplLeaveApplId" rel-field-name="emplLeaveApplId"/>
+        </relation>
+    </entity>
    <view-entity entity-name="EmplLeaveBalanceStatusAndPeriod"
       package-name="org.ofbiz.humanres"
       title="PayHeadsDetails">
