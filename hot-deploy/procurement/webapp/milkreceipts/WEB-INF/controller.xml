@@ -1220,12 +1220,19 @@
     	<response name="error" type="view" value="NonMilkReceiptIssuesOut"/>
     </request-map>
     
-    <request-map uri="createNonMilkReceiptIssuesInit">
+    <!-- <request-map uri="createNonMilkReceiptIssuesInit">
         <security https="true" auth="true"/>
         <event type="service"  invoke="createNonMilkReceiptIssuesInit"/>        
        <response name="success" type="request" value="json"/>
        <response name="failed" type="request" value="json"/>
        <response name="error" type="request" value="json"/>       
+    </request-map> -->
+    <request-map uri="createNonMilkReceiptIssuesInit">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createNonMilkReceiptIssueInit" global-transaction="true"/>        
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     <request-map uri="updateNonMilkIssuesTareWeight">
         <security https="true" auth="true"/>
@@ -1257,6 +1264,18 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="FindNonMilkReceiptIssues"/>
     	<response name="error" type="view" value="FindNonMilkReceiptIssues"/>
+    </request-map>
+    <request-map uri="generateWeighmentDcNo">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createWeighmentDcSequence"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    <request-map uri="getWeighBridgeWeight">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://procurement/webapp/milkreceipts/WEB-INF/actions/facility/"  invoke="getWeighBridgeWeight.groovy"/>
+       <response name="success" type="request" value="json"/>    
     </request-map>
     <!-- View Mappings -->
 	<view-map name="main" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>

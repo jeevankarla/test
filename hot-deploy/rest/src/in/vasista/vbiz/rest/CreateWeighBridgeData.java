@@ -174,10 +174,12 @@ public class CreateWeighBridgeData {
         
         boolean proceedToCreateMT = false;
         boolean proceedToCreateMaterialWeighment = false;
-        
+        boolean proceedToCreateWMNT = false;
         if(weighmentType.equalsIgnoreCase("G")){
         	if(statusIdToVal.equalsIgnoreCase("MR_ISSUE_GRWEIGHT")||statusIdToVal.equalsIgnoreCase("MR_RETURN_GRWEIGHT") || statusIdToVal.equalsIgnoreCase("MR_VEHICLE_GRSWEIGHT")){
         		proceedToCreateMT = true;
+        	}else if(statusIdToVal.equalsIgnoreCase("WMNT_ISSUE_VCL_GRS")||statusIdToVal.equalsIgnoreCase("WMNT_VCL_GRSWEIGHT")){
+        		proceedToCreateWMNT = true; 
         	}else{
         		proceedToCreateMT = false;
         	}
@@ -185,11 +187,13 @@ public class CreateWeighBridgeData {
         if(weighmentType.equalsIgnoreCase("T")){
         	if(statusIdToVal.equalsIgnoreCase("MR_ISSUE_TARWEIGHT")||statusIdToVal.equalsIgnoreCase("MR_RETURN_TARWEIGHT") || statusIdToVal.equalsIgnoreCase("MR_VEHICLE_TARWEIGHT")){
         		proceedToCreateMT = true;
+        	}else if(statusIdToVal.equalsIgnoreCase("WMNT_ISSUE_VCL_TARE")||statusIdToVal.equalsIgnoreCase("WMNT_VCL_TAREWEIGHT")){
+        		proceedToCreateWMNT = true; 
         	}else{
         		proceedToCreateMT = false;
         	}
         }
-        if(!proceedToCreateMT){
+        if(!proceedToCreateMT && !proceedToCreateWMNT){
         	Debug.logError("we can not update weight at this stage .vehicle current  status  :"+vehicleStatusIdExist+"("+statusItemDetail.get("statusCode")+")", module);
         	return Response.serverError().entity("we can not update weight at this stage .vehicle current  status  :"+vehicleStatusIdExist+"("+statusItemDetail.get("statusCode")+")").build();
         }
@@ -208,55 +212,57 @@ public class CreateWeighBridgeData {
         	Debug.logError("Error While creating Weigh BridgeDetails"+e, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Error While creating WeighBridge Details").build();
 		}
-        
-        
-        List MilkTransferCondList = FastList.newInstance();
-        MilkTransferCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId));
-        MilkTransferCondList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
-        EntityCondition milkTransferCondition =  EntityCondition.makeCondition(MilkTransferCondList,EntityJoinOperator.AND);
-        
-        GenericValue MilkTransfer  = null;
+        if(proceedToCreateMT){
+	        List MilkTransferCondList = FastList.newInstance();
+	        MilkTransferCondList.add(EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,vehicleId));
+	        MilkTransferCondList.add(EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,sequenceNum));
+	        EntityCondition milkTransferCondition =  EntityCondition.makeCondition(MilkTransferCondList,EntityJoinOperator.AND);
+	        
+	        GenericValue MilkTransfer  = null;
+	        try{
+	        	List MilkTransfersList = delegator.findList("MilkTransfer",milkTransferCondition,null,null,null,false);
+	        	MilkTransfer = EntityUtil.getFirst(MilkTransfersList);
+	        }catch(GenericEntityException e){
+	        	Debug.logError("Error while getting Milk TrasnsfersList :"+e, CreateWeighBridgeData.class.getName());
+	        	return Response.serverError().entity("Error while getting Milk TrasnsfersList :").build();
+	        }
+	        if(UtilValidate.isEmpty(MilkTransfer)){
+	        	Debug.logError("No valid Transfer Found to Store weight :", CreateWeighBridgeData.class.getName());
+	        	return Response.serverError().entity("No valid Transfer Found to Store weight :").build();
+	        }
+	        if(weighmentType.equalsIgnoreCase("G")){
+	        	BigDecimal tareweight = (BigDecimal)MilkTransfer.get("tareWeight");
+	    		if(UtilValidate.isNotEmpty(tareweight) && tareweight.compareTo(weightKgs)==1){
+	    			Debug.logError("Gross weight should be more than Tare weight :Existed tare weight is "+tareweight, CreateWeighBridgeData.class.getName());
+	    			return Response.serverError().entity("Gross weight should be more than Tare weight :Existed tare weight is "+tareweight).build();
+	    		}
+	        	MilkTransfer.set("grossWeight",weightKgs);
+	        }
+	        if(weighmentType.equalsIgnoreCase("T")){
+	        	if(UtilValidate.isNotEmpty(MilkTransfer.get("grossWeight"))){
+	        		BigDecimal grossweight = (BigDecimal)MilkTransfer.get("grossWeight");
+	        		if(UtilValidate.isNotEmpty(grossweight) && weightKgs.compareTo(grossweight)==1){
+	        			Debug.logError("Tare weight should be less than grossweight :Existed gross weight is "+grossweight, CreateWeighBridgeData.class.getName());
+	        			return Response.serverError().entity("Tare weight should be less than grossweight :Existed gross weight is "+grossweight).build();
+	        		}
+	        		
+	        	}
+	        	MilkTransfer.set("tareWeight",weightKgs);
+	        }
+	        // Here we are trying to store MilkTransfer
+	        
+	        try{
+	        	delegator.store(MilkTransfer);
+	        }catch(GenericEntityException e){
+	        	Debug.logError("Error while storing weight details to Transfer :"+e, CreateWeighBridgeData.class.getName());
+	        	return Response.serverError().entity("Error while storing weight details to Transfer :"+e.getMessage()).build();
+	        }
+        }
         try{
-        	List MilkTransfersList = delegator.findList("MilkTransfer",milkTransferCondition,null,null,null,false);
-        	MilkTransfer = EntityUtil.getFirst(MilkTransfersList);
-        }catch(GenericEntityException e){
-        	Debug.logError("Error while getting Milk TrasnsfersList :"+e, CreateWeighBridgeData.class.getName());
-        	return Response.serverError().entity("Error while getting Milk TrasnsfersList :").build();
-        }
-        if(UtilValidate.isEmpty(MilkTransfer)){
-        	Debug.logError("No valid Transfer Found to Store weight :", CreateWeighBridgeData.class.getName());
-        	return Response.serverError().entity("No valid Transfer Found to Store weight :").build();
-        }
-        if(weighmentType.equalsIgnoreCase("G")){
-        	BigDecimal tareweight = (BigDecimal)MilkTransfer.get("tareWeight");
-    		if(UtilValidate.isNotEmpty(tareweight) && tareweight.compareTo(weightKgs)==1){
-    			Debug.logError("Gross weight should be more than Tare weight :Existed tare weight is "+tareweight, CreateWeighBridgeData.class.getName());
-    			return Response.serverError().entity("Gross weight should be more than Tare weight :Existed tare weight is "+tareweight).build();
-    		}
-        	MilkTransfer.set("grossWeight",weightKgs);
-        }
-        if(weighmentType.equalsIgnoreCase("T")){
-        	if(UtilValidate.isNotEmpty(MilkTransfer.get("grossWeight"))){
-        		BigDecimal grossweight = (BigDecimal)MilkTransfer.get("grossWeight");
-        		if(UtilValidate.isNotEmpty(grossweight) && weightKgs.compareTo(grossweight)==1){
-        			Debug.logError("Tare weight should be less than grossweight :Existed gross weight is "+grossweight, CreateWeighBridgeData.class.getName());
-        			return Response.serverError().entity("Tare weight should be less than grossweight :Existed gross weight is "+grossweight).build();
-        		}
-        		
-        	}
-        	MilkTransfer.set("tareWeight",weightKgs);
-        }
-        // Here we are trying to store MilkTransfer
-        
-        try{
-        	delegator.store(MilkTransfer);
-        }catch(GenericEntityException e){
-        	Debug.logError("Error while storing weight details to Transfer :"+e, CreateWeighBridgeData.class.getName());
-        	return Response.serverError().entity("Error while storing weight details to Transfer :"+e.getMessage()).build();
-        }
-        try{
-        	weighBridgeDetails.set("statusId", "ITEM_APPROVED");
-        	delegator.store(weighBridgeDetails);
+        	 if(proceedToCreateMT){
+        		 weighBridgeDetails.set("statusId", "ITEM_APPROVED");
+        		 delegator.store(weighBridgeDetails);
+        	 }
         }catch(GenericEntityException e){
         	Debug.logError("Error while storing weight details  :"+e, CreateWeighBridgeData.class.getName());
         	return Response.serverError().entity("Error while storing weight details :"+e.getMessage()).build();

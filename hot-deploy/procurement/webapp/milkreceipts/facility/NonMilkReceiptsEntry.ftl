@@ -525,7 +525,7 @@ function fetchWeighmentDetails(){
   				if(!partyName){
   					partyName = partyId;
   				}
-  				partyName = partyName+' ['+partyId+']'
+  				partyName = partyName+' ['+partyId+']';
            		if(weighmentId){
            			$('[name = weighmentId]').val(weighmentId);
            			if(displayScreen != "VEHICLE_IN"){
@@ -586,6 +586,10 @@ function setVehicleId(selected){
      var selectedValue = vehicleId;
 	$('[name=tankerName]').val(selectedValue);
 	 populateVehicleSpan();
+	 var displayScreen = $('[name="displayScreen"]').val();
+	 if((displayScreen == "VEHICLE_TAREWEIGHT") || (displayScreen == "VEHICLE_GROSSWEIGHT")){
+ 		 populateWeighBridgeWeight();
+ 		}	
     $("#newVehicleDiv").hide();
 }	
 function hideDiv(){
@@ -596,6 +600,43 @@ function hideDiv(){
 }	
 function reloadingPage(){
 	setTimeout("location.reload(true);", 1000);
+}
+function populateWeighBridgeWeight(){
+		var vehicleId = $('[name=tankerName]').val();
+		var action = "getWeighBridgeWeight";
+		var displayScreen = $('[name="displayScreen"]').val();
+		var weighmentType ="";
+ 		if((displayScreen == "VEHICLE_TAREWEIGHT")){
+ 			weighmentType = "T";
+ 		}
+ 		if((displayScreen == "VEHICLE_GROSSWEIGHT")){
+ 			weighmentType = "G";
+ 		}	
+		var dataString = {"vehicleId": vehicleId,
+		                  "weighmentType":weighmentType};
+		$.ajax({
+	         type: "POST",
+	         url: action,
+	         data: dataString,
+	         dataType: 'json',
+	         success: function(result) { 
+	         	var weight = result['weight'];
+	         	var weighBridgeId = result['weighBridgeId'];
+	       		if((displayScreen == "VEHICLE_TAREWEIGHT") && (typeof(weighBridgeId)!= "undefined" && weighBridgeId!='' && weighBridgeId != null )){
+ 					$('[name=tareWeight]').val(weight);
+	       			$('#tareWeight').attr("readonly","readonly");
+ 				}
+ 				if((displayScreen == "VEHICLE_GROSSWEIGHT") && (typeof(weighBridgeId)!= "undefined" && weighBridgeId!='' && weighBridgeId != null )){
+ 					$('[name=grossWeight]').val(weight);
+	       			$('#grossWeight').attr("readonly","readonly");
+ 				}
+	         },
+	         error:function(){
+	         	//$('#dcNo').removeAttr("readonly");
+	         	//$('#generateDcNo').show();
+	         	alert("Error getting weight");
+	         }
+    	}); 
 }
 </script>
 <#if displayScreen != "VEHICLE_IN" >
@@ -709,7 +750,9 @@ function reloadingPage(){
 								    <td align='left'><span class="h2">DC No </span></td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
 								</tr>		
 					        </#if>
-					        	
+					       	<#if displayScreen !="VEHICLE_IN" || displayScreen !="VEHICLE_OUT" >
+					        	<input  name="weighBridgeId" size="10pt" type="hidden" id="weighBridgeId" />
+					        </#if> 	
 					        <#if displayScreen == "VEHICLE_IN">
 		                        <tr>
 	        						<td align='left' ><span class="h2">Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" value="${setDate}" name="entryDate" autocomplete="off" required="required" readonly="readonly"/></td>

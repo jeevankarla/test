@@ -849,6 +849,7 @@
 		<attribute name="comments" mode="IN" type="String" optional="true"/>
 		<attribute name="sealCheck" mode="IN" type="String" optional="false"/>
 		<attribute name="noOfProduct" mode="IN" type="String" optional="true"/>
+		<attribute name="weighBridgeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateNonMilkReceiptEntryTareWeight" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateNonMilkReceiptEntry" auth="true">
@@ -859,6 +860,7 @@
 		<attribute name="tareDate" mode="IN" type="String" optional="false"/>
 		<attribute name="tareTime" mode="IN" type="String" optional="false"/>
 		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="weighBridgeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateNonMilkReceiptEntryOut" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateNonMilkReceiptEntry" auth="true">
@@ -899,7 +901,7 @@
     	<attribute name="comments" mode="IN" type="String" optional="true"/>
     	<attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
     </service>
-    <service name="createNonMilkReceiptIssuesInit" engine="java"
+    <!-- <service name="createNonMilkReceiptIssuesInit" engine="java"
     	 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createNonMilkReceiptIssueEntry" auth="true">
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
         <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
@@ -907,9 +909,10 @@
         <attribute name="tareDate" mode="IN" type="String" optional="false"/>
         <attribute name="tareTime" mode="IN" type="String" optional="false"/>
         <attribute name="noOfProducts" mode="IN" type="String" optional="false"/>
+        <attribute name="noOfParties" mode="IN" type="String"></attribute>
 	 	<attribute name="vehicleStatusId" mode="IN" type="String" optional="false"/>
 	 	<attribute name="weighmentId" mode="INOUT" type="String" optional="true"/>
-    </service>
+    </service> -->
     <service name="updateNonMilkIssuesTareWeight" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateNonMilkReceiptIssuesEntry" auth="true">
 		<attribute name="tankerName" mode="IN" type="String" optional="false"/>
@@ -918,6 +921,7 @@
 		<attribute name="tareDate" mode="IN" type="String" optional="false"/>
 		<attribute name="tareTime" mode="IN" type="String" optional="false"/>
 		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="weighBridgeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateNonMilkIssuesGrsWeight" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateNonMilkReceiptIssuesEntry" auth="true">
@@ -932,6 +936,7 @@
 		<attribute name="dcNo" mode="IN" type="String" optional="false"/>
 		<attribute name="grossTime" mode="IN" type="String" optional="false"/>
 		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="weighBridgeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateNonMilkIssuesOut" engine="java"
                 location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateNonMilkReceiptIssuesEntry" auth="true">
@@ -944,5 +949,16 @@
     <service name="createMilkTransferDcSequence" engine="java" location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTransferDcSequence">
     	 <attribute name="milkTransferId" mode="IN" type="String" optional="false"/> 
     	 <attribute name="dcNo" mode="OUT" type="String" optional="true"></attribute>
+    </service>
+    <service name="createWeighmentDcSequence" engine="java" location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createWeighmentDcSequence">
+    	 <attribute name="weighmentId" mode="IN" type="String" optional="false"/> 
+    	 <attribute name="dcNo" mode="OUT" type="String" optional="true"></attribute>
+    </service>
+    <service name="createWeighmentParty" engine="java" 
+    	location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createWeighmentParty" auth="true">
+    	<attribute name="weighmentId" mode="IN" type="String" optional="false"/>
+    	<attribute name="productId" mode="IN" type="String" optional="false"/>
+    	<attribute name="partyId" mode="IN" type="String" optional="false"/>
+    	<attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
     </service>
 </services>

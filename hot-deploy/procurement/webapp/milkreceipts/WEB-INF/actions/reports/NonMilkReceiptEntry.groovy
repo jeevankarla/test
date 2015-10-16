@@ -148,21 +148,50 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="ISSUE_TARWEIGHT") 
 		tempMap=[:];
 		vehicleInTime = delegator.findOne("VehicleTripStatus",[vehicleId:trip.vehicleId,sequenceNum:trip.sequenceNum,statusId:"WMNT_ISSUE_VCL_INIT"],false);
 		List weighmentDetailsList = delegator.findList("WeighmentDetails",EntityCondition.makeCondition([EntityCondition.makeCondition("vehicleId",EntityOperator.EQUALS,trip.vehicleId),
-																							 EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,trip.sequenceNum)],EntityOperator.AND),UtilMisc.toSet("partyIdTo"),null,null,false);
+																							 EntityCondition.makeCondition("sequenceNum",EntityOperator.EQUALS,trip.sequenceNum)],EntityOperator.AND),null,null,null,false);
 		String partyId="";
-		String partyName="";
+		String weighmentId="";
 		if(weighmentDetailsList){
 			GenericValue weighmentDetails = EntityUtil.getFirst(weighmentDetailsList);
-			partyId = weighmentDetails.partyIdTo;
-			partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			weighmentId = weighmentDetails.weighmentId;
+			List weighmentPartyList = delegator.findList("WeighmentParty",EntityCondition.makeCondition("weighmentId",EntityOperator.EQUALS,weighmentId),null,null,null,false);
+			if(UtilValidate.isNotEmpty(weighmentPartyList) && weighmentPartyList.size()){
+				weighmentPartyList.each{wmntParty->
+					String partyName="";
+					partyName = PartyHelper.getPartyName(delegator, wmntParty.partyId, false);
+					if(UtilValidate.isNotEmpty(partyId)){
+						partyId = partyId+", "+partyName+"["+wmntParty.partyId+"]";
+					}else{
+						partyId = partyName+"["+wmntParty.partyId+"]";
+					}
+				}
+			}
 		}
-		tempMap.partyId = partyName +"["+partyId+"]";
+			/*partyId = weighmentDetails.partyIdTo;
+			partyName = PartyHelper.getPartyName(delegator, partyId, false);*/
+		tempMap.partyId = partyId;
 		tempMap.inTime = vehicleInTime.estimatedStartDate;
 		tempMap.vehicleId = trip.vehicleId;
 		vehicleList.add(tempMap);
-	}
+		}
+		
+	
 	context.vehicleList = vehicleList;
 }
-
-
+//party lookup json
+JSONArray partyJSON = new JSONArray();
+JSONObject partyNameObj = new JSONObject();
+partyList = delegator.findList("Party", EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"), null, null, null, false);
+if(UtilValidate.isNotEmpty(partyList)){
+	partyList.each{party->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",party.partyId);
+		partyName=PartyHelper.getPartyName(delegator, party.partyId, false);
+		newObj.put("label",partyName+"["+party.partyId+"]");
+		partyJSON.add(newObj);
+		partyNameObj.put(party.partyId, partyName+"["+party.partyId+"]");
+	}
+}
+context.partyNameObj = partyNameObj;
+context.partyJSON = partyJSON;
 

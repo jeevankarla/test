@@ -119,9 +119,39 @@ $(document).ready(function() {
  				}
  			}
  		});
+		$('#noOfProducts').focusout(function (){
+ 			var noOfProducts = $('#noOfProducts').val();
+            var rows = parseInt($('#addProductsTable tr').length);
+           	if(rows!=0){
+				for(i=0;i<=rows;i++){
+					$("#addProductsTable tr:last-child").remove();
+                 }
+            }
+ 			for(i=0;i<parseInt(noOfProducts);i++){
+ 				var ival = i;
+ 				var idVal = "productId_o_"+ival; 
+ 				var spanVal = "span_"+idVal;
+ 				$("#addProductsTable").append('<tr><td><input type="text" class="productsLookup" size="15" id="'+idVal+'" name="'+idVal+'" onkeyup="javascript:populateProd(this);"/><span class="tooltip h4" id ="'+spanVal+'">none</span></td></tr>');
+ 			}
+ 		});
+ 		$('#noOfParties').focusout(function (){
+ 			var noOfParties = $('#noOfParties').val();
+            var rows = parseInt($('#addPartyTable tr').length);
+           	if(rows!=0){
+				for(i=0;i<=rows;i++){
+					$("#addPartyTable tr:last-child").remove();
+                 }
+            }
+ 			for(i=0 ;i<parseInt(noOfParties);i++){
+				var ival = i;
+ 				var idVal = "partyId_o_"+ival; 
+ 				var spanVal = "span_"+idVal;
+ 				$("#addPartyTable").append('<tr><td><input type="text" size="15" id="'+idVal+'" name="'+idVal+'" onkeyup="javascript:populatePartyName(this);" /><span class="tooltip h4" id ="'+spanVal+'">none</span></td></tr>');
+ 			}
+ 		});
  	}
  	if($('#displayScreen').val()=="ISSUE_GRSWEIGHT"){
- 		//$('#dcNo').attr("readonly","readonly");
+ 		$('#dcNo').attr("readonly","readonly");
  		//makeDatePicker("grossDate","fromDate");
  		$('#grossWeight').focusout(function (){
     		if(tareWeight>0){
@@ -136,7 +166,7 @@ $(document).ready(function() {
     			}
     		}
 		});
-		$('#productId').focusout(function(){
+	/*	$('#productId').focusout(function(){
 			var productIdVal = $('[name=productId]').val();
 			if(typeof(itemsList)!= "undefined" && itemsList!='' && itemsList != null ){
 				for(var i=0 ; i<itemsList.length ; i++){
@@ -149,7 +179,7 @@ $(document).ready(function() {
 					}
 			     }
 			}
-		});
+		});*/
  	}
  	
 	$('#ui-datepicker-div').css('clip', 'auto');
@@ -185,6 +215,10 @@ $(document).ready(function() {
 	  			   }
 	  		}
 	  		if(e.target.name == "noOfProducts"){
+	  			if(e.which == 110 || e.which == 190){
+    				$(this).val( $(this).val().replace('.',''));
+	    		}
+	  			$(this).val( $(this).val().replace(/[^0-9\.]/g,''));
 	  			var prodCount = $('#noOfProducts').val(); 		
 	  			   if(typeof(prodCount)!= "undefined" && prodCount!='' && prodCount != null && prodCount<1){
 		   				alert("Please check no Of Products..!");
@@ -192,7 +226,18 @@ $(document).ready(function() {
 		   				return false;
 	  			   }
 	  		}
-	  		
+	  		if(e.target.name == "noOfParties"){
+	  			if(e.which == 110 || e.which == 190){
+    				$(this).val( $(this).val().replace('.',''));
+	    		}
+	  			$(this).val( $(this).val().replace(/[^0-9\.]/g,''));
+	  			var prodCount = $('#noOfParties').val(); 		
+	  			   if(typeof(prodCount)!= "undefined" && prodCount!='' && prodCount != null && prodCount<1){
+		   				alert("Please check no Of Parties..!");
+		   				$('#noOfParties').val('1');
+		   				return false;
+	  			   }
+	  		}
 	  		if(e.target.name == "product" ){
 	  			var isReadOnly = $(this).attr('readonly');
 	  			if(!isReadOnly){
@@ -216,6 +261,92 @@ $(document).ready(function() {
 		  	}
 	}); 
 });
+function populateProd(current){
+	var code = $(current).val();
+	var id= $(current).attr("id");
+	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
+		$("#"+id).autocomplete({					
+			source:  availableTags,
+			select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $("#"+id).val(selectedValue);
+					        populateProdSpan(id);
+					    }
+		});
+}
+function populateProdSpan(id){
+    var id=id;
+    var spanId = "span_"+id;
+    var code = $("#"+id).val();
+	var noOfProducts = parseInt($("#noOfProducts").val());
+	var prodCount =0;
+    for(var i=0; i<noOfProducts;i++){
+		if(code!= null && code != undefined) {
+			var idVal = "productId_o_"+i; 
+			var oldCode = $("#"+idVal).val();
+			if(oldCode!= null && oldCode != undefined && code==oldCode ){
+				prodCount = prodCount+1;
+			}
+		}
+	}	
+	if(prodCount>1){
+		alert("This Product already entered.");
+		$('#'+id).val('');
+	}else{
+	var productJson = ${StringUtil.wrapString(productJson)}
+	var tempProductJson = productJson[$("#"+id).val()];
+	if(tempProductJson){
+		productName = tempProductJson["name"];
+		$("#"+id).val($("#"+id).val());
+		$("#"+spanId).html(productName);
+	}else{
+		$("#"+spanId).html('none');
+	}
+}
+}
+function populatePartyName(current){
+	var code = $(current).val();
+	var id= $(current).attr("id");
+ 	var availableTags = ${StringUtil.wrapString(partyJSON)!'[]'};
+		$("#"+id).autocomplete({					
+			source:  availableTags,
+			select: function(event, ui) {
+					        var selectedValue = ui.item.value;
+					        $("#"+id).val(selectedValue);
+					        populatePartySpan(id);
+					    }
+		});
+}
+function populatePartySpan(id){
+	var id=id;
+	var idValue= $("#"+id).val();
+    var spanId = "span_"+id;
+	var code = $("#"+id).val();
+	var noOfParties = parseInt($("#noOfParties").val());
+	var partyCount =0;
+    for(var i=0; i<noOfParties;i++){
+		if(code!= null && code != undefined) {
+			var idVal = "partyId_o_"+i; 
+			var oldCode = $("#"+idVal).val();
+			if(oldCode!= null && oldCode != undefined && code==oldCode ){
+				partyCount = partyCount+1;
+			}
+		}
+	}	
+	if(partyCount>1){
+		alert("This Party already entered.");
+		$('#'+id).val('');
+	}else{
+	var partyNameJson = ${StringUtil.wrapString(partyNameObj)}
+	if(partyNameJson){
+		Name = partyNameJson[idValue];
+		$("#"+id).val($("#"+id).val());
+		$("#"+spanId).html(Name);
+	}else{
+		$("#"+spanId).html('none');
+	}
+	}
+}
 function populateProductNames(){
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 		$("#productId").autocomplete({					
@@ -284,7 +415,7 @@ function fetchWeighmentDetails(){
          data: dataString,
          dataType: 'json',
          success: function(result) { 
-           if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){    
+           if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){  
            			var displayScreen = $('[name=displayScreen]').val();
 	  				$('span#partyToolTip').removeClass("tooltip");
 	  				$('span#partyToolTip').addClass("tooltipWarning");
@@ -307,14 +438,7 @@ function fetchWeighmentDetails(){
 	  					$('#tareWeight').val('');
        					$('#tareWeight').removeAttr("readonly");
 	  				}
-	  				
-	  				if(displayScreen == "ISSUE_INIT"){
-           				$('#weighmentId').val('');
-           				$('[name = weighmentId]').val('');
-           				$('[name=partyIdTo]').val('');
-	           			$('[name=partyName]').val('');
-	           			$('#partyIdTo').removeAttr("readonly");
-           			}          	   
+	  				    	   
            			if(displayScreen == "ISSUE_GRSWEIGHT"){
            			    $('#purposeTypeId').val('');
            				$('span#purposeTypeToolTip').removeClass("tooltip");
@@ -357,6 +481,7 @@ function fetchWeighmentDetails(){
            				var dcNo = weighmentDetails['dcNo'];
            				if(typeof(dcNo)!= "undefined" && dcNo!='' && dcNo!= null ){
            					$('#dcNo').val(dcNo);
+							$('#generateDcNo').hide();
            				}
            			}
            			if(displayScreen == "ISSUE_GRSWEIGHT"){
@@ -368,7 +493,25 @@ function fetchWeighmentDetails(){
            		weighmentItems=result['weighmentItemDetails'];
            		itemsList = result['weighmentItemDetails'];
            		if(typeof(weighmentItems)!= "undefined" && weighmentItems!='' && weighmentItems != null ){
-           			productsCount = weighmentItems.length;
+           			var optionList = '';
+           			var productsCount =0;
+		 				optionList += "<option value = " + "" + " >" +" "+ "</option>";
+						var list= weighmentItems;
+						if (list) {		       				        	
+		        		for(var i=0 ; i<list.length ; i++){
+							var innerLis=list[i];	 
+							var grossWeight=innerLis['grossWeight'];
+							//alert(grossWeight);
+							if(grossWeight==0){
+		                		optionList += "<option value = " + innerLis['productId'] + " >" +innerLis['prodName']+" </option>";     
+		                	}else{
+		                		productsCount= productsCount+1;
+		                	} 
+		      			}//end of main list for loop
+		     			$("#productId").html(optionList);
+		     			//alert(productsCount);
+		     			$("#productsCount").val(productsCount);
+           			    }
 	           		$("#productsTable").append('<tr><td></td><td align="right"><u><span class="h2">LOADED PRODUCTS LIST</span></u></td></tr>');
 	           		$("#productsTable").append('<tr><td></td><td><u><span class="h4"><b>NAME</b></span></u></td>&nbsp;<td><u><span class="h4"><b>GRS WEIGHT</b></span></u></td>&nbsp;<td><u><span class="h4"><b>TR WEIGHT</b></span></u></td><td><u><span class="h4"><b>QUANTITY</b></span></u></td></tr>');
 	           		for(var i=0 ; i<weighmentItems.length ; i++){
@@ -463,6 +606,11 @@ function setVehicleId(selected){
      var selectedValue = vehicleId;
 	$('[name=tankerName]').val(selectedValue);
 	 populateVehicleSpan();
+	 var displayScreen = $('[name="displayScreen"]').val();
+	 if((displayScreen == "ISSUE_TARWEIGHT") || (displayScreen == "ISSUE_GRSWEIGHT")){
+ 		 populateWeighBridgeWeight();
+ 		}	
+	
     $("#newVehicleDiv").hide();
 }
 function hideDiv(){
@@ -474,7 +622,66 @@ function hideDiv(){
 function reloadingPage(){
 	setTimeout("location.reload(true);", 1000);
 }	
-	
+
+function generateDC(){
+		var weighmentId = $('[name=weighmentId]').val();
+		var action = "generateWeighmentDcNo";
+		var dataString = {"weighmentId": weighmentId };
+		$.ajax({
+	         type: "POST",
+	         url: action,
+	         data: dataString,
+	         dataType: 'json',
+	         success: function(result) { 
+	       		var dcNo	 = result['dcNo'];
+	       		$('[name=dcNo]').val(dcNo);
+	       		$('#dcNo').attr("readonly","readonly");
+	       		$('#generateDcNo').hide();
+	         },
+	         error:function(){
+	         	//$('#dcNo').removeAttr("readonly");
+	         	$('#generateDcNo').show();
+	         }
+    	}); 
+	}	
+function populateWeighBridgeWeight(){
+		var vehicleId = $('[name=tankerName]').val();
+		var action = "getWeighBridgeWeight";
+		var displayScreen = $('[name="displayScreen"]').val();
+		var weighmentType ="";
+ 		if((displayScreen == "ISSUE_TARWEIGHT")){
+ 			weighmentType = "T";
+ 		}
+ 		if((displayScreen == "ISSUE_GRSWEIGHT")){
+ 			weighmentType = "G";
+ 		}	
+		var dataString = {"vehicleId": vehicleId,
+		                  "weighmentType":weighmentType};
+		$.ajax({
+	         type: "POST",
+	         url: action,
+	         data: dataString,
+	         dataType: 'json',
+	         success: function(result) { 
+	         	var weight = result['weight'];
+	         	var weighBridgeId = result['weighBridgeId'];
+	         	$('#weighBridgeId').val(weighBridgeId);
+	       		if((displayScreen == "ISSUE_TARWEIGHT") && (typeof(weighBridgeId)!= "undefined" && weighBridgeId!='' && weighBridgeId != null )){
+ 					$('[name=tareWeight]').val(weight);
+	       			$('#tareWeight').attr("readonly","readonly");
+ 				}
+ 				if((displayScreen == "ISSUE_GRSWEIGHT") && (typeof(weighBridgeId)!= "undefined" && weighBridgeId!='' && weighBridgeId != null )){
+ 					$('[name=grossWeight]').val(weight);
+	       			$('#grossWeight').attr("readonly","readonly");
+ 				}
+	         },
+	         error:function(){
+	         	//$('#dcNo').removeAttr("readonly");
+	         	//$('#generateDcNo').show();
+	         	alert("Error getting weight");
+	         }
+    	}); 
+}	
 </script>
 <#if displayScreen != "ISSUE_INIT" >
 <div id="newVehicleDiv" style="float: left;width: 90%; background:transparent;border: #F97103 solid 0.1em; valign:middle">
@@ -501,7 +708,7 @@ function reloadingPage(){
 		<tr>
             <td><h2><input type="button" id="newVehicleId" name="newVehicleId"  value="${vehicle.vehicleId}" onclick="javascript:setVehicleId(this);"/></h2></td>
             <td><h3>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(vehicle.inTime, "dd-MM-yyyy HH:mm")}</h3></td>
-	        <td><h3>${vehicle.partyId?if_exists}</h3></td>	
+	        <td><h4>${vehicle.partyId?if_exists}</h4></td>	
 		</tr>
         </#list>
         <#else>
@@ -548,7 +755,7 @@ function reloadingPage(){
 	          		<tr>
 	          			<table>
 	          				<tr>
-					        	<td align='left'><span class="h3">Vehicle No</span> </td><td>
+					        	<td align='left'><span class="h3">Vehicle No</span> </td><td width="100%" >
 					        		<#if displayScreen == "ISSUE_INIT" >
 					        	    <input  name="tankerName"  size="12pt" type="text" id="tankerName"  autocomplete="off" required="required" onblur="javascript:"populateVehicleSpan();"/><span class="tooltip h4" id ="tankerToolTip">none</span></td>
 					        	    <#else>
@@ -573,10 +780,12 @@ function reloadingPage(){
 					        </#if>
 					        <#if displayScreen !="ISSUE_INIT">
 					        	<tr>
-					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Party </span></td><td> <span class="tooltip h2" id ="partyToolTip">none</span> </td>
+					        			<td id="displayRecievedFrom" align ="left"><span class="h3">To Party / Parties </span></td><td> <span class="tooltip h2" id ="partyToolTip">none</span> </td>
 					        	</tr>
 					        </#if>
-					        	
+					        <#if displayScreen !="ISSUE_INIT" || displayScreen !="ISSUE_OUT" >
+					        	<input  name="weighBridgeId" size="10pt" type="hidden" id="weighBridgeId" />
+					        </#if>
 					        <#if displayScreen == "ISSUE_GRSWEIGHT">	
 							    
 							    <tr>
@@ -587,7 +796,7 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h3">Gross Weight Time(HHMM)[24 hour format]</span> </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" readOnly required/></td>
 					        	</tr>
                                 <tr>
-					            	<td align='left' ><span class="h3">No Of Products </span> </td><td><input  name="noOfProduct"  size="4"   type="text" id="noOfProduct" required="required"/></td>
+					            	<td align='left' ><span class="h3">No Of Products </span> </td><td><input  name="noOfProduct"  size="4"   type="text" id="noOfProduct" required="required" readOnly/></td>
 					            </tr>
 	        					<tr>
 	        					<td>&nbsp;</td>
@@ -601,15 +810,21 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h3">Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" readOnly required/></td>
 	        					</tr>
 					        	<tr>
-        							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Proudct </span></td><td>
+        							<td align='left' valign='middle' nowrap="nowrap"><span class="h3">Proudct </span></td>
+        							<#--<td>
 						        		<input type="text" size="15" id="productId"  name="productId" autocomplete="off" /><span class="tooltip" id ="productToolTip">none</span></td>
-									</td>
+									</td>-->
+                                    <input type="hidden" id="productsCount" name="productsCount"/> 
+                                    <td><select id="productId" name="productId"  required="required" onchange="javascript: populateNetWeight();">
+                                    
+                                    </select></td>
 				        		</tr>
 							    <tr>
 	        						<td align='left' ><span class="h3"> Gross Weight(Kgs)</span> </td><td><input  type="text" size="15pt" id="grossWeight" name="grossWeight" autocomplete="off" required="required"/></td>
 	        					</tr>
 	        					 <tr>
-							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em></td>
+							       	<td align='left'><span class="h3">DC No</span> </td><td><input  name="dcNo" size="12" maxlength="10" id= "dcNo" type="text" autocomplete="off"  required/><em>*<em>
+							       	 <#if  displayScreen =="ISSUE_GRSWEIGHT"><input type="button" id="generateDcNo" name="generateDcNo"  value="Generate DcNo" onclick="javascript: generateDC();"/></td></#if>
 							    </tr>
 	        					<tr>
         							<td align='left' style="vertical-align:middle" ><span  class="h2">Description </span></td><td>
@@ -632,16 +847,22 @@ function reloadingPage(){
 	        						<td align='left' ><span class="h3">Issue Time(HHMM)[24 hour format]</span> </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" readOnly  required/></td>
 					        	</tr>
                                 <tr>
-                                	<td align='left' valign='middle' nowrap="nowrap"><span class="h3">No Of Products </span></td><td><input type="text" size="3pt" id="noOfProducts" name="noOfProducts" value="1" required="required"/></td>
+                                	<td align='left' valign='middle' nowrap="nowrap"><span class="h3">No Of Products </span></td><td><input type="text" size="3pt" id="noOfProducts" name="noOfProducts"  required="required"/></td>
                                 </tr> 
-                                <tr>
+                                <#--<tr>
 	                         		<td><span class="h3">To Party </span></td><td>
 	                         		<@htmlTemplate.lookupField  formName="nonMilkReceiptIssuesEntry" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-	                   			</tr>
+	                   			</tr> -->
 	        					<tr>
-	                   				<td><span class='h2'>From  </span></td><td><span class='h3'> MOTHER DAIRY</span><input type="hidden" size="6" id="partyIdFrom" maxlength="6" name="partyIdFrom" autocomplete="off" value="MD" /></td>
+	                   				<td><span class='h3'>From  </span></td><td><span class='h3'> MOTHER DAIRY</span><input type="hidden" size="6" id="partyIdFrom" maxlength="6" name="partyIdFrom" autocomplete="off" value="MD" /></td>
 	                   			</tr>
-							    
+                                <tr><td><span class='h3'>Products  </span></td><td>
+                                <table id="addProductsTable"></table></td>
+                                </tr>
+	                   			<tr><td><span class='h3'>No of Parties  </span></td><td><input type="text" id="noOfParties" size="3pt" name="noOfParties" required="required"/></td></tr>
+                                <tr><td><span class='h3'>To Party </span></td><td>
+                                <table id="addPartyTable"></table></td>
+                                </tr>
 	        				</#if>
 	        				<#if displayScreen == "ISSUE_TARWEIGHT" >
 	        					<tr>
