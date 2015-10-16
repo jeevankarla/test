@@ -303,7 +303,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker4("PFHFromDateCrDr","PFHThruDateCrDr");
 		//makeDatePicker2("catYearSalesFromDateId","catYearSalesThruDateId");
 		//makeDatePicker2("yearlySaleFromDateId","yearlySaleThruDateId");
-		makeDatePicker5("catYearSalesFromDateId","catYearSalesThruDateId");
+		makeDatePicker3("catYearSalesFromDateId","catYearSalesThruDateId");
 		makeDatePicker3("yearlySaleFromDateId","yearlySaleThruDateId");
 		makeDatePicker("ProductPriceFromDate","");
 	    makeDatePicker3("prodPriceFromDate","prodPriceThruDate");  

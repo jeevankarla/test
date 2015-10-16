@@ -56,6 +56,7 @@ if(UtilValidate.isEmpty(dcNo)){
 weighmentId=parameters.weighmentId;
 weighmentDetailMap=[:];
 conditionList =[];
+List weighmentPartyDetails = FastList.newInstance();
 partyId=null;
 if(UtilValidate.isNotEmpty(weighmentId) && !("undefined".equals(weighmentId))){
 	context.weighmentId=weighmentId;
@@ -69,8 +70,100 @@ if(UtilValidate.isNotEmpty(weighmentId) && !("undefined".equals(weighmentId))){
 		partyId = "";partyIdTo="";
 		if(UtilValidate.isNotEmpty(weighmentAndItemDetail.getString("partyId"))){
 			partyId = weighmentAndItemDetail.getString("partyId");
-			if(UtilValidate.isNotEmpty(weighmentAndItemDetail.getString("partyIdTo")) && partyId =="MD"){
-				partyId = weighmentAndItemDetail.getString("partyIdTo");
+			if(partyId =="MD"){
+				List weighmentPartyList = delegator.findList("WeighmentParty",EntityCondition.makeCondition("weighmentId",EntityOperator.EQUALS,weighmentAndItemDetail.getString("weighmentId")),null,null,null,false);
+				if(UtilValidate.isNotEmpty(weighmentPartyList)){
+					weighmentPartyList.each{weighmentParty->
+						List tempList = FastList.newInstance();
+						Map tempMap = FastMap.newInstance();
+						tempMap.put("partyId", weighmentParty.partyId);
+						partyName =  PartyHelper.getPartyName(delegator, weighmentParty.partyId, false);
+						if(UtilValidate.isNotEmpty(partyName)){
+							 tempMap.put("partyName",partyName);
+						}
+						
+						partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:weighmentParty.partyId, userLogin: userLogin]);
+						  address1="";address2="";city="";postalCode="";
+						   if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
+							  if(partyPostalAddress.address1){
+								  address1=partyPostalAddress.address1;
+								  tempMap.put("address1",address1);
+							  }
+							  if(partyPostalAddress.address2){
+								  address2=partyPostalAddress.address2;
+								  tempMap.put("address2",address2);
+							   }
+							  if(partyPostalAddress.city){
+								  city=partyPostalAddress.city;
+								  tempMap.put("city",city);
+							   }
+							  if(partyPostalAddress.postalCode){
+								  postalCode=partyPostalAddress.postalCode;
+								  tempMap.put("postalCode",postalCode);
+							   }
+							}
+						   
+						   partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: weighmentParty.partyId, userLogin: userLogin]);
+						   phoneNumber = "";
+						   if (partyTelephone != null && partyTelephone.contactNumber != null) {
+							   phoneNumber = partyTelephone.contactNumber;
+						   }
+						   tempMap.put("phoneNumber", phoneNumber);
+						   
+						   partyEmail= dispatcher.runSync("getPartyEmail", [partyId: weighmentParty.partyId, userLogin: userLogin]);
+						   emailAddress="";
+						   if (partyEmail != null && partyEmail.emailAddress != null) {
+							   emailAddress = partyEmail.emailAddress;
+						   }
+						   tempMap.put("emailAddress", emailAddress);
+						   weighmentPartyDetails.add(tempMap);
+					}
+				}
+			}else{
+				Map partyDetailsMap = FastMap.newInstance();
+				if(UtilValidate.isNotEmpty(partyId)){
+					
+					partyDetailsMap.put("partyId",partyId);
+					partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+					if(UtilValidate.isNotEmpty(partyName)){
+						 partyDetailsMap.put("partyName",partyName);
+					}
+					
+				  partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
+					address1="";address2="";city="";postalCode="";
+					 if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
+						if(partyPostalAddress.address1){
+					address1=partyPostalAddress.address1;
+					partyDetailsMap.put("address1",address1);
+						}
+						if(partyPostalAddress.address2){
+					address2=partyPostalAddress.address2;
+					partyDetailsMap.put("address2",address2);
+						 }
+						if(partyPostalAddress.city){
+					city=partyPostalAddress.city;
+					partyDetailsMap.put("city",city);
+						 }
+						if(partyPostalAddress.postalCode){
+					postalCode=partyPostalAddress.postalCode;
+					partyDetailsMap.put("postalCode",postalCode);
+						 }
+					  }
+					 
+					 partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
+					 phoneNumber = "";
+					 if (partyTelephone != null && partyTelephone.contactNumber != null) {
+						 phoneNumber = partyTelephone.contactNumber;
+					 }
+					 partyDetailsMap.put("phoneNumber", phoneNumber);
+					 
+					 partyEmail= dispatcher.runSync("getPartyEmail", [partyId: partyId, userLogin: userLogin]);
+					 emailAddress="";
+					 if (partyEmail != null && partyEmail.emailAddress != null) {
+						 emailAddress = partyEmail.emailAddress;
+					 }
+					 partyDetailsMap.put("emailAddress", emailAddress);
+					 weighmentPartyDetails.add(partyDetailsMap);
 			}
 		}
 		partyIdTo =  weighmentAndItemDetail.getString("partyIdTo");
@@ -90,55 +183,11 @@ if(UtilValidate.isNotEmpty(weighmentId) && !("undefined".equals(weighmentId))){
 		context.receiveDate=receiveDate;
 		context.listSize = listSize;
 	}
-	partyDetailsMap=[:]
-	if(UtilValidate.isNotEmpty(partyId)){
-		
-		partyDetailsMap.put("partyId",partyId);
-		partyName =  PartyHelper.getPartyName(delegator, partyId, false);
-		if(UtilValidate.isNotEmpty(partyName)){
-			 partyDetailsMap.put("partyName",partyName);
-		}
-		
-	  partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
-		address1="";address2="";city="";postalCode="";
-		 if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
-			if(partyPostalAddress.address1){
-		address1=partyPostalAddress.address1;
-		partyDetailsMap.put("address1",address1);
-			}
-			if(partyPostalAddress.address2){
-		address2=partyPostalAddress.address2;
-		partyDetailsMap.put("address2",address2);
-			 }
-			if(partyPostalAddress.city){
-		city=partyPostalAddress.city;
-		partyDetailsMap.put("city",city);
-			 }
-			if(partyPostalAddress.postalCode){
-		postalCode=partyPostalAddress.postalCode;
-		partyDetailsMap.put("postalCode",postalCode);
-			 }
-		  }
-		 
-		 partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
-		 phoneNumber = "";
-		 if (partyTelephone != null && partyTelephone.contactNumber != null) {
-			 phoneNumber = partyTelephone.contactNumber;
-		 }
-		 partyDetailsMap.put("phoneNumber", phoneNumber);
-		 
-		 partyEmail= dispatcher.runSync("getPartyEmail", [partyId: partyId, userLogin: userLogin]);
-		 emailAddress="";
-		 if (partyEmail != null && partyEmail.emailAddress != null) {
-			 emailAddress = partyEmail.emailAddress;
-		 }
-		 partyDetailsMap.put("emailAddress", emailAddress);
+	
 	}
-	
-	context.partyDetailsMap=partyDetailsMap;
-	
 }
 context.weighmentAndItemDetailsList=weighmentAndItemDetailsList;
+context.weighmentPartyDetails=weighmentPartyDetails;
 
 
 

@@ -120,7 +120,7 @@ $(function() {
     		$("#weighmentId").val(weighmentId);
     	}else{
     		if(!$("#nonMilkReceiptIssuesEntry").validate({messages:{
-        		 tareDate:"" , tareTime:"", noOfProducts:"", tankerName:"",partyId:""
+        		 tareDate:"" , tareTime:"", noOfProducts:"", tankerName:""
         	   }}).form()) return;
     	}
     	var dataString = $("#nonMilkReceiptIssuesEntry").serialize();
@@ -172,7 +172,8 @@ function clearFields(){
 				 for(i=0;i<=rowCount;i++){
 					 $("#productsTable tr:last-child").remove();
 				 }
-				  fetchWeighmentDetails();  
+				  fetchWeighmentDetails();
+				  var productsCount = parseInt($("#productsCount").val())+1;
 				  if(productsCount != $('#noOfProduct').val()){
 					  reloadingPage();
 				  }else{

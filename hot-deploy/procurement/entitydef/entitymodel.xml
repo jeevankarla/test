@@ -1133,6 +1133,7 @@
       <field name="partyIdTo" type="id"></field>             
       <field name="dcNo" type="id"></field>    
       <field name="noOfProducts" type="id"></field>
+      <field name="noOfParties" type="id"></field>
       <field name="isSealChecked" type="indicator"/>
       <field name="sendDate" type="date-time"></field>
       <field name="receiveDate" type="date-time"></field>
@@ -1241,6 +1242,46 @@
       <prim-key field="sequenceId"/>
       <relation rel-entity-name="MilkTransfer" type="one">
       	<key-map field-name="milkTransferId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WeighmentParty"
+            package-name="org.ofbiz.product.inventory"
+            title="Weighment Details">
+      <field name="weighmentId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="productId" type="id"></field> 
+      <field name="quantity" type="fixed-point"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field> 
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>                   
+      <prim-key field="weighmentId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="productId"/>
+      <relation type="one" fk-name="WMNTP_WMNT" rel-entity-name="WeighmentDetails">
+        <key-map field-name="weighmentId"/>
+      </relation>
+      <relation rel-entity-name="Party" type="one" fk-name="WMNTP_PARTY">
+      	<key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="WMNTP_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="WMNTP_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="WMNTP_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WeighmentDCNumberSequence"
+            package-name="org.ofbiz.product.inventory"
+            title="Weighment DC Sequence Entity">
+      <field name="finYearId" type="id"></field>
+      <field name="sequenceId" type="id-ne"></field>
+      <field name="weighmentId" type="id"></field>
+      <prim-key field="sequenceId"/>
+      <relation rel-entity-name="WeighmentDetails" type="one">
+      	<key-map field-name="weighmentId"/>
       </relation>
     </entity>
 </entitymodel>
