@@ -69,8 +69,8 @@ public class CreateWeighBridgeData {
     	Map<String, Object> result = FastMap.newInstance();
     	String productId = "";
     	Locale locale = Locale.getDefault();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    	Debug.log("date=========="+date);
     	Timestamp entryDate = UtilDateTime.nowTimestamp();
     	
     	try {
