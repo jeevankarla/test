@@ -251,6 +251,18 @@ under the License.
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+     <form name="TrialBalanceDrillDownCSV" type="list" list-name="trailBalCsv">
+                <field name="categoryId" title="Account Code"><display></display></field>
+                <field name="glAccountId" title="*"><display></display></field>
+                <field name="categoryName" title="Account Name"><display></display></field>
+                <field name="accountName" title="*"><display></display></field>
+                <field name="openingD" title="Opening D"><display></display></field>
+                <field name="openingC" title="Opening C"><display></display></field>
+                <field name="debit" title="Dr"><display></display></field>
+                <field name="credit" title="Cr"><display></display></field>
+                <field name="endingBal" title="Ending Balance"><display></display></field>
+                
+     </form>
     <form name="BalanceSheetLiabilities" type="list" list-name="liabilityAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="accountCode">

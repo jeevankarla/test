@@ -3288,7 +3288,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TrialBalanceDrillDownPDF"/>
     </request-map>
-    
+    <request-map uri="TrialBalanceDrillDown.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TrialBalanceDrillDownCSV"/>
+    </request-map>
 
     <request-map uri="TrialBalanceSearchResultsCsv.csv">
         <security https="true" auth="true"/>
@@ -4344,8 +4347,8 @@ under the License.
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalance"/>
     <view-map name="TrialBalanceDrillDown" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceDrillDown"/>
     
-      <view-map name="TrialBalanceDrillDownPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceDrillDownPDF" content-type="application/pdf" encoding="none"/>
-    
+     <view-map name="TrialBalanceDrillDownPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceDrillDownPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="TrialBalanceDrillDownCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceDrillDownCSV" content-type="text/csv" encoding="none"/>
     <view-map name="AcctgTransDrillDown" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#AcctgTransDrillDown"/>
 
     <view-map name="TrialBalanceSearchResultsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsPdf" content-type="application/pdf" encoding="none"/>
