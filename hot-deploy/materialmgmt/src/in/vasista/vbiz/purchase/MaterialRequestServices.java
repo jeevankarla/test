@@ -1230,6 +1230,20 @@ public class MaterialRequestServices {
 			}
 			
 			
+			Map emailInputMap = FastMap.newInstance();
+			emailInputMap.put("custRequestId", custRequestId);
+			emailInputMap.put("productId", productId);
+			emailInputMap.put("requirementId", requirementId);
+			emailInputMap.put("userLogin", userLogin);
+			emailInputMap.put("facilityId", facilityId);
+			emailInputMap.put("quantity",custmQuantity);
+			emailInputMap.put("fromPartyId", custRequest.getString("fromPartyId"));
+			Map emailResultMap = dispatcher.runSync("getEmailForRaiseRequirement", emailInputMap);	
+			if (ServiceUtil.isError(emailResultMap)) {
+				Debug.logError("Problem Sending Raise Requirement Email.", module);
+				return emailResultMap;
+			}
+			
 		} catch (GenericEntityException e) {
 			// TODO: handle exception
 			Debug.logError(e, module);

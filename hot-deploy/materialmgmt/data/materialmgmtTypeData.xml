@@ -213,4 +213,6 @@
      <StatusItem  description="Cancelled"  sequenceId="3" statusCode="CANCELLED" statusId="REQ_GRP_CANCELLED" statusTypeId="ENQ_REQ_GRP_STATUS"/>
      <StatusItem  description="Created"  sequenceId="1" statusCode="CREATED" statusId="REQ_GRP_CREATED" statusTypeId="ENQ_REQ_GRP_STATUS"/>
      
+      <TenantConfiguration  description="Enable Raise Requirement Email Alert"  propertyName="enableRaiseRequirementEmail" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="N"/>
+     
 </entity-engine-xml>

@@ -142,6 +142,7 @@
                                   	<screenlet title="search-options">
                           				<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
                           			</screenlet>
+                          			<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/email/PoReportEmail.ftl"/></html></platform-specific>
                    					<screenlet title="Search-results">
                        					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
                    					</screenlet>

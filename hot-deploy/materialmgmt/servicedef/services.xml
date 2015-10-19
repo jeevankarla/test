@@ -156,4 +156,32 @@
         <description>Delete a CustRequestParty record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    <service name="getEmailForRaiseRequirement" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/getEmailForRaiseRequirement.groovy" invoke="" transaction-timeout="12000">
+        <description>Get DeptEmail Details  For Raise Requirement</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>  
+          <attribute name="productId" type="String" mode="IN" optional="false"/>
+         <attribute name="requirementId" type="String" mode="IN" optional="false"/> 
+        <attribute name="fromPartyId" type="String" mode="IN" optional="false"/> 
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    <service name="sendRaiseRequirementEmail" engine="simple" location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="sendRaiseRequirementEmail">
+        <description>sendEnquiryPerEmail  </description>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="flag" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
+    </service>
+    <service name="sendPoReportEmailTosupplier" engine="simple" location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="sendPoReportEmailTosupplier">
+        <description>sendPoReportEmailTosupplier  </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
+    </service>
 </services>

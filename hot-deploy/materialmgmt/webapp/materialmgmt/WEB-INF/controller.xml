@@ -1313,6 +1313,13 @@
        </response>
        <response name="error" type="request" value="ViewMaterialEnquiry"/>   
    </request-map>
+   <request-map uri="sendPoReportEmailTosupplier">
+       <security https="true" auth="true"/>
+       <event type="service"   invoke="sendPoReportEmailTosupplier"/>
+       <response name="success" type="request-redirect" value="FindMaterialPO">  
+       </response>
+       <response name="error" type="request" value="FindMaterialPO"/>   
+   </request-map>
    <request-map uri="MaterialIndentReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MaterialIndentReport"/>        
