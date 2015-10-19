@@ -585,24 +585,28 @@
 							  <fo:table-column column-width="55pt"/>
   							  <fo:table-column column-width="55pt"/>
 		                          <fo:table-body>
-		                         <#if pmSiloOpenBalDetails?has_content>
-		                         <#assign productId= pmSiloOpenBalDetails.pmOpenProdId?if_exists >
-		          		         <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
-									   <fo:table-row>
-									    <fo:table-cell >
-									  <fo:block text-align="center" font-size="10pt"><#if productNameDetails?has_content>${productNameDetails.get("internalName")?if_exists} </#if></fo:block>
-									   </fo:table-cell >
-								           <fo:table-cell >
-											  <fo:block text-align="right" font-size="10pt"><#if pmSiloOpenBalDetails.pmOpeningQty?has_content >${pmSiloOpenBalDetails.pmOpeningQty?if_exists?string("##0.00")}<#else> 0</#if></fo:block>  
-										   </fo:table-cell>
-										   <fo:table-cell >
-											  <fo:block text-align="right" font-size="10pt">${pmSiloOpenBalDetails.pmOpeningFat?if_exists}</fo:block>
-										   </fo:table-cell >
-										   <fo:table-cell >
-											  <fo:block text-align="right" font-size="10pt">${pmSiloOpenBalDetails.pmOpeningSnf?if_exists}</fo:block>
-										   </fo:table-cell >
-				                        </fo:table-row>  
-				                      </#if>                                                                  
+		                            <#if pmSiloOpenBalDetails?has_content>
+		                              <#assign pmSiloOpenBalDetailsMaps = pmSiloOpenBalDetails.entrySet()>
+		                            
+		   							    <#list pmSiloOpenBalDetailsMaps as pmSiloOpenBalData>
+				                         <#assign productId= pmSiloOpenBalData.getKey()?if_exists >
+				          		         <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
+											   <fo:table-row>
+											    <fo:table-cell >
+											  <fo:block text-align="center" font-size="10pt"><#if productNameDetails?has_content>${productNameDetails.get("internalName")?if_exists} </#if></fo:block>
+											   </fo:table-cell >
+										           <fo:table-cell >
+													  <fo:block text-align="right" font-size="10pt"><#if pmSiloOpenBalData.getValue().get("pmOpeningQty")?has_content >${pmSiloOpenBalData.getValue().get("pmOpeningQty")?if_exists?string("##0.00")}<#else> 0</#if></fo:block>  
+												   </fo:table-cell>
+												   <fo:table-cell >
+													  <fo:block text-align="right" font-size="10pt">${pmSiloOpenBalData.getValue().get("pmOpeningFat")?if_exists}</fo:block>
+												   </fo:table-cell >
+												   <fo:table-cell >
+													  <fo:block text-align="right" font-size="10pt">${pmSiloOpenBalData.getValue().get("pmOpeningSnf")?if_exists}</fo:block>
+												   </fo:table-cell >
+						                        </fo:table-row>
+				                        </#list>  
+				                      </#if>      
 		                            </fo:table-body>   
 	 	                      </fo:table>			 
 				        </fo:block>

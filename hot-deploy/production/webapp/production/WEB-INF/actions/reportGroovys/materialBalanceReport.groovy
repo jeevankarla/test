@@ -92,6 +92,15 @@ if(UtilValidate.isNotEmpty(fromDeptPlantList)){
 	context.fromDeptPlantList = fromDeptPlantList;
 }
 
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, deptId));
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.IN, ["SILO","PLANT"]));
+EntityCondition facilitySilosCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+deptSiloList=EntityUtil.filterByCondition(facilityList,facilitySilosCond );
+allStorageIds=null;
+if(UtilValidate.isNotEmpty(deptSiloList)){
+	allStorageIds=EntityUtil.getFieldListFromEntityList(deptSiloList, "facilityId", true);
+}
 //OPENING BALANCE REPORT ===============>
 Map openingBalProductMap = FastMap.newInstance();
 Map openingBalProductTotalMap = FastMap.newInstance();
@@ -410,6 +419,48 @@ milkIssuesMap=departmentMilkIssues.get("milkIssuesMap");
 milkIssuesTotalsMap=departmentMilkIssues.get("milkIssuesTotalsMap");
 context.milkIssuesMap=milkIssuesMap;
 context.milkIssuesTotalsMap=milkIssuesTotalsMap;
+BigDecimal pmTotVariance=BigDecimal.ZERO;
+BigDecimal pmGainVariance=BigDecimal.ZERO;
+BigDecimal pmLossVariance=BigDecimal.ZERO;
+Map varianceMap= FastMap.newInstance()
+if(UtilValidate.isNotEmpty(allStorageIds)){
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	conditionList.add(EntityCondition.makeCondition("physicalInventoryDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, allStorageIds));
+	cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	pmInvItemVariance = delegator.findList("PhysicalInventoryItemAndVariance", cond, null,null, null, false);
+	if(UtilValidate.isNotEmpty(pmInvItemVariance)){
+		pmInvItemVariance.each{eachPmInvItemVariance->
+			String productId = eachPmInvItemVariance.productId;
+			BigDecimal pmVarianceQty = eachPmInvItemVariance.quantityOnHandVar;
+			
+			if(UtilValidate.isEmpty(varianceMap) || (UtilValidate.isNotEmpty(varianceMap) && UtilValidate.isEmpty(varianceMap.get(productId)))){
+				Map tempOpenMap = FastMap.newInstance();
+				tempOpenMap.put("productId", productId);
+				tempOpenMap.put("quantity", pmVarianceQty);
+				varianceMap.put(productId,tempOpenMap);
+			 }else{
+				Map tempMap = FastMap.newInstance();
+				tempMap=(Map) varianceMap.get(productId);
+				BigDecimal tempQty =(BigDecimal) tempMap.get("quantity");
+				tempMap.put("quantity", ((BigDecimal) tempMap.get("quantity"))+pmVarianceQty);
+				varianceMap.put(productId,tempMap);
+			}
+			 if(pmVarianceQty>0 && UtilValidate.isNotEmpty(pmVarianceQty)){
+				pmGainVariance=pmGainVariance+pmVarianceQty;
+			}
+			if(pmVarianceQty<0 && UtilValidate.isNotEmpty(pmVarianceQty)){
+				pmLossVariance=pmLossVariance+pmVarianceQty;
+			}
+		}
+	}
+	if(UtilValidate.isNotEmpty(pmGainVariance) && UtilValidate.isNotEmpty(pmLossVariance)){
+		pmTotVariance=pmGainVariance+pmLossVariance;
+		context.totPmVarianceQty=pmTotVariance;
+	}
+}
+context.varianceMap=varianceMap;
 
 //  CLOSING BALANCE=========================
 if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
@@ -503,8 +554,8 @@ if(UtilValidate.isNotEmpty(milkIssuesMap)){
 		if(UtilValidate.isNotEmpty(quantity)){
 			if(UtilValidate.isEmpty(closingBalanceMap) || (UtilValidate.isNotEmpty(closingBalanceMap) && UtilValidate.isEmpty(closingBalanceMap.get(productId)))){
 				Map tempOpenMap = FastMap.newInstance();
-				tempOpenMap.put("productId", -productId);
-				tempOpenMap.put("quantity", quantity);
+				tempOpenMap.put("productId", productId);
+				tempOpenMap.put("quantity", -quantity);
 				tempOpenMap.put("kgFat",kgFat);
 				tempOpenMap.put("kgSnf",kgSnf);
 				closingBalanceMap.put(productId,tempOpenMap);
@@ -514,6 +565,25 @@ if(UtilValidate.isNotEmpty(milkIssuesMap)){
 				tempMap.put("quantity", ((BigDecimal) tempMap.get("quantity"))-quantity);
 				tempMap.put("kgFat", ((BigDecimal) tempMap.get("kgFat"))-kgFat);
 				tempMap.put("kgSnf", ((BigDecimal) tempMap.get("kgSnf"))-kgSnf);
+				closingBalanceMap.put(productId,tempMap);
+			 }
+		}
+	}
+}
+if(UtilValidate.isNotEmpty(varianceMap)){
+	for(Map.Entry varianceDetails : varianceMap.entrySet()){
+		productId = varianceDetails.getKey();
+		quantity = varianceDetails.getValue().get("quantity");
+		if(UtilValidate.isNotEmpty(quantity)){
+			if(UtilValidate.isEmpty(closingBalanceMap) || (UtilValidate.isNotEmpty(closingBalanceMap) && UtilValidate.isEmpty(closingBalanceMap.get(productId)))){
+				Map tempOpenMap = FastMap.newInstance();
+				tempOpenMap.put("productId", productId);
+				tempOpenMap.put("quantity", quantity);
+				closingBalanceMap.put(productId,tempOpenMap);
+			 }else{
+				Map tempMap = FastMap.newInstance();
+				tempMap=(Map) closingBalanceMap.get(productId);
+				tempMap.put("quantity", ((BigDecimal) tempMap.get("quantity"))+quantity);
 				closingBalanceMap.put(productId,tempMap);
 			 }
 		}

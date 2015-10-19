@@ -78,9 +78,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 	          </fo:table-row>
 	       <#assign materialSiloDetails = openingBalProductMap.entrySet()>
   	          <#list materialSiloDetails as materialSiloData>
+  	          <#assign productNameDetails = delegator.findOne("Product", {"productId" : materialSiloData.getValue().get("productId")}, true)>
+  	          
               <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
-                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"    >${materialSiloData.getValue().get("description")?if_exists}[${materialSiloData.getValue().get("productId")?if_exists}]</fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"    >${materialSiloData.getValue().get("description")?if_exists} [${materialSiloData.getValue().get("productId")?if_exists}[${productNameDetails.get("description")?if_exists}]]</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"  ><#if materialSiloData.getValue().get("quantity")?has_content>${materialSiloData.getValue().get("quantity")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"  ><#if materialSiloData.getValue().get("fatPers")?has_content>${materialSiloData.getValue().get("fatPers")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"  ><#if materialSiloData.getValue().get("snfPers")?has_content>${materialSiloData.getValue().get("snfPers")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block></fo:table-cell>       		
@@ -190,7 +192,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
               
 	           <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
-                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists} [${productNameDetails.get("description")?if_exists}]</fo:block></fo:table-cell>       		
               	 <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${intReturnsAndReceiptsData.getValue().get("receivedQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${intReturnsAndReceiptsData.getValue().get("receivedFat")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${intReturnsAndReceiptsData.getValue().get("receivedSnf")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
@@ -241,7 +243,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                     <#assign productNameDetails = delegator.findOne("Product", {"productId" : milkIssuesData.getKey()}, true)>
 	           <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
-                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists}<#if milkIssuesData.getValue().get("purposeIds")?has_content>  ${milkIssuesData.getValue().get("purposeIds")?if_exists}</#if></fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists} [${productNameDetails.get("description")?if_exists}]<#if milkIssuesData.getValue().get("purposeIds")?has_content>  ${milkIssuesData.getValue().get("purposeIds")?if_exists}</#if></fo:block></fo:table-cell>       		
               	 <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${milkIssuesData.getValue().get("issuedQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${milkIssuesData.getValue().get("issuedFat")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${milkIssuesData.getValue().get("issuedSnf")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
@@ -262,6 +264,31 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 	                   	 		 <#assign  issues=issues.add(milkIssuesTotalsMap.get("totIssuedQty"))>
 	          
             </#if>
+        <#if varianceMap?has_content> 
+          <#assign sNo=1>
+          <#assign varianceList = varianceMap.entrySet()>
+	             <fo:table-row border-style="solid">
+                	 <fo:table-cell  border-style="solid"><fo:block text-align="center" font-weight="bold" font-size="12pt"  >IV</fo:block></fo:table-cell>       		
+                	 <fo:table-cell  border-style="solid"><fo:block text-align="left" font-weight="bold" font-size="14pt"   >GAIN/LOSS VARIANCE</fo:block></fo:table-cell>       		
+	            </fo:table-row>
+              <#list varianceList as varianceData>
+                    <#assign productNameDetails = delegator.findOne("Product", {"productId" : varianceData.getKey()}, true)>
+	           <fo:table-row border-style="solid">
+                 <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists} [${productNameDetails.get("description")?if_exists}]</fo:block></fo:table-cell>       		
+              	 <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${varianceData.getValue().get("quantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+	          </fo:table-row>
+	            <#assign sNo=sNo+1>
+	            </#list>
+	          <fo:table-row border-style="solid">
+                 <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  font-weight="bold" ></fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"  font-weight="bold" >TOTAL</fo:block></fo:table-cell>       		
+              	 <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   font-weight="bold" >${totPmVarianceQty?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
+	          </fo:table-row>  
+	                   	 		 <#assign  issues=issues.add(milkIssuesTotalsMap.get("totIssuedQty"))>
+	          
+            </#if>
+            
        
        <#if closingBalanceFinalMap?has_content> 
           <#assign sNo=1>
@@ -274,7 +301,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                   <#assign productNameDetails = delegator.findOne("Product", {"productId" : closingBalanceData.getKey()}, true)>
 	           <fo:table-row border-style="solid">
                  <fo:table-cell  border-style="solid"><fo:block text-align="center"  font-size="12pt"  >${sNo?if_exists}</fo:block></fo:table-cell>       		
-                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>       		
+                 <fo:table-cell  border-style="solid"><fo:block text-align="left"  font-size="12pt"   >${productNameDetails.get("internalName")?if_exists} [${productNameDetails.get("description")?if_exists}]</fo:block></fo:table-cell>       		
               	 <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${closingBalanceData.getValue().get("quantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${closingBalanceData.getValue().get("fat")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
                  <fo:table-cell  border-style="solid"><fo:block text-align="right"  font-size="12pt"   >${closingBalanceData.getValue().get("snf")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		

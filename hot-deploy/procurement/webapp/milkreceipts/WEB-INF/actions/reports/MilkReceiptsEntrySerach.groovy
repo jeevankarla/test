@@ -186,6 +186,7 @@ def getShiftWiseRecords(Timestamp shiftDateTimeStart,Timestamp shiftDateTimeEnd)
 		  shiftsMap.put("partyIdTo",eachShift.partyIdTo);
 		  shiftsMap.put("productId",eachShift.productId);
 		  shiftsMap.put("siloId",eachShift.siloId);
+		  shiftsMap.put("quantity",eachShift.quantity);
 		  shiftsMap.put("receivedQuantity",eachShift.receivedQuantity);
 		  shiftsMap.put("receivedQuantityLtrs",eachShift.receivedQuantityLtrs);
 		  shiftsMap.put("receivedFat",eachShift.receivedFat);

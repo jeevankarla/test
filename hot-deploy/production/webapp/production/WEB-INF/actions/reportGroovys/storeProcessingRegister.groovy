@@ -541,42 +541,49 @@ mpuSiloTypes.each{eachSiloType->
 	mpuSiloIds=EntityUtil.getFieldListFromEntityList(eachTypeList, "facilityId", true);
 	mpuSiloIds.each{eachMpuSiloId->
 		Map eachPmSiloMap =FastMap.newInstance();
-		Map pmSiloOpenBalMap =FastMap.newInstance();
 		Map pmSiloRecdMap =FastMap.newInstance();
 		Map pmSiloIssueMap =FastMap.newInstance();
 		Map pmSiloClosingMap =FastMap.newInstance();
+		Map allProdFloorMap =FastMap.newInstance();
 		
 		
 		BigDecimal pmSiloInventory = BigDecimal.ZERO;
 		
-		pmInvCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:fromDate, facilityId: eachMpuSiloId, userLogin: userLogin,]);
-		if(UtilValidate.isNotEmpty(pmInvCountMap)){
-			pmInvCountMapData=pmInvCountMap.openingBalance;
-			BigDecimal pmOpeningQty = BigDecimal.ZERO;
-			BigDecimal pmOpeningFat = BigDecimal.ZERO;
-			BigDecimal pmOpeningSnf = BigDecimal.ZERO;
-			String pmOpenProdId ="";
-			
-			if(UtilValidate.isNotEmpty(pmInvCountMapData.get("invProductId"))){
-				pmOpenProdId = pmInvCountMapData.get("invProductId");
-				pmOpeningQty = pmInvCountMapData.get("quantityKgs");
-				pmOpeningFat = pmInvCountMapData.get("Fat");
-				pmOpeningSnf = pmInvCountMapData.get("Snf");
-				
-				pmSiloOpenBalMap.put("pmOpenProdId", pmOpenProdId);
-				pmSiloOpenBalMap.put("pmOpeningQty", pmOpeningQty);
-				pmSiloOpenBalMap.put("pmOpeningFat", pmOpeningFat);
-				pmSiloOpenBalMap.put("pmOpeningSnf", pmOpeningSnf);
-				//openingBalSiloMap.put("siloId", eachSiloId);
-				if(UtilValidate.isNotEmpty(pmOpeningQty)){
-					pmSiloInventory=pmSiloInventory+pmOpeningQty;
-					totPmOpeningQty=totPmOpeningQty+pmOpeningQty;
+		List productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachMpuSiloId), null,null, null, false);
+		if(UtilValidate.isNotEmpty(productFacility)){
+			productIds=EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
+			productIds.each {eachProductId->
+				Map pmSiloOpenBalMap =FastMap.newInstance();
+				pmInvCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:fromDate, facilityId: eachMpuSiloId,productId: eachProductId, userLogin: userLogin,]);
+				if(UtilValidate.isNotEmpty(pmInvCountMap)){
+					pmInvCountMapData=pmInvCountMap.openingBalance;
+					BigDecimal pmOpeningQty = BigDecimal.ZERO;
+					BigDecimal pmOpeningFat = BigDecimal.ZERO;
+					BigDecimal pmOpeningSnf = BigDecimal.ZERO;
+					String pmOpenProdId ="";
 					
+					if(UtilValidate.isNotEmpty(pmInvCountMapData.get("invProductId"))){
+						pmOpenProdId = pmInvCountMapData.get("invProductId");
+						pmOpeningQty = pmInvCountMapData.get("quantityKgs");
+						pmOpeningFat = pmInvCountMapData.get("Fat");
+						pmOpeningSnf = pmInvCountMapData.get("Snf");
+						
+						pmSiloOpenBalMap.put("pmOpenProdId", pmOpenProdId);
+						pmSiloOpenBalMap.put("pmOpeningQty", pmOpeningQty);
+						pmSiloOpenBalMap.put("pmOpeningFat", pmOpeningFat);
+						pmSiloOpenBalMap.put("pmOpeningSnf", pmOpeningSnf);
+						//openingBalSiloMap.put("siloId", eachSiloId);
+						if(UtilValidate.isNotEmpty(pmOpeningQty)){
+							pmSiloInventory=pmSiloInventory+pmOpeningQty;
+							totPmOpeningQty=totPmOpeningQty+pmOpeningQty;
+							
+						}
+						allProdFloorMap.put(pmInvCountMapData.get("invProductId"),pmSiloOpenBalMap);
+					}
 				}
 			}
-			eachPmSiloMap.put("pmSiloOpenBalMap",pmSiloOpenBalMap);
 		}
-		
+		eachPmSiloMap.put("pmSiloOpenBalMap",allProdFloorMap);
 		// PM Received Qty + PM Recd Transfer Qty
 		BigDecimal pmRecdSiloQty = BigDecimal.ZERO;
 		receiptNo=1;

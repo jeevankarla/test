@@ -375,7 +375,7 @@ public class ProductionServices {
 		            	sendFromDeptIds = EntityUtil.getFieldListFromEntityList(sendFacilityDepts, "ownerPartyId", true);
 		            }
 	            }else{
-	        	 	 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
+	        	 	 //conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
 	        	 	 if(UtilValidate.isEmpty(flag)){
 	        	 		 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL,recdDeptId ));
 	        	 	 }
@@ -654,9 +654,9 @@ public class ProductionServices {
 
 		            }
 	            }else{
-	        	 	 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
+	        	 	 //conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "PLANT"));
 			         if(UtilValidate.isEmpty(flag)){
-			             conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL,thruDeptId ));
+			             conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL,ownerPartyId ));
 			         }
 	        		 EntityCondition sendFacilityCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	        		 List<GenericValue> facilityThruDepts = EntityUtil.filterByCondition(facility,sendFacilityCond);
@@ -2240,7 +2240,7 @@ public class ProductionServices {
         	 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
         	 List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
         	 BigDecimal requestedQty = xferQty;
-        	 
+
         	 if(UtilValidate.isEmpty(transferGroupId)){
 	        	 GenericValue newEntity = delegator.makeValue("InventoryTransferGroup");
 	        	 newEntity.set("transferGroupTypeId", transferGroupTypeId);
@@ -2285,7 +2285,7 @@ public class ProductionServices {
      	  		String inventoryTransferId = (String)resultMap.get("inventoryTransferId");
      	  		Timestamp dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
      	  		Timestamp dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-     	  		
+
      	  		conditionList.clear();
      	  		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, invItemId));
      	  		conditionList.add(EntityCondition.makeCondition("availableToPromiseDiff", EntityOperator.EQUALS, xferQuantity.negate()));
@@ -2296,6 +2296,7 @@ public class ProductionServices {
      	  		if(UtilValidate.isNotEmpty(inventoryItemDetail)){
      	  			GenericValue invItemDet = EntityUtil.getFirst(inventoryItemDetail);
      	  			invItemDet.set("inventoryTransferId", inventoryTransferId);
+     	  			invItemDet.set("effectiveDate", xferDate);
  	  				if(UtilValidate.isNotEmpty(workEffortId)){
  	  					invItemDet.set("workEffortId", workEffortId);
  	  				}
@@ -2308,7 +2309,7 @@ public class ProductionServices {
      	  		newEntityMember.set("inventoryItemId", invItemId);
      	  		newEntityMember.set("productId", productId);
     	        newEntityMember.set("xferQty", xferQuantity);
-    	        newEntityMember.set("createdDate", UtilDateTime.nowTimestamp());
+    	        newEntityMember.set("createdDate", xferDate);
     	        newEntityMember.set("createdByUserLogin", userLogin.get("userLoginId"));
     	        newEntityMember.set("lastModifiedDate", UtilDateTime.nowTimestamp());
     	        newEntityMember.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -2322,6 +2323,7 @@ public class ProductionServices {
         		 Map inputCtx = FastMap.newInstance();
                  inputCtx.put("statusId", "IXF_COMPLETE");
                  inputCtx.put("transferGroupId", transferGroupId);
+                 inputCtx.put("xferDate", xferDate);
                  inputCtx.put("userLogin", userLogin);
                  Map resultMap = dispatcher.runSync("updateInternalDeptTransferStatus", inputCtx);
      	  		 if(ServiceUtil.isError(resultMap)){
@@ -2378,6 +2380,7 @@ public class ProductionServices {
     	 GenericValue userLogin = (GenericValue) context.get("userLogin");
     	 String transferGroupId = (String) context.get("transferGroupId"); 
     	 String statusId = (String) context.get("statusId");
+    	 Timestamp xferDate =(Timestamp)context.get("xferDate");
     	 try{
 		  		  
 	  		  GenericValue transferGroup = delegator.findOne("InventoryTransferGroup", UtilMisc.toMap("transferGroupId", transferGroupId), false);
@@ -2394,7 +2397,7 @@ public class ProductionServices {
 		  		  
 	  		  transferGroup.set("statusId", statusId);
 	  		  transferGroup.store();
-		  		  
+	  		  
 	  		  List<GenericValue> transferGroupMembers = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null, null, null, false);
 		  		  
 	  		  List<String> inventoryTransferIds = EntityUtil.getFieldListFromEntityList(transferGroupMembers, "inventoryTransferId", true);
@@ -2406,6 +2409,9 @@ public class ProductionServices {
 	              inputCtx.put("inventoryTransferId", eachTransfer.getString("inventoryTransferId"));
 	              inputCtx.put("inventoryItemId", eachTransfer.getString("inventoryItemId"));
 	              inputCtx.put("statusId", statusId);
+	         	  if(UtilValidate.isNotEmpty(xferDate)){
+	         		  inputCtx.put("receiveDate", xferDate);
+	         	  }
 	              inputCtx.put("userLogin", userLogin);
 	              Map resultCtx = dispatcher.runSync("updateInventoryTransfer", inputCtx);
 	              if(ServiceUtil.isError(resultCtx)){
@@ -2414,7 +2420,7 @@ public class ProductionServices {
 	              }
 	              
 	              if(UtilValidate.isNotEmpty(statusId) && statusId.equals("IXF_COMPLETE") && transferTypeId.equals("RETURN_XFER") && UtilValidate.isNotEmpty(transferGroup.get("workEffortId"))){
-	            		
+	            		 		            	
 	            	  String facIdTo = eachTransfer.getString("facilityIdTo");
 	            	  GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", eachTransfer.getString("inventoryItemId")), false);
 	            	  inventoryItem.set("facilityId", facIdTo);
@@ -2520,11 +2526,13 @@ public class ProductionServices {
 		  		  
 		  		  List<GenericValue> inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
 		  		  BigDecimal totalIssuedQty = BigDecimal.ZERO;
+		  		  Timestamp sendDate =null;
 		  		  for(GenericValue eachTransGroup : transferGroupMembers){
 		  			  if(UtilValidate.isNotEmpty(eachTransGroup.getBigDecimal("xferQty"))){
 		  				totalIssuedQty = totalIssuedQty.add(eachTransGroup.getBigDecimal("xferQty"));
 		  			  }
 		  		  }
+           		  sendDate = (EntityUtil.getFirst(inventoryTransfers)).getTimestamp("sendDate");
 		  		  if((transferQty.compareTo(BigDecimal.ZERO) >0) && (transferQty.compareTo(totalIssuedQty) >0) && !statusId.equals("IXF_CANCELLED")){
 		  			  BigDecimal diffTrnsQty = transferQty.subtract(totalIssuedQty);
 		  			  GenericValue invTransfer = EntityUtil.getFirst(inventoryTransfers);
@@ -2562,6 +2570,9 @@ public class ProductionServices {
 		  			 if(UtilValidate.isNotEmpty(toFacilityId)){
 		  				if(!toFacilityId.equalsIgnoreCase(eachTransfer.getString("facilityIdTo"))){
 		  					eachTransfer.set("facilityIdTo", toFacilityId);
+		  					 if(UtilValidate.isNotEmpty(sendDate)){
+		  						eachTransfer.set("receiveDate", sendDate);
+					  		  }
 		  					eachTransfer.store();
 		  				}
 		  			  }
@@ -2570,7 +2581,10 @@ public class ProductionServices {
 		              inputCtx.put("inventoryTransferId", eachTransfer.getString("inventoryTransferId"));
 		              inputCtx.put("inventoryItemId", eachTransfer.getString("inventoryItemId"));
 		              inputCtx.put("statusId", statusId);
-		              inputCtx.put("userLogin", userLogin);
+		              if(UtilValidate.isNotEmpty(sendDate)){
+		            	  inputCtx.put("receiveDate", sendDate);
+			  		  }
+			  		  inputCtx.put("userLogin", userLogin);
 		              Map resultCtx = dispatcher.runSync("updateInventoryTransfer", inputCtx);
 		              if(ServiceUtil.isError(resultCtx)){
 		            	  Debug.logError("Error updating inventory transfer status : "+eachTransfer.getString("inventoryTransferId"), module);
