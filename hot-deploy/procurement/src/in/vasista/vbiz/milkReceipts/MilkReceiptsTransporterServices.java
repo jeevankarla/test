@@ -962,17 +962,41 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				try{
 					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 					conditionList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
-					conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
+					//conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
 					if(UtilValidate.isNotEmpty(intPartyIds)){
 						conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,intPartyIds));
 					}
-					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,"INTERNAL"));
+					List<String> purposeTypeIdsList = UtilMisc.toList("INTERNAL");
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,purposeTypeIdsList));
 					List<String> statusList = UtilMisc.toList("MXF_APPROVED");
 					//statusList.add("MXF_RECD");
 					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,statusList));
 					conditionList.add(EntityCondition.makeCondition("receivedQuantity",EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
 					milkTransferList = delegator.findList("MilkTransfer", condition, null, null, null, false);
+					// here we are getting out going vehicles for ptc
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+					conditionList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+					//conditionList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,"MD"));
+					if(UtilValidate.isNotEmpty(intPartyIds)){
+						conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,intPartyIds));
+					}
+					purposeTypeIdsList.clear();
+					purposeTypeIdsList.add("OUTGOING");
+					purposeTypeIdsList.add("COPACKING");
+					conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,purposeTypeIdsList));
+					statusList.clear();
+					statusList.add("MXF_RECD");
+					conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN,statusList));
+					conditionList.add(EntityCondition.makeCondition("receivedQuantity",EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+					condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
+					
+					List<GenericValue> outMilkTransferList = delegator.findList("MilkTransfer", condition, null, null, null, false);
+					if(UtilValidate.isNotEmpty(outMilkTransferList)){
+						milkTransferList.addAll(outMilkTransferList);
+					}
+					
 				}catch(GenericEntityException e){
 					Debug.logError("Error While Preparing Master List :"+e,module);
 					result= ServiceUtil.returnError("Error while getting masterList");
@@ -1025,7 +1049,11 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				if(UtilValidate.isNotEmpty(milkTransferList)){
 					Debug.logInfo("milkTransferList============="+milkTransferList.size(),module);
 					List<String> partyKeys = EntityUtil.getFieldListFromEntityList(milkTransferList,"partyId", false);
+					List<String> partyIdToKeys = EntityUtil.getFieldListFromEntityList(milkTransferList,"partyIdTo", false);
+					Set<String> partyIdTos = new HashSet(partyIdToKeys);
+					partyIdTos.remove("MD");
 					Set<String> partyIds = new HashSet(partyKeys);
+					partyIds.remove("MD");
 					for(String partyId : partyIds){
 						List<GenericValue> partyWiseTransfers = FastList.newInstance();
 						partyWiseTransfers = EntityUtil.filterByCondition(milkTransferList,EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
@@ -1035,8 +1063,6 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 							for(String containerId : containerIds){
 								List<GenericValue> containerWiseTransfers = FastList.newInstance();
 								containerWiseTransfers = EntityUtil.filterByCondition(partyWiseTransfers,EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,containerId));
-								Map containerDayWiseTotals = FastMap.newInstance();
-								
 								for(GenericValue containerWiseTransfer : containerWiseTransfers){
 									Map masterMap = FastMap.newInstance();
 									String milkTransferId = (String) containerWiseTransfer.get("milkTransferId");
@@ -1063,33 +1089,76 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 									masterMap.put("milkTransferId", milkTransferId);
 									masterMap.put("amount",amount);
 									masterList.add(masterMap);
-									
+								}
+							}
+						}
+					}
+					// Here we are considering out going tankersList
+					if(UtilValidate.isNotEmpty(partyIdTos)){
+						for(String partyId : partyIdTos){
+							List<GenericValue> partyWiseTransfers = FastList.newInstance();
+							partyWiseTransfers = EntityUtil.filterByCondition(milkTransferList,EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS,partyId));
+							if(UtilValidate.isNotEmpty(partyWiseTransfers)){
+								List<String> containerIdKeys = EntityUtil.getFieldListFromEntityList(milkTransferList,"containerId", false);
+								Set<String> containerIds = new HashSet(containerIdKeys);
+								for(String containerId : containerIds){
+									List<GenericValue> containerWiseTransfers = FastList.newInstance();
+									containerWiseTransfers = EntityUtil.filterByCondition(partyWiseTransfers,EntityCondition.makeCondition("containerId",EntityOperator.EQUALS,containerId));
+									for(GenericValue containerWiseTransfer : containerWiseTransfers){
+										Map masterMap = FastMap.newInstance();
+										String milkTransferId = (String) containerWiseTransfer.get("milkTransferId");
+										BigDecimal amount = BigDecimal.ZERO;
+										BigDecimal recoveryAmount = BigDecimal.ZERO;
+										BigDecimal quantity = (BigDecimal) containerWiseTransfer.get("receivedQuantity");
+										BigDecimal quantityLtrs = (BigDecimal) containerWiseTransfer.get("receivedQuantityLtrs");
+										Timestamp priceDate = (Timestamp) containerWiseTransfer.get("receiveDate");
+										Map rateMap = FastMap.newInstance();
+										rateMap.put("userLogin",userLogin);
+										rateMap.put("partyId",partyId);
+										rateMap.put("vehicleId",containerId);
+										rateMap.put("quantityKgs",quantity);
+										rateMap.put("quantityLtrs",quantityLtrs);
+										rateMap.put("priceDate",priceDate);
+										rateMap.put("customTimePeriodId",customTimePeriodId);
+										rateMap.put("ignoreUnionRelation","Y");
+										Map rateResultMap = calculateTankerMarginRate(dctx, rateMap);
+										if(ServiceUtil.isError(rateResultMap)){
+											return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rateResultMap));
+										}
+										if(ServiceUtil.isSuccess(rateResultMap)){
+											amount = amount.add((BigDecimal)rateResultMap.get("amount"));
+										}
+										masterMap.put("milkTransferId", milkTransferId);
+										masterMap.put("amount",amount);
+										masterList.add(masterMap);
+									}
 								}
 							}
 						}
 					}
 				}
-				
 				if(UtilValidate.isEmpty(masterList)){
 					result= ServiceUtil.returnError("Error while getting masterList");
 				}
 				result.put("masterList", masterList);
 				return result;
 			}	
-			
 			public static Map<String, Object>  calculateTankerMarginRate(DispatchContext dctx, Map<String, ? extends Object> context)  {
-				
 		    	String unionId = "";
 				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 				Map<String, Object> result = ServiceUtil.returnSuccess();	
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
-				// this partyId references from where vehicle is coming
+				// this partyId references from where vehicle is coming or went to
 				String partyId = (String) context.get("partyId");
 				String vehicleId = (String) context.get("vehicleId");
 				Timestamp priceDate = (Timestamp)context.get("priceDate");
 				BigDecimal quantityKgs = (BigDecimal) context.get("quantityKgs");
 				BigDecimal quantityLtrs = (BigDecimal) context.get("quantityLtrs");
+				String ignoreUnionRelation = (String) context.get("ignoreUnionRelation");
+				if(UtilValidate.isNotEmpty(ignoreUnionRelation)){
+					
+				}
 				List<GenericValue> partyDetails = null;
 				List conditionList = FastList.newInstance();
 				Boolean hasRelation = false;
@@ -1111,7 +1180,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				}
 				try{
 					conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
-					conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"));
+					conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.IN,UtilMisc.toList("UNION","UNITS")));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
 					partyDetails = delegator.findList("PartyRoleAndPartyDetail",condition,null,null,null,false);
 					if(UtilValidate.isEmpty(partyDetails)){
@@ -1148,6 +1217,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					return ServiceUtil.returnError("Error while getting distance of the union :"+partyId);
 				}
 				try{
+					vehicleId = vehicleId.trim();
 					GenericValue vehicleDeails = delegator.findOne("Vehicle", UtilMisc.toMap("vehicleId",vehicleId), false);
 					if(UtilValidate.isNotEmpty(vehicleDeails) && UtilValidate.isNotEmpty(vehicleDeails.get("vehicleCapacity"))){
 						capacity = (BigDecimal)vehicleDeails.get("vehicleCapacity");
@@ -1156,7 +1226,6 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					Debug.logError("Error while getting Capacity of vehicle :"+e,module);
 					return ServiceUtil.returnError("Error while getting Capacity of vehicle :"+vehicleId);
 				}
-				
 				String acctgFormulaId = ""; 
 				try{
 					//rateAmountEntry
@@ -1167,18 +1236,15 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 						GenericValue VehicleRate = (GenericValue)serviceResults.get("rateAmountEntry");
 						if(UtilValidate.isNotEmpty(VehicleRate)){
 							rate = (BigDecimal)VehicleRate.get("rateAmount");
-							
 							if(UtilValidate.isNotEmpty(VehicleRate.get("acctgFormulaId")) ){
 								acctgFormulaId = (String)VehicleRate.get("acctgFormulaId");
 							}
 						}
 					}
-					
 				}catch(Exception e){
 					Debug.logError("Error while getting rate of the union ::"+e,module);
 					return ServiceUtil.returnError("Error while getting rate of the union ::"+partyId);
 				}
-				
 				if(UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==0 && UtilValidate.isEmpty(acctgFormulaId)){
 					inMap.put("rateTypeId", "PTC_RATE");
 					inMap.put("partyId", unionId);
@@ -1194,12 +1260,14 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 								}
 							}
 						}
-						
 					}catch(Exception e){
 						Debug.logError("Error while getting related Union Rate details ::"+e,module);
 						return ServiceUtil.returnError("Error while getting related Union Rate details ::"+e.getMessage());
-						
 					}
+				}
+				if(UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==0 && UtilValidate.isEmpty(acctgFormulaId)){
+					Debug.logError("Rate not found for Party ::"+partyId,module);
+					return ServiceUtil.returnError("Rate not found for Party ::"+partyId);
 				}
 				if(UtilValidate.isNotEmpty(rate) && rate.compareTo(BigDecimal.ZERO)==1){
 						// formula is rate*recdQtyKgs
@@ -1480,6 +1548,9 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 							Map partyWiseValues = (Map) partyEntry.getValue();
 							BigDecimal totalMargin = (BigDecimal) partyWiseValues.get("margin");
 							BigDecimal quantity = BigDecimal.ONE;
+							
+							BigDecimal netAmt = BigDecimal.ZERO;
+							
 							// here Invoice Raised by Transporter
 							 if (UtilValidate.isEmpty(invoiceId)&& UtilValidate.isNotEmpty(partyIdTo)) {
 					                Map<String, Object> createInvoiceContext = FastMap.newInstance();
@@ -1508,6 +1579,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					                invoiceId = (String) createInvoiceResult.get("invoiceId");
 					                Map<String, Object> resMap = null;
 				                    
+					                
 					                resMap = dispatcher.runSync("createInvoiceItem", 
 				                    		UtilMisc.toMap("invoiceId", invoiceId,
 				                    				"invoiceItemTypeId", "PTC_MRGN",
@@ -1516,6 +1588,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				                    	//generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 				                    }
+				                    netAmt = netAmt.add(totalMargin);
+				                    		
 				                    if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
 				                    	Map tempPartyRecoveries = FastMap.newInstance();
 				                    	tempPartyRecoveries.putAll((Map)partyWiseRecvoryMap.get(partyIdTo));
@@ -1535,6 +1609,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					                    				continue;
 					                    			}
 					                    		}
+					                    		netAmt = netAmt.add(amount);
 					                    		// here we are creating Invoice Items
 					                    		resMap = dispatcher.runSync("createInvoiceItem", 
 							                    		UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId",
@@ -1544,10 +1619,20 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 							                    }
 					                    	}
 				                    	}
-				                    	
+				                    }
+				                    BigDecimal roundedNetAmt = netAmt.setScale(0,BigDecimal.ROUND_HALF_UP);
+				                    BigDecimal roundingAdjustment = roundedNetAmt.subtract(netAmt); 
+				                    
+				                    if(roundingAdjustment.compareTo(BigDecimal.ZERO)!=0){
+				                    	resMap = dispatcher.runSync("createInvoiceItem", 
+						                    		UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId",
+						                    				"ROUNDING_ADJUSTMENT","quantity",quantity,"amount",roundingAdjustment,"description" ,"PTC BILL ROUNDING ADJUSTMENT","userLogin", userLogin));
+						                    if (ServiceUtil.isError(resMap)) {
+						    	                Debug.logWarning("There was an error while creating  the RoundingAdjustment InvoiceItem: " + ServiceUtil.getErrorMessage(resMap), module);
+						                    }
 				                    }
 				                    Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
-				    	             invoiceCtx.put("userLogin", userLogin);
+				    	            /* invoiceCtx.put("userLogin", userLogin);
 				    	             invoiceCtx.put("statusId","INVOICE_APPROVED");
 				    	             try{
 				    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
@@ -1558,7 +1643,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				    	             }catch(GenericServiceException e){
 				    	             	 Debug.logError(e, e.toString(), module);
 				    	                 return ServiceUtil.returnError(e.toString());
-				    	             }  
+				    	             }  */
 				    	             //set to Ready for Posting
 				    	             invoiceCtx.put("userLogin", userLogin);
 				    	             invoiceCtx.put("statusId","INVOICE_READY");

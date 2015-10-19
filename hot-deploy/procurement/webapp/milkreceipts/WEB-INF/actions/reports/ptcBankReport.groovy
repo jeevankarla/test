@@ -205,15 +205,29 @@ if(UtilValidate.isNotEmpty(ptcContractors)){
 				if(UtilValidate.isNotEmpty(contractAmt)){
 					amount=contractAmt+contractAdd-contractDed;
 					amount = ((new BigDecimal(amount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+					List invAdjConditionList = FastList.newInstance();
+					String referenceNumber = "PTC_TRSPT_MRGN_";
+					BigDecimal adjustedAmt = BigDecimal.ZERO;
+					referenceNumber = referenceNumber.concat(periodBillingId);
+					invAdjConditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,eacPtcContractor));
+					invAdjConditionList.add(EntityCondition.makeCondition("referenceNumber",EntityOperator.EQUALS,referenceNumber));
+					invAdjConditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"ROUNDING_ADJUSTMENT"));
+					EntityCondition invAdjCondition = EntityCondition.makeCondition(invAdjConditionList); 
+					List adjustmentList = delegator.findList("InvoiceAndItem",invAdjCondition,null,null,null,false);
+					if(UtilValidate.isNotEmpty(adjustmentList)){
+						for(GenericValue adjustmentVal in adjustmentList){
+							BigDecimal roundAdjValue = (BigDecimal)adjustmentVal.get("amount");
+							adjustedAmt = adjustedAmt.add(roundAdjValue);
+						}
+						amount = amount+adjustedAmt;
+					}
 					totAmount=totAmount+amount;
 				}
-				
 				finAcctMap.put("partyId", eacPtcContractor);
 				finAcctMap.put("partyName", partyName);
 				finAcctMap.put("partyPan", partyPan);
 				finAcctMap.put("finAccountCode", finAccountCode);
 				finAcctMap.put("amount", amount);
-				
 				ptcBankMap.put(eacPtcContractor, finAcctMap)
 				ptcBankList.add(finAcctMap);
 			}
@@ -231,4 +245,3 @@ if(UtilValidate.isNotEmpty(totAmount)){
 	ptcBankList.add(totAmtMap);
 }
 context.ptcBankList=ptcBankList;
-

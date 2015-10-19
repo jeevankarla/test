@@ -141,14 +141,14 @@ $(document).ready(function() {
  	}
  	if($('#displayScreen').val()=="VEHICLE_OUT"){
  		$('#dcNo').attr("readonly","readonly");
- 		makeDatePicker("exitDate","fromDate");
+ 		//makeDatePicker("exitDate","fromDate");
  	}
  	if($('#displayScreen').val()=="VEHICLE_TAREWEIGHT"){
  		$('#dcNo').attr("readonly","readonly");
  		$('#grossWeightToolTip').attr("readonly","readonly");
  		$('#sendWeightToolTip').attr("readonly","readonly");
  		$('#netWeightToolTip').attr("readonly","readonly");
- 		makeDatePicker("tareDate","fromDate");
+ 		//makeDatePicker("tareDate","fromDate");
  	}
  	if($('#displayScreen').val()=="VEHICLE_GRSWEIGHT"){
  		$('#dcNo').attr("readonly","readonly");
@@ -729,8 +729,9 @@ function reloadingPage(){
 	  		</div>
     </div>
 	<div class="screenlet-body">
-	    <#assign setDate = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "dd-MM-yyyy")).replace(':','')>
-		<#assign setTime = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp(), "HH:mm")).replace(':','')>
+		<#assign setDateTime = (Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp())>
+	    <#assign setDate = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(setDateTime, "dd-MM-yyyy")).replace(':','')>
+		<#assign setTime = (Static["org.ofbiz.base.util.UtilDateTime"].toDateString(setDateTime, "HH:mm")).replace(':','')>
     	<form method="post" name="milkReceiptEntry"  id="milkReceiptEntry" >
       	<table style="border-spacing: 0 10px;" border="1">     
 	        <tr>
@@ -754,7 +755,7 @@ function reloadingPage(){
 					        <#if displayScreen == "VEHICLE_OUT">
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
-	        						<td align='left' ><span class='h2'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" readonly="readonly" required/></td>
+	        						<td align='left' ><span class='h2'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" value="${setDate}" name="exitDate" autocomplete="off" readonly="readonly" required/></td>
 	        					</tr>
 	        					<tr>
 	        						<td align='left' ><span class="h2">Exit Time(HHMM)[24 hour format]</span> </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" readonly="readonly" required/></td>
@@ -875,7 +876,7 @@ function reloadingPage(){
 	        						<td align='left' ><span class='h2'>Un-Loading Date</span></td><td><input  type="text" size="15pt" id="cipDate" name="cipDate" value="${setDate}" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' ><span class="h2">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' ><span class="h2">Un-Loading Time(HHMM)[24 hour format]</span> </td><td><input  name="cipTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required="required"/></td>
 					        	</tr>
 							    <tr>
 	        						<td align='left' ><span class='h2'>UN-LOADED TO SILO</span></td><td> 
@@ -976,11 +977,11 @@ function reloadingPage(){
                             <#if displayScreen == "VEHICLE_CIPNEW">
                                 <tr>
                                     <input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_CIP" />
-		        					<td align='left' ><span class="h2">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
+		        					<td align='left' ><span class="h2">Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" readonly="readonly" required/></td>
 		        					
 		        				</tr>
 		        				<tr>
-		        					<td align='left' ><span class="h2">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+		        					<td align='left' ><span class="h2">Dispatch Time(HHMM)[24 hour format]</span> </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" readonly="readonly" required/>
 		        					</td>
 						        </tr>
 						        <tr>
