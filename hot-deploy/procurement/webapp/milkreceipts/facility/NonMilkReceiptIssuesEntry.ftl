@@ -131,7 +131,7 @@ $(document).ready(function() {
  				var ival = i;
  				var idVal = "productId_o_"+ival; 
  				var spanVal = "span_"+idVal;
- 				$("#addProductsTable").append('<tr><td><input type="text" class="productsLookup" size="15" id="'+idVal+'" name="'+idVal+'" onkeyup="javascript:populateProd(this);"/><span class="tooltip h4" id ="'+spanVal+'">none</span></td></tr>');
+ 				$("#addProductsTable").append('<tr><td><input type="text" class="productsLookup" size="15" id="'+idVal+'" name="'+idVal+'" onkeyup="javascript:populateProd(this);" required="required"/><span class="tooltip h4" id ="'+spanVal+'">none</span></td></tr>');
  			}
  		});
  		$('#noOfParties').focusout(function (){
@@ -146,7 +146,7 @@ $(document).ready(function() {
 				var ival = i;
  				var idVal = "partyId_o_"+ival; 
  				var spanVal = "span_"+idVal;
- 				$("#addPartyTable").append('<tr><td><input type="text" size="15" id="'+idVal+'" name="'+idVal+'" onkeyup="javascript:populatePartyName(this);" /><span class="tooltip h4" id ="'+spanVal+'">none</span></td></tr>');
+ 				$("#addPartyTable").append('<tr><td><input type="text" size="15" id="'+idVal+'" name="'+idVal+'" onkeyup="javascript:populatePartyName(this);" required="required"/><span class="tooltip h4" id ="'+spanVal+'">none</span></td></tr>');
  			}
  		});
  	}
