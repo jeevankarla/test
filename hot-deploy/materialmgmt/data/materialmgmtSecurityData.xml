@@ -511,5 +511,53 @@
     <SecurityGroup description="Scrap Sale Tab View Permission.." groupId="MM_SCRPSALE_VIEW"/>
     <SecurityGroupPermission groupId="MM_SCRPSALE_VIEW"  permissionId="MM_SCRPSALE_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_SCRPSALE_VIEW"/>
+    
+    <SecurityGroupPermission groupId="MM_INDENT_ENTRY" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_INDENT_ENTRY" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_INDENT_ENTRY" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_INDENT_ENTRY" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_INDENT_ENTRY" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityGroupPermission groupId="MM_STORE_MANAGER" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_STORE_MANAGER" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_STORE_MANAGER" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_STORE_MANAGER" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_STORE_MANAGER" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityGroupPermission groupId="MM_QC_MANAGER" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_QC_MANAGER" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_QC_MANAGER" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_QC_MANAGER" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_QC_MANAGER" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityGroupPermission groupId="MM_USEER_DEPT" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_USEER_DEPT" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_USEER_DEPT" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_USEER_DEPT" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_USEER_DEPT" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityGroupPermission groupId="MM_RECEIPT_AKNOWL" permissionId="ASSETMAINT_ADMIN"/>
+	 <SecurityGroupPermission groupId="MM_RECEIPT_AKNOWL" permissionId="ACCTG_PREF_VIEW"/>
+	 <SecurityGroupPermission groupId="MM_RECEIPT_AKNOWL" permissionId="CATALOG_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_RECEIPT_AKNOWL" permissionId="FACILITY_CREATE"/>
+	 <SecurityGroupPermission groupId="MM_RECEIPT_AKNOWL" permissionId="ASSETMAINT_CREATE"/>
+	 
+	 <SecurityPermission description="Po Report Email Permission" permissionId="MM_PORPT_EMAIL"/>
+    <SecurityGroup description="Po Report Email Permission" groupId="MM_PORPT_EMAIL"/>
+    <SecurityGroupPermission groupId="MM_PORPT_EMAIL"  permissionId="MM_PORPT_EMAIL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_PORPT_EMAIL"/>
+	 
  
 </entity-engine-xml>
