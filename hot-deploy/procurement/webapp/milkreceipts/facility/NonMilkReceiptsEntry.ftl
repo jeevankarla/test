@@ -622,6 +622,7 @@ function populateWeighBridgeWeight(){
 	         success: function(result) { 
 	         	var weight = result['weight'];
 	         	var weighBridgeId = result['weighBridgeId'];
+	         	$('#weighBridgeId').val(weighBridgeId);
 	       		if((displayScreen == "VEHICLE_TAREWEIGHT") && (typeof(weighBridgeId)!= "undefined" && weighBridgeId!='' && weighBridgeId != null )){
  					$('[name=tareWeight]').val(weight);
 	       			$('#tareWeight').attr("readonly","readonly");
