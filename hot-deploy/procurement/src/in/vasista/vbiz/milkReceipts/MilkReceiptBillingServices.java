@@ -595,6 +595,8 @@ public class MilkReceiptBillingServices {
         }
         // call service for creation invoice);
         String invoiceId = (String) createInvoiceResult.get("invoiceId");
+        BigDecimal roundingAdjustment = BigDecimal.ZERO;
+        BigDecimal netAmt			  = BigDecimal.ZERO;
     	// here we are creating Invoice Items
         Map invItemInMap = FastMap.newInstance();
         invItemInMap.put("userLogin",userLogin);
@@ -607,6 +609,7 @@ public class MilkReceiptBillingServices {
         	//BigDecimal quantity = (BigDecimal)tempProdMap.get("quantity");
         	BigDecimal quantity = BigDecimal.ONE;
         	BigDecimal amount = (BigDecimal)tempProdMap.get("amount");
+        	netAmt = netAmt.add(amount);
         	/*BigDecimal unitPrice = BigDecimal.ZERO;
         	if(UtilValidate.isNotEmpty(quantity) && UtilValidate.isNotEmpty(amount) && quantity.compareTo(BigDecimal.ZERO)==1){
         		unitPrice = amount.divide(quantity, 8,BigDecimal.ROUND_HALF_UP);
@@ -622,6 +625,23 @@ public class MilkReceiptBillingServices {
         		resultMap = ServiceUtil.returnError("Error while creating invoiceItem for Product :"+productKeyStr+",partyId:"+partyIdTo+" Message:"+e.getMessage());
         	}
         }
+        BigDecimal roundedNetAmt = netAmt.setScale(0,BigDecimal.ROUND_HALF_UP);
+        roundingAdjustment = roundedNetAmt.subtract(netAmt); 
+        
+        if(roundingAdjustment.compareTo(BigDecimal.ZERO)!=0){
+        	try{
+        		resultMap = dispatcher.runSync("createInvoiceItem", 
+                		UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId",
+                				"ROUNDING_ADJUSTMENT","quantity",BigDecimal.ONE,"amount",roundingAdjustment,"description" ,"PURCHASE BILL ROUNDING ADJUSTMENT","userLogin", userLogin));
+                if (ServiceUtil.isError(resultMap)) {
+	                Debug.logWarning("There was an error while creating  the RoundingAdjustment InvoiceItem: " + ServiceUtil.getErrorMessage(resultMap), module);
+                }
+        	}catch(GenericServiceException e){
+        		Debug.logError("Error while creating rounding Adjument :"+e,module );
+        		return ServiceUtil.returnError("Error while creating rounding Adjument :"+e.getMessage());
+        	}   
+        }
+        
         return resultMap;
     }// End of the service
     
@@ -1774,6 +1794,7 @@ public class MilkReceiptBillingServices {
         invItemInMap.put("userLogin",userLogin);
         invItemInMap.put("invoiceId",invoiceId);
         invItemInMap.put("invoiceItemTypeId","SALE_MILK");
+        BigDecimal netAmt = BigDecimal.ZERO;
         for(Object productKey : productWiseAmtMap.keySet()){
         	String productKeyStr = productKey.toString();
         	Map tempProdMap = FastMap.newInstance();
@@ -1796,6 +1817,25 @@ public class MilkReceiptBillingServices {
         		resultMap = ServiceUtil.returnError("Error while creating invoiceItem for Product :"+productKeyStr+",partyId:"+partyIdTo+" Message:"+e.getMessage());
         	}
         }
+        BigDecimal roundedNetAmt = netAmt.setScale(0,BigDecimal.ROUND_HALF_UP);
+        BigDecimal roundingAdjustment = roundedNetAmt.subtract(netAmt); 
+        
+        if(roundingAdjustment.compareTo(BigDecimal.ZERO)!=0){
+        	try{
+        		resultMap = dispatcher.runSync("createInvoiceItem", 
+                		UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId",
+                				"ROUNDING_ADJUSTMENT","quantity",BigDecimal.ONE,"amount",roundingAdjustment,"description" ,"SALE BILL ROUNDING ADJUSTMENT","userLogin", userLogin));
+                if (ServiceUtil.isError(resultMap)) {
+	                Debug.logWarning("There was an error while creating  the RoundingAdjustment InvoiceItem: " + ServiceUtil.getErrorMessage(resultMap), module);
+	                return ServiceUtil.returnError("There was an error while creating  the RoundingAdjustment InvoiceItem: " + ServiceUtil.getErrorMessage(resultMap));
+                }
+        	}catch(GenericServiceException e){
+        		Debug.logError("Error while creating rounding adjustment :"+e,module);
+        		return ServiceUtil.returnError("Error while creating rounding adjustment :"+e.getMessage());
+        	}    
+        }
+        
+        
         return resultMap;
     }// End of the service
     
@@ -2845,6 +2885,7 @@ public class MilkReceiptBillingServices {
         }
         // call service for creation invoice);
         String invoiceId = (String) createInvoiceResult.get("invoiceId");
+        BigDecimal netAmt = BigDecimal.ZERO;
     	// here we are creating Invoice Items
         Map invItemInMap = FastMap.newInstance();
         invItemInMap.put("userLogin",userLogin);
@@ -2857,6 +2898,7 @@ public class MilkReceiptBillingServices {
         	//BigDecimal quantity = (BigDecimal)tempProdMap.get("quantity");
         	BigDecimal quantity = BigDecimal.ONE;
         	BigDecimal amount = (BigDecimal)tempProdMap.get("amount");
+        	netAmt = netAmt.add(amount);
         	/*BigDecimal unitPrice = BigDecimal.ZERO;
         	if(UtilValidate.isNotEmpty(quantity) && UtilValidate.isNotEmpty(amount) && quantity.compareTo(BigDecimal.ZERO)==1){
         		unitPrice = amount.divide(quantity, 8,BigDecimal.ROUND_HALF_UP);
@@ -2872,6 +2914,24 @@ public class MilkReceiptBillingServices {
         		resultMap = ServiceUtil.returnError("Error while creating invoiceItem for Product :"+productKeyStr+",partyId:"+partyIdTo+" Message:"+e.getMessage());
         	}
         }
+        BigDecimal roundedNetAmt = netAmt.setScale(0,BigDecimal.ROUND_HALF_UP);
+        BigDecimal roundingAdjustment = roundedNetAmt.subtract(netAmt); 
+        
+        if(roundingAdjustment.compareTo(BigDecimal.ZERO)!=0){
+        	try{
+        		resultMap = dispatcher.runSync("createInvoiceItem", 
+                		UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId",
+                				"ROUNDING_ADJUSTMENT","quantity",BigDecimal.ONE,"amount",roundingAdjustment,"description" ,"CONVERSION BILL ROUNDING ADJUSTMENT","userLogin", userLogin));
+                if (ServiceUtil.isError(resultMap)) {
+	                Debug.logWarning("There was an error while creating  the RoundingAdjustment InvoiceItem: " + ServiceUtil.getErrorMessage(resultMap), module);
+	                return ServiceUtil.returnError("There was an error while creating  the RoundingAdjustment InvoiceItem: " + ServiceUtil.getErrorMessage(resultMap));
+                }
+        	}catch(GenericServiceException e){
+        		Debug.logError("Error while creating rounding adjustment :"+e,module);
+        		return ServiceUtil.returnError("Error while creating rounding adjustment :"+e.getMessage());
+        	}    
+        }
+        
         return resultMap;
     }// End of the service
     /**

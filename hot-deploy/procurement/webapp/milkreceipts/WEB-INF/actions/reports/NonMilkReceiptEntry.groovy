@@ -181,7 +181,7 @@ if(UtilValidate.isNotEmpty(displayScreen) && (displayScreen=="ISSUE_TARWEIGHT") 
 //party lookup json
 JSONArray partyJSON = new JSONArray();
 JSONObject partyNameObj = new JSONObject();
-partyList = delegator.findList("Party", EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"), null, null, null, false);
+partyList = delegator.findList("Party", EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"),EntityOperator.OR,EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , null)), null, null, null, false);
 if(UtilValidate.isNotEmpty(partyList)){
 	partyList.each{party->
 		JSONObject newObj = new JSONObject();
@@ -194,4 +194,3 @@ if(UtilValidate.isNotEmpty(partyList)){
 }
 context.partyNameObj = partyNameObj;
 context.partyJSON = partyJSON;
-
