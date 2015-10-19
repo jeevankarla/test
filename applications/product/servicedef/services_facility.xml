@@ -477,6 +477,7 @@ under the License.
         <attribute name="fatPercent" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="snfPercent" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="inventoryTransferId" type="String" mode="OUT" optional="false"/>
+        <attribute name="sendDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     <service name="updateInventoryTransfer" engine="simple"
             location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryTransfer" auth="true">
@@ -484,12 +485,15 @@ under the License.
         <permission-service service-name="facilityGenericPermission" main-action="UPDATE"/>
         <implements service="interfaceInventoryTransfer"/>
         <attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
+        <attribute name="receiveDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     <service name="prepareInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="prepareInventoryTransfer">
         <description>Prepares inventory item for transfer.  If the xferQty is less than quantityOnHandTotal of the inventory item, then the inventory
                 item is "split," and an new inventory item will be created with xferQty and used for the inventory transfer.</description> <attribute name="inventoryItemId" type="String" mode="INOUT" optional="false"/>
         <attribute name="xferQty" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="sendDate" type="Timestamp" mode="IN" optional="true"/>
+        
     </service>
     <service name="completeInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="completeInventoryTransfer">

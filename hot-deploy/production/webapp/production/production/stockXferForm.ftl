@@ -81,7 +81,7 @@
 			dateFormat:'dd-mm-yy',
 			showSecond: true,
 			timeFormat: 'hh:mm:ss',
-			minDate: '-1d',
+			minDate: '-5d',
 		      maxDate: '0d',
 			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
 	        //    var nowTime = new Date(); 

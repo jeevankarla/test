@@ -79,6 +79,7 @@ public class InventoryServices {
         Delegator delegator = dctx.getDelegator();
         String inventoryItemId = (String) context.get("inventoryItemId");
         BigDecimal xferQty = (BigDecimal) context.get("xferQty");
+        Timestamp sendDate = (Timestamp)context.get("sendDate");
         GenericValue inventoryItem = null;
         GenericValue newItem = null;
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -94,7 +95,9 @@ public class InventoryServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
                     "ProductNotFindInventoryItemWithId", locale) + inventoryItemId);
         }
-
+        if (sendDate == null) {
+        	sendDate=UtilDateTime.nowTimestamp();
+        }
         try {
             Map<String, Object> results = ServiceUtil.returnSuccess();
 
@@ -139,7 +142,7 @@ public class InventoryServices {
                     newItem = GenericValue.create(inventoryItem);
                     newItem.set("availableToPromiseTotal", BigDecimal.ZERO);
                     newItem.set("quantityOnHandTotal", BigDecimal.ZERO);
-                    
+
                     delegator.createSetNextSeqId(newItem);
 
                     results.put("inventoryItemId", newItem.get("inventoryItemId"));
@@ -262,12 +265,23 @@ public class InventoryServices {
                 inventoryTransfer.set("receiveDate", UtilDateTime.nowTimestamp());
             }
         }
-
+		 try{
+			 List<GenericValue> inventoryItemAndDetail = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItem.get("inventoryItemId")), null,null, null, false);
+			 for (GenericValue inventoryItemDetail: inventoryItemAndDetail) {
+				 inventoryItemDetail.set("inventoryTransferId", inventoryTransferId);
+				 inventoryItemDetail.set("effectiveDate", receiveDate);
+				 inventoryItemDetail.store();
+			 }
+			}catch (Exception e) {
+				  Debug.logError(e, "Error While Updating inventoryTransferId for InventoryItemDetail ", module);
+				  return ServiceUtil.returnError("Error While Updating inventoryTransferId for InventoryItemDetail : "+inventoryItem.get("inventoryItemId"));
+	  	 	}
+		
         if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
             // add an adjusting InventoryItemDetail so set ATP back to QOH: ATP = ATP + (QOH - ATP), diff = QOH - ATP
             BigDecimal atp = inventoryItem.get("availableToPromiseTotal") == null ? BigDecimal.ZERO : inventoryItem.getBigDecimal("availableToPromiseTotal");
             BigDecimal qoh = inventoryItem.get("quantityOnHandTotal") == null ? BigDecimal.ZERO : inventoryItem.getBigDecimal("quantityOnHandTotal");
-            Map<String, Object> createDetailMap = UtilMisc.toMap("availableToPromiseDiff", qoh.subtract(atp),
+            Map<String, Object> createDetailMap = UtilMisc.toMap("availableToPromiseDiff", qoh.subtract(atp), "effectiveDate", receiveDate, "inventoryTransferId", inventoryTransferId, 
                     "inventoryItemId", inventoryItem.get("inventoryItemId"), "userLogin", userLogin);
             try {
                 Map<String, Object> result = dctx.getDispatcher().runSync("createInventoryItemDetail", createDetailMap);

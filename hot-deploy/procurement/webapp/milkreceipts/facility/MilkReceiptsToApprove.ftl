@@ -217,7 +217,8 @@ under the License.
           <td>Conv.Product</td>
           </#if>
           <td>Silo</td>
-          <td>&#160;      Quantity(Kgs)</td>
+          <td>&#160;      Dispatch Qty(Kgs)</td>
+          <td>&#160;      Received Qty(Kgs)</td>
           <td>&#160;      Fat %</td>
           <td>&#160;      SNF %</td>
           <td>&#160;      KgFat</td>
@@ -317,6 +318,7 @@ under the License.
                 </td>
                 </#if>
                 <td>${eachItem.siloId?if_exists}</td>
+                <td align="right">${eachItem.quantity?if_exists}</td>
               	<td align="right">${eachItem.receivedQuantity?if_exists}</td>
 				<td align="right">${eachItem.receivedFat?if_exists}</td>
 				<td align="right">${eachItem.receivedSnf?if_exists}</td>
