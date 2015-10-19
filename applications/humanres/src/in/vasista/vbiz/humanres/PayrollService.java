@@ -5119,9 +5119,10 @@ public class PayrollService {
 	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
 	        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-		    try {     
-		        delegator.createSetNextSeqId(newEntity);		        
-				periodBillingId = (String) newEntity.get("periodBillingId");	
+		    try {
+		        delegator.createSetNextSeqId(newEntity);
+				periodBillingId = (String) newEntity.get("periodBillingId");
+		        result.put("periodBillingId", periodBillingId);
 				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", customTimePeriodId, "orgPartyId", partyId, "periodBillingId",periodBillingId, "userLogin", userLogin);
 		        dispatcher.runAsync("populatePayrollAttedanceInternal", runSACOContext);
 	    	} catch (GenericEntityException e) {

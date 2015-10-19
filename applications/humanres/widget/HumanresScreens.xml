@@ -445,6 +445,9 @@
 				<set field="tabButtonItem" value="Attendance" />
  				<set field="tabButtonItem2" value="AttendanceFinalization" />                                           				
 				<set field="titleProperty" value="AttendanceFinalization" />				
+				<set field="periodBillingId" from-field="${parameters.periodBillingId}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PayRollStatusReport.groovy"/>
+                <set field="statusId" from-field="context.statusId"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -453,6 +456,7 @@
                         <screenlet title="Attendance Finalization">
                         	<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="AttendanceFinalization"/>
                         </screenlet> 
+                        <platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/payrollStatus.ftl"></html-template></html></platform-specific>
                          <screenlet title="Attendance Finalization">
                         	<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListAttendanceFinalization"/>
                         </screenlet>                         
@@ -670,7 +674,10 @@
                      <field-map field-name="periodTypeId" value="HR_MONTH"/>
                      <order-by field-name="-thruDate"/>
                      <order-by field-name="periodNum"/>
-                </entity-and> 
+                </entity-and>
+                <set field="periodBillingId" from-field="${parameters.periodBillingId}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PayRollStatusReport.groovy"/>
+                <set field="statusId" from-field="context.statusId"/> 
             </actions>            
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -686,6 +693,7 @@
            					<!-- <screenlet title="create">
             			           <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="createPayrollBilling"/>
             			 	</screenlet> -->
+            			 	<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/payrollStatus.ftl"></html-template></html></platform-specific>
             			 	<screenlet title="List Payroll Billing">
             				<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListPayrollBilling"/>
             			</screenlet>
