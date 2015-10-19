@@ -700,6 +700,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPayrollBilling"/>
     </request-map>
+    <request-map uri="FindPayrollBillingStatus">
+        <security auth="true" https="true"/>    
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/reports/" invoke="PayRollStatusReport.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="FindAttendanceBillingStatus">
+        <security auth="true" https="true"/>    
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/reports/" invoke="PayRollStatusReport.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="EmplSupPayroll">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmplSupPayroll"/>
