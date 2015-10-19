@@ -65,25 +65,33 @@ public class PeriodValidation {
 				 Timestamp fromDate= (Timestamp) context.get("fromDate");
 				 Timestamp thruDate= (Timestamp) context.get("thruDate");
 				 String partyId = (String)context.get("partyId");
-				 
+			     String dayFractionId = (String)context.get("dayFractionId");
 				try {
-					
 					List conditionList = UtilMisc.toList(
 			            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-					
 					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.NOT_EQUAL, "LEAVE_REJECTED"));
 					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-					
 					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 					List<GenericValue> leaves = delegator.findList("EmplLeave", condition, null, null, null, false);
-					
-					if(UtilValidate.isNotEmpty(leaves)){
-						String errMsg = "Leave  already exists.";
-						Debug.logError(errMsg, module);
-						return ServiceUtil.returnError(errMsg);
-					}	
+					 for (int i = 0; i < leaves.size(); ++i) {	
+	            		GenericValue leavesDetails = leaves.get(i);
+						if(UtilValidate.isNotEmpty(leavesDetails)){
+							if(UtilValidate.isNotEmpty(leavesDetails.getString("dayFractionId"))){
+								String emplDayFraction = (String) leavesDetails.getString("dayFractionId");
+								 if((emplDayFraction == null) || (emplDayFraction.equals(dayFractionId))){
+									String errMsg = "Leave  already exists.";
+									Debug.logError(errMsg, module);
+									return ServiceUtil.returnError(errMsg);
+								 }
+							}else{
+								String errMsg = "Leave  already exists.";
+								Debug.logError(errMsg, module);
+								return ServiceUtil.returnError(errMsg);
+							}
+						}	
+					 }
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					Debug.logError(e.toString(), module);
