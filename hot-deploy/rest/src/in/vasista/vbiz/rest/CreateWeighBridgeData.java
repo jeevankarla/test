@@ -71,6 +71,9 @@ public class CreateWeighBridgeData {
     	Locale locale = Locale.getDefault();
     	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     	Debug.log("date=========="+date);
+    	Debug.log("weighmentType=========="+weighmentType);
+    	Debug.log("weight=========="+weight);
+    	Debug.log("vehicleNumber=========="+vehicleId);
     	Timestamp entryDate = UtilDateTime.nowTimestamp();
     	
     	try {
@@ -199,7 +202,9 @@ public class CreateWeighBridgeData {
         }
         GenericValue weighBridgeDetails = delegator.makeValue("WeighBridgeDetails");
         try{
+        	Debug.log("weight===========##========"+weight);
         	weightKgs = new BigDecimal(weight);
+        	Debug.log("weightKgs===========##========"+weightKgs);
         	weighBridgeDetails.set("vehicleId",vehicleId);
         	weighBridgeDetails.set("weightKgs",weightKgs);
         	weighBridgeDetails.set("statusId","ITEM_CREATED");
