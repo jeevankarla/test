@@ -442,6 +442,11 @@
 													from-field="organizationPartyId" />
 												<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
 											</link>
+											<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="TrialBalanceDrillDown.csv" target-window="_blank">
+												<parameter param-name="organizationPartyId"
+													from-field="organizationPartyId" />
+												<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+											</link>
 											<platform-specific>
 												<html>
 													<html-template
@@ -534,6 +539,76 @@
 							    <html-template location="component://accounting/webapp/accounting/reports/TrialBalanceDrillDownPDF.fo.ftl" />
 									</xsl-fo>
 						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+			</section>
+		</widgets>
+	</section>
+</screen>
+<screen name="TrialBalanceDrillDownCSV">
+	<section>
+		<actions>
+			<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+			<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+		    <property-map resource="ProductUiLabels" map-name="uiLabelMap"  global="true" />
+		   <set field="viewSize" value="99999" />
+			<entity-one value-field="Name" entity-name="PartyGroup">
+				<field-map field-name="partyId" value="${parameters.organizationPartyId}" />
+				<select-field field-name="groupName" />
+			</entity-one>
+			<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
+			<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
+			<set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
+			<set field="partyIds[]" from-field="organizationPartyId" />
+				<set field="parameters.includingGrandTotals" value="Y"/>
+
+			<!-- <entity-condition entity-name="GlAccountAndHistoryTotals"
+				filter-by-date="false" list="glAccountAndHistories">
+				<condition-list>
+					<condition-expr field-name="organizationPartyId"
+						operator="in" from-field="partyIds" />
+					<condition-expr field-name="customTimePeriodId"
+						operator="equals" from-field="parameters.customTimePeriodId" />
+				</condition-list>
+				<select-field field-name="glAccountId" />
+				<select-field field-name="parentGlAccountId" />
+				<select-field field-name="glAccountClassId" />
+				<select-field field-name="accountCode" />
+				<select-field field-name="accountName" />
+				<select-field field-name="totalPostedDebits" />
+				<select-field field-name="totalPostedCredits" />
+				<select-field field-name="totalEndingBalance" />
+				<order-by field-name="accountCode" />
+			</entity-condition> -->
+			 <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
+			<entity-one value-field="customTimePeriod" entity-name="CustomTimePeriod">
+				<field-map field-name="customTimePeriodId" value="${parameters.customTimePeriodId}" />
+			</entity-one>
+			
+			<script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
+			<script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceDrillDown.groovy" />
+		</actions>
+		<widgets>
+			<section>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="TrialBalanceDrillDownCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
 					</widgets>
 				</section>
 			</widgets>

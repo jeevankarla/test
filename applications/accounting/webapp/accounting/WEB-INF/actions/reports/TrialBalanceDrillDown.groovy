@@ -88,3 +88,53 @@ context.put("parentGlJson", parentGlJson.toString());
 //Debug.log("trillDownTrialBalanceMap============="+trillDownTrialBalanceMap);
 context.put("trillDownTrialBalanceMap", trillDownTrialBalanceMap);
 context.put("parentGlNameMap", parentGlNameMap);
+
+trailBalCsv = [];
+if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap)){
+	trillDownTrialBalanceMap.each{eachCategory->
+		tempMap=[:];
+		categoryId = eachCategory.getKey();
+		categoryName = parentGlNameMap.get(categoryId);
+		tempMap.categoryId=categoryId;
+		tempMap.categoryName=categoryName;
+		
+		debit = eachCategory.getValue().getAt("debit");
+		credit = eachCategory.getValue().getAt("credit");
+		openingD = eachCategory.getValue().getAt("openingD");
+		openingC = eachCategory.getValue().getAt("openingC");
+		endingBal = eachCategory.getValue().getAt("endingBal");
+		
+		tempMap.debit=debit;
+		tempMap.credit=credit;
+		tempMap.openingD=openingD;
+		tempMap.openingC=openingC;
+		tempMap.endingBal=endingBal;
+		trailBalCsv.add(tempMap);
+		chaildGlList = eachCategory.getValue().getAt("chaildGlList");
+		if(UtilValidate.isNotEmpty(chaildGlList)){
+			chaildGlList.each {eachChaildGl->
+				tempMap=[:];
+				
+				glAccountId = eachChaildGl.get("glAccountId");
+				accountName = eachChaildGl.get("accountName");
+				totalPostedDebits = eachChaildGl.get("totalPostedDebits");
+				totalPostedCredits = eachChaildGl.get("totalPostedCredits");
+				openingD = eachChaildGl.get("openingD");
+				openingC = eachChaildGl.get("openingC");
+				totalEndingBalance = eachChaildGl.get("totalEndingBalance");
+				
+				tempMap.glAccountId=glAccountId;
+				tempMap.accountName=accountName;
+				tempMap.debit=totalPostedDebits;
+				tempMap.credit=totalPostedCredits;
+				tempMap.openingD=openingD;
+				tempMap.openingC=openingC;
+				tempMap.endingBal=totalEndingBalance;
+				
+				trailBalCsv.add(tempMap);
+				
+			}
+		}
+	}
+}
+context.trailBalCsv=trailBalCsv;
