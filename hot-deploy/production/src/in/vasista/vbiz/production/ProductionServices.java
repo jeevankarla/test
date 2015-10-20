@@ -2087,6 +2087,8 @@ public class ProductionServices {
 	       		if(UtilValidate.isNotEmpty(inventoryItem.get("quantityOnHandTotal"))){
 	       			qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
 	       		}
+	       		qoh=qoh.setScale(2, BigDecimal.ROUND_HALF_UP);
+		        qohDiff=qohDiff.setScale(2, BigDecimal.ROUND_HALF_UP);
 	       		BigDecimal totalQOH = qoh.add(qohDiff);
 	       		if(totalQOH.compareTo(BigDecimal.ZERO)<0){
 	       			Debug.logError("Inventory(QOH) cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"), module);
@@ -2099,6 +2101,8 @@ public class ProductionServices {
 	       		if(UtilValidate.isNotEmpty(inventoryItem.get("availableToPromiseTotal"))){
 	       			atp = inventoryItem.getBigDecimal("availableToPromiseTotal");
 	       		}
+	       		atpDiff=atpDiff.setScale(2, BigDecimal.ROUND_HALF_UP);
+	       		atp=atp.setScale(2, BigDecimal.ROUND_HALF_UP);
 	       		BigDecimal totalATP = atp.add(atpDiff);
 	       		if(totalATP.compareTo(BigDecimal.ZERO)<0){
 	       			Debug.logError("Inventory(ATP) cannot be less than ZERO for product Id :"+inventoryItem.getString("productId"), module);

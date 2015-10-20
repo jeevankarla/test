@@ -40,6 +40,7 @@ import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
+import in.vasista.vbiz.milkReceipts.MilkReceiptsTransporterServices;
 
 dctx = dispatcher.getDispatchContext();
 
@@ -155,6 +156,7 @@ if(UtilValidate.isNotEmpty(billingVehicleIds)){
 				receiveDate=eachMilkTransfer.receiveDate;
 				sendQuantity=eachMilkTransfer.quantity;
 				receivedQuantity=eachMilkTransfer.receivedQuantity;
+				receivedQuantityLtrs=eachMilkTransfer.receivedQuantityLtrs;
 				
 				if(UtilValidate.isNotEmpty(milkTransferId)){
 					ptcBillingCommission=EntityUtil.filterByCondition(ptcBillingCommiMilkTransfer,EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId));
@@ -179,23 +181,24 @@ if(UtilValidate.isNotEmpty(billingVehicleIds)){
 						eachVehicleMap.put("receivedQuantity",receivedQuantity);
 						eachVehicleMap.put("diffQty",diffQty);
 						
-						if(UtilValidate.isNotEmpty(partyId)){
-							conditionList.clear();
-							conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-							conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, "DISTANCE_FROM_MD"));
-							conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, receiveDate));
-							conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-								EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, receiveDate)));
-							condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-							facilityPartyRate = delegator.findList("FacilityPartyRate", condition , null, null, null, false );
-							if(UtilValidate.isNotEmpty(facilityPartyRate)){
-								facilityPartyRateData = EntityUtil.getFirst(facilityPartyRate);
-								partyDistance = facilityPartyRateData.rateAmount;
-								eachVehicleMap.put("partyDistance",partyDistance);
-							} 
-						} 
-						
-						
+						Map rateMap = FastMap.newInstance();
+						rateMap.put("userLogin",userLogin);
+						rateMap.put("partyId",partyId);
+						rateMap.put("vehicleId",containerId);
+						rateMap.put("quantityKgs",receivedQuantity);
+						rateMap.put("quantityLtrs",receivedQuantityLtrs);
+						rateMap.put("priceDate",receiveDate);
+						rateMap.put("returnRateAmt",Boolean.TRUE);
+						rateMap.put("customTimePeriodId",customTimePeriodId);
+						Map rateResultMap = MilkReceiptsTransporterServices.calculateTankerMarginRate(dctx, rateMap);
+
+						if(UtilValidate.isNotEmpty(rateResultMap) && UtilValidate.isNotEmpty(rateResultMap.amount)){
+							rateAmount = rateResultMap.amount;
+							partyDistance = rateResultMap.distance
+						 }
+						eachVehicleMap.put("rateAmount",rateResultMap.amount);
+						eachVehicleMap.put("partyDistance",rateResultMap.distance);
+
 						vehicleDataMap.put(siNo, eachVehicleMap);
 						siNo=siNo+1;
 		
