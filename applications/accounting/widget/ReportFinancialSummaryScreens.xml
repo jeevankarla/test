@@ -552,6 +552,7 @@
 			<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
 			<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
 		    <property-map resource="ProductUiLabels" map-name="uiLabelMap"  global="true" />
+		    <set field="parameters.flag" value="CSVReport"/>
 		   <set field="viewSize" value="99999" />
 			<entity-one value-field="Name" entity-name="PartyGroup">
 				<field-map field-name="partyId" value="${parameters.organizationPartyId}" />

@@ -89,20 +89,42 @@ context.put("parentGlJson", parentGlJson.toString());
 context.put("trillDownTrialBalanceMap", trillDownTrialBalanceMap);
 context.put("parentGlNameMap", parentGlNameMap);
 
-trailBalCsv = [];
-if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap)){
+if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
+	trailBalCsv = [];
+ if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap)){
 	trillDownTrialBalanceMap.each{eachCategory->
 		tempMap=[:];
-		categoryId = eachCategory.getKey();
-		categoryName = parentGlNameMap.get(categoryId);
-		tempMap.categoryId=categoryId;
-		tempMap.categoryName=categoryName;
+		categoryId="";
+		categoryName="";
+		debit=0;
+		credit=0;
+		openingD=0;
+		openingC=0;
+		endingBal=0;
 		
-		debit = eachCategory.getValue().getAt("debit");
-		credit = eachCategory.getValue().getAt("credit");
-		openingD = eachCategory.getValue().getAt("openingD");
-		openingC = eachCategory.getValue().getAt("openingC");
-		endingBal = eachCategory.getValue().getAt("endingBal");
+		if(UtilValidate.isNotEmpty(eachCategory.getKey())){
+		   categoryId = eachCategory.getKey();
+		}  
+		if(UtilValidate.isNotEmpty(eachCategory.getKey())){
+		   categoryName = parentGlNameMap.get(categoryId);
+		}   
+	 	   tempMap.categoryId=categoryId;
+		   tempMap.categoryName=categoryName;
+		if(UtilValidate.isNotEmpty(eachCategory.getValue().getAt("debit"))){
+		   debit = eachCategory.getValue().getAt("debit");
+		}
+		if(UtilValidate.isNotEmpty(eachCategory.getValue().getAt("credit"))){
+	 	   credit = eachCategory.getValue().getAt("credit");
+		}
+		if(UtilValidate.isNotEmpty(eachCategory.getValue().getAt("openingD"))){
+		   openingD = eachCategory.getValue().getAt("openingD");
+		}
+		if(UtilValidate.isNotEmpty(eachCategory.getValue().getAt("openingC"))){
+		   openingC = eachCategory.getValue().getAt("openingC");
+		}
+		if(UtilValidate.isNotEmpty(eachCategory.getValue().getAt("endingBal"))){
+		   endingBal = eachCategory.getValue().getAt("endingBal");
+		}
 		
 		tempMap.debit=debit;
 		tempMap.credit=credit;
@@ -115,14 +137,35 @@ if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap)){
 			chaildGlList.each {eachChaildGl->
 				tempMap=[:];
 				
-				glAccountId = eachChaildGl.get("glAccountId");
-				accountName = eachChaildGl.get("accountName");
-				totalPostedDebits = eachChaildGl.get("totalPostedDebits");
-				totalPostedCredits = eachChaildGl.get("totalPostedCredits");
-				openingD = eachChaildGl.get("openingD");
-				openingC = eachChaildGl.get("openingC");
-				totalEndingBalance = eachChaildGl.get("totalEndingBalance");
+				glAccountId="";
+				accountName="";
+				totalPostedDebits=0;
+				totalPostedCredits=0;
+				openingD=0;
+				openingC=0;
+				totalEndingBalance=0;
 				
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("glAccountId"))){
+				glAccountId = eachChaildGl.get("glAccountId");
+				}
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("accountName"))){
+				   accountName = eachChaildGl.get("accountName");
+				}
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("totalPostedDebits"))){
+				   totalPostedDebits = eachChaildGl.get("totalPostedDebits");
+				}
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("totalPostedCredits"))){
+				   totalPostedCredits = eachChaildGl.get("totalPostedCredits");
+				}
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("openingD"))){
+				   openingD = eachChaildGl.get("openingD");
+				}
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("openingC"))){
+				   openingC = eachChaildGl.get("openingC");
+				}
+				if(UtilValidate.isNotEmpty(eachChaildGl.get("totalEndingBalance"))){
+				   totalEndingBalance = eachChaildGl.get("totalEndingBalance");
+				}
 				tempMap.glAccountId=glAccountId;
 				tempMap.accountName=accountName;
 				tempMap.debit=totalPostedDebits;
@@ -138,3 +181,4 @@ if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap)){
 	}
 }
 context.trailBalCsv=trailBalCsv;
+}
