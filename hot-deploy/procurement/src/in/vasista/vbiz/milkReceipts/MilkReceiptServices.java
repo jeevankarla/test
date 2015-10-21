@@ -5227,7 +5227,17 @@ public class MilkReceiptServices {
 			  		return "error";
 				}
 				Timestamp receiveDate = milkTransfer.getTimestamp("receiveDate");
-				Map resultMap = checkBillingGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"receiveDate",receiveDate));
+				String existedPurposeTypeId = (String)milkTransfer.get("purposeTypeId");
+				Map billingCheckingInputMap = FastMap.newInstance();
+				billingCheckingInputMap.put("userLogin",userLogin);
+				billingCheckingInputMap.put("receiveDate",receiveDate);
+				if(UtilValidate.isNotEmpty(purposeTypeId) && UtilValidate.isNotEmpty(existedPurposeTypeId)){
+					if(purposeTypeId.equalsIgnoreCase(existedPurposeTypeId) && purposeTypeId.equalsIgnoreCase("CONVERSION")){
+						billingCheckingInputMap.put("billingTypeId", "PB_CONV_MRGN");
+					}
+				}
+				
+				Map resultMap = checkBillingGeneratedOrNotForDate(dctx,billingCheckingInputMap);
 				if(ServiceUtil.isError(resultMap)){
 					Debug.logError("Billing Generated For this Date",module);
 					request.setAttribute("_ERROR_MESSAGE_", (String)resultMap.get("errorMessage"));
@@ -5573,23 +5583,24 @@ public class MilkReceiptServices {
     	return resultMap;
    }// End of the service
  public static  Map<String, Object> checkBillingGeneratedOrNotForDate(DispatchContext dctx, Map context) {
-	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
-	 	Date date =  (Date)context.get("date");
-	 	Timestamp receiveDate = (Timestamp)context.get("receiveDate");
+ 	 GenericValue userLogin = (GenericValue) context.get("userLogin");
+ 	 Date date =  (Date)context.get("date");
+ 	 Timestamp receiveDate = (Timestamp)context.get("receiveDate");
+ 	 String billingTypeId = (String)context.get("billingTypeId");
      Delegator delegator = dctx.getDelegator();
      Timestamp dateTime=null;
-     if(UtilValidate.isNotEmpty(receiveDate)){
-     	 dateTime = receiveDate;
-     }else{
-     	 dateTime = UtilDateTime.toTimestamp(date);
-     }
- 	Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
- 	Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
+	 if(UtilValidate.isNotEmpty(receiveDate)){
+	 	 dateTime = receiveDate;
+	 }else{
+	 	 dateTime = UtilDateTime.toTimestamp(date);
+	 }
+ 	 Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
+ 	 Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
      Map result = ServiceUtil.returnSuccess();
-    List<String> customTimePeriodIds = FastList.newInstance();
+     List<String> customTimePeriodIds = FastList.newInstance();
      try {
-     	List condList = FastList.newInstance();
-			condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN ,UtilMisc.toList("PTC_FORTNIGHT_BILL","PROC_BILL_MONTH")));
+     		List condList = FastList.newInstance();
+     		condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN ,UtilMisc.toList("PTC_FORTNIGHT_BILL","PROC_BILL_MONTH","CONV_BILL_MONTH")));
 			condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(dateStart.getTime())));
 			condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
@@ -5602,11 +5613,27 @@ public class MilkReceiptServices {
 		        List<GenericValue> periodBillingList = FastList.newInstance();
 		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("REJECT_PAYMENT","COM_CANCELLED")));
 		        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN ,customTimePeriodIds));
-		    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.IN ,UtilMisc.toList("PB_PTC_TRSPT_MRGN","PB_PROC_MRGN")));
+		        List<String> billingTypeList = FastList.newInstance();
+		        billingTypeList.add("PB_PTC_TRSPT_MRGN");
+		        billingTypeList.add("PB_PROC_MRGN");
+		        if(UtilValidate.isNotEmpty(billingTypeId)){
+		        	billingTypeList.add(billingTypeId);
+		        }
+		    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.IN ,billingTypeList));
 		    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		    	periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
 		    	if(UtilValidate.isNotEmpty(periodBillingList)){	
-		    		return ServiceUtil.returnError("Billing Already Generated.");
+		    		boolean returnError = true;
+		    		if(UtilValidate.isNotEmpty(billingTypeId)){
+		    			condition = EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,billingTypeId);
+ 		    			List<GenericValue> referenceBillingList = EntityUtil.filterByCondition(periodBillingList, condition);
+		    			if(UtilValidate.isEmpty(referenceBillingList)){
+		    				returnError = false;
+		    			}
+		    		}
+		    		if(returnError){
+		    			return ServiceUtil.returnError("Billing Already Generated.");
+		    		}
 		        }
 			}
      }
