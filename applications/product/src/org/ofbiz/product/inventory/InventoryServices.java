@@ -520,6 +520,7 @@ public class InventoryServices {
                     	for(GenericValue eachInventoryDetails : inventoryFilteredList){
                     		invTotalTillDate = invTotalTillDate.add(eachInventoryDetails.getBigDecimal("availableToPromiseDiff"));
                     	}
+                        invTotalTillDate=invTotalTillDate.setScale(2, BigDecimal.ROUND_HALF_UP);
                     	//BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
                     	if(invTotalTillDate.compareTo(BigDecimal.ZERO)<0){
                     		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);

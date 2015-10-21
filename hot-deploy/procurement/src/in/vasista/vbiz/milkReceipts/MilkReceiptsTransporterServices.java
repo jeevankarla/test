@@ -1156,8 +1156,9 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 				BigDecimal quantityKgs = (BigDecimal) context.get("quantityKgs");
 				BigDecimal quantityLtrs = (BigDecimal) context.get("quantityLtrs");
 				String ignoreUnionRelation = (String) context.get("ignoreUnionRelation");
-				if(UtilValidate.isNotEmpty(ignoreUnionRelation)){
-					
+				Boolean returnRateAmt = (Boolean)context.get("returnRateAmt") ;
+				if(UtilValidate.isEmpty(returnRateAmt)){
+					returnRateAmt =false;
 				}
 				List<GenericValue> partyDetails = null;
 				List conditionList = FastList.newInstance();
@@ -1276,6 +1277,13 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					if(UtilValidate.isNotEmpty(acctgFormulaId) && UtilValidate.isNotEmpty(capacity) && capacity.compareTo(BigDecimal.ZERO)==1){
 						try{
 							String variableValues = "QUANTITYKGS="+quantityKgs+","+"QUANTITYLTRS="+quantityLtrs+","+"CAPACITY="+capacity+","+"DISTANCE="+distance+","+"RATE="+rate ;
+							if(returnRateAmt){
+								BigDecimal distanceTemp = BigDecimal.ONE; 
+								quantityKgs = capacity;
+								quantityLtrs = capacity;
+								variableValues = "QUANTITYKGS="+quantityKgs+","+"QUANTITYLTRS="+quantityLtrs+","+"CAPACITY="+capacity+","+"DISTANCE="+distanceTemp+","+"RATE="+rate ;
+							}
+							
 							Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin,"slabAmount",capacity, "acctgFormulaId",acctgFormulaId,"variableValues",variableValues);
 						  	Map<String, Object> rateResult = dispatcher.runSync("evaluateAccountFormula", input);
 						  	if (ServiceUtil.isError(rateResult)) {
@@ -1295,6 +1303,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 					}
 				}
 				result.put("amount", amount.setScale(2,BigDecimal.ROUND_HALF_UP));
+				result.put("distance", distance);
 				return result;
 			}
 			public static Map<String, Object> updateFineRecvoryWithBilling(DispatchContext dctx, Map<String, Object> context) {

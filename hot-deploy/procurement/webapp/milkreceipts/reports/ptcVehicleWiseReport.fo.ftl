@@ -59,19 +59,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcVehicleWiseReport.pdf")}
              <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >(Receipt Details for Procurement Transport Contract Bill)</fo:block>
      	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
       	    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------ ------ ------ ------ -------- -------- --------</fo:block>
-            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;DATE         PROC      DC           	     DESPATCH         RECEIVED        DIFF      DISTANCE          AMOUNT          </fo:block>
-            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;RECEIVED     CENTER    NUMBER        	    QUANTITY         QUANTITY        QTY                                                  </fo:block>
+            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;DATE         PROC      DC             DESPATCH      RECEIVED       DIFF   VEHICLE    DISTANCE         AMOUNT          </fo:block>
+            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;RECEIVED     CENTER    NUMBER         QUANTITY      QUANTITY       QTY      RATE                                              </fo:block>
             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > -------- -------- ------- -------- -------- -------- ------- ------- -------- ------- ------- -------- ------- ------- ------- ------- ------- ------- ------- ------ ------ ------ ------ ------ ------ -------- -------- --------</fo:block>
        <fo:block >
 		 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
            <fo:table-column column-width="90pt"/>               
             <fo:table-column column-width="60pt"/>               
             <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="80pt"/>
-       <#-- <fo:table-column column-width="50pt"/> -->
             <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="70pt"/>
+       		 <fo:table-column column-width="60pt"/> 
+            <fo:table-column column-width="60pt"/>
             <fo:table-column column-width="100pt"/>
            	<fo:table-body>
            	<#assign vehicleDataMapDetails = vehicleDataMap.entrySet()>
@@ -83,7 +83,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcVehicleWiseReport.pdf")}
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${vehicleDataMapDetail.getValue().get("sendQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${vehicleDataMapDetail.getValue().get("receivedQuantity")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${vehicleDataMapDetail.getValue().get("diffQty")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
-            <#-->  <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"><#if vehicleDataMapDetail.getValue().get("rateAmount")?has_content>${vehicleDataMapDetail.getValue().get("rateAmount")?if_exists?string("##0.00")} <#else>0.00</#if></fo:block></fo:table-cell>   -->
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"><#if vehicleDataMapDetail.getValue().get("rateAmount")?has_content>${vehicleDataMapDetail.getValue().get("rateAmount")?if_exists?string("##0.00")} <#else>0.00</#if></fo:block></fo:table-cell>  
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${vehicleDataMapDetail.getValue().get("partyDistance")?if_exists}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"><#if vehicleDataMapDetail.getValue().get("amount")?has_content>${vehicleDataMapDetail.getValue().get("amount")?if_exists?string("##0.00")} <#else>0.00</#if></fo:block></fo:table-cell>       		
              </fo:table-row>
@@ -99,7 +99,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ptcVehicleWiseReport.pdf")}
                 <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${totPartiesMap.get("totSendQty")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${totPartiesMap.get("totReceivedQty")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		    		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"></fo:block></fo:table-cell>       		
-             <#-->  <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"></fo:block></fo:table-cell>   -->    		
+              <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"></fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt"></fo:block></fo:table-cell>       		
               <fo:table-cell ><fo:block text-align="right"  font-weight="bold" keep-together="always" font-size="12pt">${totPartiesMap.get("totAmount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>       		    		
              
