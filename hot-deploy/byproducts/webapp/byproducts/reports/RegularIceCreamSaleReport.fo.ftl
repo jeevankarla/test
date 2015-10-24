@@ -463,11 +463,33 @@ under the License.
           						  </fo:table-row> 
 					<#--		 <#assign productDetails = productDetailsMap.entrySet()>  -->
 								<#assign productType = "">		
-								<#assign category = "">			
+								<#assign category = "">
+								<#assign subTotal =0>			
 	                	      <#list productDetailsList as prodTotals>
 	                	      
 	                	      	<#if !(productType == prodTotals.get("productType"))>
 	                	      		<#if categoryTotal[productType]?has_content>
+	                	      		<#if !(subTotal==0)>
+		                    <fo:table-row>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">Sub Total:</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="5pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                	       <fo:table-cell>
+	                            	<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${subTotal?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                       	 </fo:table-row>
+	                       	 </#if>
+	                	      	<fo:table-row> 
+							       <fo:table-cell>   						
+								    	<fo:block>---------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						</fo:table-row> 
 	                	      			<fo:table-row>
 		                    				<fo:table-cell>
 			                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>	  
@@ -485,6 +507,7 @@ under the License.
 	                	      		</#if>
 	                	      		<#assign productType = prodTotals.get("productType")>
 	                	     		<#assign productTypeName = delegator.findOne("ProductType", {"productTypeId" : productType}, true)>
+	                	     		<#assign subTotal=0>
 	                	     		<fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="left"   font-size="15pt" font-weight="bold" white-space-collapse="false">${productTypeName.description.toUpperCase()?if_exists}</fo:block>  
@@ -504,7 +527,23 @@ under the License.
 	                	      	<#if !(category == prodTotals.get("productCategory"))>
 	                	      		<#assign category = prodTotals.get("productCategory")>
 	                	      		<#assign categoryName = delegator.findOne("ProductCategory", {"productCategoryId" : category}, true)>
-	                	      	
+	                	       <#if !(subTotal==0)>
+	                	      <fo:table-row>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">Sub Total:</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="5pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                	       <fo:table-cell>
+	                            	<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${subTotal?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                       	 </fo:table-row>
+	                       	 <#assign subTotal=0>
+	                       	 </#if>
 	                	      <fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" font-weight="bold" white-space-collapse="false">${categoryName.description?if_exists}</fo:block>  
@@ -534,8 +573,30 @@ under the License.
 	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.amount?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
 	                       		</fo:table-row>
+	                       		<#assign subTotal=subTotal+prodTotals.amount>
 		                    </#list>
+		                     <#if !(subTotal==0)>
+		                    <fo:table-row>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">Sub Total:</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="5pt" white-space-collapse="false"></fo:block>  
+	                       			</fo:table-cell>
+	                	       <fo:table-cell>
+	                            	<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${subTotal?if_exists}</fo:block>  
+	                       			</fo:table-cell>
+	                       	 </fo:table-row>
+	                       	 </#if>
 		                      <#if categoryTotal[productType]?has_content>
+		                      <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>---------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> 
 		                    	<fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false"></fo:block>	  
