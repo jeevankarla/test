@@ -152,12 +152,16 @@ if (organizationPartyId) {
 	financialAcctgTransList = [];
 	glAcctgTrialBalanceList = [];
 	paymentInvType = [:];
+	Calendar calendarTimePeriodStartDate = UtilDateTime.toCalendar(dayBegin)
     if (UtilValidate.isNotEmpty(glAccountId)){
         context.currentTimePeriod = currentTimePeriod;
-        customTimePeriodStartDate = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
-        customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
-		
-        Calendar calendarTimePeriodStartDate = UtilDateTime.toCalendar(customTimePeriodStartDate);
+		if(currentTimePeriod){
+			customTimePeriodStartDate = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
+			customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
+			calendarTimePeriodStartDate = UtilDateTime.toCalendar(customTimePeriodStartDate);
+		}
+        
+       
         BigDecimal totalOfYearToDateDebit = BigDecimal.ZERO;
         BigDecimal totalOfYearToDateCredit = BigDecimal.ZERO;
         isPosted = parameters.isPosted;
