@@ -67,8 +67,6 @@ import java.util.regex.Pattern;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.lang.NullPointerException;
-
-
 import java.math.BigDecimal;
 
 
@@ -112,8 +110,120 @@ public class ProductionNetworkServices {
 	        }
 	        return productionRunId;
 	    }
-	   
-	   
-	   
+	    
+	    public static Map<String, Object> adjustProductionTransactionDate(DispatchContext dctx, Map<String, ? extends Object> context) {
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String workEffortId = (String)context.get("workEffortId");
+	        String transferGroupId = (String)context.get("transferGroupId");
+	        Map<String, Object> result = FastMap.newInstance();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        
+	        List conditionList = FastList.newInstance();
+	        try {
+	        	if(UtilValidate.isNotEmpty(workEffortId)){
+			        
+	        		GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
+	        		
+	        		if(UtilValidate.isEmpty(workEffort)){
+	        			Debug.logError("Not a valid production run : "+workEffortId, module);
+	    				return ServiceUtil.returnError("Not a valid production run : "+workEffortId);
+	        		}
+	        		
+	        		if(!(workEffort.getString("currentStatusId")).equals("PRUN_COMPLETED")){
+	        			Debug.logError("Production run is not in completed status : "+workEffortId, module);
+	    				return ServiceUtil.returnError("Production run is not in completed status : "+workEffortId);
+	        		}
+	        		
+	        		Timestamp startDate = workEffort.getTimestamp("estimatedStartDate");
+			        List<GenericValue> workEffortInventoryDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, workEffortId), null, null, null, false);
+			        
+			        List<String> inventoryItemIds = EntityUtil.getFieldListFromEntityList(workEffortInventoryDetails, "inventoryItemId", true);
+			        GenericValue inventoryItem = null;
+			        
+			        // change effectiveDate to workEffort startDate
+			        for(GenericValue invDetail : workEffortInventoryDetails){
+			        	invDetail.set("effectiveDate", startDate);
+			        	invDetail.store();
+			        }
+			        
+			        for(String inventoryItemId : inventoryItemIds){
+			        	
+			        	conditionList.clear();
+			        	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId));
+			        	EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			        	List<GenericValue> inventoryDetails = delegator.findList("InventoryItemDetail", cond, null, UtilMisc.toList("effectiveDate"), null, false);
+			        	
+			        	List<GenericValue> invDateCheckDetail = EntityUtil.filterByCondition(inventoryDetails, EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN_EQUAL_TO, BigDecimal.ZERO));
+			        	if(UtilValidate.isNotEmpty(invDateCheckDetail)){
+			        		GenericValue invItemDetail = EntityUtil.getFirst(invDateCheckDetail);
+			        		Timestamp compareDate = invItemDetail.getTimestamp("effectiveDate");
+			        		if(startDate.compareTo(compareDate)<=0){
+			        			inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+			        			inventoryItem.set("datetimeReceived", startDate);
+			        			inventoryItem.store();
+			        			for(GenericValue eachItem :  invDateCheckDetail){
+			        				eachItem.set("effectiveDate", startDate);
+			        				eachItem.store();
+			        			}
+			        		}
+			        	}
+			        }
+	        	}
+	        	
+	        	if(UtilValidate.isNotEmpty(transferGroupId)){
+			        
+	        		GenericValue transferGroup = delegator.findOne("InventoryTransferGroup", UtilMisc.toMap("transferGroupId", transferGroupId), false);
+	        		
+	        		if(UtilValidate.isEmpty(transferGroup)){
+	        			Debug.logError("Transfer with Id: "+transferGroupId+" doesn't exists", module);
+	    				return ServiceUtil.returnError("Transfer with Id: "+transferGroupId+" doesn't exists");
+	        		}
+	        		
+	        		if(!(transferGroup.getString("statusId")).equals("IXF_COMPLETE")){
+	        			Debug.logError("Transfer with Id: "+transferGroupId+" transaction is not complete", module);
+	    				return ServiceUtil.returnError("Transfer with Id: "+transferGroupId+" transaction is not complete");
+	        		}
+	        		
+	        		List<GenericValue> inventoryTransferGroup = delegator.findList("InventoryTransferGroupMember", EntityCondition.makeCondition("transferGroupId", EntityOperator.EQUALS, transferGroupId), null ,null, null, false);
+	        		
+	        		List<String> inventoryTransferIds = EntityUtil.getFieldListFromEntityList(inventoryTransferGroup, "inventoryTransferId", false);
+	        		
+	        		List<GenericValue> inventoryTransfers = delegator.findList("InventoryTransfer", EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN, inventoryTransferIds), null, null, null, false);
+	        		
+	        		for(GenericValue eachXfer : inventoryTransfers){
+	        			Timestamp sendDate = eachXfer.getTimestamp("sendDate");
+	        			Timestamp inventoryTransferId = eachXfer.getTimestamp("inventoryTransferId");
+	        			
+	        			conditionList.clear();
+	        			conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS, eachXfer.getString("inventoryTransferId")));
+	        			EntityCondition cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	        			List<GenericValue> invDetails = delegator.findList("InventoryItemDetail", cond1, null, null, null, false);
+	        			
+	        			for(GenericValue eachInvDetail : invDetails){
+	        				String detailItemId = eachInvDetail.getString("inventoryItemId");
+	        				
+	        				List<GenericValue> inventoryItemCheck = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, detailItemId), UtilMisc.toSet("effectiveDate"), UtilMisc.toList("effectiveDate"), null, false);
+	        				
+	        				if(UtilValidate.isNotEmpty(inventoryItemCheck)){
+	        					Timestamp compInvDetailDate = (EntityUtil.getFirst(inventoryItemCheck)).getTimestamp("effectiveDate");
+	        					
+	        					if(compInvDetailDate.compareTo(sendDate)< 0){
+	        						eachInvDetail.set("effectiveDate", sendDate);
+	        						eachInvDetail.store();
+	        						Debug.log("changing transfer effective date ############");
+	        					}
+	        				}
+	        			}
+	        		}
+	        	}
+	        }
+	        catch(GenericEntityException e){
+	        	Debug.logError(e, module);
+	        	return ServiceUtil.returnError(e.toString());
+	        }
+	        result = ServiceUtil.returnSuccess("Successfully");
+	        return result;
+	    }// End of the Service
 	   
 }
