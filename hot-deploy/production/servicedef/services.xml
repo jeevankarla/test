@@ -17,6 +17,10 @@
          <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
          <attribute name="productTestComponentDetails" type="Map" mode="OUT" optional="true"/>
     </service>
+    <service name="adjustProductionTransactionDate" engine="java" location="in.vasista.vbiz.production.ProductionNetworkServices" invoke="adjustProductionTransactionDate">
+    	<attribute name="workEffortId" mode="IN" type="String" optional="true"/>
+    	<attribute name="transferGroupId" mode="IN" type="String" optional="true"/>
+    </service>
     <service name="getFacilityPurposeProducts" engine="groovy" location="component://production/webapp/production/WEB-INF/actions/getFacilityPurposeProducts.groovy" invoke="" transaction-timeout="12000">
         <description>Produc Facility Purpose</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
