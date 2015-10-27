@@ -11623,4 +11623,104 @@ public class ByProductNetworkServices {
 		result.put("boothRouteIdsMap", boothRouteIdsMap);
 		return result;
 	}
+	
+	
+	public static Map getDuplicateInvoicesForParties(DispatchContext dctx,Map<String, ? extends Object> context) {
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Delegator delegator = dctx.getDelegator();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		String shipmentTypeId=(String) context.get("shipmentTypeId");
+		List conditionList = FastList.newInstance();
+		List shipmentList = FastList.newInstance();
+		Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
+		Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
+		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+		if (UtilValidate.isNotEmpty(shipmentTypeId)	&& ("AM".equals(shipmentTypeId))) {
+			shipmentTypeId="AM_SHIPMENT";
+		}
+		if (UtilValidate.isNotEmpty(shipmentTypeId)	&& ("PM".equals(shipmentTypeId))) {
+			shipmentTypeId="PM_SHIPMENT";
+		}
+		conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.EQUALS, shipmentTypeId));
+		conditionList.add(EntityCondition.makeCondition("statusId",	EntityOperator.IN, UtilMisc.toList("SHIPMENT_CANCELLED", "GENERATION_FAIL")));
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,	dayEnd));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		try {
+			shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+		} catch (Exception e) {
+			Debug.logError(e, "Unable to get shipment list: ", module);
+		}
+		
+		int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate) + 1);
+	    List partyDuplicateInvoiceList =  FastList.newInstance();
+		for (int k = 0; k < intervalDays; k++) {
+			List condList = FastList.newInstance();
+			Timestamp supplyDate = UtilDateTime.addDaysToTimestamp(fromDate, k);
+			Timestamp supplyDayStart = UtilDateTime.getDayStart(supplyDate);
+			Timestamp supplyDayEnd = UtilDateTime.getDayEnd(supplyDate);
+			List dayShipments = FastList.newInstance();
+			List<GenericValue> dayWiseShipments = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("estimatedShipDate", EntityOperator.EQUALS,supplyDayStart));
+			//Day shipments
+			if (!UtilValidate.isEmpty(dayWiseShipments)) {
+				dayShipments.addAll(EntityUtil.getFieldListFromEntityList(dayWiseShipments, "shipmentId", false));
+			}
+			condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,dayShipments));
+			condList.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN,invoiceStatusList));
+			EntityCondition invCondn = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue> orderHeaderItembillInvList = FastList.newInstance();
+			try {
+				orderHeaderItembillInvList = delegator.findList("OrderHeaderFacAndItemBillingInv",invCondn,null,null, null, false);
+			} catch (Exception e1) {
+				Debug.logError(e1, "Unable to get OrderHeaderFacAndItemBillingInv : ", module);
+			}
+			HashSet boothIdsSet = new HashSet();
+			if (!UtilValidate.isEmpty(orderHeaderItembillInvList)) {
+				boothIdsSet.addAll(EntityUtil.getFieldListFromEntityList(orderHeaderItembillInvList, "originFacilityId", false));
+			}
+			List boothIdIds =  FastList.newInstance();
+			boothIdIds.addAll(boothIdsSet);
+			int count=0;
+			for (int l = 0; l < boothIdIds.size(); l++) {
+				String boothId = (String) boothIdIds.get(l);
+				List<GenericValue> orderHeaderItemBillInv = EntityUtil.filterByCondition(orderHeaderItembillInvList, EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS,boothId));
+				if (!UtilValidate.isEmpty(orderHeaderItemBillInv)) {
+					for (int j = 0; j < orderHeaderItemBillInv.size(); j++) {
+						GenericValue eachOrderItemBill = (GenericValue) orderHeaderItemBillInv.get(j);
+						BigDecimal amount = BigDecimal.ZERO;
+						Map tempMap = FastMap.newInstance();
+						if (UtilValidate.isNotEmpty(eachOrderItemBill)){
+							String shipmentId=(String) eachOrderItemBill.get("shipmentId");
+							String orderId=(String) eachOrderItemBill.get("orderId");
+							List<GenericValue> shipmnetDetails = EntityUtil.filterByCondition(dayWiseShipments, EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS,shipmentId));
+							String routeId="";
+							if (UtilValidate.isNotEmpty(shipmnetDetails)) {
+								routeId = (String) EntityUtil.getFirst(shipmnetDetails).get("routeId");
+							}
+							amount=eachOrderItemBill.getBigDecimal("grandTotal");
+							tempMap.put("supplyDate",supplyDate);
+							tempMap.put("orderId",orderId);
+							tempMap.put("shipmentTypeId",shipmentTypeId);
+							tempMap.put("boothId",boothId);
+							tempMap.put("routeId",routeId);
+							tempMap.put("amount",amount);
+							partyDuplicateInvoiceList.add(tempMap);
+						}
+								
+					}
+				
+				}
+			}
+		}
+		Debug.log("*****partyDuplicateInvoiceList*****"+partyDuplicateInvoiceList);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("partyDuplicateInvoiceList", partyDuplicateInvoiceList);
+
+		return result;
+		
+	}
+	
+	
 }
