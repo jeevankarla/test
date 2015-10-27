@@ -4758,6 +4758,7 @@
 	<screen name="AdvancesReportCSV">
 		<section>
 			<actions>
+				<set field="viewSize" value="999999999" />
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AdvancesReport.groovy"/>
 			</actions>
 			<widgets>
