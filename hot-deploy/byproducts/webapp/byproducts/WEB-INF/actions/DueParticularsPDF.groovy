@@ -221,6 +221,7 @@ if(UtilValidate.isNotEmpty(parameters.csvFlag) && parameters.csvFlag=="duePartic
 	grandOpeningCredit=0;
 	grandInvAmt=0;
 	grandChqAmnt=0;
+	grandTotalPaid=0;
 	grandClosingDebit=0;
 	grandClosingCredit=0;
 	finalMap=[:];
@@ -237,6 +238,7 @@ if(UtilValidate.isNotEmpty(parameters.csvFlag) && parameters.csvFlag=="duePartic
 		chqRetnTot=0;
 		challanTot=0;
 		totalCatPaidAmnt=0;
+		totalPaidAmount=0;
 		netBalTot=0;
 		chequePPaidAmountCat=0;
 		eatot=0;
@@ -262,6 +264,7 @@ if(UtilValidate.isNotEmpty(parameters.csvFlag) && parameters.csvFlag=="duePartic
 				tempMap.chequePenalityPaidAmount=chequePenalityPaidAmount;
 				chequePPaidAmountCat=chequePPaidAmountCat+chequePenalityPaidAmount;
 				totalPaid=data.get("totalPaid");
+				totalPaidAmount=totalPaidAmount+totalPaid;
 				tempMap.totalPaid=totalPaid;
 				totalCatPaidAmnt=totalCatPaidAmnt+totalPaid;
 				netAmount=data.get("netAmount");
@@ -298,6 +301,8 @@ if(UtilValidate.isNotEmpty(parameters.csvFlag) && parameters.csvFlag=="duePartic
 			grandOpeningCredit=grandOpeningCredit+catCrOB;
 			catTempMap.invoiceAmount=invTot;
 			grandInvAmt=grandInvAmt+invTot;
+			grandTotalPaid=grandTotalPaid+totalPaidAmount;
+			catTempMap.totalPaid=totalPaidAmount;
 			catTempMap.chequePenalityPaidAmount=chequePPaidAmountCat;
 			grandChqAmnt=grandChqAmnt+chequePPaidAmountCat;
 			catTempMap.closingDebit=satot;
@@ -311,6 +316,7 @@ if(UtilValidate.isNotEmpty(parameters.csvFlag) && parameters.csvFlag=="duePartic
 	finalMap.openingDebit=grandOpeningDebit;
 	finalMap.openingCredit=grandOpeningCredit
 	finalMap.invoiceAmount=grandInvAmt;
+	finalMap.totalPaid=grandTotalPaid;
 	finalMap.chequePenalityPaidAmount=grandChqAmnt;
 	finalMap.closingDebit=grandClosingDebit;
 	finalMap.closingCredit=grandClosingCredit;
