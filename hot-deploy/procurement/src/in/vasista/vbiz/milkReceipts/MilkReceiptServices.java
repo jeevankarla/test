@@ -5183,6 +5183,10 @@ public class MilkReceiptServices {
 		    String partyId = "";
 		    String purposeTypeId = "";
 		    String productIdTo = "";
+		    String dispatchQtyStr = "";
+			String dcNo = "";
+		    BigDecimal dispatchWeight = BigDecimal.ZERO;
+
 		  boolean beginTransaction = false;
 		try{
   		  	beginTransaction = TransactionUtil.begin();
@@ -5214,6 +5218,21 @@ public class MilkReceiptServices {
 				if (paramMap.containsKey("productIdTo" + thisSuffix)) {
 					productIdTo = (String) paramMap.get("productIdTo" + thisSuffix);
 				}
+				if (paramMap.containsKey("dcNo" + thisSuffix)) {
+					dcNo = (String) paramMap.get("dcNo" + thisSuffix);
+				}
+				if (paramMap.containsKey("dispatchQty" + thisSuffix)) {
+					 dispatchQtyStr = (String) paramMap.get("dispatchQty" + thisSuffix);
+				}
+				if(UtilValidate.isNotEmpty(dispatchQtyStr)){
+					try {
+						dispatchWeight = new BigDecimal(dispatchQtyStr);
+					} catch (Exception e) {
+						Debug.logError(e, "Problems parsing quantity string: " + dispatchQtyStr, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + dispatchQtyStr);
+						return "error";
+					}
+				}
 				if(UtilValidate.isEmpty(productIdTo) && purposeTypeId=="CONVERSION"){
 					Debug.logError("Convertion Product Not Selected For :"+milkTransferId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Convertion Product Not Selected For :"+milkTransferId);	
@@ -5233,9 +5252,10 @@ public class MilkReceiptServices {
 					request.setAttribute("_ERROR_MESSAGE_", (String)resultMap.get("errorMessage"));
 					return "error";
 				}
-				if(!productId.equals(milkTransfer.getString("productId"))){
-					milkTransfer.set("productId", productId);
-					
+				if(!productId.equals(milkTransfer.getString("productId")) || !dispatchWeight.equals(milkTransfer.getString("dispatchWeight"))){
+					if(!productId.equals(milkTransfer.getString("productId"))){
+						milkTransfer.set("productId", productId);
+					}
 					List<GenericValue> milkTransferItemList = delegator.findList("MilkTransferItem",EntityCondition.makeCondition("milkTransferId",EntityOperator.EQUALS,milkTransferId),null,null,null,false);
 					GenericValue milkTransferItem = EntityUtil.getFirst(milkTransferItemList);
 					if(UtilValidate.isEmpty(milkTransferItem)){
@@ -5243,8 +5263,52 @@ public class MilkReceiptServices {
 						request.setAttribute("_ERROR_MESSAGE_", "No Record Found For :"+milkTransferId);	
 				  		return "error";
 					}
-					milkTransferItem.set("sendProductId", productId);
-					milkTransferItem.set("receivedProductId", productId);
+					if(!productId.equals(milkTransfer.getString("productId"))){
+						milkTransferItem.set("sendProductId", productId);
+						milkTransferItem.set("receivedProductId", productId);
+					}
+					if(UtilValidate.isNotEmpty(dispatchWeight) && !dispatchWeight.equals(milkTransfer.getBigDecimal("dispatchWeight"))){
+						if(UtilValidate.isNotEmpty((BigDecimal)milkTransfer.get("fat")) && UtilValidate.isNotEmpty((BigDecimal)milkTransfer.get("snf"))){
+							BigDecimal sendFat = (BigDecimal)milkTransfer.get("fat");
+							BigDecimal sendSnf = (BigDecimal)milkTransfer.get("snf");
+						    BigDecimal sendQty = BigDecimal.ZERO;
+						    BigDecimal sendQuantityLtrs = BigDecimal.ZERO;
+						    BigDecimal sendKgFat = BigDecimal.ZERO;
+						    BigDecimal sendKgSnf = BigDecimal.ZERO;
+
+							 if(UtilValidate.isNotEmpty(dispatchWeight)){
+						    	 sendQty=dispatchWeight;
+						     }
+						     if(UtilValidate.isNotEmpty(sendQty) && sendQty.compareTo(BigDecimal.ZERO)>0){
+						    	 sendQuantityLtrs= ProcurementNetworkServices.convertKGToLitreSetScale(sendQty,false);	
+						     }
+						     if(UtilValidate.isNotEmpty(sendQty) && UtilValidate.isNotEmpty(sendFat) && sendQty.compareTo(BigDecimal.ZERO)>0  && sendFat.compareTo(BigDecimal.ZERO)>0){
+								sendKgFat = ProcurementNetworkServices.calculateKgFatOrKgSnf(sendQty,sendFat);
+							 }
+							 if(UtilValidate.isNotEmpty(sendQty) && UtilValidate.isNotEmpty(sendSnf) && sendQty.compareTo(BigDecimal.ZERO)>0  && sendSnf.compareTo(BigDecimal.ZERO)>0){
+								 sendKgSnf = ProcurementNetworkServices.calculateKgFatOrKgSnf(sendQty,sendSnf);
+							 }
+							 
+							milkTransfer.set("dispatchWeight", dispatchWeight);
+							milkTransfer.set("quantity", sendQty);
+							milkTransfer.set("quantityLtrs", sendQuantityLtrs);
+							if(UtilValidate.isNotEmpty(milkTransferItem)){
+								milkTransferItem.set("quantity", sendQty);
+								milkTransferItem.set("quantityLtrs", sendQuantityLtrs);
+							}
+							milkTransfer.set("fat", sendFat);
+							milkTransfer.set("sendKgFat", sendKgFat);
+							milkTransfer.set("snf", sendSnf);
+							milkTransfer.set("sendKgSnf", sendKgSnf);
+							if(UtilValidate.isNotEmpty(milkTransferItem)){
+								milkTransferItem.set("fat", sendFat);
+								milkTransferItem.set("sendKgFat", sendKgFat);
+								milkTransferItem.set("snf", sendSnf);
+								milkTransferItem.set("sendKgSnf", sendKgSnf);
+							}
+						}
+					}
+
 					delegator.store(milkTransferItem);
 				}
 				String conversionProductId="";
@@ -5256,6 +5320,9 @@ public class MilkReceiptServices {
 				}
 				if(!partyId.equals(milkTransfer.getString("partyId"))){
 					milkTransfer.set("partyId", partyId);
+				}
+				if(!dcNo.equals(milkTransfer.getString("dcNo"))){
+					milkTransfer.set("dcNo", dcNo);
 				}
 				if(!purposeTypeId.equals(milkTransfer.getString("purposeTypeId"))){
 					milkTransfer.set("purposeTypeId", purposeTypeId);
@@ -6015,12 +6082,12 @@ public class MilkReceiptServices {
 					milkTransfer.set("fat", sendFat);
 					milkTransfer.set("sendKgFat", sendKgFat);
 					milkTransfer.set("snf", sendSnf);
-					milkTransfer.set("sendKgSnf", sendKgFat);
+					milkTransfer.set("sendKgSnf", sendKgSnf);
 					if(UtilValidate.isNotEmpty(milkTransferItem)){
 						milkTransferItem.set("fat", sendFat);
 						milkTransferItem.set("sendKgFat", sendKgFat);
 						milkTransferItem.set("snf", sendSnf);
-						milkTransferItem.set("sendKgSnf", sendKgFat);
+						milkTransferItem.set("sendKgSnf", sendKgSnf);
 					}
 				}
 				if((UtilValidate.isNotEmpty(recdFat) && UtilValidate.isNotEmpty(receivedFat) && !receivedFat.equals(recdFat)) || (UtilValidate.isNotEmpty(recdSnf) && !receivedSnf.equals(recdSnf))){

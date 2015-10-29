@@ -40,7 +40,7 @@ under the License.
         	    <#if shiftId?has_content>
 	  				<#assign workShiftTypes = delegator.findOne("WorkShiftType", {"shiftTypeId" : shiftId}, true)>
 				</#if>
-        	    <fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >&#160;&#160;SMP ISSUE REGISTER FOR MPU FLOOR ON DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")}   <#if shiftId?has_content> ${workShiftTypes.description} </#if></fo:block>
+        	    <fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" >&#160;&#160;SMP ISSUE REGISTER FOR MPU FLOOR BETWEEN  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} <#if shiftId?has_content> ${workShiftTypes.description} </#if></fo:block>
         	    <fo:block white-space-collapse="false"  text-align="center" keep-together="always" >&#160;</fo:block>
         		<fo:block>
         		   <fo:table  >

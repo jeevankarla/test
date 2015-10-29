@@ -100,7 +100,7 @@
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("convFromDate","convThruDate");
 		makeDatePicker("milkProcessRegDate","");
-		makeDatePicker("smpRegDate","");
+		makeDatePicker("smpRegFromDate","smpRegThruDate");
 		makeDatePicker("temperatureDate","");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
 		makeDatePicker("deptProductIssueFromDate","deptProductIssueThruDate");
@@ -193,11 +193,12 @@
 							
 							<td width="35%">
 							     <span class='h3'>
-									Date <input  type="text" size="18pt" id="smpRegDate"   name="fromDate"/>
+									From  <input  type="text" size="18pt" id="smpRegFromDate"   name="fromDate"/>
+								    To <input  type="text" size="18pt" id="smpRegThruDate"   name="thruDate"/>
 								 </span>
 							</td>
-						    <td width="35%">
-						    	 <span class='h3'>Shift </span>
+						   <td width="35%">
+						   <#--  <span class='h3'>Shift </span>
 			                    <select name="shiftId" id="shiftId">
 	        				 <option value=""></option>
 			                    <#if allShiftsList?has_content>	
@@ -207,7 +208,7 @@
 					                  		 </option>
 			                		</#list>    
 			                	 </#if>	    
-			                    </select>
+			                    </select>-->
 						    </td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
@@ -230,7 +231,14 @@
                              <#list partyGroup as facilityDepartment>
 						     <option value='${facilityDepartment.partyId?if_exists}' >${facilityDepartment.groupName?if_exists}</option>
 						     </#list>
-						     </select></td>
+						     </select>
+						     <span class="h3"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Products Type</span>
+							  <select name="productTypeId" id="productTypeId">
+   						      <option value='' >All</option>
+ 						      <option value='FINISHED_GOODS' >Finished Goods</option>
+ 						      <option value='RAW_MATERIAL' >Pack Materials</option>
+ 						     </select>
+						     </td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>

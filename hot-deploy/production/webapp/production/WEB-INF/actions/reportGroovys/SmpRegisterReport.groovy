@@ -16,26 +16,30 @@ import in.vasista.vbiz.production.ProductionServices;
 import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 
 fromDate=parameters.fromDate;
+thruDate=parameters.thruDate;
+
 shiftId=parameters.shiftId;
 context.shiftId = shiftId;
 
 dctx = dispatcher.getDispatchContext();
-DateTime = null;
+fromDateTime = null;
+thruDateTime = null;
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
-	DateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
+	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
+	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-dayBegin = UtilDateTime.getDayStart(DateTime);
-dayEnd = UtilDateTime.getDayEnd(DateTime);
+dayBegin = UtilDateTime.getDayStart(fromDateTime);
+dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 
 Map inMap = FastMap.newInstance();
 inMap.put("userLogin", userLogin);
 inMap.put("shiftType", "MILK_SHIFT");
 inMap.put("fromDate", dayBegin);
-//inMap.put("thruDate", dayBegin);
-inMap.put("shiftTypeId", shiftId);
+inMap.put("thruDate", dayEnd);
+//inMap.put("shiftTypeId", shiftId);
 Map workShifts = MilkReceiptBillingServices.getShiftDaysByType(dctx,inMap );
 
 fromDate=workShifts.fromDate;

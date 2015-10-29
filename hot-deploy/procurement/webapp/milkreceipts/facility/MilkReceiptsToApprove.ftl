@@ -130,6 +130,10 @@ under the License.
                     var purposeTypeId = purposeObj.val();
                     var productIdToObj = $(domObj).find("[name='productIdTo']");
                     var productIdTo = productIdToObj.val();
+                    var dcNoObj = $(domObj).find("[name='dcNo']");
+                	var dcNo = $(dcNoObj).val();   
+                	var dispatchQtyObj = $(domObj).find("[name='dispatchQty']");
+                	var dispatchQty = $(dispatchQtyObj).val();   
                     if(purposeTypeId == "CONVERSION" && ((productIdTo == null) ||(productIdTo == ""))){
                         submitCount=submitCount+1;
                         alert("Please select conversion Product..!");
@@ -141,6 +145,10 @@ under the License.
                         $("#updateMilkTransferForm").append(appendProductIdToStr);
                     }
                     var appendProductIdStr = "<input type=hidden name=productId_o_"+index+" value="+productId+" />";
+                    $("#updateMilkTransferForm").append(appendProductIdStr);
+                    var appendProductIdStr = "<input type=hidden name=dcNo_o_"+index+" value="+dcNo+" />";
+                    $("#updateMilkTransferForm").append(appendProductIdStr);
+                    var appendProductIdStr = "<input type=hidden name=dispatchQty_o_"+index+" value="+dispatchQty+" />";
                     $("#updateMilkTransferForm").append(appendProductIdStr);
                     var appendPartyIsStr = "<input type=hidden name=partyId_o_"+index+" value="+partyId+" />";
                     $("#updateMilkTransferForm").append(appendPartyIsStr);
@@ -239,7 +247,11 @@ under the License.
               	<td>${eachItem.containerId?if_exists}</td>
               	<td>${eachItem.contractorId?if_exists}</td>
 				<td>${eachItem.vehicleEntryDate}</td>
-				<td>${eachItem.dcNo?if_exists}</td>
+              	 <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
+             		<td><input type="text" size="10" maxlength="10" name="dcNo" id="dcNo"  value="${eachItem.dcNo?if_exists}" /></td>
+              	 <#else>
+              	   <td>${eachItem.dcNo?if_exists}</td>
+              	 </#if>
               	 <#if eachItem.receiveDate?has_content>
 				<td>${eachItem.receiveDate}</td>
 				<#else>
@@ -318,7 +330,11 @@ under the License.
                 </td>
                 </#if>
                 <td>${eachItem.siloId?if_exists}</td>
-                <td align="right">${eachItem.quantity?if_exists}</td>
+                <#if parameters.flag?has_content && parameters.flag == "FINALIZATION">
+             		<td align="right"><input type="text" size="10" maxlength="10" name="dispatchQty" id="dispatchQty"  value="${eachItem.quantity?if_exists}" /></td>
+              	<#else>
+              	   <td align="right">${eachItem.quantity?if_exists}</td>
+              	</#if>
               	<td align="right">${eachItem.receivedQuantity?if_exists}</td>
 				<td align="right">${eachItem.receivedFat?if_exists}</td>
 				<td align="right">${eachItem.receivedSnf?if_exists}</td>
