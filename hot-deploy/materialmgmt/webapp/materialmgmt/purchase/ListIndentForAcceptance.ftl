@@ -101,6 +101,7 @@ under the License.
           <td>Item No</td>
           <td>Indent Ref.</td>
           <td>Indent Date</td>
+          <td>Issued Date</td>
           <td>From Department</td>
           <td>Material Name - [Code][UOM]</td>
           
@@ -130,6 +131,7 @@ under the License.
               	<td>${eachItem.custRequestItemSeqId?if_exists}</td>
               	<td>${eachItem.custRequestName?if_exists}</td>
               	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.custRequestDate, "dd/MM/yyyy")}</td>
+				<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.issuedDateTime, "dd/MM/yyyy")}</td>
 				<#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : eachItem.fromPartyId}, false))!>
               	<td>${partyName.groupName?if_exists}${partyName.firstName?if_exists} ${partyName.lastName?if_exists} - [${eachItem.fromPartyId}]</td>
               	<#assign product = (delegator.findOne("Product", {"productId" : eachItem.productId}, false))!>
