@@ -38,6 +38,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 				</fo:flow>
 	</fo:page-sequence>
 <#else>
+<#if partyWiseProductWiseConversionMap?has_content>
 <#assign pageNumber = 0>
 
 			<fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
@@ -45,7 +46,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 		            </fo:static-content>	
 		            	
 		            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
-		        <#if partyWiseProductWiseConversionMap?has_content>
 	<#assign partyIds = partyWiseProductWiseConversionMap.keySet()>
 	<#list partyIds as partyIdstr>
 		<#assign conversionProductMap = "">
@@ -714,9 +714,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ConversionBillingReport.pdf")}
 		          </#if>
 				</fo:flow>
 		 	</fo:page-sequence>
-		 	
-		 	 
-		 	
 		 <#else>
 			<fo:page-sequence master-reference="main">
 				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
