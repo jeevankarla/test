@@ -561,7 +561,9 @@
                <#assign pmSiloInventory = pmRegisterDetails.getValue().get("pmSiloInventory")?if_exists> 
                <#assign pmGainVariance = pmRegisterDetails.getValue().get("pmGainVariance")?if_exists>                  
                <#assign pmSiloIssueDetails = pmRegisterDetails.getValue().get("pmSiloIssueMap")?if_exists>
-               <#assign pmSiloClosingDetails = pmRegisterDetails.getValue().get("pmSiloClosingMap")?if_exists>                  
+               <#assign pmSiloClosingDetails = pmRegisterDetails.getValue().get("pmSiloClosingMap")?if_exists> 
+               <#assign prodsCloseBalDetails = pmRegisterDetails.getValue().get("prodsCloseBalMap")?if_exists>                  
+                                
  <fo:table-row border-style="solid">
 	   <fo:table-cell >
 			<fo:block text-align="left" >
@@ -704,7 +706,7 @@
 	   <fo:table-column column-width="90pt"/>
 	   <fo:table-column column-width="60pt"/>
                   <fo:table-body>	
-				 <#if pmSiloClosingDetails?has_content>
+			<#-->	 <#if pmSiloClosingDetails?has_content>
 					   <fo:table-row>
 				           <fo:table-cell  >
 							  <fo:block text-align="right" font-size="10pt">${pmSiloClosingDetails.dayCloseBal?if_exists?string("##0.00")}</fo:block>
@@ -713,7 +715,25 @@
 							  <fo:block text-align="right" font-size="10pt"></fo:block>
 						   </fo:table-cell >				   
                         </fo:table-row>
+                        </#if> -->
+                        
+                      <#if prodsCloseBalDetails?has_content>
+                      <#assign prodsCloseBalDetail = prodsCloseBalDetails.entrySet()?if_exists>											
+       					  <#list prodsCloseBalDetail as prodsCloseBalData>
+       					  	<#assign productId= prodsCloseBalData.getKey()?if_exists >
+		          		<#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
+       					  
+					   <fo:table-row>
+				           <fo:table-cell  >
+							  <fo:block text-align="right" font-size="10pt">${prodsCloseBalData.getValue()?if_exists?string("##0.00")}</fo:block>
+						   </fo:table-cell >
+						   <fo:table-cell  >
+						      <fo:block text-align="right" font-size="10pt"><#if productNameDetails?has_content>${productNameDetails.get("internalName")?if_exists} </#if></fo:block>
+						   </fo:table-cell >				   
+                        </fo:table-row>
+                         </#list>
                         </#if>
+                        
                </fo:table-body>   
              </fo:table>			 
           </fo:block>

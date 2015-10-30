@@ -502,8 +502,8 @@ public class InventoryServices {
                     Map inventoryDetails = (Map)getProductInventoryOpeningBalance(dctx, UtilMisc.toMap("effectiveDate", effectiveDate, "userLogin", userLogin, "productId", productId, "facilityId", facilityId));
                     BigDecimal totalInventory = (BigDecimal)inventoryDetails.get("inventoryCount");
                     if(totalInventory.compareTo(BigDecimal.ZERO)<0){
-                    	Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
-        	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    	Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date1", module);
+        	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date1");
                     }
                     
                     List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId), null, UtilMisc.toList("effectiveDate"), null, false);
@@ -511,8 +511,8 @@ public class InventoryServices {
                     if(UtilValidate.isNotEmpty(inventoryItemDetails)){
                     	Timestamp createdDate = (EntityUtil.getFirst(inventoryItemDetails)).getTimestamp("effectiveDate");
                     	if((UtilDateTime.getDayStart(createdDate)).compareTo(UtilDateTime.getDayStart(effectiveDate))> 0){
-                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
-            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date2", module);
+            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date2");
                     	}
                     	
                     	List<GenericValue> inventoryFilteredList = EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -523,8 +523,8 @@ public class InventoryServices {
                         invTotalTillDate=invTotalTillDate.setScale(2, BigDecimal.ROUND_HALF_UP);
                     	//BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
                     	if(invTotalTillDate.compareTo(BigDecimal.ZERO)<0){
-                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
-            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date3", module);
+            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date3");
                     	}
                     }
                     

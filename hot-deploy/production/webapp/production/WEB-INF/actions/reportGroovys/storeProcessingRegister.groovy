@@ -545,7 +545,7 @@ mpuSiloTypes.each{eachSiloType->
 		Map pmSiloIssueMap =FastMap.newInstance();
 		Map pmSiloClosingMap =FastMap.newInstance();
 		Map allProdFloorMap =FastMap.newInstance();
-		
+		Map prodsCloseBalMap =FastMap.newInstance();
 		
 		BigDecimal pmSiloInventory = BigDecimal.ZERO;
 		
@@ -573,12 +573,17 @@ mpuSiloTypes.each{eachSiloType->
 						pmSiloOpenBalMap.put("pmOpeningFat", pmOpeningFat);
 						pmSiloOpenBalMap.put("pmOpeningSnf", pmOpeningSnf);
 						//openingBalSiloMap.put("siloId", eachSiloId);
-						if(UtilValidate.isNotEmpty(pmOpeningQty)){
+						if(UtilValidate.isNotEmpty(pmOpeningQty) && pmOpeningQty>0){
 							pmSiloInventory=pmSiloInventory+pmOpeningQty;
 							totPmOpeningQty=totPmOpeningQty+pmOpeningQty;
+							allProdFloorMap.put(pmInvCountMapData.get("invProductId"),pmSiloOpenBalMap);
 							
+							if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(pmOpenProdId)))){
+								prodsCloseBalMap.putAt(pmOpenProdId, pmOpeningQty);
+							}else{
+								prodsCloseBalMap.putAt(pmOpenProdId, (prodsCloseBalMap.get(pmOpenProdId))+pmOpeningQty);
+							}
 						}
-						allProdFloorMap.put(pmInvCountMapData.get("invProductId"),pmSiloOpenBalMap);
 					}
 				}
 			}
@@ -630,6 +635,12 @@ mpuSiloTypes.each{eachSiloType->
 				pmReceiptsMap.put("pmRecdSnf",pmRecdSnf);
 				if(UtilValidate.isNotEmpty(pmRecdQty)){
 					pmRecdSiloQty=pmRecdSiloQty+pmRecdQty;
+					
+					if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(pmRecedProdId)))){
+						prodsCloseBalMap.putAt(pmRecedProdId, pmRecdQty);
+					}else{
+						prodsCloseBalMap.putAt(pmRecedProdId, (prodsCloseBalMap.get(pmRecedProdId))+pmRecdQty);
+					}
 				}
 				pmSiloRecdMap.put(receiptNo,pmReceiptsMap);
 				receiptNo++;
@@ -661,6 +672,13 @@ mpuSiloTypes.each{eachSiloType->
 					pmReturnReceiptsMap.put("pmRecdSnf",pmRecdSnf);
 					if(UtilValidate.isNotEmpty(pmRecdQty)){
 						pmRecdSiloQty=pmRecdSiloQty+pmRecdQty;
+						
+						if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(pmRecedProdId)))){
+							prodsCloseBalMap.putAt(pmRecedProdId, pmRecdQty);
+						}else{
+							prodsCloseBalMap.putAt(pmRecedProdId, (prodsCloseBalMap.get(pmRecedProdId))+pmRecdQty);
+						}
+	
 					}
 					pmSiloRecdMap.put(receiptNo,pmReturnReceiptsMap);
 					receiptNo++;
@@ -697,6 +715,13 @@ mpuSiloTypes.each{eachSiloType->
 					}
 					if(UtilValidate.isNotEmpty(pmTransferQty)){
 						pmRecdSiloQty=pmRecdSiloQty+pmTransferQty;
+						
+						if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(recdTransprodId)))){
+							prodsCloseBalMap.putAt(recdTransprodId, pmTransferQty);
+						}else{
+							prodsCloseBalMap.putAt(recdTransprodId, (prodsCloseBalMap.get(recdTransprodId))+pmTransferQty);
+						}
+	
 					}
 					pmInvTransRecdParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,pmFromFacId));
 					if(UtilValidate.isNotEmpty(pmInvTransRecdParty)){
@@ -735,9 +760,18 @@ mpuSiloTypes.each{eachSiloType->
 					recdSilo = (String)eachPmWorkEffInvIssue.get("facilityId");
 					productBatchId = (String)eachPmWorkEffInvIssue.get("productBatchId");
 					tempPmIssuedQty = (BigDecimal)eachPmWorkEffInvIssue.get("quantityOnHandDiff");
+					String productId = (String)eachPmWorkEffInvIssue.get("productId");
+					
 					if(UtilValidate.isNotEmpty(recdSilo) && tempPmIssuedQty<0){
 						tempPmIssuedQty=-tempPmIssuedQty;
 						pmProductionIssuQty=pmProductionIssuQty+tempPmIssuedQty;
+						
+						if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(productId)))){
+							prodsCloseBalMap.putAt(productId, -tempPmIssuedQty);
+						}else{
+							prodsCloseBalMap.putAt(productId, (prodsCloseBalMap.get(productId))-tempPmIssuedQty);
+						}
+
 					}
 				}
 				pmWorkEffortRecdInvItemDetails=EntityUtil.filterByCondition(allSiloInveAndDetailList, EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachPmIssueWorkeffId));
@@ -770,6 +804,7 @@ mpuSiloTypes.each{eachSiloType->
 			   // PM issued Qty through production
 			   BigDecimal pmissueProdnQty = ((BigDecimal)eachinventoryItemDetail.get("quantityOnHandDiff"));
 			   pmItemIssuanceId=eachinventoryItemDetail.itemIssuanceId; 
+			   String productId=eachinventoryItemDetail.productId;
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("itemIssuanceId", EntityOperator.EQUALS,pmItemIssuanceId));
 				conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
@@ -778,6 +813,14 @@ mpuSiloTypes.each{eachSiloType->
 				if(UtilValidate.isEmpty(itemIssuanceCloseData)){
 				   if(UtilValidate.isNotEmpty(pmItemIssuanceId) && pmissueProdnQty<0){
 					   pmissueProdnQty=-pmissueProdnQty;
+					  
+					   // each product closing Balance in silo 
+					   if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(productId)))){
+						   prodsCloseBalMap.putAt(productId, -pmissueProdnQty);
+					   }else{
+						   prodsCloseBalMap.putAt(productId, (prodsCloseBalMap.get(productId))-pmissueProdnQty);
+					   }
+
 					   custFromPartyId='';
 					   pmItemIssuanceCustIdList = delegator.findOne("ItemIssuance",["itemIssuanceId":pmItemIssuanceId],false);
 					   if(pmItemIssuanceCustIdList){
@@ -839,8 +882,18 @@ mpuSiloTypes.each{eachSiloType->
 				   BigDecimal pmIssueTransQty=BigDecimal.ZERO;
 				   pmIssueTransQty=eachInventoryIssuedTransfer.xferQtySum;
 				   pmRecdFacilityId=eachInventoryIssuedTransfer.toFacilityId;
+				   String productId =eachInventoryIssuedTransfer.productId;
+				   
 				   if(UtilValidate.isNotEmpty(pmIssueTransQty)){
 					   pmIssuedSiloQty=pmIssuedSiloQty+pmIssueTransQty;
+					 
+					     // each product closing Balance in silo
+					   if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(productId)))){
+						   prodsCloseBalMap.putAt(productId, -pmIssueTransQty);
+					   }else{
+						   prodsCloseBalMap.putAt(productId, (prodsCloseBalMap.get(productId))-pmIssueTransQty);
+					   }
+
 				   }
 				   pmInvTransIssuedParty=EntityUtil.filterByCondition(partyGroup, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,pmRecdFacilityId));
 				   if(UtilValidate.isNotEmpty(pmInvTransIssuedParty)){
@@ -871,6 +924,15 @@ mpuSiloTypes.each{eachSiloType->
 		if(UtilValidate.isNotEmpty(pmInvItemVariance)){
 			pmInvItemVariance.each{eachPmInvItemVariance->
 				BigDecimal pmVarianceQty = eachPmInvItemVariance.quantityOnHandVar;
+				String productId = eachPmInvItemVariance.productId;
+				
+				// each product closing Balance in silo
+				if(UtilValidate.isEmpty(prodsCloseBalMap) || (UtilValidate.isNotEmpty(prodsCloseBalMap) && UtilValidate.isEmpty(prodsCloseBalMap.get(productId)))){
+					prodsCloseBalMap.putAt(productId, pmVarianceQty);
+				}else{
+					prodsCloseBalMap.putAt(productId, (prodsCloseBalMap.get(productId))+pmVarianceQty);
+				}
+
 				 if(pmVarianceQty>0 && UtilValidate.isNotEmpty(pmVarianceQty)){
 					pmGainVariance=pmGainVariance+pmVarianceQty;
 				}
@@ -894,6 +956,7 @@ mpuSiloTypes.each{eachSiloType->
 	  eachPmSiloMap.put("pmSiloIssueMap",pmSiloIssueMap);
 	  eachPmSiloMap.put("pmGainVariance",pmTotVariance);
 	  eachPmSiloMap.put("pmSiloClosingMap",pmSiloClosingMap);
+	  eachPmSiloMap.put("prodsCloseBalMap",prodsCloseBalMap);
 	  
 	 pmRegisterMap.put(eachMpuSiloId,eachPmSiloMap);
 	

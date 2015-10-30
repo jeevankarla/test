@@ -79,7 +79,6 @@ if(UtilValidate.isNotEmpty(allSilosList)){
 					smpQty=smpQty+eachSmpQty.quantityOnHandDiff;
 				}
 				smpQty=smpQty.negate();
-				smpTotQty=smpTotQty+smpQty;
 				
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, allSiloIds));
@@ -87,13 +86,15 @@ if(UtilValidate.isNotEmpty(allSilosList)){
 				conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,eachWorkEffortId ));
 				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				smpAndRmSilosData = EntityUtil.filterByCondition(allSiloInveAndDetailList, condition);
-				facilityId = ((EntityUtil.getFirst(smpAndRmSilosData)).facilityId);
-				if(UtilValidate.isEmpty(smpRegsterMap) || (UtilValidate.isNotEmpty(smpRegsterMap) && UtilValidate.isEmpty(smpRegsterMap.get(facilityId)))){
-					smpRegsterMap.putAt(facilityId, smpQty);
-				}else{
-					smpRegsterMap.putAt(facilityId, smpQty+(smpRegsterMap.get(facilityId)));
-				}
-					
+				if(UtilValidate.isNotEmpty(smpAndRmSilosData)){
+					facilityId = ((EntityUtil.getFirst(smpAndRmSilosData)).facilityId);
+					if(UtilValidate.isEmpty(smpRegsterMap) || (UtilValidate.isNotEmpty(smpRegsterMap) && UtilValidate.isEmpty(smpRegsterMap.get(facilityId)))){
+						smpRegsterMap.putAt(facilityId, smpQty);
+					}else{
+						smpRegsterMap.putAt(facilityId, smpQty+(smpRegsterMap.get(facilityId)));
+					}
+					smpTotQty=smpTotQty+smpQty;
+				}				
 				
 			}
 			

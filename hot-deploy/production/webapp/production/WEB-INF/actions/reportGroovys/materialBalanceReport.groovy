@@ -23,7 +23,7 @@ import in.vasista.vbiz.milkReceipts.MilkReceiptBillingServices;
 fromDate=parameters.mateBalanceFromDate;
 thruDate=parameters.mateBalanceThruDate;
 deptId =parameters.deptId;
-
+productTypeId =parameters.productTypeId;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -63,6 +63,10 @@ Map closingBalanceMap =FastMap.newInstance();
 
 
 List facilityList = delegator.findList("Facility", null, null,null, null, false);
+List productList = delegator.findList("Product", null, null,null, null, false);
+
+rawMtrlproductList =EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS,"RAW_MATERIAL"));
+rawMtrlProducts=EntityUtil.getFieldListFromEntityList(rawMtrlproductList, "productId", true);
 
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, deptId));
@@ -115,8 +119,9 @@ eachSiloNo=1;
 if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDeptPlantList)){
 		
 	if(UtilValidate.isNotEmpty(fromDeptStorageIds)){
-		fromDeptStorageIds.each {eachDeptStorageId->
-			
+		//fromDeptStorageIds.each {eachDeptStorageId->
+		for(eachDeptStorageId in fromDeptStorageIds){
+				
 			BigDecimal openingQty = BigDecimal.ZERO;
 			BigDecimal openingFatKg = BigDecimal.ZERO;
 			BigDecimal openingSnfKg = BigDecimal.ZERO;
@@ -125,12 +130,21 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 			
 			invCountMap = ProductionServices.getSiloInventoryOpeningBalance(dctx, [effectiveDate:fromDate, facilityId: eachDeptStorageId, userLogin: userLogin,]);
 			invCountMapData=invCountMap.openingBalance;
-			if(invCountMapData.get("quantityKgs") && UtilValidate.isNotEmpty(invCountMapData)){
+			if(UtilValidate.isNotEmpty(invCountMapData) && invCountMapData.get("quantityKgs")){
 				// && invCountMapData.get("quantityKgs") >0
 				openingQty = invCountMapData.get("quantityKgs");
 				invProductId = invCountMapData.get("invProductId");
 				openingFatKg=invCountMapData.get("kgFat");
 				openingSnfKg=invCountMapData.get("kgSnf");
+				if(UtilValidate.isNotEmpty(productTypeId) && "RAW_MATERIAL".equals(productTypeId)){
+					if(UtilValidate.isNotEmpty(invProductId) && !rawMtrlProducts.contains(invProductId)){
+						continue;
+					}
+				}else if(UtilValidate.isNotEmpty(productTypeId) && !"RAW_MATERIAL".equals(productTypeId)){
+					if(UtilValidate.isNotEmpty(invProductId) && rawMtrlProducts.contains(invProductId)){
+						continue;
+					}
+				}
 				openingFatPers = ProcurementNetworkServices.calculateFatOrSnf(openingFatKg, openingQty);
 				openingSnfPers = ProcurementNetworkServices.calculateFatOrSnf(openingSnfKg, openingQty);
 				if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
@@ -159,7 +173,8 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 		List productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, fromDeptPlantId), null,null, null, false);
 		if(UtilValidate.isNotEmpty(productFacility)){
 			productIds=EntityUtil.getFieldListFromEntityList(productFacility, "productId", true);
-			productIds.each {eachProductId->
+			//productIds.each {eachProductId->
+			for(eachProductId in productIds){
 				BigDecimal openingQty = BigDecimal.ZERO;
 				BigDecimal openingFatKg = BigDecimal.ZERO;
 				BigDecimal openingSnfKg = BigDecimal.ZERO;
@@ -172,6 +187,15 @@ if(UtilValidate.isNotEmpty(fromDeptStorageIds) || UtilValidate.isNotEmpty(fromDe
 					invProductId = invCountMapData.get("invProductId");
 					openingFatKg=invCountMapData.get("kgFat");
 					openingSnfKg=invCountMapData.get("kgSnf");
+					if(UtilValidate.isNotEmpty(productTypeId) && "RAW_MATERIAL".equals(productTypeId)){
+						if(UtilValidate.isNotEmpty(invProductId) && !rawMtrlProducts.contains(invProductId)){
+							continue;
+						}
+					}else if(UtilValidate.isNotEmpty(productTypeId) && !"RAW_MATERIAL".equals(productTypeId)){
+						if(UtilValidate.isNotEmpty(invProductId) && rawMtrlProducts.contains(invProductId)){
+							continue;
+						}
+					}
 					openingFatPers = ProcurementNetworkServices.calculateFatOrSnf(openingFatKg, openingQty);
 					openingSnfPers = ProcurementNetworkServices.calculateFatOrSnf(openingSnfKg, openingQty);
 					if(UtilValidate.isNotEmpty(openingQty) && !(openingQty.compareTo(BigDecimal.ZERO)==0)){
@@ -208,7 +232,6 @@ context.openingBalProductTotalMap=openingBalProductTotalMap;
 List convParties =[];
 List convPurchaseList=FastList.newInstance();
 if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
-	
 	convUnionProductsMap=[:];
 	// CONVERSION RECEIPTS======================>
 	conversionReceipts = ProductionServices.getPurchaseAndConversionMilkReceipts(dctx, [fromDate: fromDate, thruDate: thruDate, purposeTypeId: "CONVERSION", userLogin: userLogin,]);
@@ -402,7 +425,7 @@ if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
 }
 
 // INTERNAL, RECEIPTS AND RETURNS =============>
-internalReturnsAndReceipts = ProductionServices.getMilkReturnsAndIntenalReceipts(dctx, [fromDate: fromDate,thruDate: thruDate, recdDeptId:deptId, flag:"allDepts", userLogin: userLogin,]);
+internalReturnsAndReceipts = ProductionServices.getMilkReturnsAndIntenalReceipts(dctx, [fromDate: fromDate,thruDate: thruDate, recdDeptId:deptId, flag:"allDepts",productTypeId:productTypeId, userLogin: userLogin,]);
 intReturnsAndReceipts=internalReturnsAndReceipts.get("milkReturnsAndReceiptsMap");
 intReturnsAndReceiptsTotal=internalReturnsAndReceipts.get("milkRetnsAndRcptsTotalsMap");
 context.intReturnsAndReceipts=intReturnsAndReceipts;
@@ -414,7 +437,7 @@ if(UtilValidate.isNotEmpty(intReturnsAndReceiptsTotal)){
 }
 
 // ISSUE DETAILS==============================>
-departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDate,thruDate: thruDate, ownerPartyId:deptId, flag:"allDepts", userLogin: userLogin,]);
+departmentMilkIssues = ProductionServices.getDepartmentMilkIssues(dctx, [fromDate: fromDate,thruDate: thruDate, ownerPartyId:deptId, flag:"allDepts",productTypeId:productTypeId, userLogin: userLogin,]);
 milkIssuesMap=departmentMilkIssues.get("milkIssuesMap");
 milkIssuesTotalsMap=departmentMilkIssues.get("milkIssuesTotalsMap");
 context.milkIssuesMap=milkIssuesMap;
@@ -468,6 +491,7 @@ if("INT7".equals(deptId) && UtilValidate.isNotEmpty(deptId)){
 		if(UtilValidate.isNotEmpty(eachConPurList)){
 			for(Map.Entry convMilkReceiptsData : eachConPurList.entrySet()){
 				String productId = convMilkReceiptsData.getKey();
+					   productId = "23";
 				BigDecimal quantity = convMilkReceiptsData.getValue().get("quantity");
 				BigDecimal kgFat = convMilkReceiptsData.getValue().get("kgFat");
 				BigDecimal kgSnf = convMilkReceiptsData.getValue().get("kgSnf");
