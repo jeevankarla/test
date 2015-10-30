@@ -16,6 +16,7 @@ custRequestId = parameters.custRequestId;
 custRequestDate = parameters.custRequestDate;
 custRequestTypeId=parameters.custRequestTypeId;
 context.custRequestTypeId=custRequestTypeId;
+custRequestEndDate = parameters.custRequestEndDate;
 partyId = parameters.fromPartyId;
 fromPartyId=context.get("partyId");
 conditionList=[];
@@ -32,14 +33,29 @@ if(UtilValidate.isNotEmpty(partyId)){
 if(UtilValidate.isEmpty(partyId) && UtilValidate.isNotEmpty(fromPartyId)){
 	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.IN, fromPartyId));
 }
+Timestamp custRequestDateNew=null;
+Timestamp custRequestEndDateNew=null;
 if(UtilValidate.isNotEmpty(custRequestDate)){
     def sdf = new SimpleDateFormat("yyyy-MM-dd");
 	try {
-		custRequestDateNew = new java.sql.Timestamp(sdf.parse(custRequestDate+" 00:00:00").getTime());
+		custRequestDateNew = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(custRequestDate).getTime()));
 	}catch (Exception e) {
 		Debug.logError(e, "Cannot parse date string: " + custRequestDate, "");
 	}
-	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, custRequestDateNew));
+}
+if(UtilValidate.isNotEmpty(custRequestEndDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd");
+	try {
+		custRequestEndDateNew = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(custRequestEndDate).getTime()));
+	}catch (Exception e) {
+		Debug.logError(e, "Cannot parse date string: " + custRequestEndDate, "");
+	}
+}
+if(UtilValidate.isNotEmpty(custRequestDateNew)){
+	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, custRequestDateNew));
+}
+if(UtilValidate.isNotEmpty(custRequestEndDateNew)){
+	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, custRequestEndDateNew));
 }
 orderBy = UtilMisc.toList("lastModifiedDate");	
 //conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.EQUALS, "CRQ_ISSUED"));
@@ -111,6 +127,7 @@ if(UtilValidate.isNotEmpty(CustRequestAndItemAndAttribute)){
 				 indentItemsMap.put("itemIssuanceId", itemIssuanceId);
 				 indentItemsMap.put("productId", productId);
 				 indentItemsMap.put("fromPartyId", fromPartyId);
+				 indentItemsMap.put("issuedDateTime",eachItemIssuance.issuedDateTime);
 				 productFacility = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId),UtilMisc.toSet("facilityId"),null,null,false);
 				 prodFacilityIds = EntityUtil.getFieldListFromEntityList(productFacility, "facilityId", true);
 				 ecl = EntityCondition.makeCondition([EntityCondition.makeCondition("facilityId",EntityOperator.IN,prodFacilityIds),
