@@ -499,20 +499,32 @@ public class InventoryServices {
                     inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
                     String productId = inventoryItem.getString("productId");
                     String facilityId = inventoryItem.getString("facilityId");
+                    Debug.log("effectiveDate====================================="+effectiveDate);
+                    Debug.log("inventoryItemId====================================="+inventoryItemId);
+                    Debug.log("quantityOnHandDiff====================================="+quantityOnHandDiff);
+                    Debug.log("availableToPromiseDiff====================================="+availableToPromiseDiff);
+                    Debug.log("productId====================================="+productId);
+                    Debug.log("facilityId====================================="+facilityId);
+
                     Map inventoryDetails = (Map)getProductInventoryOpeningBalance(dctx, UtilMisc.toMap("effectiveDate", effectiveDate, "userLogin", userLogin, "productId", productId, "facilityId", facilityId));
                     BigDecimal totalInventory = (BigDecimal)inventoryDetails.get("inventoryCount");
+                    Debug.log("totalInventory====================================="+totalInventory);
+
                     if(totalInventory.compareTo(BigDecimal.ZERO)<0){
-                    	Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
-        	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    	Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date1", module);
+        	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date1");
                     }
                     
                     List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, inventoryItemId), null, UtilMisc.toList("effectiveDate"), null, false);
-                    
+                    Debug.log("inventoryItemDetails====================================="+inventoryItemDetails);
+ 
                     if(UtilValidate.isNotEmpty(inventoryItemDetails)){
                     	Timestamp createdDate = (EntityUtil.getFirst(inventoryItemDetails)).getTimestamp("effectiveDate");
+                        Debug.log("createdDate====================================="+createdDate);
+
                     	if((UtilDateTime.getDayStart(createdDate)).compareTo(UtilDateTime.getDayStart(effectiveDate))> 0){
-                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
-            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date2", module);
+            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date2");
                     	}
                     	
                     	List<GenericValue> inventoryFilteredList = EntityUtil.filterByCondition(inventoryItemDetails, EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
@@ -520,11 +532,15 @@ public class InventoryServices {
                     	for(GenericValue eachInventoryDetails : inventoryFilteredList){
                     		invTotalTillDate = invTotalTillDate.add(eachInventoryDetails.getBigDecimal("availableToPromiseDiff"));
                     	}
+                        Debug.log("invTotalTillDate=================== befor=set scale================="+invTotalTillDate);
+
                         invTotalTillDate=invTotalTillDate.setScale(2, BigDecimal.ROUND_HALF_UP);
                     	//BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
+                        Debug.log("invTotalTillDate=================== after=set scale================="+invTotalTillDate);
+
                     	if(invTotalTillDate.compareTo(BigDecimal.ZERO)<0){
-                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date", module);
-            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date");
+                    		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date3", module);
+            	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date3");
                     	}
                     }
                     
@@ -1403,6 +1419,10 @@ public class InventoryServices {
         	Debug.logError(e, module);
         	return ServiceUtil.returnError(e.toString());
         }
+        Debug.log("inventoryCount====================================="+inventoryCount);
+        Debug.log("inventoryCost====================================="+inventoryCost);
+        Debug.log("inventoryATP====================================="+inventoryATP);
+
         result.put("inventoryCount", inventoryCount);
         result.put("inventoryCost", inventoryCost);
         result.put("inventoryATP", inventoryATP);

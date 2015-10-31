@@ -344,6 +344,7 @@ public class ProductionServices {
         String sendDeptId = (String)context.get("sendDeptId");
         String productId = (String)context.get("productId");
         String flag = (String)context.get("flag");
+        String productTypeId = (String)context.get("productTypeId");
         Map<String, Object> result = FastMap.newInstance();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
@@ -360,9 +361,14 @@ public class ProductionServices {
 		List<String> facilityIds = FastList.newInstance();
 		List<String> sendFacilityIds = FastList.newInstance();
 		List<String> sendFromDeptIds = FastList.newInstance();
+		List<String> rawMtrlProducts = FastList.newInstance();
     	List conditionList = FastList.newInstance();
         if(UtilValidate.isNotEmpty(recdDeptId)){
 	        try {
+	        	List<GenericValue> productList = delegator.findList("Product", null, null,null, null, false);
+	        	List<GenericValue> rawMtrlproductList =EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS,"RAW_MATERIAL"));
+	        	rawMtrlProducts=EntityUtil.getFieldListFromEntityList(rawMtrlproductList, "productId", true);
+	        	
             	List<GenericValue> facility = delegator.findList("Facility", null, null, null, null, false);
             	List<GenericValue> recdFacilityDepts = EntityUtil.filterByCondition(facility,EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,recdDeptId));
 	            if(UtilValidate.isNotEmpty(recdFacilityDepts)){
@@ -402,21 +408,27 @@ public class ProductionServices {
         		 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
         	 	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
         	 	 if(UtilValidate.isNotEmpty(productId)){
-       	    	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,productId ));
+        	 		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,productId ));
         	 	 }
+	        	 if(UtilValidate.isNotEmpty(productTypeId) && "RAW_MATERIAL".equals(productTypeId)){
+	        		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,rawMtrlProducts ));
+				 }
+	        	 if(UtilValidate.isNotEmpty(productTypeId) && !"RAW_MATERIAL".equals(productTypeId)){
+	        	     conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN,rawMtrlProducts ));
+				 }
         	 	 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         		 List<GenericValue> inventoryItemAndDetail = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);
             	 if(UtilValidate.isNotEmpty(inventoryItemAndDetail)){
  		        	List<String> invProductIds = EntityUtil.getFieldListFromEntityList(inventoryItemAndDetail, "productId", true);
 
- 		          List<String> recdDeptWorkEffortIds =FastList.newInstance();
+ 		        	List<String> recdDeptWorkEffortIds =FastList.newInstance();
 		        	List<String> recdFromDeptWorkEffortIds =FastList.newInstance();
 		        	 conditionList.clear();
 		        	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 	        	 	 conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	        		 conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.NOT_EQUAL,null ));
-	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
-	        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
+	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+	        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
 	        		 EntityCondition workEffortRecdCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	        		 List<GenericValue> workEffortIdsInvDetailList = delegator.findList("InventoryItemAndDetail", workEffortRecdCond, null,null, null, false);
 	        		 recdDeptWorkEffortIds = EntityUtil.getFieldListFromEntityList(workEffortIdsInvDetailList, "workEffortId", true);
@@ -424,11 +436,11 @@ public class ProductionServices {
 	        		 conditionList.clear();
 	        		 conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.IN,recdDeptWorkEffortIds ));
 		        	 conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS,null ));
-	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
-	        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
+	        		 conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+	        		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
 	        		 EntityCondition workEffortCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	        		 List<GenericValue> workEffortInvDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, workEffortCond);
- 		           
+
 	 		        List<GenericValue> inventoryTransDetailList=FastList.newInstance();
 	        		conditionList.clear();
 	 		        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
@@ -440,7 +452,7 @@ public class ProductionServices {
 	        			HashSet<String> inventoryTransferIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransferList, "inventoryTransferId", true));
 	        			conditionList.clear();
 
-		        		//conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+		        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
 		        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,inventoryTransferIds ));
 		        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
 		        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -494,7 +506,6 @@ public class ProductionServices {
 		     	    		if(UtilValidate.isNotEmpty(eachProdWorkEffortInventory)){
 	    						for(GenericValue productInventory : eachProdWorkEffortInventory){
 	    	    					BigDecimal tempRecdQty = (BigDecimal)productInventory.get("quantityOnHandDiff");
-	    	    					tempRecdQty=tempRecdQty.negate();
 	    	    					BigDecimal tempFatPercent = (BigDecimal)productInventory.get("fatPercent");
 	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInventory.get("snfPercent");
 	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
@@ -619,6 +630,7 @@ public class ProductionServices {
         String productId = (String)context.get("productId");
         String thruDeptId = (String)context.get("thruDeptId");
         String flag = (String)context.get("flag");
+        String productTypeId = (String)context.get("productTypeId");
         Map<String, Object> result = FastMap.newInstance();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
@@ -637,9 +649,14 @@ public class ProductionServices {
 		List<String> facilityIds = FastList.newInstance();
 		List<String> thruFacilityIds = FastList.newInstance();
 		List<String> thruDeptIds = FastList.newInstance();
+		List<String> rawMtrlProducts = FastList.newInstance();
     	List conditionList = FastList.newInstance();
         if(UtilValidate.isNotEmpty(ownerPartyId)){
 	        try {
+	        	List<GenericValue> productList = delegator.findList("Product", null, null,null, null, false);
+	        	List<GenericValue> rawMtrlproductList =EntityUtil.filterByCondition(productList, EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS,"RAW_MATERIAL"));
+	        	rawMtrlProducts=EntityUtil.getFieldListFromEntityList(rawMtrlproductList, "productId", true);
+	        	
             	List<GenericValue> facility = delegator.findList("Facility", null, null, null, null, false);
 	        	
             	List<GenericValue> fromFacility = EntityUtil.filterByCondition(facility,EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,ownerPartyId));
@@ -681,6 +698,12 @@ public class ProductionServices {
         	     if(UtilValidate.isNotEmpty(productId)){
         	    	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,productId ));
         	     }
+        	     if(UtilValidate.isNotEmpty(productTypeId) && "RAW_MATERIAL".equals(productTypeId)){
+	        		 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN,rawMtrlProducts ));
+				 }
+	        	 if(UtilValidate.isNotEmpty(productTypeId) && !"RAW_MATERIAL".equals(productTypeId)){
+	        	     conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_IN,rawMtrlProducts ));
+				 }
         		 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         		 List<GenericValue> inventoryItemAndDetailList = delegator.findList("InventoryItemAndDetail", condition, null,null, null, false);
         		 List<GenericValue> inventoryItemAndDetail = EntityUtil.filterByCondition(inventoryItemAndDetailList, EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
@@ -738,7 +761,7 @@ public class ProductionServices {
 		        		if(UtilValidate.isNotEmpty(inventoryTransferList)){
 			        		HashSet<String> inventoryTransferIds= new HashSet( EntityUtil.getFieldListFromEntityList(inventoryTransferList, "inventoryTransferId", true));
 			        		conditionList.clear();
-			        		//conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
 			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.IN,inventoryTransferIds ));
 			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
 			        		EntityCondition invenTransCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
