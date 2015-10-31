@@ -1360,5 +1360,34 @@ under the License.
         <field name="debitAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('D'))return(amount);if(debitCreditFlag.equals('C'))return(0);}"/></field>
         <field name="creditAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('C'))return(amount);if(debitCreditFlag.equals('D'))return(0);}"/></field>
     </form>
+    
+      <form name="AcctgTransEntriesDetailed" type="list" list-name="allAcctgCodeTransEntryList">
+        <field name="glAccountId"><display/></field>
+        <field name="acctgTransId"><display/></field>
+        <field name="transTypeDescription"><display/></field>
+        <field name="transactionDate"><display/></field>
+        <field name="invoiceId"><display/></field>
+        <field name="partyId"><display/></field>
+        <field name="productId"><display/></field>
+        <field name="isPosted"><display/></field>
+        <field name="postedDate"><display/></field>
+        <field name="transactionDate"><display/></field>
+        <field name="currencyUomId" title="${uiLabelMap.AccountingOriginalCurrency}"><display description="${origCurrencyUomId}"/></field>
+        <field name="debitAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('D'))return(amount);if(debitCreditFlag.equals('C'))return(0);}"/></field>
+        <field name="creditAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('C'))return(amount);if(debitCreditFlag.equals('D'))return(0);}"/></field>
+    </form>
+    <form name="AcctgTransEntriesCondensed" type="list" list-name="allAcctgCodeTransEntryList">
+        <field name="glAccountId"><display/></field>
+        <field name="transactionDate"><display/></field>
+        <field name="invoiceId"><display/></field>
+        <field name="paymentId"><display/></field>
+        <field name="glAccountTypeId"><display/></field>
+        <field name="partyId"><display/></field>
+        <field name="productId"><display/></field>
+        <field name="debitAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('D'))return(amount);if(debitCreditFlag.equals('C'))return(0);}"/></field>
+        <field name="creditAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('C'))return(amount);if(debitCreditFlag.equals('D'))return(0);}"/></field>
+    </form>
+    
+    
 
 </forms>
