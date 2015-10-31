@@ -130,6 +130,8 @@
 	
 	<Enumeration enumId="INV_CHECK" enumTypeId="TENANTCONF_TYPE" description="Inventory Check" lastUpdatedStamp="2013-03-09 20:57:52.0" lastUpdatedTxStamp="2013-03-09 20:57:52.0" createdStamp="2013-03-09 20:57:52.0" createdTxStamp="2013-03-09 20:57:52.0"/>
 	<TenantConfiguration propertyName="enableInvCheck" propertyTypeEnumId="INV_CHECK" propertyValue="Y" description="Enable Inventory Check for Parlour Sales" lastUpdatedStamp="2013-03-09 20:59:27.0" lastUpdatedTxStamp="2013-03-09 20:59:27.0" createdStamp="2013-03-09 20:59:27.0" createdTxStamp="2013-03-09 20:59:27.0"/>
+	<TenantConfiguration propertyName="enableInvForICPSale" propertyTypeEnumId="INV_CHECK" propertyValue="Y" description="Enable Inventory for ICP Sales" />
+	<TenantConfiguration propertyName="enableInvForFGSSale" propertyTypeEnumId="INV_CHECK" propertyValue="Y" description="Enable Inventory for FGS Sales" />
 	
 	<Enumeration description="Route Marketing Tenant Configuration" enumId="RT_MKTG" enumTypeId="TENANTCONF_TYPE" sequenceId="1"/>
 	<TenantConfiguration propertyName="enablePartyWiseDues" propertyTypeEnumId="RT_MKTG" propertyValue="N" description="Enable Partywise Dues"/>
@@ -144,8 +146,8 @@
     
      
      <OrderAdjustmentType description="Promotions Adjustment" hasTable="N" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT"/>
-	<InvoiceItemType description="Promotions Adjustment" hasTable="N" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
-	<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
+	 <InvoiceItemType description="Promotions Adjustment" hasTable="N" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
+	 <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
     
      <OrderAdjustmentType description="Promotions Adjustment" hasTable="N" orderAdjustmentTypeId="INVOICE_ADJ"/>
      <InvoiceItemType description="Promotions Adjustment" hasTable="N" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
