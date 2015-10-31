@@ -31,6 +31,7 @@ import org.ofbiz.accounting.util.*;
 
 condList = [];
 allAcctgCodeTransEntryMap=[:];
+List allAcctgCodeTransEntryList=FastList.newInstance();
 glAccountIdList=[];
 glAccountId=parameters.AccountCode;
 if(UtilValidate.isEmpty(glAccountId)){
@@ -63,10 +64,30 @@ context.put("openingBal",result.get("openingBal"));
  // filterByCondition
  acctgTransEntryList=[];
  if(UtilValidate.isNotEmpty(acctgTransEntryListIter)){
+	 BigDecimal totDebtAmount = BigDecimal.ZERO;
+	 BigDecimal totCrdtAmount = BigDecimal.ZERO;
+     Map totalDebtMap= FastMap.newInstance();
+	 Map totalCrdtMap= FastMap.newInstance();
 	// Debug.log("acctgTransEntryListIter===================="+acctgTransEntryListIter);
 	 while(acctgTransEntry= acctgTransEntryListIter.next()) {
 	  acctgTransEntryList.addAll(acctgTransEntry);
+	  if(UtilValidate.isNotEmpty(acctgTransEntry.debitCreditFlag) && (acctgTransEntry.debitCreditFlag).equals("C")){
+		  totCrdtAmount=totCrdtAmount+acctgTransEntry.amount;
+	  }
+	  if(UtilValidate.isNotEmpty(acctgTransEntry.debitCreditFlag) && (acctgTransEntry.debitCreditFlag).equals("D")){
+		  totDebtAmount=totDebtAmount+acctgTransEntry.amount;
+	  }
+	  allAcctgCodeTransEntryList.addAll(acctgTransEntry);
 	 }
+	 totalDebtMap.put("partyId","Tootal DebitAmount");
+	 totalDebtMap.put("productId",totDebtAmount);
+	 allAcctgCodeTransEntryList.addAll(totalDebtMap);
+	 
+	 totalCrdtMap.put("partyId","Tootal CreditAmount");
+	 totalCrdtMap.put("productId",totCrdtAmount);
+	 allAcctgCodeTransEntryList.addAll(totalCrdtMap);
+	 
+	 
 	 if(UtilValidate.isNotEmpty(acctgTransEntryList)){
 		 allAcctgCodeTransEntryMap[glAccountId]=acctgTransEntryList;
 	 }
@@ -81,3 +102,5 @@ context.put("openingBal",result.get("openingBal"));
   context.allAcctgCodeTransEntryMap=allAcctgCodeTransEntryMap;
   context.fromDate=fromDate;
   context.thruDate=thruDate;
+  context.allAcctgCodeTransEntryList=allAcctgCodeTransEntryList;
+  

@@ -766,7 +766,7 @@ function reportTypeChangeFunc() {
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
        	<tr class="alternate-row"> 
-      	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">	
+      	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">
       		  	<td width="30%">GL History Report<input type="hidden" name="reportType" value="byAccount"/></td>
 				<#-- <td width="25%">From<input  type="text" size="18pt" id="glLedgerFromDate" readonly  name="fromDate"/></td>
 				<td width="25%">To<input  type="text" size="18pt" id="glLedgerThruDate" readonly  name="thruDate"/></td>-->
@@ -782,7 +782,7 @@ function reportTypeChangeFunc() {
 			  	  <td width="75%"><input type="hidden" name="organizationPartyId" value="Company"/></td>&#160;</td> 
 			</tr>
 			 <tr class="alternate-row">
-			  	 <td width="25%"> &#160;</td>
+			  	 <td width="20%"> &#160;</td>
 			  	 <td width="50%">AccountCode
 			  	  	<select name='AccountCode' id ="AccountCode">	
 					 	
@@ -794,7 +794,8 @@ function reportTypeChangeFunc() {
 						<option value='detailed'>Detailed</option>
 					</select>
 				</td>
-          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td>
+				<td width="30%"><input type="submit" value="PDF" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+							    <input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.csv</@ofbizUrl>');" class="buttontext"/></td>         			
           	</tr>
       		</form>
       	</tr>

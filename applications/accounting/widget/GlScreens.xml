@@ -1347,4 +1347,54 @@ reportType:byAccount -->
 			</widgets>
 		</section>
 	</screen>
+	<screen name="AcctgTransEntriesSearchResultsNewCsv">
+		<section>
+			<actions>
+			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
+			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrailBalanceTransactions.groovy" />
+			 <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+			    <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+              
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="organizationPartyId" from-field="parameters.organizationPartyId"
+ 					global="true" />
+				<set field="fromDate" type="Date" value="${parameters.fromDate}"
+					global="true" />
+			    <set field="thruDate" type="Date" value="${parameters.thruDate}"
+					global="true" />
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+     			<set field="viewSize" value="99999999" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="detailed" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<screenlet title="${uiLabelMap.PageTitleAcctgTransactions}">
+							<include-form name="AcctgTransEntriesDetailed"
+								location="component://accounting/widget/GlForms.xml" />
+						</screenlet>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="condensed" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<screenlet title="${uiLabelMap.PageTitleAcctgTransactionsCondensed}">
+							<include-form name="AcctgTransEntriesCondensed"
+								location="component://accounting/widget/GlForms.xml" />
+						</screenlet>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
