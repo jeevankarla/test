@@ -879,15 +879,16 @@ public class ByProductServices {
             failedMsg +=errorMsg;
    			sendMailParams.put("body", failedMsg);
             try{
-                dispatcher.runAsync("sendMail", sendMailParams);
-                
+                Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
+                if(ServiceUtil.isError(resultCtxMap)){
+                	Debug.log("Problem in calling service sendMail");
+                }
             }catch(GenericServiceException e1){
             	Debug.log("Problem in sending email");
 			}
-            Debug.log("Problem in calling service sendMail");
-           return ServiceUtil.returnError(failedMsg);
-            
-   		}else {
+            //Debug.log("Problem in calling service sendMail");
+            //return ServiceUtil.returnError(failedMsg);
+        }else {
    			shipment.set("statusId", "GENERATED");	
    		}
         try {
@@ -1083,13 +1084,13 @@ public class ByProductServices {
 			shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
 			
 		}catch(GenericEntityException e){
-			Debug.logError("No partyRole found for given partyId:"+ partyId, module);
+			Debug.logError("No Shipment found for given Id:"+ shipmentId, module);
               try{
               errorMsg =stackTraceToString(e);
               }catch (Exception e1) {
 					// TODO: handle exception
 				}
-			return ServiceUtil.returnError("No partyRole found for given partyId");
+			return ServiceUtil.returnError("No Shipment found for given Id:"+ shipmentId);
 		}
 		
         ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currencyUomId);
