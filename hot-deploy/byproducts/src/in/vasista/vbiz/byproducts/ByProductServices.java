@@ -879,13 +879,14 @@ public class ByProductServices {
             failedMsg +=errorMsg;
    			sendMailParams.put("body", failedMsg);
             try{
-                Map resultCtxMap = dispatcher.runSync("sendMail", sendMailParams, 360, true);
-                if(ServiceUtil.isError(resultCtxMap)){
-                	Debug.log("Problem in calling service sendMail");
-                }
+                dispatcher.runAsync("sendMail", sendMailParams);
+                
             }catch(GenericServiceException e1){
             	Debug.log("Problem in sending email");
 			}
+            Debug.log("Problem in calling service sendMail");
+           return ServiceUtil.returnError(failedMsg);
+            
    		}else {
    			shipment.set("statusId", "GENERATED");	
    		}
