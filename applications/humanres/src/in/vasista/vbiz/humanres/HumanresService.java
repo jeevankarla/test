@@ -329,48 +329,100 @@ public class HumanresService {
 								continue;
 							}*/
 							
-							Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
-							int minimumTime = 0;
-							int totalMinutes = 0;
-							int index = 0;
-							if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
-								List punchDetailsList = (List)punMap.get("punchDataList");
-								if(UtilValidate.isNotEmpty(punchDetailsList)){
-									/*Map firstPunchDetails = (Map) punchDetailsList.get(0);
-					        		String totalPunchTime = (String)firstPunchDetails.get("totalTime");
-					        		if(UtilValidate.isNotEmpty(totalPunchTime)){
-					        			totalPunchTime = totalPunchTime.replace(" Hrs", "");
-										List<String> punchTimeSplit = StringUtil.split(totalPunchTime, ":");
-										if(UtilValidate.isNotEmpty(punchTimeSplit)){
-											hours = Integer.parseInt(punchTimeSplit.get(0));
-											minutes = Integer.parseInt(punchTimeSplit.get(1));
-											totalMinutes = (hours*60)+minutes;
-											minimumTime = totalMinutes;
-											index = 0;
-										}
-					        		}
-									for (int j = 0; j < punchDetailsList.size(); ++j) {		
-						        		Map punchDetails = (Map) punchDetailsList.get(j);
-						        		String totalTime = (String)punchDetails.get("totalTime");
-						        		if(UtilValidate.isNotEmpty(totalTime)){
-											totalTime = totalTime.replace(" Hrs", "");
-											List<String> timeSplit = StringUtil.split(totalTime, ":");
-											if(UtilValidate.isNotEmpty(timeSplit)){
-												hours = Integer.parseInt(timeSplit.get(0));
-												minutes = Integer.parseInt(timeSplit.get(1));
+							if((UtilValidate.isNotEmpty(isGH) && (isGH.equals("Y"))) || (UtilValidate.isNotEmpty(isSS) && (isSS.equals("Y")))){
+								
+							}else{
+								Timestamp tempDateTime = UtilDateTime.toTimestamp(tempDate);
+								Timestamp nextDayStart = UtilDateTime.getNextDayStart(tempDateTime);
+								Timestamp nextDayEnd = UtilDateTime.getDayEnd(nextDayStart);
+								
+								List emplLeaveCondList = FastList.newInstance();
+								emplLeaveCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+								emplLeaveCondList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS ,"RL"));
+								emplLeaveCondList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS ,"LEAVE_APPROVED"));
+								emplLeaveCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO ,nextDayStart));
+								emplLeaveCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,nextDayEnd));
+								EntityCondition leaveCond = EntityCondition.makeCondition(emplLeaveCondList,EntityOperator.AND);   
+								List<GenericValue> emplLeaveList = delegator.findList("EmplLeave", leaveCond, null, UtilMisc.toList("-fromDate"), null, false);
+								if(UtilValidate.isNotEmpty(emplLeaveList)){
+									tempDate = null;
+								}
+							}
+							if(UtilValidate.isNotEmpty(tempDate) && (!tempDate.equals(null))){
+								Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+								int minimumTime = 0;
+								int totalMinutes = 0;
+								int index = 0;
+								if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
+									List punchDetailsList = (List)punMap.get("punchDataList");
+									if(UtilValidate.isNotEmpty(punchDetailsList)){
+										/*Map firstPunchDetails = (Map) punchDetailsList.get(0);
+						        		String totalPunchTime = (String)firstPunchDetails.get("totalTime");
+						        		if(UtilValidate.isNotEmpty(totalPunchTime)){
+						        			totalPunchTime = totalPunchTime.replace(" Hrs", "");
+											List<String> punchTimeSplit = StringUtil.split(totalPunchTime, ":");
+											if(UtilValidate.isNotEmpty(punchTimeSplit)){
+												hours = Integer.parseInt(punchTimeSplit.get(0));
+												minutes = Integer.parseInt(punchTimeSplit.get(1));
 												totalMinutes = (hours*60)+minutes;
-												if (totalMinutes < minimumTime){
-													minimumTime = totalMinutes;
-													index = j;
-											    }
+												minimumTime = totalMinutes;
+												index = 0;
 											}
 						        		}
-									}*/
-									Map shiftWiseMap = FastMap.newInstance();
-									for (int j = 0; j < punchDetailsList.size(); ++j) {	
-										Map punchDetails = (Map) punchDetailsList.get(j);
-										String inTime = (String)punchDetails.get("inTime");
-										String outTime = (String)punchDetails.get("outTime");
+										for (int j = 0; j < punchDetailsList.size(); ++j) {		
+							        		Map punchDetails = (Map) punchDetailsList.get(j);
+							        		String totalTime = (String)punchDetails.get("totalTime");
+							        		if(UtilValidate.isNotEmpty(totalTime)){
+												totalTime = totalTime.replace(" Hrs", "");
+												List<String> timeSplit = StringUtil.split(totalTime, ":");
+												if(UtilValidate.isNotEmpty(timeSplit)){
+													hours = Integer.parseInt(timeSplit.get(0));
+													minutes = Integer.parseInt(timeSplit.get(1));
+													totalMinutes = (hours*60)+minutes;
+													if (totalMinutes < minimumTime){
+														minimumTime = totalMinutes;
+														index = j;
+												    }
+												}
+							        		}
+										}*/
+										Map shiftWiseMap = FastMap.newInstance();
+										for (int j = 0; j < punchDetailsList.size(); ++j) {	
+											Map punchDetails = (Map) punchDetailsList.get(j);
+											String inTime = (String)punchDetails.get("inTime");
+											String outTime = (String)punchDetails.get("outTime");
+											String totalTime = (String)punchDetails.get("totalTime");
+											if(UtilValidate.isNotEmpty(totalTime)){
+												totalTime = totalTime.replace(" Hrs", "");
+												List<String> timeSplit = StringUtil.split(totalTime, ":");
+												if(UtilValidate.isNotEmpty(timeSplit)){
+													 int hours = Integer.parseInt(timeSplit.get(0));
+													 int minutes = Integer.parseInt(timeSplit.get(1));
+													 int timeInMinutes = (hours*60)+minutes;
+													 totalMinutes = totalMinutes + timeInMinutes;
+												}
+											}
+											String inTimeVal = "inTime" + j;
+											String outTimeVal = "outTime" + j;
+											String totalTimeVal = "totalTime" + j;
+											shiftWiseMap.put(inTimeVal,inTime);
+											shiftWiseMap.put(outTimeVal,outTime);
+											shiftWiseMap.put(totalTimeVal,totalTime);
+											if((punchDetailsList.size()) == 1){
+												shiftWiseMap.put("inTime1","");
+												shiftWiseMap.put("outTime1","");
+												shiftWiseMap.put("totalTime1","");
+											}
+										}
+										
+										if(totalMinutes >= 225){
+											tempDayMap.put("punchDetails", shiftWiseMap);
+											tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
+											workedHolidaysList.add(tempDayMap);
+										}
+									}
+									//Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+									/*if(UtilValidate.isNotEmpty(punchDetails)){
 										String totalTime = (String)punchDetails.get("totalTime");
 										if(UtilValidate.isNotEmpty(totalTime)){
 											totalTime = totalTime.replace(" Hrs", "");
@@ -378,47 +430,16 @@ public class HumanresService {
 											if(UtilValidate.isNotEmpty(timeSplit)){
 												 int hours = Integer.parseInt(timeSplit.get(0));
 												 int minutes = Integer.parseInt(timeSplit.get(1));
-												 int timeInMinutes = (hours*60)+minutes;
-												 totalMinutes = totalMinutes + timeInMinutes;
+												 if(((hours*60)+minutes) >=225){
+												 //if(((hours*60)+minutes) >=240){
+													 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
+													 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
+													 workedHolidaysList.add(tempDayMap);
+												 }
 											}
 										}
-										String inTimeVal = "inTime" + j;
-										String outTimeVal = "outTime" + j;
-										String totalTimeVal = "totalTime" + j;
-										shiftWiseMap.put(inTimeVal,inTime);
-										shiftWiseMap.put(outTimeVal,outTime);
-										shiftWiseMap.put(totalTimeVal,totalTime);
-										if((punchDetailsList.size()) == 1){
-											shiftWiseMap.put("inTime1","");
-											shiftWiseMap.put("outTime1","");
-											shiftWiseMap.put("totalTime1","");
-										}
-									}
-									
-									if(totalMinutes >= 225){
-										tempDayMap.put("punchDetails", shiftWiseMap);
-										tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
-										workedHolidaysList.add(tempDayMap);
-									}
+									}*/
 								}
-								//Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
-								/*if(UtilValidate.isNotEmpty(punchDetails)){
-									String totalTime = (String)punchDetails.get("totalTime");
-									if(UtilValidate.isNotEmpty(totalTime)){
-										totalTime = totalTime.replace(" Hrs", "");
-										List<String> timeSplit = StringUtil.split(totalTime, ":");
-										if(UtilValidate.isNotEmpty(timeSplit)){
-											 int hours = Integer.parseInt(timeSplit.get(0));
-											 int minutes = Integer.parseInt(timeSplit.get(1));
-											 if(((hours*60)+minutes) >=225){
-											 //if(((hours*60)+minutes) >=240){
-												 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
-												 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
-												 workedHolidaysList.add(tempDayMap);
-											 }
-										}
-									}
-								}*/
 							}
 							//tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
 							//holidays.remove(tempDate);
