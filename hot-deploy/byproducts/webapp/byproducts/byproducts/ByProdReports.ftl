@@ -1368,7 +1368,7 @@ function reportTypeChangeFunc() {
 	      					<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
-					  <tr class="alternate-row">
+					<#--  <tr class="alternate-row">
 						<form id="purchaseSaleReport" name="purchaseSaleReport" method="post" action="<@ofbizUrl>PurchaseSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Purchse Book Report Detail<input type="hidden" id="isPurchaseInvoice" name="isPurchaseInvoice" value="Y"/></td>
 							<td width="15%">From<input  type="text" size="18pt" id="PurchaseSalesFromDate" readonly  name="fromDate"/></td>
@@ -1381,12 +1381,12 @@ function reportTypeChangeFunc() {
 				      			<option value="UNION">Sale to Union</option>
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td> -->
-							<td width="15%"></td>
+						<#--	<td width="15%"></td>
 			      			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="purchaseSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseSaleReport', '<@ofbizUrl>PurchaseSaleBookReport.pdf</@ofbizUrl>');" class="buttontext"/>
-						    <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseSaleReport', '<@ofbizUrl>PurchaseSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>    -->     			
+						    <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseSaleReport', '<@ofbizUrl>PurchaseSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 						</form>
-	                  </tr>
+	                  </tr> -->
 	                  <tr class="alternate-row">
 						<form id="saleInvoiceAbstractReport" name="saleInvoiceAbstractReport" method="post" action="<@ofbizUrl>saleInvoiceAbstractReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Invoice Sequence Number Report</td>
