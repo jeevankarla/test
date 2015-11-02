@@ -155,9 +155,9 @@ under the License.
 						                                   <#if categoryType?has_content && categoryType!="UNITS">
                                                             <#assign product=delegator.findOne("Product",{"productId":productDtls.getKey()},true)>
                                                            </#if>
-						                                   <#if categoryType?has_content>
+						                                   <#if categoryType?has_content && categoryType!="UNITS">
                                                            <fo:table-cell>
-								                           		<fo:block   font-size="12pt" text-align="left" white-space-collapse="true">${productDtls.getKey()?if_exists}</fo:block>  
+								                           		<fo:block   font-size="12pt" text-align="left" white-space-collapse="true">${product.description?if_exists}</fo:block>  
 								                       		</fo:table-cell>
                                                           <#--<#elseif categoryType?has_content>
 						                                   <fo:table-cell>
@@ -165,7 +165,7 @@ under the License.
 								                       		</fo:table-cell> -->
                                                             <#else>
                                                             <fo:table-cell>
-								                           		<fo:block  font-size="12pt" text-align="left" white-space-collapse="true">${product.description?if_exists}</fo:block>  
+								                           		<fo:block  font-size="12pt" text-align="left" white-space-collapse="true">${productDtls.getKey()?if_exists}</fo:block>  
 								                       		</fo:table-cell>
 															</#if>
 															<fo:table-cell>

@@ -2,6 +2,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import java.util.*;
 import java.lang.*;
 import org.ofbiz.entity.*;
@@ -9,6 +10,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
 import java.sql.*;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -77,6 +79,13 @@ if(UtilValidate.isEmpty(parameters.partyId)){
 	if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 		depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
 		partyIds.addAll(depotPartyIds);
+	}
+	if(UtilValidate.isEmpty(categoryType)){
+		EntityFindOptions efo = new EntityFindOptions();
+		efo.setDistinct(true);
+		fieldToSelect = UtilMisc.toSet("partyId");
+		EntityListIterator partyRoleList = delegator.find("PartyRole",null,null,fieldToSelect,null,efo);
+		partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoleList, "partyId", true);
 	}
 }else{
 	partyIds.add(parameters.partyId);
@@ -169,7 +178,7 @@ vatMap=[:];
 												product = delegator.findOne("Product", [productId : currentProduct], false);
 												productId = productValue.getKey();
 													exprList=[];
-													if(product.productTypeId == "FINISHED_GOOD" && categoryType.equalsIgnoreCase("UNITS")){
+													if(product.productTypeId == "FINISHED_GOOD" && UtilValidate.isNotEmpty(categoryType) && categoryType.equalsIgnoreCase("UNITS")){
 														
 															exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "SALES_ACANLY"));
 														
