@@ -1758,9 +1758,9 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					itemValue = itemValue.add((BigDecimal)prodMap.get("bedseccessAmount"));
 				}
 				
-				if(!recalculateBEDAndVAT){
+				/*if(!recalculateBEDAndVAT){
 					itemValue = itemValue.add(bedItemTotal);
-				}
+				}*/
 				
 				if(recalculateVAT){
 					//BigDecimal listAmt = ((BigDecimal)prodMap.get("unitPrice")).multiply((BigDecimal)prodMap.get("quantity"));
@@ -1783,7 +1783,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 				if(perProdAdjFlag){
 					recalcAdjPrice = amount;
 				}
-					
+				    
 				totalItemValue = totalItemValue.add(recalcAdjPrice);
 				BigDecimal adjUnitAmt = recalcAdjPrice.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding);
 				BigDecimal uPrice = unitListPrice.add(adjUnitAmt);
@@ -2043,8 +2043,8 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 	    		   termAmount = termValue;
 	    	   }
     	   }
-		   
-    	   adjustmentMap.put("amount", termAmount);
+
+	       adjustmentMap.put("amount", termAmount);
 	       result.put("termAmount", termAmount); 
 	       result.put("adjustmentMap", adjustmentMap);
 	       return result;
