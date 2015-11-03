@@ -179,9 +179,17 @@ vatMap=[:];
 													exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 													condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 													productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+													GenericValue productEntry = null;
 													 if(UtilValidate.isNotEmpty(productList)){
-														productList=EntityUtil.getFirst(productList);
-													    virtualProductId = productList.get("productCategoryId");
+														productEntry=EntityUtil.getFirst(productList);
+													    virtualProductId = productEntry.get("productCategoryId");
+													 }
+													 virtualProductId = "";
+													 if(productEntry.categoryName && product.productTypeId == "FINISHED_GOOD"){
+														 virtualProductId = productEntry.categoryName;
+													 }
+													 else if(product.brandName){
+														 virtualProductId = product.brandName;
 													 }
 													  if(categoryType.equals("UNITS")){
 														    if(UtilValidate.isEmpty(prodTempMap[product.brandName])){
@@ -190,7 +198,12 @@ vatMap=[:];
 															  temp.put("amount" , productValue.getValue().get("totalRevenue"));
 															  temp.put("productType", product.productTypeId);
 															  temp.put("productCategory", product.primaryProductCategoryId);
+															  if(product.productTypeId == "FINISHED_GOOD" && productEntry.categoryName){
+																  temp.put("brandName", productEntry.categoryName);
+															  }
+															  else{
 															  temp.put("brandName", product.brandName);
+															  }
 															  prodTempMap.put(product.brandName, temp);
 															}else{
 																totProd =0;
@@ -198,10 +211,6 @@ vatMap=[:];
 																totProd["qtyLtrs"]+= productValue.getValue().get("total");
 																totProd["amount"]+= productValue.getValue().get("totalRevenue");
 																prodTempMap.put(product.brandName,totProd);
-															}
-															virtualProductId = "";
-															if(product.brandName){
-																virtualProductId = product.brandName;
 															}
 															productDetailsList = UtilMisc.sortMaps(prodTempMap.values().asList(), UtilMisc.toList("productCategory"));
 														}
