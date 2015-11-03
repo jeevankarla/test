@@ -477,23 +477,47 @@ public class ProductionServices {
 	 	        		EntityCondition internalReturnCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	 	        		internalReturnsList = EntityUtil.filterByCondition(inventoryItemAndDetail, internalReturnCond);
                     }
+	        		// internal indent
+	        		List<GenericValue> indentIssuesDetailList =null;
 	        		conditionList.clear();
-	        		conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "INTERNAL_INDENT"));
+	        		conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS,recdDeptId ));
 	        		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("CRQ_CANCELLED")));
-	        		conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, recdDeptId));
-	        		EntityCondition internCustReqCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	        		List<GenericValue> internalCustRequest = delegator.findList("CustRequest",internCustReqCond, null, null, null, false);
-	        		if(UtilValidate.isNotEmpty(internalCustRequest)){
-	        			custRequestIds = EntityUtil.getFieldListFromEntityList(internalCustRequest, "custRequestId", true);
-	            		conditionList.clear();
-	 	        		conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN,custRequestIds ));
-	 	        		conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.NOT_EQUAL,null));
-	 	        		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.NOT_EQUAL,null));
-	 	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
-	 	        		EntityCondition internalCustRequestCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	 	        		custrequestList = EntityUtil.filterByCondition(inventoryItemAndDetail, internalCustRequestCond);
-                    }
-	     	    	for(String invProductId:invProductIds){
+	        		EntityCondition custReqCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        		List<GenericValue> custRequestList = delegator.findList("CustRequestAndIssuance",custReqCond , null,null, null, false);
+	        		
+	        		if(UtilValidate.isNotEmpty(custRequestList)){
+	        			List<GenericValue> custRequestListIntr = EntityUtil.filterByCondition(custRequestList, EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS,"INTERNAL_INDENT" ));
+		        		HashSet<String> itemIssuanceIds= new HashSet( EntityUtil.getFieldListFromEntityList(custRequestListIntr, "itemIssuanceId", true));
+	 	        	 	if(UtilValidate.isNotEmpty(itemIssuanceIds)){
+		 	        	 	conditionList.clear();
+			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("itemIssuanceId", EntityOperator.IN,itemIssuanceIds ));
+			        		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,sendFacilityIds ));
+			        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.LESS_THAN,BigDecimal.ZERO));
+			        		EntityCondition indentIssuesCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			        		indentIssuesDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, indentIssuesCond);
+		        		}
+	        		}
+	        		// raw materail indent receives
+	        		List<GenericValue> storeIndentIssuesDetailList =null;
+	        		if(UtilValidate.isNotEmpty(custRequestList)){
+	        			List<GenericValue> custRequestStoreList = EntityUtil.filterByCondition(custRequestList, EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS,"PRODUCT_REQUIREMENT" ));
+		        		HashSet<String> storeCustRequestIds= new HashSet( EntityUtil.getFieldListFromEntityList(custRequestStoreList, "custRequestId", true));
+	 	        	 	if(UtilValidate.isNotEmpty(storeCustRequestIds)){
+		 	        	 	conditionList.clear();
+			        		conditionList.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("inventoryTransferId", EntityOperator.EQUALS,null ));
+			        		conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN,storeCustRequestIds ));
+		 	        		conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.NOT_EQUAL,null));
+		 	        		conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.NOT_EQUAL,null));
+		 	        		conditionList.add(EntityCondition.makeCondition("quantityOnHandDiff", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
+			        		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIds ));
+			        		EntityCondition storeIndentIssuesCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			        		storeIndentIssuesDetailList = EntityUtil.filterByCondition(inventoryItemAndDetail, storeIndentIssuesCond);
+		        		}
+	        		}
+ 	        	 	for(String invProductId:invProductIds){
 	     	    		Map productReceiptReturnMap = FastMap.newInstance();
 	     	    		BigDecimal receivedQuantity = BigDecimal.ZERO;
 						BigDecimal receivedKgFat = BigDecimal.ZERO;
@@ -546,12 +570,12 @@ public class ProductionServices {
 		
 		     	    		}
 						}
-						if(UtilValidate.isNotEmpty(custrequestList)){
-		     	    		List<GenericValue> eachProdCustReqtList = EntityUtil.filterByCondition(custrequestList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+						if(UtilValidate.isNotEmpty(indentIssuesDetailList)){
+		     	    		List<GenericValue> eachProdCustReqtList = EntityUtil.filterByCondition(indentIssuesDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
 		     	    		if(UtilValidate.isNotEmpty(eachProdCustReqtList)){
 	    						for(GenericValue eachProdCustReqt : eachProdCustReqtList){
 	    	    					BigDecimal tempRecdQty = (BigDecimal)eachProdCustReqt.get("quantityOnHandDiff");
-
+	    	    								tempRecdQty=tempRecdQty.negate();
 	    	    					BigDecimal tempFatPercent = (BigDecimal)eachProdCustReqt.get("fatPercent");
 	    	    					BigDecimal tempSnfPercent = (BigDecimal)eachProdCustReqt.get("snfPercent");
 	    	    					if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
@@ -577,6 +601,29 @@ public class ProductionServices {
 
 	    	    					BigDecimal tempFatPercent = (BigDecimal)productInvReturn.get("fatPercent");
 	    	    					BigDecimal tempSnfPercent = (BigDecimal)productInvReturn.get("snfPercent");
+	    	    					if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
+	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
+		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempSnfPercent)){
+	    								BigDecimal tempSnfKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempSnfPercent);
+	    								receivedKgSnf=receivedKgSnf.add(tempSnfKg);
+	    							}
+	    							if(UtilValidate.isNotEmpty(tempRecdQty)){
+	    								receivedQuantity=receivedQuantity.add(tempRecdQty);
+	    							}
+	    	    				}
+		
+		     	    		}
+						}
+						if(UtilValidate.isNotEmpty(storeIndentIssuesDetailList)){
+		     	    		List<GenericValue> storeIndentIssuesDetails = EntityUtil.filterByCondition(storeIndentIssuesDetailList,EntityCondition.makeCondition("productId",EntityOperator.EQUALS,invProductId));
+		     	    		if(UtilValidate.isNotEmpty(storeIndentIssuesDetails)){
+	    						for(GenericValue storeIndentReced : storeIndentIssuesDetails){
+	    	    					BigDecimal tempRecdQty = (BigDecimal)storeIndentReced.get("quantityOnHandDiff");
+
+	    	    					BigDecimal tempFatPercent = (BigDecimal)storeIndentReced.get("fatPercent");
+	    	    					BigDecimal tempSnfPercent = (BigDecimal)storeIndentReced.get("snfPercent");
 	    	    					if(UtilValidate.isNotEmpty(tempRecdQty) && UtilValidate.isNotEmpty(tempFatPercent)){
 	    								BigDecimal tempFatKg = ProcurementNetworkServices.calculateKgFatOrKgSnf(tempRecdQty, tempFatPercent);
 		    	    					receivedKgFat=receivedKgFat.add(tempFatKg);

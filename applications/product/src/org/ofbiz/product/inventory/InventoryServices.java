@@ -538,7 +538,7 @@ public class InventoryServices {
                     	//BigDecimal effectiveDateInvCheck = invTotalTillDate.add(availableToPromiseDiff);
                         Debug.log("invTotalTillDate=================== after=set scale================="+invTotalTillDate);
 
-                    	if(invTotalTillDate.compareTo(BigDecimal.ZERO)<0){
+                    	if(invTotalTillDate.compareTo(BigDecimal.ZERO)< -0.01){
                     		Debug.logError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date3", module);
             	  			return ServiceUtil.returnError("Inventory on transaction date["+effectiveDate+"]  is zero, Change in transaction date3");
                     	}
