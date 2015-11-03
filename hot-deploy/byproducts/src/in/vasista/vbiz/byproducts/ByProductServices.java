@@ -432,6 +432,7 @@ public class ByProductServices {
 		        vehicleTripStatusEntity.put("userLogin", userLogin);
 		        vehicleTripStatusEntity.put("statusId", "VEHICLE_OUT");
 		        vehicleTripStatusEntity.put("createdDate", nowTimeStamp);
+		        vehicleTripStatusEntity.put("estimatedEndDate", nowTimeStamp);
 		        vehicleTripStatusEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
 		        vehicleTripStatusEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 		        try {
@@ -4909,6 +4910,7 @@ public class ByProductServices {
 	    			 vehicleTripStatusMap.put("userLogin", userLogin);
 	    			 vehicleTripStatusMap.put("statusId", statusId);
 	    			 vehicleTripStatusMap.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			 vehicleTripStatusMap.put("estimatedEndDate", UtilDateTime.nowTimestamp());
 	    			 vehicleTripStatusMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			        try {
 			        	Map vehicleTripStatusResult=null;

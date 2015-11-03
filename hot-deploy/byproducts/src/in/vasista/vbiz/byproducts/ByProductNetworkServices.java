@@ -2797,6 +2797,7 @@ public class ByProductNetworkServices {
 						vehicleTripStatusMap.put("userLogin", userLogin);
 						vehicleTripStatusMap.put("statusId", "VEHICLE_RETURNED");
 						vehicleTripStatusMap.put("lastModifiedDate",UtilDateTime.nowTimestamp());
+						vehicleTripStatusMap.put("estimatedEndDate",UtilDateTime.nowTimestamp());
 						vehicleTripStatusMap.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
 						try {
 							Map vehicleTripStatusResult = dispatcher.runSync("createVehicleTripStatus",vehicleTripStatusMap);
