@@ -307,6 +307,10 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MilkConversionReportPDF"/>        
     </request-map>
+      <request-map uri="ProductionsReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ProductionsReportPDF"/>        
+    </request-map>
      <request-map uri="StockProcessingRegisterReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="StockProcessingRegisterReportPDF"/>        
@@ -519,6 +523,7 @@
     <!-- View Mappings for Production Reports-->
     <view-map name="MilkConversionReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MilkConversionReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="StockProcessingRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#StockProcessingRegisterReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="ProductionsReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#ProductionsReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="smpRegisterReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#smpRegisterReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MaterialBalanceReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#MaterialBalanceReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="productionRunCompletedReportPDF" type="screenfop" page="component://production/widget/ProductionReportScreens.xml#productionRunCompletedReportPDF" content-type="application/pdf" encoding="none"/>

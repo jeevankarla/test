@@ -99,6 +99,7 @@
 	$(document).ready(function(){
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("convFromDate","convThruDate");
+		makeDatePicker("productionsFromDate","productionsThruDate");
 		makeDatePicker("milkProcessRegDate","");
 		makeDatePicker("smpRegFromDate","smpRegThruDate");
 		makeDatePicker("temperatureDate","");
@@ -145,6 +146,44 @@
 							</td>
 						    <td width="35%"><span class='h3'></span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+			<tr class="alternate-row"> 
+				<form id="productionsReport" name="productionsReport" mothed="post" action="<@ofbizUrl>ProductionsReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="18%"><span class='h3'>Productions Report</span></td>
+							<td width="30%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="productionsFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="productionsThruDate"   name="thruDate"/>
+								 </span>
+							</td>
+						   	<td align='left' width="37%"><span class="h3">From Dept</span>
+						     <select name='fromDeptId' onchange="javascript:getDeptProducts(this);" required>
+	       						     <option value='' ></option>
+				      			 	 <#list partyGroup as facilityDepartment>
+				      			 			<option value='${facilityDepartment.get("partyId")}'>${facilityDepartment.get("groupName")}</option>
+				      			 		</#list> 
+				      			 	</select>
+						     
+					     <span class="h3">&#160; Product</span>
+					          <select name='productId'  >
+				      			 	</select>
+				      			 	
+				      			 	<span class="h3">&#160;                                                  Type</span>
+						     <select name='prodType'  >
+	       						     <option value='' ></option>
+ 	       						     <option value='IssueProducts' >Issue Products</option>
+ 	       						     <option value='DeclareProducts' >Declare Products</option>
+ 	       						     <option value='ReturnProducts' >Return Products</option>
+	       						     
+				      			 	</select>
+				      			 	
+					     	</td>
+						    <td width="5%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					</table>
 				</form>
