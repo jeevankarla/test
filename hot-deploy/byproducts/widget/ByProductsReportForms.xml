@@ -296,6 +296,7 @@
       <field name="openingDebit" title="OPENING DEBIT"><display></display></field>
       <field name="openingCredit" title="OPENING CREDIT"><display/></field>
       <field name="invoiceAmount" title="INVOICE AMOUNT"><display></display></field>
+      <field name="totalPaid" title="TOT-PAID AMOUNT "><display></display></field>
       <field name="chequePenalityPaidAmount" title="CHQ-RTN PAYMENT"><display></display></field>
       <field name="closingDebit" title="CLOSING DEBIT"><display></display></field>
       <field name="closingCredit" title="CLOSING CREDIT"><display></display></field>
