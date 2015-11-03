@@ -55,7 +55,6 @@ public class EmplLeaveService {
 	
 	public static Map<String, Object> getEmployeeLeaveBalance(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
-
         Map<String, Object> result = FastMap.newInstance();
         String employeeId = (String) context.get("employeeId");
         Date balanceDate = (Date)context.get("balanceDate");
@@ -1303,7 +1302,29 @@ public class EmplLeaveService {
     		maxIntervalDays = (maxIntervalDays.divide(new BigDecimal(2),2,BigDecimal.ROUND_HALF_UP));
     	}
     	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
-    	
+		List leaveTypeList = FastList.newInstance(); 
+		leaveTypeList.add("CH");
+		leaveTypeList.add("CL");
+		leaveTypeList.add("CHGH");
+		leaveTypeList.add("CHSS");
+		if(UtilValidate.isNotEmpty(leaveTypeId) && (!leaveTypeList.contains(leaveTypeId))){
+	    	try {
+				Timestamp thruDateBefore = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+				Timestamp thruDateAfter = UtilDateTime.addDaysToTimestamp(thruDate, +1);
+				List conditionList = UtilMisc.toList(
+				        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+						conditionList.add(EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS,"CL"));
+						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, thruDateBefore), EntityOperator.OR, 
+				    	EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, thruDateAfter)));
+						EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
+						List<GenericValue> leaves = delegator.findList("EmplLeave", condition, null, null, null, false);
+						if(UtilValidate.isNotEmpty(leaves)){
+							return ServiceUtil.returnError("same Leave cannot be combined.");
+						}
+	    	}catch (Exception e) {
+				return ServiceUtil.returnError("same Leave cannot be combined.");
+			}
+		}
     	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, -1));
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CHGH") || leaveTypeId.equals("CH") || leaveTypeId.equals("CHSS")){
@@ -1314,32 +1335,37 @@ public class EmplLeaveService {
 					}
 				}
 			}
-			if(UtilValidate.isNotEmpty(partyId)){
-    			Map getEmplLeaveBalMap = FastMap.newInstance();
-    			getEmplLeaveBalMap.put("userLogin",userLogin);
-    			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
-    			getEmplLeaveBalMap.put("employeeId",partyId);
-    			getEmplLeaveBalMap.put("flag","creditLeaves");
-    			getEmplLeaveBalMap.put("createleaveFlag","Y");
-    			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
-    			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
-    				try{
-    					serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
-    		            if (ServiceUtil.isError(serviceResult)){
-    		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-    		            	return ServiceUtil.returnSuccess();
-    		            } 
-    	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
-    	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
-    	    			if(UtilValidate.isNotEmpty(maxIntervalDays) && ((maxIntervalDays).compareTo(BigDecimal.ZERO) !=0)){
-    	    				if((maxIntervalDays.compareTo(leaveClosingBalance)) >0){
-    	    					return ServiceUtil.returnError("You cannot apply leave more than available leaves for leaveType: "+leaveTypeId);
-    	    				}
-    	    			}
-    				}catch(Exception e){
-        					Debug.logError("Error while getting Employee Leave Balance"+e.getMessage(), module);
-        			}
-    			}
+			if(UtilValidate.isNotEmpty(leaveTypeId) && (!leaveTypeList.contains(leaveTypeId))){
+				if(UtilValidate.isNotEmpty(partyId)){
+	    			Map getEmplLeaveBalMap = FastMap.newInstance();
+	    			getEmplLeaveBalMap.put("userLogin",userLogin);
+	    			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
+	    			getEmplLeaveBalMap.put("employeeId",partyId);
+	    			getEmplLeaveBalMap.put("flag","creditLeaves");
+	    			getEmplLeaveBalMap.put("createleaveFlag","Y");
+	    			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+	    			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
+	    				try{
+	    					serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
+	    		            if (ServiceUtil.isError(serviceResult)){
+	    		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+	    		            	return ServiceUtil.returnSuccess();
+	    		            }
+	    		            BigDecimal leaveClosingBalance = BigDecimal.ZERO;
+	    	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
+	    	    			if(UtilValidate.isNotEmpty(leaveBalances.get(leaveTypeId))){
+	        	    			leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
+	    	    			}
+	    	    			if(UtilValidate.isNotEmpty(maxIntervalDays) && ((maxIntervalDays).compareTo(BigDecimal.ZERO) !=0)){
+	    	    				if((maxIntervalDays.compareTo(leaveClosingBalance)) >0){
+	    	    					return ServiceUtil.returnError("You cannot apply leave more than available leaves for leaveType: "+leaveTypeId);
+	    	    				}
+	    	    			}
+	    				}catch(Exception e){
+	        					Debug.logError("Error while getting Employee Leave Balance"+e.getMessage(), module);
+	        			}
+	    			}
+				}
 			}
 		}catch(Exception e){
 			Debug.logError("Error while getting Leave Type Details"+e.getMessage(), module);
