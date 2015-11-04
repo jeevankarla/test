@@ -461,7 +461,21 @@ employmentsList.each{ employeeId->
 					}
 				}
 				//DA Arrears
-				DAArrearsPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+				
+				periodTypeId = "";
+				List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"SP_DA_ARREARS"));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+				condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthDateStart));
+				condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, monthDateEnd));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
+				if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
+					PeriodBillingDetails = EntityUtil.getFirst(PeriodBillingAndCustomTimePeriodList);
+					periodTypeId = PeriodBillingDetails.get("periodTypeId");
+				}
+				
+				DAArrearsPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId",periodTypeId,"billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
 				if(UtilValidate.isNotEmpty(DAArrearsPeriodTotals)){
 					Iterator DAArrearsPeriodTotalsIter = DAArrearsPeriodTotals.entrySet().iterator();
 					while(DAArrearsPeriodTotalsIter.hasNext()){
