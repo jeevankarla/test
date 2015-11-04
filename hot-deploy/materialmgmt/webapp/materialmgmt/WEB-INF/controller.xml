@@ -1225,6 +1225,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ScrapDCandGatePassReportPDF"/>
     </request-map>
+    <request-map uri="SaleDCandGatePassReport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="SaleDCandGatePassReportPDF"/>
+    </request-map>
      <request-map uri="listofpendingPOs.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="listofpendingPOsPDF"/>
@@ -1536,6 +1540,7 @@
     <view-map name="stockPositionReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StockPositionReportPDF" content-type="application/pdf"/>
     <view-map name="PurchaseIndentReport" type="screenfop" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#PurcaseIndentReport" content-type="application/pdf"/>
     <view-map name="ScrapDCandGatePassReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ScrapDCandGatePassReportPDF" content-type="application/pdf"/>
+     <view-map name="SaleDCandGatePassReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#SaleDCandGatePassReportPDF" content-type="application/pdf"/>
      <view-map name="groupedReqDetailsReportPDF" type="screenfop" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#groupedReqDetailsReportPDF" content-type="application/pdf"/>
     
     <!-- custRequest views -->
