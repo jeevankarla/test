@@ -9338,7 +9338,6 @@ public class ByProductNetworkServices {
 		try {
 			// get Issueance Details
 			GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
-			
 			if(UtilValidate.isEmpty(shipment)){
 				result = ServiceUtil.returnSuccess();
 				return result;
@@ -9351,27 +9350,25 @@ public class ByProductNetworkServices {
 				List<GenericValue> orderHeaders = delegator.findList("OrderHeader", cond, null, null, null, false);
 				
 				List<String> orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
-				for(String eachOrderId : orderIds){
-					result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(eachOrderId),"userLogin", userLogin));
-	    			if (ServiceUtil.isError(result)) {
-	    	        	  Debug.logError("There was an error while Cancel  the Orders: " + ServiceUtil.getErrorMessage(result), module);              
-	    	              return ServiceUtil.returnError("There was an error while Cancel  the Orders: ");  
-	    	         }
-				}
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", orderIds,"userLogin", userLogin));
+    			if (ServiceUtil.isError(result)) {
+    	        	  Debug.logError("There was an error while Cancel  the Orders: " + ServiceUtil.getErrorMessage(result), module);              
+    	              return ServiceUtil.returnError("There was an error while Cancel  the Orders: ");  
+    	         }
 				 			
 				List<GenericValue> orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), null, null, null, false);
 				
 				List<String> invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBilling, "invoiceId", true);
 				
 				List<GenericValue> invoices = delegator.findList("Invoice", EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"), null, null, null, false);
-				for(GenericValue eachInvoice : invoices){
-					result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(eachInvoice.getString("invoiceId")), "statusId","INVOICE_CANCELLED","userLogin", userLogin));
-	        		 
-	        		if (ServiceUtil.isError(result)) {
-	        			 Debug.logError("There was an error while Cancel  the invoices: " + ServiceUtil.getErrorMessage(result), module);	               
-	    	             return ServiceUtil.returnError("There was an error while Cancel  the invoices: ");   			 
-	        		}
-				}
+				
+				List<String> duplicateInvoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+				result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", duplicateInvoiceIds, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
+        		 
+        		if (ServiceUtil.isError(result)) {
+        			 Debug.logError("There was an error while Cancel  the invoices: " + ServiceUtil.getErrorMessage(result), module);	               
+    	             return ServiceUtil.returnError("There was an error while Cancel  the invoices: ");   			 
+        		}
 			}
 			
 		} catch (Exception e) {
