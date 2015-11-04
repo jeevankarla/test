@@ -9328,7 +9328,57 @@ public class ByProductNetworkServices {
 		resultMap.put("canTotal", issuanceProductTotals.get("CAN"));
 		return resultMap;
 	}
-
+	
+	public static Map<String, Object> cancelDuplicateOrderAndInvoice(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String shipmentId = (String) context.get("shipmentId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List conditionList = FastList.newInstance();
+		try {
+			// get Issueance Details
+			GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+			if(UtilValidate.isEmpty(shipment)){
+				result = ServiceUtil.returnSuccess();
+				return result;
+			}
+			
+			if((shipment.getString("statusId")).equals("GENERATION_FAIL")){
+				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+				EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> orderHeaders = delegator.findList("OrderHeader", cond, null, null, null, false);
+				
+				List<String> orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", orderIds,"userLogin", userLogin));
+    			if (ServiceUtil.isError(result)) {
+    	        	  Debug.logError("There was an error while Cancel  the Orders: " + ServiceUtil.getErrorMessage(result), module);              
+    	              return ServiceUtil.returnError("There was an error while Cancel  the Orders: ");  
+    	         }
+				 			
+				List<GenericValue> orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), null, null, null, false);
+				
+				List<String> invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBilling, "invoiceId", true);
+				
+				List<GenericValue> invoices = delegator.findList("Invoice", EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"), null, null, null, false);
+				
+				List<String> duplicateInvoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+				result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", duplicateInvoiceIds, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
+        		 
+        		if (ServiceUtil.isError(result)) {
+        			 Debug.logError("There was an error while Cancel  the invoices: " + ServiceUtil.getErrorMessage(result), module);	               
+    	             return ServiceUtil.returnError("There was an error while Cancel  the invoices: ");   			 
+        		}
+			}
+			
+		} catch (Exception e) {
+			Debug.logError(e, e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}
+	
 	public static Map<String, Object> getFacilityFinAccountInfo(DispatchContext dctx, Map context) {
 
 		Delegator delegator = (Delegator) dctx.getDelegator();

@@ -631,6 +631,8 @@ public class ByProductServices {
        boolean beganTransaction = false;
        boolean generationFailed = false;
        Map PONumberMap = FastMap.newInstance();
+       String shipmentId = (String)context.get("shipmentId");
+       result.put("shipmentId", shipmentId);
        try{
     	   List<GenericValue> subscriptionAttr = delegator.findList("SubscriptionAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
     	   for(GenericValue eachAttr : subscriptionAttr){
@@ -638,14 +640,14 @@ public class ByProductServices {
     	   }
        }catch (GenericEntityException e) {
       		Debug.logError(e, "Error fetching PO Numbers", module);
-          try{
-          errorMsg =stackTraceToString(e);
-          }catch (Exception e1) {
+      		try{
+      			errorMsg =stackTraceToString(e);
+      		}catch (Exception e1) {
 				// TODO: handle exception
 			}
       		return ServiceUtil.returnError("Error fetching PO Numbers : " + e);         	
        }
-    	   String shipmentId = (String)context.get("shipmentId");
+
     	   GenericValue shipment;
            try {
         	    beganTransaction = TransactionUtil.begin(72000);
@@ -1028,6 +1030,7 @@ public class ByProductServices {
        }*/
        
        result = ServiceUtil.returnSuccess();
+       result.put("shipmentId", shipmentId);
        result.put("orderCounter", orderCounter);
        return result;
     }

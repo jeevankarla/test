@@ -35,6 +35,11 @@
         <description>Cancel Payment Grouping</description>
         <attribute name="paymentGroupId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="cancelDuplicateOrderAndInvoice" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="cancelDuplicateOrderAndInvoice">
+        <description>Cancel duplicate order and invoice</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
     
     <service name="createSequenceForVATInvoice" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createSequenceForVATInvoice" transaction-timeout="20000">
@@ -352,7 +357,8 @@
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="routeId" mode="IN" type="String" optional="true"/>        
         <attribute name="excludeInvoiceForFacilityIds" mode="IN" type="List" optional="true"/>
-        <attribute name="orderCounter" mode="OUT" type="Integer" optional="true"/>         
+        <attribute name="orderCounter" mode="OUT" type="Integer" optional="true"/>  
+        <attribute name="shipmentId" mode="OUT" type="String" optional="true"/>       
     </service>
     
     <service name="cancelByProdShipment" engine="java" auth="true" transaction-timeout="300"

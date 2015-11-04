@@ -40,5 +40,10 @@ under the License.
         <condition field-name="recoveryTypeId" operator="is-not-empty"/>
         <condition field-name="amount" operator="is-not-empty"/>
         <action service="sendFacilityRecoverySms" mode="sync"/>
+    </eca>
+    <eca service="runSubscriptionAutoCreateByprodOrdersInternal" event="commit">
+        <condition field-name="shipmentId" operator="is-not-empty"/>
+        <action service="cancelDuplicateOrderAndInvoice" mode="sync"/>
     </eca>  
+     
 </service-eca>
