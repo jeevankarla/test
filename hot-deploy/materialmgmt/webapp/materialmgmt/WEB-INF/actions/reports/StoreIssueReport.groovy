@@ -99,7 +99,7 @@ currentDayEnd = UtilDateTime.getDayEnd(currentDayStart);
 
 date = UtilDateTime.toDateString(currentDayStart);
 //currentDateKeysList.add(date);
-
+if(UtilValidate.isNotEmpty(issueToFacilityId)){
 storeIssueReceipts = MaterialHelperServices.getMaterialReceiptsForPeriod(dctx, [fromDate:currentDayStart, thruDate:currentDayEnd,productId:productId,facilityId:issueToFacilityId,isForMrrReg:"Y"]);
 //MaterialReceiptRegister=storeIssueReceipts.get("MaterialReceiptRegisterMap");
 receiptList =storeIssueReceipts.get("receiptsList");
@@ -209,6 +209,7 @@ if(UtilValidate.isNotEmpty(receiptIssuesMap)){
 	receiptIssuesMap.put("dayClosingQty",dayClosingQty);
 allDetailsMap.put(currentDayStart, receiptIssuesMap);
  }
+}
 }
 context.allDetailsMap=allDetailsMap;
 
