@@ -257,9 +257,10 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_SB_CANCEL"/>
     
     <SecurityPermission description="Cancel Convesion Billing" permissionId="MR_CB_CANCEL"/>
-    <SecurityGroup description="Edit Screens view" groupId="MR_CB_CANCEL"/>
+    <SecurityGroup description="Cancel Convesion Billing" groupId="MR_CB_CANCEL"/>
     <SecurityGroupPermission groupId="MR_CB_CANCEL" permissionId="MR_CB_CANCEL"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_CB_CANCEL"/>
+    
     
     <SecurityPermission description="Cancel Transporter Billing" permissionId="MR_TB_CANCEL"/>
     <SecurityGroup description="Cancel Transporter Billing" groupId="MR_TB_CANCEL"/>
