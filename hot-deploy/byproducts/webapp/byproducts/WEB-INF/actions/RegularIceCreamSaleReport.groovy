@@ -196,7 +196,7 @@ vatMap=[:];
 													    virtualProductId = productEntry.get("productCategoryId");
 													 }
 													 virtualProductId = "";
-													 if(productEntry.categoryName && product.productTypeId == "FINISHED_GOOD"){
+													 if(UtilValidate.isNotEmpty(productEntry) && productEntry.categoryName && product.productTypeId == "FINISHED_GOOD"){
 														 virtualProductId = productEntry.categoryName;
 													 }
 													 else if(product.brandName){
@@ -209,7 +209,7 @@ vatMap=[:];
 															  temp.put("amount" , productValue.getValue().get("totalRevenue"));
 															  temp.put("productType", product.productTypeId);
 															  temp.put("productCategory", product.primaryProductCategoryId);
-															  if(product.productTypeId == "FINISHED_GOOD" && productEntry.categoryName){
+															  if(product.productTypeId == "FINISHED_GOOD" && UtilValidate.isNotEmpty(productEntry) && productEntry.categoryName){
 																  temp.put("brandName", productEntry.categoryName);
 															  }
 															  else{
