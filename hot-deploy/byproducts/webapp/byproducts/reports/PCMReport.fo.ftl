@@ -37,21 +37,35 @@ under the License.
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">
 		        	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
                         <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-		        	    	
-		        	    <fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;               ${reportHeader.description?if_exists}.</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;             ${reportSubHeader.description?if_exists}.</fo:block>
-                    	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;            ANALYSIS OF RETAILER'S MILK SALES  </fo:block>
-                    	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    WITH COMPARISION TO PREVIOUS MONTH SALES(SACHET ROUTES) </fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>
-              			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==============================================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">PARTICULARS				                           				      ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(pMonthStart, "MMM-yy")}		                    ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(cMonthStart, "MMM-yy")}	       </fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"   white-space-collapse="false">==============================================================================================</fo:block> 
+                        
+                        <fo:block text-align="center"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false" >&#160;               ${reportHeader.description?if_exists}.</fo:block>
+                    	<fo:block text-align="center"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;             ${reportSubHeader.description?if_exists}.</fo:block>
+                    	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;            ANALYSIS OF RETAILER'S MILK SALES  </fo:block>
+                    	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;            WITH COMPARISION TO PREVIOUS MONTH SALES(SACHET ROUTES) </fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                      Print Date :${printDate?if_exists}</fo:block>
+              			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==============================================================================================================================================</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">PARTICULARS				                           				      		 ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(pMonthStart, "MMM-yy")}		                    		                    ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(cMonthStart, "MMM-yy")}	       </fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"   white-space-collapse="false">==============================================================================================================================================</fo:block>
+                         
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="180pt"/>
                     <fo:table-column column-width="150pt"/> 
+                    <#if categorysList.size() lte 5>
+                    <#list categorysList as eachCat>
                	    <fo:table-column column-width="70pt"/>
+               	    </#list>
+                    <#list categorysList as eachCat>
                	    <fo:table-column column-width="70pt"/>
+               	    </#list>
+                    <#else>
+                    <#list categorysList as eachCat>
+               	    <fo:table-column column-width="60pt"/>
+               	    </#list>
+                    <#list categorysList as eachCat>
+               	    <fo:table-column column-width="60pt"/>
+               	    </#list>
+                    </#if>  
                	    <fo:table-column column-width="70pt"/>
                     <fo:table-column column-width="70pt"/> 
                	    <fo:table-column column-width="70pt"/>
@@ -66,15 +80,21 @@ under the License.
 	                    <#assign previousMonthCatLst=prvCatAbsMap.entrySet()>	
 						<#list previousMonthCatLst as pMonthVal>
                				<fo:table-cell>
-                           		<fo:block  font-weight="bold" keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false"><#if pMonthVal.getKey() == "SCT_RTLR">SACHET</#if><#if pMonthVal.getKey() == "CR_INST">CREDIT</#if>
-		            	  		<#if pMonthVal.getKey() == "SHP_RTLR">BVB</#if></fo:block> 
+                           		<fo:block  font-weight="bold" keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">
+                                <#if pMonthVal.getKey() == "SCT_RTLR">SACHET
+                                <#elseif pMonthVal.getKey() == "CR_INST">CREDIT
+		            	  		<#elseif pMonthVal.getKey() == "SHP_RTLR">BVB
+                                <#else>${pMonthVal.getKey()?if_exists}</#if></fo:block> 
 		            	  		</fo:table-cell>
 						</#list>
 						<#assign currentMonthCatLst=curntCatAbsMap.entrySet()>	
 	                    <#list currentMonthCatLst as cMonthVal>
 	                    <fo:table-cell>
-               				<fo:block  font-weight="bold" font-size="11pt" keep-together="always" text-align="right" white-space-collapse="false"><#if cMonthVal.getKey() == "SCT_RTLR">SACHET</#if><#if cMonthVal.getKey() == "CR_INST">CREDIT</#if>
-		            	  		<#if cMonthVal.getKey() == "SHP_RTLR">BVB</#if></fo:block> 
+               				<fo:block  font-weight="bold" font-size="11pt" keep-together="always" text-align="right" white-space-collapse="false">
+                            <#if cMonthVal.getKey() == "SCT_RTLR">SACHET
+                                <#elseif cMonthVal.getKey() == "CR_INST">CREDIT
+		            	  		<#elseif cMonthVal.getKey() == "SHP_RTLR">BVB
+                                <#else>${cMonthVal.getKey()?if_exists}</#if></fo:block> 
 		            	  </fo:table-cell>	
 						</#list>
 						 </fo:table-row>
@@ -396,9 +416,11 @@ under the License.
 						</#list>
 						 </fo:table-row>
 				        <fo:table-row>
+						
 						<fo:table-cell>
-		            		<fo:block  keep-together="always">-----------------------------------------------------------------------------------------------------</fo:block>  
+		            		<fo:block  keep-together="always">---------------------------------------------------------------------------------------------------------------------------------------------</fo:block>  
 		            	</fo:table-cell>
+		            	
 				        </fo:table-row>
 						<fo:table-row>	
 				            	<fo:table-cell>
@@ -437,8 +459,8 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            	    <fo:block text-align="right"  keep-together="always"  font-weight="bold" white-space-collapse="false">	                                                                         GM(System)</fo:block>
-				            		<fo:block text-align="right"  keep-together="always"  font-weight="bold"  white-space-collapse="false">	                                                                           Mother Dairy</fo:block>  
+				            	    <fo:block text-align="left"  keep-together="always"  font-weight="bold" white-space-collapse="false">	   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                        GM(System)</fo:block>
+				            		<fo:block text-align="left"  keep-together="always"  font-weight="bold"  white-space-collapse="false">	   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                       Mother Dairy</fo:block>  
 				            	</fo:table-cell> 
 				            </fo:table-row>
 	                </fo:table-body>
