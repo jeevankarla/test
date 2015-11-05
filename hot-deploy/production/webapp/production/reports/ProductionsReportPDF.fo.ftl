@@ -30,7 +30,7 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "ProductionsReport.pdf")}
- <#if productionMap?has_content> 
+ <#if fromDeptId?has_content> 
 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">	
 		<#assign pageNumber = 0>				
@@ -47,6 +47,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ProductionsReport.pdf")}
 		
 		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> PRODUCTIONS <#if prodType?has_content>${prodType}</#if> REPORT BETWEEN ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
 	    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
+	 <#if productionMap?has_content> 
+	
 	 <#assign allProductsList = productionMap.entrySet()?if_exists>											
        <#list allProductsList as allProductsListDetails>
        <#assign  prunIssuesMap= allProductsListDetails.getValue().get("prunIssuesMap")>
@@ -132,8 +134,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ProductionsReport.pdf")}
 	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
  
      </#list>
-     
+     </#if>
      <#-- ALL PRODUCTS TOTALS ---------------------------------------------------->
+      <#if productionTotalsMap?has_content> 
      
      	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
      	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
@@ -216,6 +219,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ProductionsReport.pdf")}
 	         	</fo:table-body>
     </fo:table>
  </fo:block>	
+	      	       	       </#if>
 	                
 	         
 			 </fo:flow>

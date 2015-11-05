@@ -309,6 +309,62 @@
 				</table>
 			</form>
 		</tr>
+		<tr class="alternate-row"> 
+				<form id="PTCVehicleReport" name="PTCVehicleReport" mothed="post" action="<@ofbizUrl>ptcVehicleWiseReportforDates.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="23%"><span class='h3'>PTC vehicle Wise Report</span></td>
+							<td width="38%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="vehicleFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="vehicleThruDate"   name="thruDate"/>
+								 </span>
+							</td>
+	                        <td align='left' width="35%"><span class="h3">Vehicle No </span>
+					            <select name="vehicleId" id="vehicleId">
+						     <option value="all">All</option>  
+                             <#list vehicleRoleList as vehicles>
+						     <option value='${vehicles.vehicleId?if_exists}' >${vehicles.vehicleId?if_exists}</option>
+						     </#list>
+						     </select>
+						     </td>
+						     
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+				<tr class="alternate-row"> 
+				<form id="PTCTankerReport" name="PTCTankerReport" mothed="post" action="<@ofbizUrl>ptcVehicleContractorWiseReportDates.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="23%"><span class='h3'>PTC Vehicle Contractor Wise Report</span></td>
+							
+							<td width="38%">
+					     <span class='h3'>
+									From <input  type="text" size="18pt" id="contractorFromDate"   name="fromDate"/>
+									To   <input  type="text" size="18pt" id="contractorThruDate"   name="thruDate"/>
+								 </span> 
+							</td>
+						    <td align='left' width="35%"><span class="h3">Contractor </span>
+					            <select name="partyId" id="partyId">
+						     <option value="">All</option>  
+                             <#list ptcParties as ptcParty>
+                             <#assign partyName = ptcParty>
+                             <#assign party = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(ptcParty) />
+                             <#if party?has_content>
+                             	<#assign partyName= partyName+"["+party+"]" >
+                             </#if>
+						     <option value='${ptcParty?if_exists}' > ${partyName?if_exists}   </option>
+						     </#list>
+						     </select>
+						     </td>
+						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
+			
 		</#if>
         <#if reportFrequencyFlag?has_content && reportFrequencyFlag=="AccountingReports">
 		 <tr class="alternate-row"> 

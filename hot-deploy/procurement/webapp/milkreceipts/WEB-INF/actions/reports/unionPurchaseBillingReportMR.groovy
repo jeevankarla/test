@@ -59,8 +59,8 @@ try {
 periodCondList =[];
 periodCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "COM_CANCELLED"));
 periodCondList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PB_PROC_MRGN"));
-periodCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(thruDateTime)));
-periodCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(thruDateTime)),EntityOperator.AND,EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromDateTime))));
+//periodCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(thruDateTime)));
+//periodCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(thruDateTime)),EntityOperator.AND,EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromDateTime))));
 EntityCondition periodCond = EntityCondition.makeCondition(periodCondList,EntityOperator.AND);
 periodBilling = delegator.findList("PeriodBillingAndCustomTimePeriod", periodCond , null, null, null, false );
 if(UtilValidate.isNotEmpty(periodBilling)){
