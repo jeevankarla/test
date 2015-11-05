@@ -9360,7 +9360,11 @@ public class ByProductNetworkServices {
 				
 				List<String> invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBilling, "invoiceId", true);
 				
-				List<GenericValue> invoices = delegator.findList("Invoice", EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"), null, null, null, false);
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, "invoiceIds"));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> invoices = delegator.findList("Invoice", condition, null, null, null, false);
 				
 				List<String> duplicateInvoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
 				result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", duplicateInvoiceIds, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
