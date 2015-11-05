@@ -70,7 +70,7 @@
             <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
             </hyperlink>
         </field>
-         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;APPROVED_PAYMENT&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_TB_CANCEL&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelPtcTranporterMargin" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>

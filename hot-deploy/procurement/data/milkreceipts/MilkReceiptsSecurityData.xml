@@ -261,5 +261,9 @@
     <SecurityGroupPermission groupId="MR_CB_CANCEL" permissionId="MR_CB_CANCEL"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_CB_CANCEL"/>
     
+    <SecurityPermission description="Cancel Transporter Billing" permissionId="MR_TB_CANCEL"/>
+    <SecurityGroup description="Cancel Transporter Billing" groupId="MR_TB_CANCEL"/>
+    <SecurityGroupPermission groupId="MR_TB_CANCEL" permissionId="MR_TB_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_TB_CANCEL"/>
     
 </entity-engine-xml>
