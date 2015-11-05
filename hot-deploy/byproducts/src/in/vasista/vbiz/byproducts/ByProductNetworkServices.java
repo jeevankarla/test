@@ -9342,7 +9342,7 @@ public class ByProductNetworkServices {
 				result = ServiceUtil.returnSuccess();
 				return result;
 			}
-			
+			Debug.log("Shipment #################"+shipment);
 			if((shipment.getString("statusId")).equals("GENERATION_FAIL")){
 				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
@@ -9350,6 +9350,8 @@ public class ByProductNetworkServices {
 				List<GenericValue> orderHeaders = delegator.findList("OrderHeader", cond, null, null, null, false);
 				
 				List<String> orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+				Debug.log("orderIds #################"+orderIds);
+				
 				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", orderIds,"userLogin", userLogin));
     			if (ServiceUtil.isError(result)) {
     	        	  Debug.logError("There was an error while Cancel  the Orders: " + ServiceUtil.getErrorMessage(result), module);              
@@ -9359,7 +9361,7 @@ public class ByProductNetworkServices {
 				List<GenericValue> orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), null, null, null, false);
 				
 				List<String> invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBilling, "invoiceId", true);
-				
+				Debug.log("invoiceIds #################"+invoiceIds);
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, "invoiceIds"));
@@ -9367,6 +9369,7 @@ public class ByProductNetworkServices {
 				List<GenericValue> invoices = delegator.findList("Invoice", condition, null, null, null, false);
 				
 				List<String> duplicateInvoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+				Debug.log("duplicateInvoiceIds #################"+duplicateInvoiceIds);
 				result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", duplicateInvoiceIds, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
         		 
         		if (ServiceUtil.isError(result)) {
