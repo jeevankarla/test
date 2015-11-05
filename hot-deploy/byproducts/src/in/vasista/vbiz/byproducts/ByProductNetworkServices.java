@@ -9362,10 +9362,9 @@ public class ByProductNetworkServices {
 				List<GenericValue> orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), null, null, null, false);
 				
 				List<String> invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBilling, "invoiceId", true);
-				Debug.log("invoiceIds #################"+invoiceIds);
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, "invoiceIds"));
+				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				List<GenericValue> invoices = delegator.findList("Invoice", condition, null, null, null, false);
 				
