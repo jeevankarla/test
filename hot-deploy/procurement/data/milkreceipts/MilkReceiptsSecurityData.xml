@@ -246,5 +246,20 @@
     <SecurityGroupPermission groupId="MILKRECEIPT_ADMIN" permissionId="MR_EDIT_SCREENS"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_EDIT_SCREENS"/>
     
+    <SecurityPermission description="Cancel Purchase Billing" permissionId="MR_PB_CANCEL"/>
+    <SecurityGroup description="Cancel Purchase Billing" groupId="MR_PB_CANCEL"/>
+    <SecurityGroupPermission groupId="MR_PB_CANCEL" permissionId="MR_PB_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_PB_CANCEL"/>
+    
+    <SecurityPermission description="Cancel Sale Billing" permissionId="MR_SB_CANCEL"/>
+    <SecurityGroup description="Cancel Sale Billing" groupId="MR_SB_CANCEL"/>
+    <SecurityGroupPermission groupId="MR_SB_CANCEL" permissionId="MR_SB_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_SB_CANCEL"/>
+    
+    <SecurityPermission description="Cancel Convesion Billing" permissionId="MR_CB_CANCEL"/>
+    <SecurityGroup description="Edit Screens view" groupId="MR_CB_CANCEL"/>
+    <SecurityGroupPermission groupId="MR_CB_CANCEL" permissionId="MR_CB_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MR_CB_CANCEL"/>
+    
     
 </entity-engine-xml>

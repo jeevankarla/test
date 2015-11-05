@@ -106,7 +106,7 @@
             <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
             </hyperlink>
         </field>
-         <field name="cancelPurchaseBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+         <field name="cancelPurchaseBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;APPROVED_PAYMENT&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_PB_CANCEL&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelPurchaseBilling" description="${uiLabelMap.CommonCancel}" >
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
@@ -142,7 +142,7 @@
             <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
             </hyperlink>
         </field>
-         <field name="cancelSaleBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+         <field name="cancelSaleBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;APPROVED_PAYMENT&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_SB_CANCEL&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelSaleBilling" description="${uiLabelMap.CommonCancel}" >
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
@@ -178,7 +178,7 @@
             <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
             </hyperlink>
         </field>
-         <field name="cancelConversionBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+         <field name="cancelConversionBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;APPROVED_PAYMENT&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MR&quot;, &quot;_CB_CANCEL&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelConversionBilling" description="${uiLabelMap.CommonCancel}" >
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
