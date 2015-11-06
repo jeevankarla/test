@@ -1202,24 +1202,32 @@
         </field>
     </form>
     <form name="CreateEmplPunchType" type="single" target="CreateEmplPunchType">
-	    	<field name="partyId"><hidden value="${partyId}"/></field>
-	    	<field name="punchType" title="${uiLabelMap.PunchType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-			     <drop-down allow-empty="true">
-					<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-						<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
-						<entity-order-by field-name="sequenceId" />
-					</entity-options>
-				</drop-down>
-			</field>
-			<field name="punchTypeFromDate" id-name="punchTypeFromDate" title="From date" event="onClick" action="javascript:picker()"><text  size="12"/></field>
-		   <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-	   </form>
-	   
-	   <form name="ListEmplPunchType" type="list" list-name="emplPunchTypeList" default-table-style="basic-table hover-bar" separate-columns="true">
-	    	<field name="punchType" title="Punch Type"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/></field>
-	    	<field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
-	    	<field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
-    </form>
+    	<field name="partyId"><hidden value="${partyId}"/></field>
+    	<field name="punchType" title="${uiLabelMap.PunchType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="punchTypeFromDate" id-name="punchTypeFromDate" title="From date" event="onClick" action="javascript:picker()"><text  size="12"/></field>
+	   <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+   </form>
+   
+   <form name="ListEmplPunchType" type="list" list-name="emplPunchTypeList" default-table-style="basic-table hover-bar" separate-columns="true">
+   		<field name="employeeId"><hidden/></field>
+    	<field name="punchType" title="Punch Type"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/></field>
+    	<field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+    	<field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+   		<!-- <field name="deleteLink" title="Delete" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"   widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmplPunchType">
+                <parameter param-name="employeeId"/>
+                <parameter param-name="punchType"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field> -->
+   	</form>
     
 </forms>
 

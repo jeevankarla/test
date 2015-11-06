@@ -2097,4 +2097,12 @@ under the License.emplpunch
         <attribute name="punchType" mode="IN" type="String" optional="true"/>
         <attribute name="punchTypeFromDate" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="deleteEmplPunchType"  engine="java"
+       		location="in.vasista.vbiz.humanres.PayrollService" invoke="deleteEmplPunchType" auth="true">
+        <description>Delete Employee Punch Type</description>
+        <attribute name="employeeId" mode="IN" type="String" optional="true"/>
+        <attribute name="punchType" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="partyId" mode="OUT" type="Timestamp" optional="true"/>
+    </service>
 </services>

@@ -9924,19 +9924,29 @@ public class PayrollService {
   	    
         List conList = FastList.newInstance();
         conList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, employeeId));
-        conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDateTime));
-        conList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
         EntityCondition punchTypeCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
         
         List<GenericValue> emplPunchTypeList = FastList.newInstance();
         try{
         	emplPunchTypeList = delegator.findList("EmplPunchType", punchTypeCond, null, null, null, false);
         	if(UtilValidate.isNotEmpty(emplPunchTypeList)){
-        		GenericValue emplPunchType = EntityUtil.getFirst(emplPunchTypeList);
-        		emplPunchType.set("thruDate",previousDayEnd);
-        		emplPunchType.store();
+        		
+        		
+        		List<GenericValue> employeePunchTypeList = EntityUtil.filterByCondition(emplPunchTypeList, EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null));
+        		if(UtilValidate.isNotEmpty(employeePunchTypeList)){
+        			GenericValue emplPunchType = EntityUtil.getFirst(employeePunchTypeList);
+        			String existPunchType = emplPunchType.getString("punchType");
+        			Timestamp existedFromDate = emplPunchType.getTimestamp("fromDate");
+        			if(fromDateTime.compareTo(existedFromDate)<= 0){
+        				return ServiceUtil.returnError("Already exists..");
+        			}
+        			if(existPunchType.equals(punchType)){
+        				return ServiceUtil.returnError("PunchType already exists..");
+        			}
+            		emplPunchType.set("thruDate",previousDayEnd);
+            		emplPunchType.store();
+        		}
             }
-        	
         	GenericValue newEntity = delegator.makeValue("EmplPunchType");
         	newEntity.set("employeeId",employeeId);
         	newEntity.set("punchType",punchType);
@@ -9945,8 +9955,40 @@ public class PayrollService {
         	
         }catch(GenericEntityException e) {
 			Debug.logError(e, module);
-	        return ServiceUtil.returnError("Unable to get PayrollHeaderAndPayrollRetention");			
+	        return ServiceUtil.returnError("Error in creating PunchType");			
 		}
+  	    return result;
+  	}
+  	
+  	public static Map<String, Object> deleteEmplPunchType(DispatchContext dctx, Map<String, ? extends Object> context){
+  		Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    Locale locale = (Locale) context.get("locale");
+  	    FastMap result = FastMap.newInstance();
+  	    
+  	    String employeeId = (String)context.get("employeeId");
+  	    String punchType = (String)context.get("punchType");
+  	    Timestamp fromDate = (Timestamp)context.get("fromDate");
+  	    
+        List conList = FastList.newInstance();
+        conList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, employeeId));
+        conList.add(EntityCondition.makeCondition("punchType", EntityOperator.EQUALS, punchType));
+        conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, fromDate));
+        EntityCondition punchTypeCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
+        List<GenericValue> emplPunchTypeList = FastList.newInstance();
+        try{
+        	emplPunchTypeList = delegator.findList("EmplPunchType", punchTypeCond, null, null, null, false);
+        	if(UtilValidate.isNotEmpty(emplPunchTypeList)){
+    			GenericValue emplPunchType = EntityUtil.getFirst(emplPunchTypeList);
+    			emplPunchType.remove();
+            }
+        	
+        }catch(GenericEntityException e) {
+			Debug.logError(e, module);
+	        return ServiceUtil.returnError("Error while deleting PunchType");			
+		}
+        result.put("partyId",employeeId);
   	    return result;
   	}
 }//end of class

@@ -2560,6 +2560,12 @@ under the License.
         <response name="success" type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
+    <request-map uri="deleteEmplPunchType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteEmplPunchType"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
     
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
