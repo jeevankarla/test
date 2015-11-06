@@ -1497,7 +1497,20 @@ function reportTypeChangeFunc() {
 				      			<option value="COPAC_CHG">Copacking Charges</option>
 				      			<option value="STOR_CHG">Storage Charges</option>
 			      			</select></td>
-	      					<td width="15%"></td>
+			      			<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="ServiceProductsReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+	      					</td>
+			      			<td width="5%">Report Type 
+								<select name='reportTypeFlag' id = "reportTypeFlag">
+									<option value='Detailed' selected>Detailed</option>
+									<option value='Abstract'>Abstract</option>
+								</select>
+							</td>
+							<#--</tr><tr>
+							<td width="30%"></td>
+							<td width="30%"></td>
+							<td width="30%"></td>
+							<td width="30%"></td>
+							<td width="30%"></td>-->
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
