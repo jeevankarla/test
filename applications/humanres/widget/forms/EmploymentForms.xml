@@ -1027,6 +1027,7 @@
         </field> 
         <field name="surchargePercentage" title="Surcharge Percentage" tooltip="Eg : Like 10%"><text size="20"/></field>
         <field name="educationalCessPercentage" title="Educational Cess Percentage" tooltip="Eg : Like 10%"><text size="20"/></field>
+        <field name="rebate" title="Rebate" tooltip=" "><text size="20"/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field>
         <field name="fatherName" title="FatherName" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field>
         <field name="designation" title="Designation" tooltip="${uiLabelMap.CommonRequired}"><text size="20"/></field> 
@@ -1040,6 +1041,7 @@
         <field name="customTimePeriodId"><display></display></field>
         <field name="surchargePercentage"><display></display></field>
         <field name="educationalCessPercentage"><display></display></field>
+        <field name="rebate"><display></display></field>
         <field name="name"><display></display></field>
         <field name="fatherName"><display></display></field>
         <field name="designation"><display></display></field>
