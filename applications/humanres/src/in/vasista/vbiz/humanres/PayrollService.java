@@ -5469,7 +5469,7 @@ public class PayrollService {
 			    				//consider only single shift  late min for lossofpay 
 			    				List<GenericValue> dayShiftListLop = UtilMisc.toList(EntityUtil.getFirst(dayShiftList));
 			    				for(GenericValue dayShift :dayShiftListLop){
-			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(punchType) 
+			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(punchType)||((UtilValidate.isNotEmpty(punchType) 
 			    										&& (!(punchType.equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
