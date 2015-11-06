@@ -201,6 +201,9 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			Timestamp nextDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateStart, 1));
 			Timestamp nextDayStart = UtilDateTime.getDayStart(nextDayEnd);
 			
+			List datesList = FastList.newInstance();
+			datesList = UtilMisc.toList(previousDayStart,nextDayStart);
+			
 			int k = 0;
 			List<GenericValue> leavesList = FastList.newInstance();
 			List<GenericValue> punchOutdeatils = FastList.newInstance();
@@ -244,41 +247,53 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 				c3.add(Calendar.DATE,1);
 			}
 			
-			List datesList = FastList.newInstance();
-			datesList = UtilMisc.toList(previousDayStart,nextDayStart);
+			holidaysLists = [];
+			holidays.each{ hDay->
+				if(UtilValidate.isNotEmpty(hDay)){
+					Timestamp hDay1 = UtilDateTime.toTimestamp(hDay);
+					Timestamp holiDayStart = UtilDateTime.getDayStart(hDay1);
+					holidaysLists.add(holiDayStart);
+				}
+			}
+			
 			
 			if(UtilValidate.isNotEmpty(datesList)){
 				for(int j=0;j<datesList.size();j++){
 					Timestamp punchDate = (Timestamp)datesList.get(j);
-					List conditionList1 = FastList.newInstance();
-					conditionList1.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, (UtilDateTime.toSqlDate(punchDate))));
-					conditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-					conditionList1.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "IN"));
-					EntityCondition condition1=EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
-					List<GenericValue> punchINdeatils = delegator.findList("EmplPunch", condition1 , null, null, null, false );
-					if(UtilValidate.isNotEmpty(punchINdeatils)){
-						
-						GenericValue punchINrecord = EntityUtil.getFirst(punchINdeatils);
-						String shiftType = punchINrecord.getString("shiftType");
-						
-						Timestamp nextInPunchDate = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(punchDate, 1));
-						List conditionList2 = FastList.newInstance();
-						if(shiftType.equals("SHIFT_NIGHT")){
-							conditionList2.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(nextInPunchDate)));
-						}else{
-							conditionList2.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(punchDate)));
-						}
-						conditionList2.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-						conditionList2.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, shiftType));
-						conditionList2.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
-						EntityCondition condition2=EntityCondition.makeCondition(conditionList2,EntityOperator.AND);
-						punchOutdeatils = delegator.findList("EmplPunch", condition2 , null, null, null, false );
-						if(UtilValidate.isNotEmpty(punchOutdeatils)){
-							k = k + 1;
-						}
+					
+					if(weeklyOffDaysList.contains(punchDate)){
+						k = k + 1;
 					}else{
-						if(weeklyOffDaysList.contains(punchDate)){
+						if(holidaysLists.contains(punchDate)){
 							k = k + 1;
+						}else{
+							List conditionList1 = FastList.newInstance();
+							conditionList1.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, (UtilDateTime.toSqlDate(punchDate))));
+							conditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+							conditionList1.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "IN"));
+							EntityCondition condition1=EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
+							List<GenericValue> punchINdeatils = delegator.findList("EmplPunch", condition1 , null, null, null, false );
+							if(UtilValidate.isNotEmpty(punchINdeatils)){
+								
+								GenericValue punchINrecord = EntityUtil.getFirst(punchINdeatils);
+								String shiftType = punchINrecord.getString("shiftType");
+								
+								Timestamp nextInPunchDate = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(punchDate, 1));
+								List conditionList2 = FastList.newInstance();
+								if(shiftType.equals("SHIFT_NIGHT")){
+									conditionList2.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(nextInPunchDate)));
+								}else{
+									conditionList2.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(punchDate)));
+								}
+								conditionList2.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+								conditionList2.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, shiftType));
+								conditionList2.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
+								EntityCondition condition2=EntityCondition.makeCondition(conditionList2,EntityOperator.AND);
+								punchOutdeatils = delegator.findList("EmplPunch", condition2 , null, null, null, false );
+								if(UtilValidate.isNotEmpty(punchOutdeatils)){
+									k = k + 1;
+								}
+							}
 						}
 					}
 				}
