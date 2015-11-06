@@ -173,13 +173,20 @@
 					          <select name='productId'  >
 				      			 	</select>
 				      			 	
-				      			 	<span class="h3">&#160;                                                  Type</span>
+				      			 	<span class="h3">&#160;   &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Products Type</span>
 						     <select name='prodType'  >
 	       						     <option value='' ></option>
  	       						     <option value='IssueProducts' >Issue Products</option>
  	       						     <option value='DeclareProducts' >Declare Products</option>
  	       						     <option value='ReturnProducts' >Return Products</option>
 	       						     
+				      			 	</select>
+				      			 	
+				      			 	<span class="h3">&#160;           Type </span>
+						     <select name='reportType'  >
+	       						     <option value='' ></option>
+ 	       						     <option value='prunDetail' >Production Details</option>
+ 	       						     <option value='abstract' >Abstract</option>
 				      			 	</select>
 				      			 	
 					     	</td>

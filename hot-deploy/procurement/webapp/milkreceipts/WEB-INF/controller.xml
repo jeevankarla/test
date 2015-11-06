@@ -717,7 +717,15 @@
     <request-map uri="ptcVehicleWiseReport.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="ptcVehicleWiseReportPDF"/> 
-    </request-map> 
+    </request-map>
+    <request-map uri="ptcVehicleWiseReportforDates.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="ptcVehicleWiseReportPDFforDates"/> 
+    </request-map>  
+      <request-map uri="ptcVehicleContractorWiseReportDates.pdf">  
+        <security https="true" auth="true"/> 
+        <response name="success" type="view" value="ptcVehicleContractorWiseReportPDFDates"/> 
+    </request-map>  
      <request-map uri="ptcUnionsReport.pdf">  
         <security https="true" auth="true"/> 
         <response name="success" type="view" value="ptcUnionsReportPDF"/> 
@@ -1390,6 +1398,8 @@
    
     <view-map name="ptcVehicleContractorWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleContractorWiseReportPDF" content-type="application/pdf"/> 
     <view-map name="ptcVehicleWiseReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleWiseReportPDF" content-type="application/pdf"/> 
+    <view-map name="ptcVehicleWiseReportPDFforDates" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleWiseReportPDFforDates" content-type="application/pdf"/> 
+    <view-map name="ptcVehicleContractorWiseReportPDFDates" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcVehicleContractorWiseReportPDFDates" content-type="application/pdf"/> 
     <view-map name="ptcUnionsReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcUnionsReportPDF" content-type="application/pdf"/> 
 	<view-map name="MilkQcReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkQcReportPDF" content-type="application/pdf"/>
     <view-map name="ptcBankReportPDF" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#ptcBankReportPDF" content-type="application/pdf"/> 

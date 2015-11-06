@@ -48,6 +48,7 @@ fromDeptId=parameters.fromDeptId;
 selectProdId=parameters.productId;
 thruDeptId=parameters.thruDeptId;
 prodType=parameters.prodType;
+reportType=parameters.reportType;
 
 
 fromDate=parameters.fromDate;
@@ -80,6 +81,7 @@ context.fromDate = fromDate;
 context.thruDate = dayEnd;
 context.fromDeptId = fromDeptId;
 context.selectProdId = selectProdId;
+context.reportType = reportType;
 
 partyName =  PartyHelper.getPartyName(delegator, thruDeptId, false);
 if(UtilValidate.isNotEmpty(partyName)){
@@ -275,7 +277,9 @@ for(int i=0; i <totalDays; i++){
 productionTotalsMap.put("productionTotIssMap",productionTotIssMap);
 productionTotalsMap.put("productionTotDeclaresMap",productionTotDeclaresMap);
 productionTotalsMap.put("productionTotReturnsMap",productionTotReturnsMap);
-
-context.productionMap=productionMap;
-context.productionTotalsMap=productionTotalsMap;
-
+if(UtilValidate.isEmpty(reportType) || (UtilValidate.isNotEmpty(reportType) && reportType.equals("prunDetail"))){
+	context.productionMap=productionMap;
+}
+if(UtilValidate.isEmpty(reportType) || (UtilValidate.isNotEmpty(reportType) && reportType.equals("abstract"))){
+	context.productionTotalsMap=productionTotalsMap;
+}
