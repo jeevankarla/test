@@ -37,4 +37,12 @@ function picker(){
 			jQuery("#date").datepicker('setDate', selectedDate);
 		}
 	});
+	jQuery("#punchTypeFromDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		changeMonth: true,
+		numberOfMonths: 1,
+		onSelect: function(selectedDate) {
+			jQuery("#punchTypeFromDate").datepicker('setDate', selectedDate);
+		}
+	});
 }

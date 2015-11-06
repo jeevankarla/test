@@ -5374,7 +5374,7 @@ public class PayrollService {
 			    				                                     ,EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(attdTimePeriodEnd))));
 			    		
 			    		//here handle no punch and no leaves for the period then populate noOfPayableDays zero
-			    		if(UtilValidate.isEmpty(payrollPeriodPunchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
+			    		/*if(UtilValidate.isEmpty(payrollPeriodPunchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
 			    				   (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && !(employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
 			    			Debug.logWarning("No punchs for employee"+employeeId, module);
 			    			newEntity.set("lossOfPayDays", noOfEmployementDays);
@@ -5386,7 +5386,7 @@ public class PayrollService {
 			        		newEntity.set("extraMin", BigDecimal.ZERO);
 				    		delegator.createOrStore(newEntity);
 				    		continue;
-			    		}
+			    		}*/
 			    		lossOfPayDays = lossOfPayDays+ ((BigDecimal)resultMap.get("lossOfPayDays")).doubleValue();
 			    		
 			    		double noOfAttendedHoliDays =0;
@@ -5411,7 +5411,29 @@ public class PayrollService {
 			    			Timestamp cTime = new Timestamp(c1.getTimeInMillis());
 			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
 			    			//Debug.log("cTime==========="+cTime);
-			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
+			    			String punchType = " ";
+			    			List conditionList1 = FastList.newInstance();
+			    			conditionList1.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS ,employeeId));
+			    			conditionList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, cTime));
+			    			conditionList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, cTime), EntityOperator.OR, 
+								    EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
+			    			EntityCondition condition1= EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
+						    List<GenericValue> emplPunchTypeList = delegator.findList("EmplPunchType", condition1, null,null, null, false);
+						    if(UtilValidate.isNotEmpty(emplPunchTypeList)){
+						    	GenericValue emplPunchType = EntityUtil.getFirst(emplPunchTypeList);
+						    	punchType = (String)emplPunchType.get("punchType");
+						    }
+						    List<GenericValue> dayPunchList = FastList.newInstance();
+						    if(UtilValidate.isNotEmpty(punchList)){
+						    	dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
+						    }
+						    List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
+						    if(UtilValidate.isEmpty(dayPunchList) && (UtilValidate.isEmpty(cDayLeaves)) &&
+				    				   (UtilValidate.isNotEmpty(punchType) && (!punchType.equalsIgnoreCase("N")))){
+						    	lossOfPayDays = lossOfPayDays+1;
+		    					c1.add(Calendar.DATE,1);
+		    					continue;
+						    }
 						    //dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("shiftType",EntityOperator.NOT_EQUAL,"SHIFT_NIGHT") , EntityOperator.AND,EntityCondition.makeCondition("InOut",EntityOperator.NOT_EQUAL,"OUT")));
 			    			// filter by normal punchType
 			    			//call edit punch to re-calculate late min
@@ -5433,11 +5455,10 @@ public class PayrollService {
 			    			}*/
 			    			
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
-			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
 			    			List cDayLeaveFraction = EntityUtil.getFieldListFromEntityList(cDayLeaves, "dayFractionId", true);
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition(EntityCondition.makeCondition("date",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("date",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			// handle no punch employees here
-			    			if(((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("N"))))
+			    			if(((UtilValidate.isNotEmpty(punchType) && (punchType.equalsIgnoreCase("N"))))
 			    					||  (UtilValidate.isNotEmpty(cDayLeaves) && UtilValidate.isEmpty(cDayLeaveFraction))){
 			    				c1.add(Calendar.DATE,1);
 		    					continue;
@@ -5448,8 +5469,8 @@ public class PayrollService {
 			    				//consider only single shift  late min for lossofpay 
 			    				List<GenericValue> dayShiftListLop = UtilMisc.toList(EntityUtil.getFirst(dayShiftList));
 			    				for(GenericValue dayShift :dayShiftListLop){
-			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) 
-    										&& (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
+			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(punchType)||((UtilValidate.isNotEmpty(punchType) 
+			    										&& (!(punchType.equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 				    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
@@ -5466,7 +5487,7 @@ public class PayrollService {
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
-			    				if((inPunch.size() >= 1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
+			    				if((inPunch.size() >= 1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(punchType) && (punchType.equalsIgnoreCase("O"))))){
 			    					shiftFalg = Boolean.TRUE;
 			    				}else{
 			    					// if no night shift then ignore night shift punch outs ,since those are prevoius day shift related punchs
@@ -5509,7 +5530,7 @@ public class PayrollService {
 			    				}
 			    				
 			    			}else if((!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && (cTime.compareTo(secondSaturDay) != 0) 
-			    					&& UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves)){
+			    					 && UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves) && (UtilValidate.isNotEmpty(punchType)) && (!punchType.equalsIgnoreCase("N"))){
 			    				// no punch ,not weekly off ,not secondSaturDay, not general holiday  and no leave then consider it as lossOfPay
 			    				lossOfPayDays = lossOfPayDays+1;
 			    				//Debug.log("no punch lossOfPayDays===="+cTime);
@@ -9881,4 +9902,93 @@ public class PayrollService {
 	  	}
 	 	return "success";
 	}
+  	public static Map<String, Object> CreateEmplPunchType(DispatchContext dctx, Map<String, ? extends Object> context){
+  		Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    Locale locale = (Locale) context.get("locale");
+  	    FastMap result = FastMap.newInstance();
+  	    
+  	    String employeeId = (String)context.get("partyId");
+  	    String punchType = (String)context.get("punchType");
+  	    String fromDate = (String)context.get("punchTypeFromDate");
+  	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+  	    Timestamp fromDateTime = null;
+  	    Timestamp previousDayEnd = null;
+  	    
+  	    try {
+  	    	fromDateTime = UtilDateTime.toTimestamp(sdf.parse(fromDate));
+  	  	    previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+		} catch (ParseException e) {
+		}
+  	    
+        List conList = FastList.newInstance();
+        conList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, employeeId));
+        EntityCondition punchTypeCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
+        
+        List<GenericValue> emplPunchTypeList = FastList.newInstance();
+        try{
+        	emplPunchTypeList = delegator.findList("EmplPunchType", punchTypeCond, null, null, null, false);
+        	if(UtilValidate.isNotEmpty(emplPunchTypeList)){
+        		
+        		
+        		List<GenericValue> employeePunchTypeList = EntityUtil.filterByCondition(emplPunchTypeList, EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null));
+        		if(UtilValidate.isNotEmpty(employeePunchTypeList)){
+        			GenericValue emplPunchType = EntityUtil.getFirst(employeePunchTypeList);
+        			String existPunchType = emplPunchType.getString("punchType");
+        			Timestamp existedFromDate = emplPunchType.getTimestamp("fromDate");
+        			if(fromDateTime.compareTo(existedFromDate)<= 0){
+        				return ServiceUtil.returnError("Already exists..");
+        			}
+        			if(existPunchType.equals(punchType)){
+        				return ServiceUtil.returnError("PunchType already exists..");
+        			}
+            		emplPunchType.set("thruDate",previousDayEnd);
+            		emplPunchType.store();
+        		}
+            }
+        	GenericValue newEntity = delegator.makeValue("EmplPunchType");
+        	newEntity.set("employeeId",employeeId);
+        	newEntity.set("punchType",punchType);
+        	newEntity.set("fromDate",fromDateTime);
+        	newEntity.create();
+        	
+        }catch(GenericEntityException e) {
+			Debug.logError(e, module);
+	        return ServiceUtil.returnError("Error in creating PunchType");			
+		}
+  	    return result;
+  	}
+  	
+  	public static Map<String, Object> deleteEmplPunchType(DispatchContext dctx, Map<String, ? extends Object> context){
+  		Delegator delegator = dctx.getDelegator();
+  	    LocalDispatcher dispatcher = dctx.getDispatcher();
+  	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	    Locale locale = (Locale) context.get("locale");
+  	    FastMap result = FastMap.newInstance();
+  	    
+  	    String employeeId = (String)context.get("employeeId");
+  	    String punchType = (String)context.get("punchType");
+  	    Timestamp fromDate = (Timestamp)context.get("fromDate");
+  	    
+        List conList = FastList.newInstance();
+        conList.add(EntityCondition.makeCondition("employeeId", EntityOperator.EQUALS, employeeId));
+        conList.add(EntityCondition.makeCondition("punchType", EntityOperator.EQUALS, punchType));
+        conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, fromDate));
+        EntityCondition punchTypeCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
+        List<GenericValue> emplPunchTypeList = FastList.newInstance();
+        try{
+        	emplPunchTypeList = delegator.findList("EmplPunchType", punchTypeCond, null, null, null, false);
+        	if(UtilValidate.isNotEmpty(emplPunchTypeList)){
+    			GenericValue emplPunchType = EntityUtil.getFirst(emplPunchTypeList);
+    			emplPunchType.remove();
+            }
+        	
+        }catch(GenericEntityException e) {
+			Debug.logError(e, module);
+	        return ServiceUtil.returnError("Error while deleting PunchType");			
+		}
+        result.put("partyId",employeeId);
+  	    return result;
+  	}
 }//end of class
