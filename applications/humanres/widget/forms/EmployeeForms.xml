@@ -439,14 +439,14 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="punchType" title="${uiLabelMap.PunchType}">
+		<!-- <field name="punchType" title="${uiLabelMap.PunchType}">
 		     <drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field> -->
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
 				<option key="Sunday"/>
@@ -576,7 +576,7 @@
 			<sort-field name="religion" />  
 			<sort-field name="caste" /> 
 			<sort-field name="nationality" /> 
-			<sort-field name="punchType" />
+			<!-- <sort-field name="punchType" /> -->
 			<sort-field name="weeklyOff" />
 			<sort-field name="weeklyOffDate" />
 			<sort-field name="attendanceIndn" />
@@ -1201,7 +1201,25 @@
             </hyperlink>
         </field>
     </form>
-    
+    <form name="CreateEmplPunchType" type="single" target="CreateEmplPunchType">
+	    	<field name="partyId"><hidden value="${partyId}"/></field>
+	    	<field name="punchType" title="${uiLabelMap.PunchType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+			     <drop-down allow-empty="true">
+					<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+						<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
+						<entity-order-by field-name="sequenceId" />
+					</entity-options>
+				</drop-down>
+			</field>
+			<field name="punchTypeFromDate" id-name="punchTypeFromDate" title="From date" event="onClick" action="javascript:picker()"><text  size="12"/></field>
+		   <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+	   </form>
+	   
+	   <form name="ListEmplPunchType" type="list" list-name="emplPunchTypeList" default-table-style="basic-table hover-bar" separate-columns="true">
+	    	<field name="punchType" title="Punch Type"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/></field>
+	    	<field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+	    	<field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+    </form>
     
 </forms>
 

@@ -2201,4 +2201,25 @@ under the License.
        
     </view-entity>
  	
+ 	<entity entity-name="EmplPunchType"
+            package-name="org.ofbiz.humanres"
+            title="Employee Punch Type">
+      	<field name="employeeId" type="id-ne"></field>
+      	<field name="punchType" type="id-ne"/>
+      	<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field>
+      	<field name="createdDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <prim-key field="employeeId"/>
+      	<prim-key field="punchType"/>
+      	<prim-key field="fromDate"/>
+      	<relation type="one" fk-name="EPP"  rel-entity-name="Party">
+            <key-map field-name="employeeId" rel-field-name="partyId"/>
+        </relation>
+		<relation type="one" fk-name="EPT" rel-entity-name="EmployeeDetail">
+        	<key-map field-name="punchType"/>
+        </relation>
+ 	</entity>
 </entitymodel>
