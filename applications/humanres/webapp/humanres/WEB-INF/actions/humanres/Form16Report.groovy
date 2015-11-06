@@ -805,11 +805,13 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 			}
 		}
 		taxPayable = 0;
+		rebateAmount = 0;
 		percentagesDetails = delegator.findOne("TDSRemittances", [partyId : "Company", customTimePeriodId : parameters.customTimePeriodId], false);
 		if(UtilValidate.isNotEmpty(percentagesDetails)){
 			signatoryName = percentagesDetails.get("name");
 			fatherName = percentagesDetails.get("fatherName");
 			designation = percentagesDetails.get("designation");
+			rebateAmount = percentagesDetails.get("rebate");
 			surchargePercentage = percentagesDetails.get("surchargePercentage");
 			surchargeAmount = 0;
 			educationalCessAmount = 0;
@@ -847,7 +849,11 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		educationalCessAmount = 0;
 		BigDecimal taxAfterRebateValue = BigDecimal.ZERO;
 		if(totalIncome < 500000){
-			rebate = 2000;
+			if(UtilValidate.isNotEmpty(rebateAmount)){
+				rebate = rebateAmount;
+			}else{
+				rebate = 2000;
+			}
 		}else{
 			rebate = 0;
 		}
@@ -865,7 +871,7 @@ if(UtilValidate.isNotEmpty(employeeIdsList)){
 		if(UtilValidate.isNotEmpty(taxOnIncome)){
 			if(rebate > taxOnIncome){
 				rebate = taxOnIncome;
-		   }
+			}
 			taxAfterRebate = taxOnIncome - rebate;
 			taxAfterRebateValue = new BigDecimal(taxAfterRebate);
 			taxAfterRebateValue = taxAfterRebateValue.setScale(0, BigDecimal.ROUND_HALF_UP);

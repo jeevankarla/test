@@ -2036,7 +2036,7 @@ public class PayrollService {
                     }
                     
                     
-	                Map<String, Object> calcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
+                    Map<String, Object> calcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
 	                Debug.logInfo("calcResults in calculatePayHeadAmount ############################"+calcResults ,module);
 	                //apply rounding mode here
 	                calcResults.put("amount", ((BigDecimal)calcResults.get("amount")).setScale(0, rounding));
@@ -5194,7 +5194,7 @@ public class PayrollService {
 	 }       
 	 
 	 public static Map<String, Object> populatePayrollAttedance(DispatchContext dctx, Map<String, ? extends Object> context) {
-               
+    	   
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
 	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -5295,10 +5295,10 @@ public class PayrollService {
 	        		double lateMin =0;
 	        		double extraMin =0;
 	        		emplCounter++;
-               		if ((emplCounter % 20) == 0) {
-               			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
-               			Debug.logImportant("Completed " + emplCounter + " employee [ in " + elapsedSeconds + " seconds]", module);
-               		}
+         		if ((emplCounter % 20) == 0) {
+         			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+         			Debug.logImportant("Completed " + emplCounter + " employee [ in " + elapsedSeconds + " seconds]", module);
+         		}
 	        		BigDecimal noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
 	        		if(UtilValidate.isNotEmpty(employementFromaDate) && (employementFromaDate.compareTo(timePeriodStart) >=0)){
@@ -5320,8 +5320,8 @@ public class PayrollService {
 		    	        	if(UtilValidate.isEmpty(empEmployement)){
 		    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate));
 		    	        	}else{
- 		    	        		employement = empEmployement;
- 		    	        	}
+		    	        		employement = empEmployement;
+		    	        	}
 		        		}
 	        		}
 	        		
@@ -5412,7 +5412,7 @@ public class PayrollService {
 			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
 			    			//Debug.log("cTime==========="+cTime);
 			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
-			    			//dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("shiftType",EntityOperator.NOT_EQUAL,"SHIFT_NIGHT") , EntityOperator.AND,EntityCondition.makeCondition("InOut",EntityOperator.NOT_EQUAL,"OUT")));
+						    //dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("shiftType",EntityOperator.NOT_EQUAL,"SHIFT_NIGHT") , EntityOperator.AND,EntityCondition.makeCondition("InOut",EntityOperator.NOT_EQUAL,"OUT")));
 			    			// filter by normal punchType
 			    			//call edit punch to re-calculate late min
 			    			if(UtilValidate.isNotEmpty(dayPunchList) && UtilValidate.isNotEmpty(periodBillingId)){
@@ -5449,7 +5449,7 @@ public class PayrollService {
 			    				List<GenericValue> dayShiftListLop = UtilMisc.toList(EntityUtil.getFirst(dayShiftList));
 			    				for(GenericValue dayShift :dayShiftListLop){
 			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) 
-			    										&& (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
+    										&& (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 				    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
@@ -5509,7 +5509,7 @@ public class PayrollService {
 			    				}
 			    				
 			    			}else if((!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && (cTime.compareTo(secondSaturDay) != 0) 
-			    					 && UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves)){
+			    					&& UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves)){
 			    				// no punch ,not weekly off ,not secondSaturDay, not general holiday  and no leave then consider it as lossOfPay
 			    				lossOfPayDays = lossOfPayDays+1;
 			    				//Debug.log("no punch lossOfPayDays===="+cTime);
@@ -5608,27 +5608,27 @@ public class PayrollService {
 				    			}
 				    		}
 			    		}
-                       if(UtilValidate.isNotEmpty(shiftDetailMap)){
-                    	   Iterator entries = shiftDetailMap.entrySet().iterator();
-                    	   GenericValue newEntityShift = delegator.makeValue("PayrollAttendanceShiftWise");
-                    	   newEntityShift.set("customTimePeriodId", lastCloseAttedancePeriod.getString("customTimePeriodId"));
-                    	   newEntityShift.set("partyId",employeeId);
-                    	  
-                           while (entries.hasNext()) {
-                             Entry entry = (Entry) entries.next();
-                             String shiftTypeId = (String)entry.getKey();
-                             Integer noOfDays = (Integer)entry.getValue();
-                             newEntityShift.set("shiftTypeId", shiftTypeId);
-                      	     newEntityShift.set("noOfDays", new BigDecimal(noOfDays));
-                      	     newEntityShift.set("availedCanteenDays",BigDecimal.ZERO);
-                      	     if(UtilValidate.isNotEmpty(availedCanteenDetailMap.get(shiftTypeId))){
-                      	    	newEntityShift.set("availedCanteenDays", new BigDecimal((Integer)availedCanteenDetailMap.get(shiftTypeId)));
-                      	     }
-                      	     delegator.createOrStore(newEntityShift);
-                             
-                           }
-                    	   
-                       }
+                 if(UtilValidate.isNotEmpty(shiftDetailMap)){
+              	   Iterator entries = shiftDetailMap.entrySet().iterator();
+              	   GenericValue newEntityShift = delegator.makeValue("PayrollAttendanceShiftWise");
+              	   newEntityShift.set("customTimePeriodId", lastCloseAttedancePeriod.getString("customTimePeriodId"));
+              	   newEntityShift.set("partyId",employeeId);
+              	  
+                     while (entries.hasNext()) {
+                       Entry entry = (Entry) entries.next();
+                       String shiftTypeId = (String)entry.getKey();
+                       Integer noOfDays = (Integer)entry.getValue();
+                       newEntityShift.set("shiftTypeId", shiftTypeId);
+                	     newEntityShift.set("noOfDays", new BigDecimal(noOfDays));
+                	     newEntityShift.set("availedCanteenDays",BigDecimal.ZERO);
+                	     if(UtilValidate.isNotEmpty(availedCanteenDetailMap.get(shiftTypeId))){
+                	    	newEntityShift.set("availedCanteenDays", new BigDecimal((Integer)availedCanteenDetailMap.get(shiftTypeId)));
+                	     }
+                	     delegator.createOrStore(newEntityShift);
+                       
+                     }
+              	   
+                 }
 		    		
 			    		
 			    	}catch (GenericEntityException e) {
@@ -8826,6 +8826,7 @@ public class PayrollService {
   	    String surchargePercentage = (String) context.get("surchargePercentage");
   	    String educationalCessPercentage = (String) context.get("educationalCessPercentage");
   	    String name = (String) context.get("name");
+  	    String rebate = (String) context.get("rebate");
   	    String fatherName = (String) context.get("fatherName");
   	    String designation = (String) context.get("designation");
   	    try {
@@ -8845,6 +8846,9 @@ public class PayrollService {
 	  				if(UtilValidate.isNotEmpty(name)){
 	  					newEntity.set("name",name);
 					}
+	  				if(UtilValidate.isNotEmpty(rebate)){
+	  					newEntity.set("rebate",new BigDecimal(rebate));
+					}
 					if(UtilValidate.isNotEmpty(fatherName)){
 						newEntity.set("fatherName",fatherName);
 					}
@@ -8863,6 +8867,9 @@ public class PayrollService {
   					if(UtilValidate.isNotEmpty(name)){
   						TDSRemittancesList.set("name",name);
   					}
+  					if(UtilValidate.isNotEmpty(rebate)){
+  						TDSRemittancesList.set("rebate",new BigDecimal(rebate));
+					}
   					if(UtilValidate.isNotEmpty(fatherName)){
   						TDSRemittancesList.set("fatherName",fatherName);
   					}
