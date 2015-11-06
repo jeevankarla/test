@@ -1118,11 +1118,10 @@
                 <set field="tabButtonItem" value="analytics"/>
  				<set field="tabButtonItem2" value="channelSalesChart" />
  				<entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
-                	<condition-list combine="or">
-               		 	<condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+               		 	<!-- <condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
                			<condition-expr field-name="enumId" operator="equals" value="CR_INST"/>   
-               			<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
-               		</condition-list>
+               			<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  --> 
          		</entity-condition>		                                           
                 <set field="headerItem" value="charts"/>
 				<set field="ajaxUrl" value="ChannelWiseSalesChartInternal" type="String"/>
