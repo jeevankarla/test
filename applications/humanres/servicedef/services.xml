@@ -1982,6 +1982,7 @@ under the License.emplpunch
         <attribute name="surchargePercentage" mode="IN" type="String" optional="true"/>
         <attribute name="educationalCessPercentage" mode="IN" type="String" optional="true"/>
         <attribute name="name" mode="IN" type="String" optional="true"/>
+        <attribute name="rebate" mode="IN" type="String" optional="true"/>
         <attribute name="fatherName" mode="IN" type="String" optional="true"/>
         <attribute name="designation" mode="IN" type="String" optional="true"/>
     </service>

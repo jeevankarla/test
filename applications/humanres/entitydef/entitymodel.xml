@@ -2105,6 +2105,7 @@ under the License.
      		<field name="ReceiptNumber" type="long-varchar"></field>
      		<field name="surchargePercentage" type="fixed-point"></field>
      		<field name="educationalCessPercentage" type="fixed-point"></field>
+     		<field name="rebate" type="fixed-point"></field>
      		<field name="name" type="name"></field>
      		<field name="fatherName" type="name"></field>
      		<field name="designation" type="name"></field>
