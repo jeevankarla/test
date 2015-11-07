@@ -18,7 +18,7 @@ under the License.
 -->
 
 
-<#escape x as x?xml>
+ <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="12in" page-width="17in"
@@ -61,7 +61,7 @@ under the License.
 						<fo:table-column column-width="80pt"/>
 						<fo:table-column column-width="95pt"/>
 						<fo:table-column column-width="50pt"/>
-						<fo:table-column column-width="50pt"/>
+						<fo:table-column column-width="100pt"/>
 						<fo:table-body>
 						 <fo:table-row height="14px" space-start=".15in" text-align="center">
 								   <fo:table-cell number-columns-spanned="1" border-style="solid" width="40px">
@@ -94,7 +94,7 @@ under the License.
 									<fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
 										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">EL</fo:block>
 									</fo:table-cell>
-									<fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
+									<fo:table-cell number-columns-spanned="1" border-style="solid" width="100px">
 										<fo:block text-align="center" keep-together="always" white-space-collapse="false" font-weight="bold">Remarks</fo:block>
 									</fo:table-cell>
 								</fo:table-row>
@@ -130,7 +130,7 @@ under the License.
 						<fo:table-column column-width="40pt"/>
 						<fo:table-column column-width="55pt"/>
 						<fo:table-column column-width="55pt"/>
-						<fo:table-column column-width="50pt"/>
+						<fo:table-column column-width="100pt"/>
 						<fo:table-body>
 						<fo:table-row>
 						<fo:table-cell number-columns-spanned="1" border-style="solid" width="40px">
@@ -163,9 +163,9 @@ under the License.
 	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="60px">
 	                    	<fo:block text-align="right" keep-together="always">${employee.get("balance")?if_exists}</fo:block>
 	                    </fo:table-cell>
-	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="70px">
-	                    	<fo:block text-align="left" keep-together="always"></fo:block>
-	                    </fo:table-cell>
+	                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="100px">
+	                    	<fo:block text-align="left" keep-together="always"><#if employee.get("terminationTypeId")?has_content>${employee.get("terminationTypeId")?if_exists}<#else>&#160;</#if></fo:block>
+	                  </fo:table-cell>
 						</fo:table-row>
 						<#assign sno=sno+1>
 						</fo:table-body>

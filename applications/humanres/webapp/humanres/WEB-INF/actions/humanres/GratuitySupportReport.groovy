@@ -98,6 +98,10 @@ List<GenericValue> employementList = delegator.findList("EmploymentAndPerson", e
 if(UtilValidate.isNotEmpty(employementList)){
 	employementList.each { employment ->
 		employee = [:];
+		terminationTypeId="";
+		if(employment.terminationTypeId){
+		terminationTypeId=employment.terminationTypeId;
+		}
 		group=delegator.findByAnd("PartyRelationshipAndDetail", [partyId: employment.partyIdFrom, partyTypeId : "PARTY_GROUP"],["groupName"]);
 		daAmount=0;
 		if(UtilValidate.isNotEmpty(periodBillingId)){
@@ -132,6 +136,9 @@ if(UtilValidate.isNotEmpty(employementList)){
 		}
 		employee.put("name", employment.firstName + " " + lastName);
 		employee.put("employeeId", employment.partyIdTo);
+		if(UtilValidate.isNotEmpty(terminationTypeId)){
+		employee.put("terminationTypeId",terminationTypeId);
+		}
 		partyIdenctnCondList = [];
 		partyIdenctnCondList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "GRATUITY_ID"));
 		partyIdenctnCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employment.partyIdTo));
