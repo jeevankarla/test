@@ -200,11 +200,17 @@ under the License.
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Transaction Total:</fo:block>  
 		                    </fo:table-cell>
+		                    <#assign partyDebitTrans=0>
+		                    <#assign partyCreditTrans=0>
+							<#assign partyDebitTrans=partyTotalTrasnsMap.get("debitValue")?if_exists>
+							<#assign partyCreditTrans=partyTotalTrasnsMap.get("creditValue")?if_exists>
+							 <#assign partyDebitTrans=partyDebitTrans+partyOBMap.get("debitValue")?if_exists>
+		                    <#assign partyCreditTrans=partyCreditTrans+partyOBMap.get("creditValue")?if_exists>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyDebitTrans?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCreditTrans?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
                          </fo:table-row>
                           <fo:table-row>
@@ -245,24 +251,27 @@ under the License.
 											<fo:block>
 											<fo:table>
 						                    <fo:table-column column-width="90pt"/>
-						            		<fo:table-column column-width="230pt"/> 	
+						            		<fo:table-column column-width="150pt"/> 	
+							            	<fo:table-column column-width="90pt"/>
+						            		<fo:table-column column-width="75pt"/>
 						            		<fo:table-column column-width="70pt"/>
-						            		<fo:table-column column-width="70pt"/>
-						            		<fo:table-column column-width="100pt"/>
-						            		<fo:table-column column-width="100pt"/>
+						            		<fo:table-column column-width="90pt"/>
+						            		<fo:table-column column-width="90pt"/>
 						            		<fo:table-column column-width="90pt"/>	
-						            		<fo:table-column column-width="90pt"/>	
+						            		<fo:table-column column-width="90pt"/>
 						                    <fo:table-body>
 						                    <fo:table-row>
 								                    <fo:table-cell>
 										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DATE</fo:block>  
 										            </fo:table-cell>
-										            <fo:table-cell>
-										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Financial Transactions</fo:block>  
+										            <fo:table-cell number-columns-spanned="2">
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Financial </fo:block>  
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;Transactions</fo:block>   
 										            </fo:table-cell>
+										           
 										             <fo:table-cell>
-										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice</fo:block> 
-										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;Id</fo:block>   
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">FinAccount</fo:block> 
+										            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;TransId</fo:block>   
 										            </fo:table-cell>
 										            <#-->
 									            <fo:table-cell>
@@ -291,23 +300,33 @@ under the License.
 					            	<fo:block>
 					                 	<fo:table>
 					                     <fo:table-column column-width="90pt"/>
-					            		<fo:table-column column-width="230pt"/> 	
+					            		<fo:table-column column-width="150pt"/> 	
+						            	<fo:table-column column-width="90pt"/>
+					            		<fo:table-column column-width="75pt"/>
 					            		<fo:table-column column-width="70pt"/>
-					            		<fo:table-column column-width="70pt"/>
-					            		<fo:table-column column-width="100pt"/>
-					            		<fo:table-column column-width="100pt"/>
+					            		<fo:table-column column-width="90pt"/>
+					            		<fo:table-column column-width="90pt"/>
 					            		<fo:table-column column-width="90pt"/>	
 					            		<fo:table-column column-width="90pt"/>
 					                    <fo:table-body>		
 					                    	<#assign partyDayWiseFin = totalPartyDayWiseFinHistryOpeningBal.entrySet()>
 											<#list partyDayWiseFin as partyDayWiseFinTrans>
+											<#assign FinOpenDebit=0>
+											<#assign FinOpenCredit=0>
+											<#assign FinTransDebit=0>
+											<#assign FinTransCredit=0>
 											<#assign FinOpenBal = partyDayWiseFinTrans.getValue().get("openingBal")>
 											<#assign FinCloseBal = partyDayWiseFinTrans.getValue().get("FinClsBalMap")>	
 											<#assign FinTransTotal = partyDayWiseFinTrans.getValue().get("FinTransMap")>	
+											<#assign FinTransDebit =FinTransTotal.get("debitValue")+FinOpenBal.debitValue?if_exists>	
+											<#assign FinTransCredit =FinTransTotal.get("creditValue")+FinOpenBal.creditValue?if_exists>	
 											<#assign FinDayWiseTrans = partyDayWiseFinTrans.getValue().get("partyDayWiseFinHistryMap").entrySet()>
 												
 										
 					                     <fo:table-row>
+												 <fo:table-cell font-weight="bold">
+							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block>  
+							                    </fo:table-cell>
 							                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 							                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Opening Balance:</fo:block>  
 							                    </fo:table-cell>
@@ -338,9 +357,13 @@ under the License.
 							                    <fo:table-cell>
 									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${FinTransDaywise.getKey()}</fo:block>  
 									            </fo:table-cell>
-									             <fo:table-cell>
-									            	<fo:block   text-align="left"  >${FinTransDay.get("description")?if_exists}</fo:block>  
-									            </fo:table-cell>
+									             
+												<#assign FinAccTransId ="">
+												<#assign FinAccTransId =FinTransDay.get("instrumentNo")?if_exists>
+									            <#assign finAccountTrns = delegator.findOne("FinAccountTrans", {"finAccountTransId" : FinAccTransId}, true)?if_exists/> 
+  													<fo:table-cell number-columns-spanned="2">
+										            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false">${finAccountTrns.comments?if_exists}</fo:block> 
+										            </fo:table-cell>
 									             <fo:table-cell>
 									            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${FinTransDay.get("instrumentNo")?if_exists}</fo:block>  
 									            </fo:table-cell>
@@ -366,14 +389,17 @@ under the License.
 		                	</fo:table-cell>
 						</fo:table-row>
                         <fo:table-row>
+		                    <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block>  
+				            </fo:table-cell>
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Financial Transaction Total:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransTotal.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransDebit?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransTotal.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransCredit?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
                          </fo:table-row>
                           <fo:table-row>
@@ -382,6 +408,9 @@ under the License.
 		                	</fo:table-cell>
 						</fo:table-row>
                          <fo:table-row>
+							 <fo:table-cell>
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block>  
+				            </fo:table-cell>
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Closing Balance:</fo:block>  
 		                    </fo:table-cell>
@@ -421,10 +450,10 @@ under the License.
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Total Business Transaction Total:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyDebitTrans?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTotalTrasnsMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCreditTrans?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
                          </fo:table-row>
 						 <fo:table-row>
@@ -432,10 +461,10 @@ under the License.
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Total Financial Transaction Total:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTotalMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransDebit?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTotalMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${FinTransCredit?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
                          </fo:table-row>
                           <fo:table-row>
@@ -448,15 +477,18 @@ under the License.
 	                    	    <fo:block font-size="11pt" text-align="left">------------------------------------------------------------------------------------------------------</fo:block>
 		                	</fo:table-cell>
 						</fo:table-row>
+						<#assign TotalDebitTrans=partyDebitTrans+FinTransDebit>
+						<#assign TotalCreditTrans=partyCreditTrans+FinTransCredit>
+
                           <fo:table-row>
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***Total Transaction Total:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTrTotalMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${TotalDebitTrans?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyTrTotalMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${TotalCreditTrans?if_exists?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
                          </fo:table-row>
                           <fo:table-row>
@@ -464,15 +496,24 @@ under the License.
 	                    	   <fo:block font-size="11pt" text-align="left">&#160;</fo:block>
 		                	</fo:table-cell>
 						</fo:table-row>
+						<#assign cB=0>
+						<#assign cB=TotalDebitTrans-TotalCreditTrans>
+						<#assign partyCBDebit=0>
+						<#assign partyCBCredit=0>
+						<#if 0 < cB >
+							<#assign partyCBDebit=cB>
+						<#else>
+						<#assign partyCBCredit=(-1*cB)>
+						</#if>
                          <fo:table-row>
 		                    <fo:table-cell number-columns-spanned="4" font-weight="bold">
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">***ToTal Closing Balance:</fo:block>  
 		                    </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCBMap.get("debitValue")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCBDebit?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCBMap.get("creditValue")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${partyCBCredit?if_exists?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
                          </fo:table-row>
 						<fo:table-row>
