@@ -102,9 +102,50 @@
 		makeDatePicker("milkProcessRegDate","");
 		makeDatePicker("purchaseBillingFromDate","purchaseBillingThruDate");
 		makeDatePicker("mateBalanceFromDate","mateBalanceThruDate");
-		$('#ui-datepicker-div').css('clip', 'auto');		
+		$('#ui-datepicker-div').css('clip', 'auto');	
+		
+		$("input").keyup(function(e){
+			if(e.target.name == "vehicleId"){
+				$('[name=vehicleId]').val(($('[name=vehicleId]').val()).toUpperCase());
+				populateVehicleName();
+				populateVehicleSpan();
+			}	
+		});
+			
 	});
 
+function populateVehicleName(){
+	var availableTags = ${StringUtil.wrapString(vehItemsJSON)!'[]'};
+	$("#vehicleId").autocomplete({					
+			source:  availableTags,
+			select: function(event, ui) {
+		        var selectedValue = ui.item.value;
+		        $('[name=vehicleId]').val(selectedValue);
+		        populateVehicleSpan();
+		    }
+	});
+}
+function populateVehicleSpan(){
+	var vehicleCodeJson = ${StringUtil.wrapString(vehicleCodeJson)}
+	var tempVehJson = vehicleCodeJson[$('[name=vehicleId]').val()];
+	if(tempVehJson){
+		$('span#tankerToolTip').addClass("tooltip");
+		$('span#tankerToolTip').removeClass("tooltipWarning");
+		var vehicleName = tempVehJson["vehicleName"];
+		var vehicleId = tempVehJson["vehicleId"];
+		if(!vehicleName){
+			vehicleName = vehicleId;
+		}
+		$('span#tankerToolTip').html(vehicleName);
+		$('[name=vehicleId]').val(vehicleName);
+		
+	}else{
+		//$('[name=vehicleId]').val('');
+		$('span#tankerToolTip').removeClass("tooltip");
+		$('span#tankerToolTip').addClass("tooltipWarning");
+		$('span#tankerToolTip').html('None');
+	}
+}
 	
 	
 </script>	
@@ -199,14 +240,17 @@
 									From <input  type="text" size="18pt" id="vehicleFromDate"   name="fromDate"/>
 									To   <input  type="text" size="18pt" id="vehicleThruDate"   name="thruDate"/>
 								 </span>
-							</td>-->
+							</td>
 	                        <td align='left' width="35%"><span class="h3">Vehicle No </span>
 					            <select name="vehicleId" id="vehicleId">
 						     <option value="all">All</option>  
                              <#list vehicleRoleList as vehicles>
 						     <option value='${vehicles.vehicleId?if_exists}' >${vehicles.vehicleId?if_exists}</option>
 						     </#list>
-						     </select>
+						     </select>-->
+                       <td align='left' width="35%"><span class="h3">Vehicle No </span>
+						    <input  name="vehicleId" size="12pt" type="text" id="vehicleId"   required="required" /><span class="tooltip h5" id ="tankerToolTip">none</span> 
+						     
 						     </td>
 						     
 						    <td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
